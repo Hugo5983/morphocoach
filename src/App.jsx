@@ -429,8 +429,8 @@ export default function App(){
     if(code.length<8)return;
     try{
       const r=await fetch(`https://world.openfoodfacts.org/api/v0/product/${code}.json`);
-      const d=await r.json();
-      if(d.status===1){const n=d.product.nutriments||{};setScanRes({n:d.product.product_name_fr||"Produit",c:Math.round(n["energy-kcal_100g"]||0),p:Math.round(n.proteins_100g||0),g:Math.round(n.carbohydrates_100g||0),l:Math.round(n.fat_100g||0),cat:"Scanné"});}
+      const scanData=await r.json();
+      if(scanData.status===1){const n=scanData.product.nutriments||{};setScanRes({n:scanData.product.product_name_fr||"Produit",c:Math.round(n["energy-kcal_100g"]||0),p:Math.round(n.proteins_100g||0),g:Math.round(n.carbohydrates_100g||0),l:Math.round(n.fat_100g||0),cat:"Scanné"});}
       else setScanRes({error:true});
     }catch{setScanRes({error:true});}
   };
@@ -545,10 +545,9 @@ export default function App(){
         if(match){
           const dayNum=match[1];
           for(let w=0;w<6;w++){
-            const d=new Date(today);
-            const diff=((dayNum-d.getDay())+7)%7+(w===0&&diff===0?7:0)+w*7;
-            d.setDate(d.getDate()+((dayNum-d.getDay()+7)%7||7)+w*7);
-            const key=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+            const dateObj=new Date(today);
+            dateObj.setDate(dateObj.getDate()+((dayNum-dateObj.getDay()+7)%7||7)+w*7);
+            const key=`${dateObj.getFullYear()}-${String(dateObj.getMonth()+1).padStart(2,"0")}-${String(dateObj.getDate()).padStart(2,"0")}`;
             const int=INT[jour.intensite||"modere"];
             newSess[key]={nom:jour.focus||jour.nom,intensite:jour.intensite||"modere",color:int.c};
           }
@@ -1124,9 +1123,9 @@ export default function App(){
             const match=Object.entries(joursMap).find(([k])=>jour.focus.startsWith(k));
             if(match){
               for(let w=0;w<6;w++){
-                const d=new Date(today);
-                d.setDate(d.getDate()+((match[1]-d.getDay()+7)%7||7)+w*7);
-                const key=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+                const dateObj2=new Date(today);
+                dateObj2.setDate(dateObj2.getDate()+((match[1]-dateObj2.getDay()+7)%7||7)+w*7);
+                const key=`${dateObj2.getFullYear()}-${String(dateObj2.getMonth()+1).padStart(2,"0")}-${String(dateObj2.getDate()).padStart(2,"0")}`;
                 newSess[key]={nom:jour.nom,intensite:jour.intensite||"modere",color:INT[jour.intensite||"modere"].c};
               }
             }
