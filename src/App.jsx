@@ -488,7 +488,7 @@ export default function App(){
         method:"POST",
         headers:{"Content-Type":"application/json"},
         body:JSON.stringify({
-          model:"claude-3-haiku-20240307",
+          model:"claude-opus-4-20250514",
           max_tokens:3000,
           messages:[{role:"user",content}]
         })
