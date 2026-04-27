@@ -478,9 +478,9 @@ export default function App(){
         const errTxt=await res.text();
         throw new Error(`API ${res.status}: ${errTxt.substring(0,100)}`);
       }
-      const d=await res.json();
-      if(d.error) throw new Error(d.error.message||"Erreur API");
-      const rawText=d.content.map(i=>i.text||"").join("").trim();
+      const apiData=await res.json();
+      if(apiData.error) throw new Error(apiData.error.message||"Erreur API");
+      const rawText=apiData.content.map(i=>i.text||"").join("").trim();
       if(!rawText) throw new Error("Réponse vide de l'API");
       let jsonStr=rawText.replace(/```json\s*/gi,"").replace(/```\s*/g,"").trim();
       const jStart=jsonStr.indexOf("{");
