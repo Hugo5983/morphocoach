@@ -446,30 +446,11 @@ export default function App(){
       objectifPrecis:form.objectifPrecis,jours:form.jours,
       materiel:form.materiel,pathologies:form.pathologies,cycle:cycleNum
     });
-    const prompt="Tu es un coach BPJEPS expert en biomecanique (methode Delavier et Gundill).\n"
-      +"Tu dois generer un programme de musculation 100% personnalise base sur la photo et le profil.\n"
-      +histCtx+"\n\n"
-      +"REGLES MORPHOLOGIQUES A APPLIQUER:\n"
-      +"- Bras longs: halteres obligatoires, curl incline, eviter barre droite\n"
-      +"- Femurs longs: presse et hack squat prioritaires, squat classique interdit\n"
-      +"- Clavicules larges: halteres ou EZ, pas de barre droite au developpé couché\n"
-      +"- Cage plate: pull-over prioritaire, machines pec\n"
-      +"- Insertion biceps haute: curl incline et stretch curl poulie\n"
-      +"- Cyphose: face pull et dos posterieur en premier\n"
-      +"- Lordose: gainage transverse avant abdos classiques\n"
-      +"- Sedentaire: mobilite et foam roller systematiques\n"
-      +"- Desequilibre quad/ischios: leg curl excentrique prioritaire\n"
-      +"- Max 4 seances par semaine, excentrique 3-4s selon Gundill\n"
-      +"- Abdos: bas du dos au sol obligatoire, mains aux tempes\n\n"
-      +"PROFIL CLIENT: "+profilStr+"\n\n"
-      +"INSTRUCTION CRITIQUE: Reponds UNIQUEMENT avec du JSON valide. "
-      +"Aucun texte avant. Aucun texte apres. Aucun markdown. Aucun backtick.\n"
-      +"Le JSON doit contenir: morpho (humerus, femurs, clavicules, cage, posture, points_forts, points_faibles, resume), "
-      +"programme (titre, split, intro, seances avec jour/focus/duree/intensite/exercices, progression), "
-      +"nutrition (cal, p, g, l, conseil).\n"
-      +"Chaque exercice doit avoir: nom, cat, series, reps, repos, charge, prog, morpho_tip (SPECIFIQUE a cette morphologie), patho_tip, technique.\n"
-      +"Le champ intensite doit etre: leger, modere, lourd, ou intense.\n"
-      +"Le champ cat doit etre: principal, correctif, mobilite, ou gainage.";
+    const prompt="Tu es un coach sportif expert. "+histCtx+"\n\n"
+      +"PROFIL: "+profilStr+"\n\n"
+      +"REGLES: bras longs=halteres, femurs longs=presse pas squat, cage plate=pull-over prioritaire, cyphose=face pull, lordose=gainage transverse avant abdos.\n\n"
+      +"Reponds UNIQUEMENT avec ce JSON valide (rien d autre, pas de texte, pas de markdown):\n"
+      +'{"programme":{"titre":"string","seances":[{"jour":"string","focus":"string","duree":"string","intensite":"modere","exercices":[{"nom":"string","series":"4","reps":"10","repos":"60s","charge":"60%","morpho_tip":"string"}]}]},"nutrition":{"cal":2500,"p":150,"g":300,"l":80,"conseil":"string"},"morpho":{"resume":"string"}}';
     return prompt;
   };
   const lancerIA=async()=>{
@@ -488,7 +469,7 @@ export default function App(){
         method:"POST",
         headers:{"Content-Type":"application/json"},
         body:JSON.stringify({
-          model:"claude-haiku-4-5",
+          model:"claude-3-5-sonnet-20241022",
           max_tokens:3000,
           messages:[{role:"user",content}]
         })
