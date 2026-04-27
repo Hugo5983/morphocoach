@@ -573,12 +573,16 @@ export default function App(){
     const today=new Date();
     const todayKey=`${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,"0")}-${String(today.getDate()).padStart(2,"0")}`;
     const todaySess=calSess[todayKey];
+    const motiv=MOTIVATIONS[today.getDay()%MOTIVATIONS.length];
     return(
       <div style={{padding:"0 15px 16px"}} className="anim">
-        <div style={{paddingTop:26,paddingBottom:18}}>
+        <div style={{paddingTop:26,paddingBottom:14}}>
           <div style={{fontSize:10,color:C.mid,marginBottom:4}}>{today.toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long"})}</div>
-          <div style={{fontFamily:"'Syne',sans-serif",fontSize:32,letterSpacing:2,lineHeight:1}}>
+          <div style={{fontFamily:"'Syne',sans-serif",fontSize:32,letterSpacing:2,lineHeight:1,marginBottom:12}}>
             {profil.prenom?`BONJOUR, ${profil.prenom.toUpperCase()}`:"MORPHOCOACH"}
+          </div>
+          <div style={{padding:"10px 13px",background:"rgba(212,168,83,0.08)",border:`1px solid ${C.goldB}`,borderRadius:10,fontSize:12,color:C.mid,fontStyle:"italic",lineHeight:1.5}}>
+            💬 {motiv}
           </div>
         </div>
         {todaySess&&(
@@ -802,13 +806,8 @@ export default function App(){
     );
   };
   const Calendar=()=>{
-    const motiv=MOTIVATIONS[new Date().getDay()%MOTIVATIONS.length];
     return(
     <div style={{padding:"0 15px"}}>
-      {/* Phrase de motivation */}
-      <div style={{padding:"10px 13px",background:"rgba(212,168,83,0.08)",border:`1px solid ${C.goldB}`,borderRadius:10,marginBottom:10,fontSize:12,color:C.mid,fontStyle:"italic",lineHeight:1.5}}>
-        💬 {motiv}
-      </div>
       <Box>
         <Lbl>Calendrier mensuel</Lbl>
         <MonthCal sessions={calSess} onUpdate={(date,sess)=>{
@@ -1725,14 +1724,10 @@ export default function App(){
 
   const TodayView=()=>{
     const todaySeance=getTodaySeance();
-    const motiv=MOTIVATIONS[new Date().getDay()%MOTIVATIONS.length];
     const [viewSeance,setViewSeance]=useState(null);
     if(viewSeance) return <SeanceDetail seance={viewSeance} onBack={()=>setViewSeance(null)}/>;
     return(
       <div style={{padding:"0 15px"}}>
-        <div style={{padding:"8px 12px",background:"rgba(212,168,83,0.08)",border:`1px solid ${C.goldB}`,borderRadius:10,marginBottom:12,fontSize:12,color:C.mid,fontStyle:"italic",lineHeight:1.5}}>
-          💬 {motiv}
-        </div>
         {todaySeance?(
           <div>
             <Lbl>Séance du jour</Lbl>
@@ -1852,6 +1847,7 @@ export default function App(){
 
   const ProgramTab=()=>{
     const subNav=[
+      {id:"calendar",l:"Planification"},
       {id:"today",l:"Aujourd'hui"},
       {id:"semaine",l:"Semaine"},
       {id:"stats",l:"Progression"},
@@ -1860,12 +1856,13 @@ export default function App(){
     ];
     return(
       <div style={{paddingBottom:16}}>
-        <div style={{padding:"26px 15px 12px"}}><div style={{fontFamily:"'Syne',sans-serif",fontSize:30,letterSpacing:-0.3,fontWeight:800}}>PROGRAMME</div></div>
+        <div style={{padding:"26px 15px 12px"}}><div style={{fontFamily:"'Syne',sans-serif",fontSize:30,letterSpacing:-0.3,fontWeight:800}}>PROGRAMMATION</div></div>
         <div style={{display:"flex",gap:5,padding:"0 15px",marginBottom:14,overflowX:"auto",paddingBottom:3}}>
           {subNav.map(s=>(
             <button key={s.id} onClick={()=>{if(s.prem&&!premium)setPaywall(true);else setProgView(s.id);}} style={{padding:"7px 13px",background:progView===s.id?C.goldD:C.s2,border:`1px solid ${progView===s.id?C.gold:C.s3}`,borderRadius:18,color:progView===s.id?C.gold:C.mid,cursor:"pointer",fontSize:11.5,fontWeight:600,whiteSpace:"nowrap",fontFamily:"'Inter',sans-serif"}}>{s.l}</button>
           ))}
         </div>
+        {progView==="calendar"&&Calendar()}
         {progView==="today"&&<TodayView/>}
         {progView==="semaine"&&<SemaineView/>}
         {progView==="stats"&&Stats()}
