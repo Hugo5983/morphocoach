@@ -629,6 +629,83 @@ export default function App(){
             {[...Array(8)].map((_,i)=><div key={i} onClick={()=>setEau(i<eau?i:i+1)} style={{fontSize:20,opacity:i<eau?1:0.14,cursor:"pointer"}}>💧</div>)}
           </div>
         </Box>
+        <Lbl>Suivi du poids</Lbl>
+        {(()=>{
+          const today=new Date();
+          const daysSinceLast=lastWeighIn?Math.floor((today-new Date(lastWeighIn))/(1000*60*60*24)):999;
+          const canWeighIn=daysSinceLast>=14;
+          const lastWeight=weightLog.length>0?weightLog[weightLog.length-1]:null;
+          const firstWeight=weightLog.length>1?weightLog[0]:null;
+          const diff=lastWeight&&firstWeight?(lastWeight.v-firstWeight.v).toFixed(1):null;
+          const [showInput,setShowInput]=useState(false);
+          const [newW,setNewW]=useState("");
+          return(
+            <Box style={{marginBottom:9}}>
+              {weightLog.length>=2&&(
+                <div style={{marginBottom:12}}>
+                  <Row style={{justifyContent:"space-between",marginBottom:8}}>
+                    <div>
+                      <div style={{fontFamily:"'Syne',sans-serif",fontSize:28,fontWeight:800,color:C.gold,letterSpacing:-1,lineHeight:1}}>{lastWeight?.v}<span style={{fontSize:12,color:C.mid,fontFamily:"'Inter',sans-serif"}}> kg</span></div>
+                      <div style={{fontSize:10,color:C.mid,marginTop:2}}>Dernière pesée · {lastWeight?.date}</div>
+                    </div>
+                    {diff&&<div style={{textAlign:"right"}}>
+                      <div style={{fontSize:16,fontWeight:800,color:parseFloat(diff)>0?(profil.objectif==="poids"?C.red:C.green):(profil.objectif==="poids"?C.green:C.red)}}>{parseFloat(diff)>0?"+":""}{diff}kg</div>
+                      <div style={{fontSize:9,color:C.mid}}>depuis le début</div>
+                    </div>}
+                  </Row>
+                  <svg viewBox={`0 0 280 55`} style={{width:"100%",height:55,display:"block"}}>
+                    {weightLog.length>=2&&(()=>{
+                      const vals=weightLog.map(w=>w.v);
+                      const mn=Math.min(...vals)*0.995,mx=Math.max(...vals)*1.005;
+                      const pts=weightLog.map((w,i)=>{const x=(i/(weightLog.length-1))*280;const y=55-((w.v-mn)/(mx-mn||1))*50;return`${x},${y}`;}).join(" ");
+                      return(<>
+                        <polyline points={pts} fill="none" stroke={C.gold} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        {weightLog.map((w,i)=>{const x=(i/(weightLog.length-1))*280;const y=55-((w.v-mn)/(mx-mn||1))*50;return<circle key={i} cx={x} cy={y} r={3} fill={C.gold}/>;} )}
+                      </>);
+                    })()}
+                  </svg>
+                  <Row style={{justifyContent:"space-between",marginTop:2}}>
+                    <span style={{fontSize:9,color:C.dim}}>{weightLog[0]?.date}</span>
+                    <span style={{fontSize:9,color:C.dim}}>{weightLog[weightLog.length-1]?.date}</span>
+                  </Row>
+                </div>
+              )}
+              {weightLog.length===0&&(
+                <div style={{textAlign:"center",padding:"12px 0",fontSize:12,color:C.mid,marginBottom:10}}>Enregistrez votre première pesée pour voir votre progression.</div>
+              )}
+              {weightLog.length===1&&(
+                <Row style={{justifyContent:"space-between",marginBottom:10}}>
+                  <div>
+                    <div style={{fontFamily:"'Syne',sans-serif",fontSize:28,fontWeight:800,color:C.gold,letterSpacing:-1}}>{lastWeight?.v}<span style={{fontSize:12,color:C.mid,fontFamily:"'Inter',sans-serif"}}> kg</span></div>
+                    <div style={{fontSize:10,color:C.mid}}>Pesée du {lastWeight?.date}</div>
+                  </div>
+                </Row>
+              )}
+              {canWeighIn?(
+                showInput?(
+                  <Row style={{gap:8}}>
+                    <Inp style={{flex:1,marginBottom:0}} type="number" placeholder="Ex: 79.5" value={newW} onChange={e=>setNewW(e.target.value)} step="0.1"/>
+                    <button onClick={()=>{
+                      if(!newW) return;
+                      const entry={v:parseFloat(newW),date:today.toLocaleDateString("fr-FR")};
+                      setWeightLog(prev=>[...prev,entry]);
+                      setLastWeighIn(today.toISOString());
+                      setNewW("");setShowInput(false);
+                      push("⚖️","Poids enregistré !",`${newW}kg enregistré. Prochain pesée dans 2 semaines.`);
+                    }} style={{padding:"11px 14px",background:C.goldD,border:`1px solid ${C.goldB}`,borderRadius:9,color:C.gold,cursor:"pointer",fontSize:12,fontWeight:700,fontFamily:"'Syne',sans-serif",whiteSpace:"nowrap"}}>✓ OK</button>
+                    <button onClick={()=>setShowInput(false)} style={{padding:"11px 10px",background:C.s2,border:`1px solid ${C.s3}`,borderRadius:9,color:C.mid,cursor:"pointer",fontSize:14}}>×</button>
+                  </Row>
+                ):(
+                  <Btn onClick={()=>setShowInput(true)} v="out">⚖️ Enregistrer mon poids</Btn>
+                )
+              ):(
+                <div style={{padding:"9px 11px",background:"rgba(62,199,122,0.08)",border:"1px solid rgba(62,199,122,0.2)",borderRadius:8,fontSize:11,color:C.green,lineHeight:1.5,textAlign:"center"}}>
+                  🌱 Prochaine pesée dans <span style={{fontWeight:700}}>{14-daysSinceLast} jour{14-daysSinceLast>1?"s":""}</span> — laisse ton corps s'adapter !
+                </div>
+              )}
+            </Box>
+          );
+        })()}
         <Lbl>Accès rapide</Lbl>
         <G2>
           {[
@@ -1342,114 +1419,321 @@ export default function App(){
     const tot=totR();
     const all=[...FOODS,...myFoods];
     const filtered=search?all.filter(f=>f.n.toLowerCase().includes(search.toLowerCase())):[];
+
+    // Score santé calculé
+    const calcScore=()=>{
+      let score=100;
+      const totalItems=[...repas.matin,...repas.midi,...repas.soir,...repas.snack];
+      const sucres=totalItems.reduce((a,f)=>a+(f.sucres||0),0);
+      const fibres=totalItems.reduce((a,f)=>a+(f.fibres||0),0);
+      const transformes=totalItems.filter(f=>f.cat==="Transformé"||f.cat==="Scanné").length;
+      if(sucres>25) score-=20;
+      else if(sucres>15) score-=10;
+      if(transformes>2) score-=15;
+      else if(transformes>1) score-=8;
+      if(fibres<15) score-=10;
+      if(eau<6) score-=15;
+      else if(eau<4) score-=25;
+      if(tot.p<pObj*0.7) score-=10;
+      const repasNonVides=[repas.matin,repas.midi,repas.soir].filter(r=>r.length>0).length;
+      if(repasNonVides<2) score-=10;
+      return Math.max(0,Math.min(100,score));
+    };
+    const score=calcScore();
+    const scoreLettre=score>=85?"A":score>=70?"B":score>=55?"C":score>=40?"D":"E";
+    const scoreColor=score>=85?C.green:score>=70?"#8BC34A":score>=55?C.orange:score>=40?"#FF7043":C.red;
+
+    const scoreDetails=[
+      {l:"Sucres ajoutés",ok:[...repas.matin,...repas.midi,...repas.soir,...repas.snack].reduce((a,f)=>a+(f.sucres||0),0)<=15,icon:"🍬"},
+      {l:"Aliments transformés",[...repas.matin,...repas.midi,...repas.soir,...repas.snack].filter(f=>f.cat==="Transformé"||f.cat==="Scanné").length<=1?"ok":false?null:null,ok:[...repas.matin,...repas.midi,...repas.soir,...repas.snack].filter(f=>f.cat==="Transformé"||f.cat==="Scanné").length<=1,icon:"🏭"},
+      {l:"Hydratation",ok:eau>=6,icon:"💧"},
+      {l:"Apport protéines",ok:tot.p>=pObj*0.8,icon:"💪"},
+      {l:"Diversité repas",ok:[repas.matin,repas.midi,repas.soir].filter(r=>r.length>0).length>=2,icon:"🥗"},
+    ];
+
+    // Anneau SVG
+    const Ring=({pct,color,size=110,stroke=9,children})=>{
+      const R=size/2-stroke;
+      const CI=2*Math.PI*R;
+      const offset=CI*(1-Math.min(1,pct/100));
+      return(
+        <div style={{position:"relative",width:size,height:size,flexShrink:0}}>
+          <svg width={size} height={size} style={{transform:"rotate(-90deg)"}}>
+            <circle cx={size/2} cy={size/2} r={R} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth={stroke}/>
+            <circle cx={size/2} cy={size/2} r={R} fill="none" stroke={color} strokeWidth={stroke}
+              strokeDasharray={CI} strokeDashoffset={offset} strokeLinecap="round"
+              style={{transition:"stroke-dashoffset .8s ease"}}/>
+          </svg>
+          <div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center"}}>{children}</div>
+        </div>
+      );
+    };
+
+    const MiniRing=({pct,color,label,v,max})=>(
+      <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:4}}>
+        <div style={{position:"relative",width:56,height:56}}>
+          <svg width={56} height={56} style={{transform:"rotate(-90deg)"}}>
+            <circle cx={28} cy={28} r={22} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth={5}/>
+            <circle cx={28} cy={28} r={22} fill="none" stroke={color} strokeWidth={5}
+              strokeDasharray={2*Math.PI*22} strokeDashoffset={2*Math.PI*22*(1-Math.min(1,pct/100))}
+              strokeLinecap="round" style={{transition:"stroke-dashoffset .8s ease"}}/>
+          </svg>
+          <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center"}}>
+            <span style={{fontSize:10,fontWeight:700,color}}>{Math.round(pct)}%</span>
+          </div>
+        </div>
+        <div style={{textAlign:"center"}}>
+          <div style={{fontSize:11,fontWeight:700,color:C.text}}>{v}g</div>
+          <div style={{fontSize:9,color:C.mid}}>{label}</div>
+          <div style={{fontSize:8,color:C.dim}}>/{max}g</div>
+        </div>
+      </div>
+    );
+
+    const calLeft=Math.max(0,calObj-tot.cal);
+    const calPct=Math.min(100,tot.cal/calObj*100);
+
     return(
-      <div style={{padding:"0 15px 16px"}} className="anim">
-        <div style={{padding:"26px 0 14px"}}><div style={{fontFamily:"'Syne',sans-serif",fontSize:30,letterSpacing:-0.3,fontWeight:800}}>NUTRITION</div></div>
-        <div style={{display:"flex",gap:5,marginBottom:12,overflowX:"auto",paddingBottom:2}}>
-          {[{id:"journal",l:"Journal"},{id:"scanner",l:"Scanner"},{id:"aliments",l:"Mes aliments"}].map(s=>(
-            <button key={s.id} onClick={()=>setNView(s.id)} style={{padding:"6px 13px",background:nView===s.id?C.goldD:C.s2,border:`1px solid ${nView===s.id?C.gold:C.s3}`,borderRadius:16,color:nView===s.id?C.gold:C.mid,cursor:"pointer",fontSize:11.5,fontWeight:600,whiteSpace:"nowrap",fontFamily:"'Inter',sans-serif"}}>{s.l}</button>
+      <div style={{background:C.bg,minHeight:"100vh",paddingBottom:20}} className="anim">
+        {/* Header */}
+        <div style={{padding:"20px 15px 0"}}>
+          <div style={{fontFamily:"'Syne',sans-serif",fontSize:28,fontWeight:800,letterSpacing:-0.5}}>NUTRITION</div>
+          <div style={{fontSize:11,color:C.mid,marginTop:2}}>{new Date().toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long"})}</div>
+        </div>
+
+        {/* Nav */}
+        <div style={{display:"flex",gap:5,padding:"12px 15px",overflowX:"auto",paddingBottom:4}}>
+          {[{id:"journal",l:"Journal"},{id:"scanner",l:"Scanner"},{id:"aliments",l:"Aliments"}].map(s=>(
+            <button key={s.id} onClick={()=>setNView(s.id)} style={{padding:"7px 16px",background:nView===s.id?C.goldD:"transparent",border:`1px solid ${nView===s.id?C.gold:C.s3}`,borderRadius:20,color:nView===s.id?C.gold:C.mid,cursor:"pointer",fontSize:12,fontWeight:600,whiteSpace:"nowrap",fontFamily:"'Syne',sans-serif",letterSpacing:"0.3px"}}>{s.l}</button>
           ))}
         </div>
-        {nView==="journal"&&<div>
-          <Box>
-            <Row style={{justifyContent:"space-between",marginBottom:10}}>
-              <div>
-                <div style={{fontFamily:"'Syne',sans-serif",fontSize:34,color:tot.cal>calObj?C.red:C.gold,letterSpacing:1,lineHeight:1}}>{tot.cal}<span style={{fontSize:13,color:C.mid,fontFamily:"'Inter',sans-serif"}}> /{calObj}</span></div>
-                <div style={{fontSize:10,color:C.mid,marginTop:3}}>kcal · {obj.l}</div>
-              </div>
-              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,textAlign:"center"}}>
-                {[{l:"P",v:tot.p,o:pObj,c:C.red},{l:"G",v:tot.g,o:gObj,c:C.orange},{l:"L",v:tot.l,o:lObj,c:C.green}].map(m=>(
-                  <div key={m.l}><div style={{fontFamily:"'Syne',sans-serif",fontSize:15,color:m.c,letterSpacing:0.5}}>{m.v}g</div><div style={{fontSize:9,color:C.dim}}>{m.l}/{m.o}</div></div>
-                ))}
-              </div>
-            </Row>
-            <Bar pct={tot.cal/calObj*100} h={5}/>
-            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:6,marginTop:8}}>
-              {[{l:"Protéines",v:tot.p,o:pObj,c:C.red},{l:"Glucides",v:tot.g,o:gObj,c:C.orange},{l:"Lipides",v:tot.l,o:lObj,c:C.green}].map(m=>(
-                <div key={m.l}><div style={{fontSize:9,color:C.mid,marginBottom:3}}>{m.l}</div><Bar pct={m.v/m.o*100} color={m.c}/></div>
-              ))}
-            </div>
-          </Box>
-          <Box>
-            <Lbl>Hydratation</Lbl>
-            <div style={{display:"flex",gap:7,marginBottom:4}}>
-              {[...Array(8)].map((_,i)=><div key={i} onClick={()=>setEau(i<eau?i:i+1)} style={{fontSize:20,opacity:i<eau?1:0.12,cursor:"pointer"}}>💧</div>)}
-            </div>
-            <div style={{fontSize:10,color:C.mid}}>{eau*250}ml / 2000ml</div>
-          </Box>
-          <Box>
-            <div style={{display:"flex",gap:5,marginBottom:12,overflowX:"auto"}}>
-              {[{id:"matin",l:"Matin"},{id:"midi",l:"Midi"},{id:"soir",l:"Soir"},{id:"snack",l:"Snack"}].map(r=>(
-                <button key={r.id} onClick={()=>setRepasA(r.id)} style={{padding:"6px 12px",background:repasA===r.id?C.goldD:C.s2,border:`1px solid ${repasA===r.id?C.gold:C.s3}`,borderRadius:15,color:repasA===r.id?C.gold:C.mid,cursor:"pointer",fontSize:11.5,whiteSpace:"nowrap",fontFamily:"'Inter',sans-serif",fontWeight:600}}>{r.l}{repas[r.id].length>0?` (${repas[r.id].length})`:""}</button>
-              ))}
-            </div>
-            {repas[repasA].length===0&&<div style={{textAlign:"center",padding:"12px 0",fontSize:12,color:C.dim}}>Aucun aliment ajouté</div>}
-            {repas[repasA].map((item,i)=>(
-              <Row key={i} style={{justifyContent:"space-between",padding:"8px 0",borderBottom:`1px solid ${C.s3}`}}>
-                <div><div style={{fontSize:12}}>{item.n}</div><div style={{fontSize:10,color:C.mid}}>{item.c}kcal · P:{item.p}g G:{item.g}g L:{item.l}g</div></div>
-                <button onClick={()=>setRepas(r=>({...r,[repasA]:r[repasA].filter((_,j)=>j!==i)}))} style={{background:"transparent",border:"none",color:C.red,cursor:"pointer",fontSize:15}}>×</button>
-              </Row>
-            ))}
-            <Inp style={{marginTop:10}} placeholder="🔍 Rechercher…" value={search} onChange={e=>setSearch(e.target.value)}/>
-            {search&&filtered.length>0&&(
-              <div style={{maxHeight:190,overflowY:"auto",border:`1px solid ${C.s3}`,borderRadius:9}}>
-                {filtered.map((item,i)=>(
-                  <div key={i} onClick={()=>{setRepas(r=>({...r,[repasA]:[...r[repasA],item]}));setSearch("");}} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"9px 12px",background:C.s2,borderBottom:`1px solid ${C.s3}`,cursor:"pointer"}}>
-                    <div><div style={{fontSize:12}}>{item.n}</div><div style={{fontSize:10,color:C.mid}}>{item.c}kcal</div></div>
-                    <span style={{color:C.gold,fontSize:18}}>+</span>
-                  </div>
-                ))}
-              </div>
-            )}
-            <div style={{marginTop:12}}>
-              <Lbl>Bibliothèque</Lbl>
-              {[...new Set(FOODS.map(f=>f.cat))].map(cat=>(
-                <div key={cat} style={{marginBottom:9}}>
-                  <div style={{fontSize:9,color:C.gold,marginBottom:5,fontWeight:700}}>{cat}</div>
-                  <div style={{display:"flex",flexWrap:"wrap"}}>
-                    {FOODS.filter(f=>f.cat===cat).map((f,i)=>(
-                      <Tag key={i} onClick={()=>setRepas(r=>({...r,[repasA]:[...r[repasA],f]}))}>{f.n.split("(")[0].trim()} · {f.c}</Tag>
-                    ))}
+
+        {nView==="journal"&&(
+          <div style={{padding:"0 15px"}}>
+            {/* Anneau principal calories */}
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"18px 16px",background:C.s1,borderRadius:16,marginBottom:12,border:`1px solid ${C.s3}`}}>
+              <Ring pct={calPct} color={tot.cal>calObj?C.red:C.gold} size={120} stroke={10}>
+                <div style={{fontFamily:"'Syne',sans-serif",fontSize:22,fontWeight:800,color:tot.cal>calObj?C.red:C.text,lineHeight:1,letterSpacing:-1}}>{calLeft}</div>
+                <div style={{fontSize:9,color:C.mid,marginTop:2}}>kcal restantes</div>
+              </Ring>
+              <div style={{flex:1,marginLeft:20}}>
+                <div style={{marginBottom:10}}>
+                  <Row style={{justifyContent:"space-between",marginBottom:3}}>
+                    <span style={{fontSize:11,color:C.mid}}>Consommé</span>
+                    <span style={{fontSize:12,fontWeight:700,color:tot.cal>calObj?C.red:C.text}}>{tot.cal} kcal</span>
+                  </Row>
+                  <Row style={{justifyContent:"space-between",marginBottom:3}}>
+                    <span style={{fontSize:11,color:C.mid}}>Objectif</span>
+                    <span style={{fontSize:12,fontWeight:700}}>{calObj} kcal</span>
+                  </Row>
+                  <Row style={{justifyContent:"space-between"}}>
+                    <span style={{fontSize:11,color:C.mid}}>Objectif</span>
+                    <span style={{fontSize:11,color:C.gold}}>{obj.l}</span>
+                  </Row>
+                </div>
+                {/* Score */}
+                <div onClick={()=>setNView("score")} style={{display:"flex",alignItems:"center",gap:8,padding:"8px 10px",background:`${scoreColor}15`,border:`1px solid ${scoreColor}30`,borderRadius:9,cursor:"pointer"}}>
+                  <div style={{fontFamily:"'Syne',sans-serif",fontSize:22,fontWeight:800,color:scoreColor,lineHeight:1}}>{scoreLettre}</div>
+                  <div>
+                    <div style={{fontSize:10,fontWeight:700,color:scoreColor}}>Score santé</div>
+                    <div style={{fontSize:9,color:C.mid}}>{score}/100 · Voir détail</div>
                   </div>
                 </div>
-              ))}
+              </div>
             </div>
-          </Box>
-        </div>}
-        {nView==="scanner"&&<Box>
-          <Lbl>Scanner un produit</Lbl>
-          <div style={{padding:"8px 10px",background:C.goldD,border:`1px solid ${C.goldB}`,borderRadius:7,fontSize:11,color:C.mid,marginBottom:10,lineHeight:1.6}}>Base Open Food Facts — 3 millions de produits · Carrefour, Auchan, Lidl, Leclerc et plus.</div>
-          <Inp placeholder="Code-barres EAN (ex: 3017620422003)" inputMode="numeric" value={scanCode} onChange={e=>{setScan(e.target.value);if(e.target.value.length>=8)handleScan(e.target.value);}}/>
-          {scanRes&&!scanRes.error&&<div style={{padding:11,background:"rgba(56,199,117,.08)",border:"1px solid rgba(56,199,117,.2)",borderRadius:9,marginBottom:8}}>
-            <div style={{fontWeight:700,fontSize:13,color:C.green,marginBottom:7}}>{scanRes.n}</div>
-            <div style={{display:"flex",gap:4,flexWrap:"wrap",marginBottom:9}}>
-              {[{l:`${scanRes.c} kcal`,c:C.gold},{l:`P: ${scanRes.p}g`,c:C.red},{l:`G: ${scanRes.g}g`,c:C.orange},{l:`L: ${scanRes.l}g`,c:C.green}].map(s=>(
-                <div key={s.l} style={{padding:"3px 8px",background:`${s.c}14`,border:`1px solid ${s.c}28`,borderRadius:5,fontSize:10,color:s.c}}>{s.l}</div>
-              ))}
+
+            {/* Mini anneaux macros */}
+            <div style={{display:"flex",justifyContent:"space-around",padding:"14px 16px",background:C.s1,borderRadius:14,marginBottom:12,border:`1px solid ${C.s3}`}}>
+              <MiniRing pct={tot.p/pObj*100} color={C.red} label="Protéines" v={tot.p} max={pObj}/>
+              <div style={{width:1,background:C.s3}}/>
+              <MiniRing pct={tot.g/gObj*100} color={C.orange} label="Glucides" v={tot.g} max={gObj}/>
+              <div style={{width:1,background:C.s3}}/>
+              <MiniRing pct={tot.l/lObj*100} color={C.green} label="Lipides" v={tot.l} max={lObj}/>
             </div>
-            <Btn sm onClick={()=>{setRepas(r=>({...r,[repasA]:[...r[repasA],scanRes]}));setScanRes(null);setScan("");setNView("journal");}}>+ Ajouter au {repasA}</Btn>
-            <Btn v="out" sm onClick={()=>{setMyFoods(f=>[...f,{...scanRes,id:Date.now()}]);setScanRes(null);setScan("");}}>💾 Sauvegarder</Btn>
-          </div>}
-          {scanRes?.error&&<div style={{padding:"8px 10px",background:"rgba(224,72,72,.08)",border:"1px solid rgba(224,72,72,.2)",borderRadius:7,fontSize:11,color:C.red}}>Produit non trouvé. Ajoutez-le manuellement.</div>}
-        </Box>}
-        {nView==="aliments"&&<div>
-          <Box>
-            <Lbl>Ajouter un aliment</Lbl>
-            <Inp placeholder="Nom (ex: Mon pain maison 100g)" value={newFood.nom} onChange={e=>setNewFood({...newFood,nom:e.target.value})}/>
-            <G2><Inp type="number" placeholder="Calories" style={{marginBottom:0}} value={newFood.cal} onChange={e=>setNewFood({...newFood,cal:e.target.value})}/><Inp type="number" placeholder="Protéines (g)" style={{marginBottom:0}} value={newFood.p} onChange={e=>setNewFood({...newFood,p:e.target.value})}/></G2>
-            <G2 style={{marginTop:6}}><Inp type="number" placeholder="Glucides (g)" style={{marginBottom:0}} value={newFood.g} onChange={e=>setNewFood({...newFood,g:e.target.value})}/><Inp type="number" placeholder="Lipides (g)" style={{marginBottom:0}} value={newFood.l} onChange={e=>setNewFood({...newFood,l:e.target.value})}/></G2>
-            <Btn disabled={!newFood.nom||!newFood.cal} onClick={()=>{setMyFoods(f=>[...f,{id:Date.now(),n:newFood.nom,c:parseInt(newFood.cal)||0,p:parseInt(newFood.p)||0,g:parseInt(newFood.g)||0,l:parseInt(newFood.l)||0,cat:"Personnel"}]);setNewFood({nom:"",cal:"",p:"",g:"",l:""});push("✅","Aliment ajouté !","Disponible dans votre bibliothèque.");}} style={{marginTop:8}}>+ Ajouter</Btn>
-          </Box>
-          {myFoods.length>0&&<Box>
-            <Lbl>Mes aliments ({myFoods.length})</Lbl>
-            {myFoods.map((f,i)=>(
-              <Row key={i} style={{justifyContent:"space-between",padding:"7px 0",borderBottom:`1px solid ${C.s3}`}}>
-                <div><div style={{fontSize:12}}>{f.n}</div><div style={{fontSize:10,color:C.mid}}>{f.c}kcal · P:{f.p}g G:{f.g}g L:{f.l}g</div></div>
-                <button onClick={()=>setRepas(r=>({...r,[repasA]:[...r[repasA],f]}))} style={{padding:"4px 9px",background:C.goldD,border:`1px solid ${C.goldB}`,borderRadius:5,color:C.gold,cursor:"pointer",fontSize:10,fontFamily:"'Inter',sans-serif",fontWeight:700}}>+</button>
+
+            {/* Eau */}
+            <div style={{padding:"14px 16px",background:C.s1,borderRadius:14,marginBottom:12,border:`1px solid ${C.s3}`}}>
+              <Row style={{justifyContent:"space-between",marginBottom:10}}>
+                <div>
+                  <div style={{fontSize:13,fontWeight:700}}>Hydratation</div>
+                  <div style={{fontSize:10,color:C.mid}}>{eau*250}ml / 2000ml</div>
+                </div>
+                <div style={{fontFamily:"'Syne',sans-serif",fontSize:22,fontWeight:800,color:eau>=8?C.green:C.blue}}>{eau}/8</div>
               </Row>
-            ))}
-          </Box>}
-        </div>}
+              <div style={{display:"flex",gap:5,marginBottom:8}}>
+                {[...Array(8)].map((_,i)=>(
+                  <div key={i} onClick={()=>setEau(i<eau?i:i+1)} style={{flex:1,height:28,borderRadius:6,background:i<eau?"rgba(77,143,224,0.8)":"rgba(77,143,224,0.1)",border:`1px solid ${i<eau?"rgba(77,143,224,0.8)":"rgba(77,143,224,0.2)"}`,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,transition:"all .15s"}}>{i<eau?"💧":""}</div>
+                ))}
+              </div>
+              <div style={{height:4,background:"rgba(255,255,255,0.06)",borderRadius:2,overflow:"hidden"}}>
+                <div style={{height:"100%",width:`${eau/8*100}%`,background:C.blue,borderRadius:2,transition:"width .5s"}}/>
+              </div>
+            </div>
+
+            {/* Repas */}
+            {[{id:"matin",l:"Petit-déjeuner",i:"☀️"},{id:"midi",l:"Déjeuner",i:"🍽️"},{id:"soir",l:"Dîner",i:"🌙"},{id:"snack",l:"Collation",i:"🍎"}].map(r=>{
+              const rTot=repas[r.id].reduce((a,f)=>({cal:a.cal+f.c,p:a.p+f.p,g:a.g+f.g,l:a.l+f.l}),{cal:0,p:0,g:0,l:0});
+              const isActive=repasA===r.id;
+              return(
+                <div key={r.id} style={{background:C.s1,borderRadius:14,marginBottom:10,border:`1px solid ${isActive?C.goldB:C.s3}`,overflow:"hidden"}}>
+                  {/* Header repas */}
+                  <div onClick={()=>setRepasA(isActive?null:r.id)} style={{padding:"12px 14px",display:"flex",alignItems:"center",gap:10,cursor:"pointer"}}>
+                    <div style={{width:36,height:36,borderRadius:10,background:C.s2,display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,flexShrink:0}}>{r.i}</div>
+                    <div style={{flex:1}}>
+                      <div style={{fontSize:13,fontWeight:700}}>{r.l}</div>
+                      <div style={{fontSize:10,color:C.mid}}>{repas[r.id].length>0?`${repas[r.id].length} aliment${repas[r.id].length>1?"s":""} · ${rTot.cal} kcal`:"Aucun aliment"}</div>
+                    </div>
+                    <div style={{display:"flex",alignItems:"center",gap:8}}>
+                      {rTot.cal>0&&<span style={{fontSize:13,fontWeight:700,color:C.gold}}>{rTot.cal}</span>}
+                      <span style={{fontSize:14,color:C.mid,transform:isActive?"rotate(180deg)":"none",transition:"transform .2s"}}>⌄</span>
+                    </div>
+                  </div>
+                  {/* Aliments */}
+                  {isActive&&(
+                    <div style={{borderTop:`1px solid ${C.s3}`,padding:"10px 14px"}}>
+                      {repas[r.id].length===0&&<div style={{fontSize:12,color:C.dim,textAlign:"center",padding:"8px 0"}}>Aucun aliment ajouté</div>}
+                      {repas[r.id].map((item,i)=>(
+                        <Row key={i} style={{justifyContent:"space-between",padding:"7px 0",borderBottom:`1px solid ${C.s3}`}}>
+                          <div style={{flex:1}}>
+                            <div style={{fontSize:12,fontWeight:600}}>{item.n}</div>
+                            <Row style={{gap:8,marginTop:2}}>
+                              <span style={{fontSize:9,color:C.red}}>P:{item.p}g</span>
+                              <span style={{fontSize:9,color:C.orange}}>G:{item.g}g</span>
+                              <span style={{fontSize:9,color:C.green}}>L:{item.l}g</span>
+                            </Row>
+                          </div>
+                          <Row style={{gap:8,alignItems:"center"}}>
+                            <span style={{fontSize:12,fontWeight:700,color:C.gold}}>{item.c}</span>
+                            <span style={{fontSize:9,color:C.mid}}>kcal</span>
+                            <button onClick={()=>setRepas(rp=>({...rp,[r.id]:rp[r.id].filter((_,j)=>j!==i)}))} style={{background:"transparent",border:"none",color:C.red,cursor:"pointer",fontSize:15,padding:"0 4px"}}>×</button>
+                          </Row>
+                        </Row>
+                      ))}
+                      {/* Recherche rapide */}
+                      <Inp style={{marginTop:10,marginBottom:6}} placeholder="🔍 Ajouter un aliment…" value={search} onChange={e=>setSearch(e.target.value)}/>
+                      {search&&filtered.length>0&&(
+                        <div style={{maxHeight:180,overflowY:"auto",borderRadius:9,border:`1px solid ${C.s3}`}}>
+                          {filtered.map((item,i)=>(
+                            <div key={i} onClick={()=>{setRepas(rp=>({...rp,[r.id]:[...rp[r.id],item]}));setSearch("");}} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"9px 12px",background:C.s2,borderBottom:`1px solid ${C.s3}`,cursor:"pointer"}}>
+                              <div><div style={{fontSize:12}}>{item.n}</div><div style={{fontSize:10,color:C.mid}}>{item.c}kcal</div></div>
+                              <span style={{color:C.gold,fontSize:18}}>+</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                      {/* Bibliothèque rapide */}
+                      <div style={{marginTop:8}}>
+                        <div style={{display:"flex",gap:4,overflowX:"auto",paddingBottom:4}}>
+                          {[...new Set(FOODS.map(f=>f.cat))].map(cat=>(
+                            <button key={cat} style={{padding:"4px 10px",background:C.s2,border:`1px solid ${C.s3}`,borderRadius:12,color:C.mid,cursor:"pointer",fontSize:10,whiteSpace:"nowrap",fontFamily:"'Inter',sans-serif"}} onClick={()=>{}}>{cat}</button>
+                          ))}
+                        </div>
+                        <div style={{display:"flex",flexWrap:"wrap",gap:4,marginTop:6}}>
+                          {FOODS.filter(f=>!search||f.cat===search).slice(0,8).map((f,i)=>(
+                            <div key={i} onClick={()=>setRepas(rp=>({...rp,[r.id]:[...rp[r.id],f]}))} style={{padding:"5px 10px",background:C.s2,border:`1px solid ${C.s3}`,borderRadius:8,cursor:"pointer",fontSize:10,color:C.text}}>
+                              {f.n.split("(")[0].trim()} <span style={{color:C.gold}}>{f.c}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {nView==="score"&&(
+          <div style={{padding:"0 15px"}}>
+            <button onClick={()=>setNView("journal")} style={{background:"transparent",border:"none",color:C.gold,cursor:"pointer",fontSize:13,fontWeight:600,padding:"8px 0",marginBottom:10,display:"flex",alignItems:"center",gap:5}}>← Retour</button>
+            <Box>
+              <Row style={{justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
+                <div>
+                  <Lbl style={{marginBottom:4}}>Score santé du jour</Lbl>
+                  <div style={{fontSize:11,color:C.mid,lineHeight:1.5}}>Basé sur la qualité de vos aliments<br/>et vos comportements nutritionnels</div>
+                </div>
+                <div style={{textAlign:"center"}}>
+                  <div style={{fontFamily:"'Syne',sans-serif",fontSize:48,fontWeight:800,color:scoreColor,lineHeight:1,letterSpacing:-2}}>{scoreLettre}</div>
+                  <div style={{fontSize:10,color:C.mid}}>{score}/100</div>
+                </div>
+              </Row>
+              <div style={{height:6,background:"rgba(255,255,255,0.06)",borderRadius:3,overflow:"hidden",marginBottom:16}}>
+                <div style={{height:"100%",width:`${score}%`,background:`linear-gradient(90deg,${C.red},${C.orange},${C.green})`,borderRadius:3,transition:"width .8s"}}/>
+              </div>
+              {scoreDetails.map((d,i)=>(
+                <Row key={i} style={{padding:"10px 0",borderBottom:i<scoreDetails.length-1?`1px solid ${C.s3}`:"none",justifyContent:"space-between"}}>
+                  <Row style={{gap:10}}>
+                    <span style={{fontSize:18}}>{d.icon}</span>
+                    <span style={{fontSize:12}}>{d.l}</span>
+                  </Row>
+                  <div style={{width:22,height:22,borderRadius:"50%",background:d.ok?"rgba(62,199,122,0.15)":"rgba(224,82,82,0.15)",border:`1px solid ${d.ok?"rgba(62,199,122,0.4)":"rgba(224,82,82,0.4)"}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,color:d.ok?C.green:C.red}}>{d.ok?"✓":"✕"}</div>
+                </Row>
+              ))}
+              <div style={{marginTop:14,padding:"10px 12px",background:C.s2,borderRadius:9,fontSize:11,color:C.mid,lineHeight:1.6}}>
+                💡 {score>=85?"Excellente journée nutritionnelle ! Continuez comme ça.":score>=70?"Bonne journée, quelques petits ajustements possibles.":score>=55?"Journée correcte. Pensez à l'hydratation et la diversité.":score>=40?"Des efforts à faire sur la qualité alimentaire.":"Journée difficile nutritionnellement. Revenez aux bases demain."}
+              </div>
+            </Box>
+          </div>
+        )}
+
+        {nView==="scanner"&&(
+          <div style={{padding:"0 15px"}}>
+            <Box>
+              <Lbl>Scanner un produit</Lbl>
+              <div style={{padding:"9px 11px",background:C.goldD,border:`1px solid ${C.goldB}`,borderRadius:8,fontSize:11,color:C.mid,marginBottom:12,lineHeight:1.6}}>Base Open Food Facts · 3 millions de produits</div>
+              <Inp placeholder="Code-barres EAN (ex: 3017620422003)" inputMode="numeric" value={scanCode} onChange={e=>{setScan(e.target.value);if(e.target.value.length>=8)handleScan(e.target.value);}}/>
+              {scanRes&&!scanRes.error&&(
+                <div style={{padding:12,background:"rgba(62,199,122,.08)",border:"1px solid rgba(62,199,122,.2)",borderRadius:10,marginBottom:8}}>
+                  <div style={{fontWeight:700,fontSize:14,color:C.green,marginBottom:8}}>{scanRes.n}</div>
+                  <div style={{display:"flex",gap:4,flexWrap:"wrap",marginBottom:10}}>
+                    {[{l:`${scanRes.c} kcal`,c:C.gold},{l:`P: ${scanRes.p}g`,c:C.red},{l:`G: ${scanRes.g}g`,c:C.orange},{l:`L: ${scanRes.l}g`,c:C.green}].map(s=>(
+                      <div key={s.l} style={{padding:"4px 9px",background:`${s.c}14`,border:`1px solid ${s.c}28`,borderRadius:6,fontSize:11,color:s.c,fontWeight:600}}>{s.l}</div>
+                    ))}
+                  </div>
+                  <div style={{display:"flex",gap:7}}>
+                    {[{id:"matin",l:"Matin"},{id:"midi",l:"Midi"},{id:"soir",l:"Soir"},{id:"snack",l:"Snack"}].map(r=>(
+                      <button key={r.id} onClick={()=>{setRepas(rp=>({...rp,[r.id]:[...rp[r.id],scanRes]}));setScanRes(null);setScan("");setNView("journal");push("✅","Ajouté !",`${scanRes.n} ajouté au ${r.l.toLowerCase()}.`);}} style={{flex:1,padding:"7px 4px",background:C.s2,border:`1px solid ${C.s3}`,borderRadius:7,color:C.text,cursor:"pointer",fontSize:10,fontFamily:"'Syne',sans-serif",fontWeight:600}}>{r.l}</button>
+                    ))}
+                  </div>
+                  <button onClick={()=>{setMyFoods(f=>[...f,{...scanRes,id:Date.now()}]);setScanRes(null);setScan("");}} style={{marginTop:8,width:"100%",padding:"7px",background:"transparent",border:`1px solid ${C.s3}`,borderRadius:7,color:C.mid,cursor:"pointer",fontSize:11,fontFamily:"'Inter',sans-serif"}}>💾 Sauvegarder dans ma bibliothèque</button>
+                </div>
+              )}
+              {scanRes?.error&&<div style={{padding:"9px 11px",background:"rgba(224,82,82,.08)",border:"1px solid rgba(224,82,82,.2)",borderRadius:8,fontSize:11,color:C.red}}>Produit non trouvé. Ajoutez-le manuellement.</div>}
+            </Box>
+          </div>
+        )}
+
+        {nView==="aliments"&&(
+          <div style={{padding:"0 15px"}}>
+            <Box>
+              <Lbl>Ajouter un aliment</Lbl>
+              <Inp placeholder="Nom (ex: Mon pain maison 100g)" value={newFood.nom} onChange={e=>setNewFood({...newFood,nom:e.target.value})}/>
+              <G2><Inp type="number" placeholder="Calories" style={{marginBottom:0}} value={newFood.cal} onChange={e=>setNewFood({...newFood,cal:e.target.value})}/><Inp type="number" placeholder="Protéines (g)" style={{marginBottom:0}} value={newFood.p} onChange={e=>setNewFood({...newFood,p:e.target.value})}/></G2>
+              <G2 style={{marginTop:6}}><Inp type="number" placeholder="Glucides (g)" style={{marginBottom:0}} value={newFood.g} onChange={e=>setNewFood({...newFood,g:e.target.value})}/><Inp type="number" placeholder="Lipides (g)" style={{marginBottom:0}} value={newFood.l} onChange={e=>setNewFood({...newFood,l:e.target.value})}/></G2>
+              <Btn disabled={!newFood.nom||!newFood.cal} onClick={()=>{setMyFoods(f=>[...f,{id:Date.now(),n:newFood.nom,c:parseInt(newFood.cal)||0,p:parseInt(newFood.p)||0,g:parseInt(newFood.g)||0,l:parseInt(newFood.l)||0,cat:"Personnel"}]);setNewFood({nom:"",cal:"",p:"",g:"",l:""});push("✅","Aliment ajouté !","Disponible dans votre bibliothèque.");}} style={{marginTop:8}}>+ Ajouter</Btn>
+            </Box>
+            {myFoods.length>0&&(
+              <Box>
+                <Lbl>Mes aliments ({myFoods.length})</Lbl>
+                {myFoods.map((f,i)=>(
+                  <Row key={i} style={{justifyContent:"space-between",padding:"9px 0",borderBottom:`1px solid ${C.s3}`}}>
+                    <div style={{flex:1}}>
+                      <div style={{fontSize:12,fontWeight:600}}>{f.n}</div>
+                      <Row style={{gap:8,marginTop:2}}>
+                        <span style={{fontSize:9,color:C.gold}}>{f.c}kcal</span>
+                        <span style={{fontSize:9,color:C.red}}>P:{f.p}g</span>
+                        <span style={{fontSize:9,color:C.orange}}>G:{f.g}g</span>
+                        <span style={{fontSize:9,color:C.green}}>L:{f.l}g</span>
+                      </Row>
+                    </div>
+                    <button onClick={()=>setRepas(rp=>({...rp,[repasA]:[...rp[repasA],f]}))} style={{padding:"5px 11px",background:C.goldD,border:`1px solid ${C.goldB}`,borderRadius:7,color:C.gold,cursor:"pointer",fontSize:11,fontFamily:"'Syne',sans-serif",fontWeight:700}}>+</button>
+                  </Row>
+                ))}
+              </Box>
+            )}
+          </div>
+        )}
       </div>
     );
   };
@@ -1569,6 +1853,8 @@ export default function App(){
   const [checkedEx,setCheckedEx]=useState({});
   const [selectedWeekDay,setSelectedWeekDay]=useState(null);
   const [progView,setProgView]=useState("today");
+  const [weightLog,setWeightLog]=useState([]);
+  const [lastWeighIn,setLastWeighIn]=useState(null);
 
   const toggleCheck=(seanceId,exIdx)=>{
     const key=`${seanceId}-${exIdx}`;
