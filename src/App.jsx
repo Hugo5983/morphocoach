@@ -475,20 +475,20 @@ export default function App(){
         })
       });
       if(!res.ok){
-        const err=await res.text();
-        throw new Error(`API ${res.status}: ${err.substring(0,100)}`);
+        const errTxt=await res.text();
+        throw new Error(`API ${res.status}: ${errTxt.substring(0,100)}`);
       }
       const d=await res.json();
       if(d.error) throw new Error(d.error.message||"Erreur API");
       const rawText=d.content.map(i=>i.text||"").join("").trim();
       if(!rawText) throw new Error("Réponse vide de l'API");
       let jsonStr=rawText.replace(/```json\s*/gi,"").replace(/```\s*/g,"").trim();
-      const start=jsonStr.indexOf("{");
-      const end=jsonStr.lastIndexOf("}");
-      if(start===-1||end===-1||end<=start){
-        throw new Error("Pas de JSON détecté. Réponse: "+rawText.substring(0,80));
+      const jStart=jsonStr.indexOf("{");
+      const jEnd=jsonStr.lastIndexOf("}");
+      if(jStart===-1||jEnd===-1||jEnd<=jStart){
+        throw new Error("Pas de JSON détecté: "+rawText.substring(0,80));
       }
-      jsonStr=jsonStr.substring(start,end+1);
+      jsonStr=jsonStr.substring(jStart,jEnd+1);
       let parsed;
       try{
         parsed=JSON.parse(jsonStr);
