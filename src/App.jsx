@@ -31,7 +31,7 @@ select option{background:${C.s2}}
 @media print{.np{display:none!important}}
 `;
 const Box = ({children,style,onClick})=>(
-  <div onClick={onClick} style={{background:'#0e0c08',border:'0.5px solid #1e1a10',borderRadius:14,padding:"16px 15px",marginBottom:9,cursor:onClick?"pointer":"default",...style}}>{children}</div>
+  <div onClick={onClick} style={{background:"#0e0c08",border:"0.5px solid #1e1a10",borderRadius:14,padding:"16px 15px",marginBottom:9,cursor:onClick?"pointer":"default",...style}}>{children}</div>
 );
 const Lbl = ({children,style})=>(
   <div style={{fontSize:9,color:C.gold,letterSpacing:"2px",textTransform:"uppercase",fontWeight:700,marginBottom:10,...style}}>{children}</div>
@@ -1572,7 +1572,7 @@ export default function App(){
               const rTot=repas[r.id].reduce((a,f)=>({cal:a.cal+f.c,p:a.p+f.p,g:a.g+f.g,l:a.l+f.l}),{cal:0,p:0,g:0,l:0});
               const isActive=repasA===r.id;
               return(
-                <div key={r.id} style={{background:'#0e0c08',borderRadius:14,marginBottom:8,border:`0.5px solid ${isActive?'#C8963E':'#1e1a10'}`,overflow:'hidden'}}>
+                <div key={r.id} style={{background:"#0e0c08",borderRadius:14,marginBottom:8,border:`0.5px solid ${isActive?'#C8963E':'#1e1a10'}`,overflow:"hidden"}}>
                   {/* Header repas */}
                   <div onClick={()=>setRepasA(isActive?null:r.id)} style={{padding:"12px 14px",display:"flex",alignItems:"center",gap:10,cursor:"pointer"}}>
                     <div style={{width:34,height:34,borderRadius:9,background:"#120f07",display:"flex",alignItems:"center",justifyContent:"center",fontSize:17,flexShrink:0}}>{r.i}</div>
