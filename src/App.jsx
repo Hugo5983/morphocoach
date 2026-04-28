@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 const C = {
-  bg:"#edf3fb",   s1:"#ffffff",  s2:"#edf3fb",  s3:"#dce8f4",
+  bg:"#e4eef8",   s1:"#ffffff",  s2:"#e4eef8",  s3:"#dce8f4",
   gold:"#3b82f6", goldL:"#60a5fa", goldD:"rgba(59,130,246,0.08)", goldB:"rgba(59,130,246,0.2)",
   text:"#0f1a2e", mid:"#a0b4cc",  dim:"#c4d4e8",
   green:"#22c55e", red:"#f87171", blue:"#3b82f6", orange:"#f97316", purple:"#8b5cf6",
@@ -15,9 +15,9 @@ const INT = {
 };
 const SESS_COLORS = ["#3b82f6","#22c55e","#f97316","#f87171","#8b5cf6","#06b6d4","#ec4899","#eab308"];
 const CSS = `
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@300;400;500;700&family=Inter:wght@300;400;500&display=swap');
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
-body{background:#edf3fb;color:#0f1a2e;font-family:'Inter',sans-serif}
+body{background:#e4eef8;color:#0f1a2e;font-family:'Inter',sans-serif}
 input,textarea,select{outline:none;font-family:'Inter',sans-serif}
 input::placeholder,textarea::placeholder{color:${C.dim}}
 select option{background:${C.s2}}
@@ -37,13 +37,13 @@ const Lbl = ({children,style})=>(
   <div style={{fontSize:9,color:"#a0b4cc",letterSpacing:"2px",textTransform:"uppercase",fontWeight:600,marginBottom:10,...style}}>{children}</div>
 );
 const Inp = ({style,...p})=>(
-  <input style={{width:"100%",padding:"11px 13px",background:"#edf3fb",border:"0.5px solid #dce8f4",borderRadius:9,color:"#0f1a2e",fontSize:13,marginBottom:8,...style}} {...p}/>
+  <input style={{width:"100%",padding:"11px 13px",background:"#e4eef8",border:"0.5px solid #dce8f4",borderRadius:9,color:"#0f1a2e",fontSize:13,marginBottom:8,...style}} {...p}/>
 );
 const Btn = ({children,onClick,disabled,v="fill",sm})=>{
   const vs={
     fill:{bg:`linear-gradient(135deg,#60a5fa,#3b82f6)`,color:"#ffffff",border:"none"},
-    out: {bg:"transparent",color:C.gold,border:`0.5px solid ${C.goldB}`},
-    ghost:{bg:"rgba(255,255,255,0.04)",color:C.mid,border:"0.5px solid #1e1a10"},
+    out: {bg:"transparent",color:"#3b82f6",border:"0.5px solid rgba(59,130,246,0.3)"},
+    ghost:{bg:"rgba(255,255,255,0.04)",color:C.mid,border:"0.5px solid #dce8f4"},
   };
   const s=vs[v]||vs.fill;
   return(
@@ -57,7 +57,7 @@ const Btn = ({children,onClick,disabled,v="fill",sm})=>{
   );
 };
 const Bar = ({pct,color=C.gold,h=4})=>(
-  <div style={{height:h,background:"#edf3fb",borderRadius:h/2,overflow:"hidden",marginTop:5}}>
+  <div style={{height:h,background:"#e4eef8",borderRadius:h/2,overflow:"hidden",marginTop:5}}>
     <div style={{height:"100%",width:`${Math.min(100,pct||0)}%`,background:pct>100?C.red:color,borderRadius:h/2,transition:"width .5s"}}/>
   </div>
 );
@@ -80,7 +80,7 @@ function Notif({n,onClose}){
       <div style={{background:"#ffffff",border:"0.5px solid #dce8f4",borderRadius:12,padding:"11px 14px",maxWidth:460,width:"100%",display:"flex",alignItems:"center",gap:10,pointerEvents:"all",boxShadow:"0 8px 32px rgba(0,0,0,0.6)"}}>
         <span style={{fontSize:20,flexShrink:0}}>{n.icon}</span>
         <div style={{flex:1}}>
-          <div style={{fontSize:12,fontWeight:700}}>{n.title}</div>
+          <div style={{fontSize:12,fontWeight:500}}>{n.title}</div>
           <div style={{fontSize:11,color:C.mid}}>{n.body}</div>
         </div>
         <button onClick={onClose} style={{background:"transparent",border:"none",color:C.mid,cursor:"pointer",fontSize:16}}>×</button>
@@ -110,7 +110,7 @@ function Chrono({onClose}){
             style={{transition:"stroke-dashoffset .8s ease"}}/>
         </svg>
         <div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center"}}>
-          <div style={{fontFamily:"'Syne',sans-serif",fontSize:30,color:done?C.green:C.text,letterSpacing:-0.5,fontWeight:800}}>{preset?fmt(left||0):fmt(t)}</div>
+          <div style={{fontFamily:"'Syne',sans-serif",fontSize:30,color:done?C.green:C.text,letterSpacing:-0.5,fontWeight:300}}>{preset?fmt(left||0):fmt(t)}</div>
           {done&&<div style={{fontSize:9,color:C.green,fontWeight:700,letterSpacing:"2px"}}>GO!</div>}
         </div>
       </div>
@@ -121,7 +121,7 @@ function Chrono({onClose}){
       </div>
       <div style={{display:"flex",gap:8,marginBottom:16}}>
         <button onClick={()=>setRun(r=>!r)} style={{padding:"10px 18px",background:run?"rgba(224,72,72,.1)":"rgba(56,199,117,.1)",border:`1px solid ${run?"rgba(224,72,72,.3)":"rgba(56,199,117,.3)"}`,borderRadius:8,color:run?C.red:C.green,cursor:"pointer",fontSize:12,fontFamily:"'Inter',sans-serif",fontWeight:600}}>{run?"Pause":"Go"}</button>
-        <button onClick={()=>{setT(0);setLeft(preset);setRun(true);}} style={{padding:"10px 14px",background:C.s2,border:"0.5px solid #1e1a10",borderRadius:8,color:C.mid,cursor:"pointer",fontSize:14}}>↺</button>
+        <button onClick={()=>{setT(0);setLeft(preset);setRun(true);}} style={{padding:"10px 14px",background:C.s2,border:"0.5px solid #dce8f4",borderRadius:8,color:C.mid,cursor:"pointer",fontSize:14}}>↺</button>
       </div>
       <button onClick={onClose} style={{padding:"9px 20px",background:"transparent",border:`0.5px solid ${C.goldB}`,borderRadius:8,color:C.gold,cursor:"pointer",fontSize:11,fontWeight:600,letterSpacing:"1px"}}>FERMER</button>
     </div>
@@ -133,12 +133,12 @@ function DayModal({date,session,onSave,onDelete,onClose}){
   const [color,setColor]=useState(session?.color||SESS_COLORS[0]);
   return(
     <div style={{position:"fixed",inset:0,background:"rgba(8,9,14,0.92)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:300,padding:18}}>
-      <div style={{background:C.s1,border:"0.5px solid #1e1a10",borderRadius:14,padding:"22px 18px",width:"100%",maxWidth:360}}>
+      <div style={{background:C.s1,border:"0.5px solid #dce8f4",borderRadius:14,padding:"22px 18px",width:"100%",maxWidth:360}}>
         <Lbl>Séance du {date}</Lbl>
         {session&&(
           <Row style={{justifyContent:"space-between",marginBottom:12,padding:"8px 10px",background:C.s2,borderRadius:8}}>
-            <span style={{fontSize:12,color:session.color,fontWeight:700}}>{session.nom}</span>
-            <button onClick={()=>{onDelete();onClose();}} style={{background:"transparent",border:"none",color:C.red,cursor:"pointer",fontSize:12,fontWeight:700}}>Supprimer</button>
+            <span style={{fontSize:12,color:session.color,fontWeight:500}}>{session.nom}</span>
+            <button onClick={()=>{onDelete();onClose();}} style={{background:"transparent",border:"none",color:C.red,cursor:"pointer",fontSize:12,fontWeight:500}}>Supprimer</button>
           </Row>
         )}
         <Inp placeholder="Nom de la séance" value={nom} onChange={e=>setNom(e.target.value)}/>
@@ -177,7 +177,7 @@ function MonthCal({sessions,onUpdate}){
     <div>
       <Row style={{justifyContent:"space-between",marginBottom:12}}>
         <button onClick={()=>canGoPrev&&setDate(new Date(y,m-1,1))} disabled={!canGoPrev} style={{background:"transparent",border:"none",color:canGoPrev?C.mid:C.dim,cursor:canGoPrev?"pointer":"not-allowed",fontSize:18,padding:"2px 8px"}}>‹</button>
-        <div style={{fontFamily:"'Syne',sans-serif",fontSize:18,letterSpacing:-0.3,fontWeight:800}}>{MONTHS[m]} {y}</div>
+        <div style={{fontFamily:"'Syne',sans-serif",fontSize:18,letterSpacing:-0.3,fontWeight:300}}>{MONTHS[m]} {y}</div>
         <button onClick={()=>canGoNext&&setDate(new Date(y,m+1,1))} disabled={!canGoNext} style={{background:"transparent",border:"none",color:canGoNext?C.mid:C.dim,cursor:canGoNext?"pointer":"not-allowed",fontSize:18,padding:"2px 8px"}}>›</button>
       </Row>
       <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",gap:2,marginBottom:4}}>
@@ -227,8 +227,8 @@ function MiniChart({data,color=C.gold}){
   return(
     <div>
       <Row style={{justifyContent:"space-between",marginBottom:6}}>
-        <span style={{fontFamily:"'Syne',sans-serif",fontSize:22,color,letterSpacing:-0.5,fontWeight:800}}>{last}<span style={{fontSize:12,color:C.mid}}> kg</span></span>
-        <span style={{fontSize:12,fontWeight:700,color:diff>=0?C.green:C.red}}>{diff>=0?"+":""}{diff}kg</span>
+        <span style={{fontFamily:"'Syne',sans-serif",fontSize:22,color,letterSpacing:-0.5,fontWeight:300}}>{last}<span style={{fontSize:12,color:C.mid}}> kg</span></span>
+        <span style={{fontSize:12,fontWeight:500,color:diff>=0?C.green:C.red}}>{diff>=0?"+":""}{diff}kg</span>
       </Row>
       <svg viewBox={`0 0 ${W} ${H}`} style={{width:"100%",height:55}}>
         <polyline points={pts} fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -591,7 +591,7 @@ export default function App(){
             <div style={{width:8,height:8,borderRadius:"50%",background:todaySess.color,flexShrink:0}}/>
             <div>
               <div style={{fontSize:9,color:todaySess.color,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase"}}>Séance du jour</div>
-              <div style={{fontSize:14,fontWeight:700}}>{todaySess.nom}</div>
+              <div style={{fontSize:14,fontWeight:500}}>{todaySess.nom}</div>
             </div>
             <div style={{marginLeft:"auto",fontSize:10,color:todaySess.color,fontWeight:600}}>{INT[todaySess.intensite]?.l}</div>
           </div>
@@ -601,9 +601,9 @@ export default function App(){
             <Row style={{justifyContent:"space-between",marginBottom:8}}>
               <div>
                 <div style={{fontSize:9,color:C.gold,letterSpacing:"1.5px",fontWeight:700,textTransform:"uppercase",marginBottom:3}}>Cycle · Sem {semC+1}/6</div>
-                <div style={{fontFamily:"'Syne',sans-serif",fontSize:16,letterSpacing:-0.5,fontWeight:800}}>{prog?.titre}</div>
+                <div style={{fontFamily:"'Syne',sans-serif",fontSize:16,letterSpacing:-0.5,fontWeight:300}}>{prog?.titre}</div>
               </div>
-              <div style={{fontFamily:"'Syne',sans-serif",fontSize:26,color:jR<=7?C.orange:C.gold,letterSpacing:-0.5,fontWeight:800}}>{jR}J</div>
+              <div style={{fontFamily:"'Syne',sans-serif",fontSize:26,color:jR<=7?C.orange:C.gold,letterSpacing:-0.5,fontWeight:300}}>{jR}J</div>
             </Row>
             <Bar pct={cPct} h={4}/>
             <div style={{display:"flex",gap:3,marginTop:6}}>
@@ -614,20 +614,20 @@ export default function App(){
         <G2>
           <Box style={{marginBottom:0}}>
             <div style={{fontSize:9,color:C.mid,letterSpacing:"1px",textTransform:"uppercase",marginBottom:6}}>Calories</div>
-            <div style={{fontFamily:"'Syne',sans-serif",fontSize:26,color:tot.cal>calObj?C.red:C.gold,letterSpacing:-0.5,fontWeight:800}}>{tot.cal}</div>
+            <div style={{fontFamily:"'Syne',sans-serif",fontSize:26,color:tot.cal>calObj?C.red:C.gold,letterSpacing:-0.5,fontWeight:300}}>{tot.cal}</div>
             <div style={{fontSize:10,color:C.mid}}>/{calObj} kcal</div>
             <Bar pct={tot.cal/calObj*100}/>
           </Box>
           <Box style={{marginBottom:0}}>
             <div style={{fontSize:9,color:C.mid,letterSpacing:"1px",textTransform:"uppercase",marginBottom:6}}>Eau</div>
-            <div style={{fontFamily:"'Syne',sans-serif",fontSize:26,color:C.blue,letterSpacing:-0.5,fontWeight:800}}>{eau*250}<span style={{fontSize:12,color:C.mid}}>ml</span></div>
+            <div style={{fontFamily:"'Syne',sans-serif",fontSize:26,color:C.blue,letterSpacing:-0.5,fontWeight:300}}>{eau*250}<span style={{fontSize:12,color:C.mid}}>ml</span></div>
             <Bar pct={eau/8*100} color={C.blue}/>
           </Box>
         </G2>
         <Box>
           <Lbl>Hydratation</Lbl>
           <div style={{display:"flex",gap:7}}>
-            {[...Array(8)].map((_,i)=><div key={i} onClick={()=>setEau(i<eau?i:i+1)} style={{fontSize:20,opacity:i<eau?1:0.14,cursor:"pointer"}}>💧</div>)}
+            {[...Array(8)].map((_,i)=><div key={i} onClick={()=>setEau(i<eau?i:i+1)} style={{flex:1,height:22,borderRadius:6,background:i<eau?`rgba(59,130,246,${0.25+i*0.09})`:"#dce8f4",cursor:"pointer",transition:"background .2s"}}/>)}
           </div>
         </Box>
         <Lbl>Suivi du poids</Lbl>
@@ -644,11 +644,11 @@ export default function App(){
                 <div style={{marginBottom:12}}>
                   <Row style={{justifyContent:"space-between",marginBottom:8}}>
                     <div>
-                      <div style={{fontFamily:"'Syne',sans-serif",fontSize:28,fontWeight:800,color:C.gold,letterSpacing:-1,lineHeight:1}}>{lastWeight?.v}<span style={{fontSize:12,color:C.mid,fontFamily:"'Inter',sans-serif"}}> kg</span></div>
+                      <div style={{fontFamily:"'Syne',sans-serif",fontSize:28,fontWeight:300,color:C.gold,letterSpacing:-1,lineHeight:1}}>{lastWeight?.v}<span style={{fontSize:12,color:C.mid,fontFamily:"'Inter',sans-serif"}}> kg</span></div>
                       <div style={{fontSize:10,color:C.mid,marginTop:2}}>Dernière pesée · {lastWeight?.date}</div>
                     </div>
                     {diff&&<div style={{textAlign:"right"}}>
-                      <div style={{fontSize:16,fontWeight:800,color:parseFloat(diff)>0?(profil.objectif==="poids"?C.red:C.green):(profil.objectif==="poids"?C.green:C.red)}}>{parseFloat(diff)>0?"+":""}{diff}kg</div>
+                      <div style={{fontSize:16,fontWeight:300,color:parseFloat(diff)>0?(profil.objectif==="poids"?C.red:C.green):(profil.objectif==="poids"?C.green:C.red)}}>{parseFloat(diff)>0?"+":""}{diff}kg</div>
                       <div style={{fontSize:9,color:C.mid}}>depuis le début</div>
                     </div>}
                   </Row>
@@ -673,7 +673,7 @@ export default function App(){
               {weightLog.length===1&&(
                 <Row style={{justifyContent:"space-between",marginBottom:10}}>
                   <div>
-                    <div style={{fontFamily:"'Syne',sans-serif",fontSize:28,fontWeight:800,color:C.gold,letterSpacing:-1}}>{lastWeight?.v}<span style={{fontSize:12,color:C.mid,fontFamily:"'Inter',sans-serif"}}> kg</span></div>
+                    <div style={{fontFamily:"'Syne',sans-serif",fontSize:28,fontWeight:300,color:C.gold,letterSpacing:-1}}>{lastWeight?.v}<span style={{fontSize:12,color:C.mid,fontFamily:"'Inter',sans-serif"}}> kg</span></div>
                     <div style={{fontSize:10,color:C.mid}}>Pesée du {lastWeight?.date}</div>
                   </div>
                 </Row>
@@ -689,8 +689,8 @@ export default function App(){
                       setLastWeighIn(new Date().toISOString());
                       setNewWeight("");setShowWeightInput(false);
                       push("⚖️","Poids enregistré !",`${newWeight}kg enregistré. Prochain pesée dans 2 semaines.`);
-                    }} style={{padding:"11px 14px",background:C.goldD,border:`0.5px solid ${C.goldB}`,borderRadius:9,color:C.gold,cursor:"pointer",fontSize:12,fontWeight:700,fontFamily:"'Syne',sans-serif",whiteSpace:"nowrap"}}>✓ OK</button>
-                    <button onClick={()=>setShowWeightInput(false)} style={{padding:"11px 10px",background:C.s2,border:"0.5px solid #1e1a10",borderRadius:9,color:C.mid,cursor:"pointer",fontSize:14}}>×</button>
+                    }} style={{padding:"11px 14px",background:C.goldD,border:`0.5px solid ${C.goldB}`,borderRadius:9,color:C.gold,cursor:"pointer",fontSize:12,fontWeight:500,fontFamily:"'Syne',sans-serif",whiteSpace:"nowrap"}}>✓ OK</button>
+                    <button onClick={()=>setShowWeightInput(false)} style={{padding:"11px 10px",background:C.s2,border:"0.5px solid #dce8f4",borderRadius:9,color:C.mid,cursor:"pointer",fontSize:14}}>×</button>
                   </Row>
                 ):(
                   <Btn onClick={()=>setShowWeightInput(true)} v="out">⚖️ Enregistrer mon poids</Btn>
@@ -713,7 +713,7 @@ export default function App(){
           ].map((a,i)=>(
             <Box key={i} onClick={a.fn} style={{marginBottom:0,cursor:"pointer",background:a.prem?"rgba(200,150,62,0.06)":C.s1,borderColor:a.prem?C.goldB:C.s3}}>
               <div style={{fontSize:22,marginBottom:7}}>{a.icon}</div>
-              <div style={{fontSize:12,fontWeight:700,color:a.prem?C.gold:C.text}}>{a.l}</div>
+              <div style={{fontSize:12,fontWeight:500,color:a.prem?C.gold:C.text}}>{a.l}</div>
               <div style={{fontSize:10,color:C.mid,marginTop:2}}>{a.sub}</div>
             </Box>
           ))}
@@ -722,10 +722,10 @@ export default function App(){
           <Box style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
             <div>
               <div style={{fontSize:9,color:C.mid,letterSpacing:"1px",textTransform:"uppercase",marginBottom:3}}>IMC</div>
-              <div style={{fontFamily:"'Syne',sans-serif",fontSize:30,color:C.gold,letterSpacing:-0.5,fontWeight:800}}>{imc}</div>
+              <div style={{fontFamily:"'Syne',sans-serif",fontSize:30,color:C.gold,letterSpacing:-0.5,fontWeight:300}}>{imc}</div>
             </div>
             <div style={{textAlign:"right"}}>
-              <div style={{fontSize:12,fontWeight:700,color:imc<18.5?C.blue:imc<25?C.green:imc<30?C.orange:C.red}}>{imc<18.5?"Maigreur":imc<25?"Normal ✓":imc<30?"Surpoids":"Obésité"}</div>
+              <div style={{fontSize:12,fontWeight:500,color:imc<18.5?C.blue:imc<25?C.green:imc<30?C.orange:C.red}}>{imc<18.5?"Maigreur":imc<25?"Normal ✓":imc<30?"Surpoids":"Obésité"}</div>
               <div style={{fontSize:10,color:C.mid,marginTop:2}}>{profil.poids}kg · {profil.taille}cm</div>
             </div>
           </Box>
@@ -736,7 +736,7 @@ export default function App(){
   const Stats=()=>{
     if(!prog)return(
       <Box style={{textAlign:"center",padding:"40px 20px",margin:"0 15px"}}>
-        <div style={{fontFamily:"'Syne',sans-serif",fontSize:32,opacity:.1,fontWeight:800,marginBottom:12}}>STATS</div>
+        <div style={{fontFamily:"'Syne',sans-serif",fontSize:32,opacity:.1,fontWeight:300,marginBottom:12}}>STATS</div>
         <div style={{fontSize:13,color:C.mid,lineHeight:1.6}}>Créez un programme et enregistrez vos séances pour voir votre progression.</div>
       </Box>
     );
@@ -756,7 +756,7 @@ export default function App(){
             {l:"Semaine",v:`${semC+1}/6`,c:C.blue}
           ].map(s=>(
             <Box key={s.l} style={{marginBottom:0,textAlign:"center",padding:"14px 6px"}}>
-              <div style={{fontFamily:"'Syne',sans-serif",fontSize:22,fontWeight:800,color:s.c,letterSpacing:-0.5,lineHeight:1}}>
+              <div style={{fontFamily:"'Syne',sans-serif",fontSize:22,fontWeight:300,color:s.c,letterSpacing:-0.5,lineHeight:1}}>
                 {s.v}{s.u&&<span style={{fontSize:11,color:C.mid,marginLeft:2,fontWeight:500}}>{s.u}</span>}
               </div>
               <div style={{fontSize:10,color:C.mid,marginTop:5,letterSpacing:"0.3px"}}>{s.l}</div>
@@ -794,7 +794,7 @@ export default function App(){
               });
               return(
                 <Box key={i}>
-                  <div style={{fontSize:13,fontWeight:700,marginBottom:12,fontFamily:"'Syne',sans-serif"}}>{nom}</div>
+                  <div style={{fontSize:13,fontWeight:500,marginBottom:12,fontFamily:"'Syne',sans-serif"}}>{nom}</div>
                   <MiniChart data={data} color={colors[i%6]}/>
                   <div style={{marginTop:10,paddingTop:10,borderTop:`1px solid ${C.s3}`,display:"flex",gap:12,fontSize:10,color:C.mid}}>
                     <span>{data.length} séances</span>
@@ -814,7 +814,7 @@ export default function App(){
                     <div style={{fontSize:10,color:C.mid,marginTop:2}}>{r.c} séance{r.c>1?"s":""}</div>
                   </div>
                   <div style={{display:"flex",alignItems:"baseline",gap:3}}>
-                    <span style={{fontFamily:"'Syne',sans-serif",fontSize:20,fontWeight:800,color:i===0?C.gold:C.text,letterSpacing:-0.5}}>{r.max}</span>
+                    <span style={{fontFamily:"'Syne',sans-serif",fontSize:20,fontWeight:300,color:i===0?C.gold:C.text,letterSpacing:-0.5}}>{r.max}</span>
                     <span style={{fontSize:10,color:C.mid}}>kg</span>
                     {i===0&&<span style={{marginLeft:4,fontSize:12}}>🏆</span>}
                   </div>
@@ -854,7 +854,7 @@ export default function App(){
                       <div style={{fontSize:9,color:C.gold,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",marginBottom:3}}>
                         Cycle {c.numero||i+1} · Archivé
                       </div>
-                      <div style={{fontSize:13,fontWeight:700}}>{c.titre}</div>
+                      <div style={{fontSize:13,fontWeight:500}}>{c.titre}</div>
                     </div>
                     <div style={{textAlign:"right"}}>
                       <div style={{fontSize:11,color:C.green,fontWeight:600}}>{sf} séances</div>
@@ -893,7 +893,7 @@ export default function App(){
       <Lbl>Séance bonus</Lbl>
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,marginBottom:12}}>
         {[{id:"etirements",i:"🧘",l:"Étirements",color:C.purple},{id:"cardio",i:"🏃",l:"Cardio",color:C.blue},{id:"mobilite",i:"💆",l:"Mobilité",color:C.green}].map(b=>(
-          <div key={b.id} onClick={()=>setBonusModal(b)} style={{padding:"12px 8px",textAlign:"center",background:C.s2,border:"0.5px solid #1e1a10",borderRadius:10,cursor:"pointer"}}>
+          <div key={b.id} onClick={()=>setBonusModal(b)} style={{padding:"12px 8px",textAlign:"center",background:C.s2,border:"0.5px solid #dce8f4",borderRadius:10,cursor:"pointer"}}>
             <div style={{fontSize:22,marginBottom:4}}>{b.i}</div>
             <div style={{fontSize:11,fontWeight:700,color:b.color}}>{b.l}</div>
           </div>
@@ -901,7 +901,7 @@ export default function App(){
       </div>
       {bonusModal&&(
         <div style={{position:"fixed",inset:0,background:"rgba(237,243,251,0.97)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:300,padding:18}}>
-          <div style={{background:C.s1,border:"0.5px solid #1e1a10",borderRadius:14,padding:"22px 18px",width:"100%",maxWidth:360}}>
+          <div style={{background:C.s1,border:"0.5px solid #dce8f4",borderRadius:14,padding:"22px 18px",width:"100%",maxWidth:360}}>
             <Lbl>{bonusModal.i} {bonusModal.l}</Lbl>
             <div style={{fontSize:12,color:C.mid,marginBottom:14}}>Durée de la séance ?</div>
             <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:16}}>
@@ -912,7 +912,7 @@ export default function App(){
                   setCalSess(s=>({...s,[key]:{nom:`${bonusModal.l} ${dur}`,intensite:"mobilite",color:bonusModal.color}}));
                   setBonusModal(null);
                   push("✅",`${bonusModal.l} ajouté !`,`${dur} enregistré dans le calendrier.`);
-                }} style={{padding:"10px 16px",background:C.s2,border:"0.5px solid #1e1a10",borderRadius:9,cursor:"pointer",fontSize:13,fontWeight:600,color:C.text}}>{dur}</div>
+                }} style={{padding:"10px 16px",background:C.s2,border:"0.5px solid #dce8f4",borderRadius:9,cursor:"pointer",fontSize:13,fontWeight:600,color:C.text}}>{dur}</div>
               ))}
             </div>
             <Btn v="ghost" onClick={()=>setBonusModal(null)}>Annuler</Btn>
@@ -924,16 +924,16 @@ export default function App(){
           <Row style={{justifyContent:"space-between",alignItems:"flex-start",marginBottom:10}}>
             <div>
               <Lbl style={{marginBottom:4}}>Cycle {prog.numero||1} · 6 semaines</Lbl>
-              <div style={{fontFamily:"'Syne',sans-serif",fontSize:14,fontWeight:700}}>{prog.titre}</div>
+              <div style={{fontFamily:"'Syne',sans-serif",fontSize:14,fontWeight:500}}>{prog.titre}</div>
               {prog.dateDebut&&<div style={{fontSize:10,color:C.mid,marginTop:2}}>Démarré le {prog.dateDebut}</div>}
             </div>
             {jR!==null&&jR<=7&&(
-              <div style={{padding:"5px 10px",background:"rgba(224,136,58,0.15)",border:"1px solid rgba(224,136,58,0.3)",borderRadius:8,fontSize:10,color:C.orange,fontWeight:700,flexShrink:0}}>J-{jR}</div>
+              <div style={{padding:"5px 10px",background:"rgba(224,136,58,0.15)",border:"1px solid rgba(224,136,58,0.3)",borderRadius:8,fontSize:10,color:"#f97316",fontWeight:500,flexShrink:0}}>J-{jR}</div>
             )}
           </Row>
           {jR===0&&(
             <div style={{padding:"12px 14px",background:"rgba(62,199,122,0.1)",border:"1px solid rgba(62,199,122,0.3)",borderRadius:10,marginBottom:12}}>
-              <div style={{fontSize:13,fontWeight:700,color:C.green,marginBottom:4}}>🏆 Cycle terminé !</div>
+              <div style={{fontSize:13,fontWeight:500,color:C.green,marginBottom:4}}>🏆 Cycle terminé !</div>
               <div style={{fontSize:11,color:C.mid,marginBottom:10,lineHeight:1.5}}>Démarrez un nouveau cycle pour continuer votre progression.</div>
               <Btn sm onClick={()=>{if(!premium)setPaywall(true);else{setProgView("analyse");setTab("program");}}} >Nouveau cycle personnalisé →</Btn>
             </div>
@@ -954,11 +954,11 @@ export default function App(){
             const total=j.exercices?.length||0;
             const done=j.exercices?.filter((_,idx)=>checkedEx[`${j.id}-${idx}`]).length||0;
             return(
-              <Row key={i} onClick={()=>{setTab("program");setProgView("semaine");}} style={{padding:"10px 12px",background:C.s2,borderRadius:9,marginBottom:5,cursor:"pointer",border:"0.5px solid #1e1a10"}}>
+              <Row key={i} onClick={()=>{setTab("program");setProgView("semaine");}} style={{padding:"10px 12px",background:C.s2,borderRadius:9,marginBottom:5,cursor:"pointer",border:"0.5px solid #dce8f4"}}>
                 <div style={{width:3,height:36,borderRadius:1.5,background:int.c,marginRight:10,flexShrink:0}}/>
                 <div style={{flex:1}}>
                   <div style={{fontSize:9,color:int.c,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",marginBottom:2}}>{int.l}</div>
-                  <div style={{fontSize:13,fontWeight:700}}>{j.nom}</div>
+                  <div style={{fontSize:13,fontWeight:500}}>{j.nom}</div>
                   <div style={{fontSize:10,color:C.mid}}>{j.focus} · {total} exercices</div>
                 </div>
                 <Row style={{gap:8,alignItems:"center"}}>
@@ -991,10 +991,10 @@ export default function App(){
           <button onClick={()=>setSeance(null)} style={{background:"transparent",border:"none",color:C.gold,cursor:"pointer",fontSize:13,fontWeight:600,padding:"8px 0",marginBottom:10,display:"flex",alignItems:"center",gap:5}}>← Retour</button>
           <div style={{padding:"13px 14px",background:`${int.c}14`,border:`1px solid ${int.c}30`,borderRadius:11,marginBottom:10}}>
             <div style={{fontSize:9,color:int.c,fontWeight:700,letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:3}}>{int.l}</div>
-            <div style={{fontFamily:"'Syne',sans-serif",fontSize:18,letterSpacing:-0.5,fontWeight:800}}>{s.nom}</div>
+            <div style={{fontFamily:"'Syne',sans-serif",fontSize:18,letterSpacing:-0.5,fontWeight:300}}>{s.nom}</div>
             <div style={{fontSize:11,color:C.mid}}>{s.focus} · {s.duree}</div>
           </div>
-          <button onClick={()=>setChrono(true)} style={{display:"flex",alignItems:"center",gap:8,width:"100%",padding:"10px 13px",background:C.s2,border:"0.5px solid #1e1a10",borderRadius:9,color:C.mid,cursor:"pointer",fontSize:12,fontFamily:"'Inter',sans-serif",fontWeight:500,marginBottom:10}}>⏱ Chronomètre de repos</button>
+          <button onClick={()=>setChrono(true)} style={{display:"flex",alignItems:"center",gap:8,width:"100%",padding:"10px 13px",background:C.s2,border:"0.5px solid #dce8f4",borderRadius:9,color:C.mid,cursor:"pointer",fontSize:12,fontFamily:"'Inter',sans-serif",fontWeight:500,marginBottom:10}}>⏱ Chronomètre de repos</button>
           {s.exercices.map((ex,j)=>{
             const last=ex.historique.length>0?ex.historique[ex.historique.length-1]:null;
             const gain=ex.historique.length>1?(parseFloat(ex.historique[ex.historique.length-1].poids)-parseFloat(ex.historique[0].poids)):0;
@@ -1007,7 +1007,7 @@ export default function App(){
                 {/* Titre + actions */}
                 <Row style={{justifyContent:"space-between",marginBottom:8}}>
                   <div style={{flex:1}}>
-                    <div style={{fontSize:13,fontWeight:700}}>{ex.nom}</div>
+                    <div style={{fontSize:13,fontWeight:500}}>{ex.nom}</div>
                     <div style={{fontSize:9,padding:"2px 7px",background:`${cc}18`,border:`1px solid ${cc}30`,borderRadius:5,color:cc,textTransform:"uppercase",letterSpacing:"0.5px",display:"inline-block",marginTop:3}}>{ex.cat}</div>
                   </div>
                   <div style={{display:"flex",gap:5}}>
@@ -1020,8 +1020,8 @@ export default function App(){
                 {!editParams?(
                   <div style={{display:"flex",gap:4,flexWrap:"wrap",marginBottom:8}}>
                     {[{l:"Sets",v:ex.series},{l:"Reps",v:ex.reps},{l:"Repos",v:ex.repos},{l:"Charge",v:ex.charge}].filter(s=>s.v).map(s=>(
-                      <div key={s.l} style={{padding:"4px 9px",background:C.s2,border:"0.5px solid #1e1a10",borderRadius:6,textAlign:"center"}}>
-                        <div style={{fontFamily:"'Syne',sans-serif",fontSize:14,color:C.gold,fontWeight:700}}>{s.v}</div>
+                      <div key={s.l} style={{padding:"4px 9px",background:C.s2,border:"0.5px solid #dce8f4",borderRadius:6,textAlign:"center"}}>
+                        <div style={{fontFamily:"'Syne',sans-serif",fontSize:14,color:C.gold,fontWeight:500}}>{s.v}</div>
                         <div style={{fontSize:9,color:C.mid}}>{s.l}</div>
                       </div>
                     ))}
@@ -1042,7 +1042,7 @@ export default function App(){
                             const u=[...prog.jours];
                             u[seance].exercices[j][p.k]=e.target.value;
                             setProg({...prog,jours:u});
-                          }} style={{width:"100%",padding:"7px 9px",background:C.s3,border:"0.5px solid #1e1a10",borderRadius:6,color:C.text,fontSize:12,fontFamily:"'Inter',sans-serif"}}/>
+                          }} style={{width:"100%",padding:"7px 9px",background:C.s3,border:"0.5px solid #dce8f4",borderRadius:6,color:C.text,fontSize:12,fontFamily:"'Inter',sans-serif"}}/>
                         </div>
                       ))}
                     </div>
@@ -1082,7 +1082,7 @@ export default function App(){
                     {/* Variantes */}
                     {exInfo?.v?.length>0&&(
                       <div style={{marginBottom:8}}>
-                        <div style={{fontSize:9,color:C.orange,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",marginBottom:5}}>Variantes</div>
+                        <div style={{fontSize:9,color:"#f97316",fontWeight:500,letterSpacing:"1px",textTransform:"uppercase",marginBottom:5}}>Variantes</div>
                         {exInfo.v.map((v,vi)=>(
                           <div key={vi} style={{padding:"5px 8px",background:C.s2,borderRadius:6,marginBottom:4,fontSize:11,color:C.text}}>{v}</div>
                         ))}
@@ -1133,7 +1133,7 @@ export default function App(){
             );
           })}
           <Lbl style={{marginTop:8}}>Note de séance</Lbl>
-          <textarea style={{width:"100%",padding:"11px 13px",background:C.s2,border:"0.5px solid #1e1a10",borderRadius:9,color:C.text,fontSize:13,minHeight:65,resize:"vertical",marginBottom:8,fontFamily:"'Inter',sans-serif"}} placeholder="Comment s'est passée la séance ?" value={s.note||""} onChange={e=>{const u=[...prog.jours];u[seance].note=e.target.value;setProg({...prog,jours:u});}}/>
+          <textarea style={{width:"100%",padding:"11px 13px",background:C.s2,border:"0.5px solid #dce8f4",borderRadius:9,color:C.text,fontSize:13,minHeight:65,resize:"vertical",marginBottom:8,fontFamily:"'Inter',sans-serif"}} placeholder="Comment s'est passée la séance ?" value={s.note||""} onChange={e=>{const u=[...prog.jours];u[seance].note=e.target.value;setProg({...prog,jours:u});}}/>
           <Btn onClick={()=>{const u=[...prog.jours];u[seance].complete=true;u[seance].date=new Date().toLocaleDateString("fr-FR");setProg({...prog,jours:u});push("🏆","Séance terminée !","Bravo ! Progression enregistrée.");setSeance(null);}}>✓ Séance terminée</Btn>
         </div>
       );
@@ -1151,7 +1151,7 @@ export default function App(){
                     <div style={{fontSize:9,color:int.c,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase"}}>{int.l}</div>
                     {j.complete&&<div style={{fontSize:9,color:C.green,marginLeft:"auto"}}>✓ {j.date}</div>}
                   </Row>
-                  <div style={{fontWeight:700,fontSize:14}}>{j.nom}</div>
+                  <div style={{fontWeight:500,fontSize:14}}>{j.nom}</div>
                   <div style={{fontSize:11,color:C.mid,marginTop:2}}>{j.focus} · {j.exercices.length} ex.</div>
                 </div>
                 <div style={{color:C.dim,fontSize:18}}>›</div>
@@ -1166,7 +1166,7 @@ export default function App(){
             </Box>
           );
         })}
-        <button onClick={()=>setChrono(true)} style={{display:"flex",alignItems:"center",justifyContent:"center",gap:8,width:"100%",padding:13,background:"transparent",border:"0.5px solid #1e1a10",borderRadius:11,color:C.mid,cursor:"pointer",fontSize:12,fontFamily:"'Inter',sans-serif",marginBottom:8}}>⏱ Chronomètre de repos</button>
+        <button onClick={()=>setChrono(true)} style={{display:"flex",alignItems:"center",justifyContent:"center",gap:8,width:"100%",padding:13,background:"transparent",border:"0.5px solid #dce8f4",borderRadius:11,color:C.mid,cursor:"pointer",fontSize:12,fontFamily:"'Inter',sans-serif",marginBottom:8}}>⏱ Chronomètre de repos</button>
       </div>
     );
   };
@@ -1218,7 +1218,7 @@ export default function App(){
             ))}
           </div>
           {groupe&&EX[groupe].map((ex,i)=>(
-            <div key={i} onClick={()=>setNewP(p=>({...p,seances:{...p.seances,[jc]:{...sean,exercices:[...sean.exercices,{nom:ex.n,cat:ex.cat,series:ex.s,reps:ex.r,repos:ex.rest,charge:ex.ch,prog:ex.prog||"",morpho_tip:ex.morpho,historique:[],note:""}]}}}))} style={{padding:"10px 11px",background:C.s2,border:"0.5px solid #1e1a10",borderRadius:9,marginBottom:5,cursor:"pointer"}}>
+            <div key={i} onClick={()=>setNewP(p=>({...p,seances:{...p.seances,[jc]:{...sean,exercices:[...sean.exercices,{nom:ex.n,cat:ex.cat,series:ex.s,reps:ex.r,repos:ex.rest,charge:ex.ch,prog:ex.prog||"",morpho_tip:ex.morpho,historique:[],note:""}]}}}))} style={{padding:"10px 11px",background:C.s2,border:"0.5px solid #dce8f4",borderRadius:9,marginBottom:5,cursor:"pointer"}}>
               <div style={{fontWeight:600,fontSize:12,marginBottom:2}}>{ex.n}</div>
               <div style={{fontSize:10,color:C.mid,marginBottom:3}}>{ex.s}×{ex.r} · {ex.rest}</div>
               <div style={{fontSize:10,color:C.dim,fontStyle:"italic",lineHeight:1.4}}>{ex.morpho.substring(0,80)}…</div>
@@ -1257,12 +1257,12 @@ export default function App(){
         <Box style={{textAlign:"center",padding:"46px 20px"}}>
           {loadMsg.startsWith("Erreur")?<>
             <div style={{fontSize:36,marginBottom:14}}>❌</div>
-            <div style={{fontFamily:"'Syne',sans-serif",fontSize:15,color:C.red,fontWeight:700,marginBottom:10}}>Génération échouée</div>
+            <div style={{fontFamily:"'Syne',sans-serif",fontSize:15,color:C.red,fontWeight:500,marginBottom:10}}>Génération échouée</div>
             <div style={{fontSize:12,color:C.mid,marginBottom:16,lineHeight:1.6}}>{loadMsg}</div>
             <Btn onClick={()=>{setLoadIA(false);setLoadMsg("");}}>← Réessayer</Btn>
           </>:<>
             <div style={{width:48,height:48,border:`3px solid ${C.goldD}`,borderTop:`3px solid ${C.gold}`,borderRadius:"50%",animation:"spin 1s linear infinite",margin:"0 auto 18px"}}/>
-            <div style={{fontFamily:"'Syne',sans-serif",fontSize:16,color:C.gold,fontWeight:700,marginBottom:8}}>{loadMsg}</div>
+            <div style={{fontFamily:"'Syne',sans-serif",fontSize:16,color:C.gold,fontWeight:300,marginBottom:8}}>{loadMsg}</div>
             <div style={{fontSize:11,color:C.mid,lineHeight:1.7}}>
               Analyse morphologique + génération<br/>du programme personnalisé en cours…
             </div>
@@ -1289,7 +1289,7 @@ export default function App(){
             {key:"profil",label:"De profil", icon:"↔️", desc:"Côté droit ou gauche, position droite"},
           ].map(({key,label,icon,desc})=>(
             <div key={key} style={{marginBottom:10}}>
-              <div style={{fontSize:12,fontWeight:700,color:photos[key]?C.green:C.text,marginBottom:5,display:"flex",alignItems:"center",gap:6}}>
+              <div style={{fontSize:12,fontWeight:500,color:photos[key]?C.green:C.text,marginBottom:5,display:"flex",alignItems:"center",gap:6}}>
                 {photos[key]
                   ? <span style={{color:C.green}}>✓</span>
                   : <span style={{opacity:0.4}}>○</span>
@@ -1371,10 +1371,10 @@ export default function App(){
           <div style={{fontSize:11,color:C.mid,marginBottom:8}}>Objectif principal <span style={{color:C.red}}>*</span></div>
           <G2>{[{id:"hypertrophie",i:"💪",l:"Prise de muscle"},{id:"force",i:"🏋️",l:"Force"},{id:"poids",i:"🔥",l:"Perte de poids"},{id:"reathletisation",i:"🩺",l:"Réathlé"},{id:"sante",i:"❤️",l:"Santé"},{id:"performance",i:"🏆",l:"Performance"}].map(o=>(
             <div key={o.id} onClick={()=>setForm({...form,objectif:o.id})} style={{padding:"12px 8px",textAlign:"center",cursor:"pointer",background:form.objectif===o.id?C.goldD:C.s2,border:`1px solid ${form.objectif===o.id?C.gold:C.s3}`,borderRadius:10}}>
-              <div style={{fontSize:20,marginBottom:4}}>{o.i}</div><div style={{fontSize:11,fontWeight:700}}>{o.l}</div>
+              <div style={{fontSize:20,marginBottom:4}}>{o.i}</div><div style={{fontSize:11,fontWeight:400}}>{o.l}</div>
             </div>
           ))}</G2>
-          <textarea style={{width:"100%",padding:"11px 13px",background:C.s2,border:"0.5px solid #1e1a10",borderRadius:9,color:C.text,fontSize:13,minHeight:60,resize:"vertical",marginBottom:10,fontFamily:"'Inter',sans-serif"}} placeholder="Décrivez votre objectif précis (facultatif)" value={form.objectifPrecis} onChange={e=>setForm({...form,objectifPrecis:e.target.value})}/>
+          <textarea style={{width:"100%",padding:"11px 13px",background:C.s2,border:"0.5px solid #dce8f4",borderRadius:9,color:C.text,fontSize:13,minHeight:60,resize:"vertical",marginBottom:10,fontFamily:"'Inter',sans-serif"}} placeholder="Décrivez votre objectif précis (facultatif)" value={form.objectifPrecis} onChange={e=>setForm({...form,objectifPrecis:e.target.value})}/>
           <div style={{fontSize:11,color:C.mid,marginBottom:6}}>Jours d'entraînement <span style={{color:C.red}}>*</span></div>
           <div style={{display:"flex",flexWrap:"wrap",marginBottom:6}}>
             {["Lun","Mar","Mer","Jeu","Ven","Sam","Dim"].map(j=>(
@@ -1402,7 +1402,7 @@ export default function App(){
           <div style={{fontSize:11,color:C.mid,marginBottom:8}}>Matériel disponible <span style={{color:C.red}}>*</span></div>
           <G2>{[{id:"salle_complete",i:"🏋️",l:"Salle complète"},{id:"halteres",i:"💪",l:"Haltères"},{id:"elastiques",i:"🎯",l:"Élastiques"},{id:"barre_traction",i:"⬆️",l:"Barre traction"},{id:"poids_corps",i:"🤸",l:"Poids du corps"},{id:"machines",i:"⚙️",l:"Machines"}].map(m=>(
             <div key={m.id} onClick={()=>setForm(f=>({...f,materiel:f.materiel.includes(m.id)?f.materiel.filter(x=>x!==m.id):[...f.materiel,m.id]}))} style={{padding:"12px 8px",textAlign:"center",cursor:"pointer",background:form.materiel.includes(m.id)?C.goldD:C.s2,border:`1px solid ${form.materiel.includes(m.id)?C.gold:C.s3}`,borderRadius:10}}>
-              <div style={{fontSize:20,marginBottom:4}}>{m.i}</div><div style={{fontSize:11,fontWeight:700}}>{m.l}</div>
+              <div style={{fontSize:20,marginBottom:4}}>{m.i}</div><div style={{fontSize:11,fontWeight:400}}>{m.l}</div>
             </div>
           ))}</G2>
           {form.materiel.length===0&&<div style={{fontSize:11,color:C.red,marginBottom:8}}>* Sélectionne au moins un équipement</div>}
@@ -1494,35 +1494,36 @@ export default function App(){
     return(
       <div style={{background:C.bg,minHeight:"100vh",paddingBottom:20}} className="anim">
         {/* Header */}
-        <div style={{padding:"20px 15px 0"}}>
-          <div style={{fontFamily:"'Syne',sans-serif",fontSize:28,fontWeight:800,letterSpacing:-0.5}}>NUTRITION</div>
-          <div style={{fontSize:11,color:C.mid,marginTop:2}}>{new Date().toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long"})}</div>
+        <div style={{padding:"22px 16px 12px"}}>
+          <div style={{fontSize:9,letterSpacing:"1.5px",color:"#a0b4cc",fontWeight:500,marginBottom:6,textTransform:"uppercase"}}>{new Date().toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long"})}</div>
+          <div style={{fontFamily:"'Syne',sans-serif",fontSize:28,fontWeight:300,color:"#0f1a2e",letterSpacing:-1,lineHeight:1.1,marginBottom:2}}>Bonjour, <span style={{fontWeight:500,color:"#3b82f6"}}>{profil.prenom||"Hugo"}</span></div>
+          <div style={{fontSize:11,color:"#a0b4cc"}}>{obj.l} · Cycle {prog?.numero||1}</div>
         </div>
 
         {/* Nav */}
         <div style={{display:"flex",gap:5,padding:"12px 15px",overflowX:"auto",paddingBottom:4}}>
           {[{id:"journal",l:"Journal"},{id:"scanner",l:"Scanner"},{id:"aliments",l:"Aliments"}].map(s=>(
-            <button key={s.id} onClick={()=>setNView(s.id)} style={{padding:"7px 16px",background:nView===s.id?"rgba(59,130,246,0.08)":"transparent",border:`0.5px solid ${nView===s.id?"#3b82f6":"#dce8f4"}`,borderRadius:20,color:nView===s.id?C.gold:C.mid,cursor:"pointer",fontSize:12,fontWeight:600,whiteSpace:"nowrap",fontFamily:"'Syne',sans-serif",letterSpacing:"0.3px"}}>{s.l}</button>
+            <button key={s.id} onClick={()=>setNView(s.id)} style={{padding:"7px 16px",background:nView===s.id?"rgba(59,130,246,0.08)":"transparent",border:`0.5px solid ${nView===s.id?"#3b82f6":"#dce8f4"}`,borderRadius:20,color:nView===s.id?"#3b82f6":"#a0b4cc",cursor:"pointer",fontSize:12,fontWeight:600,whiteSpace:"nowrap",fontFamily:"'Syne',sans-serif",letterSpacing:"0.3px"}}>{s.l}</button>
           ))}
         </div>
 
         {nView==="journal"&&(
           <div style={{padding:"0 15px"}}>
             {/* Anneau principal calories */}
-            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"18px 16px",background:"#ffffff",borderRadius:18,marginBottom:12,border:"0.5px solid #1e1a10"}}>
-              <Ring pct={calPct} color={tot.cal>calObj?C.red:C.gold} size={120} stroke={10}>
-                <div style={{fontFamily:"'Syne',sans-serif",fontSize:22,fontWeight:800,color:tot.cal>calObj?C.red:C.text,lineHeight:1,letterSpacing:-1}}>{calLeft}</div>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"18px 16px",background:"#ffffff",borderRadius:18,marginBottom:12,border:"0.5px solid #dce8f4"}}>
+              <Ring pct={calPct} color={tot.cal>calObj?"#f87171":"#3b82f6"} size={120} stroke={10}>
+                <div style={{fontFamily:"'Syne',sans-serif",fontSize:22,fontWeight:300,color:tot.cal>calObj?C.red:C.text,lineHeight:1,letterSpacing:-1}}>{calLeft}</div>
                 <div style={{fontSize:9,color:C.mid,marginTop:2}}>kcal restantes</div>
               </Ring>
               <div style={{flex:1,marginLeft:20}}>
                 <div style={{marginBottom:10}}>
                   <Row style={{justifyContent:"space-between",marginBottom:3}}>
                     <span style={{fontSize:11,color:C.mid}}>Consommé</span>
-                    <span style={{fontSize:12,fontWeight:700,color:tot.cal>calObj?C.red:C.text}}>{tot.cal} kcal</span>
+                    <span style={{fontSize:12,fontWeight:500,color:tot.cal>calObj?C.red:C.text}}>{tot.cal} kcal</span>
                   </Row>
                   <Row style={{justifyContent:"space-between",marginBottom:3}}>
                     <span style={{fontSize:11,color:C.mid}}>Objectif</span>
-                    <span style={{fontSize:12,fontWeight:700}}>{calObj} kcal</span>
+                    <span style={{fontSize:12,fontWeight:500}}>{calObj} kcal</span>
                   </Row>
                   <Row style={{justifyContent:"space-between"}}>
                     <span style={{fontSize:11,color:C.mid}}>Objectif</span>
@@ -1531,7 +1532,7 @@ export default function App(){
                 </div>
                 {/* Score */}
                 <div onClick={()=>setNView("score")} style={{display:"flex",alignItems:"center",gap:8,padding:"8px 10px",background:`${scoreColor}15`,border:`1px solid ${scoreColor}30`,borderRadius:9,cursor:"pointer"}}>
-                  <div style={{fontFamily:"'Syne',sans-serif",fontSize:22,fontWeight:800,color:scoreColor,lineHeight:1}}>{scoreLettre}</div>
+                  <div style={{fontFamily:"'Syne',sans-serif",fontSize:22,fontWeight:300,color:scoreColor,lineHeight:1}}>{scoreLettre}</div>
                   <div>
                     <div style={{fontSize:10,fontWeight:700,color:scoreColor}}>Score santé</div>
                     <div style={{fontSize:9,color:C.mid}}>{score}/100 · Voir détail</div>
@@ -1541,7 +1542,7 @@ export default function App(){
             </div>
 
             {/* Mini anneaux macros */}
-            <div style={{display:"flex",justifyContent:"space-around",padding:"14px 16px",background:"#ffffff",borderRadius:16,marginBottom:12,border:"0.5px solid #1e1a10"}}>
+            <div style={{display:"flex",justifyContent:"space-around",padding:"14px 16px",background:"#ffffff",borderRadius:16,marginBottom:12,border:"0.5px solid #dce8f4"}}>
               <MiniRing pct={tot.p/pObj*100} color={C.red} label="Protéines" v={tot.p} max={pObj}/>
               <div style={{width:1,background:C.s3}}/>
               <MiniRing pct={tot.g/gObj*100} color={C.orange} label="Glucides" v={tot.g} max={gObj}/>
@@ -1550,17 +1551,17 @@ export default function App(){
             </div>
 
             {/* Eau */}
-            <div style={{padding:"14px 16px",background:C.s1,borderRadius:14,marginBottom:12,border:"0.5px solid #1e1a10"}}>
+            <div style={{padding:"14px 16px",background:C.s1,borderRadius:14,marginBottom:12,border:"0.5px solid #dce8f4"}}>
               <Row style={{justifyContent:"space-between",marginBottom:10}}>
                 <div>
-                  <div style={{fontSize:13,fontWeight:700}}>Hydratation</div>
+                  <div style={{fontSize:13,fontWeight:500}}>Hydratation</div>
                   <div style={{fontSize:10,color:C.mid}}>{eau*250}ml / 2000ml</div>
                 </div>
-                <div style={{fontFamily:"'Syne',sans-serif",fontSize:22,fontWeight:800,color:eau>=8?C.green:C.blue}}>{eau}/8</div>
+                <div style={{fontFamily:"'Syne',sans-serif",fontSize:22,fontWeight:300,color:eau>=8?C.green:C.blue}}>{eau}/8</div>
               </Row>
               <div style={{display:"flex",gap:5,marginBottom:8}}>
                 {[...Array(8)].map((_,i)=>(
-                  <div key={i} onClick={()=>setEau(i<eau?i:i+1)} style={{flex:1,height:28,borderRadius:6,background:i<eau?"rgba(77,143,224,0.8)":"rgba(77,143,224,0.1)",border:`1px solid ${i<eau?"rgba(77,143,224,0.8)":"rgba(77,143,224,0.2)"}`,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,transition:"all .15s"}}>{i<eau?"💧":""}</div>
+                  <div key={i} onClick={()=>setEau(i<eau?i:i+1)} style={{flex:1,height:26,borderRadius:7,background:i<eau?`rgba(59,130,246,${0.25+i*0.09})`:"#dce8f4",cursor:"pointer",transition:"background .2s"}}/>
                 ))}
               </div>
               <div style={{height:4,background:"rgba(255,255,255,0.06)",borderRadius:2,overflow:"hidden"}}>
@@ -1576,9 +1577,9 @@ export default function App(){
                 <div key={r.id} style={{background:"#ffffff",borderRadius:14,marginBottom:8,border:`0.5px solid ${isActive?'#C8963E':'#1e1a10'}`,overflow:"hidden"}}>
                   {/* Header repas */}
                   <div onClick={()=>setRepasA(isActive?null:r.id)} style={{padding:"12px 14px",display:"flex",alignItems:"center",gap:10,cursor:"pointer"}}>
-                    <div style={{width:34,height:34,borderRadius:9,background:"#edf3fb",display:"flex",alignItems:"center",justifyContent:"center",fontSize:17,flexShrink:0}}>{r.i}</div>
+                    <div style={{width:34,height:34,borderRadius:9,background:"#e4eef8",display:"flex",alignItems:"center",justifyContent:"center",fontSize:17,flexShrink:0}}>{r.i}</div>
                     <div style={{flex:1}}>
-                      <div style={{fontSize:12,fontWeight:700,color:"#0f1a2e"}}>{r.l}</div>
+                      <div style={{fontSize:12,fontWeight:500,color:"#0f1a2e"}}>{r.l}</div>
                       <div style={{fontSize:10,color:"#a0b4cc"}}>{repas[r.id].length>0?`${repas[r.id].length} aliment${repas[r.id].length>1?"s":""}`:"Aucun aliment"}</div>
                       {rTot.cal>0&&(
                         <div style={{display:"flex",gap:3,marginTop:4}}>
@@ -1588,7 +1589,7 @@ export default function App(){
                       )}
                     </div>
                     <div style={{display:"flex",alignItems:"center",gap:8}}>
-                      {rTot.cal>0&&<span style={{fontSize:14,fontWeight:800,color:"#C8963E"}}>{rTot.cal}</span>}
+                      {rTot.cal>0&&<span style={{fontSize:14,fontWeight:300,color:"#C8963E"}}>{rTot.cal}</span>}
                       <span style={{fontSize:14,color:"#c4d4e8",transform:isActive?"rotate(180deg)":"none",transition:"transform .2s"}}>⌄</span>
                     </div>
                   </div>
@@ -1607,7 +1608,7 @@ export default function App(){
                             </Row>
                           </div>
                           <Row style={{gap:8,alignItems:"center"}}>
-                            <span style={{fontSize:12,fontWeight:700,color:C.gold}}>{item.c}</span>
+                            <span style={{fontSize:12,fontWeight:500,color:C.gold}}>{item.c}</span>
                             <span style={{fontSize:9,color:C.mid}}>kcal</span>
                             <button onClick={()=>setRepas(rp=>({...rp,[r.id]:rp[r.id].filter((_,j)=>j!==i)}))} style={{background:"transparent",border:"none",color:C.red,cursor:"pointer",fontSize:15,padding:"0 4px"}}>×</button>
                           </Row>
@@ -1616,7 +1617,7 @@ export default function App(){
                       {/* Recherche rapide */}
                       <Inp style={{marginTop:10,marginBottom:6}} placeholder="🔍 Ajouter un aliment…" value={search} onChange={e=>setSearch(e.target.value)}/>
                       {search&&filtered.length>0&&(
-                        <div style={{maxHeight:180,overflowY:"auto",borderRadius:9,border:"0.5px solid #1e1a10"}}>
+                        <div style={{maxHeight:180,overflowY:"auto",borderRadius:9,border:"0.5px solid #dce8f4"}}>
                           {filtered.map((item,i)=>(
                             <div key={i} onClick={()=>{setRepas(rp=>({...rp,[r.id]:[...rp[r.id],item]}));setSearch("");}} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"9px 12px",background:C.s2,borderBottom:`1px solid ${C.s3}`,cursor:"pointer"}}>
                               <div><div style={{fontSize:12}}>{item.n}</div><div style={{fontSize:10,color:C.mid}}>{item.c}kcal</div></div>
@@ -1629,12 +1630,12 @@ export default function App(){
                       <div style={{marginTop:8}}>
                         <div style={{display:"flex",gap:4,overflowX:"auto",paddingBottom:4}}>
                           {[...new Set(FOODS.map(f=>f.cat))].map(cat=>(
-                            <button key={cat} style={{padding:"4px 10px",background:C.s2,border:"0.5px solid #1e1a10",borderRadius:12,color:C.mid,cursor:"pointer",fontSize:10,whiteSpace:"nowrap",fontFamily:"'Inter',sans-serif"}} onClick={()=>{}}>{cat}</button>
+                            <button key={cat} style={{padding:"4px 10px",background:C.s2,border:"0.5px solid #dce8f4",borderRadius:12,color:C.mid,cursor:"pointer",fontSize:10,whiteSpace:"nowrap",fontFamily:"'Inter',sans-serif"}} onClick={()=>{}}>{cat}</button>
                           ))}
                         </div>
                         <div style={{display:"flex",flexWrap:"wrap",gap:4,marginTop:6}}>
                           {FOODS.filter(f=>!search||f.cat===search).slice(0,8).map((f,i)=>(
-                            <div key={i} onClick={()=>setRepas(rp=>({...rp,[r.id]:[...rp[r.id],f]}))} style={{padding:"5px 10px",background:C.s2,border:"0.5px solid #1e1a10",borderRadius:8,cursor:"pointer",fontSize:10,color:C.text}}>
+                            <div key={i} onClick={()=>setRepas(rp=>({...rp,[r.id]:[...rp[r.id],f]}))} style={{padding:"5px 10px",background:C.s2,border:"0.5px solid #dce8f4",borderRadius:8,cursor:"pointer",fontSize:10,color:C.text}}>
                               {f.n.split("(")[0].trim()} <span style={{color:C.gold}}>{f.c}</span>
                             </div>
                           ))}
@@ -1658,7 +1659,7 @@ export default function App(){
                   <div style={{fontSize:11,color:C.mid,lineHeight:1.5}}>Basé sur la qualité de vos aliments<br/>et vos comportements nutritionnels</div>
                 </div>
                 <div style={{textAlign:"center"}}>
-                  <div style={{fontFamily:"'Syne',sans-serif",fontSize:48,fontWeight:800,color:scoreColor,lineHeight:1,letterSpacing:-2}}>{scoreLettre}</div>
+                  <div style={{fontFamily:"'Syne',sans-serif",fontSize:48,fontWeight:300,color:scoreColor,lineHeight:1,letterSpacing:-2}}>{scoreLettre}</div>
                   <div style={{fontSize:10,color:C.mid}}>{score}/100</div>
                 </div>
               </Row>
@@ -1689,7 +1690,7 @@ export default function App(){
               <Inp placeholder="Code-barres EAN (ex: 3017620422003)" inputMode="numeric" value={scanCode} onChange={e=>{setScan(e.target.value);if(e.target.value.length>=8)handleScan(e.target.value);}}/>
               {scanRes&&!scanRes.error&&(
                 <div style={{padding:12,background:"rgba(62,199,122,.08)",border:"1px solid rgba(62,199,122,.2)",borderRadius:10,marginBottom:8}}>
-                  <div style={{fontWeight:700,fontSize:14,color:C.green,marginBottom:8}}>{scanRes.n}</div>
+                  <div style={{fontWeight:500,fontSize:14,color:C.green,marginBottom:8}}>{scanRes.n}</div>
                   <div style={{display:"flex",gap:4,flexWrap:"wrap",marginBottom:10}}>
                     {[{l:`${scanRes.c} kcal`,c:C.gold},{l:`P: ${scanRes.p}g`,c:C.red},{l:`G: ${scanRes.g}g`,c:C.orange},{l:`L: ${scanRes.l}g`,c:C.green}].map(s=>(
                       <div key={s.l} style={{padding:"4px 9px",background:`${s.c}14`,border:`1px solid ${s.c}28`,borderRadius:6,fontSize:11,color:s.c,fontWeight:600}}>{s.l}</div>
@@ -1697,10 +1698,10 @@ export default function App(){
                   </div>
                   <div style={{display:"flex",gap:7}}>
                     {[{id:"matin",l:"Matin"},{id:"midi",l:"Midi"},{id:"soir",l:"Soir"},{id:"snack",l:"Snack"}].map(r=>(
-                      <button key={r.id} onClick={()=>{setRepas(rp=>({...rp,[r.id]:[...rp[r.id],scanRes]}));setScanRes(null);setScan("");setNView("journal");push("✅","Ajouté !",`${scanRes.n} ajouté au ${r.l.toLowerCase()}.`);}} style={{flex:1,padding:"7px 4px",background:C.s2,border:"0.5px solid #1e1a10",borderRadius:7,color:C.text,cursor:"pointer",fontSize:10,fontFamily:"'Syne',sans-serif",fontWeight:600}}>{r.l}</button>
+                      <button key={r.id} onClick={()=>{setRepas(rp=>({...rp,[r.id]:[...rp[r.id],scanRes]}));setScanRes(null);setScan("");setNView("journal");push("✅","Ajouté !",`${scanRes.n} ajouté au ${r.l.toLowerCase()}.`);}} style={{flex:1,padding:"7px 4px",background:C.s2,border:"0.5px solid #dce8f4",borderRadius:7,color:C.text,cursor:"pointer",fontSize:10,fontFamily:"'Syne',sans-serif",fontWeight:600}}>{r.l}</button>
                     ))}
                   </div>
-                  <button onClick={()=>{setMyFoods(f=>[...f,{...scanRes,id:Date.now()}]);setScanRes(null);setScan("");}} style={{marginTop:8,width:"100%",padding:"7px",background:"transparent",border:"0.5px solid #1e1a10",borderRadius:7,color:C.mid,cursor:"pointer",fontSize:11,fontFamily:"'Inter',sans-serif"}}>💾 Sauvegarder dans ma bibliothèque</button>
+                  <button onClick={()=>{setMyFoods(f=>[...f,{...scanRes,id:Date.now()}]);setScanRes(null);setScan("");}} style={{marginTop:8,width:"100%",padding:"7px",background:"transparent",border:"0.5px solid #dce8f4",borderRadius:7,color:C.mid,cursor:"pointer",fontSize:11,fontFamily:"'Inter',sans-serif"}}>💾 Sauvegarder dans ma bibliothèque</button>
                 </div>
               )}
               {scanRes?.error&&<div style={{padding:"9px 11px",background:"rgba(224,82,82,.08)",border:"1px solid rgba(224,82,82,.2)",borderRadius:8,fontSize:11,color:C.red}}>Produit non trouvé. Ajoutez-le manuellement.</div>}
@@ -1743,7 +1744,7 @@ export default function App(){
   };
   const Profile=()=>(
     <div style={{padding:"0 15px 16px"}} className="anim">
-      <div style={{padding:"26px 0 14px"}}><div style={{fontFamily:"'Syne',sans-serif",fontSize:30,letterSpacing:-0.3,fontWeight:800}}>PROFIL</div></div>
+      <div style={{padding:"26px 0 14px"}}><div style={{fontFamily:"'Syne',sans-serif",fontSize:30,letterSpacing:-0.3,fontWeight:300}}>PROFIL</div></div>
       {!premium?<div style={{background:"rgba(59,130,246,0.06)",border:`0.5px solid ${C.goldB}`,borderRadius:13,padding:"20px 16px",marginBottom:9}}>
         <div style={{fontFamily:"'Syne',sans-serif",fontSize:24,letterSpacing:2,color:C.gold,textAlign:"center",marginBottom:4}}>PASSER À PREMIUM</div>
         <div style={{fontSize:12,color:C.mid,textAlign:"center",marginBottom:14}}>Programmes personnalisés selon votre morphologie</div>
@@ -1754,17 +1755,17 @@ export default function App(){
           </Row>
         ))}
         <div style={{textAlign:"center",margin:"12px 0"}}>
-          <div style={{fontFamily:"'Syne',sans-serif",fontSize:28,color:C.gold,letterSpacing:-0.5,fontWeight:800}}>19.99€<span style={{fontSize:12,color:C.mid,fontFamily:"'Inter',sans-serif",fontWeight:400}}> /cycle</span></div>
+          <div style={{fontFamily:"'Syne',sans-serif",fontSize:28,color:C.gold,letterSpacing:-0.5,fontWeight:300}}>19.99€<span style={{fontSize:12,color:C.mid,fontFamily:"'Inter',sans-serif",fontWeight:400}}> /cycle</span></div>
         </div>
         <Btn onClick={()=>{setPremium(true);push("🎉","Premium activé !","Accès complet activé !");}}>Commencer maintenant</Btn>
       </div>:<Box style={{background:C.goldD,borderColor:C.goldB,display:"flex",alignItems:"center",gap:11}}>
         <div style={{width:38,height:38,borderRadius:"50%",background:"rgba(200,150,62,.15)",border:`0.5px solid ${C.goldB}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,flexShrink:0}}>◈</div>
-        <div><div style={{fontFamily:"'Syne',sans-serif",fontSize:16,color:C.gold,letterSpacing:-0.5,fontWeight:800}}>MEMBRE PREMIUM</div><div style={{fontSize:10,color:C.mid}}>Accès complet activé</div></div>
+        <div><div style={{fontFamily:"'Syne',sans-serif",fontSize:16,color:C.gold,letterSpacing:-0.5,fontWeight:300}}>MEMBRE PREMIUM</div><div style={{fontSize:10,color:C.mid}}>Accès complet activé</div></div>
       </Box>}
       <Box>
         <Lbl>Informations</Lbl>
         <Inp placeholder="Prénom" value={profil.prenom} onChange={e=>setProfil({...profil,prenom:e.target.value})}/>
-        <G2><Inp type="number" placeholder="Âge" style={{marginBottom:0}} value={profil.age} onChange={e=>setProfil({...profil,age:e.target.value})}/><select style={{width:"100%",padding:"11px 13px",background:C.s2,border:"0.5px solid #1e1a10",borderRadius:9,color:C.text,fontSize:13}} value={profil.sexe} onChange={e=>setProfil({...profil,sexe:e.target.value})}><option value="">Sexe</option><option value="homme">Homme</option><option value="femme">Femme</option></select></G2>
+        <G2><Inp type="number" placeholder="Âge" style={{marginBottom:0}} value={profil.age} onChange={e=>setProfil({...profil,age:e.target.value})}/><select style={{width:"100%",padding:"11px 13px",background:C.s2,border:"0.5px solid #dce8f4",borderRadius:9,color:C.text,fontSize:13}} value={profil.sexe} onChange={e=>setProfil({...profil,sexe:e.target.value})}><option value="">Sexe</option><option value="homme">Homme</option><option value="femme">Femme</option></select></G2>
         <G2 style={{marginTop:6}}><Inp type="number" placeholder="Poids (kg)" style={{marginBottom:0}} value={profil.poids} onChange={e=>setProfil({...profil,poids:e.target.value})}/><Inp type="number" placeholder="Taille (cm)" style={{marginBottom:0}} value={profil.taille} onChange={e=>setProfil({...profil,taille:e.target.value})}/></G2>
         {imc&&<div style={{marginTop:7,padding:"8px 11px",background:C.s2,borderRadius:7,display:"flex",justifyContent:"space-between"}}>
           <span style={{fontSize:11,color:C.mid}}>IMC</span>
@@ -1775,7 +1776,7 @@ export default function App(){
         <Lbl>Objectif</Lbl>
         <G2>{[{id:"hypertrophie",i:"💪",l:"Prise de muscle"},{id:"force",i:"🏋️",l:"Force"},{id:"poids",i:"🔥",l:"Perte de poids"},{id:"sante",i:"❤️",l:"Santé"}].map(o=>(
           <div key={o.id} onClick={()=>setProfil({...profil,objectif:o.id})} style={{padding:"12px 8px",textAlign:"center",cursor:"pointer",background:profil.objectif===o.id?C.goldD:C.s2,border:`1px solid ${profil.objectif===o.id?C.gold:C.s3}`,borderRadius:10}}>
-            <div style={{fontSize:20,marginBottom:5}}>{o.i}</div><div style={{fontSize:11,fontWeight:700}}>{o.l}</div>
+            <div style={{fontSize:20,marginBottom:5}}>{o.i}</div><div style={{fontSize:11,fontWeight:400}}>{o.l}</div>
           </div>
         ))}</G2>
       </Box>
@@ -1880,17 +1881,17 @@ export default function App(){
           <Row style={{justifyContent:"space-between",marginBottom:6}}>
             <div>
               <div style={{fontSize:9,color:int.c,fontWeight:700,letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:3}}>{int.l}</div>
-              <div style={{fontFamily:"'Syne',sans-serif",fontSize:18,fontWeight:800,letterSpacing:-0.5}}>{seance.nom}</div>
+              <div style={{fontFamily:"'Syne',sans-serif",fontSize:18,fontWeight:400,letterSpacing:-0.5}}>{seance.nom}</div>
               <div style={{fontSize:11,color:C.mid}}>{seance.focus} · {seance.duree}</div>
             </div>
             <div style={{textAlign:"center"}}>
-              <div style={{fontFamily:"'Syne',sans-serif",fontSize:22,fontWeight:800,color:pct===100?C.green:C.gold}}>{pct}%</div>
+              <div style={{fontFamily:"'Syne',sans-serif",fontSize:22,fontWeight:300,color:pct===100?C.green:C.gold}}>{pct}%</div>
               <div style={{fontSize:9,color:C.mid}}>{done}/{total}</div>
             </div>
           </Row>
           <Bar pct={pct} color={pct===100?C.green:int.c} h={4}/>
         </div>
-        <button onClick={()=>setChrono(true)} style={{display:"flex",alignItems:"center",gap:8,width:"100%",padding:"10px 13px",background:C.s2,border:"0.5px solid #1e1a10",borderRadius:9,color:C.mid,cursor:"pointer",fontSize:12,fontFamily:"'Inter',sans-serif",fontWeight:500,marginBottom:10}}>⏱ Chronomètre de repos</button>
+        <button onClick={()=>setChrono(true)} style={{display:"flex",alignItems:"center",gap:8,width:"100%",padding:"10px 13px",background:C.s2,border:"0.5px solid #dce8f4",borderRadius:9,color:C.mid,cursor:"pointer",fontSize:12,fontFamily:"'Inter',sans-serif",fontWeight:500,marginBottom:10}}>⏱ Chronomètre de repos</button>
         {seance.exercices?.map((ex,j)=>{
           const cc={principal:C.gold,correctif:C.red,mobilite:C.blue,gainage:C.green,isolation:C.purple}[ex.cat||"principal"]||C.gold;
           const exInfo=Object.values(EX).flat().find(e=>e.n===ex.nom)||null;
@@ -1904,7 +1905,7 @@ export default function App(){
                 <div style={{flex:1}}>
                   <Row style={{gap:7,marginBottom:4}}>
                     <div onClick={()=>toggleCheck(seance.id,j)} style={{width:20,height:20,borderRadius:5,background:isChecked?C.green:"transparent",border:`2px solid ${isChecked?C.green:C.s3}`,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:11,color:"white"}}>{isChecked?"✓":""}</div>
-                    <div style={{fontSize:13,fontWeight:700,textDecoration:isChecked?"line-through":"none",color:isChecked?C.mid:C.text}}>{ex.nom}</div>
+                    <div style={{fontSize:13,fontWeight:500,textDecoration:isChecked?"line-through":"none",color:isChecked?C.mid:C.text}}>{ex.nom}</div>
                   </Row>
                   <div style={{display:"inline-block",padding:"2px 8px",background:`${cc}18`,border:`1px solid ${cc}30`,borderRadius:5,fontSize:9,color:cc,fontWeight:700,textTransform:"uppercase"}}>{ex.cat}</div>
                 </div>
@@ -1916,8 +1917,8 @@ export default function App(){
               {!editMd?(
                 <div style={{display:"flex",gap:4,flexWrap:"wrap",marginBottom:8}}>
                   {[{l:"Sets",v:ex.series},{l:"Reps",v:ex.reps},{l:"Repos",v:ex.repos},{l:"Charge",v:ex.charge}].filter(s=>s.v).map(s=>(
-                    <div key={s.l} style={{padding:"4px 9px",background:C.s2,border:"0.5px solid #1e1a10",borderRadius:6,textAlign:"center",minWidth:52}}>
-                      <div style={{fontFamily:"'Syne',sans-serif",fontSize:14,fontWeight:700,color:C.gold}}>{s.v}</div>
+                    <div key={s.l} style={{padding:"4px 9px",background:C.s2,border:"0.5px solid #dce8f4",borderRadius:6,textAlign:"center",minWidth:52}}>
+                      <div style={{fontFamily:"'Syne',sans-serif",fontSize:14,fontWeight:500,color:C.gold}}>{s.v}</div>
                       <div style={{fontSize:9,color:C.mid}}>{s.l}</div>
                     </div>
                   ))}
@@ -1933,7 +1934,7 @@ export default function App(){
                           const u=[...prog.jours];
                           const sIdx=prog.jours.findIndex(s=>s.id===seance.id);
                           if(sIdx>=0){u[sIdx].exercices[j][p.k]=e.target.value;setProg({...prog,jours:u});}
-                        }} style={{width:"100%",padding:"7px 9px",background:C.s3,border:"0.5px solid #1e1a10",borderRadius:6,color:C.text,fontSize:12,fontFamily:"'Inter',sans-serif"}}/>
+                        }} style={{width:"100%",padding:"7px 9px",background:C.s3,border:"0.5px solid #dce8f4",borderRadius:6,color:C.text,fontSize:12,fontFamily:"'Inter',sans-serif"}}/>
                       </div>
                     ))}
                   </div>
@@ -1957,7 +1958,7 @@ export default function App(){
                   )}
                   {exInfo?.variantes?.length>0&&(
                     <div style={{marginBottom:8}}>
-                      <div style={{fontSize:9,color:C.orange,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",marginBottom:5}}>Variantes</div>
+                      <div style={{fontSize:9,color:"#f97316",fontWeight:500,letterSpacing:"1px",textTransform:"uppercase",marginBottom:5}}>Variantes</div>
                       {exInfo.variantes.map((v,vi)=>(
                         <div key={vi} style={{padding:"5px 8px",background:C.s2,borderRadius:6,marginBottom:4,fontSize:11,color:C.text}}>{v}</div>
                       ))}
@@ -2000,7 +2001,7 @@ export default function App(){
         {pct===100&&(
           <Box style={{background:"rgba(62,199,122,0.08)",borderColor:"rgba(62,199,122,0.3)",textAlign:"center",padding:"20px 16px"}}>
             <div style={{fontSize:32,marginBottom:8}}>🏆</div>
-            <div style={{fontFamily:"'Syne',sans-serif",fontSize:16,fontWeight:800,color:C.green,marginBottom:6}}>Séance terminée !</div>
+            <div style={{fontFamily:"'Syne',sans-serif",fontSize:16,fontWeight:400,color:C.green,marginBottom:6}}>Séance terminée !</div>
             <Btn onClick={()=>{
               const u=[...prog.jours];
               const sIdx=u.findIndex(s=>s.id===seance.id);
@@ -2027,7 +2028,7 @@ export default function App(){
               <Row style={{justifyContent:"space-between",marginBottom:8}}>
                 <div>
                   <div style={{fontSize:9,color:INT[todaySeance.intensite||"modere"].c,fontWeight:700,letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:3}}>{INT[todaySeance.intensite||"modere"].l}</div>
-                  <div style={{fontFamily:"'Syne',sans-serif",fontSize:16,fontWeight:800}}>{todaySeance.nom}</div>
+                  <div style={{fontFamily:"'Syne',sans-serif",fontSize:16,fontWeight:400}}>{todaySeance.nom}</div>
                   <div style={{fontSize:11,color:C.mid}}>{todaySeance.focus} · {todaySeance.duree} · {todaySeance.exercices?.length||0} exercices</div>
                 </div>
                 <div style={{color:C.gold,fontSize:22}}>›</div>
@@ -2046,14 +2047,14 @@ export default function App(){
         ):(
           <Box style={{textAlign:"center",padding:"24px 16px"}}>
             <div style={{fontSize:32,marginBottom:8}}>😴</div>
-            <div style={{fontFamily:"'Syne',sans-serif",fontSize:15,fontWeight:700,marginBottom:4}}>Jour de repos</div>
+            <div style={{fontFamily:"'Syne',sans-serif",fontSize:15,fontWeight:500,marginBottom:4}}>Jour de repos</div>
             <div style={{fontSize:12,color:C.mid,marginBottom:14,lineHeight:1.6}}>Profites-en pour récupérer ou ajouter une séance bonus.</div>
           </Box>
         )}
         <Lbl style={{marginTop:12}}>Séance bonus</Lbl>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,marginBottom:12}}>
           {[{id:"etirements",i:"🧘",l:"Étirements",color:C.purple},{id:"cardio",i:"🏃",l:"Cardio",color:C.blue},{id:"mobilite",i:"💆",l:"Mobilité",color:C.green}].map(b=>(
-            <div key={b.id} onClick={()=>setBonusModal(b)} style={{padding:"12px 8px",textAlign:"center",background:C.s2,border:"0.5px solid #1e1a10",borderRadius:10,cursor:"pointer"}}>
+            <div key={b.id} onClick={()=>setBonusModal(b)} style={{padding:"12px 8px",textAlign:"center",background:C.s2,border:"0.5px solid #dce8f4",borderRadius:10,cursor:"pointer"}}>
               <div style={{fontSize:22,marginBottom:4}}>{b.i}</div>
               <div style={{fontSize:11,fontWeight:700,color:b.color}}>{b.l}</div>
             </div>
@@ -2061,7 +2062,7 @@ export default function App(){
         </div>
         {bonusModal&&(
           <div style={{position:"fixed",inset:0,background:"rgba(237,243,251,0.97)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:300,padding:18}}>
-            <div style={{background:C.s1,border:"0.5px solid #1e1a10",borderRadius:14,padding:"22px 18px",width:"100%",maxWidth:360}}>
+            <div style={{background:C.s1,border:"0.5px solid #dce8f4",borderRadius:14,padding:"22px 18px",width:"100%",maxWidth:360}}>
               <Lbl>{bonusModal.i} {bonusModal.l}</Lbl>
               <div style={{fontSize:12,color:C.mid,marginBottom:14}}>Durée de la séance ?</div>
               <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:16}}>
@@ -2072,7 +2073,7 @@ export default function App(){
                     setCalSess(s=>({...s,[key]:{nom:`${bonusModal.l} ${dur}`,intensite:"mobilite",color:bonusModal.color}}));
                     setBonusModal(null);
                     push("✅",`${bonusModal.l} ajouté !`,`${dur} de ${bonusModal.l.toLowerCase()} enregistré.`);
-                  }} style={{padding:"10px 16px",background:C.s2,border:"0.5px solid #1e1a10",borderRadius:9,cursor:"pointer",fontSize:13,fontWeight:600,color:C.text}}>{dur}</div>
+                  }} style={{padding:"10px 16px",background:C.s2,border:"0.5px solid #dce8f4",borderRadius:9,cursor:"pointer",fontSize:13,fontWeight:600,color:C.text}}>{dur}</div>
                 ))}
               </div>
               <Btn v="ghost" onClick={()=>setBonusModal(null)}>Annuler</Btn>
@@ -2113,7 +2114,7 @@ export default function App(){
                 <Row style={{gap:10}}>
                   <div style={{width:36,height:36,borderRadius:"50%",background:isToday?`${int.c}30`:C.s3,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:700,color:isToday?int.c:C.mid,flexShrink:0}}>{day}</div>
                   <div>
-                    <div style={{fontSize:12,fontWeight:700}}>{seance.nom}</div>
+                    <div style={{fontSize:12,fontWeight:500}}>{seance.nom}</div>
                     <div style={{fontSize:10,color:C.mid}}>{seance.focus} · {total} exercices</div>
                   </div>
                 </Row>
@@ -2148,7 +2149,7 @@ export default function App(){
     ];
     return(
       <div style={{paddingBottom:16}}>
-        <div style={{padding:"26px 15px 12px"}}><div style={{fontFamily:"'Syne',sans-serif",fontSize:30,letterSpacing:-0.3,fontWeight:800}}>PROGRAMMATION</div></div>
+        <div style={{padding:"26px 15px 12px"}}><div style={{fontFamily:"'Syne',sans-serif",fontSize:30,letterSpacing:-0.3,fontWeight:300}}>PROGRAMMATION</div></div>
         <div style={{display:"flex",gap:5,padding:"0 15px",marginBottom:14,overflowX:"auto",paddingBottom:3}}>
           {subNav.map(s=>(
             <button key={s.id} onClick={()=>{if(s.prem&&!premium)setPaywall(true);else setProgView(s.id);}} style={{padding:"7px 13px",background:progView===s.id?C.goldD:C.s2,border:`1px solid ${progView===s.id?C.gold:C.s3}`,borderRadius:18,color:progView===s.id?C.gold:C.mid,cursor:"pointer",fontSize:11.5,fontWeight:600,whiteSpace:"nowrap",fontFamily:"'Inter',sans-serif"}}>{s.l}</button>
@@ -2165,7 +2166,7 @@ export default function App(){
               <div>
                 <div style={{padding:"10px 12px",background:C.goldD,border:`0.5px solid ${C.goldB}`,borderRadius:9,marginBottom:12}}>
                   <div style={{fontSize:9,color:C.gold,fontWeight:700,letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:3}}>Cycle {prog.numero||1} actif</div>
-                  <div style={{fontSize:14,fontWeight:700}}>{prog.titre}</div>
+                  <div style={{fontSize:14,fontWeight:500}}>{prog.titre}</div>
                   <div style={{fontSize:10,color:C.mid,marginTop:2}}>{prog.jours?.length} séances · Démarré le {prog.dateDebut}</div>
                 </div>
                 {prog.jours?.map((j,i)=>{
@@ -2173,11 +2174,11 @@ export default function App(){
                   const total=j.exercices?.length||0;
                   const done=j.exercices?.filter((_,idx)=>checkedEx[`${j.id}-${idx}`]).length||0;
                   return(
-                    <div key={i} onClick={()=>{setProgView("semaine");}} style={{padding:"10px 12px",background:C.s2,border:"0.5px solid #1e1a10",borderRadius:9,marginBottom:6,cursor:"pointer"}}>
+                    <div key={i} onClick={()=>{setProgView("semaine");}} style={{padding:"10px 12px",background:C.s2,border:"0.5px solid #dce8f4",borderRadius:9,marginBottom:6,cursor:"pointer"}}>
                       <Row style={{justifyContent:"space-between"}}>
                         <div>
                           <div style={{fontSize:9,color:int.c,fontWeight:700,textTransform:"uppercase",letterSpacing:"1px",marginBottom:2}}>{int.l}</div>
-                          <div style={{fontSize:13,fontWeight:700}}>{j.nom}</div>
+                          <div style={{fontSize:13,fontWeight:500}}>{j.nom}</div>
                           <div style={{fontSize:10,color:C.mid}}>{j.focus} · {total} exercices</div>
                         </div>
                         <Row style={{gap:8}}>
@@ -2219,7 +2220,7 @@ export default function App(){
           </Row>
         ))}
         <div style={{textAlign:"center",margin:"14px 0"}}>
-          <div style={{fontFamily:"'Syne',sans-serif",fontSize:26,color:C.gold,letterSpacing:-0.5,fontWeight:800}}>19.99€<span style={{fontSize:11,color:C.mid,fontFamily:"'Inter',sans-serif",fontWeight:400}}> /cycle</span></div>
+          <div style={{fontFamily:"'Syne',sans-serif",fontSize:26,color:C.gold,letterSpacing:-0.5,fontWeight:300}}>19.99€<span style={{fontSize:11,color:C.mid,fontFamily:"'Inter',sans-serif",fontWeight:400}}> /cycle</span></div>
         </div>
         <Btn onClick={()=>{setPremium(true);setPaywall(false);push("🎉","Premium activé !","Bienvenue !");}}>Commencer maintenant</Btn>
         <Btn v="ghost" onClick={()=>setPaywall(false)}>Continuer en gratuit</Btn>
@@ -2228,24 +2229,24 @@ export default function App(){
   );
   const NAV=[{id:"home",i:"⌂",l:"Accueil"},{id:"program",i:"▦",l:"Programme"},{id:"nutrition",i:"◈",l:"Nutrition"}];
   return(
-    <div style={{minHeight:"100vh",background:C.bg,fontFamily:"'Inter',sans-serif",color:C.text,paddingBottom:70}}>
+    <div style={{minHeight:"100vh",background:C.bg,fontFamily:"'Inter',sans-serif",color:C.text,paddingBottom:80}}>
       <style>{CSS}</style>
       <Notif n={notif} onClose={()=>setNotif(null)}/>
       {/* Header */}
-      <div className="np" style={{background:"rgba(8,9,14,0.95)",backdropFilter:"blur(20px)",borderBottom:`1px solid ${C.s3}`,padding:"12px 16px",position:"sticky",top:0,zIndex:100,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-        <div style={{fontFamily:"'Syne',sans-serif",fontSize:16,letterSpacing:"3px"}}>
-          MORPHO<span style={{color:C.gold}}>COACH</span>
+      <div className="np" style={{background:"rgba(237,243,251,0.95)",backdropFilter:"blur(16px)",borderBottom:"0.5px solid #dce8f4",padding:"12px 16px",position:"sticky",top:0,zIndex:100,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+        <div style={{fontFamily:"'Syne',sans-serif",fontSize:15,letterSpacing:"3px",fontWeight:500,color:"#0f1a2e"}}>
+          MORPHO<span style={{color:"#3b82f6"}}>COACH</span>
         </div>
         <div style={{display:"flex",gap:10,alignItems:"center"}}>
-          {cycleStart&&jR!==null&&jR<=7&&<span style={{fontSize:9,color:C.orange,fontWeight:700}}>⚠️ J-{jR}</span>}
-          {premium&&<span style={{fontSize:9,color:C.gold,border:`0.5px solid ${C.goldB}`,padding:"2px 8px",borderRadius:8,fontWeight:700,letterSpacing:"1px"}}>PREMIUM</span>}
+          {cycleStart&&jR!==null&&jR<=7&&<span style={{fontSize:9,color:"#f97316",fontWeight:500}}>⚠️ J-{jR}</span>}
+          {premium&&<span style={{fontSize:9,color:"#3b82f6",border:"0.5px solid rgba(59,130,246,0.3)",padding:"2px 8px",borderRadius:8,fontWeight:700,letterSpacing:"1px"}}>PREMIUM</span>}
           {/* Icône Profil */}
           <button onClick={()=>setTab(tab==="profile"?"home":"profile")} style={{
             width:34,height:34,borderRadius:"50%",
-            background:tab==="profile"?"rgba(212,168,83,0.2)":C.s2,
-            border:`1px solid ${tab==="profile"?C.gold:C.s3}`,
+            background:tab==="profile"?"rgba(59,130,246,0.1)":"transparent",
+            border:`0.5px solid ${tab==="profile"?"#3b82f6":"#dce8f4"}`,
             display:"flex",alignItems:"center",justifyContent:"center",
-            cursor:"pointer",fontSize:16,color:tab==="profile"?C.gold:C.mid,
+            cursor:"pointer",fontSize:16,color:tab==="profile"?"#3b82f6":"#a0b4cc",
             transition:"all .15s",
           }}>◉</button>
         </div>
@@ -2257,11 +2258,12 @@ export default function App(){
         {tab==="profile"&&Profile()}
       </div>
       {/* Nav — 3 onglets uniquement */}
-      <nav className="np" style={{position:"fixed",bottom:0,left:0,right:0,background:"rgba(237,243,251,0.97)",backdropFilter:"blur(20px)",borderTop:"0.5px solid #dce8f4",display:"flex",zIndex:100}}>
+      <nav className="np" style={{position:"fixed",bottom:0,left:0,right:0,background:"rgba(230,240,252,0.98)",backdropFilter:"blur(20px)",borderTop:"0.5px solid #c8daf0",display:"flex",zIndex:100}}>
         {NAV.map(t=>(
-          <button key={t.id} onClick={()=>setTab(t.id)} style={{flex:1,padding:"11px 4px 8px",background:"transparent",border:"none",color:tab===t.id?"#3b82f6":"#a0b4cc",cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:3,transition:"color .15s",fontFamily:"'Inter',sans-serif"}}>
-            <span style={{fontSize:17,lineHeight:1}}>{t.i}</span>
-            <span style={{fontSize:9,letterSpacing:"0.5px",textTransform:"uppercase",fontWeight:tab===t.id?700:400}}>{t.l}</span>
+          <button key={t.id} onClick={()=>setTab(t.id)} style={{flex:1,padding:"10px 4px 14px",background:"transparent",border:"none",cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:4,transition:"all .15s",fontFamily:"'Inter',sans-serif"}}>
+            <span style={{fontSize:20,lineHeight:1,opacity:tab===t.id?1:0.35,transition:"opacity .15s"}}>{t.i}</span>
+            <span style={{fontSize:9,letterSpacing:"0.5px",fontWeight:500,color:tab===t.id?"#3b82f6":"#a0b4cc",transition:"color .15s"}}>{t.l}</span>
+            {tab===t.id&&<div style={{width:16,height:2,borderRadius:1,background:"#3b82f6",marginTop:1}}/>}
           </button>
         ))}
       </nav>
