@@ -190,12 +190,12 @@ function MonthCal({sessions,onUpdate}){
           return(
             <div key={d} onClick={()=>setModal({date:key,session:sess})} style={{
               aspectRatio:"1",borderRadius:7,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",cursor:"pointer",
-              background:sess?`${sess.color}1A`:isToday?"rgba(59,130,246,0.08)":"rgba(255,255,255,0.02)",
-              border:`1px solid ${sess?sess.color+"44":isToday?C.gold:C.s3}`,
-              outline:isToday?`1.5px solid ${C.gold}`:undefined,
+              background:sess?sess.color:isToday?"rgba(59,130,246,0.1)":"transparent",
+              border:`1px solid ${sess?sess.color:isToday?"#3b82f6":C.s3}`,
+              outline:isToday&&!sess?`1.5px solid #3b82f6`:undefined,
+              transition:"background .15s",
             }}>
-              <div style={{fontSize:10,fontWeight:isToday?700:400,color:isToday?C.gold:sess?C.text:C.mid,lineHeight:1}}>{d}</div>
-              {sess&&<div style={{width:4,height:4,borderRadius:"50%",background:sess.color,marginTop:2}}/>}
+              <div style={{fontSize:10,fontWeight:isToday?600:400,color:sess?"#ffffff":isToday?"#3b82f6":C.mid,lineHeight:1}}>{d}</div>
             </div>
           );
         })}
@@ -388,6 +388,8 @@ export default function App(){
   const [newP,setNewP]=useState({nom:"",jours:[],seances:{}});
   const [jourActif,setJourActif]=useState(null);
   const [groupe,setGroupe]=useState(null);
+  const [exModal,setExModal]=useState(null);
+  const [exModalTab,setExModalTab]=useState("tips");
   const [photos,setPhotos]=useState({face:null,dos:null,profil:null});
   const fileRefFace=useRef();
   const fileRefDos=useRef();
@@ -574,16 +576,17 @@ export default function App(){
     const today=new Date();
     const todayKey=`${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,"0")}-${String(today.getDate()).padStart(2,"0")}`;
     const todaySess=calSess[todayKey];
-    const motiv=MOTIVATIONS[today.getDay()%MOTIVATIONS.length];
+    const dayOfYear=Math.floor((today-new Date(today.getFullYear(),0,0))/(1000*60*60*24));const motiv=MOTIVATIONS[dayOfYear%MOTIVATIONS.length];
     return(
       <div style={{padding:"0 15px 16px"}} className="anim">
-        <div style={{paddingTop:26,paddingBottom:14}}>
-          <div style={{fontSize:10,color:C.mid,marginBottom:4}}>{today.toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long"})}</div>
-          <div style={{fontFamily:"'Syne',sans-serif",fontSize:32,letterSpacing:2,lineHeight:1,marginBottom:12}}>
-            {profil.prenom?`BONJOUR, ${profil.prenom.toUpperCase()}`:"MORPHOCOACH"}
+        <div style={{paddingTop:24,paddingBottom:14}}>
+          <div style={{fontSize:9,letterSpacing:"1.5px",color:C.mid,fontWeight:500,marginBottom:8,textTransform:"uppercase"}}>{today.toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long"})}</div>
+          <div style={{fontFamily:"'Syne',sans-serif",fontSize:26,fontWeight:300,color:C.text,letterSpacing:-0.5,lineHeight:1.1,marginBottom:12}}>
+            {profil.prenom?<>Bonjour, <span style={{fontWeight:500,color:C.blue}}>{profil.prenom}</span></>:<><span style={{fontWeight:500,color:C.blue}}>Morpho</span>Coach</>}
           </div>
-          <div style={{padding:"10px 13px",background:"rgba(212,168,83,0.08)",border:`0.5px solid ${C.goldB}`,borderRadius:10,fontSize:12,color:C.mid,fontStyle:"italic",lineHeight:1.5}}>
-            💬 {motiv}
+          <div style={{padding:"12px 14px",background:"rgba(59,130,246,0.06)",border:"0.5px solid rgba(59,130,246,0.15)",borderRadius:12}}>
+            <div style={{fontSize:9,color:C.blue,fontWeight:600,letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:5}}>Motivation du jour</div>
+            <div style={{fontSize:13,color:C.text,fontWeight:500,lineHeight:1.6}}>{motiv}</div>
           </div>
         </div>
         {todaySess&&(
@@ -954,7 +957,7 @@ export default function App(){
             const total=j.exercices?.length||0;
             const done=j.exercices?.filter((_,idx)=>checkedEx[`${j.id}-${idx}`]).length||0;
             return(
-              <Row key={i} onClick={()=>{setTab("program");setProgView("semaine");}} style={{padding:"10px 12px",background:C.s2,borderRadius:9,marginBottom:5,cursor:"pointer",border:"0.5px solid #dce8f4"}}>
+              <Row key={i} onClick={()=>{setTab("program");setProgView("today");}} style={{padding:"10px 12px",background:C.s2,borderRadius:9,marginBottom:5,cursor:"pointer",border:"0.5px solid #dce8f4"}}>
                 <div style={{width:3,height:36,borderRadius:1.5,background:int.c,marginRight:10,flexShrink:0}}/>
                 <div style={{flex:1}}>
                   <div style={{fontSize:9,color:int.c,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",marginBottom:2}}>{int.l}</div>
@@ -1211,19 +1214,105 @@ export default function App(){
               <button onClick={()=>setNewP(p=>({...p,seances:{...p.seances,[jc]:{...sean,exercices:sean.exercices.filter((_,j)=>j!==i)}}}))} style={{background:"transparent",border:"none",color:C.red,cursor:"pointer",fontSize:15}}>×</button>
             </Row>
           ))}
-          <Lbl style={{marginTop:10}}>Bibliothèque</Lbl>
-          <div style={{display:"flex",flexWrap:"wrap",marginBottom:9}}>
+          <Lbl style={{marginTop:10}}>Bibliothèque d'exercices</Lbl>
+          <div style={{display:"flex",flexWrap:"wrap",marginBottom:10}}>
             {Object.keys(EX).map(g=>(
               <Tag key={g} active={groupe===g} onClick={()=>setGroupe(g===groupe?null:g)}>{g}</Tag>
             ))}
           </div>
-          {groupe&&EX[groupe].map((ex,i)=>(
-            <div key={i} onClick={()=>setNewP(p=>({...p,seances:{...p.seances,[jc]:{...sean,exercices:[...sean.exercices,{nom:ex.n,cat:ex.cat,series:ex.s,reps:ex.r,repos:ex.rest,charge:ex.ch,prog:ex.prog||"",morpho_tip:ex.morpho,historique:[],note:""}]}}}))} style={{padding:"10px 11px",background:C.s2,border:"0.5px solid #dce8f4",borderRadius:9,marginBottom:5,cursor:"pointer"}}>
-              <div style={{fontWeight:600,fontSize:12,marginBottom:2}}>{ex.n}</div>
-              <div style={{fontSize:10,color:C.mid,marginBottom:3}}>{ex.s}×{ex.r} · {ex.rest}</div>
-              <div style={{fontSize:10,color:C.dim,fontStyle:"italic",lineHeight:1.4}}>{ex.morpho.substring(0,80)}…</div>
+          {groupe&&EX[groupe].map((ex,i)=>{
+            const cc={principal:"#3b82f6",correctif:"#f87171",mobilite:"#06b6d4",gainage:"#22c55e",isolation:"#8b5cf6"}[ex.cat]||"#3b82f6";
+            return(
+              <div key={i} style={{background:"#ffffff",border:"0.5px solid #dce8f4",borderRadius:12,marginBottom:8,overflow:"hidden"}}>
+                <div style={{padding:"11px 13px"}}>
+                  <Row style={{justifyContent:"space-between",marginBottom:6}}>
+                    <div style={{flex:1}}>
+                      <div style={{display:"inline-block",padding:"2px 8px",background:`${cc}14`,borderRadius:5,fontSize:9,color:cc,fontWeight:600,letterSpacing:"0.5px",textTransform:"uppercase",marginBottom:5}}>{ex.cat}</div>
+                      <div style={{fontSize:13,fontWeight:500,color:"#0f1a2e",marginBottom:2}}>{ex.n}</div>
+                      <div style={{fontSize:10,color:"#a0b4cc"}}>{ex.s}×{ex.r} · {ex.rest} · {ex.ch}</div>
+                    </div>
+                  </Row>
+                  <div style={{fontSize:11,color:"#a0b4cc",fontStyle:"italic",lineHeight:1.5,marginBottom:8}}>{(ex.morpho||"").substring(0,90)}…</div>
+                  <Row style={{gap:7}}>
+                    <button onClick={()=>setNewP(p=>({...p,seances:{...p.seances,[jc]:{...sean,exercices:[...sean.exercices,{nom:ex.n,cat:ex.cat,series:ex.s,reps:ex.r,repos:ex.rest,charge:ex.ch,prog:ex.prog||"",morpho_tip:ex.morpho,historique:[],note:""}]}}}))} style={{flex:1,padding:"7px 10px",background:"#3b82f6",border:"none",borderRadius:8,color:"#ffffff",cursor:"pointer",fontSize:11,fontWeight:500,fontFamily:"'Inter',sans-serif"}}>+ Ajouter</button>
+                    <button onClick={e=>{e.stopPropagation();setExModal(ex);}} style={{padding:"7px 12px",background:"rgba(59,130,246,0.08)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:8,color:"#3b82f6",cursor:"pointer",fontSize:11,fontWeight:500,fontFamily:"'Inter',sans-serif"}}>Guide ›</button>
+                  </Row>
+                </div>
+              </div>
+            );
+          })}
+          {exModal&&(
+            <div style={{position:"fixed",inset:0,background:"rgba(237,243,251,0.98)",zIndex:300,overflowY:"auto"}}>
+              <div style={{maxWidth:500,margin:"0 auto",padding:"0 0 80px"}}>
+                <div style={{padding:"20px 16px 0",display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
+                  <div style={{flex:1}}>
+                    <div style={{display:"inline-block",padding:"3px 10px",background:"rgba(59,130,246,0.1)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:8,fontSize:10,color:"#3b82f6",letterSpacing:"1px",textTransform:"uppercase",fontWeight:500,marginBottom:10}}>{exModal.cat}</div>
+                    <div style={{fontFamily:"'Syne',sans-serif",fontSize:20,fontWeight:400,lineHeight:1.2,color:"#0f1a2e",marginBottom:4}}>{exModal.n}</div>
+                    <div style={{fontSize:11,color:"#a0b4cc"}}>{exModal.s} séries · {exModal.r} reps · {exModal.rest}</div>
+                  </div>
+                  <button onClick={()=>setExModal(null)} style={{background:"#edf3fb",border:"0.5px solid #dce8f4",borderRadius:10,width:36,height:36,color:"#a0b4cc",cursor:"pointer",fontSize:18,flexShrink:0,marginLeft:12}}>×</button>
+                </div>
+                <div style={{padding:"12px 16px",display:"flex",gap:7,flexWrap:"wrap"}}>
+                  {[{l:"Séries",v:exModal.s},{l:"Reps",v:exModal.r},{l:"Repos",v:exModal.rest},{l:"Charge",v:exModal.ch}].map(s=>(
+                    <div key={s.l} style={{padding:"8px 10px",background:"#ffffff",border:"0.5px solid #dce8f4",borderRadius:10,textAlign:"center",flex:1,minWidth:60}}>
+                      <div style={{fontSize:14,fontWeight:400,color:"#3b82f6",fontFamily:"'Syne',sans-serif"}}>{s.v}</div>
+                      <div style={{fontSize:9,color:"#a0b4cc",marginTop:2}}>{s.l}</div>
+                    </div>
+                  ))}
+                </div>
+                <div style={{padding:"0 16px",display:"flex",gap:6,marginBottom:14}}>
+                  {[{id:"tips",l:"Tips"},{id:"variantes",l:"Variantes"},{id:"erreurs",l:"Erreurs"},{id:"morpho",l:"Morpho"}].map(t=>(
+                    <button key={t.id} onClick={()=>setExModalTab(t.id)} style={{padding:"6px 13px",background:exModalTab===t.id?"rgba(59,130,246,0.08)":"transparent",border:`0.5px solid ${exModalTab===t.id?"#3b82f6":"#dce8f4"}`,borderRadius:20,color:exModalTab===t.id?"#3b82f6":"#a0b4cc",cursor:"pointer",fontSize:11,fontWeight:500,fontFamily:"'Inter',sans-serif"}}>{t.l}</button>
+                  ))}
+                </div>
+                <div style={{padding:"0 16px"}}>
+                  {exModalTab==="tips"&&(
+                    <Box>
+                      <Lbl>Conseils techniques</Lbl>
+                      {(exModal.tips||[]).map((tip,i)=>(
+                        <div key={i} style={{display:"flex",gap:12,marginBottom:14,paddingBottom:14,borderBottom:i<(exModal.tips.length-1)?"0.5px solid #dce8f4":"none"}}>
+                          <div style={{width:22,height:22,borderRadius:"50%",background:"rgba(59,130,246,0.1)",border:"0.5px solid rgba(59,130,246,0.2)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:10,fontWeight:500,color:"#3b82f6"}}>{i+1}</div>
+                          <div style={{fontSize:12,color:"#0f1a2e",lineHeight:1.6}}>{tip}</div>
+                        </div>
+                      ))}
+                      {exModal.prog&&<div style={{marginTop:4,padding:"10px 12px",background:"rgba(34,197,94,0.08)",border:"0.5px solid rgba(34,197,94,0.2)",borderRadius:9}}><div style={{fontSize:10,color:"#22c55e",fontWeight:500,letterSpacing:"1px",textTransform:"uppercase",marginBottom:3}}>Progression</div><div style={{fontSize:12,color:"#a0b4cc",lineHeight:1.5}}>{exModal.prog}</div></div>}
+                    </Box>
+                  )}
+                  {exModalTab==="variantes"&&(
+                    <div>
+                      {(exModal.variantes||[]).map((v,i)=>(
+                        <Box key={i}>
+                          <div style={{fontSize:13,fontWeight:500,color:"#0f1a2e",marginBottom:5}}>{v.nom||v}</div>
+                          {v.note&&<div style={{fontSize:11,color:"#a0b4cc",lineHeight:1.5}}>{v.note}</div>}
+                        </Box>
+                      ))}
+                    </div>
+                  )}
+                  {exModalTab==="erreurs"&&(
+                    <Box>
+                      <Lbl>Erreurs à éviter</Lbl>
+                      {(exModal.erreurs||[]).map((e,i)=>(
+                        <div key={i} style={{display:"flex",gap:10,marginBottom:12,alignItems:"flex-start"}}>
+                          <div style={{width:20,height:20,borderRadius:"50%",background:"rgba(248,113,113,0.1)",border:"0.5px solid rgba(248,113,113,0.3)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:10,color:"#f87171"}}>✕</div>
+                          <div style={{fontSize:12,color:"#0f1a2e",lineHeight:1.5}}>{e}</div>
+                        </div>
+                      ))}
+                    </Box>
+                  )}
+                  {exModalTab==="morpho"&&(
+                    <Box>
+                      <Lbl>Adaptation morphologique</Lbl>
+                      <div style={{fontSize:12,color:"#0f1a2e",lineHeight:1.8}}>{exModal.morpho}</div>
+                    </Box>
+                  )}
+                </div>
+                <div style={{padding:"12px 16px 0"}}>
+                  <Btn onClick={()=>{setNewP(p=>({...p,seances:{...p.seances,[jc]:{...sean,exercices:[...sean.exercices,{nom:exModal.n,cat:exModal.cat,series:exModal.s,reps:exModal.r,repos:exModal.rest,charge:exModal.ch,prog:exModal.prog||"",morpho_tip:exModal.morpho,historique:[],note:""}]}}}));setExModal(null);}}>+ Ajouter cet exercice</Btn>
+                  <Btn v="ghost" onClick={()=>setExModal(null)}>← Retour</Btn>
+                </div>
+              </div>
             </div>
-          ))}
+          )}
         </Box>
         <Btn onClick={()=>{
           const jours=newP.jours.map((j,i)=>({id:i+1,nom:newP.seances[j]?.nom||`Séance ${j}`,focus:j,duree:"45-60 min",intensite:newP.seances[j]?.intensite||"modere",exercices:(newP.seances[j]?.exercices||[]).map(ex=>({...ex,historique:[],note:""})),complete:false,date:null,note:""}));
@@ -1744,7 +1833,13 @@ export default function App(){
   };
   const Profile=()=>(
     <div style={{padding:"0 15px 16px"}} className="anim">
-      <div style={{padding:"26px 0 14px"}}><div style={{fontFamily:"'Syne',sans-serif",fontSize:30,letterSpacing:-0.3,fontWeight:300}}>PROFIL</div></div>
+      <div style={{padding:"26px 0 14px",display:"flex",flexDirection:"column",alignItems:"center"}}>
+        <div style={{width:68,height:68,borderRadius:"50%",background:"rgba(59,130,246,0.08)",border:"0.5px solid rgba(59,130,246,0.2)",display:"flex",alignItems:"center",justifyContent:"center",marginBottom:12}}>
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        </div>
+        <div style={{fontFamily:"'Syne',sans-serif",fontSize:20,fontWeight:300,color:"#0f1a2e",marginBottom:3}}>{profil.prenom||"Mon profil"}</div>
+        <div style={{fontSize:11,color:"#a0b4cc",marginBottom:4}}>{premium?"Membre Premium ✦":"Compte gratuit"}</div>
+      </div>
       {!premium?<div style={{background:"rgba(59,130,246,0.06)",border:`0.5px solid ${C.goldB}`,borderRadius:13,padding:"20px 16px",marginBottom:9}}>
         <div style={{fontFamily:"'Syne',sans-serif",fontSize:24,letterSpacing:2,color:C.gold,textAlign:"center",marginBottom:4}}>PASSER À PREMIUM</div>
         <div style={{fontSize:12,color:C.mid,textAlign:"center",marginBottom:14}}>Programmes personnalisés selon votre morphologie</div>
@@ -1820,13 +1915,7 @@ export default function App(){
   // PROGRAMME TAB — Aujourd'hui / Semaine / Progression / Analyse IA
   // ─────────────────────────────────────
   const MOTIVATIONS=[
-    "Chaque répétition te rapproche de ta meilleure version. 💪",
-    "La progression n'est pas linéaire — continue quand même. 🔥",
-    "Ton corps s'adapte à chaque séance. Fais-lui confiance. ⚡",
-    "Les champions s'entraînent même quand ils n'en ont pas envie. 🏆",
-    "Un jour difficile aujourd'hui = une force supplémentaire demain. 💎",
-    "Tu n'as pas à être parfait. Tu dois juste te présenter. 🎯",
-    "La régularité bat toujours l'intensité. Reste constant. 📈",
+    "La régularité construit les champions. 💪","Chaque rep compte, même les plus dures. 🔥","Ton corps s'améliore entre les séances, pas pendant. ⚡","La douleur d'aujourd'hui est la force de demain. 🏆","Un entraînement imparfait vaut mieux que rien. 🎯","La progression n'est pas linéaire — tiens bon. 📈","Ce que tu fais aujourd'hui, tu en récolteras les fruits. 💎","La discipline est la liberté la plus haute. 🧠","Fais confiance au processus, les résultats arrivent. ⏳","Chaque kilo ajouté est une victoire sur toi-même. 🏋️","Le succès est la somme de petits efforts répétés. ✨","Sois constant, même quand personne ne regarde. 👁️","Les champions ne naissent pas, ils se construisent. 🔨","Aujourd'hui tu peux. Alors fais-le. ⚡","La force mentale précède la force physique. 🧘","Un pas en avant, même petit, est toujours un progrès. 👣","Ton seul concurrent, c'est toi d'hier. 🪞","Le corps accomplit ce que l'esprit croit possible. 💡","Repose-toi si tu dois, mais n'abandonne jamais. 🛡️","La forme physique est une récompense, pas une punition. 🎁","Sois patient, les grandes choses prennent du temps. 🌱","La motivation commence l'action, l'habitude la termine. ⚙️","Chaque séance t'éloigne de là où tu étais. 🚀","Investis en toi aujourd'hui pour récolter demain. 💰","La progression est lente — c'est pour ça qu'elle dure. 🐢","Ne cherche pas la perfection, cherche la constance. 🎖️","Ta santé est ton actif le plus précieux. 💎","Même les pros ont des mauvaises journées. Ils y vont quand même. 🔑","Le plus dur, c'est de commencer. Le reste suit. 🏁","Tu n'es qu'à une séance d'une meilleure humeur. 😤","Construis le corps dont tu as besoin. 🏗️","Chaque goutte de sueur est un investissement. 💧","La force ne vient pas de ce que tu peux faire, mais de ce que tu surmontais. 🌊","Sois l'athlète que tu admirais enfant. 🌟","Ton futur te remercie pour l'effort d'aujourd'hui. 🙏","Les habitudes façonnent le destin. 🧩","Ne te compare à personne — ton chemin est unique. 🛤️","L'entraînement est un dialogue entre toi et ton corps. 🤝","La cohérence bat le talent quand le talent est inconstant. ⚖️","Transforme tes objectifs en habitudes. 📆","Tu mérites de te sentir fort(e) et en forme. ✊","Le mental d'abord, le physique suit. 🧠","Chaque effort nourrit ta confiance en toi. 🌿","Reste humble, travaille dur, reste patient. 🏔️","Ce n'est pas une course. C'est un voyage. 🧳","Fais aujourd'hui ce que d'autres ne veulent pas faire. 🔐","La persévérance est le secret de tous les triomphes. 🗝️","Pas d'excuses, juste des résultats. 💥","Tu es plus fort(e) que tu ne le crois. 🦁","Avance, même lentement. Ne t'arrête jamais. 🚶","Le progrès exige de la patience et du dévouement. 🌄","Chaque séance est une promesse tenue envers toi-même. 📝","Ne laisse pas tes émotions décider de ta discipline. 🧊","La sueur d'aujourd'hui est la médaille de demain. 🥇","Un corps fort se construit une répétition à la fois. 🧱","Recommencer chaque jour, c'est déjà extraordinaire. 🔄","La volonté est un muscle — entraîne-la. 💪","Ton effort d'aujourd'hui redéfinit tes limites de demain. 📏","Il n'y a pas de raccourcis — seulement du travail. 🛠️","Fais le travail. Vois les résultats. Crois au processus. 🔬","Les petites victoires mènent aux grands triomphes. 🏆","La forme physique est le carburant de la vie. ⛽","Investis du temps dans ta santé — c'est rentable. 💹","Chaque jour est une nouvelle chance de progresser. 🌅","Ne sous-estime jamais le pouvoir de la régularité. ⏰","Tu construis quelque chose de grand. Continue. 🏛️","La discipline crée la liberté. 🔓","Ton corps est capable de plus que tu ne le penses. 🌪️","Entraîne-toi dur. Récupère bien. Recommence. 🔁","La santé est la première richesse. 💰","Sois fier(e) de chaque effort, grand ou petit. 🌈","L'excellence est une habitude, pas un acte. 📚","Chaque séance t'appartient. Profites-en. 🙌","Avancer lentement est toujours mieux qu'être immobile. 🐾","Les limites existent dans l'esprit — repousse-les. 🧠","Tu te bâtis, séance après séance. 🏗️","La vraie transformation prend du temps. Sois patient(e). 🌿","Ce que tu fais régulièrement te définit. 🪨","Ton engagement d'aujourd'hui est ta fierté de demain. 🎗️","La persévérance transforme l'ordinaire en exceptionnel. ✨","Travaille dur en silence. Laisse tes résultats parler. 🤫","Le corps suit l'esprit — programme ta réussite. 🧬","Chaque rep de moins facile te rend plus fort(e). 🔩","Sois meilleur(e) qu'hier, moins bon(ne) que demain. 📊","L'effort d'aujourd'hui remodèle le toi de demain. 🖼️","Bouger est un privilège — honore-le. 🙏","La ténacité fait la différence entre l'essai et le succès. 🎯","La douleur est temporaire, la fierté est permanente. 🏅","Chaque matin est une page blanche pour écrire ta victoire. 📖","Ta santé est l'investissement le plus rentable. 📈","Ne t'arrête pas quand tu es fatigué(e). Arrête quand c'est fait. ✅","La progression constante bat la perfection ponctuelle. 🔄","Un objectif sans plan n'est qu'un souhait. 🗺️","Les grandes transformations commencent par de petites décisions. 🌱","Fais de chaque séance un acte de respect envers toi-même. 🤲","L'effort d'aujourd'hui, c'est la santé de demain. 🩺","Tu es l'auteur(e) de ta propre transformation. ✍️","Tiens la barre, même quand c'est difficile. 🎢","Le meilleur moment pour commencer était hier. Le deuxième meilleur, c'est maintenant. ⏱️","Construis des habitudes, pas des excuses. 🚫","Sois l'énergie que tu veux attirer. ⚡","Chaque progrès mérite d'être célébré, même minime. 🎉","La cohérence est la clé de la transformation durable. 🔑","Donne tout dans chaque séance — tu te remerciera plus tard. 🙌","Le vrai courage, c'est de recommencer quand on est épuisé. 🦅","Ta discipline impressionne — continue. 💫","Chaque centimètre gagné est une victoire réelle. 📐","Le voyage de mille lieues commence par un seul pas. 🌍","Tu n'as pas besoin de motivation — tu as besoin de discipline. ⚙️","La transformation physique est une transformation intérieure. 🧘","Sois cohérent(e) plutôt que parfait(e). ✔️","Chaque séance est une déclaration d'intention. 📣","Construis la version de toi qui dépasse tes rêves. 🌠","Les résultats récompensent ceux qui persistent. 🏆","Tes efforts d'aujourd'hui sont les fondations de demain. 🏛️","Ne te laisse pas arrêter par ce que tu ne peux pas encore faire. 🌊","L'entraînement n'est pas une option — c'est un mode de vie. 🌿","Avance un jour à la fois. C'est suffisant. 📅","Ton potentiel dépasse ce que tu imagines. 🚀","La force est construite dans la répétition. 🔁","Chaque journée d'entraînement est une journée de gagnée. ✊","La santé est silencieuse. La maladie est bruyante. Prends soin de la première. 🤫","Reste concentré(e) sur ton chemin, pas sur celui des autres. 👁️","Tu progresses même quand tu ne le vois pas encore. 🌱","Le calme intérieur vient d'une discipline extérieure. 🧘","Chaque effort a une valeur, même si personne ne le voit. 💡","Le succès est le résultat de choix quotidiens. 📆","La fatigue est temporaire, l'abandon est définitif. 🛑","Ton corps te dit merci après chaque séance. 💚","Fais de ta santé ta priorité numéro un. 🥇","Chaque limite franchie te rend plus libre. 🕊️","La grandeur n'est pas dans les éclairs, mais dans la constance. ⏳","Tu ne seras jamais prêt(e) à 100% — commence quand même. 🎬","Le succès se construit brique après brique. 🧱","Ce n'est pas une question de talent, mais de travail. 🔧","La régularité crée des miracles à long terme. ✨","Ne cherche pas la facilité — cherche la croissance. 🌳","Chaque obstacle est une leçon déguisée. 🎓","Tu as plus de force que tu ne le crois. 💥","L'effort quotidien construit l'excellence durable. 🏆","Prends soin de ton corps — c'est le seul endroit où tu dois vivre. 🏠","La progression est inévitable quand l'effort est constant. 📊","Chaque jour d'entraînement est un vote pour ta santé future. 🗳️","Ne laisse jamais une mauvaise journée devenir une mauvaise semaine. 🔄","Le mental solide précède le physique solide. 🧱","Tu es en train de devenir la meilleure version de toi. 🌟","La cohérence sur le long terme, c'est là que la magie opère. ✨","Chaque séance accomplie est une dette envers toi remboursée. 💳","Il n'y a pas de génétique parfaite — il y a du travail parfait. 🔬","Sois fier(e) d'avoir commencé. 🌅","Le corps fort soutient l'esprit fort. 🤝","Ton investissement en toi est le meilleur placement. 💎","Chaque fois que tu soulèves, tu te soulèves toi-même. ⬆️","La santé est une victoire quotidienne. 🏆","Ne compte pas les jours — fais que les jours comptent. ⏰","La sueur efface les doutes. 💦","Ton futur toi est en train de te remercier. 🙌","Petit à petit, l'oiseau fait son nid. 🐦","Sois l'exemple que tu aurais voulu avoir. 💪","La constance crée la confiance. 🛡️","Chaque limit défoncée ouvre une nouvelle porte. 🚪","Le chemin vers le sommet commence par un premier pas. 🏔️","La discipline aujourd'hui = la liberté demain. 🕊️","Ton corps est ton temple — traite-le comme tel. ⛩️","Chaque jour est une opportunité de te surpasser. ⚡","Le talent sans travail ne mène nulle part. 🛤️","Avance. Progresse. Recommence. C'est ça le secret. 🔑","Tu construis quelque chose de remarquable. 🌟","Fais confiance à ton parcours, même les jours sans résultat visible. 🌫️","La persévérance est la vertu des forts. 💎","Chaque session terminée est une victoire sur le doute. 🥊","L'excellence quotidienne produit l'extraordinaire. ✨","Sois discipliné(e) même quand tu n'en as pas envie. 🔐","Ta santé, c'est ta richesse la plus précieuse. 💰","Un corps en mouvement reste en mouvement. 🌀","Chaque effort compte, surtout quand personne ne regarde. 🌙","La transformation se passe dans l'obscurité, entre les séances. 🌑","Sois plus fort(e) que tes excuses. 🚫","Ta vie s'améliore quand tu t'améliores. 📈","La récupération fait partie du progrès. 😴","Ton corps mérite le meilleur soin. 🌿","Chaque objectif atteint en appelle un autre. 🎯","Le mouvement, c'est la vie. Bouge chaque jour. 🏃","Reste concentré(e) sur tes raisons profondes. 💡","Le succès se cache dans la régularité des petits actes. 🔍","Même le plus long voyage a une fin. Continue. 🛤️","Tu es capable de plus que ce que tu réalises. 💥","La force naît de la répétition. 🔄","Chaque jour de santé est une victoire. 🏅","Ne permets pas à la paresse de décider de ta journée. ⏰","Le progrès récompense la patience. 🌱","Ta vie change quand tes habitudes changent. 🔀","Chaque effort est un investissement dans ton futur. 📈","La volonté se renforce avec chaque effort. 💪","Avance même sans applaudissements — fais-le pour toi. 🎖️","La rigueur mène à la réussite. 🏆","Chaque séance accomplie est une victoire sur la médiocrité. ✅","Tu es en bonne voie — garde le cap. ⛵","La force intérieure se bâtit une répétition à la fois. 🧱","Prends soin de toi aujourd'hui pour les victoires de demain. 🌄","Tu as fait le choix difficile — félicitations. 🎊","Chaque goutte de sueur t'approche de ton objectif. 💧","La santé est un mode de vie, pas une destination. 🗺️","Sois meilleur(e) chaque jour, pas parfait(e) un seul. 📅","L'effort constant produit des résultats constants. ⚖️","Ta persévérance force le respect. 🙏","Reste dans l'action — c'est là que tout se passe. 🔥","La volonté est illimitée — utilise-la. ∞","Chaque séance te rapproche de ton meilleur toi. 🎯","Le secret du succès : ne jamais abandonner. 🏆","Ton engagement fait la différence. ✊","Sois plus tenace que tes obstacles. 🪨","La forme physique amplifie tout ce que tu es. 📢","Chaque jour, tu deviens une meilleure version. 🌟","La régularité bât toujours l'intensité. 📊","Un esprit fort dans un corps fort — c'est l'objectif. 🧬","Fais de ta santé une habitude, pas un effort. ⚙️","Le courage n'est pas l'absence de peur — c'est agir malgré elle. 🦁","Chaque limite franchie élargit ta vision du possible. 🌅","La transformation est un processus, pas un événement. 🌿","Tu mérites chaque résultat que tu obtiens. 🏅","Ne recompte pas les efforts passés — concentre-toi sur maintenant. ⏱️","La constance dans l'effort est une forme de génie. 🧠","Chaque session d'entraînement est un chapitre de ta success story. 📖","Ton corps est ton outil le plus puissant. 🔧","Sois reconnaissant(e) de ce que ton corps peut faire. 🙌","La santé physique nourrit la santé mentale. 🌊","Avance sans te comparer — ton chemin est unique. 🛤️","Le vrai luxe, c'est la santé. 💎","Chaque effort d'aujourd'hui est un cadeau pour demain. 🎁","Ta transformation inspire ceux qui t'entourent. 🌟","La discipline silencieuse construit les destins bruyants. 📣","Ne cherche pas l'inspiration — cherche la transpiration. 💦","Chaque répétition est une victoire microscopique. 🔬","Le corps change quand les habitudes changent. 🔀","Sois l'architecte de ta propre santé. 🏗️","Chaque jour compte dans le grand puzzle de ta transformation. 🧩","La rigueur quotidienne produit des résultats extraordinaires. ✨","Tu es en train de faire quelque chose que beaucoup n'osent pas. 🦅","Le progrès est invisible jusqu'au jour où il devient évident. 🌄","Avance, même les jours sans énergie. Surtout ces jours-là. 💡","Tu es plus résistant(e) que tu ne le penses. 🛡️","Chaque entraînement te construit de l'intérieur. 🌱","La santé n'est pas tout — mais sans elle, tout n'est rien. ⚡","Reste sur la voie même quand la destination semble lointaine. 🗺️","Ton engagement aujourd'hui = ta fierté demain. 🎖️","La force se forge dans la difficulté, pas dans le confort. 🔩","Chaque jour d'effort est un jour de plus vers tes objectifs. 📅","Sois fier(e) de chaque séance réalisée. 🌟","La transformation physique commence dans la tête. 🧠","Chaque limite que tu repousses t'appartient. 🏆","Reste motivé(e), même quand les résultats tardent. 🌱","La santé est la base de tout succès durable. 🏛️","Chaque progrès, aussi petit soit-il, mérite d'être célébré. 🎉","Tu progresses. Continue. Ne t'arrête pas. 🚀",
   ];
 
   const getTodaySeance=()=>{
@@ -2142,7 +2231,6 @@ export default function App(){
     const subNav=[
       {id:"calendar",l:"Planification"},
       {id:"today",l:"Aujourd'hui"},
-      {id:"semaine",l:"Semaine"},
       {id:"stats",l:"Progression"},
       {id:"creer",l:"Programme"},
       {id:"analyse",l:"Analyse IA",prem:true},
@@ -2157,7 +2245,7 @@ export default function App(){
         </div>
         {progView==="calendar"&&Calendar()}
         {progView==="today"&&<TodayView/>}
-        {progView==="semaine"&&<SemaineView/>}
+        
         {progView==="stats"&&Stats()}
         {progView==="creer"&&<div style={{padding:"0 15px"}}>
           <Box>
@@ -2174,7 +2262,7 @@ export default function App(){
                   const total=j.exercices?.length||0;
                   const done=j.exercices?.filter((_,idx)=>checkedEx[`${j.id}-${idx}`]).length||0;
                   return(
-                    <div key={i} onClick={()=>{setProgView("semaine");}} style={{padding:"10px 12px",background:C.s2,border:"0.5px solid #dce8f4",borderRadius:9,marginBottom:6,cursor:"pointer"}}>
+                    <div key={i} onClick={()=>{setProgView("today");}} style={{padding:"10px 12px",background:C.s2,border:"0.5px solid #dce8f4",borderRadius:9,marginBottom:6,cursor:"pointer"}}>
                       <Row style={{justifyContent:"space-between"}}>
                         <div>
                           <div style={{fontSize:9,color:int.c,fontWeight:700,textTransform:"uppercase",letterSpacing:"1px",marginBottom:2}}>{int.l}</div>
@@ -2227,9 +2315,13 @@ export default function App(){
       </div>
     </div>
   );
-  const NAV=[{id:"home",i:"⌂",l:"Accueil"},{id:"program",i:"▦",l:"Programme"},{id:"nutrition",i:"◈",l:"Nutrition"}];
+  const NAV=[
+    {id:"home",l:"Accueil",svg:<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>},
+    {id:"program",l:"Programme",svg:<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></svg>},
+    {id:"nutrition",l:"Nutrition",svg:<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2a9 9 0 0 1 9 9c0 4-2.5 7.5-6 9l-3 2-3-2C5.5 18.5 3 15 3 11a9 9 0 0 1 9-9z"/><path d="M12 6v6l4 2"/></svg>},
+  ];
   return(
-    <div style={{minHeight:"100vh",background:C.bg,fontFamily:"'Inter',sans-serif",color:C.text,paddingBottom:80}}>
+    <div style={{minHeight:"100vh",background:C.bg,fontFamily:"'Inter',sans-serif",color:C.text}}>
       <style>{CSS}</style>
       <Notif n={notif} onClose={()=>setNotif(null)}/>
       {/* Header */}
@@ -2251,7 +2343,7 @@ export default function App(){
           }}>◉</button>
         </div>
       </div>
-      <div style={{maxWidth:500,margin:"0 auto"}}>
+      <div style={{maxWidth:500,margin:"0 auto",paddingBottom:72}}>
         {tab==="home"&&Home()}
         {tab==="program"&&ProgramTab()}
         {tab==="nutrition"&&Nutrition()}
@@ -2260,10 +2352,10 @@ export default function App(){
       {/* Nav — 3 onglets uniquement */}
       <nav className="np" style={{position:"fixed",bottom:0,left:0,right:0,background:"rgba(230,240,252,0.98)",backdropFilter:"blur(20px)",borderTop:"0.5px solid #c8daf0",display:"flex",zIndex:100}}>
         {NAV.map(t=>(
-          <button key={t.id} onClick={()=>setTab(t.id)} style={{flex:1,padding:"10px 4px 14px",background:"transparent",border:"none",cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:4,transition:"all .15s",fontFamily:"'Inter',sans-serif"}}>
-            <span style={{fontSize:20,lineHeight:1,opacity:tab===t.id?1:0.35,transition:"opacity .15s"}}>{t.i}</span>
-            <span style={{fontSize:9,letterSpacing:"0.5px",fontWeight:500,color:tab===t.id?"#3b82f6":"#a0b4cc",transition:"color .15s"}}>{t.l}</span>
-            {tab===t.id&&<div style={{width:16,height:2,borderRadius:1,background:"#3b82f6",marginTop:1}}/>}
+          <button key={t.id} onClick={()=>setTab(t.id)} style={{flex:1,padding:"10px 4px 12px",background:"transparent",border:"none",cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:3,transition:"all .15s",fontFamily:"'Inter',sans-serif"}}>
+            <div style={{color:tab===t.id?"#3b82f6":"#a0b4cc",transition:"color .15s",lineHeight:1}}>{t.svg}</div>
+            <span style={{fontSize:9,letterSpacing:"0.3px",fontWeight:tab===t.id?600:400,color:tab===t.id?"#3b82f6":"#a0b4cc",transition:"color .15s"}}>{t.l}</span>
+            {tab===t.id&&<div style={{width:20,height:2,borderRadius:1,background:"#3b82f6"}}/>}
           </button>
         ))}
       </nav>
