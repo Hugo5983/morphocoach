@@ -1,18 +1,19 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 const C = {
-  bg:"#08090D", s1:"#0F1118", s2:"#161820", s3:"#1E2130",
-  gold:"#D4A853", goldL:"#F5C842", goldD:"rgba(212,168,83,0.12)", goldB:"rgba(212,168,83,0.22)",
-  text:"#EEE9DF", mid:"#7A7670", dim:"#3A3830",
-  green:"#3EC87A", red:"#E05252", blue:"#4D8FE0", orange:"#E0883A", purple:"#9B6FE0",
+  bg:"#06060a",   s1:"#0e0c08",  s2:"#120f07",  s3:"#1e1a10",
+  gold:"#C8963E", goldL:"#E8B84B", goldD:"rgba(200,150,62,0.12)", goldB:"rgba(200,150,62,0.22)",
+  text:"#f0e8d8", mid:"#5a4e3a",  dim:"#2a2015",
+  green:"#22c55e", red:"#f87171", blue:"#60a5fa", orange:"#d97706", purple:"#a78bfa",
+  warm1:"#1e1a10", warm2:"#2a2015", warm3:"rgba(200,150,62,0.08)",
 };
 const INT = {
-  leger:   {l:"Léger",   c:"#3EC87A"},
-  modere:  {l:"Modéré",  c:"#4D8FE0"},
-  lourd:   {l:"Lourd",   c:"#E0883A"},
-  intense: {l:"Intense", c:"#E05252"},
-  mobilite:{l:"Mobilité",c:"#9B6FE0"},
+  leger:   {l:"Léger",   c:"#22c55e"},
+  modere:  {l:"Modéré",  c:"#C8963E"},
+  lourd:   {l:"Lourd",   c:"#d97706"},
+  intense: {l:"Intense", c:"#f87171"},
+  mobilite:{l:"Mobilité",c:"#a78bfa"},
 };
-const SESS_COLORS = ["#D4A853","#3EC87A","#4D8FE0","#E05252","#E0883A","#9B6FE0","#3AB8C8","#E06890"];
+const SESS_COLORS = ["#C8963E","#3EC87A","#4D8FE0","#E05252","#E0883A","#9B6FE0","#3AB8C8","#E06890"];
 const CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap');
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
@@ -21,7 +22,7 @@ input,textarea,select{outline:none;font-family:'Inter',sans-serif}
 input::placeholder,textarea::placeholder{color:${C.dim}}
 select option{background:${C.s2}}
 ::-webkit-scrollbar{width:2px;height:2px}
-::-webkit-scrollbar-thumb{background:rgba(212,168,83,0.2);border-radius:2px}
+::-webkit-scrollbar-thumb{background:rgba(200,150,62,0.2);border-radius:2px}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes slideDown{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
@@ -30,19 +31,19 @@ select option{background:${C.s2}}
 @media print{.np{display:none!important}}
 `;
 const Box = ({children,style,onClick})=>(
-  <div onClick={onClick} style={{background:C.s1,border:`1px solid ${C.s3}`,borderRadius:13,padding:"16px 15px",marginBottom:9,cursor:onClick?"pointer":"default",...style}}>{children}</div>
+  <div onClick={onClick} style={{background:'#0e0c08',border:'0.5px solid #1e1a10',borderRadius:14,padding:"16px 15px",marginBottom:9,cursor:onClick?"pointer":"default",...style}}>{children}</div>
 );
 const Lbl = ({children,style})=>(
   <div style={{fontSize:9,color:C.gold,letterSpacing:"2px",textTransform:"uppercase",fontWeight:700,marginBottom:10,...style}}>{children}</div>
 );
 const Inp = ({style,...p})=>(
-  <input style={{width:"100%",padding:"11px 13px",background:C.s2,border:`1px solid ${C.s3}`,borderRadius:9,color:C.text,fontSize:13,marginBottom:8,...style}} {...p}/>
+  <input style={{width:"100%",padding:"11px 13px",background:"#120f07",border:"0.5px solid #1e1a10",borderRadius:9,color:"#f0e8d8",fontSize:13,marginBottom:8,...style}} {...p}/>
 );
 const Btn = ({children,onClick,disabled,v="fill",sm})=>{
   const vs={
-    fill:{bg:`linear-gradient(135deg,${C.goldL},${C.gold})`,color:"#08090E",border:"none"},
-    out: {bg:"transparent",color:C.gold,border:`1px solid ${C.goldB}`},
-    ghost:{bg:"rgba(255,255,255,0.04)",color:C.mid,border:`1px solid ${C.s3}`},
+    fill:{bg:`linear-gradient(135deg,#E8B84B,#C8963E)`,color:"#06060a",border:"none"},
+    out: {bg:"transparent",color:C.gold,border:`0.5px solid ${C.goldB}`},
+    ghost:{bg:"rgba(255,255,255,0.04)",color:C.mid,border:"0.5px solid #1e1a10"},
   };
   const s=vs[v]||vs.fill;
   return(
@@ -56,7 +57,7 @@ const Btn = ({children,onClick,disabled,v="fill",sm})=>{
   );
 };
 const Bar = ({pct,color=C.gold,h=4})=>(
-  <div style={{height:h,background:"rgba(255,255,255,0.06)",borderRadius:h/2,overflow:"hidden",marginTop:5}}>
+  <div style={{height:h,background:"rgba(200,150,62,0.06)",borderRadius:h/2,overflow:"hidden",marginTop:5}}>
     <div style={{height:"100%",width:`${Math.min(100,pct||0)}%`,background:pct>100?C.red:color,borderRadius:h/2,transition:"width .5s"}}/>
   </div>
 );
@@ -76,7 +77,7 @@ function Notif({n,onClose}){
   useEffect(()=>{const t=setTimeout(onClose,4000);return()=>clearTimeout(t);},[]);
   return(
     <div className="notif" style={{position:"fixed",top:0,left:0,right:0,zIndex:500,padding:"10px 14px",display:"flex",justifyContent:"center",pointerEvents:"none"}}>
-      <div style={{background:C.s1,border:`1px solid ${C.goldB}`,borderRadius:12,padding:"11px 14px",maxWidth:460,width:"100%",display:"flex",alignItems:"center",gap:10,pointerEvents:"all",boxShadow:"0 8px 32px rgba(0,0,0,0.6)"}}>
+      <div style={{background:C.s1,border:`0.5px solid ${C.goldB}`,borderRadius:12,padding:"11px 14px",maxWidth:460,width:"100%",display:"flex",alignItems:"center",gap:10,pointerEvents:"all",boxShadow:"0 8px 32px rgba(0,0,0,0.6)"}}>
         <span style={{fontSize:20,flexShrink:0}}>{n.icon}</span>
         <div style={{flex:1}}>
           <div style={{fontSize:12,fontWeight:700}}>{n.title}</div>
@@ -120,9 +121,9 @@ function Chrono({onClose}){
       </div>
       <div style={{display:"flex",gap:8,marginBottom:16}}>
         <button onClick={()=>setRun(r=>!r)} style={{padding:"10px 18px",background:run?"rgba(224,72,72,.1)":"rgba(56,199,117,.1)",border:`1px solid ${run?"rgba(224,72,72,.3)":"rgba(56,199,117,.3)"}`,borderRadius:8,color:run?C.red:C.green,cursor:"pointer",fontSize:12,fontFamily:"'Inter',sans-serif",fontWeight:600}}>{run?"Pause":"Go"}</button>
-        <button onClick={()=>{setT(0);setLeft(preset);setRun(true);}} style={{padding:"10px 14px",background:C.s2,border:`1px solid ${C.s3}`,borderRadius:8,color:C.mid,cursor:"pointer",fontSize:14}}>↺</button>
+        <button onClick={()=>{setT(0);setLeft(preset);setRun(true);}} style={{padding:"10px 14px",background:C.s2,border:"0.5px solid #1e1a10",borderRadius:8,color:C.mid,cursor:"pointer",fontSize:14}}>↺</button>
       </div>
-      <button onClick={onClose} style={{padding:"9px 20px",background:"transparent",border:`1px solid ${C.goldB}`,borderRadius:8,color:C.gold,cursor:"pointer",fontSize:11,fontWeight:600,letterSpacing:"1px"}}>FERMER</button>
+      <button onClick={onClose} style={{padding:"9px 20px",background:"transparent",border:`0.5px solid ${C.goldB}`,borderRadius:8,color:C.gold,cursor:"pointer",fontSize:11,fontWeight:600,letterSpacing:"1px"}}>FERMER</button>
     </div>
   );
 }
@@ -132,7 +133,7 @@ function DayModal({date,session,onSave,onDelete,onClose}){
   const [color,setColor]=useState(session?.color||SESS_COLORS[0]);
   return(
     <div style={{position:"fixed",inset:0,background:"rgba(8,9,14,0.92)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:300,padding:18}}>
-      <div style={{background:C.s1,border:`1px solid ${C.s3}`,borderRadius:14,padding:"22px 18px",width:"100%",maxWidth:360}}>
+      <div style={{background:C.s1,border:"0.5px solid #1e1a10",borderRadius:14,padding:"22px 18px",width:"100%",maxWidth:360}}>
         <Lbl>Séance du {date}</Lbl>
         {session&&(
           <Row style={{justifyContent:"space-between",marginBottom:12,padding:"8px 10px",background:C.s2,borderRadius:8}}>
@@ -581,12 +582,12 @@ export default function App(){
           <div style={{fontFamily:"'Syne',sans-serif",fontSize:32,letterSpacing:2,lineHeight:1,marginBottom:12}}>
             {profil.prenom?`BONJOUR, ${profil.prenom.toUpperCase()}`:"MORPHOCOACH"}
           </div>
-          <div style={{padding:"10px 13px",background:"rgba(212,168,83,0.08)",border:`1px solid ${C.goldB}`,borderRadius:10,fontSize:12,color:C.mid,fontStyle:"italic",lineHeight:1.5}}>
+          <div style={{padding:"10px 13px",background:"rgba(212,168,83,0.08)",border:`0.5px solid ${C.goldB}`,borderRadius:10,fontSize:12,color:C.mid,fontStyle:"italic",lineHeight:1.5}}>
             💬 {motiv}
           </div>
         </div>
         {todaySess&&(
-          <div style={{padding:"12px 14px",background:`${todaySess.color}18`,border:`1px solid ${todaySess.color}40`,borderRadius:11,marginBottom:9,display:"flex",alignItems:"center",gap:10}}>
+          <div style={{padding:"12px 14px",background:`${todaySess.color}15`,border:`0.5px solid ${todaySess.color}35`,borderRadius:11,marginBottom:9,display:"flex",alignItems:"center",gap:10}}>
             <div style={{width:8,height:8,borderRadius:"50%",background:todaySess.color,flexShrink:0}}/>
             <div>
               <div style={{fontSize:9,color:todaySess.color,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase"}}>Séance du jour</div>
@@ -688,8 +689,8 @@ export default function App(){
                       setLastWeighIn(new Date().toISOString());
                       setNewWeight("");setShowWeightInput(false);
                       push("⚖️","Poids enregistré !",`${newWeight}kg enregistré. Prochain pesée dans 2 semaines.`);
-                    }} style={{padding:"11px 14px",background:C.goldD,border:`1px solid ${C.goldB}`,borderRadius:9,color:C.gold,cursor:"pointer",fontSize:12,fontWeight:700,fontFamily:"'Syne',sans-serif",whiteSpace:"nowrap"}}>✓ OK</button>
-                    <button onClick={()=>setShowWeightInput(false)} style={{padding:"11px 10px",background:C.s2,border:`1px solid ${C.s3}`,borderRadius:9,color:C.mid,cursor:"pointer",fontSize:14}}>×</button>
+                    }} style={{padding:"11px 14px",background:C.goldD,border:`0.5px solid ${C.goldB}`,borderRadius:9,color:C.gold,cursor:"pointer",fontSize:12,fontWeight:700,fontFamily:"'Syne',sans-serif",whiteSpace:"nowrap"}}>✓ OK</button>
+                    <button onClick={()=>setShowWeightInput(false)} style={{padding:"11px 10px",background:C.s2,border:"0.5px solid #1e1a10",borderRadius:9,color:C.mid,cursor:"pointer",fontSize:14}}>×</button>
                   </Row>
                 ):(
                   <Btn onClick={()=>setShowWeightInput(true)} v="out">⚖️ Enregistrer mon poids</Btn>
@@ -821,7 +822,7 @@ export default function App(){
               ))}
             </Box>
             {/* Motivation */}
-            <Box style={{background:`linear-gradient(135deg,rgba(212,168,83,0.08),rgba(212,168,83,0.02))`,border:`1px solid ${C.goldB}`,textAlign:"center"}}>
+            <Box style={{background:`linear-gradient(135deg,rgba(212,168,83,0.08),rgba(212,168,83,0.02))`,border:`0.5px solid ${C.goldB}`,textAlign:"center"}}>
               <div style={{fontSize:20,marginBottom:8}}>💪</div>
               <div style={{fontSize:13,color:C.text,lineHeight:1.6,fontWeight:500}}>
                 {seancesFaites<5?"Vous êtes sur la bonne voie ! Continuez à enregistrer vos séances.":
@@ -892,7 +893,7 @@ export default function App(){
       <Lbl>Séance bonus</Lbl>
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,marginBottom:12}}>
         {[{id:"etirements",i:"🧘",l:"Étirements",color:C.purple},{id:"cardio",i:"🏃",l:"Cardio",color:C.blue},{id:"mobilite",i:"💆",l:"Mobilité",color:C.green}].map(b=>(
-          <div key={b.id} onClick={()=>setBonusModal(b)} style={{padding:"12px 8px",textAlign:"center",background:C.s2,border:`1px solid ${C.s3}`,borderRadius:10,cursor:"pointer"}}>
+          <div key={b.id} onClick={()=>setBonusModal(b)} style={{padding:"12px 8px",textAlign:"center",background:C.s2,border:"0.5px solid #1e1a10",borderRadius:10,cursor:"pointer"}}>
             <div style={{fontSize:22,marginBottom:4}}>{b.i}</div>
             <div style={{fontSize:11,fontWeight:700,color:b.color}}>{b.l}</div>
           </div>
@@ -900,7 +901,7 @@ export default function App(){
       </div>
       {bonusModal&&(
         <div style={{position:"fixed",inset:0,background:"rgba(8,9,13,0.92)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:300,padding:18}}>
-          <div style={{background:C.s1,border:`1px solid ${C.s3}`,borderRadius:14,padding:"22px 18px",width:"100%",maxWidth:360}}>
+          <div style={{background:C.s1,border:"0.5px solid #1e1a10",borderRadius:14,padding:"22px 18px",width:"100%",maxWidth:360}}>
             <Lbl>{bonusModal.i} {bonusModal.l}</Lbl>
             <div style={{fontSize:12,color:C.mid,marginBottom:14}}>Durée de la séance ?</div>
             <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:16}}>
@@ -911,7 +912,7 @@ export default function App(){
                   setCalSess(s=>({...s,[key]:{nom:`${bonusModal.l} ${dur}`,intensite:"mobilite",color:bonusModal.color}}));
                   setBonusModal(null);
                   push("✅",`${bonusModal.l} ajouté !`,`${dur} enregistré dans le calendrier.`);
-                }} style={{padding:"10px 16px",background:C.s2,border:`1px solid ${C.s3}`,borderRadius:9,cursor:"pointer",fontSize:13,fontWeight:600,color:C.text}}>{dur}</div>
+                }} style={{padding:"10px 16px",background:C.s2,border:"0.5px solid #1e1a10",borderRadius:9,cursor:"pointer",fontSize:13,fontWeight:600,color:C.text}}>{dur}</div>
               ))}
             </div>
             <Btn v="ghost" onClick={()=>setBonusModal(null)}>Annuler</Btn>
@@ -953,7 +954,7 @@ export default function App(){
             const total=j.exercices?.length||0;
             const done=j.exercices?.filter((_,idx)=>checkedEx[`${j.id}-${idx}`]).length||0;
             return(
-              <Row key={i} onClick={()=>{setTab("program");setProgView("semaine");}} style={{padding:"10px 12px",background:C.s2,borderRadius:9,marginBottom:5,cursor:"pointer",border:`1px solid ${C.s3}`}}>
+              <Row key={i} onClick={()=>{setTab("program");setProgView("semaine");}} style={{padding:"10px 12px",background:C.s2,borderRadius:9,marginBottom:5,cursor:"pointer",border:"0.5px solid #1e1a10"}}>
                 <div style={{width:3,height:36,borderRadius:1.5,background:int.c,marginRight:10,flexShrink:0}}/>
                 <div style={{flex:1}}>
                   <div style={{fontSize:9,color:int.c,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",marginBottom:2}}>{int.l}</div>
@@ -993,7 +994,7 @@ export default function App(){
             <div style={{fontFamily:"'Syne',sans-serif",fontSize:18,letterSpacing:-0.5,fontWeight:800}}>{s.nom}</div>
             <div style={{fontSize:11,color:C.mid}}>{s.focus} · {s.duree}</div>
           </div>
-          <button onClick={()=>setChrono(true)} style={{display:"flex",alignItems:"center",gap:8,width:"100%",padding:"10px 13px",background:C.s2,border:`1px solid ${C.s3}`,borderRadius:9,color:C.mid,cursor:"pointer",fontSize:12,fontFamily:"'Inter',sans-serif",fontWeight:500,marginBottom:10}}>⏱ Chronomètre de repos</button>
+          <button onClick={()=>setChrono(true)} style={{display:"flex",alignItems:"center",gap:8,width:"100%",padding:"10px 13px",background:C.s2,border:"0.5px solid #1e1a10",borderRadius:9,color:C.mid,cursor:"pointer",fontSize:12,fontFamily:"'Inter',sans-serif",fontWeight:500,marginBottom:10}}>⏱ Chronomètre de repos</button>
           {s.exercices.map((ex,j)=>{
             const last=ex.historique.length>0?ex.historique[ex.historique.length-1]:null;
             const gain=ex.historique.length>1?(parseFloat(ex.historique[ex.historique.length-1].poids)-parseFloat(ex.historique[0].poids)):0;
@@ -1019,7 +1020,7 @@ export default function App(){
                 {!editParams?(
                   <div style={{display:"flex",gap:4,flexWrap:"wrap",marginBottom:8}}>
                     {[{l:"Sets",v:ex.series},{l:"Reps",v:ex.reps},{l:"Repos",v:ex.repos},{l:"Charge",v:ex.charge}].filter(s=>s.v).map(s=>(
-                      <div key={s.l} style={{padding:"4px 9px",background:C.s2,border:`1px solid ${C.s3}`,borderRadius:6,textAlign:"center"}}>
+                      <div key={s.l} style={{padding:"4px 9px",background:C.s2,border:"0.5px solid #1e1a10",borderRadius:6,textAlign:"center"}}>
                         <div style={{fontFamily:"'Syne',sans-serif",fontSize:14,color:C.gold,fontWeight:700}}>{s.v}</div>
                         <div style={{fontSize:9,color:C.mid}}>{s.l}</div>
                       </div>
@@ -1041,7 +1042,7 @@ export default function App(){
                             const u=[...prog.jours];
                             u[seance].exercices[j][p.k]=e.target.value;
                             setProg({...prog,jours:u});
-                          }} style={{width:"100%",padding:"7px 9px",background:C.s3,border:`1px solid ${C.s3}`,borderRadius:6,color:C.text,fontSize:12,fontFamily:"'Inter',sans-serif"}}/>
+                          }} style={{width:"100%",padding:"7px 9px",background:C.s3,border:"0.5px solid #1e1a10",borderRadius:6,color:C.text,fontSize:12,fontFamily:"'Inter',sans-serif"}}/>
                         </div>
                       ))}
                     </div>
@@ -1132,7 +1133,7 @@ export default function App(){
             );
           })}
           <Lbl style={{marginTop:8}}>Note de séance</Lbl>
-          <textarea style={{width:"100%",padding:"11px 13px",background:C.s2,border:`1px solid ${C.s3}`,borderRadius:9,color:C.text,fontSize:13,minHeight:65,resize:"vertical",marginBottom:8,fontFamily:"'Inter',sans-serif"}} placeholder="Comment s'est passée la séance ?" value={s.note||""} onChange={e=>{const u=[...prog.jours];u[seance].note=e.target.value;setProg({...prog,jours:u});}}/>
+          <textarea style={{width:"100%",padding:"11px 13px",background:C.s2,border:"0.5px solid #1e1a10",borderRadius:9,color:C.text,fontSize:13,minHeight:65,resize:"vertical",marginBottom:8,fontFamily:"'Inter',sans-serif"}} placeholder="Comment s'est passée la séance ?" value={s.note||""} onChange={e=>{const u=[...prog.jours];u[seance].note=e.target.value;setProg({...prog,jours:u});}}/>
           <Btn onClick={()=>{const u=[...prog.jours];u[seance].complete=true;u[seance].date=new Date().toLocaleDateString("fr-FR");setProg({...prog,jours:u});push("🏆","Séance terminée !","Bravo ! Progression enregistrée.");setSeance(null);}}>✓ Séance terminée</Btn>
         </div>
       );
@@ -1165,7 +1166,7 @@ export default function App(){
             </Box>
           );
         })}
-        <button onClick={()=>setChrono(true)} style={{display:"flex",alignItems:"center",justifyContent:"center",gap:8,width:"100%",padding:13,background:"transparent",border:`1px solid ${C.s3}`,borderRadius:11,color:C.mid,cursor:"pointer",fontSize:12,fontFamily:"'Inter',sans-serif",marginBottom:8}}>⏱ Chronomètre de repos</button>
+        <button onClick={()=>setChrono(true)} style={{display:"flex",alignItems:"center",justifyContent:"center",gap:8,width:"100%",padding:13,background:"transparent",border:"0.5px solid #1e1a10",borderRadius:11,color:C.mid,cursor:"pointer",fontSize:12,fontFamily:"'Inter',sans-serif",marginBottom:8}}>⏱ Chronomètre de repos</button>
       </div>
     );
   };
@@ -1217,7 +1218,7 @@ export default function App(){
             ))}
           </div>
           {groupe&&EX[groupe].map((ex,i)=>(
-            <div key={i} onClick={()=>setNewP(p=>({...p,seances:{...p.seances,[jc]:{...sean,exercices:[...sean.exercices,{nom:ex.n,cat:ex.cat,series:ex.s,reps:ex.r,repos:ex.rest,charge:ex.ch,prog:ex.prog||"",morpho_tip:ex.morpho,historique:[],note:""}]}}}))} style={{padding:"10px 11px",background:C.s2,border:`1px solid ${C.s3}`,borderRadius:9,marginBottom:5,cursor:"pointer"}}>
+            <div key={i} onClick={()=>setNewP(p=>({...p,seances:{...p.seances,[jc]:{...sean,exercices:[...sean.exercices,{nom:ex.n,cat:ex.cat,series:ex.s,reps:ex.r,repos:ex.rest,charge:ex.ch,prog:ex.prog||"",morpho_tip:ex.morpho,historique:[],note:""}]}}}))} style={{padding:"10px 11px",background:C.s2,border:"0.5px solid #1e1a10",borderRadius:9,marginBottom:5,cursor:"pointer"}}>
               <div style={{fontWeight:600,fontSize:12,marginBottom:2}}>{ex.n}</div>
               <div style={{fontSize:10,color:C.mid,marginBottom:3}}>{ex.s}×{ex.r} · {ex.rest}</div>
               <div style={{fontSize:10,color:C.dim,fontStyle:"italic",lineHeight:1.4}}>{ex.morpho.substring(0,80)}…</div>
@@ -1278,7 +1279,7 @@ export default function App(){
         <div style={{fontSize:10,color:C.mid,marginBottom:12,letterSpacing:"0.5px"}}>ÉTAPE {aStep+1}/{steps.length} — {steps[aStep].toUpperCase()}</div>
         {aStep===0&&<Box>
           <Lbl>Photos de posture</Lbl>
-          <div style={{padding:"10px 12px",background:C.goldD,border:`1px solid ${C.goldB}`,borderRadius:8,fontSize:12,color:C.mid,marginBottom:14,lineHeight:1.6}}>
+          <div style={{padding:"10px 12px",background:C.goldD,border:`0.5px solid ${C.goldB}`,borderRadius:8,fontSize:12,color:C.mid,marginBottom:14,lineHeight:1.6}}>
             📸 3 photos permettent une analyse morphologique précise. Position droite, vêtements près du corps. Vous pouvez utiliser votre galerie ou prendre de nouvelles photos.
           </div>
           {/* 3 zones photo */}
@@ -1373,7 +1374,7 @@ export default function App(){
               <div style={{fontSize:20,marginBottom:4}}>{o.i}</div><div style={{fontSize:11,fontWeight:700}}>{o.l}</div>
             </div>
           ))}</G2>
-          <textarea style={{width:"100%",padding:"11px 13px",background:C.s2,border:`1px solid ${C.s3}`,borderRadius:9,color:C.text,fontSize:13,minHeight:60,resize:"vertical",marginBottom:10,fontFamily:"'Inter',sans-serif"}} placeholder="Décrivez votre objectif précis (facultatif)" value={form.objectifPrecis} onChange={e=>setForm({...form,objectifPrecis:e.target.value})}/>
+          <textarea style={{width:"100%",padding:"11px 13px",background:C.s2,border:"0.5px solid #1e1a10",borderRadius:9,color:C.text,fontSize:13,minHeight:60,resize:"vertical",marginBottom:10,fontFamily:"'Inter',sans-serif"}} placeholder="Décrivez votre objectif précis (facultatif)" value={form.objectifPrecis} onChange={e=>setForm({...form,objectifPrecis:e.target.value})}/>
           <div style={{fontSize:11,color:C.mid,marginBottom:6}}>Jours d'entraînement <span style={{color:C.red}}>*</span></div>
           <div style={{display:"flex",flexWrap:"wrap",marginBottom:6}}>
             {["Lun","Mar","Mer","Jeu","Ven","Sam","Dim"].map(j=>(
@@ -1387,7 +1388,7 @@ export default function App(){
         </Box>}
         {aStep===3&&<Box>
           <Lbl>Douleurs & Pathologies</Lbl>
-          <div style={{padding:"8px 10px",background:C.goldD,border:`1px solid ${C.goldB}`,borderRadius:7,fontSize:11,color:C.mid,marginBottom:10,lineHeight:1.6}}>Exercices correctifs = renforcement uniquement. Consultez un kiné pour tout diagnostic.</div>
+          <div style={{padding:"8px 10px",background:C.goldD,border:`0.5px solid ${C.goldB}`,borderRadius:7,fontSize:11,color:C.mid,marginBottom:10,lineHeight:1.6}}>Exercices correctifs = renforcement uniquement. Consultez un kiné pour tout diagnostic.</div>
           {[{z:"Dos",p:["Lombalgie","Hernie discale","Scoliose","Cervicalgie"]},{z:"Épaule",p:["Conflit épaule","Coiffe rotateurs"]},{z:"Genou",p:["Ménisque","LCA","Tendinite","Arthrose"]},{z:"Autres",p:["Épicondylite","Canal carpien","Tendinite Achille","Coxarthrose"]}].map(zone=>(
             <div key={zone.z} style={{marginBottom:10}}>
               <div style={{fontSize:9,color:C.dim,textTransform:"uppercase",letterSpacing:"1px",marginBottom:4}}>{zone.z}</div>
@@ -1455,7 +1456,7 @@ export default function App(){
       return(
         <div style={{position:"relative",width:size,height:size,flexShrink:0}}>
           <svg width={size} height={size} style={{transform:"rotate(-90deg)"}}>
-            <circle cx={size/2} cy={size/2} r={R} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth={stroke}/>
+            <circle cx={size/2} cy={size/2} r={R} fill="none" stroke="rgba(200,150,62,0.08)" strokeWidth={stroke}/>
             <circle cx={size/2} cy={size/2} r={R} fill="none" stroke={color} strokeWidth={stroke}
               strokeDasharray={CI} strokeDashoffset={offset} strokeLinecap="round"
               style={{transition:"stroke-dashoffset .8s ease"}}/>
@@ -1469,7 +1470,7 @@ export default function App(){
       <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:4}}>
         <div style={{position:"relative",width:56,height:56}}>
           <svg width={56} height={56} style={{transform:"rotate(-90deg)"}}>
-            <circle cx={28} cy={28} r={22} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth={5}/>
+            <circle cx={28} cy={28} r={22} fill="none" stroke="rgba(200,150,62,0.06)" strokeWidth={5}/>
             <circle cx={28} cy={28} r={22} fill="none" stroke={color} strokeWidth={5}
               strokeDasharray={2*Math.PI*22} strokeDashoffset={2*Math.PI*22*(1-Math.min(1,pct/100))}
               strokeLinecap="round" style={{transition:"stroke-dashoffset .8s ease"}}/>
@@ -1507,7 +1508,7 @@ export default function App(){
         {nView==="journal"&&(
           <div style={{padding:"0 15px"}}>
             {/* Anneau principal calories */}
-            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"18px 16px",background:C.s1,borderRadius:16,marginBottom:12,border:`1px solid ${C.s3}`}}>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"18px 16px",background:"#0e0c08",borderRadius:18,marginBottom:12,border:"0.5px solid #1e1a10"}}>
               <Ring pct={calPct} color={tot.cal>calObj?C.red:C.gold} size={120} stroke={10}>
                 <div style={{fontFamily:"'Syne',sans-serif",fontSize:22,fontWeight:800,color:tot.cal>calObj?C.red:C.text,lineHeight:1,letterSpacing:-1}}>{calLeft}</div>
                 <div style={{fontSize:9,color:C.mid,marginTop:2}}>kcal restantes</div>
@@ -1539,7 +1540,7 @@ export default function App(){
             </div>
 
             {/* Mini anneaux macros */}
-            <div style={{display:"flex",justifyContent:"space-around",padding:"14px 16px",background:C.s1,borderRadius:14,marginBottom:12,border:`1px solid ${C.s3}`}}>
+            <div style={{display:"flex",justifyContent:"space-around",padding:"14px 16px",background:"#0e0c08",borderRadius:16,marginBottom:12,border:"0.5px solid #1e1a10"}}>
               <MiniRing pct={tot.p/pObj*100} color={C.red} label="Protéines" v={tot.p} max={pObj}/>
               <div style={{width:1,background:C.s3}}/>
               <MiniRing pct={tot.g/gObj*100} color={C.orange} label="Glucides" v={tot.g} max={gObj}/>
@@ -1548,7 +1549,7 @@ export default function App(){
             </div>
 
             {/* Eau */}
-            <div style={{padding:"14px 16px",background:C.s1,borderRadius:14,marginBottom:12,border:`1px solid ${C.s3}`}}>
+            <div style={{padding:"14px 16px",background:C.s1,borderRadius:14,marginBottom:12,border:"0.5px solid #1e1a10"}}>
               <Row style={{justifyContent:"space-between",marginBottom:10}}>
                 <div>
                   <div style={{fontSize:13,fontWeight:700}}>Hydratation</div>
@@ -1571,17 +1572,23 @@ export default function App(){
               const rTot=repas[r.id].reduce((a,f)=>({cal:a.cal+f.c,p:a.p+f.p,g:a.g+f.g,l:a.l+f.l}),{cal:0,p:0,g:0,l:0});
               const isActive=repasA===r.id;
               return(
-                <div key={r.id} style={{background:C.s1,borderRadius:14,marginBottom:10,border:`1px solid ${isActive?C.goldB:C.s3}`,overflow:"hidden"}}>
+                <div key={r.id} style={{background:'#0e0c08',borderRadius:14,marginBottom:8,border:`0.5px solid ${isActive?'#C8963E':'#1e1a10'}`,overflow:'hidden'}}>
                   {/* Header repas */}
                   <div onClick={()=>setRepasA(isActive?null:r.id)} style={{padding:"12px 14px",display:"flex",alignItems:"center",gap:10,cursor:"pointer"}}>
-                    <div style={{width:36,height:36,borderRadius:10,background:C.s2,display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,flexShrink:0}}>{r.i}</div>
+                    <div style={{width:34,height:34,borderRadius:9,background:"#120f07",display:"flex",alignItems:"center",justifyContent:"center",fontSize:17,flexShrink:0}}>{r.i}</div>
                     <div style={{flex:1}}>
-                      <div style={{fontSize:13,fontWeight:700}}>{r.l}</div>
-                      <div style={{fontSize:10,color:C.mid}}>{repas[r.id].length>0?`${repas[r.id].length} aliment${repas[r.id].length>1?"s":""} · ${rTot.cal} kcal`:"Aucun aliment"}</div>
+                      <div style={{fontSize:12,fontWeight:700,color:"#f0e8d8"}}>{r.l}</div>
+                      <div style={{fontSize:10,color:"#5a4e3a"}}>{repas[r.id].length>0?`${repas[r.id].length} aliment${repas[r.id].length>1?"s":""}`:"Aucun aliment"}</div>
+                      {rTot.cal>0&&(
+                        <div style={{display:"flex",gap:3,marginTop:4}}>
+                          <div style={{height:2,borderRadius:1,background:"#C8963E",flex:rTot.cal,maxWidth:"60%"}}/>
+                          <div style={{height:2,borderRadius:1,background:"#1e1a10",flex:calObj}}/>
+                        </div>
+                      )}
                     </div>
                     <div style={{display:"flex",alignItems:"center",gap:8}}>
-                      {rTot.cal>0&&<span style={{fontSize:13,fontWeight:700,color:C.gold}}>{rTot.cal}</span>}
-                      <span style={{fontSize:14,color:C.mid,transform:isActive?"rotate(180deg)":"none",transition:"transform .2s"}}>⌄</span>
+                      {rTot.cal>0&&<span style={{fontSize:14,fontWeight:800,color:"#C8963E"}}>{rTot.cal}</span>}
+                      <span style={{fontSize:14,color:"#2a2015",transform:isActive?"rotate(180deg)":"none",transition:"transform .2s"}}>⌄</span>
                     </div>
                   </div>
                   {/* Aliments */}
@@ -1608,7 +1615,7 @@ export default function App(){
                       {/* Recherche rapide */}
                       <Inp style={{marginTop:10,marginBottom:6}} placeholder="🔍 Ajouter un aliment…" value={search} onChange={e=>setSearch(e.target.value)}/>
                       {search&&filtered.length>0&&(
-                        <div style={{maxHeight:180,overflowY:"auto",borderRadius:9,border:`1px solid ${C.s3}`}}>
+                        <div style={{maxHeight:180,overflowY:"auto",borderRadius:9,border:"0.5px solid #1e1a10"}}>
                           {filtered.map((item,i)=>(
                             <div key={i} onClick={()=>{setRepas(rp=>({...rp,[r.id]:[...rp[r.id],item]}));setSearch("");}} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"9px 12px",background:C.s2,borderBottom:`1px solid ${C.s3}`,cursor:"pointer"}}>
                               <div><div style={{fontSize:12}}>{item.n}</div><div style={{fontSize:10,color:C.mid}}>{item.c}kcal</div></div>
@@ -1621,12 +1628,12 @@ export default function App(){
                       <div style={{marginTop:8}}>
                         <div style={{display:"flex",gap:4,overflowX:"auto",paddingBottom:4}}>
                           {[...new Set(FOODS.map(f=>f.cat))].map(cat=>(
-                            <button key={cat} style={{padding:"4px 10px",background:C.s2,border:`1px solid ${C.s3}`,borderRadius:12,color:C.mid,cursor:"pointer",fontSize:10,whiteSpace:"nowrap",fontFamily:"'Inter',sans-serif"}} onClick={()=>{}}>{cat}</button>
+                            <button key={cat} style={{padding:"4px 10px",background:C.s2,border:"0.5px solid #1e1a10",borderRadius:12,color:C.mid,cursor:"pointer",fontSize:10,whiteSpace:"nowrap",fontFamily:"'Inter',sans-serif"}} onClick={()=>{}}>{cat}</button>
                           ))}
                         </div>
                         <div style={{display:"flex",flexWrap:"wrap",gap:4,marginTop:6}}>
                           {FOODS.filter(f=>!search||f.cat===search).slice(0,8).map((f,i)=>(
-                            <div key={i} onClick={()=>setRepas(rp=>({...rp,[r.id]:[...rp[r.id],f]}))} style={{padding:"5px 10px",background:C.s2,border:`1px solid ${C.s3}`,borderRadius:8,cursor:"pointer",fontSize:10,color:C.text}}>
+                            <div key={i} onClick={()=>setRepas(rp=>({...rp,[r.id]:[...rp[r.id],f]}))} style={{padding:"5px 10px",background:C.s2,border:"0.5px solid #1e1a10",borderRadius:8,cursor:"pointer",fontSize:10,color:C.text}}>
                               {f.n.split("(")[0].trim()} <span style={{color:C.gold}}>{f.c}</span>
                             </div>
                           ))}
@@ -1677,7 +1684,7 @@ export default function App(){
           <div style={{padding:"0 15px"}}>
             <Box>
               <Lbl>Scanner un produit</Lbl>
-              <div style={{padding:"9px 11px",background:C.goldD,border:`1px solid ${C.goldB}`,borderRadius:8,fontSize:11,color:C.mid,marginBottom:12,lineHeight:1.6}}>Base Open Food Facts · 3 millions de produits</div>
+              <div style={{padding:"9px 11px",background:C.goldD,border:`0.5px solid ${C.goldB}`,borderRadius:8,fontSize:11,color:C.mid,marginBottom:12,lineHeight:1.6}}>Base Open Food Facts · 3 millions de produits</div>
               <Inp placeholder="Code-barres EAN (ex: 3017620422003)" inputMode="numeric" value={scanCode} onChange={e=>{setScan(e.target.value);if(e.target.value.length>=8)handleScan(e.target.value);}}/>
               {scanRes&&!scanRes.error&&(
                 <div style={{padding:12,background:"rgba(62,199,122,.08)",border:"1px solid rgba(62,199,122,.2)",borderRadius:10,marginBottom:8}}>
@@ -1689,10 +1696,10 @@ export default function App(){
                   </div>
                   <div style={{display:"flex",gap:7}}>
                     {[{id:"matin",l:"Matin"},{id:"midi",l:"Midi"},{id:"soir",l:"Soir"},{id:"snack",l:"Snack"}].map(r=>(
-                      <button key={r.id} onClick={()=>{setRepas(rp=>({...rp,[r.id]:[...rp[r.id],scanRes]}));setScanRes(null);setScan("");setNView("journal");push("✅","Ajouté !",`${scanRes.n} ajouté au ${r.l.toLowerCase()}.`);}} style={{flex:1,padding:"7px 4px",background:C.s2,border:`1px solid ${C.s3}`,borderRadius:7,color:C.text,cursor:"pointer",fontSize:10,fontFamily:"'Syne',sans-serif",fontWeight:600}}>{r.l}</button>
+                      <button key={r.id} onClick={()=>{setRepas(rp=>({...rp,[r.id]:[...rp[r.id],scanRes]}));setScanRes(null);setScan("");setNView("journal");push("✅","Ajouté !",`${scanRes.n} ajouté au ${r.l.toLowerCase()}.`);}} style={{flex:1,padding:"7px 4px",background:C.s2,border:"0.5px solid #1e1a10",borderRadius:7,color:C.text,cursor:"pointer",fontSize:10,fontFamily:"'Syne',sans-serif",fontWeight:600}}>{r.l}</button>
                     ))}
                   </div>
-                  <button onClick={()=>{setMyFoods(f=>[...f,{...scanRes,id:Date.now()}]);setScanRes(null);setScan("");}} style={{marginTop:8,width:"100%",padding:"7px",background:"transparent",border:`1px solid ${C.s3}`,borderRadius:7,color:C.mid,cursor:"pointer",fontSize:11,fontFamily:"'Inter',sans-serif"}}>💾 Sauvegarder dans ma bibliothèque</button>
+                  <button onClick={()=>{setMyFoods(f=>[...f,{...scanRes,id:Date.now()}]);setScanRes(null);setScan("");}} style={{marginTop:8,width:"100%",padding:"7px",background:"transparent",border:"0.5px solid #1e1a10",borderRadius:7,color:C.mid,cursor:"pointer",fontSize:11,fontFamily:"'Inter',sans-serif"}}>💾 Sauvegarder dans ma bibliothèque</button>
                 </div>
               )}
               {scanRes?.error&&<div style={{padding:"9px 11px",background:"rgba(224,82,82,.08)",border:"1px solid rgba(224,82,82,.2)",borderRadius:8,fontSize:11,color:C.red}}>Produit non trouvé. Ajoutez-le manuellement.</div>}
@@ -1723,7 +1730,7 @@ export default function App(){
                         <span style={{fontSize:9,color:C.green}}>L:{f.l}g</span>
                       </Row>
                     </div>
-                    <button onClick={()=>setRepas(rp=>({...rp,[repasA]:[...rp[repasA],f]}))} style={{padding:"5px 11px",background:C.goldD,border:`1px solid ${C.goldB}`,borderRadius:7,color:C.gold,cursor:"pointer",fontSize:11,fontFamily:"'Syne',sans-serif",fontWeight:700}}>+</button>
+                    <button onClick={()=>setRepas(rp=>({...rp,[repasA]:[...rp[repasA],f]}))} style={{padding:"5px 11px",background:C.goldD,border:`0.5px solid ${C.goldB}`,borderRadius:7,color:C.gold,cursor:"pointer",fontSize:11,fontFamily:"'Syne',sans-serif",fontWeight:700}}>+</button>
                   </Row>
                 ))}
               </Box>
@@ -1736,7 +1743,7 @@ export default function App(){
   const Profile=()=>(
     <div style={{padding:"0 15px 16px"}} className="anim">
       <div style={{padding:"26px 0 14px"}}><div style={{fontFamily:"'Syne',sans-serif",fontSize:30,letterSpacing:-0.3,fontWeight:800}}>PROFIL</div></div>
-      {!premium?<div style={{background:"rgba(200,150,62,0.07)",border:`1px solid ${C.goldB}`,borderRadius:13,padding:"20px 16px",marginBottom:9}}>
+      {!premium?<div style={{background:"rgba(200,150,62,0.07)",border:`0.5px solid ${C.goldB}`,borderRadius:13,padding:"20px 16px",marginBottom:9}}>
         <div style={{fontFamily:"'Syne',sans-serif",fontSize:24,letterSpacing:2,color:C.gold,textAlign:"center",marginBottom:4}}>PASSER À PREMIUM</div>
         <div style={{fontSize:12,color:C.mid,textAlign:"center",marginBottom:14}}>Programmes personnalisés selon votre morphologie</div>
         {["Programme unique adapté à votre corps","Biomécanique et exercices correctifs","Programme nutrition sur mesure","Calendrier cycle 6 semaines"].map(f=>(
@@ -1750,13 +1757,13 @@ export default function App(){
         </div>
         <Btn onClick={()=>{setPremium(true);push("🎉","Premium activé !","Accès complet activé !");}}>Commencer maintenant</Btn>
       </div>:<Box style={{background:C.goldD,borderColor:C.goldB,display:"flex",alignItems:"center",gap:11}}>
-        <div style={{width:38,height:38,borderRadius:"50%",background:"rgba(200,150,62,.15)",border:`1px solid ${C.goldB}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,flexShrink:0}}>◈</div>
+        <div style={{width:38,height:38,borderRadius:"50%",background:"rgba(200,150,62,.15)",border:`0.5px solid ${C.goldB}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,flexShrink:0}}>◈</div>
         <div><div style={{fontFamily:"'Syne',sans-serif",fontSize:16,color:C.gold,letterSpacing:-0.5,fontWeight:800}}>MEMBRE PREMIUM</div><div style={{fontSize:10,color:C.mid}}>Accès complet activé</div></div>
       </Box>}
       <Box>
         <Lbl>Informations</Lbl>
         <Inp placeholder="Prénom" value={profil.prenom} onChange={e=>setProfil({...profil,prenom:e.target.value})}/>
-        <G2><Inp type="number" placeholder="Âge" style={{marginBottom:0}} value={profil.age} onChange={e=>setProfil({...profil,age:e.target.value})}/><select style={{width:"100%",padding:"11px 13px",background:C.s2,border:`1px solid ${C.s3}`,borderRadius:9,color:C.text,fontSize:13}} value={profil.sexe} onChange={e=>setProfil({...profil,sexe:e.target.value})}><option value="">Sexe</option><option value="homme">Homme</option><option value="femme">Femme</option></select></G2>
+        <G2><Inp type="number" placeholder="Âge" style={{marginBottom:0}} value={profil.age} onChange={e=>setProfil({...profil,age:e.target.value})}/><select style={{width:"100%",padding:"11px 13px",background:C.s2,border:"0.5px solid #1e1a10",borderRadius:9,color:C.text,fontSize:13}} value={profil.sexe} onChange={e=>setProfil({...profil,sexe:e.target.value})}><option value="">Sexe</option><option value="homme">Homme</option><option value="femme">Femme</option></select></G2>
         <G2 style={{marginTop:6}}><Inp type="number" placeholder="Poids (kg)" style={{marginBottom:0}} value={profil.poids} onChange={e=>setProfil({...profil,poids:e.target.value})}/><Inp type="number" placeholder="Taille (cm)" style={{marginBottom:0}} value={profil.taille} onChange={e=>setProfil({...profil,taille:e.target.value})}/></G2>
         {imc&&<div style={{marginTop:7,padding:"8px 11px",background:C.s2,borderRadius:7,display:"flex",justifyContent:"space-between"}}>
           <span style={{fontSize:11,color:C.mid}}>IMC</span>
@@ -1803,7 +1810,7 @@ export default function App(){
             </div>
           </Row>
         ))}
-        <button onClick={()=>push("🔔","Test réussi !","Les notifications fonctionnent correctement.")} style={{background:C.goldD,border:`1px solid ${C.goldB}`,borderRadius:7,padding:"7px 14px",color:C.gold,cursor:"pointer",fontSize:11,fontFamily:"'Inter',sans-serif",fontWeight:700}}>Tester les notifications</button>
+        <button onClick={()=>push("🔔","Test réussi !","Les notifications fonctionnent correctement.")} style={{background:C.goldD,border:`0.5px solid ${C.goldB}`,borderRadius:7,padding:"7px 14px",color:C.gold,cursor:"pointer",fontSize:11,fontFamily:"'Inter',sans-serif",fontWeight:700}}>Tester les notifications</button>
       </Box>
     </div>
   );
@@ -1882,7 +1889,7 @@ export default function App(){
           </Row>
           <Bar pct={pct} color={pct===100?C.green:int.c} h={4}/>
         </div>
-        <button onClick={()=>setChrono(true)} style={{display:"flex",alignItems:"center",gap:8,width:"100%",padding:"10px 13px",background:C.s2,border:`1px solid ${C.s3}`,borderRadius:9,color:C.mid,cursor:"pointer",fontSize:12,fontFamily:"'Inter',sans-serif",fontWeight:500,marginBottom:10}}>⏱ Chronomètre de repos</button>
+        <button onClick={()=>setChrono(true)} style={{display:"flex",alignItems:"center",gap:8,width:"100%",padding:"10px 13px",background:C.s2,border:"0.5px solid #1e1a10",borderRadius:9,color:C.mid,cursor:"pointer",fontSize:12,fontFamily:"'Inter',sans-serif",fontWeight:500,marginBottom:10}}>⏱ Chronomètre de repos</button>
         {seance.exercices?.map((ex,j)=>{
           const cc={principal:C.gold,correctif:C.red,mobilite:C.blue,gainage:C.green,isolation:C.purple}[ex.cat||"principal"]||C.gold;
           const exInfo=Object.values(EX).flat().find(e=>e.n===ex.nom)||null;
@@ -1908,7 +1915,7 @@ export default function App(){
               {!editMd?(
                 <div style={{display:"flex",gap:4,flexWrap:"wrap",marginBottom:8}}>
                   {[{l:"Sets",v:ex.series},{l:"Reps",v:ex.reps},{l:"Repos",v:ex.repos},{l:"Charge",v:ex.charge}].filter(s=>s.v).map(s=>(
-                    <div key={s.l} style={{padding:"4px 9px",background:C.s2,border:`1px solid ${C.s3}`,borderRadius:6,textAlign:"center",minWidth:52}}>
+                    <div key={s.l} style={{padding:"4px 9px",background:C.s2,border:"0.5px solid #1e1a10",borderRadius:6,textAlign:"center",minWidth:52}}>
                       <div style={{fontFamily:"'Syne',sans-serif",fontSize:14,fontWeight:700,color:C.gold}}>{s.v}</div>
                       <div style={{fontSize:9,color:C.mid}}>{s.l}</div>
                     </div>
@@ -1925,7 +1932,7 @@ export default function App(){
                           const u=[...prog.jours];
                           const sIdx=prog.jours.findIndex(s=>s.id===seance.id);
                           if(sIdx>=0){u[sIdx].exercices[j][p.k]=e.target.value;setProg({...prog,jours:u});}
-                        }} style={{width:"100%",padding:"7px 9px",background:C.s3,border:`1px solid ${C.s3}`,borderRadius:6,color:C.text,fontSize:12,fontFamily:"'Inter',sans-serif"}}/>
+                        }} style={{width:"100%",padding:"7px 9px",background:C.s3,border:"0.5px solid #1e1a10",borderRadius:6,color:C.text,fontSize:12,fontFamily:"'Inter',sans-serif"}}/>
                       </div>
                     ))}
                   </div>
@@ -2045,7 +2052,7 @@ export default function App(){
         <Lbl style={{marginTop:12}}>Séance bonus</Lbl>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,marginBottom:12}}>
           {[{id:"etirements",i:"🧘",l:"Étirements",color:C.purple},{id:"cardio",i:"🏃",l:"Cardio",color:C.blue},{id:"mobilite",i:"💆",l:"Mobilité",color:C.green}].map(b=>(
-            <div key={b.id} onClick={()=>setBonusModal(b)} style={{padding:"12px 8px",textAlign:"center",background:C.s2,border:`1px solid ${C.s3}`,borderRadius:10,cursor:"pointer"}}>
+            <div key={b.id} onClick={()=>setBonusModal(b)} style={{padding:"12px 8px",textAlign:"center",background:C.s2,border:"0.5px solid #1e1a10",borderRadius:10,cursor:"pointer"}}>
               <div style={{fontSize:22,marginBottom:4}}>{b.i}</div>
               <div style={{fontSize:11,fontWeight:700,color:b.color}}>{b.l}</div>
             </div>
@@ -2053,7 +2060,7 @@ export default function App(){
         </div>
         {bonusModal&&(
           <div style={{position:"fixed",inset:0,background:"rgba(8,9,13,0.92)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:300,padding:18}}>
-            <div style={{background:C.s1,border:`1px solid ${C.s3}`,borderRadius:14,padding:"22px 18px",width:"100%",maxWidth:360}}>
+            <div style={{background:C.s1,border:"0.5px solid #1e1a10",borderRadius:14,padding:"22px 18px",width:"100%",maxWidth:360}}>
               <Lbl>{bonusModal.i} {bonusModal.l}</Lbl>
               <div style={{fontSize:12,color:C.mid,marginBottom:14}}>Durée de la séance ?</div>
               <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:16}}>
@@ -2064,7 +2071,7 @@ export default function App(){
                     setCalSess(s=>({...s,[key]:{nom:`${bonusModal.l} ${dur}`,intensite:"mobilite",color:bonusModal.color}}));
                     setBonusModal(null);
                     push("✅",`${bonusModal.l} ajouté !`,`${dur} de ${bonusModal.l.toLowerCase()} enregistré.`);
-                  }} style={{padding:"10px 16px",background:C.s2,border:`1px solid ${C.s3}`,borderRadius:9,cursor:"pointer",fontSize:13,fontWeight:600,color:C.text}}>{dur}</div>
+                  }} style={{padding:"10px 16px",background:C.s2,border:"0.5px solid #1e1a10",borderRadius:9,cursor:"pointer",fontSize:13,fontWeight:600,color:C.text}}>{dur}</div>
                 ))}
               </div>
               <Btn v="ghost" onClick={()=>setBonusModal(null)}>Annuler</Btn>
@@ -2093,7 +2100,7 @@ export default function App(){
             <div key={i} style={{padding:"10px 12px",background:isToday?"rgba(212,168,83,0.05)":C.s2,border:`1px solid ${isToday?C.goldB:C.s3}`,borderRadius:9,marginBottom:6,display:"flex",alignItems:"center",gap:10}}>
               <div style={{width:36,height:36,borderRadius:"50%",background:isToday?C.goldD:C.s3,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:700,color:isToday?C.gold:C.mid,flexShrink:0}}>{day}</div>
               <div style={{fontSize:12,color:C.dim,fontStyle:"italic"}}>Repos</div>
-              {isToday&&<div style={{marginLeft:"auto",fontSize:9,color:C.gold,fontWeight:700,border:`1px solid ${C.goldB}`,padding:"2px 7px",borderRadius:5}}>AUJOURD'HUI</div>}
+              {isToday&&<div style={{marginLeft:"auto",fontSize:9,color:C.gold,fontWeight:700,border:`0.5px solid ${C.goldB}`,padding:"2px 7px",borderRadius:5}}>AUJOURD'HUI</div>}
             </div>
           );
           const int=INT[seance.intensite||"modere"];
@@ -2155,7 +2162,7 @@ export default function App(){
             <Lbl>Mon programme</Lbl>
             {prog?(
               <div>
-                <div style={{padding:"10px 12px",background:C.goldD,border:`1px solid ${C.goldB}`,borderRadius:9,marginBottom:12}}>
+                <div style={{padding:"10px 12px",background:C.goldD,border:`0.5px solid ${C.goldB}`,borderRadius:9,marginBottom:12}}>
                   <div style={{fontSize:9,color:C.gold,fontWeight:700,letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:3}}>Cycle {prog.numero||1} actif</div>
                   <div style={{fontSize:14,fontWeight:700}}>{prog.titre}</div>
                   <div style={{fontSize:10,color:C.mid,marginTop:2}}>{prog.jours?.length} séances · Démarré le {prog.dateDebut}</div>
@@ -2165,7 +2172,7 @@ export default function App(){
                   const total=j.exercices?.length||0;
                   const done=j.exercices?.filter((_,idx)=>checkedEx[`${j.id}-${idx}`]).length||0;
                   return(
-                    <div key={i} onClick={()=>{setProgView("semaine");}} style={{padding:"10px 12px",background:C.s2,border:`1px solid ${C.s3}`,borderRadius:9,marginBottom:6,cursor:"pointer"}}>
+                    <div key={i} onClick={()=>{setProgView("semaine");}} style={{padding:"10px 12px",background:C.s2,border:"0.5px solid #1e1a10",borderRadius:9,marginBottom:6,cursor:"pointer"}}>
                       <Row style={{justifyContent:"space-between"}}>
                         <div>
                           <div style={{fontSize:9,color:int.c,fontWeight:700,textTransform:"uppercase",letterSpacing:"1px",marginBottom:2}}>{int.l}</div>
@@ -2230,7 +2237,7 @@ export default function App(){
         </div>
         <div style={{display:"flex",gap:10,alignItems:"center"}}>
           {cycleStart&&jR!==null&&jR<=7&&<span style={{fontSize:9,color:C.orange,fontWeight:700}}>⚠️ J-{jR}</span>}
-          {premium&&<span style={{fontSize:9,color:C.gold,border:`1px solid ${C.goldB}`,padding:"2px 8px",borderRadius:8,fontWeight:700,letterSpacing:"1px"}}>PREMIUM</span>}
+          {premium&&<span style={{fontSize:9,color:C.gold,border:`0.5px solid ${C.goldB}`,padding:"2px 8px",borderRadius:8,fontWeight:700,letterSpacing:"1px"}}>PREMIUM</span>}
           {/* Icône Profil */}
           <button onClick={()=>setTab(tab==="profile"?"home":"profile")} style={{
             width:34,height:34,borderRadius:"50%",
@@ -2249,7 +2256,7 @@ export default function App(){
         {tab==="profile"&&Profile()}
       </div>
       {/* Nav — 3 onglets uniquement */}
-      <nav className="np" style={{position:"fixed",bottom:0,left:0,right:0,background:"rgba(8,9,14,0.97)",backdropFilter:"blur(20px)",borderTop:`1px solid ${C.s3}`,display:"flex",zIndex:100}}>
+      <nav className="np" style={{position:"fixed",bottom:0,left:0,right:0,background:"rgba(6,6,10,0.97)",backdropFilter:"blur(24px)",borderTop:"0.5px solid #1e1a10",display:"flex",zIndex:100}}>
         {NAV.map(t=>(
           <button key={t.id} onClick={()=>setTab(t.id)} style={{flex:1,padding:"11px 4px 8px",background:"transparent",border:"none",color:tab===t.id?C.gold:C.mid,cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:3,transition:"color .15s",fontFamily:"'Inter',sans-serif"}}>
             <span style={{fontSize:17,lineHeight:1}}>{t.i}</span>
