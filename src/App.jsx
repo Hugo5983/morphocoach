@@ -631,14 +631,12 @@ export default function App(){
         </Box>
         <Lbl>Suivi du poids</Lbl>
         {(()=>{
-          const today=new Date();
-          const daysSinceLast=lastWeighIn?Math.floor((today-new Date(lastWeighIn))/(1000*60*60*24)):999;
+          const todayD=new Date();
+          const daysSinceLast=lastWeighIn?Math.floor((todayD-new Date(lastWeighIn))/(1000*60*60*24)):999;
           const canWeighIn=daysSinceLast>=14;
           const lastWeight=weightLog.length>0?weightLog[weightLog.length-1]:null;
           const firstWeight=weightLog.length>1?weightLog[0]:null;
           const diff=lastWeight&&firstWeight?(lastWeight.v-firstWeight.v).toFixed(1):null;
-          const [showInput,setShowInput]=useState(false);
-          const [newW,setNewW]=useState("");
           return(
             <Box style={{marginBottom:9}}>
               {weightLog.length>=2&&(
@@ -653,8 +651,8 @@ export default function App(){
                       <div style={{fontSize:9,color:C.mid}}>depuis le début</div>
                     </div>}
                   </Row>
-                  <svg viewBox={`0 0 280 55`} style={{width:"100%",height:55,display:"block"}}>
-                    {weightLog.length>=2&&(()=>{
+                  <svg viewBox="0 0 280 55" style={{width:"100%",height:55,display:"block"}}>
+                    {(()=>{
                       const vals=weightLog.map(w=>w.v);
                       const mn=Math.min(...vals)*0.995,mx=Math.max(...vals)*1.005;
                       const pts=weightLog.map((w,i)=>{const x=(i/(weightLog.length-1))*280;const y=55-((w.v-mn)/(mx-mn||1))*50;return`${x},${y}`;}).join(" ");
@@ -670,9 +668,7 @@ export default function App(){
                   </Row>
                 </div>
               )}
-              {weightLog.length===0&&(
-                <div style={{textAlign:"center",padding:"12px 0",fontSize:12,color:C.mid,marginBottom:10}}>Enregistrez votre première pesée pour voir votre progression.</div>
-              )}
+              {weightLog.length===0&&<div style={{textAlign:"center",padding:"12px 0",fontSize:12,color:C.mid,marginBottom:10}}>Enregistrez votre première pesée pour voir votre progression.</div>}
               {weightLog.length===1&&(
                 <Row style={{justifyContent:"space-between",marginBottom:10}}>
                   <div>
@@ -682,21 +678,21 @@ export default function App(){
                 </Row>
               )}
               {canWeighIn?(
-                showInput?(
+                showWeightInput?(
                   <Row style={{gap:8}}>
-                    <Inp style={{flex:1,marginBottom:0}} type="number" placeholder="Ex: 79.5" value={newW} onChange={e=>setNewW(e.target.value)} step="0.1"/>
+                    <Inp style={{flex:1,marginBottom:0}} type="number" placeholder="Ex: 79.5" value={newWeight} onChange={e=>setNewWeight(e.target.value)} step="0.1"/>
                     <button onClick={()=>{
-                      if(!newW) return;
-                      const entry={v:parseFloat(newW),date:today.toLocaleDateString("fr-FR")};
+                      if(!newWeight) return;
+                      const entry={v:parseFloat(newWeight),date:new Date().toLocaleDateString("fr-FR")};
                       setWeightLog(prev=>[...prev,entry]);
-                      setLastWeighIn(today.toISOString());
-                      setNewW("");setShowInput(false);
-                      push("⚖️","Poids enregistré !",`${newW}kg enregistré. Prochain pesée dans 2 semaines.`);
+                      setLastWeighIn(new Date().toISOString());
+                      setNewWeight("");setShowWeightInput(false);
+                      push("⚖️","Poids enregistré !",`${newWeight}kg enregistré. Prochain pesée dans 2 semaines.`);
                     }} style={{padding:"11px 14px",background:C.goldD,border:`1px solid ${C.goldB}`,borderRadius:9,color:C.gold,cursor:"pointer",fontSize:12,fontWeight:700,fontFamily:"'Syne',sans-serif",whiteSpace:"nowrap"}}>✓ OK</button>
-                    <button onClick={()=>setShowInput(false)} style={{padding:"11px 10px",background:C.s2,border:`1px solid ${C.s3}`,borderRadius:9,color:C.mid,cursor:"pointer",fontSize:14}}>×</button>
+                    <button onClick={()=>setShowWeightInput(false)} style={{padding:"11px 10px",background:C.s2,border:`1px solid ${C.s3}`,borderRadius:9,color:C.mid,cursor:"pointer",fontSize:14}}>×</button>
                   </Row>
                 ):(
-                  <Btn onClick={()=>setShowInput(true)} v="out">⚖️ Enregistrer mon poids</Btn>
+                  <Btn onClick={()=>setShowWeightInput(true)} v="out">⚖️ Enregistrer mon poids</Btn>
                 )
               ):(
                 <div style={{padding:"9px 11px",background:"rgba(62,199,122,0.08)",border:"1px solid rgba(62,199,122,0.2)",borderRadius:8,fontSize:11,color:C.green,lineHeight:1.5,textAlign:"center"}}>
@@ -1855,6 +1851,8 @@ export default function App(){
   const [progView,setProgView]=useState("today");
   const [weightLog,setWeightLog]=useState([]);
   const [lastWeighIn,setLastWeighIn]=useState(null);
+  const [showWeightInput,setShowWeightInput]=useState(false);
+  const [newWeight,setNewWeight]=useState("");
 
   const toggleCheck=(seanceId,exIdx)=>{
     const key=`${seanceId}-${exIdx}`;
