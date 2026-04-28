@@ -1,28 +1,28 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 const C = {
-  bg:"#06060a",   s1:"#0e0c08",  s2:"#120f07",  s3:"#1e1a10",
-  gold:"#C8963E", goldL:"#E8B84B", goldD:"rgba(200,150,62,0.12)", goldB:"rgba(200,150,62,0.22)",
-  text:"#f0e8d8", mid:"#5a4e3a",  dim:"#2a2015",
-  green:"#22c55e", red:"#f87171", blue:"#60a5fa", orange:"#d97706", purple:"#a78bfa",
-  warm1:"#1e1a10", warm2:"#2a2015", warm3:"rgba(200,150,62,0.08)",
+  bg:"#edf3fb",   s1:"#ffffff",  s2:"#edf3fb",  s3:"#dce8f4",
+  gold:"#3b82f6", goldL:"#60a5fa", goldD:"rgba(59,130,246,0.08)", goldB:"rgba(59,130,246,0.2)",
+  text:"#0f1a2e", mid:"#a0b4cc",  dim:"#c4d4e8",
+  green:"#22c55e", red:"#f87171", blue:"#3b82f6", orange:"#f97316", purple:"#8b5cf6",
+  cyan:"#06b6d4", accent:"#3b82f6",
 };
 const INT = {
   leger:   {l:"Léger",   c:"#22c55e"},
-  modere:  {l:"Modéré",  c:"#C8963E"},
-  lourd:   {l:"Lourd",   c:"#d97706"},
+  modere:  {l:"Modéré",  c:"#3b82f6"},
+  lourd:   {l:"Lourd",   c:"#f97316"},
   intense: {l:"Intense", c:"#f87171"},
-  mobilite:{l:"Mobilité",c:"#a78bfa"},
+  mobilite:{l:"Mobilité",c:"#8b5cf6"},
 };
-const SESS_COLORS = ["#C8963E","#3EC87A","#4D8FE0","#E05252","#E0883A","#9B6FE0","#3AB8C8","#E06890"];
+const SESS_COLORS = ["#3b82f6","#22c55e","#f97316","#f87171","#8b5cf6","#06b6d4","#ec4899","#eab308"];
 const CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap');
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
-body{background:${C.bg};color:${C.text};font-family:'Inter',sans-serif}
+body{background:#edf3fb;color:#0f1a2e;font-family:'Inter',sans-serif}
 input,textarea,select{outline:none;font-family:'Inter',sans-serif}
 input::placeholder,textarea::placeholder{color:${C.dim}}
 select option{background:${C.s2}}
 ::-webkit-scrollbar{width:2px;height:2px}
-::-webkit-scrollbar-thumb{background:rgba(200,150,62,0.2);border-radius:2px}
+::-webkit-scrollbar-thumb{background:rgba(59,130,246,0.2);border-radius:2px}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes slideDown{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
@@ -31,17 +31,17 @@ select option{background:${C.s2}}
 @media print{.np{display:none!important}}
 `;
 const Box = ({children,style,onClick})=>(
-  <div onClick={onClick} style={{background:"#0e0c08",border:"0.5px solid #1e1a10",borderRadius:14,padding:"16px 15px",marginBottom:9,cursor:onClick?"pointer":"default",...style}}>{children}</div>
+  <div onClick={onClick} style={{background:"#ffffff",border:"0.5px solid #dce8f4",borderRadius:16,padding:"16px 15px",marginBottom:9,cursor:onClick?"pointer":"default",...style}}>{children}</div>
 );
 const Lbl = ({children,style})=>(
-  <div style={{fontSize:9,color:C.gold,letterSpacing:"2px",textTransform:"uppercase",fontWeight:700,marginBottom:10,...style}}>{children}</div>
+  <div style={{fontSize:9,color:"#a0b4cc",letterSpacing:"2px",textTransform:"uppercase",fontWeight:600,marginBottom:10,...style}}>{children}</div>
 );
 const Inp = ({style,...p})=>(
-  <input style={{width:"100%",padding:"11px 13px",background:"#120f07",border:"0.5px solid #1e1a10",borderRadius:9,color:"#f0e8d8",fontSize:13,marginBottom:8,...style}} {...p}/>
+  <input style={{width:"100%",padding:"11px 13px",background:"#edf3fb",border:"0.5px solid #dce8f4",borderRadius:9,color:"#0f1a2e",fontSize:13,marginBottom:8,...style}} {...p}/>
 );
 const Btn = ({children,onClick,disabled,v="fill",sm})=>{
   const vs={
-    fill:{bg:`linear-gradient(135deg,#E8B84B,#C8963E)`,color:"#06060a",border:"none"},
+    fill:{bg:`linear-gradient(135deg,#60a5fa,#3b82f6)`,color:"#ffffff",border:"none"},
     out: {bg:"transparent",color:C.gold,border:`0.5px solid ${C.goldB}`},
     ghost:{bg:"rgba(255,255,255,0.04)",color:C.mid,border:"0.5px solid #1e1a10"},
   };
@@ -57,7 +57,7 @@ const Btn = ({children,onClick,disabled,v="fill",sm})=>{
   );
 };
 const Bar = ({pct,color=C.gold,h=4})=>(
-  <div style={{height:h,background:"rgba(200,150,62,0.06)",borderRadius:h/2,overflow:"hidden",marginTop:5}}>
+  <div style={{height:h,background:"#edf3fb",borderRadius:h/2,overflow:"hidden",marginTop:5}}>
     <div style={{height:"100%",width:`${Math.min(100,pct||0)}%`,background:pct>100?C.red:color,borderRadius:h/2,transition:"width .5s"}}/>
   </div>
 );
@@ -66,8 +66,8 @@ const G2 = ({children,gap=8,style})=><div style={{display:"grid",gridTemplateCol
 const Tag = ({children,active,color,onClick})=>(
   <span onClick={onClick} style={{
     display:"inline-block",padding:"5px 11px",margin:"3px",
-    background:active?`rgba(${color||"200,150,62"},.14)`:"rgba(255,255,255,0.03)",
-    border:`1px solid ${active?`rgba(${color||"200,150,62"},.44)`:C.s3}`,
+    background:active?`rgba(${color||"59,130,246"},.14)`:"rgba(255,255,255,0.03)",
+    border:`1px solid ${active?`rgba(${color||"59,130,246"},.44)`:C.s3}`,
     borderRadius:18,fontSize:11.5,color:active?`rgb(${color||"200,150,62"})`:C.mid,
     cursor:onClick?"pointer":"default",transition:"all .15s",
   }}>{children}</span>
@@ -77,7 +77,7 @@ function Notif({n,onClose}){
   useEffect(()=>{const t=setTimeout(onClose,4000);return()=>clearTimeout(t);},[]);
   return(
     <div className="notif" style={{position:"fixed",top:0,left:0,right:0,zIndex:500,padding:"10px 14px",display:"flex",justifyContent:"center",pointerEvents:"none"}}>
-      <div style={{background:C.s1,border:`0.5px solid ${C.goldB}`,borderRadius:12,padding:"11px 14px",maxWidth:460,width:"100%",display:"flex",alignItems:"center",gap:10,pointerEvents:"all",boxShadow:"0 8px 32px rgba(0,0,0,0.6)"}}>
+      <div style={{background:"#ffffff",border:"0.5px solid #dce8f4",borderRadius:12,padding:"11px 14px",maxWidth:460,width:"100%",display:"flex",alignItems:"center",gap:10,pointerEvents:"all",boxShadow:"0 8px 32px rgba(0,0,0,0.6)"}}>
         <span style={{fontSize:20,flexShrink:0}}>{n.icon}</span>
         <div style={{flex:1}}>
           <div style={{fontSize:12,fontWeight:700}}>{n.title}</div>
@@ -100,7 +100,7 @@ function Chrono({onClose}){
   const pct=preset?((preset-(left||0))/preset)*100:0;
   const R=44,CI=2*Math.PI*R;
   return(
-    <div style={{position:"fixed",inset:0,background:"rgba(8,9,14,0.97)",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",zIndex:400,padding:24}}>
+    <div style={{position:"fixed",inset:0,background:"rgba(237,243,251,0.99)",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",zIndex:400,padding:24}}>
       <Lbl style={{marginBottom:20}}>Temps de repos</Lbl>
       <div style={{position:"relative",width:120,height:120,marginBottom:24}}>
         <svg width={120} height={120} style={{transform:"rotate(-90deg)"}}>
@@ -190,7 +190,7 @@ function MonthCal({sessions,onUpdate}){
           return(
             <div key={d} onClick={()=>setModal({date:key,session:sess})} style={{
               aspectRatio:"1",borderRadius:7,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",cursor:"pointer",
-              background:sess?`${sess.color}1A`:isToday?"rgba(200,150,62,0.08)":"rgba(255,255,255,0.02)",
+              background:sess?`${sess.color}1A`:isToday?"rgba(59,130,246,0.08)":"rgba(255,255,255,0.02)",
               border:`1px solid ${sess?sess.color+"44":isToday?C.gold:C.s3}`,
               outline:isToday?`1.5px solid ${C.gold}`:undefined,
             }}>
@@ -597,7 +597,7 @@ export default function App(){
           </div>
         )}
         {cycleStart&&(
-          <Box style={{background:"rgba(200,150,62,0.07)",borderColor:C.goldB}}>
+          <Box style={{background:"rgba(59,130,246,0.06)",borderColor:C.goldB}}>
             <Row style={{justifyContent:"space-between",marginBottom:8}}>
               <div>
                 <div style={{fontSize:9,color:C.gold,letterSpacing:"1.5px",fontWeight:700,textTransform:"uppercase",marginBottom:3}}>Cycle · Sem {semC+1}/6</div>
@@ -900,7 +900,7 @@ export default function App(){
         ))}
       </div>
       {bonusModal&&(
-        <div style={{position:"fixed",inset:0,background:"rgba(8,9,13,0.92)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:300,padding:18}}>
+        <div style={{position:"fixed",inset:0,background:"rgba(237,243,251,0.97)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:300,padding:18}}>
           <div style={{background:C.s1,border:"0.5px solid #1e1a10",borderRadius:14,padding:"22px 18px",width:"100%",maxWidth:360}}>
             <Lbl>{bonusModal.i} {bonusModal.l}</Lbl>
             <div style={{fontSize:12,color:C.mid,marginBottom:14}}>Durée de la séance ?</div>
@@ -920,7 +920,7 @@ export default function App(){
         </div>
       )}
       {cycleStart&&prog&&(
-        <Box style={{background:"rgba(200,150,62,0.07)",borderColor:C.goldB}}>
+        <Box style={{background:"rgba(59,130,246,0.06)",borderColor:C.goldB}}>
           <Row style={{justifyContent:"space-between",alignItems:"flex-start",marginBottom:10}}>
             <div>
               <Lbl style={{marginBottom:4}}>Cycle {prog.numero||1} · 6 semaines</Lbl>
@@ -942,7 +942,7 @@ export default function App(){
             {["modere","modere","lourd","lourd","intense","leger"].map((k,w)=>{
               const int=INT[k];
               return(
-                <div key={w} style={{padding:"7px 4px",background:w===semC?`${int.c}20`:w<semC?"rgba(56,199,117,0.1)":C.s2,border:`1px solid ${w===semC?int.c:w<semC?"rgba(56,199,117,.2)":C.s3}`,borderRadius:7,textAlign:"center"}}>
+                <div key={w} style={{padding:"7px 4px",background:w===semC?`${int.c}20`:w<semC?"rgba(34,197,94,0.1)":C.s2,border:`1px solid ${w===semC?int.c:w<semC?"rgba(56,199,117,.2)":C.s3}`,borderRadius:7,textAlign:"center"}}>
                   <div style={{fontSize:9,color:w===semC?int.c:w<semC?C.green:C.dim,fontWeight:700}}>S{w+1}</div>
                   <div style={{width:4,height:4,borderRadius:"50%",background:int.c,margin:"4px auto 0"}}/>
                 </div>
@@ -1457,7 +1457,7 @@ export default function App(){
       return(
         <div style={{position:"relative",width:size,height:size,flexShrink:0}}>
           <svg width={size} height={size} style={{transform:"rotate(-90deg)"}}>
-            <circle cx={size/2} cy={size/2} r={R} fill="none" stroke="rgba(200,150,62,0.08)" strokeWidth={stroke}/>
+            <circle cx={size/2} cy={size/2} r={R} fill="none" stroke="rgba(59,130,246,0.08)" strokeWidth={stroke}/>
             <circle cx={size/2} cy={size/2} r={R} fill="none" stroke={color} strokeWidth={stroke}
               strokeDasharray={CI} strokeDashoffset={offset} strokeLinecap="round"
               style={{transition:"stroke-dashoffset .8s ease"}}/>
@@ -1502,14 +1502,14 @@ export default function App(){
         {/* Nav */}
         <div style={{display:"flex",gap:5,padding:"12px 15px",overflowX:"auto",paddingBottom:4}}>
           {[{id:"journal",l:"Journal"},{id:"scanner",l:"Scanner"},{id:"aliments",l:"Aliments"}].map(s=>(
-            <button key={s.id} onClick={()=>setNView(s.id)} style={{padding:"7px 16px",background:nView===s.id?C.goldD:"transparent",border:`1px solid ${nView===s.id?C.gold:C.s3}`,borderRadius:20,color:nView===s.id?C.gold:C.mid,cursor:"pointer",fontSize:12,fontWeight:600,whiteSpace:"nowrap",fontFamily:"'Syne',sans-serif",letterSpacing:"0.3px"}}>{s.l}</button>
+            <button key={s.id} onClick={()=>setNView(s.id)} style={{padding:"7px 16px",background:nView===s.id?"rgba(59,130,246,0.08)":"transparent",border:`0.5px solid ${nView===s.id?"#3b82f6":"#dce8f4"}`,borderRadius:20,color:nView===s.id?C.gold:C.mid,cursor:"pointer",fontSize:12,fontWeight:600,whiteSpace:"nowrap",fontFamily:"'Syne',sans-serif",letterSpacing:"0.3px"}}>{s.l}</button>
           ))}
         </div>
 
         {nView==="journal"&&(
           <div style={{padding:"0 15px"}}>
             {/* Anneau principal calories */}
-            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"18px 16px",background:"#0e0c08",borderRadius:18,marginBottom:12,border:"0.5px solid #1e1a10"}}>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"18px 16px",background:"#ffffff",borderRadius:18,marginBottom:12,border:"0.5px solid #1e1a10"}}>
               <Ring pct={calPct} color={tot.cal>calObj?C.red:C.gold} size={120} stroke={10}>
                 <div style={{fontFamily:"'Syne',sans-serif",fontSize:22,fontWeight:800,color:tot.cal>calObj?C.red:C.text,lineHeight:1,letterSpacing:-1}}>{calLeft}</div>
                 <div style={{fontSize:9,color:C.mid,marginTop:2}}>kcal restantes</div>
@@ -1541,7 +1541,7 @@ export default function App(){
             </div>
 
             {/* Mini anneaux macros */}
-            <div style={{display:"flex",justifyContent:"space-around",padding:"14px 16px",background:"#0e0c08",borderRadius:16,marginBottom:12,border:"0.5px solid #1e1a10"}}>
+            <div style={{display:"flex",justifyContent:"space-around",padding:"14px 16px",background:"#ffffff",borderRadius:16,marginBottom:12,border:"0.5px solid #1e1a10"}}>
               <MiniRing pct={tot.p/pObj*100} color={C.red} label="Protéines" v={tot.p} max={pObj}/>
               <div style={{width:1,background:C.s3}}/>
               <MiniRing pct={tot.g/gObj*100} color={C.orange} label="Glucides" v={tot.g} max={gObj}/>
@@ -1573,23 +1573,23 @@ export default function App(){
               const rTot=repas[r.id].reduce((a,f)=>({cal:a.cal+f.c,p:a.p+f.p,g:a.g+f.g,l:a.l+f.l}),{cal:0,p:0,g:0,l:0});
               const isActive=repasA===r.id;
               return(
-                <div key={r.id} style={{background:"#0e0c08",borderRadius:14,marginBottom:8,border:`0.5px solid ${isActive?'#C8963E':'#1e1a10'}`,overflow:"hidden"}}>
+                <div key={r.id} style={{background:"#ffffff",borderRadius:14,marginBottom:8,border:`0.5px solid ${isActive?'#C8963E':'#1e1a10'}`,overflow:"hidden"}}>
                   {/* Header repas */}
                   <div onClick={()=>setRepasA(isActive?null:r.id)} style={{padding:"12px 14px",display:"flex",alignItems:"center",gap:10,cursor:"pointer"}}>
-                    <div style={{width:34,height:34,borderRadius:9,background:"#120f07",display:"flex",alignItems:"center",justifyContent:"center",fontSize:17,flexShrink:0}}>{r.i}</div>
+                    <div style={{width:34,height:34,borderRadius:9,background:"#edf3fb",display:"flex",alignItems:"center",justifyContent:"center",fontSize:17,flexShrink:0}}>{r.i}</div>
                     <div style={{flex:1}}>
-                      <div style={{fontSize:12,fontWeight:700,color:"#f0e8d8"}}>{r.l}</div>
-                      <div style={{fontSize:10,color:"#5a4e3a"}}>{repas[r.id].length>0?`${repas[r.id].length} aliment${repas[r.id].length>1?"s":""}`:"Aucun aliment"}</div>
+                      <div style={{fontSize:12,fontWeight:700,color:"#0f1a2e"}}>{r.l}</div>
+                      <div style={{fontSize:10,color:"#a0b4cc"}}>{repas[r.id].length>0?`${repas[r.id].length} aliment${repas[r.id].length>1?"s":""}`:"Aucun aliment"}</div>
                       {rTot.cal>0&&(
                         <div style={{display:"flex",gap:3,marginTop:4}}>
                           <div style={{height:2,borderRadius:1,background:"#C8963E",flex:rTot.cal,maxWidth:"60%"}}/>
-                          <div style={{height:2,borderRadius:1,background:"#1e1a10",flex:calObj}}/>
+                          <div style={{height:2,borderRadius:1,background:"#dce8f4",flex:calObj}}/>
                         </div>
                       )}
                     </div>
                     <div style={{display:"flex",alignItems:"center",gap:8}}>
                       {rTot.cal>0&&<span style={{fontSize:14,fontWeight:800,color:"#C8963E"}}>{rTot.cal}</span>}
-                      <span style={{fontSize:14,color:"#2a2015",transform:isActive?"rotate(180deg)":"none",transition:"transform .2s"}}>⌄</span>
+                      <span style={{fontSize:14,color:"#c4d4e8",transform:isActive?"rotate(180deg)":"none",transition:"transform .2s"}}>⌄</span>
                     </div>
                   </div>
                   {/* Aliments */}
@@ -1744,7 +1744,7 @@ export default function App(){
   const Profile=()=>(
     <div style={{padding:"0 15px 16px"}} className="anim">
       <div style={{padding:"26px 0 14px"}}><div style={{fontFamily:"'Syne',sans-serif",fontSize:30,letterSpacing:-0.3,fontWeight:800}}>PROFIL</div></div>
-      {!premium?<div style={{background:"rgba(200,150,62,0.07)",border:`0.5px solid ${C.goldB}`,borderRadius:13,padding:"20px 16px",marginBottom:9}}>
+      {!premium?<div style={{background:"rgba(59,130,246,0.06)",border:`0.5px solid ${C.goldB}`,borderRadius:13,padding:"20px 16px",marginBottom:9}}>
         <div style={{fontFamily:"'Syne',sans-serif",fontSize:24,letterSpacing:2,color:C.gold,textAlign:"center",marginBottom:4}}>PASSER À PREMIUM</div>
         <div style={{fontSize:12,color:C.mid,textAlign:"center",marginBottom:14}}>Programmes personnalisés selon votre morphologie</div>
         {["Programme unique adapté à votre corps","Biomécanique et exercices correctifs","Programme nutrition sur mesure","Calendrier cycle 6 semaines"].map(f=>(
@@ -2060,7 +2060,7 @@ export default function App(){
           ))}
         </div>
         {bonusModal&&(
-          <div style={{position:"fixed",inset:0,background:"rgba(8,9,13,0.92)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:300,padding:18}}>
+          <div style={{position:"fixed",inset:0,background:"rgba(237,243,251,0.97)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:300,padding:18}}>
             <div style={{background:C.s1,border:"0.5px solid #1e1a10",borderRadius:14,padding:"22px 18px",width:"100%",maxWidth:360}}>
               <Lbl>{bonusModal.i} {bonusModal.l}</Lbl>
               <div style={{fontSize:12,color:C.mid,marginBottom:14}}>Durée de la séance ?</div>
@@ -2257,9 +2257,9 @@ export default function App(){
         {tab==="profile"&&Profile()}
       </div>
       {/* Nav — 3 onglets uniquement */}
-      <nav className="np" style={{position:"fixed",bottom:0,left:0,right:0,background:"rgba(6,6,10,0.97)",backdropFilter:"blur(24px)",borderTop:"0.5px solid #1e1a10",display:"flex",zIndex:100}}>
+      <nav className="np" style={{position:"fixed",bottom:0,left:0,right:0,background:"rgba(237,243,251,0.97)",backdropFilter:"blur(20px)",borderTop:"0.5px solid #dce8f4",display:"flex",zIndex:100}}>
         {NAV.map(t=>(
-          <button key={t.id} onClick={()=>setTab(t.id)} style={{flex:1,padding:"11px 4px 8px",background:"transparent",border:"none",color:tab===t.id?C.gold:C.mid,cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:3,transition:"color .15s",fontFamily:"'Inter',sans-serif"}}>
+          <button key={t.id} onClick={()=>setTab(t.id)} style={{flex:1,padding:"11px 4px 8px",background:"transparent",border:"none",color:tab===t.id?"#3b82f6":"#a0b4cc",cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:3,transition:"color .15s",fontFamily:"'Inter',sans-serif"}}>
             <span style={{fontSize:17,lineHeight:1}}>{t.i}</span>
             <span style={{fontSize:9,letterSpacing:"0.5px",textTransform:"uppercase",fontWeight:tab===t.id?700:400}}>{t.l}</span>
           </button>
