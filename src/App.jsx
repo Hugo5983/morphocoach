@@ -1440,9 +1440,10 @@ export default function App(){
     const scoreLettre=score>=85?"A":score>=70?"B":score>=55?"C":score>=40?"D":"E";
     const scoreColor=score>=85?C.green:score>=70?"#8BC34A":score>=55?C.orange:score>=40?"#FF7043":C.red;
 
+    const allItems=[...repas.matin,...repas.midi,...repas.soir,...repas.snack];
     const scoreDetails=[
-      {l:"Sucres ajoutés",ok:[...repas.matin,...repas.midi,...repas.soir,...repas.snack].reduce((a,f)=>a+(f.sucres||0),0)<=15,icon:"🍬"},
-      {l:"Aliments transformés",[...repas.matin,...repas.midi,...repas.soir,...repas.snack].filter(f=>f.cat==="Transformé"||f.cat==="Scanné").length<=1?"ok":false?null:null,ok:[...repas.matin,...repas.midi,...repas.soir,...repas.snack].filter(f=>f.cat==="Transformé"||f.cat==="Scanné").length<=1,icon:"🏭"},
+      {l:"Sucres ajoutés",ok:allItems.reduce((a,f)=>a+(f.sucres||0),0)<=15,icon:"🍬"},
+      {l:"Aliments transformés",ok:allItems.filter(f=>f.cat==="Transformé"||f.cat==="Scanné").length<=1,icon:"🏭"},
       {l:"Hydratation",ok:eau>=6,icon:"💧"},
       {l:"Apport protéines",ok:tot.p>=pObj*0.8,icon:"💪"},
       {l:"Diversité repas",ok:[repas.matin,repas.midi,repas.soir].filter(r=>r.length>0).length>=2,icon:"🥗"},
