@@ -863,28 +863,40 @@ Réponds UNIQUEMENT avec ce JSON valide (aucun texte avant ou après, aucun mark
     let mi=0;
     setLoadMsg(msgs[0]);
     const interval=setInterval(()=>{mi=(mi+1)%msgs.length;setLoadMsg(msgs[mi]);},2200);
+
+    // ─── Compression image avant envoi ───
+    const compressImage=(dataUrl,maxW=800,quality=0.7)=>new Promise(resolve=>{
+      const img=new Image();
+      img.onload=()=>{
+        const canvas=document.createElement("canvas");
+        const ratio=Math.min(maxW/img.width,maxW/img.height,1);
+        canvas.width=Math.round(img.width*ratio);
+        canvas.height=Math.round(img.height*ratio);
+        const ctx=canvas.getContext("2d");
+        ctx.drawImage(img,0,0,canvas.width,canvas.height);
+        resolve(canvas.toDataURL("image/jpeg",quality));
+      };
+      img.onerror=()=>resolve(dataUrl); // fallback sans compression
+      img.src=dataUrl;
+    });
+
     try{
       const content=[];
-      // ─── Envoyer les photos avec l'analyse ───
+      // ─── Compresser et envoyer les photos ───
       const photosSent=[];
-      if(photos.face){
-        const b64=photos.face.split(",")[1];
-        const mt=photos.face.split(";")[0].split(":")[1];
-        content.push({type:"image",source:{type:"base64",media_type:mt,data:b64}});
-        photosSent.push("face");
+      const photoEntries=[
+        {key:"face",src:photos.face},
+        {key:"dos",src:photos.dos},
+        {key:"profil",src:photos.profil},
+      ].filter(p=>p.src);
+
+      for(const {key,src} of photoEntries){
+        const compressed=await compressImage(src,800,0.65);
+        const b64=compressed.split(",")[1];
+        content.push({type:"image",source:{type:"base64",media_type:"image/jpeg",data:b64}});
+        photosSent.push(key);
       }
-      if(photos.dos){
-        const b64=photos.dos.split(",")[1];
-        const mt=photos.dos.split(";")[0].split(":")[1];
-        content.push({type:"image",source:{type:"base64",media_type:mt,data:b64}});
-        photosSent.push("dos");
-      }
-      if(photos.profil){
-        const b64=photos.profil.split(",")[1];
-        const mt=photos.profil.split(";")[0].split(":")[1];
-        content.push({type:"image",source:{type:"base64",media_type:mt,data:b64}});
-        photosSent.push("profil");
-      }
+
       content.push({type:"text",text:buildP()});
       const res=await fetch("/api/generate",{
         method:"POST",
