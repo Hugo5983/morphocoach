@@ -488,52 +488,34 @@ erreurs:["Coude qui descend","Amplitude partielle","Corps qui se balance"]},
 
 "Quadriceps":[
 {n:"Presse à jambes 45° pieds hauts",s:"4",r:"10-15",rest:"90s",ch:"70%",cat:"principal",
-morpho:"🦴 Fémurs longs : MEILLEUR exercice jambes selon Delavier — le squat force un buste trop incliné vers l'avant avec des fémurs longs, créant une surcharge lombaire. La presse supprime ce problème anatomique.\n🦴 Fémurs courts : squat ou presse fonctionnent — les deux sont appropriés.\n🔩 Position des pieds détermine les muscles ciblés : hauts = fessiers+ischios+quadriceps / bas = quadriceps isolés / écartés = adducteurs + fessiers.",
-tips:["Pieds à hauteur des épaules ou légèrement plus écartés","Amplitude complète — descendre jusqu'à un angle de 90° minimum","Genoux dans l'axe des pieds — ne jamais les laisser rentrer en dedans","Excentrique 3 secondes — pas de rebond en bas","Ne jamais décoller le bas du dos de la plateforme"],
-variantes:[{nom:"Presse pieds bas",note:"Quadriceps isolés — moins de fessiers et d'ischios"},{nom:"Presse unilatérale",note:"Correction des asymétries gauche/droite"},{nom:"Hack squat guidé",note:"Plus de quadriceps, moins de sollicitation lombaire"}],
-erreurs:["Décoller le bas du dos en bas du mouvement — risque lombaire grave","Genoux qui rentrent en dedans — risque ligamentaire","Verrouiller les genoux en haut — perte de tension et risque articulaire","Rebond en bas — perte du contrôle excentrique"]},
+morpho:"🦴 Fémurs longs : MEILLEUR exercice jambes selon Delavier — le squat force un buste trop incliné vers l'avant avec des fémurs longs, créant une surcharge lombaire. La presse supprime ce problème anatomique.\n🦴 Fémurs courts : squat ou presse fonctionnent — les deux sont appropriés.\n🔩 Position des pieds : hauts = fessiers+ischios+quadriceps / bas = quadriceps isolés / écartés = adducteurs + fessiers.",
+tips:["Pieds à hauteur des épaules ou légèrement plus écartés","Amplitude complète — descendre jusqu'à 90° minimum","Genoux dans l'axe des pieds — ne jamais les laisser rentrer","Excentrique 3 secondes — pas de rebond en bas","Ne jamais décoller le bas du dos de la plateforme"],
+variantes:[{nom:"Presse pieds bas",note:"Quadriceps isolés — moins de fessiers"},{nom:"Presse unilatérale",note:"Correction des asymétries"},{nom:"Hack squat guidé",note:"Plus de quadriceps, moins de lombaires"}],
+erreurs:["Décoller le bas du dos — risque lombaire grave","Genoux qui rentrent","Verrouiller les genoux en haut","Rebond en bas"]},
 
 {n:"Leg extension machine",s:"3",r:"15",rest:"60s",ch:"60%",cat:"isolation",
-morpho:"🦴 Tous morphotypes : isolation pure des quadriceps — exercice de finition universel après un mouvement de base.\n🦴 Fémurs longs : amplitude de flexion naturellement plus grande — exploiter pleinement l'extension.\n💡 La contraction isométrique 1-2 secondes en extension complète est indispensable pour la connexion neuromusculaire avec les quadriceps.",
-tips:["Dos appuyé sur le dossier — lombaires en contact permanent","Contraction de 1-2 secondes en extension complète — c'est là que l'exercice est le plus efficace","Excentrique 3 secondes — maximiser le temps sous tension","Pointe des pieds vers soi pour plus d'activation du droit fémoral","15-20 reps en finisseur léger pour le pump"],
-variantes:[{nom:"Leg extension unilatéral",note:"Correction des asymétries — commencer par la jambe faible"},{nom:"Sissy squat",note:"Quadriceps en étirement complet — version avancée"},{nom:"Terminal knee extension élastique",note:"Préventif du genou — activation VMO"}],
-erreurs:["Amplitude insuffisante en bas — perd l'activation complète","Pas de contraction en haut — perd le bénéfice de l'isolation","Trop lourd — compensation avec le buste"]},
+morpho:"🦴 Tous morphotypes : isolation pure des quadriceps.\n🦴 Fémurs longs : amplitude de flexion naturellement plus grande — exploiter pleinement.\n💡 Contraction isométrique 1-2s en extension complète indispensable pour la connexion neuromusculaire.",
+tips:["Dos appuyé sur le dossier — lombaires en contact","Contraction 1-2s en extension complète","Excentrique 3s","Pointe des pieds vers soi pour plus d'activation du droit fémoral","15-20 reps léger en finisseur"],
+variantes:[{nom:"Leg extension unilatéral",note:"Correction des asymétries"},{nom:"Sissy squat",note:"Quadriceps en étirement complet — avancé"},{nom:"Terminal knee extension élastique",note:"Préventif du genou"}],
+erreurs:["Amplitude insuffisante en bas","Pas de contraction en haut","Trop lourd — compensation avec le buste"]},
 
 {n:"Squat goblet haltère",s:"3",r:"12",rest:"90s",ch:"Modéré",cat:"principal",
-morpho:"🦴 Fémurs longs : l'haltère tenu devant agit comme contrepoids et permet de rester plus vertical qu'au squat classique — version accessible et sécuritaire.\n🦴 Fémurs courts : exercice confortable — la position naturelle est déjà favorable.\n💡 Version d'apprentissage du squat ou exercice d'échauffement avant la presse.",
-tips:["Haltère tenu verticalement contre la poitrine — bras en V vers le bas","Descente contrôlée — cuisses parallèles au sol minimum","Genoux dans l'axe des pieds, légèrement en dehors","Talon bien ancré au sol — poids réparti sur tout le pied","Dos droit, regard frontal"],
-variantes:[{nom:"Squat barre guidée Smith",note:"Sécuritaire — moins de proprioception mais bonne technique"},{nom:"Squat avant barre",note:"Plus de quadriceps — dos plus vertical naturellement"},{nom:"Squat sumo",note:"Plus d'adducteurs — fémurs courts avantagés sur cet exercice"}],
-erreurs:["Talons qui décollent — manque de mobilité de cheville à travailler","Genoux qui rentrent en dedans — signe de faiblesse des abducteurs","Dos qui s'arrondit — charge trop lourde"]},
+morpho:"🦴 Fémurs longs : l'haltère tenu devant contrebalance et permet de rester plus vertical — version accessible.\n🦴 Fémurs courts : exercice confortable — position naturellement favorable.\n💡 Version d'apprentissage ou échauffement avant la presse.",
+tips:["Haltère tenu verticalement contre la poitrine","Descente contrôlée — cuisses parallèles au sol minimum","Genoux dans l'axe des pieds, légèrement en dehors","Talon bien ancré au sol","Dos droit, regard frontal"],
+variantes:[{nom:"Squat barre guidée Smith",note:"Sécuritaire — bonne technique"},{nom:"Squat avant barre",note:"Plus de quadriceps — dos plus vertical"},{nom:"Squat sumo",note:"Plus d'adducteurs — fémurs courts avantagés"}],
+erreurs:["Talons qui décollent — manque de mobilité cheville","Genoux qui rentrent","Dos qui s'arrondit — charge trop lourde"]},
 
 {n:"Hack squat machine",s:"4",r:"10-12",rest:"90s",ch:"65-70%",cat:"principal",
-morpho:"🦴 Fémurs longs : meilleure option que le squat classique — la machine réduit la compensation du dos.\n🦴 Fémurs courts : exercice confortable et très efficace pour les quadriceps.\n💡 Plus de quadriceps que la presse grâce à l'angle de la machine.",
-tips:["Pieds à largeur des hanches ou légèrement plus écartés","Descente jusqu'à 90° minimum","Genoux dans l'axe des pieds","Dos plaqué contre le dossier","Ne pas verrouiller les genoux en haut"],
-variantes:[{nom:"Presse à jambes pieds bas",note:"Plus de quadriceps — alternative si hack squat indisponible"},{nom:"Sissy squat",note:"Isolation quadriceps extrême — avancé"}],
-erreurs:["Genoux qui rentrent en dedans","Amplitude insuffisante","Fesses qui décollent du siège"]},
+morpho:"🦴 Fémurs longs : meilleure option que le squat classique — machine réduit la compensation du dos.\n🦴 Fémurs courts : exercice confortable et très efficace.\n💡 Plus de quadriceps que la presse grâce à l'angle de la machine.",
+tips:["Pieds à largeur des hanches","Descente jusqu'à 90° minimum","Genoux dans l'axe des pieds","Dos plaqué contre le dossier","Ne pas verrouiller les genoux en haut"],
+variantes:[{nom:"Presse à jambes pieds bas",note:"Plus de quadriceps — si hack squat indisponible"},{nom:"Sissy squat",note:"Isolation quadriceps extrême — avancé"}],
+erreurs:["Genoux qui rentrent","Amplitude insuffisante","Fesses qui décollent du siège"]},
 
 {n:"Fentes avant haltères",s:"4",r:"10/jambe",rest:"75s",ch:"Modéré",cat:"principal",
-morpho:"🦴 Fémurs longs : pas long pour maximiser l'activation des fessiers.\n🦴 Fémurs courts : quadriceps davantage sollicités avec un pas normal.\n💡 Longueur de foulée = résultat : grand pas = fessiers / petit pas = quadriceps.",
+morpho:"🦴 Fémurs longs : pas long pour maximiser l'activation des fessiers.\n🦴 Fémurs courts : quadriceps davantage sollicités avec un pas normal.\n💡 Grand pas = fessiers / Petit pas = quadriceps.",
 tips:["Pas long — genou avant dans l'axe du pied","Buste droit, regard frontal","Genou avant ne dépasse pas la pointe du pied","Pied arrière bien ancré sur la pointe","Descendre sans toucher le genou arrière au sol"],
-variantes:[{nom:"Fentes marchées",note:"Plus dynamique — challenge équilibre et coordination"},{nom:"Fentes bulgares",note:"Version unilateral avancée — fessier très isolé"},{nom:"Fentes arrière",note:"Moins de stress genou — option si genoux fragiles"}],
+variantes:[{nom:"Fentes marchées",note:"Plus dynamique — challenge équilibre"},{nom:"Fentes bulgares",note:"Unilateral avancé — fessier très isolé"},{nom:"Fentes arrière",note:"Moins de stress genou"}],
 erreurs:["Genou avant qui dépasse les orteils","Buste qui s'incline","Pas trop court"]},
-],
-{n:"Presse à jambes 45° pieds hauts",s:"4",r:"10-15",rest:"90s",ch:"70%",cat:"principal",
-morpho:"🦴 Fémurs longs : MEILLEUR exercice jambes selon Delavier — le squat force un buste trop incliné vers l'avant avec des fémurs longs, créant une surcharge lombaire. La presse supprime ce problème anatomique.\n🦴 Fémurs courts : squat ou presse fonctionnent — les deux sont appropriés.\n🔩 Position des pieds détermine les muscles ciblés : hauts = fessiers+ischios+quadriceps / bas = quadriceps isolés / écartés = adducteurs + fessiers.",
-tips:["Pieds à hauteur des épaules ou légèrement plus écartés","Amplitude complète — descendre jusqu'à un angle de 90° minimum","Genoux dans l'axe des pieds — ne jamais les laisser rentrer en dedans","Excentrique 3 secondes — pas de rebond en bas","Ne jamais décoller le bas du dos de la plateforme"],
-variantes:[{nom:"Presse pieds bas",note:"Quadriceps isolés — moins de fessiers et d'ischios"},{nom:"Presse unilatérale",note:"Correction des asymétries gauche/droite"},{nom:"Hack squat guidé",note:"Plus de quadriceps, moins de sollicitation lombaire"}],
-erreurs:["Décoller le bas du dos en bas du mouvement — risque lombaire grave","Genoux qui rentrent en dedans — risque ligamentaire","Verrouiller les genoux en haut — perte de tension et risque articulaire","Rebond en bas — perte du contrôle excentrique"]},
-
-{n:"Leg extension machine",s:"3",r:"15",rest:"60s",ch:"60%",cat:"isolation",
-morpho:"🦴 Tous morphotypes : isolation pure des quadriceps — exercice de finition universel après un mouvement de base.\n🦴 Fémurs longs : amplitude de flexion naturellement plus grande — exploiter pleinement l'extension.\n💡 La contraction isométrique 1-2 secondes en extension complète est indispensable pour la connexion neuromusculaire avec les quadriceps.",
-tips:["Dos appuyé sur le dossier — lombaires en contact permanent","Contraction de 1-2 secondes en extension complète — c'est là que l'exercice est le plus efficace","Excentrique 3 secondes — maximiser le temps sous tension","Pointe des pieds vers soi pour plus d'activation du droit fémoral","15-20 reps en finisseur léger pour le pump"],
-variantes:[{nom:"Leg extension unilatéral",note:"Correction des asymétries — commencer par la jambe faible"},{nom:"Sissy squat",note:"Quadriceps en étirement complet — version avancée"},{nom:"Terminal knee extension élastique",note:"Préventif du genou — activation VMO"}],
-erreurs:["Amplitude insuffisante en bas — perd l'activation complète","Pas de contraction en haut — perd le bénéfice de l'isolation","Trop lourd — compensation avec le buste"]},
-
-{n:"Squat goblet haltère",s:"3",r:"12",rest:"90s",ch:"Modéré",cat:"principal",
-morpho:"🦴 Fémurs longs : l'haltère tenu devant agit comme contrepoids et permet de rester plus vertical qu'au squat classique — version accessible et sécuritaire.\n🦴 Fémurs courts : exercice confortable — la position naturelle est déjà favorable.\n💡 Version d'apprentissage du squat ou exercice d'échauffement avant la presse.",
-tips:["Haltère tenu verticalement contre la poitrine — bras en V vers le bas","Descente contrôlée — cuisses parallèles au sol minimum","Genoux dans l'axe des pieds, légèrement en dehors","Talon bien ancré au sol — poids réparti sur tout le pied","Dos droit, regard frontal"],
-variantes:[{nom:"Squat barre guidée Smith",note:"Sécuritaire — moins de proprioception mais bonne technique"},{nom:"Squat avant barre",note:"Plus de quadriceps — dos plus vertical naturellement"},{nom:"Squat sumo",note:"Plus d'adducteurs — fémurs courts avantagés sur cet exercice"}],
-erreurs:["Talons qui décollent — manque de mobilité de cheville à travailler","Genoux qui rentrent en dedans — signe de faiblesse des abducteurs","Dos qui s'arrondit — charge trop lourde"]},
 ],
 
 "Ischio-jambiers":[
@@ -657,7 +639,7 @@ export default function App(){
   const [paywall,setPaywall]=useState(false);
   const [notif,setNotif]=useState(null);
   const [profil,setProfil]=useState({prenom:"",age:"",poids:"",taille:"",sexe:"",objectif:"hypertrophie",activite:"modere"});
-  const [pView,setPView]=useState("calendar");
+  // progView merged into progView
   const [prog,setProg]=useState(null);
   const [cycles,setCycles]=useState([]); // historique des cycles précédents
   const [cycleStart,setCycleStart]=useState(null);
@@ -989,7 +971,7 @@ Réponds UNIQUEMENT avec ce JSON valide (aucun texte avant ou après, aucun mark
         }
       });
       setCalSess(prev=>({...prev,...newSess}));
-      setPView("today");
+      setProgView("today");
       setTab("program");
       const pts=np.analyse?.points_faibles?.join(", ")||"";
       push("🎯",`Programme Cycle ${np.numero} créé !`,pts?`Points faibles: ${pts}`:"Votre programme est prêt !");
@@ -1169,10 +1151,10 @@ Réponds UNIQUEMENT avec ce JSON valide (aucun texte avant ou après, aucun mark
         <Lbl>Accès rapide</Lbl>
         <G2>
           {[
-            {icon:"📅",l:"Planification",sub:"Calendrier",fn:()=>{setTab("program");setPView("calendar");}},
-            {icon:"📊",l:"Progression",sub:"Voir mes séances",fn:()=>{setTab("program");setPView("today");}},
-            {icon:"🏋️",l:"Mon programme",sub:"Créer & suivre",fn:()=>{setTab("program");setPView("creer");}},
-            {icon:"◈",l:"Analyse morpho",sub:"Premium",fn:()=>{if(!premium)setPaywall(true);else{setTab("program");setPView("analyse");}},prem:true},
+            {icon:"📅",l:"Planification",sub:"Calendrier",fn:()=>{setTab("program");setProgView("calendar");}},
+            {icon:"📊",l:"Progression",sub:"Voir mes séances",fn:()=>{setTab("program");setProgView("today");}},
+            {icon:"🏋️",l:"Mon programme",sub:"Créer & suivre",fn:()=>{setTab("program");setProgView("creer");}},
+            {icon:"◈",l:"Analyse morpho",sub:"Premium",fn:()=>{if(!premium)setPaywall(true);else{setTab("program");setProgView("analyse");}},prem:true},
           ].map((a,i)=>(
             <Box key={i} onClick={a.fn} style={{marginBottom:0,cursor:"pointer",background:a.prem?"rgba(200,150,62,0.06)":C.s1,borderColor:a.prem?C.goldB:C.s3}}>
               <div style={{fontSize:22,marginBottom:7}}>{a.icon}</div>
@@ -1896,7 +1878,7 @@ Réponds UNIQUEMENT avec ce JSON valide (aucun texte avant ou après, aucun mark
             }
           });
           setCalSess(prev=>({...prev,...newSess}));
-          setPView("calendar");setCS(0);
+          setProgView("calendar");setCS(0);
           push("✅","Programme créé !",`${newP.nom} · Calendrier mis à jour !`);
         }}>✓ Enregistrer le programme</Btn>
         <Btn v="ghost" onClick={()=>setCS(0)}>← Retour</Btn>
