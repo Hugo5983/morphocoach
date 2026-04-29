@@ -741,114 +741,20 @@ ${form.pathologies.includes("Épicondylite")?
 :""}
 `:"\nAucune pathologie particulière.";
 
-    return `Tu es un coach sportif expert BPJEPS spécialisé en musculation et biomécanique. Ton niveau d'expertise est basé sur les méthodes Delavier et Gundill.
+    return `Tu es un coach sportif expert (méthode Delavier/Gundill). ${histCtx}
 
-${histCtx}
+PROFIL: ${form.prenom||"User"}, ${form.age}ans, ${form.sexe}, ${form.poids}kg/${form.taille}cm, IMC:${imc}
+Niveau:${form.niveau} | Objectif:${form.objectif} | Jours:${(form.jours||[]).join("/")||"3j"} | Matériel:${(form.materiel||[]).join(",")||"salle"} | Pathologies:${pathosAdapt.join(",")||"aucune"} | Cycle:${cycleNum} | Photos:${nbPhotos} | Corriger faibles:${corrigerFaibles?"OUI":"NON"}
 
-PROFIL COMPLET:
-- Nom: ${form.prenom||"Utilisateur"} | Âge: ${form.age} ans | Sexe: ${form.sexe}
-- Poids: ${form.poids}kg | Taille: ${form.taille}cm | IMC: ${imc}
-- Niveau: ${form.niveau} | Objectif: ${form.objectif} (${form.objectifPrecis||"prise de masse générale"})
-- Jours d'entraînement disponibles: ${(form.jours||[]).join(", ")||"à définir"}
-- Matériel: ${(form.materiel||[]).join(", ")||"salle complète"}
-- Pathologies: ${pathosAdapt.length>0?pathosAdapt.join(", "):"aucune"}
-- Cycle n°: ${cycleNum}
-- Photos analysées: ${nbPhotos} (${[photos.face?"face":"",photos.dos?"dos":"",photos.profil?"profil de côté":""].filter(Boolean).join(", ")||"aucune"})
-- Corriger les points faibles morphologiques: ${corrigerFaibles?"OUI — priorité absolue aux groupes en retard":"NON — programme équilibré"}
+RÈGLES DELAVIER (selon photos):
+- Humérus longs→haltères UNIQUEMENT au développé/épaules | Fémurs longs→presse PAS squat | Cage plate→pull-over OBLIGATOIRE | Antépulsion→face pull chaque séance
+- Débutant:3s×8-12,10s/séance,corps entier | Intermédiaire:4s,split H/B,pyramidal,supersets | Avancé:5s,split complet,drop-set,5×5,rest-pause
+- Cycle${cycleNum}:${cycleNum===1?"méthodes de base":cycleNum===2?"pyramidal+supersets":"drop-sets+rest-pause+avancé"}
+${pathosAdapt.length>0?`PATHOLOGIES:${form.pathologies.includes("Lombalgie")||form.pathologies.includes("Hernie discale")?"INTERDIT:soulevé terre,good morning,hyperextension lourde|OBLIGATOIRE:gainage transverse":""}${form.pathologies.includes("Conflit épaule")||form.pathologies.includes("Coiffe rotateurs")?"INTERDIT:développé barre,tirage nuque|OBLIGATOIRE:face pull,rotation externe":""}${form.pathologies.includes("Ménisque")||form.pathologies.includes("LCA")?"INTERDIT:squat profond,fentes impact|OK:presse 60°,leg extension léger":""}${form.pathologies.includes("Scoliose")?"Exercices unilatéraux PRIORITAIRES":""}${form.pathologies.includes("Épicondylite")?"INTERDIT:curl barre droite,rowing barre":""}`:""} 
+Analyse les photos, identifie morphologie et déséquilibres musculaires.
 
-MÉTHODES D'INTENSIFICATION À UTILISER (selon le niveau):
-${methodesByLevel[form.niveau]||methodesByLevel.debutant}
-Pour le cycle ${cycleNum}: ${cycleNum===1?"méthodes de base uniquement":cycleNum===2?"introduire super-sets et pyramidal":cycleNum>=3?"drop-sets, rest-pause et méthodes avancées si niveau le permet":"méthodes progressives"}
-
-RÈGLES MORPHOLOGIQUES DELAVIER OBLIGATOIRES (applique-les selon l'analyse des photos):
-1. HUMÉRUS LONGS: haltères OBLIGATOIRES, jamais la barre au développé couché ou épaules
-2. HUMÉRUS COURTS: barre ou haltères selon préférence, plus de charge possible
-3. FÉMURS LONGS: presse jambes obligatoire, pas de squat classique (buste trop incliné)
-4. FÉMURS COURTS: squat classique autorisé
-5. CLAVICULES LARGES: avantage sur les tractions, prise large
-6. CAGE THORACIQUE PLATE: pull-over PRIORITAIRE en début de séance pectoraux
-7. ANTÉPULSION ÉPAULES: face pull OBLIGATOIRE chaque séance, avant tout mouvement de poussée
-8. DÉBUTANT: 3 séries max/exercice, 10 séries max/séance, corps entier chaque séance
-9. INTERMÉDIAIRE: split haut/bas ou poussée/tirage, 4 séries, 15-20 séries/séance
-10. AVANCÉ: split complet, 4-5 séries, 20-25 séries/séance, méthodes intensification
-
-ANALYSE PHYSIQUE DEPUIS LES PHOTOS (si photos fournies):
-- Identifier les groupes musculaires en retard visuel (pec, dos, épaules, bras, jambes)
-- Identifier les déséquilibres posturaux (antépulsion, hyperlordose, scoliose)
-- Identifier les points forts (muscles déjà bien développés)
-- Adapter le volume selon les retards: +1 série et +1 exercice sur les groupes faibles
-${corrigerFaibles?"- PRIORITÉ CORRECTION: augmenter le volume des groupes en retard de 30%":""}
-
-${pathoRules}
-
-Génère un programme complet sur 6-8 semaines adapté aux ${(form.jours||[]).length||3} jours d'entraînement.
-
-Réponds UNIQUEMENT avec ce JSON valide (aucun texte avant ou après, aucun markdown):
-{
-  "analyse_physique": {
-    "points_forts": ["muscle1", "muscle2"],
-    "points_faibles": ["muscle1", "muscle2"],
-    "posture": "description courte de la posture",
-    "morphotype": "ectomorphe|mésomorphe|endomorphe|combiné",
-    "humerus": "courts|moyens|longs",
-    "femurs": "courts|moyens|longs",
-    "cage_thoracique": "plate|moyenne|large",
-    "recommandation_principale": "phrase clé d'adaptation"
-  },
-  "programme": {
-    "titre": "string",
-    "methode": "nom de la méthode d'entraînement utilisée",
-    "duree_semaines": 8,
-    "seances": [
-      {
-        "jour": "Lundi|Mercredi|Vendredi",
-        "focus": "Groupe musculaire principal",
-        "duree": "55 min",
-        "intensite": "leger|modere|intense|maximal",
-        "type_seance": "corps_entier|haut_corps|bas_corps|poussee|tirage|force|hypertrophie",
-        "exercices": [
-          {
-            "nom": "nom exercice",
-            "ordre": 1,
-            "series": "4",
-            "reps": "8-10",
-            "repos": "90s",
-            "charge": "70%1RM",
-            "tempo": "2-1-3",
-            "methode_intensification": "classique|pyramidal|superset|drop-set|rest-pause|5x5",
-            "superset_avec": null,
-            "morpho_tip": "conseil spécifique à la morphologie de cette personne",
-            "technique": "1 conseil technique clé",
-            "pourquoi": "pourquoi cet exercice pour ce profil"
-          }
-        ],
-        "note_seance": "conseil global pour cette séance"
-      }
-    ],
-    "progression": {
-      "semaines_1_2": "description",
-      "semaines_3_4": "description",
-      "semaines_5_6": "description",
-      "semaines_7_8": "description"
-    }
-  },
-  "correction_faibles": {
-    "groupes_prioritaires": ["muscle1", "muscle2"],
-    "exercices_correctifs": ["exercice1 - raison", "exercice2 - raison"],
-    "frequence_supplementaire": "description"
-  },
-  "nutrition": {
-    "cal": 2500,
-    "p": 150,
-    "g": 300,
-    "l": 80,
-    "conseil": "conseil nutrition personnalisé selon poids et objectif",
-    "repartition": "conseil sur la répartition des repas"
-  },
-  "morpho": {
-    "resume": "résumé de l'analyse morphologique complète"
-  }
-}`;
+RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
+{"analyse":{"points_forts":["m1"],"points_faibles":["m1"],"posture":"courte","morphotype":"ecto|meso|endo","humerus":"courts|longs","femurs":"courts|longs","cage":"plate|large","conseil":"1 phrase"},"programme":{"titre":"string","methode":"string","seances":[{"jour":"Lundi","focus":"string","duree":"50min","intensite":"modere","exercices":[{"nom":"string","series":"3","reps":"10","repos":"90s","charge":"65%","tempo":"2-1-3","methode":"classique","morpho_tip":"string","technique":"string"}],"note":"string"}],"progression":"conseil 8 semaines"},"correction":{"groupes":["m1"],"note":"string"},"nutrition":{"cal":2500,"p":150,"g":300,"l":80,"conseil":"string"},"morpho":{"resume":"string"}}`;
   };
 
   const lancerIA=async()=>{
@@ -903,7 +809,7 @@ Réponds UNIQUEMENT avec ce JSON valide (aucun texte avant ou après, aucun mark
         headers:{"Content-Type":"application/json"},
         body:JSON.stringify({
           model:"claude-haiku-4-5",
-          max_tokens:4000,
+          max_tokens:5000,
           messages:[{role:"user",content}]
         })
       });
@@ -915,29 +821,55 @@ Réponds UNIQUEMENT avec ce JSON valide (aucun texte avant ou après, aucun mark
       if(apiData.error) throw new Error(apiData.error.message||"Erreur API");
       const rawText=apiData.content.map(i=>i.text||"").join("").trim();
       if(!rawText) throw new Error("Réponse vide de l'API");
+      // Nettoyage robuste du JSON
       let jsonStr=rawText.replace(/```json\s*/gi,"").replace(/```\s*/g,"").trim();
+      // Extraire uniquement le JSON (entre le premier { et le dernier })
       const jStart=jsonStr.indexOf("{");
       const jEnd=jsonStr.lastIndexOf("}");
-      if(jStart===-1||jEnd===-1||jEnd<=jStart) throw new Error("Pas de JSON détecté");
+      if(jStart===-1||jEnd===-1||jEnd<=jStart) throw new Error("Pas de JSON dans la réponse");
       jsonStr=jsonStr.substring(jStart,jEnd+1);
+      // Tenter de corriger les JSON tronqués courants
+      const openB=(jsonStr.match(/\{/g)||[]).length;
+      const closeB=(jsonStr.match(/\}/g)||[]).length;
+      if(openB>closeB) jsonStr+="}".repeat(openB-closeB);
+      const openBr=(jsonStr.match(/\[/g)||[]).length;
+      const closeBr=(jsonStr.match(/\]/g)||[]).length;
+      if(openBr>closeBr) jsonStr+="]".repeat(openBr-closeBr)+"}";
       let parsed;
       try{parsed=JSON.parse(jsonStr);}
       catch(pe){throw new Error("JSON mal formé: "+pe.message.substring(0,50));}
       if(!parsed.programme) throw new Error("Clé 'programme' absente");
       if(!Array.isArray(parsed.programme.seances)||parsed.programme.seances.length===0) throw new Error("Aucune séance générée");
+      // Support both compact keys (new) and verbose keys (old)
+      const analyse=parsed.analyse||parsed.analyse_physique||{};
+      const correction=parsed.correction||parsed.correction_faibles||{};
       const np={
         titre:parsed.programme.titre||"Mon programme",
         type:"ia",
         methode:parsed.programme.methode||"Classique",
         morpho:parsed.morpho||{},
-        analyse:parsed.analyse_physique||{},
-        correction:parsed.correction_faibles||{},
+        analyse:{
+          points_forts:analyse.points_forts||[],
+          points_faibles:analyse.points_faibles||[],
+          posture:analyse.posture||"",
+          morphotype:analyse.morphotype||"",
+          humerus:analyse.humerus||"",
+          femurs:analyse.femurs||"",
+          cage_thoracique:analyse.cage||analyse.cage_thoracique||"",
+          recommandation_principale:analyse.conseil||analyse.recommandation_principale||"",
+        },
+        correction:{
+          groupes_prioritaires:correction.groupes||correction.groupes_prioritaires||[],
+          note:correction.note||correction.frequence_supplementaire||"",
+        },
         numero:cycles.length+1,
         objectif:form.objectif,
         nutrition:parsed.nutrition||{},
         dateDebut:new Date().toLocaleDateString("fr-FR"),
         duree_semaines:parsed.programme.duree_semaines||8,
-        progression:parsed.programme.progression||{},
+        progression:typeof parsed.programme.progression==="string"
+          ?{semaines_1_2:parsed.programme.progression}
+          :parsed.programme.progression||{},
         jours:parsed.programme.seances.map((s,i)=>({
           id:i+1,
           nom:s.jour||`Séance ${i+1}`,
@@ -945,9 +877,13 @@ Réponds UNIQUEMENT avec ce JSON valide (aucun texte avant ou après, aucun mark
           duree:s.duree||"50 min",
           intensite:s.intensite||"modere",
           type_seance:s.type_seance||"corps_entier",
-          note_seance:s.note_seance||"",
+          note_seance:s.note||s.note_seance||"",
           exercices:(s.exercices||[]).map(ex=>({
             ...ex,
+            // normalise compact keys
+            series:ex.series||ex.s||"3",
+            reps:ex.reps||ex.r||"10",
+            repos:ex.repos||"90s",
             historique:[],note:""
           })),
           complete:false,date:null,note:""
