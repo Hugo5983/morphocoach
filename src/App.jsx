@@ -354,26 +354,19 @@ variantes:[{nom:"Pull-over haltère couché",note:"Plus d'étirement en bas — 
 erreurs:["Trop fléchir les coudes en cours de mouvement — les triceps prennent le travail","Amplitude insuffisante vers le haut — perd l'étirement activateur","Buste qui compense par flexion excessive du tronc"]},
 
 {n:"Soulevé de terre roumain",s:"4",r:"6-8",rest:"120s",ch:"75-80%",cat:"principal",
-morpho:"🦴 Fémurs courts : exercice confortable — position naturellement verticale, bon levier.
-🦴 Fémurs longs : difficile de garder le dos plat — Romanian deadlift haltères ou trap bar recommandés.
-💪 Chaîne postérieure complète : grand dorsal + trapèzes + érecteurs + ischios + fessiers — l'exercice le plus complet de la musculation.",
+morpho:"🦴 Fémurs courts : exercice confortable — position naturellement verticale, bon levier.\n🦴 Fémurs longs : difficile de garder le dos plat — Romanian deadlift haltères ou trap bar recommandés.\n💪 Chaîne postérieure complète : grand dorsal + trapèzes + érecteurs + ischios + fessiers — l'exercice le plus complet de la musculation.",
 tips:["Lordose naturelle OBLIGATOIRE — si le dos s'arrondit, charge trop lourde","Barre au ras des tibias sur tout le trajet — ne pas l'éloigner du corps","Pieds à largeur des hanches, prise en pronation ou mixte","Engagement des dorsaux avant de tirer — penser à rentrer les omoplates","Poussée des jambes dans le sol plutôt que tirage vers le haut"],
 variantes:[{nom:"Soulevé sumo",note:"Pieds larges, moins de stress lombaire — bonne option fémurs longs"},{nom:"Soulevé trap bar hexagonale",note:"Meilleure option pour fémurs longs — charge dans l'axe du corps"},{nom:"Romanian deadlift haltères",note:"Plus d'étirement ischios — version accessible"}],
 erreurs:["Arrondir le dos — blessure lombaire certaine","Barre qui s'éloigne du corps — levier défavorable","Hyperextension lombaire en haut — verrouiller les hanches suffit"]},
 
 {n:"Tirage horizontal câble assis",s:"4",r:"10-12",rest:"75s",ch:"65%",cat:"principal",
-morpho:"🦴 Fémurs longs : meilleure option que le rowing barre car la position assise neutralise les compensations du bas du dos.
-🦴 Tous morphotypes : exercice complet pour les dorsaux moyens et inférieurs.
-🔩 Prise serrée neutre = grand dorsal + grand rond / prise large = trapèzes moyens + rhomboïdes.",
+morpho:"🦴 Fémurs longs : meilleure option que le rowing barre car la position assise neutralise les compensations du bas du dos.\n🦴 Tous morphotypes : exercice complet pour les dorsaux moyens et inférieurs.\n🔩 Prise serrée neutre = grand dorsal + grand rond / prise large = trapèzes moyens + rhomboïdes.",
 tips:["Dos droit, légère inclinaison arrière en tirant — pas de bascule excessive","Tirer vers le nombril avec les coudes bien le long du corps","Etirement complet en avant — laisser les omoplates s'écarter","Contraction maximale en fin de mouvement — serrer les omoplates","Excentrique contrôlé 2-3s"],
 variantes:[{nom:"Tirage horizontal prise large",note:"Trapèzes moyens et rhomboïdes davantage sollicités"},{nom:"Tirage horizontal unilatéral",note:"Correction asymétrie + concentration supérieure"},{nom:"Chest supported row machine",note:"Élimine tout élan — isolation dorsale pure"}],
 erreurs:["Bascule excessive du buste pour prendre de l'élan","Coudes trop écartés — trapèzes supérieurs dominent","Amplitude insuffisante en avant — perd l'étirement activateur"]},
 
 {n:"Tractions supination",s:"4",r:"6-10",rest:"120s",ch:"Corps + lest",cat:"principal",
-morpho:"🦴 Bras longs : meilleur recrutement biceps qui aide à compléter le mouvement malgré la longueur.
-🦴 Bras courts : biceps moins impliqués — dorsaux plus isolés.
-📐 Clavicules larges : prise légèrement plus étroite que les tractions pronation pour optimiser la trajectoire.
-💡 Hybride biceps + grand dorsal — plus accessible que les tractions pronation pour progresser.",
+morpho:"🦴 Bras longs : meilleur recrutement biceps qui aide à compléter le mouvement malgré la longueur.\n🦴 Bras courts : biceps moins impliqués — dorsaux plus isolés.\n📐 Clavicules larges : prise légèrement plus étroite que les tractions pronation pour optimiser la trajectoire.\n💡 Hybride biceps + grand dorsal — plus accessible que les tractions pronation pour progresser.",
 tips:["Prise supination à largeur des épaules ou légèrement plus étroite","Initier par la dépression scapulaire avant de plier les coudes","Tirer les coudes vers les hanches — pas vers l'arrière","Chin above bar = amplitude complète — ne pas tricher avec un demi-mouvement","Excentrique 3-4s"],
 variantes:[{nom:"Tractions neutres",note:"Meilleure tolérance articulaire — entre pronation et supination"},{nom:"Assisted pull-ups machine",note:"Progression vers les tractions pures"},{nom:"Tirage supination poulie haute",note:"Pattern identique sans le poids du corps"}],
 erreurs:["Amplitude partielle — menton doit dépasser la barre","Balancement pour se propulser","Ne pas aller en extension complète en bas"]},
@@ -405,16 +398,13 @@ variantes:[{nom:"Rotation externe haltère allongé sur côté",note:"Gravity as
 erreurs:["Coude qui décolle du corps — l'exercice perd complètement son intérêt","Trop lourd — les compensations musculaires prennent le dessus","Amplitude incomplète — travail insuffisant des rotateurs externes"]},
 
 {n:"Élévations frontales haltères",s:"3",r:"12-15",rest:"60s",ch:"Très léger",cat:"isolation",
-morpho:"🦴 Tous morphotypes : deltoïde antérieur. Souvent surdéveloppé par les exercices de poussée — à ne pas surcharger si antépulsion.
-📐 Antépulsion épaules : à éviter ou remplacer par l'oiseau penché — renforce une dominance déjà présente.
-💡 Si les épaules compensent dès le premier reps : charge trop lourde.",
+morpho:"🦴 Tous morphotypes : deltoïde antérieur. Souvent surdéveloppé par les exercices de poussée — à ne pas surcharger si antépulsion.\n📐 Antépulsion épaules : à éviter ou remplacer par l'oiseau penché — renforce une dominance déjà présente.\n💡 Si les épaules compensent dès le premier reps : charge trop lourde.",
 tips:["Mouvement vers l'avant et légèrement vers l'intérieur","Arrêt à hauteur des épaules — pas plus haut","Excentrique contrôlé 2-3s","Alternativement pour plus de concentration","Prise pronation ou en pince selon préférence"],
 variantes:[{nom:"Élévations frontales câble bas",note:"Tension constante — meilleure option selon Gundill"},{nom:"Élévations frontales barre",note:"Bilatéral — plus de charge mais moins d'isolation"},{nom:"Raise inversé cable",note:"Deltoïde antérieur en fin d'arc — bon finisseur"}],
 erreurs:["Balancement du corps pour se propulser","Dépasser la hauteur des épaules — trapèzes prennent le relais","Trop lourd — compensation lombaire"]},
 
 {n:"Shrug d'isolation haut pectoraux",s:"3",r:"15",rest:"60s",ch:"Léger",cat:"isolation",
-morpho:"🫁 Cage plate : exercice de Gundill ciblant le haut des pectoraux via l'angle d'élévation de l'épaule. Excellent pour les morphotypes à cage plate qui peinent à développer le haut du torse.
-📐 Épaules saines obligatoires — douleur = arrêt immédiat.",
+morpho:"🫁 Cage plate : exercice de Gundill ciblant le haut des pectoraux via l'angle d'élévation de l'épaule. Excellent pour les morphotypes à cage plate qui peinent à développer le haut du torse.\n📐 Épaules saines obligatoires — douleur = arrêt immédiat.",
 tips:["Bras tendus devant soi, penché légèrement vers la machine","Élever l'épaule vers la tête en gardant le bras tendu","Contraction 1-2s en position haute","Amplitude de seulement quelques centimètres — mouvement d'épaule pur","Poids très léger — c'est la connexion neuromusculaire qui compte"],
 variantes:[{nom:"Shrug pec-deck",note:"Machine guidée — version la plus accessible"},{nom:"Cable shrug incliné",note:"Version câble pour tension constante"}],
 erreurs:["Amplitude trop grande — trapèzes prennent le relais","Trop lourd — perd l'isolation du haut pectoral","Ne pas sentir la contraction = mauvaise position"]},
