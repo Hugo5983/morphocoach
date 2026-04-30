@@ -260,11 +260,13 @@ const FOODS=[
   {id:20,n:"Pomme",c:52,p:0,g:14,l:0,cat:"Fruits"},
 ];
 const OBJ={
-  hypertrophie:{l:"Prise de muscle",c:1.15,p:.30,g:.50,li:.20},
-  force:       {l:"Force",         c:1.10,p:.30,g:.45,li:.25},
-  poids:       {l:"Perte de poids",c:0.80,p:.35,g:.40,li:.25},
-  sante:       {l:"Santé",         c:1.0, p:.25,g:.50,li:.25},
+  hypertrophie:{l:"Prise de muscle",  icon:"💪", surplus:300,  p:2.2, g:4.0, li:1.0},
+  force:       {l:"Force athlétique", icon:"🏋️", surplus:200,  p:2.0, g:3.5, li:1.1},
+  poids:       {l:"Perte de poids",   icon:"🔥", deficit:-400, p:2.4, g:2.5, li:0.9},
+  sante:       {l:"Santé générale",   icon:"❤️", surplus:0,    p:1.6, g:3.0, li:1.0},
 };
+// Facteurs activité TDEE
+const ACTIVITE_FACTOR={sedentaire:1.2,leger:1.375,modere:1.55,actif:1.725,tres_actif:1.9};
 const EX={
 "Pectoraux":[
 {n:"Développé haltères incliné 30°",s:"4",r:"8-10",rest:"90s",ch:"60-70%",cat:"principal",
@@ -674,13 +676,43 @@ export default function App(){
   const [scanRes,setScanRes]=useState(null);
   const imc=profil.poids&&profil.taille?(profil.poids/((profil.taille/100)**2)).toFixed(1):null;
   const obj=OBJ[profil.objectif]||OBJ.sante;
+
+  // ─── Calcul TDEE complet (Harris-Benedict révisé 1984) ───
   const calBase=useCallback(()=>{
-    if(!profil.poids||!profil.taille||!profil.age||!profil.sexe)return 2000;
-    const b=profil.sexe==="homme"?10*profil.poids+6.25*profil.taille-5*profil.age+5:10*profil.poids+6.25*profil.taille-5*profil.age-161;
-    return Math.round(b*({sedentaire:1.2,leger:1.375,modere:1.55,actif:1.725}[profil.activite]||1.375)*obj.c);
-  },[profil,obj]);
+    const p=parseFloat(profil.poids)||0;
+    const t=parseFloat(profil.taille)||0;
+    const a=parseFloat(profil.age)||0;
+    if(!p||!t||!a)return 2000;
+    // MB Harris-Benedict révisé
+    const mb=profil.sexe==="femme"
+      ?447.593+9.247*p+3.098*t-4.330*a      // Femme
+      :88.362+13.397*p+4.799*t-5.677*a;     // Homme (défaut)
+    // TDEE = MB × facteur activité
+    const factAct=ACTIVITE_FACTOR[profil.activite]||1.375;
+    const tdee=Math.round(mb*factAct);
+    // Ajustement objectif
+    const adj=obj.surplus||0; // surplus positif = masse, négatif = sèche
+    // Ajustement par cycle (bulk progressif ou sèche progressive)
+    const cycleNum=cycles.length+1;
+    let cycleAdj=0;
+    if(profil.objectif==="hypertrophie"){
+      // Bulk progressif : +50 kcal par cycle jusqu'à +500 max
+      cycleAdj=Math.min((cycleNum-1)*50,200);
+    } else if(profil.objectif==="poids"){
+      // Déficit progressif par paliers pour éviter la stagnation
+      // Cycle 1-2: -400, Cycle 3-4: -350 (réintroduction), Cycle 5+: -400
+      cycleAdj=cycleNum%4<2?0:50;
+    }
+    return Math.max(1200, tdee+adj+cycleAdj);
+  },[profil,obj,cycles]);
+
   const calObj=calBase();
-  const pObj=Math.round(calObj*obj.p/4),gObj=Math.round(calObj*obj.g/4),lObj=Math.round(calObj*obj.li/9);
+  // Macros en grammes (p:g/kg, g:g/kg, li:g/kg selon poids)
+  const p_kg=parseFloat(profil.poids)||70;
+  const pObj=Math.round(p_kg*(obj.p||2.0));          // Protéines g
+  const lObj=Math.round(p_kg*(obj.li||1.0));          // Lipides g
+  const calFromPL=pObj*4+lObj*9;
+  const gObj=Math.max(50,Math.round((calObj-calFromPL)/4)); // Glucides g (reste)
   const totR=()=>[...repas.matin,...repas.midi,...repas.soir,...repas.snack].reduce((a,i)=>({cal:a.cal+i.c,p:a.p+i.p,g:a.g+i.g,l:a.l+i.l}),{cal:0,p:0,g:0,l:0});
   const jR=cycleStart?Math.max(0,42-Math.floor((Date.now()-cycleStart)/864e5)):null;
   const cPct=cycleStart?Math.min(100,((42-(jR||0))/42)*100):0;
@@ -2387,18 +2419,58 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
         ))}
       </Box>
       {profil.poids&&profil.taille&&profil.age&&profil.sexe&&<Box>
-        <Lbl>Besoins estimés</Lbl>
-        <div style={{fontFamily:"'Syne',sans-serif",fontSize:30,color:C.gold,letterSpacing:1,marginBottom:3}}>{calObj}<span style={{fontSize:13,color:C.mid,fontFamily:"'Inter',sans-serif",fontWeight:400}}> kcal/jour</span></div>
-        <div style={{fontSize:10,color:C.mid,marginBottom:10}}>{obj.l}</div>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:7}}>
-          {[{l:"Protéines",v:pObj,c:C.red},{l:"Glucides",v:gObj,c:C.orange},{l:"Lipides",v:lObj,c:C.green}].map(m=>(
-            <div key={m.l} style={{textAlign:"center",padding:"10px 6px",background:C.s2,borderRadius:9}}>
-              <div style={{fontFamily:"'Syne',sans-serif",fontSize:18,color:m.c,letterSpacing:0.5}}>{m.v}g</div>
-              <div style={{fontSize:9,color:C.mid,marginTop:2}}>{m.l}</div>
+        <Lbl>Besoins calculés</Lbl>
+        {/* ─── Calorie principale ─── */}
+        <div style={{display:"flex",alignItems:"baseline",gap:6,marginBottom:2}}>
+          <div style={{fontFamily:"'Syne',sans-serif",fontSize:34,color:"#3b82f6",fontWeight:300,letterSpacing:-1,lineHeight:1}}>{calObj}</div>
+          <div style={{fontSize:12,color:C.mid}}>kcal/jour</div>
+          {cycles.length>0&&<div style={{marginLeft:"auto",padding:"3px 8px",background:"rgba(59,130,246,0.08)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:6,fontSize:10,color:"#3b82f6"}}>Cycle {cycles.length+1}</div>}
+        </div>
+        <div style={{fontSize:11,color:C.mid,marginBottom:10}}>{obj.icon} {obj.l} · {obj.surplus>0?`+${obj.surplus} kcal surplus`:obj.surplus<0?`${obj.surplus} kcal déficit`:"Maintien"}</div>
+        {/* ─── Détail calcul ─── */}
+        {(()=>{
+          const p=parseFloat(profil.poids)||0;
+          const t=parseFloat(profil.taille)||0;
+          const a=parseFloat(profil.age)||0;
+          const mb=profil.sexe==="femme"?Math.round(447.593+9.247*p+3.098*t-4.330*a):Math.round(88.362+13.397*p+4.799*t-5.677*a);
+          const factAct=ACTIVITE_FACTOR[profil.activite]||1.375;
+          const tdee=Math.round(mb*factAct);
+          return(
+            <div style={{padding:"10px 12px",background:"rgba(59,130,246,0.04)",border:"0.5px solid rgba(59,130,246,0.12)",borderRadius:10,marginBottom:12}}>
+              <div style={{fontSize:9,color:"#3b82f6",fontWeight:600,letterSpacing:"1px",textTransform:"uppercase",marginBottom:6}}>📊 Détail Harris-Benedict</div>
+              <div style={{display:"flex",justifyContent:"space-between",marginBottom:3}}>
+                <span style={{fontSize:10,color:C.mid}}>Métabolisme de base (MB)</span>
+                <span style={{fontSize:10,fontWeight:600,color:C.text}}>{mb} kcal</span>
+              </div>
+              <div style={{display:"flex",justifyContent:"space-between",marginBottom:3}}>
+                <span style={{fontSize:10,color:C.mid}}>TDEE (MB × {factAct})</span>
+                <span style={{fontSize:10,fontWeight:600,color:C.text}}>{tdee} kcal</span>
+              </div>
+              <div style={{display:"flex",justifyContent:"space-between",borderTop:"0.5px solid #dce8f4",paddingTop:4,marginTop:2}}>
+                <span style={{fontSize:10,color:C.mid}}>Objectif ({obj.l})</span>
+                <span style={{fontSize:11,fontWeight:600,color:"#3b82f6"}}>{calObj} kcal</span>
+              </div>
+            </div>
+          );
+        })()}
+        {/* ─── Macros en g/kg ─── */}
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:7,marginBottom:10}}>
+          {[
+            {l:"Protéines",v:pObj,sub:`${obj.p}g/kg`,c:"#ef4444",bg:"rgba(239,68,68,0.08)"},
+            {l:"Glucides", v:gObj,sub:"reste cal",   c:"#f97316",bg:"rgba(249,115,22,0.08)"},
+            {l:"Lipides",  v:lObj,sub:`${obj.li}g/kg`,c:"#22c55e",bg:"rgba(34,197,94,0.08)"},
+          ].map(m=>(
+            <div key={m.l} style={{textAlign:"center",padding:"10px 6px",background:m.bg,borderRadius:10,border:`0.5px solid ${m.c}30`}}>
+              <div style={{fontFamily:"'Syne',sans-serif",fontSize:20,color:m.c,fontWeight:300}}>{m.v}<span style={{fontSize:9}}>g</span></div>
+              <div style={{fontSize:9,color:C.text,fontWeight:500,marginTop:1}}>{m.l}</div>
+              <div style={{fontSize:8,color:C.mid,marginTop:1}}>{m.sub}</div>
             </div>
           ))}
         </div>
-        {profil.objectif==="poids"&&<div style={{marginTop:9,padding:"8px 10px",background:"rgba(220,125,52,.08)",border:"1px solid rgba(220,125,52,.2)",borderRadius:7,fontSize:11,color:C.orange,lineHeight:1.5}}>Perte saine : max 2 kg/mois. Déficit modéré + musculation = préservation musculaire.</div>}
+        {/* ─── Conseil selon objectif ─── */}
+        {profil.objectif==="hypertrophie"&&<div style={{padding:"8px 10px",background:"rgba(59,130,246,0.06)",border:"0.5px solid rgba(59,130,246,0.15)",borderRadius:8,fontSize:10,color:"#3b82f6",lineHeight:1.5}}>💪 Prise de masse : surplus de +{(OBJ.hypertrophie.surplus+(Math.min(cycles.length,4)*50))}kcal. Protéines à {obj.p}g/kg. Progression du surplus par cycle (+50kcal chaque cycle).</div>}
+        {profil.objectif==="poids"&&<div style={{padding:"8px 10px",background:"rgba(249,115,22,0.06)",border:"0.5px solid rgba(249,115,22,0.15)",borderRadius:8,fontSize:10,color:"#f97316",lineHeight:1.5}}>🔥 Perte de graisse : déficit de 400kcal. Perte saine : 400-500g/semaine. Protéines élevées ({obj.p}g/kg) pour préserver le muscle. Méthode MATADOR recommandée : alterner 2 semaines déficit / 2 semaines maintien.</div>}
+        {profil.objectif==="force"&&<div style={{padding:"8px 10px",background:"rgba(139,92,246,0.06)",border:"0.5px solid rgba(139,92,246,0.15)",borderRadius:8,fontSize:10,color:"#8b5cf6",lineHeight:1.5}}>🏋️ Force : léger surplus +{OBJ.force.surplus}kcal. Protéines à {obj.p}g/kg. Glucides élevés ({obj.g}g/kg) pour les performances.</div>}
       </Box>}
       <Box>
         <Lbl>Notifications</Lbl>
