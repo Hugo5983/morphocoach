@@ -89,43 +89,201 @@ function Notif({n,onClose}){
  );
 }
 function Chrono({onClose,initSec=90}){
- const [t,setT]=useState(0),[run,setRun]=useState(true),[preset,setPreset]=useState(null),[left,setLeft]=useState(null);
- const ref=useRef();
- useEffect(()=>{
- if(run) ref.current=setInterval(()=>{setT(x=>x+1);if(left!==null)setLeft(l=>Math.max(0,l-1));},1000);
- return()=>clearInterval(ref.current);
- },[run,left]);
- const fmt=s=>`${String(Math.floor(s/60)).padStart(2,"0")}:${String(s%60).padStart(2,"0")}`;
- const done=left===0&&preset!==null;
- const pct=preset?((preset-(left||0))/preset)*100:0;
- const R=44,CI=2*Math.PI*R;
- return(
- <div style={{position:"fixed",inset:0,background:"rgba(237,243,251,0.99)",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",zIndex:400,padding:24}}>
- <Lbl style={{marginBottom:20}}>Temps de repos</Lbl>
- <div style={{position:"relative",width:120,height:120,marginBottom:24}}>
- <svg width={120} height={120} style={{transform:"rotate(-90deg)"}}>
- <circle cx={60} cy={60} r={R} fill="none" stroke={C.s3} strokeWidth={4}/>
- <circle cx={60} cy={60} r={R} fill="none" stroke={done?C.green:C.gold} strokeWidth={4}
- strokeDasharray={CI} strokeDashoffset={CI*(1-pct/100)} strokeLinecap="round"
- style={{transition:"stroke-dashoffset.8s ease"}}/>
- </svg>
- <div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center"}}>
- <div style={{fontFamily:"'Syne',sans-serif",fontSize:30,color:done?C.green:C.text,letterSpacing:-0.5,fontWeight:300}}>{preset?fmt(left||0):fmt(t)}</div>
- {done&&<div style={{fontSize:9,color:C.green,fontWeight:700,letterSpacing:"2px"}}>GO!</div>}
- </div>
- </div>
- <div style={{display:"flex",gap:6,flexWrap:"wrap",justifyContent:"center",marginBottom:16}}>
- {[30,45,60,90,120].map(s=>(
- <button key={s} onClick={()=>{setPreset(s);setLeft(s);setT(0);setRun(true);}} style={{padding:"7px 13px",background:preset===s?C.goldD:C.s2,border:`1px solid ${preset===s?C.gold:C.s3}`,borderRadius:8,color:preset===s?C.gold:C.mid,cursor:"pointer",fontSize:12,fontFamily:"'Inter',sans-serif",fontWeight:500}}>{s}s</button>
- ))}
- </div>
- <div style={{display:"flex",gap:8,marginBottom:16}}>
- <button onClick={()=>setRun(r=>!r)} style={{padding:"10px 18px",background:run?"rgba(224,72,72,.1)":"rgba(56,199,117,.1)",border:`1px solid ${run?"rgba(224,72,72,.3)":"rgba(56,199,117,.3)"}`,borderRadius:8,color:run?C.red:C.green,cursor:"pointer",fontSize:12,fontFamily:"'Inter',sans-serif",fontWeight:600}}>{run?"Pause":"Go"}</button>
- <button onClick={()=>{setT(0);setLeft(preset);setRun(true);}} style={{padding:"10px 14px",background:C.s2,border:"0.5px solid #dce8f4",borderRadius:8,color:C.mid,cursor:"pointer",fontSize:14}}>↺</button>
- </div>
- <button onClick={onClose} style={{padding:"9px 20px",background:"transparent",border:`0.5px solid ${C.goldB}`,borderRadius:8,color:C.gold,cursor:"pointer",fontSize:11,fontWeight:600,letterSpacing:"1px"}}>FERMER</button>
- </div>
- );
+  const [left,setLeft]=useState(initSec);
+  const [total,setTotal]=useState(initSec);
+  const [run,setRun]=useState(true);
+  const [elapsed,setElapsed]=useState(0);
+  const [mode,setMode]=useState("countdown"); // countdown | stopwatch
+  const [vibrated,setVibrated]=useState(false);
+  const ref=useRef();
+
+  // Presets
+  const PRESETS=[
+    {l:"30s",s:30},{l:"45s",s:45},{l:"60s",s:60},
+    {l:"1:30",s:90},{l:"2:00",s:120},{l:"3:00",s:180},
+  ];
+
+  useEffect(()=>{
+    if(run){
+      ref.current=setInterval(()=>{
+        if(mode==="countdown"){
+          setLeft(l=>{
+            if(l<=1){
+              clearInterval(ref.current);
+              setRun(false);
+              if(!vibrated){
+                if(navigator.vibrate) navigator.vibrate([200,100,200,100,300]);
+                setVibrated(true);
+              }
+              return 0;
+            }
+            return l-1;
+          });
+        } else {
+          setElapsed(e=>e+1);
+        }
+      },1000);
+    }
+    return()=>clearInterval(ref.current);
+  },[run,mode]);
+
+  const fmt=s=>{
+    const m=Math.floor(s/60);
+    const sec=s%60;
+    return `${String(m).padStart(2,"0")}:${String(sec).padStart(2,"0")}`;
+  };
+
+  const pct=mode==="countdown"?((total-left)/total)*100:0;
+  const done=mode==="countdown"&&left===0;
+  const R=80;
+  const CI=2*Math.PI*R;
+  const urgency=mode==="countdown"&&left<=10&&left>0;
+
+  const handlePreset=(s)=>{
+    setLeft(s);setTotal(s);setRun(true);setVibrated(false);
+  };
+
+  // Color based on state
+  const arcColor=done?"#22c55e":urgency?"#ef4444":"#3b82f6";
+  const arcBg="rgba(59,130,246,0.08)";
+  const timeColor=done?"#22c55e":urgency?"#ef4444":"#0f1a2e";
+
+  return(
+    <div style={{position:"fixed",inset:0,background:"#e4eef8",zIndex:400,display:"flex",flexDirection:"column",alignItems:"center",overflowY:"auto"}}>
+      {/* Header */}
+      <div style={{width:"100%",maxWidth:500,display:"flex",justifyContent:"space-between",alignItems:"center",padding:"16px 20px 0"}}>
+        <button onClick={onClose} style={{background:"rgba(59,130,246,0.1)",border:"none",borderRadius:10,width:36,height:36,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",color:"#3b82f6",fontSize:18}}>×</button>
+        <div style={{fontFamily:"'Syne',sans-serif",fontSize:14,fontWeight:400,color:"#0f1a2e",letterSpacing:1,textTransform:"uppercase"}}>Temps de repos</div>
+        {/* Mode switch */}
+        <div style={{display:"flex",background:"rgba(59,130,246,0.08)",borderRadius:10,padding:3,gap:3}}>
+          {["countdown","stopwatch"].map(m=>(
+            <button key={m} onClick={()=>{setMode(m);setLeft(total);setElapsed(0);setRun(false);setVibrated(false);}} style={{padding:"5px 8px",borderRadius:7,border:"none",background:mode===m?"#ffffff":"transparent",color:mode===m?"#3b82f6":"#a0b4cc",cursor:"pointer",fontSize:10,fontWeight:600,transition:"all .15s"}}>
+              {m==="countdown"?"⏱":"⏲"}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Main circle */}
+      <div style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"20px 20px 0",width:"100%",maxWidth:500}}>
+        <div style={{position:"relative",width:220,height:220,marginBottom:32}}>
+          {/* Outer glow when urgent */}
+          {urgency&&<div style={{position:"absolute",inset:-8,borderRadius:"50%",background:"rgba(239,68,68,0.08)",animation:"pulse 1s infinite"}}/>}
+
+          <svg width={220} height={220} viewBox="0 0 220 220" style={{transform:"rotate(-90deg)",filter:done?"drop-shadow(0 0 12px rgba(34,197,94,0.4))":urgency?"drop-shadow(0 0 12px rgba(239,68,68,0.3))":"none",transition:"filter .5s"}}>
+            {/* Background track */}
+            <circle cx={110} cy={110} r={R} fill="none" stroke="#dce8f4" strokeWidth={10}/>
+            {/* Progress arc */}
+            {mode==="countdown"?(
+              <circle cx={110} cy={110} r={R} fill="none" stroke={arcColor} strokeWidth={10}
+                strokeDasharray={CI} strokeDashoffset={CI*(pct/100)}
+                strokeLinecap="round" style={{transition:"stroke-dashoffset .9s cubic-bezier(.4,0,.2,1),stroke .3s"}}/>
+            ):(
+              <circle cx={110} cy={110} r={R} fill="none" stroke="#3b82f6" strokeWidth={10}
+                strokeDasharray={`${(elapsed%60)/60*CI} ${CI}`}
+                strokeLinecap="round" style={{transition:"stroke-dasharray .9s"}}/>
+            )}
+            {/* Tick marks */}
+            {[0,15,30,45].map(tick=>(
+              <line key={tick} x1={110} y1={30} x2={110} y2={24}
+                stroke="#c8d8ec" strokeWidth={2}
+                transform={`rotate(${tick*6} 110 110)`}/>
+            ))}
+          </svg>
+
+          {/* Center content */}
+          <div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:2}}>
+            {done?(
+              <>
+                <div style={{fontSize:40,lineHeight:1}}>✅</div>
+                <div style={{fontFamily:"'Syne',sans-serif",fontSize:16,fontWeight:500,color:"#22c55e",letterSpacing:1}}>C'EST PARTI !</div>
+              </>
+            ):(
+              <>
+                <div style={{fontFamily:"'Syne',sans-serif",fontSize:46,fontWeight:200,color:timeColor,letterSpacing:-2,lineHeight:1,transition:"color .3s"}}>
+                  {mode==="countdown"?fmt(left):fmt(elapsed)}
+                </div>
+                <div style={{fontSize:10,color:"#a0b4cc",fontWeight:500,letterSpacing:"1px",marginTop:2}}>
+                  {mode==="countdown"
+                    ?left===total?"PRÊT":run?"REPOS...":"PAUSE"
+                    :run?"EN COURS...":"PAUSE"}
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+
+        {/* Presets - seulement en mode countdown */}
+        {mode==="countdown"&&(
+          <div style={{display:"flex",gap:8,flexWrap:"wrap",justifyContent:"center",marginBottom:24}}>
+            {PRESETS.map(p=>(
+              <button key={p.s} onClick={()=>handlePreset(p.s)} style={{
+                padding:"8px 14px",
+                background:total===p.s&&!done?"#3b82f6":"#ffffff",
+                border:`1px solid ${total===p.s&&!done?"#3b82f6":"#dce8f4"}`,
+                borderRadius:20,
+                color:total===p.s&&!done?"#ffffff":"#64748b",
+                cursor:"pointer",fontSize:12,fontWeight:600,
+                fontFamily:"'Inter',sans-serif",
+                transition:"all .15s",
+                boxShadow:total===p.s&&!done?"0 2px 8px rgba(59,130,246,0.3)":"none"
+              }}>{p.l}</button>
+            ))}
+          </div>
+        )}
+
+        {/* Controls */}
+        <div style={{display:"flex",gap:16,alignItems:"center",marginBottom:24}}>
+          {/* Reset */}
+          <button onClick={()=>{setLeft(total);setElapsed(0);setRun(false);setVibrated(false);}} style={{width:52,height:52,borderRadius:"50%",background:"#ffffff",border:"0.5px solid #dce8f4",display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",boxShadow:"0 2px 8px rgba(0,0,0,0.06)"}}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.8"/></svg>
+          </button>
+
+          {/* Play/Pause - big */}
+          <button onClick={()=>{if(done){setLeft(total);setElapsed(0);setVibrated(false);setRun(true);}else setRun(r=>!r);}} style={{
+            width:72,height:72,
+            borderRadius:"50%",
+            background:run&&!done?"#ef4444":"#3b82f6",
+            border:"none",
+            display:"flex",alignItems:"center",justifyContent:"center",
+            cursor:"pointer",
+            boxShadow:`0 4px 20px ${run&&!done?"rgba(239,68,68,0.4)":"rgba(59,130,246,0.4)"}`,
+            transition:"all .2s"
+          }}>
+            {done?(
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.8"/></svg>
+            ):run?(
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
+            ):(
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><polygon points="5,3 19,12 5,21"/></svg>
+            )}
+          </button>
+
+          {/* +30s */}
+          <button onClick={()=>{if(mode==="countdown"){setLeft(l=>l+30);setTotal(t=>t+30);}}} style={{width:52,height:52,borderRadius:"50%",background:"#ffffff",border:"0.5px solid #dce8f4",display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",boxShadow:"0 2px 8px rgba(0,0,0,0.06)",flexDirection:"column",gap:1}}>
+            <span style={{fontSize:10,fontWeight:700,color:"#3b82f6",lineHeight:1}}>+30</span>
+            <span style={{fontSize:8,color:"#a0b4cc"}}>sec</span>
+          </button>
+        </div>
+
+        {/* Progress bar linéaire */}
+        {mode==="countdown"&&total>0&&(
+          <div style={{width:"100%",maxWidth:280,marginBottom:24}}>
+            <div style={{height:3,background:"#dce8f4",borderRadius:2,overflow:"hidden"}}>
+              <div style={{height:"100%",width:`${100-pct}%`,background:arcColor,borderRadius:2,transition:"width .9s cubic-bezier(.4,0,.2,1)"}}/>
+            </div>
+            <div style={{display:"flex",justifyContent:"space-between",marginTop:4}}>
+              <span style={{fontSize:9,color:"#a0b4cc"}}>0s</span>
+              <span style={{fontSize:9,color:"#a0b4cc"}}>{fmt(total)}</span>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* CSS animation */}
+      <style>{`@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}`}</style>
+    </div>
+  );
 }
 function DayModal({date,session,onSave,onDelete,onClose}){
  const [nom,setNom]=useState(session?.nom||"");
@@ -316,6 +474,24 @@ morpho:"🦴 Tous morphotypes : trajectoire guidée qui s'adapte à la plupart d
 tips:["Régler les bras à hauteur des épaules pour le chef moyen — plus bas pour le chef inférieur","Contraction maximale 2s en position fermée","Excentrique contrôlé 2-3s — résister à la machine","Coudes légèrement fléchis et fixes","Penser à pousser avec les pectoraux, pas avec les bras"],
 variantes:[{nom:"Pec-deck (butterfy)",note:"Amplitude plus grande — coudes fléchis à 90°"},{nom:"Câble croisé debout",note:"Plus de liberté de mouvement, tension constante"},{nom:"Écarté poulie haute",note:"Cible le bas des pecs en croisant devant les hanches"}],
 erreurs:["Régler trop large — stress articulaire en position ouverte","Ne pas aller en extension complète — perd l'étirement","Trop de charge — les épaules avancent"]},
+
+{n:"Développé haltères décliné",s:"4",r:"10-12",rest:"75s",ch:"60-70%",cat:"principal",
+morpho:"🦴 Bras longs : haltères indispensables — même logique qu'en plat, rotation naturelle du poignet.\n🫁 Cage plate : moins prioritaire que l'incliné — à ajouter une fois le pull-over intégré.\n🫁 Cage large/épaisse : excellent pour finir le bas des pectoraux.\n💡 Le décliné cible le chef sternal inférieur — donne l'aspect de la séparation pectorale.",
+tips:["Banc à 15-30° de déclin maximum — trop incliné = épaules","Omoplates rétractées et pressées sur le banc","Coudes à 45° du torse, jamais perpendiculaires","Contrôle excentrique 2-3s","Contraction maximale en haut sans verrouillage"],
+variantes:[{nom:"Décliné barre",note:"Plus de charge — uniquement si humérus courts"},{nom:"Dips buste très incliné",note:"Même zone ciblée en poids de corps"}],
+erreurs:["Trop de déclin : épaules et triceps dominent","Amplitude insuffisante en bas","Rebond"]},
+
+{n:"Câble croisé debout",s:"3",r:"15",rest:"60s",ch:"Léger",cat:"isolation",
+morpho:"🦴 Tous morphotypes : tension constante sur TOUT l'arc — supérieur aux haltères pour la contraction finale.\n💡 Croiser les bras devant le sternum = contraction maximale des fibres internes. Ne pas dépasser la ligne médiane.",
+tips:["Légère inclinaison du buste vers l'avant","Poignets légèrement fléchis vers l'intérieur en fin de mouvement","Contraction 2s au croisement","Excentrique lent 3s — résister à la tension","Garder la même légère flexion des coudes tout au long"],
+variantes:[{nom:"Câble croisé haut vers bas",note:"Chef inférieur — croisement vers les hanches"},{nom:"Câble croisé bas vers haut",note:"Chef supérieur/claviculaire"}],
+erreurs:["Trop lourd — les épaules compensent","Pas de croisement en haut — perd la contraction maximale","Coudes qui bougent"]},
+
+{n:"Pompes bulgares (pieds surélevés)",s:"4",r:"15-20",rest:"60s",ch:"Corps",cat:"principal",
+morpho:"🦴 Tous morphotypes : pieds surélevés = angle développé incliné — cible le chef supérieur des pectoraux.\n💡 Plus fonctionnel et accessible que la machine — force le gainage simultanément.",
+tips:["Pieds sur banc (30-40cm), mains à largeur des épaules","Corps en ligne droite — gainage actif tout au long","Descendre au maximum, menton vers le sol","Explosion à la montée","Variante avancée : lester avec gilet"],
+variantes:[{nom:"Pompes classiques",note:"Version débutant — même technique"},{nom:"Pompes archer",note:"Isolation unilatérale avancée"},{nom:"Pompes mains surélevées",note:"Chef inférieur"}],
+erreurs:["Hanches qui montent — perd le gainage","Amplitude insuffisante — ne touche pas le sol","Coudes perpendiculaires au torse"]},
 ],
 
 "Dos":[
@@ -372,6 +548,30 @@ morpho:"🦴 Bras longs : meilleur recrutement biceps qui aide à compléter le 
 tips:["Prise supination à largeur des épaules ou légèrement plus étroite","Initier par la dépression scapulaire avant de plier les coudes","Tirer les coudes vers les hanches — pas vers l'arrière","Chin above bar = amplitude complète — ne pas tricher avec un demi-mouvement","Excentrique 3-4s"],
 variantes:[{nom:"Tractions neutres",note:"Meilleure tolérance articulaire — entre pronation et supination"},{nom:"Assisted pull-ups machine",note:"Progression vers les tractions pures"},{nom:"Tirage supination poulie haute",note:"Pattern identique sans le poids du corps"}],
 erreurs:["Amplitude partielle — menton doit dépasser la barre","Balancement pour se propulser","Ne pas aller en extension complète en bas"]},
+
+{n:"Deadlift roumain barre",s:"4",r:"6-8",rest:"120s",ch:"70-80%",cat:"principal",
+morpho:"🦴 Fémurs courts : exercice confortable — levier naturellement bon.\n🦴 Fémurs longs : amplitude plus grande — descendre prudement et surveiller la lordose.\n💪 Le grand dorsal est fortement activé comme stabilisateur. L'exercice le plus complet pour la chaîne postérieure.",
+tips:["Lordose naturelle OBLIGATOIRE — si dos arrondi : trop lourd","Barre rase les tibias sur tout le trajet","Descendre jusqu'à mi-tibia maximum","Genoux légèrement fléchis et FIXES","Monter en poussant les hanches vers l'avant"],
+variantes:[{nom:"Soulevé de terre sumo",note:"Pieds larges — moins de stress lombaire, plus d'adducteurs"},{nom:"Trap bar deadlift",note:"Meilleure option fémurs longs — charge dans l'axe du corps"}],
+erreurs:["Arrondir le dos — blessure certaine","Barre qui s'éloigne du corps","Hyperextension lombaire en haut"]},
+
+{n:"Tirage coude au corps poulie basse",s:"4",r:"12-15",rest:"60s",ch:"Modéré",cat:"isolation",
+morpho:"🦴 Tous morphotypes : cible le grand dorsal inférieur et les lombaires basses.\n💡 Tirage vers le ventre coudes serrés = grand dorsal pur. Un des meilleurs exercices de finition dorsale.",
+tips:["Assis droit, dos légèrement incliné arrière en fin de mouvement","Coudes serrés le long du corps — pas écartés","Contraction maximale et scapulaire en fin de mouvement","Etirement complet — laisser les omoplates s'écarter","Excentrique 2-3s"],
+variantes:[{nom:"Tirage prise triangle",note:"Grand dorsal + grand rond"},{nom:"Tirage prise large",note:"Trapèzes moyens + rhomboïdes plus solicités"}],
+erreurs:["Balancement du buste","Coudes trop écartés — trapèzes dominent","Amplitude insuffisante"]},
+
+{n:"Traction lestée prise neutre",s:"4",r:"6-8",rest:"120s",ch:"Corps + lest",cat:"principal",
+morpho:"🦴 Bras longs : prise neutre = meilleure tolérance articulaire à l'épaule — à privilégier si inconfort en pronation.\n📐 Épaules fragiles : la prise neutre réduit significativement le conflit sous-acromial par rapport à la prise large.",
+tips:["Même initiation que les tractions : dépression scapulaire avant de plier les coudes","Tirer les coudes vers les hanches","Menton au-dessus des mains minimum","Excentrique 3-4s","Barre d'haltères ou poignées parallèles si disponible"],
+variantes:[{nom:"Tractions avec bande élastique",note:"Version assistée pour progresser"},{nom:"Tirage poulie prise neutre",note:"Pattern identique sans poids du corps"}],
+erreurs:["Amplitude partielle","Balancement pour se propulser","Ne pas aller en extension en bas"]},
+
+{n:"Shrug barre derrière le dos",s:"4",r:"15",rest:"60s",ch:"Lourd",cat:"isolation",
+morpho:"🦴 Tous morphotypes : trapèzes supérieurs + moyens.\n💡 La position derrière le dos modifie légèrement l'angle d'activation — cible davantage les fibres moyennes des trapèzes que le shrug classique.",
+tips:["Barre derrière les cuisses, prise pronation","Mouvement VERTICAL UNIQUEMENT — pas de rotation","Contraction 1-2s en haut","Descente lente — étirement complet","Utiliser des straps si la prise est limitante"],
+variantes:[{nom:"Shrug haltères",note:"Plus de liberté de mouvement"},{nom:"Shrug poulie haute",note:"Tension constante sur tout l'arc"}],
+erreurs:["Rotation des épaules","Amplitude insuffisante en bas","Utiliser l'élan des jambes"]},
 ],
 
 "Épaules":[
@@ -410,6 +610,24 @@ morpho:"🫁 Cage plate : exercice de ciblant le haut des pectoraux via l'angle 
 tips:["Bras tendus devant soi, penché légèrement vers la machine","Élever l'épaule vers la tête en gardant le bras tendu","Contraction 1-2s en position haute","Amplitude de seulement quelques centimètres — mouvement d'épaule pur","Poids très léger — c'est la connexion neuromusculaire qui compte"],
 variantes:[{nom:"Shrug pec-deck",note:"Machine guidée — version la plus accessible"},{nom:"Cable shrug incliné",note:"Version câble pour tension constante"}],
 erreurs:["Amplitude trop grande — trapèzes prennent le relais","Trop lourd — perd l'isolation du haut pectoral","Ne pas sentir la contraction = mauvaise position"]},
+
+{n:"Arnold press haltères assis",s:"4",r:"10-12",rest:"90s",ch:"55%",cat:"principal",
+morpho:"🦴 Bras longs : haltères permettent la rotation naturelle des poignets.\n📐 Clavicules larges : excellente option — le mouvement de rotation recrute tous les faisceaux du deltoïde.\n💡 L'Arnold press recrute les 3 faisceaux du deltoïde grâce à la rotation en supination/pronation.",
+tips:["Démarrer paumes vers le visage (supination), tourner vers l'extérieur en montant","Arriver en pronation en extension","Descendre en inversant la rotation","Amplitude complète — revenir à la supination totale en bas","Pas de verrouillage en haut"],
+variantes:[{nom:"Développé épaules haltères classique",note:"Sans rotation — plus simple"},{nom:"Cable arnold press",note:"Tension constante"}],
+erreurs:["Rotation incomplète — perd le bénéfice de l'exercice","Trop lourd — la rotation devient impossible","Coudes trop en arrière du plan frontal"]},
+
+{n:"W-raise haltères penché",s:"3",r:"15",rest:"45s",ch:"Très léger",cat:"correctif",
+morpho:"📐 Antépulsion épaules : exercice CORRECTIF avancé — combine l'oiseau + rotation externe. Renforce simultanément le deltoïde postérieur et les rotateurs externes.\n🦴 Tous morphotypes : très léger, qualité de contraction prioritaire.",
+tips:["Buste penché horizontal, bras en W (coudes fléchis à 90°)","Lever les coudes en gardant l'angle","Rotation externe maximale en haut — doigts vers le plafond","Poids TRÈS léger — 2-4kg maximum","Mouvement lent et contrôlé"],
+variantes:[{nom:"Face pull corde",note:"Version plus dynamique"},{nom:"External rotation 90°",note:"Même bénéfice correctif"}],
+erreurs:["Trop lourd — trapèzes dominent","Pas de rotation externe en haut","Coudes qui descendent"]},
+
+{n:"Élévation latérale unilatérale câble",s:"3",r:"20",rest:"45s",ch:"Très léger",cat:"isolation",
+morpho:"🦴 Tous morphotypes : tension constante du câble sur TOUT l'arc — supérieur aux haltères pour l'activation du deltoïde moyen.\n💡 Unilatéral = correction des asymétries gauche/droite fréquentes sur les épaules.",
+tips:["Poulie au niveau des hanches côté opposé — bras croisé devant le corps","Lever latéralement — 90° maximum","Excentrique contrôlé 2-3s","Incliner légèrement le buste vers l'avant","Pied opposé légèrement en avant pour la stabilité"],
+variantes:[{nom:"Élévation latérale machine appui coudes",note:"Idéal bras longs — neutralise le désavantage mécanique"},{nom:"Élévation haltères bilatérale",note:"Version classique"}],
+erreurs:["Dépasser 90° — trapèzes prennent le relais","Balancement du corps","Trop lourd"]},
 ],
 
 "Biceps":[
@@ -448,6 +666,24 @@ morpho:"🦴 Tous morphotypes : isolation maximale — aucun élan possible grâ
 tips:["Coude appuyé contre la cuisse intérieure — position fixe stricte","Supination en montant — rotation externe du poignet","Contraction maximale 2s en haut — visualiser le muscle","Excentrique très lent 3-4s","Un bras à la fois pour une concentration totale"],
 variantes:[{nom:"Curl concentration câble bas",note:"Tension constante — version cable"},{nom:"Spider curl banc incliné inversé",note:"Coudes devant sur banc incliné inversé — isolement maximum"}],
 erreurs:["Coude qui décolle de la cuisse","Amplitude insuffisante en bas","Ne pas supiner"]},
+
+{n:"Curl câble bilatéral debout",s:"4",r:"12",rest:"60s",ch:"65%",cat:"principal",
+morpho:"🦴 Humérus longs : tension constante en bas = compense le manque d'étirement naturel du biceps.\n🦴 Tous morphotypes : tension sur tout l'arc de mouvement — aucun point mort comme avec les haltères.",
+tips:["Barre droite ou EZ attachée à la poulie basse","Coudes fixes le long du corps","Amplitude complète — extension quasi-totale en bas","Excentrique 3s","Contraction 2s en haut"],
+variantes:[{nom:"Curl câble unilatéral",note:"Correction asymétrie + plus de concentration"},{nom:"Curl poulie haute face",note:"Chef long en étirement constant"}],
+erreurs:["Coudes qui avancent","Amplitude insuffisante en bas — perd la tension","Balancement"]},
+
+{n:"Spider curl banc incliné inversé",s:"3",r:"12",rest:"60s",ch:"50%",cat:"isolation",
+morpho:"🦴 Humérus longs : coudes DEVANT le corps = étirement maximal du chef long en bas + contraction maximale en haut. Un des meilleurs exercices pour compenser le manque de pic naturel.\n💡 Le banc incliné inversé fixe les coudes — aucun élan possible.",
+tips:["Banc incliné à 45°, allongé sur le ventre, coudes dépassant le banc","Amplitude complète — extension totale en bas","Supination progressive pendant la montée","Contraction 2s en haut","Poids modéré — la position amplifie l'effort"],
+variantes:[{nom:"Curl pupitre haltères",note:"Même principe d'isolation"},{nom:"Curl concentration",note:"Version assis, même isolation"}],
+erreurs:["Coudes qui remontent sur le banc — perd l'isolation","Amplitude insuffisante","Trop lourd"]},
+
+{n:"Curl barre EZ inversé (reverse)",s:"3",r:"12",rest:"60s",ch:"50%",cat:"isolation",
+morpho:"🦴 Tous morphotypes : extenseurs des avant-bras + brachioradial.\n💡 Équilibre fléchisseurs/extenseurs des avant-bras. Prévient les épicondylites et améliore la force de prise. Souvent négligé.",
+tips:["Prise pronation sur barre EZ","Amplitude complète","Poignets en position neutre ou légèrement fléchis vers le haut","Coudes fixes","Mouvement lent et contrôlé"],
+variantes:[{nom:"Reverse curl haltères",note:"Prise neutre — moins de stress poignet"},{nom:"Wrist roller",note:"Avant-bras complet, extenseurs et fléchisseurs"}],
+erreurs:["Poignets qui fléchissent vers le bas — risque épicondylite","Amplitude insuffisante","Trop lourd"]},
 ],
 
 "Triceps":[
@@ -486,6 +722,24 @@ morpho:"🦴 Tous morphotypes : chef long en étirement et tension constants.\n�
 tips:["Dos à la poulie — câble au-dessus de la tête","Extension du coude vers l'avant et le bas","Coude fixe et haut","Contraction 1s en extension complète","Excentrique 2-3s"],
 variantes:[{nom:"Extension nuque haltère bilatéral",note:"Sans câble — haltère à deux mains"},{nom:"French press couché câble",note:"Version allongée — même principe"}],
 erreurs:["Coude qui descend","Amplitude partielle","Corps qui se balance"]},
+
+{n:"Barre au front incliné (incline skull crusher)",s:"4",r:"10-12",rest:"75s",ch:"55%",cat:"isolation",
+morpho:"🦴 Bras longs : banc légèrement incliné (+15°) créé un étirement supérieur du chef long par rapport au plat.\n💡 L'inclinaison réduit aussi le stress sur les coudes par rapport au French press couché plat.",
+tips:["Banc incliné 15-20° — pas plus","Descendre la barre vers le front en contrôlant","Coudes pointent strictement vers le plafond — ne s'écartent pas","Excentrique 3-4s","Extension sans verrouillage final"],
+variantes:[{nom:"French press couché plat",note:"Version classique"},{nom:"Cable skull crusher",note:"Tension constante — meilleure activation du chef long"}],
+erreurs:["Coudes qui s'écartent","Descente vers le nez (risque)","Trop de charge — technique compromise"]},
+
+{n:"Close grip bench press",s:"4",r:"8-10",rest:"90s",ch:"70%",cat:"principal",
+morpho:"🦴 Bras courts : exercice confortable — bon levier.\n🦴 Bras longs : amplitude grande — progression prudente.\n💡 Développé prise serrée = triceps (60%) + pectoraux internes (40%). Permet de charger lourd en sécurité.",
+tips:["Prise à largeur des épaules (pas plus serrée)","Descente contrôlée vers le bas de la poitrine","Coudes légèrement serrés contre le corps","Poussée explosive","Pont lombaire naturel — fesses sur le banc"],
+variantes:[{nom:"Dips prise serrée",note:"Même zone en poids de corps"},{nom:"Extension poulie haute",note:"Si épaules fragiles"}],
+erreurs:["Prise trop serrée — stress poignet","Laisser les coudes s'écarter","Rebond sur la poitrine"]},
+
+{n:"Overhead triceps extension câble",s:"3",r:"15",rest:"60s",ch:"Léger",cat:"isolation",
+morpho:"🦴 Bras longs : amplitude naturellement grande — excellent étirement du chef long.\n💡 Extension au-dessus de la tête = chef long en étirement constant TOUT au long du mouvement. Supérieur aux haltères pour ce chef.",
+tips:["Dos à la poulie, câble au-dessus de la tête","Coudes pointent vers le plafond — ne bougent pas","Extension complète vers l'avant et le bas","Excentrique 2-3s","Gainage actif — ne pas cambrer"],
+variantes:[{nom:"Extension nuque haltère bilatéral",note:"Sans câble, même principe"},{nom:"Rope overhead extension",note:"Corde = plus d'amplitude en bas"}],
+erreurs:["Coudes qui descendent","Corps qui se balance","Amplitude partielle"]},
 ],
 
 "Quadriceps":[
@@ -518,6 +772,18 @@ morpho:"🦴 Fémurs longs : pas long pour maximiser l'activation des fessiers.\
 tips:["Pas long — genou avant dans l'axe du pied","Buste droit, regard frontal","Genou avant ne dépasse pas la pointe du pied","Pied arrière bien ancré sur la pointe","Descendre sans toucher le genou arrière au sol"],
 variantes:[{nom:"Fentes marchées",note:"Plus dynamique — challenge équilibre"},{nom:"Fentes bulgares",note:"Unilateral avancé — fessier très isolé"},{nom:"Fentes arrière",note:"Moins de stress genou"}],
 erreurs:["Genou avant qui dépasse les orteils","Buste qui s'incline","Pas trop court"]},
+
+{n:"Bulgarian split squat barre",s:"4",r:"8/jambe",rest:"90s",ch:"Modéré-lourd",cat:"principal",
+morpho:"🦴 Fémurs longs : excellent — la position unilatérale permet au fémur de rester plus vertical.\n🦴 Fémurs courts : quadriceps très sollicités.\n💡 Considéré par beaucoup comme supérieur au squat bilatéral pour l'hypertrophie des jambes.",
+tips:["Barre basse sur les trapèzes","Pied arrière sur banc","Pied avant assez loin — genou ne dépasse pas les orteils","Descente quasi-verticale — buste droit","Pause 1s en bas"],
+variantes:[{nom:"Fentes bulgares haltères",note:"Plus accessible — même pattern"},{nom:"Squat unilateral",note:"Même principe sans banc"}],
+erreurs:["Pied avant trop près","Buste trop incliné","Trop lourd avant maîtrise technique"]},
+
+{n:"Sissy squat",s:"3",r:"12-15",rest:"60s",ch:"Corps",cat:"isolation",
+morpho:"🦴 Tous morphotypes : quadriceps en étirement MAXIMAL — les genoux dépassent largement la ligne des orteils intentionnellement.\n💡 Exercice d'isolation pure des quadriceps souvent mal compris. Pas dangereux si progression graduelle.",
+tips:["Tenir un appui, monter sur la pointe des pieds","Genoux vers l'avant en descendant — le corps forme une ligne droite genoux-hanches-épaules","Descendre jusqu'à l'inconfort musculaire (pas articulaire)","Remonter lentement","Progresser avec haltère sur la poitrine"],
+variantes:[{nom:"Leg extension machine",note:"Plus accessible, même isolation"},{nom:"Sissy squat machine guidée",note:"Version assistée"}],
+erreurs:["Aller trop vite avant d'avoir la mobilité","Douleur articulaire (arrêter immédiatement)","Amplitude insuffisante"]},
 ],
 
 "Ischio-jambiers":[
@@ -538,6 +804,24 @@ morpho:"🦴 Fémurs longs : avantage mécanique sur cet exercice — le levier 
 tips:["Omoplates sur le banc — pas les cervicales","Poussée explosive vers le haut — contraction maximale des fessiers en haut","Menton rentré, regard vers le plafond pendant le mouvement","Pieds à largeur des hanches, pointe légèrement vers l'extérieur","Contraction isométrique 1-2 secondes en haut"],
 variantes:[{nom:"Hip thrust poids du corps",note:"Débutant — apprentissage du pattern de mouvement"},{nom:"Hip thrust machine",note:"Charge guidée — bonne progression"},{nom:"Glute bridge au sol",note:"Version sol — débutant absolu ou échauffement"}],
 erreurs:["Hyperextension lombaire en haut — les lombaires travaillent au lieu des fessiers","Poussée insuffisante — ne pas aller en extension complète de hanche","Pieds trop proches ou trop loin — modifie l'activation musculaire"]},
+
+{n:"Nordic curl au sol",s:"3",r:"5-8",rest:"120s",ch:"Corps",cat:"principal",
+morpho:"🦴 Tous morphotypes : excentrique pur des ischio-jambiers. Le plus efficace pour prévenir les déchirures musculaires des ischios. Exercice avancé.\n🦴 Fémurs longs : amplitude maximale — progression très progressive obligatoire.",
+tips:["Partenaire ou barre fixe pour les pieds","Descendre le plus lentement possible vers le sol","Utiliser les mains pour absorber l'impact en bas","Remonter en s'aidant des bras au début","Progression : bande élastique d'aide"],
+variantes:[{nom:"Leg curl allongé excentrique 4s",note:"Version machine, même concept"},{nom:"Glute ham raise machine",note:"Version assistée et guidée"}],
+erreurs:["Progresser trop vite — risque de déchirure","Hanche qui fléchit","Amplitude insuffisante"]},
+
+{n:"Glute ham raise machine",s:"3",r:"10",rest:"90s",ch:"Corps",cat:"principal",
+morpho:"🦴 Fémurs longs : excellent exercice — l'amplitude naturelle est exploitée pleinement.\n💡 Combine extension de hanche + flexion du genou = travaille les ischios sur les 2 fonctions simultanément. Un des meilleurs exercices pour les ischios.",
+tips:["Hanches au niveau du pad — pas plus haut ni plus bas","Extension complète en bas","Flexion complète en haut — fléchir les genoux jusqu'à 90°","Contrôle total tout au long","Progresser avec les bras si trop difficile"],
+variantes:[{nom:"Nordic curl",note:"Sans machine"},{nom:"Leg curl allongé",note:"Flexion du genou isolée"}],
+erreurs:["Amplitude insuffisante", "Hanches qui fléchissent en bas","Trop rapide"]},
+
+{n:"Pont fessier sumo (sumo hip thrust)",s:"3",r:"15",rest:"75s",ch:"Modéré",cat:"isolation",
+morpho:"🦴 Fémurs longs : les pieds écartés en sumo permettent une meilleure activation des fessiers et ischios avec des fémurs longs.\n💡 Pieds écartés + pointes tournées vers l'extérieur = plus d'ischios et adducteurs.",
+tips:["Pieds plus larges que les hanches, pointes à 45°","Même pattern que le hip thrust classique","Contraction maximale en haut — garder 2s","Descente contrôlée","Menton rentré — regard plafond"],
+variantes:[{nom:"Hip thrust barre classique",note:"Pieds à largeur des hanches"},{nom:"Hip thrust unilatéral",note:"Correction asymétrie"}],
+erreurs:["Hyperextension lombaire","Pieds trop écartés — instabilité","Amplitude insuffisante"]},
 ],
 
 "Fessiers":[
@@ -552,6 +836,24 @@ morpho:"🦴 Tous morphotypes : fessier moyen et petit fessier — souvent négl
 tips:["Mouvement en arc dans le plan frontal strict","Contraction 1 seconde en haut","Excentrique contrôlé — résister à la gravité","Corps légèrement incliné vers l'avant pour cibler davantage le fessier moyen","Amplitude maximale dans l'axe — pas en avant"],
 variantes:[{nom:"Abduction machine assis",note:"Charge plus lourde possible — bonne progression"},{nom:"Clamshell élastique",note:"Rotation externe de hanche — fessier moyen profond"},{nom:"Fire hydrant à 4 pattes",note:"Sans équipement — très accessible"}],
 erreurs:["Compenser avec le buste","Amplitude en avant du plan frontal — hip flexors au lieu des fessiers","Trop lourd — perd le contrôle"]},
+
+{n:"Fentes bulgares haltères",s:"4",r:"10/jambe",rest:"90s",ch:"Modéré",cat:"principal",
+morpho:"🦴 Fémurs longs : foulée longue = plus d'activation fessiers. Un des meilleurs exercices unilatéraux.\n🦴 Fémurs courts : exercice confortable — quadriceps très sollicités.\n💡 Meilleur exercice unilatéral pour l'hypertrophie fessière selon de nombreux experts.",
+tips:["Pied arrière sur banc (30-40cm), pied avant assez loin","Descendre quasi verticalement — buste droit","Genou arrière vers le sol sans le toucher","Pousse avec le talon avant pour remonter","Haltères aux côtés ou goblet devant"],
+variantes:[{nom:"Fentes bulgares barre",note:"Plus de charge — même pattern"},{nom:"Fentes statiques",note:"Moins de coordination requise"},{nom:"Step-up haltères",note:"Moins de stress genou postérieur"}],
+erreurs:["Pied avant trop près — genou dépasse les orteils","Buste qui s'incline en avant","Pas assez de profondeur"]},
+
+{n:"Cable kickback fessier",s:"4",r:"15-20",rest:"45s",ch:"Léger",cat:"isolation",
+morpho:"🦴 Tous morphotypes : isolation fessière pure. Tension constante du câble supérieure aux exercices au sol.\n💡 Extension de hanche avec genou fléchi = Grand fessier isolé. Extension genou tendu = ischio aussi.",
+tips:["Poulie basse attachée à la cheville","Légère inclinaison vers l'avant, appui sur un support","Extension de hanche vers l'arrière — mouvement pur de la hanche","Contraction maximale en haut 1-2s","Genou légèrement fléchi pour isoler le fessier"],
+variantes:[{nom:"Donkey kickback sans câble",note:"Version à 4 pattes au sol"},{nom:"Hip extension machine",note:"Version guidée"}],
+erreurs:["Extension lombaire au lieu de hanche","Amplitude insuffisante","Trop de charge — compensation"]},
+
+{n:"Step-up haltères",s:"4",r:"12/jambe",rest:"60s",ch:"Modéré",cat:"principal",
+morpho:"🦴 Fémurs longs : marche plus haute = plus d'activation fessière — exploiter la longueur naturelle.\n💡 Fonctionnel, unilatéral, préventif du genou. Hauteur de marche = paramètre clé.",
+tips:["Marche à hauteur du genou ou légèrement en dessous","Appuyer fort avec tout le pied sur la marche","Monter en poussant avec la jambe avant (pas en sautant)","Contrôle en descendant — excentrique","Alterner les jambes ou finir une jambe puis l'autre"],
+variantes:[{nom:"Step-up box jump",note:"Version explosive — puissance"},{nom:"Lateral step-up",note:"Abducteurs + fessiers — plan frontal"}],
+erreurs:["Pousser avec la jambe arrière — perd l'isolation","Marche trop basse","Pas de contrôle en descendant"]},
 ],
 
 "Abdominaux":[
@@ -578,6 +880,24 @@ morpho:"🦴 Tous morphotypes : obliques + stabilisateurs latéraux. Indispensab
 tips:["Corps en ligne droite de la tête aux pieds","La hanche ne doit pas descendre ou monter","Regard fixe devant pour maintenir l'alignement","Progresser en soulevant le bras ou la jambe supérieure","Version débutant : genoux au sol"],
 variantes:[{nom:"Gainage latéral avec abduction",note:"Fessiers + obliques — version combinée"},{nom:"Copenhagen plank",note:"Adducteurs + obliques — version très avancée"},{nom:"Side bend câble",note:"Obliques avec charge — version dynamique"}],
 erreurs:["Hanche qui descend — compensation courante","Corps en angle au niveau des hanches","Retenir la respiration sous effort"]},
+
+{n:"Hollow body hold",s:"3",r:"30-45s",rest:"60s",ch:"Corps",cat:"gainage",
+morpho:"🦴 Tous morphotypes : position fondamentale de la gymnastique. Active le transverse + obliques + psoas + quadriceps simultanément. Gainage anti-extension le plus complet.\n💡 Base de nombreux exercices avancés (L-sit, handstand).",
+tips:["Allongé sur le dos — creuser le nombril vers le sol","Bras tendus derrière la tête, jambes tendues à 20-30° du sol","Corps en forme de « banane inversée »","Ne jamais laisser le bas du dos décoller","Progression : genoux fléchis → jambes tendues hautes → jambes tendues basses"],
+variantes:[{nom:"Hollow body rock",note:"Version dynamique — balancement avant/arrière"},{nom:"L-sit sur barres parallèles",note:"Version avancée debout"}],
+erreurs:["Bas du dos qui décolle — perd le gainage","Jambes trop hautes — trop facile","Retenir la respiration"]},
+
+{n:"Pallof press câble",s:"3",r:"12/côté",rest:"60s",ch:"Léger-modéré",cat:"gainage",
+morpho:"🦴 Tous morphotypes : gainage ANTI-ROTATION — souvent négligé mais fondamental pour la stabilité du tronc.\n💡 Simule les contraintes rotationnelles de la vie quotidienne et du sport. Protège les lombaires.",
+tips:["Poulie à hauteur du sternum — côté au câble","Tenir les mains devant la poitrine, pousser vers l'avant sans rotation","Corps immobile — tout le travail est dans le gainage","Revenir lentement","Pieds à largeur des épaules, genoux légèrement fléchis"],
+variantes:[{nom:"Pallof press avec rotation",note:"Version avancée — ajoute de la rotation contrôlée"},{nom:"Anti-rotation avec élastique",note:"Sans câble"}],
+erreurs:["Rotation du corps","Trop lourd — rotation inévitable","Amplitude insuffisante"]},
+
+{n:"Bicycle crunch",s:"4",r:"20/côté",rest:"45s",ch:"Corps",cat:"principal",
+morpho:"🦴 Tous morphotypes : obliques + grand droit.\n💡 Si bien exécuté (lentement, rotation réelle du buste), c'est un des meilleurs exercices pour les obliques. Si trop rapide = momentum, pas de gainage.",
+tips:["Lentement ! Le tempo est la clé — 2s par répétition","Rotation réelle du buste — pas juste le coude qui avance","Jambe opposée s'étend en même temps","Bas du dos collé au sol en permanence","Mains aux tempes — ne pas tirer sur la nuque"],
+variantes:[{nom:"Crunch oblique alternés simple",note:"Plus accessible — sans extension des jambes"},{nom:"Russian twist",note:"Obliques avec rotation + gravité"}],
+erreurs:["Trop rapide — momentum remplace le gainage","Pas de rotation réelle du buste","Nuque tirée avec les mains"]},
 ],
 
 "Lombaires":[
@@ -606,6 +926,18 @@ morpho:"🦴 Tous morphotypes : SOLÉAIRE (mollet profond). Un mollet ne sera ja
 tips:["Genoux à 90° en position assise — position stricte","Amplitude complète en bas et en haut","Pause en bas et en haut identique à l'exercice debout","Tempo lent — les fibres lentes du soléaire ont besoin de temps sous tension","Progresser doucement — le soléaire est résistant à l'hypertrophie"],
 variantes:[{nom:"Donkey calf raise",note:"Étirement augmenté — version avancée"},{nom:"Mollets assis haltères posés sur les genoux",note:"Sans machine — accessible"}],
 erreurs:["Amplitude partielle — le soléaire nécessite l'étirement complet","Négliger cet exercice — les mollets resteront visuellement incomplets"]},
+
+{n:"Tibia raises debout",s:"3",r:"20-25",rest:"45s",ch:"Corps",cat:"correctif",
+morpho:"🦴 Tous morphotypes : tibial antérieur — souvent complètement négligé.\n💡 Équilibre mollets/tibial. Prévient les periostites et les douleurs de shin splints. Important pour la santé du genou et de la cheville.",
+tips:["Dos contre un mur, talons à 30cm du mur","Lever les pointes des pieds le plus haut possible","Contraction maximale en haut","Descente contrôlée","Progresser avec haltère sur les pieds"],
+variantes:[{nom:"Tibia raises assis",note:"Version assise sur banc"},{nom:"Tibial anterior machine",note:"Si disponible"}],
+erreurs:["Amplitude insuffisante","Vitesse trop rapide","Négliger cet exercice"]},
+
+{n:"Sauts de mollets explosifs",s:"4",r:"20",rest:"60s",ch:"Corps",cat:"principal",
+morpho:"🦴 Tous morphotypes : fibres rapides des mollets — rarement entraînées.\n💡 Le travail explosif des mollets est différent du travail lent. Les deux sont nécessaires pour un développement complet.",
+tips:["Sauts légers sur la pointe des pieds — élan minimal","Amplitude complète : talons qui touchent le sol entre chaque saut","Rythme régulier et contrôlé","Genoux légèrement fléchis pour amortir","Peut se faire sur une marche pour plus d'amplitude"],
+variantes:[{nom:"Jump rope (corde à sauter)",note:"Cardio + mollets simultanément"},{nom:"Skipping",note:"Fréquence élevée — fibres rapides"}],
+erreurs:["Genoux verrouillés","Amplitude nulle — sauts sur place sans extension","Trop d'élan"]},
 ],
 
 "Avant-bras":[
@@ -620,6 +952,18 @@ morpho:"🦴 Tous morphotypes : force de préhension + avant-bras + trapèzes. M
 tips:["Haltères aussi lourds que ta limite de prise le permet","Pas réguliers et équilibrés — sans balancement du corps","Dos droit, épaules hautes et stables","Respiration régulière tout au long","Progresser en distance ou en charge"],
 variantes:[{nom:"Dead hang à la barre fixe",note:"Isométrique — force de prise pure"},{nom:"Plate pinch 2 doigts",note:"Force de pincement — complète la prise en crochet"},{nom:"Captains of crush gripper",note:"Outil spécifique force de prise — très efficace"}],
 erreurs:["Trop léger — pas de stimulus suffisant sur la prise","Dos qui s'incline latéralement — risque lombaire"]},
+
+{n:"Dead hang barre fixe",s:"4",r:"30-60s",rest:"60s",ch:"Corps",cat:"principal",
+morpho:"🦴 Bras longs : tenue naturellement plus facile grâce à l'amplitude de prise.\n💡 Force de prise isométrique + décompression de la colonne vertébrale + étirement des épaules. Exercice multi-bénéfices souvent sous-estimé.",
+tips:["Prise pronation ou supination selon préférence","Corps détendu — laisser la gravité décompresser","Épaules légèrement rétractées — ne pas laisser totalement relâcher","Respiration profonde et régulière","Progresser en durée"],
+variantes:[{nom:"Active hang avec légère rétraction",note:"Plus travail des épaules"},{nom:"Hang with leg raise",note:"Dead hang + relevé de jambes = double bénéfice"}],
+erreurs:["Laisser les épaules totalement relâchées en hypermobilité","Gripper trop fort — muscles des avant-bras non en endurance","Durée trop courte pour développer la prise"]},
+
+{n:"Wrist roller",s:"3",r:"3 montées/descentes",rest:"60s",ch:"Léger",cat:"principal",
+morpho:"🦴 Tous morphotypes : enroulage et déroulage = fléchisseurs + extenseurs complets.\n💡 Un des seuls exercices qui travaille les avant-bras en amplitude COMPLÈTE dans les deux directions.",
+tips:["Bras tendus devant soi à hauteur des épaules","Enrouler la corde vers le haut en alternant les poignets","Contrôler la descente — ne pas laisser tomber","Charge légère — la fatigue vient vite","Peut se faire bras le long du corps pour moins d'effort des épaules"],
+variantes:[{nom:"Farmer walk",note:"Force de prise en charge dynamique"},{nom:"Curl poignet barre",note:"Fléchisseurs seuls"}],
+erreurs:["Trop lourd — les épaules fatiguent avant les avant-bras","Vitesse trop rapide — perd le travail excentrique","Bras non tendus"]},
 ],
 
 "Trapèzes":[
@@ -628,6 +972,18 @@ morpho:"🦴 Tous morphotypes : chef supérieur des trapèzes. À équilibrer AB
 tips:["Mouvement VERTICAL PUR — aucune rotation des épaules (risque articulaire sous-acromial)","Contraction isométrique 1-2 secondes en haut","Descente lente — étirement complet en bas","Haltères préférés pour la liberté de mouvement"],
 variantes:[{nom:"Haussements barre",note:"Plus de charge possible — même principe vertical"},{nom:"Haussements poulie",note:"Tension constante sur tout l'arc"},{nom:"Haussements barre derrière le dos",note:"Chef supérieur + trapèzes moyens"}],
 erreurs:["Rotation des épaules — risque articulaire sous-acromial","Amplitude partielle en bas — perd l'étirement","Utiliser l'élan des genoux pour compenser"]},
+
+{n:"Rowing barre debout (upright row)",s:"4",r:"12",rest:"60s",ch:"55%",cat:"principal",
+morpho:"📐 Épaules saines obligatoires — à éviter en cas de conflit sous-acromial.\n📐 Clavicules larges : peut créer un conflit — utiliser une prise légèrement plus large.\n💡 Trapèzes supérieurs + deltoïde moyen. Tirer vers le menton — coudes TOUJOURS au-dessus des mains.",
+tips:["Prise légèrement plus large que les épaules sur barre EZ","Tirer vers le menton — coudes remontent au-dessus des mains","Maintenir 1s en haut","Descente contrôlée 2-3s","Arrêt si douleur à l'épaule — exercice individuel"],
+variantes:[{nom:"Upright row haltères",note:"Plus de liberté — trajectoire naturelle"},{nom:"Upright row câble",note:"Tension constante — plus doux pour les épaules"}],
+erreurs:["Prise trop serrée — conflit sous-acromial certain","Coudes sous les mains — perd l'exercice","Trop lourd"]},
+
+{n:"Face pull corde + shrug combiné",s:"3",r:"15",rest:"60s",ch:"Léger",cat:"correctif",
+morpho:"📐 Antépulsion épaules : version combinée — face pull correctif + activation des trapèzes moyens.\n💡 L'ajout du shrug léger à la fin du face pull permet de recruter les trapèzes moyens en plus des rotateurs externes.",
+tips:["Face pull classique jusqu'à la rotation externe maximale","Ajouter un léger haussement d'épaules en fin de mouvement","Pause 2s en contraction maximale","Descente contrôlée","Poids très léger — qualité de mouvement prioritaire"],
+variantes:[{nom:"Face pull classique",note:"Sans le shrug — version pure correctif"},{nom:"W-raise haltères",note:"Même bénéfice en libre"}],
+erreurs:["Trop lourd — perd la rotation externe","Shrug trop prononcé — devient un shrug pur","Vitesse trop rapide"]},
 ],
 };
 
