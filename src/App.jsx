@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 const C = {
  bg:"#e4eef8", s1:"#ffffff", s2:"#e4eef8", s3:"#dce8f4",
  gold:"#3b82f6", goldL:"#60a5fa", goldD:"rgba(59,130,246,0.08)", goldB:"rgba(59,130,246,0.2)",
- text:"#0f1a2e", mid:"#a0b4cc", dim:"#c4d4e8",
+ text:"#0f1a2e", mid:"#64748b", dim:"#c4d4e8",
  green:"#22c55e", red:"#f87171", blue:"#3b82f6", orange:"#f97316", purple:"#8b5cf6",
  cyan:"#06b6d4", accent:"#3b82f6",
 };
@@ -34,7 +34,7 @@ const Box = ({children,style,onClick})=>(
  <div onClick={onClick} style={{background:"#ffffff",border:"0.5px solid #dce8f4",borderRadius:16,padding:"16px 15px",marginBottom:9,cursor:onClick?"pointer":"default",...style}}>{children}</div>
 );
 const Lbl = ({children,style})=>(
- <div style={{fontSize:9,color:"#a0b4cc",letterSpacing:"2px",textTransform:"uppercase",fontWeight:600,marginBottom:10,...style}}>{children}</div>
+ <div style={{fontSize:9,color:"#64748b",letterSpacing:"2px",textTransform:"uppercase",fontWeight:600,marginBottom:10,...style}}>{children}</div>
 );
 const Inp = ({style,...p})=>(
  <input style={{width:"100%",padding:"11px 13px",background:"#e4eef8",border:"0.5px solid #dce8f4",borderRadius:9,color:"#0f1a2e",fontSize:13,marginBottom:8,...style}} {...p}/>
@@ -43,14 +43,14 @@ const Btn = ({children,onClick,disabled,v="fill",sm})=>{
  const vs={
  fill:{bg:`linear-gradient(135deg,#60a5fa,#3b82f6)`,color:"#ffffff",border:"none"},
  out: {bg:"transparent",color:"#3b82f6",border:"0.5px solid rgba(59,130,246,0.3)"},
- ghost:{bg:"rgba(255,255,255,0.04)",color:C.mid,border:"0.5px solid #dce8f4"},
+ ghost:{bg:"rgba(255,255,255,0.04)",color:"#64748b",border:"0.5px solid #dce8f4"},
  };
  const s=vs[v]||vs.fill;
  return(
  <button onClick={onClick} disabled={disabled} style={{
  display:"block",width:"100%",padding:sm?"9px 14px":"13px 16px",
  background:disabled?"rgba(255,255,255,0.04)":s.bg,
- color:disabled?C.mid:s.color,border:disabled?`1px solid ${C.s3}`:s.border,
+ color:disabled?"#64748b":s.color,border:disabled?`1px solid ${C.s3}`:s.border,
  borderRadius:9,fontSize:sm?12:13.5,fontWeight:600,cursor:disabled?"not-allowed":"pointer",
  marginBottom:7,transition:"opacity.15s",
  }}>{children}</button>
@@ -68,7 +68,7 @@ const Tag = ({children,active,color,onClick})=>(
  display:"inline-block",padding:"5px 11px",margin:"3px",
  background:active?`rgba(${color||"59,130,246"},.14)`:"rgba(255,255,255,0.03)",
  border:`1px solid ${active?`rgba(${color||"59,130,246"},.44)`:C.s3}`,
- borderRadius:18,fontSize:11.5,color:active?`rgb(${color||"200,150,62"})`:C.mid,
+ borderRadius:18,fontSize:11.5,color:active?`rgb(${color||"200,150,62"})`:"#64748b",
  cursor:onClick?"pointer":"default",transition:"all.15s",
  }}>{children}</span>
 );
@@ -81,9 +81,9 @@ function Notif({n,onClose}){
  <span style={{fontSize:20,flexShrink:0}}>{n.icon}</span>
  <div style={{flex:1}}>
  <div style={{fontSize:12,fontWeight:500}}>{n.title}</div>
- <div style={{fontSize:11,color:C.mid}}>{n.body}</div>
+ <div style={{fontSize:11,color:"#64748b"}}>{n.body}</div>
  </div>
- <button onClick={onClose} style={{background:"transparent",border:"none",color:C.mid,cursor:"pointer",fontSize:16}}>×</button>
+ <button onClick={onClose} style={{background:"transparent",border:"none",color:"#64748b",cursor:"pointer",fontSize:16}}>×</button>
  </div>
  </div>
  );
@@ -157,7 +157,7 @@ function Chrono({onClose,initSec=90}){
         {/* Mode switch */}
         <div style={{display:"flex",background:"rgba(59,130,246,0.08)",borderRadius:10,padding:3,gap:3}}>
           {["countdown","stopwatch"].map(m=>(
-            <button key={m} onClick={()=>{setMode(m);setLeft(total);setElapsed(0);setRun(false);setVibrated(false);}} style={{padding:"5px 8px",borderRadius:7,border:"none",background:mode===m?"#ffffff":"transparent",color:mode===m?"#3b82f6":"#a0b4cc",cursor:"pointer",fontSize:10,fontWeight:600,transition:"all .15s"}}>
+            <button key={m} onClick={()=>{setMode(m);setLeft(total);setElapsed(0);setRun(false);setVibrated(false);}} style={{padding:"5px 8px",borderRadius:7,border:"none",background:mode===m?"#ffffff":"transparent",color:mode===m?"#3b82f6":"#64748b",cursor:"pointer",fontSize:10,fontWeight:600,transition:"all .15s"}}>
               {m==="countdown"?"⏱":"⏲"}
             </button>
           ))}
@@ -203,7 +203,7 @@ function Chrono({onClose,initSec=90}){
                 <div style={{fontFamily:"'Syne',sans-serif",fontSize:46,fontWeight:200,color:timeColor,letterSpacing:-2,lineHeight:1,transition:"color .3s"}}>
                   {mode==="countdown"?fmt(left):fmt(elapsed)}
                 </div>
-                <div style={{fontSize:10,color:"#a0b4cc",fontWeight:500,letterSpacing:"1px",marginTop:2}}>
+                <div style={{fontSize:10,color:"#64748b",fontWeight:500,letterSpacing:"1px",marginTop:2}}>
                   {mode==="countdown"
                     ?left===total?"PRÊT":run?"REPOS...":"PAUSE"
                     :run?"EN COURS...":"PAUSE"}
@@ -262,7 +262,7 @@ function Chrono({onClose,initSec=90}){
           {/* +30s */}
           <button onClick={()=>{if(mode==="countdown"){setLeft(l=>l+30);setTotal(t=>t+30);}}} style={{width:52,height:52,borderRadius:"50%",background:"#ffffff",border:"0.5px solid #dce8f4",display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",boxShadow:"0 2px 8px rgba(0,0,0,0.06)",flexDirection:"column",gap:1}}>
             <span style={{fontSize:10,fontWeight:700,color:"#3b82f6",lineHeight:1}}>+30</span>
-            <span style={{fontSize:8,color:"#a0b4cc"}}>sec</span>
+            <span style={{fontSize:8,color:"#64748b"}}>sec</span>
           </button>
         </div>
 
@@ -273,8 +273,8 @@ function Chrono({onClose,initSec=90}){
               <div style={{height:"100%",width:`${100-pct}%`,background:arcColor,borderRadius:2,transition:"width .9s cubic-bezier(.4,0,.2,1)"}}/>
             </div>
             <div style={{display:"flex",justifyContent:"space-between",marginTop:4}}>
-              <span style={{fontSize:9,color:"#a0b4cc"}}>0s</span>
-              <span style={{fontSize:9,color:"#a0b4cc"}}>{fmt(total)}</span>
+              <span style={{fontSize:9,color:"#64748b"}}>0s</span>
+              <span style={{fontSize:9,color:"#64748b"}}>{fmt(total)}</span>
             </div>
           </div>
         )}
@@ -303,7 +303,7 @@ function DayModal({date,session,onSave,onDelete,onClose}){
  <Lbl style={{marginTop:4}}>Intensité</Lbl>
  <div style={{display:"flex",gap:5,flexWrap:"wrap",marginBottom:12}}>
  {Object.entries(INT).map(([k,v])=>(
- <div key={k} onClick={()=>{setInt(k);setColor(v.c);}} style={{padding:"5px 10px",background:intensite===k?`${v.c}20`:C.s2,border:`1px solid ${intensite===k?v.c:C.s3}`,borderRadius:7,cursor:"pointer",fontSize:11,color:intensite===k?v.c:C.mid,fontWeight:intensite===k?700:400}}>{v.l}</div>
+ <div key={k} onClick={()=>{setInt(k);setColor(v.c);}} style={{padding:"5px 10px",background:intensite===k?`${v.c}20`:C.s2,border:`1px solid ${intensite===k?v.c:C.s3}`,borderRadius:7,cursor:"pointer",fontSize:11,color:intensite===k?v.c:"#64748b",fontWeight:intensite===k?700:400}}>{v.l}</div>
  ))}
  </div>
  <Lbl>Couleur</Lbl>
@@ -334,9 +334,9 @@ function MonthCal({sessions,onUpdate}){
  return(
  <div>
  <Row style={{justifyContent:"space-between",marginBottom:12}}>
- <button onClick={()=>canGoPrev&&setDate(new Date(y,m-1,1))} disabled={!canGoPrev} style={{background:"transparent",border:"none",color:canGoPrev?C.mid:C.dim,cursor:canGoPrev?"pointer":"not-allowed",fontSize:18,padding:"2px 8px"}}>‹</button>
+ <button onClick={()=>canGoPrev&&setDate(new Date(y,m-1,1))} disabled={!canGoPrev} style={{background:"transparent",border:"none",color:canGoPrev?"#64748b":C.dim,cursor:canGoPrev?"pointer":"not-allowed",fontSize:18,padding:"2px 8px"}}>‹</button>
  <div style={{fontFamily:"'Syne',sans-serif",fontSize:18,letterSpacing:-0.3,fontWeight:300}}>{MONTHS[m]} {y}</div>
- <button onClick={()=>canGoNext&&setDate(new Date(y,m+1,1))} disabled={!canGoNext} style={{background:"transparent",border:"none",color:canGoNext?C.mid:C.dim,cursor:canGoNext?"pointer":"not-allowed",fontSize:18,padding:"2px 8px"}}>›</button>
+ <button onClick={()=>canGoNext&&setDate(new Date(y,m+1,1))} disabled={!canGoNext} style={{background:"transparent",border:"none",color:canGoNext?"#64748b":C.dim,cursor:canGoNext?"pointer":"not-allowed",fontSize:18,padding:"2px 8px"}}>›</button>
  </Row>
  <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",gap:2,marginBottom:4}}>
  {DAYS.map((d,i)=><div key={i} style={{textAlign:"center",fontSize:9,color:C.dim,fontWeight:700,padding:"3px 0"}}>{d}</div>)}
@@ -353,14 +353,14 @@ function MonthCal({sessions,onUpdate}){
  outline:isToday&&!sess?`1.5px solid #3b82f6`:undefined,
  transition:"background.15s",
  }}>
- <div style={{fontSize:10,fontWeight:isToday?600:400,color:sess?"#ffffff":isToday?"#3b82f6":C.mid,lineHeight:1}}>{d}</div>
+ <div style={{fontSize:10,fontWeight:isToday?600:400,color:sess?"#ffffff":isToday?"#3b82f6":"#475569",lineHeight:1}}>{d}</div>
  </div>
  );
  })}
  </div>
  <div style={{marginTop:10,display:"flex",flexWrap:"wrap",gap:5}}>
  {Object.entries(INT).map(([k,v])=>(
- <Row key={k} style={{gap:4}}><div style={{width:5,height:5,borderRadius:"50%",background:v.c}}/><span style={{fontSize:9,color:C.mid}}>{v.l}</span></Row>
+ <Row key={k} style={{gap:4}}><div style={{width:5,height:5,borderRadius:"50%",background:v.c}}/><span style={{fontSize:9,color:"#64748b"}}>{v.l}</span></Row>
  ))}
  </div>
  {modal&&(
@@ -375,7 +375,7 @@ function MonthCal({sessions,onUpdate}){
  );
 }
 function MiniChart({data,color=C.gold}){
- if(!data||data.length<2)return<div style={{fontSize:11,color:C.mid,textAlign:"center",padding:"8px 0"}}>Enregistrez plus de séances pour voir la progression.</div>;
+ if(!data||data.length<2)return<div style={{fontSize:11,color:"#64748b",textAlign:"center",padding:"8px 0"}}>Enregistrez plus de séances pour voir la progression.</div>;
  const vals=data.map(d=>parseFloat(d.poids)||0);
  const min=Math.min(...vals)*.96,max=Math.max(...vals)*1.04;
  const W=260,H=60;
@@ -385,7 +385,7 @@ function MiniChart({data,color=C.gold}){
  return(
  <div>
  <Row style={{justifyContent:"space-between",marginBottom:6}}>
- <span style={{fontFamily:"'Syne',sans-serif",fontSize:22,color,letterSpacing:-0.5,fontWeight:300}}>{last}<span style={{fontSize:12,color:C.mid}}> kg</span></span>
+ <span style={{fontFamily:"'Syne',sans-serif",fontSize:22,color,letterSpacing:-0.5,fontWeight:300}}>{last}<span style={{fontSize:12,color:"#64748b"}}> kg</span></span>
  <span style={{fontSize:12,fontWeight:500,color:diff>=0?C.green:C.red}}>{diff>=0?"+":""}{diff}kg</span>
  </Row>
  <svg viewBox={`0 0 ${W} ${H}`} style={{width:"100%",height:55}}>
@@ -997,7 +997,7 @@ export default function App(){
  const [chronoSec,setChronoSec]=useState(90);
  const [paywall,setPaywall]=useState(false);
  const [notif,setNotif]=useState(null);
- const [profil,setProfil]=useState({prenom:"",age:"",poids:"",taille:"",sexe:"",objectif:"hypertrophie",activite:"modere"});
+ const [profil,setProfil]=useState({prenom:"",age:"",poids:"",taille:"",sexe:"",objectif:"hypertrophie",activite:"modere",bodyfat:""});
  const [onboardingDone,setOnboardingDone]=useState(false);
 
  // ─── ONBOARDING ───────────────────────────────────────────────────────────
@@ -1022,15 +1022,15 @@ export default function App(){
  {steps.map((_,i)=><div key={i} style={{flex:1,height:3,borderRadius:2,background:i<=oStep?"#3b82f6":"#dce8f4",transition:"background.3s"}}/>)}
  </div>
  <div style={{fontFamily:"'Syne',sans-serif",fontSize:24,fontWeight:300,color:C.text,marginBottom:4}}>{step.title}</div>
- <div style={{fontSize:12,color:C.mid,marginBottom:28}}>{step.sub}</div>
+ <div style={{fontSize:12,color:"#64748b",marginBottom:28}}>{step.sub}</div>
 
  {oStep===0&&<>
  <div style={{marginBottom:16}}>
- <div style={{fontSize:11,color:C.mid,marginBottom:6,fontWeight:500}}>Prénom (facultatif)</div>
+ <div style={{fontSize:11,color:"#64748b",marginBottom:6,fontWeight:500}}>Prénom (facultatif)</div>
  <input value={oData.prenom} onChange={e=>setOData({...oData,prenom:e.target.value})} placeholder="Ton prénom" style={{width:"100%",padding:"12px 14px",background:"#fff",border:"0.5px solid #dce8f4",borderRadius:10,fontSize:14,color:C.text,fontFamily:"'Inter',sans-serif",boxSizing:"border-box"}}/>
  </div>
  <div style={{marginBottom:16}}>
- <div style={{fontSize:11,color:C.mid,marginBottom:8,fontWeight:500}}>Sexe <span style={{color:C.red}}>*</span></div>
+ <div style={{fontSize:11,color:"#64748b",marginBottom:8,fontWeight:500}}>Sexe <span style={{color:C.red}}>*</span></div>
  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
  {[{id:"homme",l:"Homme",i:"♂️"},{id:"femme",l:"Femme",i:"♀️"}].map(s=>(
  <div key={s.id} onClick={()=>setOData({...oData,sexe:s.id})} style={{padding:"14px",textAlign:"center",borderRadius:12,border:`1.5px solid ${oData.sexe===s.id?"#3b82f6":"#dce8f4"}`,background:oData.sexe===s.id?"rgba(59,130,246,0.08)":"#fff",cursor:"pointer"}}>
@@ -1041,24 +1041,43 @@ export default function App(){
  </div>
  </div>
  <div>
- <div style={{fontSize:11,color:C.mid,marginBottom:6,fontWeight:500}}>Âge <span style={{color:C.red}}>*</span></div>
+ <div style={{fontSize:11,color:"#64748b",marginBottom:6,fontWeight:500}}>Âge <span style={{color:C.red}}>*</span></div>
  <input type="number" value={oData.age} onChange={e=>setOData({...oData,age:e.target.value})} placeholder="Ex: 25" style={{width:"100%",padding:"12px 14px",background:"#fff",border:"0.5px solid #dce8f4",borderRadius:10,fontSize:14,color:C.text,fontFamily:"'Inter',sans-serif",boxSizing:"border-box"}}/>
  </div>
  </>}
 
  {oStep===1&&<>
  <div style={{marginBottom:16}}>
- <div style={{fontSize:11,color:C.mid,marginBottom:6,fontWeight:500}}>Poids (kg) <span style={{color:C.red}}>*</span></div>
+ <div style={{fontSize:11,color:"#64748b",marginBottom:6,fontWeight:500}}>Poids (kg) <span style={{color:C.red}}>*</span></div>
  <input type="number" value={oData.poids} onChange={e=>setOData({...oData,poids:e.target.value})} placeholder="Ex: 80" style={{width:"100%",padding:"12px 14px",background:"#fff",border:"0.5px solid #dce8f4",borderRadius:10,fontSize:14,color:C.text,fontFamily:"'Inter',sans-serif",boxSizing:"border-box"}}/>
  </div>
  <div>
- <div style={{fontSize:11,color:C.mid,marginBottom:6,fontWeight:500}}>Taille (cm) <span style={{color:C.red}}>*</span></div>
+ <div style={{fontSize:11,color:"#64748b",marginBottom:6,fontWeight:500}}>Taille (cm) <span style={{color:C.red}}>*</span></div>
  <input type="number" value={oData.taille} onChange={e=>setOData({...oData,taille:e.target.value})} placeholder="Ex: 178" style={{width:"100%",padding:"12px 14px",background:"#fff",border:"0.5px solid #dce8f4",borderRadius:10,fontSize:14,color:C.text,fontFamily:"'Inter',sans-serif",boxSizing:"border-box"}}/>
  </div>
  {oData.poids&&oData.taille&&(()=>{
  const imc=(parseFloat(oData.poids)/Math.pow(parseFloat(oData.taille)/100,2)).toFixed(1);
- const cat=imc<18.5?"Insuffisance pondérale":imc<25?"Poids normal ✅":imc<30?"Surpoids":imc<35?"Obésité modérée":"Obésité sévère";
- return <div style={{marginTop:12,padding:"10px 12px",background:"rgba(59,130,246,0.06)",border:"0.5px solid rgba(59,130,246,0.15)",borderRadius:10,fontSize:11,color:C.mid}}>IMC calculé : <span style={{fontWeight:600,color:"#3b82f6"}}>{imc}</span> — {cat}</div>;
+ return(
+  <div style={{marginTop:12,display:"flex",flexDirection:"column",gap:8}}>
+   <div style={{padding:"8px 12px",background:"rgba(59,130,246,0.04)",border:"0.5px solid rgba(59,130,246,0.12)",borderRadius:10,fontSize:11}}>
+    <span style={{color:"#64748b"}}>IMC : </span><span style={{fontWeight:600,color:"#3b82f6"}}>{imc}</span>
+    <div style={{fontSize:9,color:"#94a3b8",marginTop:2}}>ℹ️ L'IMC ne distingue pas muscle et graisse</div>
+   </div>
+   <div>
+    <div style={{fontSize:11,color:"#64748b",marginBottom:5,fontWeight:500}}>% Masse grasse <span style={{color:"#94a3b8",fontWeight:400}}>(optionnel)</span></div>
+    <div style={{display:"flex",alignItems:"center",gap:8}}>
+     <input type="number" value={oData.bodyfat||""} onChange={e=>setOData({...oData,bodyfat:e.target.value})} placeholder="Ex: 18" style={{flex:1,padding:"10px 12px",background:"#fff",border:"0.5px solid #dce8f4",borderRadius:10,fontSize:14,color:"#0f1a2e",fontFamily:"'Inter',sans-serif"}}/>
+     <span style={{fontSize:13,color:"#64748b",fontWeight:500}}>%</span>
+    </div>
+    {oData.bodyfat&&(()=>{
+     const bf=parseFloat(oData.bodyfat);
+     const cat=oData.sexe==="femme"?(bf<14?"Athlète ⚡":bf<21?"Forme ✅":bf<25?"Acceptable":bf<32?"À améliorer":"Obésité"):(bf<6?"Athlète ⚡":bf<14?"Forme ✅":bf<18?"Acceptable":bf<25?"À améliorer":"Obésité");
+     const col=cat.includes("Athlète")||cat.includes("Forme")?"#22c55e":cat==="Acceptable"?"#f97316":"#ef4444";
+     return <div style={{fontSize:11,color:col,fontWeight:600,marginTop:4}}>📊 {cat}</div>;
+    })()}
+   </div>
+  </div>
+ );
  })()}
  </>}
 
@@ -1072,7 +1091,7 @@ export default function App(){
  <div key={g.id} onClick={()=>setOData({...oData,objectif:g.id})} style={{padding:"14px 10px",textAlign:"center",borderRadius:12,border:`1.5px solid ${oData.objectif===g.id?"#3b82f6":"#dce8f4"}`,background:oData.objectif===g.id?"rgba(59,130,246,0.08)":"#fff",cursor:"pointer"}}>
  <div style={{fontSize:26,marginBottom:6}}>{g.i}</div>
  <div style={{fontSize:12,fontWeight:600,color:oData.objectif===g.id?"#3b82f6":C.text,marginBottom:2}}>{g.l}</div>
- <div style={{fontSize:10,color:C.mid}}>{g.d}</div>
+ <div style={{fontSize:10,color:"#64748b"}}>{g.d}</div>
  </div>
  ))}
  </div>}
@@ -1088,9 +1107,9 @@ export default function App(){
  <div key={a.id} onClick={()=>setOData({...oData,activite:a.id})} style={{padding:"12px 14px",display:"flex",justifyContent:"space-between",alignItems:"center",borderRadius:10,border:`1.5px solid ${oData.activite===a.id?"#3b82f6":"#dce8f4"}`,background:oData.activite===a.id?"rgba(59,130,246,0.08)":"#fff",cursor:"pointer"}}>
  <div>
  <div style={{fontSize:13,fontWeight:500,color:oData.activite===a.id?"#3b82f6":C.text}}>{a.l}</div>
- <div style={{fontSize:10,color:C.mid,marginTop:1}}>{a.d}</div>
+ <div style={{fontSize:10,color:"#64748b",marginTop:1}}>{a.d}</div>
  </div>
- <div style={{fontSize:11,fontWeight:600,color:oData.activite===a.id?"#3b82f6":C.mid,flexShrink:0,marginLeft:8}}>{a.f}</div>
+ <div style={{fontSize:11,fontWeight:600,color:oData.activite===a.id?"#3b82f6":"#64748b",flexShrink:0,marginLeft:8}}>{a.f}</div>
  </div>
  ))}
  </div>}
@@ -1099,7 +1118,7 @@ export default function App(){
  <div style={{marginTop:28}}>
  {oStep===steps.length-1?(
  <button onClick={()=>{
- setProfil({...profil,...oData});
+ setProfil({...profil,...oData,bodyfat:oData.bodyfat||""});
  setOnboardingDone(true);
  }} disabled={!oData.sexe||!oData.age||!oData.poids||!oData.taille}
  style={{width:"100%",padding:"14px",background:(!oData.sexe||!oData.age||!oData.poids||!oData.taille)?"#dce8f4":"#3b82f6",border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:(!oData.sexe||!oData.age||!oData.poids||!oData.taille)?"default":"pointer",fontFamily:"'Inter',sans-serif",transition:"background.2s"}}>
@@ -1116,8 +1135,8 @@ export default function App(){
  Continuer →
  </button>
  )}
- {oStep>0&&<button onClick={()=>setOStep(s=>s-1)} style={{width:"100%",padding:"10px",background:"transparent",border:"none",color:C.mid,fontSize:12,cursor:"pointer",marginTop:8,fontFamily:"'Inter',sans-serif"}}>← Retour</button>}
- {oStep===0&&<button onClick={()=>setOnboardingDone(true)} style={{width:"100%",padding:"10px",background:"transparent",border:"none",color:C.mid,fontSize:11,cursor:"pointer",marginTop:8,fontFamily:"'Inter',sans-serif",textDecoration:"underline",textDecorationStyle:"dotted"}}>Passer pour l'instant</button>}
+ {oStep>0&&<button onClick={()=>setOStep(s=>s-1)} style={{width:"100%",padding:"10px",background:"transparent",border:"none",color:"#64748b",fontSize:12,cursor:"pointer",marginTop:8,fontFamily:"'Inter',sans-serif"}}>← Retour</button>}
+ {oStep===0&&<button onClick={()=>setOnboardingDone(true)} style={{width:"100%",padding:"10px",background:"transparent",border:"none",color:"#64748b",fontSize:11,cursor:"pointer",marginTop:8,fontFamily:"'Inter',sans-serif",textDecoration:"underline",textDecorationStyle:"dotted"}}>Passer pour l'instant</button>}
  </div>
  </div>
  </div>
@@ -1127,7 +1146,7 @@ export default function App(){
  const [prog,setProg]=useState(null);
  const [cycles,setCycles]=useState([]); // historique des cycles précédents
  // ─── Streak ───
- const calcStreak=()=>{
+ const getStreak=()=>{
  if(!prog) return 0;
  const dates=prog.jours.filter(j=>j.complete&&j.date).map(j=>j.date).sort((a,b)=>new Date(b.split('/').reverse().join('-'))-new Date(a.split('/').reverse().join('-')));
  if(!dates.length) return 0;
@@ -1149,6 +1168,7 @@ export default function App(){
  const [newP,setNewP]=useState({nom:"",jours:[],seances:{}});
  const [jourActif,setJourActif]=useState(null);
  const [groupe,setGroupe]=useState(null);
+  const [editExIdx,setEditExIdx]=useState({});
  const [exModal,setExModal]=useState(null);
  const [exModalTab,setExModalTab]=useState("tips");
  const [photos,setPhotos]=useState({face:null,dos:null,profil:null});
@@ -1478,9 +1498,9 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  return(
  <div style={{padding:"0 15px 16px"}} className="anim">
  <div style={{paddingTop:24,paddingBottom:14}}>
- <div style={{fontSize:9,letterSpacing:"1.5px",color:C.mid,fontWeight:500,marginBottom:8,textTransform:"uppercase"}}>{today.toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long"})}</div>
+ <div style={{fontSize:9,letterSpacing:"1.5px",color:"#64748b",fontWeight:500,marginBottom:8,textTransform:"uppercase"}}>{today.toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long"})}</div>
  <div style={{fontFamily:"'Syne',sans-serif",fontSize:26,fontWeight:300,color:C.text,letterSpacing:-0.5,lineHeight:1.1,marginBottom:12}}>
- {profil.prenom?<>Bonjour, <span style={{fontWeight:500,color:C.blue}}>{profil.prenom}</span></>:<>Bonjour <span style={{fontWeight:300,color:C.mid}}>👋</span></>}
+ {profil.prenom?<>Bonjour, <span style={{fontWeight:500,color:C.blue}}>{profil.prenom}</span></>:<>Bonjour <span style={{fontWeight:300,color:"#64748b"}}>👋</span></>}
  </div>
  <div style={{padding:"12px 14px",background:"rgba(59,130,246,0.06)",border:"0.5px solid rgba(59,130,246,0.15)",borderRadius:12}}>
  <div style={{fontSize:9,color:C.blue,fontWeight:600,letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:5}}>Motivation du jour</div>
@@ -1491,7 +1511,7 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
             <span style={{fontSize:18}}>🔥</span>
             <div>
               <span style={{fontSize:13,fontWeight:600,color:"#f97316"}}>{s} jour{s>1?"s":""} consécutif{s>1?"s":""}</span>
-              <span style={{fontSize:10,color:C.mid,marginLeft:6}}>{s>=7?"Semaine parfaite ! 🏆":s>=3?"Continue comme ça ! 💪":"En route !"}</span>
+              <span style={{fontSize:10,color:"#64748b",marginLeft:6}}>{s>=7?"Semaine parfaite ! 🏆":s>=3?"Continue comme ça ! 💪":"En route !"}</span>
             </div>
           </div>):null;})()}
  </div>
@@ -1524,8 +1544,8 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  {profil.poids&&profil.taille&&profil.age&&profil.sexe?(
  <Box style={{marginBottom:9}}>
  <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
- <div style={{fontSize:9,color:C.mid,letterSpacing:"1px",textTransform:"uppercase",fontWeight:500}}>Calories du jour</div>
- <div style={{fontSize:11,fontWeight:500,color:tot.cal>calObj?C.red:"#3b82f6"}}>{tot.cal} <span style={{color:C.mid,fontWeight:400}}>/ {calObj} kcal</span></div>
+ <div style={{fontSize:9,color:"#64748b",letterSpacing:"1px",textTransform:"uppercase",fontWeight:500}}>Calories du jour</div>
+ <div style={{fontSize:11,fontWeight:500,color:tot.cal>calObj?C.red:"#3b82f6"}}>{tot.cal} <span style={{color:"#64748b",fontWeight:400}}>/ {calObj} kcal</span></div>
  </div>
  {/* Barre calories principale */}
  <div style={{height:6,background:"#dce8f4",borderRadius:3,marginBottom:12,overflow:"hidden"}}>
@@ -1540,11 +1560,11 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  ].map(m=>(
  <div key={m.l} style={{padding:"8px 6px",background:m.bg,borderRadius:8}}>
  <div style={{fontSize:9,color:m.c,fontWeight:600,letterSpacing:"0.3px",marginBottom:3}}>{m.l}</div>
- <div style={{fontFamily:"'Syne',sans-serif",fontSize:15,fontWeight:300,color:C.text,lineHeight:1}}>{m.v}<span style={{fontSize:8,color:C.mid}}>g</span></div>
+ <div style={{fontFamily:"'Syne',sans-serif",fontSize:15,fontWeight:300,color:C.text,lineHeight:1}}>{m.v}<span style={{fontSize:8,color:"#64748b"}}>g</span></div>
  <div style={{height:2,background:"#dce8f4",borderRadius:1,marginTop:4,overflow:"hidden"}}>
  <div style={{height:"100%",width:`${Math.min(100,m.v/m.obj*100)}%`,background:m.c,borderRadius:1,transition:"width.3s"}}/>
  </div>
- <div style={{fontSize:8,color:C.mid,marginTop:2}}>{m.v}/{m.obj}g</div>
+ <div style={{fontSize:8,color:"#64748b",marginTop:2}}>{m.v}/{m.obj}g</div>
  </div>
  ))}
  </div>
@@ -1555,7 +1575,7 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  <div style={{width:36,height:36,borderRadius:"50%",background:"rgba(59,130,246,0.1)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:18}}>👤</div>
  <div style={{flex:1}}>
  <div style={{fontSize:12,fontWeight:600,color:"#3b82f6",marginBottom:2}}>Complète ton profil</div>
- <div style={{fontSize:10,color:C.mid,lineHeight:1.4}}>Renseigne ton poids, taille, âge et objectif pour voir tes calories et macros personnalisées</div>
+ <div style={{fontSize:10,color:"#64748b",lineHeight:1.4}}>Renseigne ton poids, taille, âge et objectif pour voir tes calories et macros personnalisées</div>
  </div>
  <div style={{fontSize:16,color:"#3b82f6"}}>›</div>
  </div>
@@ -1580,12 +1600,12 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  <div style={{marginBottom:12}}>
  <Row style={{justifyContent:"space-between",alignItems:"flex-end",marginBottom:12}}>
  <div>
- <div style={{fontFamily:"'Syne',sans-serif",fontSize:32,fontWeight:300,color:"#3b82f6",letterSpacing:-1,lineHeight:1}}>{lastWeight?.v}<span style={{fontSize:12,color:C.mid,fontFamily:"'Inter',sans-serif",fontWeight:400}}> kg</span></div>
- <div style={{fontSize:10,color:C.mid,marginTop:2}}>Dernière pesée · {lastWeight?.date}</div>
+ <div style={{fontFamily:"'Syne',sans-serif",fontSize:32,fontWeight:300,color:"#3b82f6",letterSpacing:-1,lineHeight:1}}>{lastWeight?.v}<span style={{fontSize:12,color:"#64748b",fontFamily:"'Inter',sans-serif",fontWeight:400}}> kg</span></div>
+ <div style={{fontSize:10,color:"#64748b",marginTop:2}}>Dernière pesée · {lastWeight?.date}</div>
  </div>
  {diff&&<div style={{textAlign:"right",paddingBottom:4}}>
  <div style={{fontSize:20,fontWeight:300,color:parseFloat(diff)>0?(profil.objectif==="poids"?C.red:C.green):(profil.objectif==="poids"?C.green:C.red),lineHeight:1}}>{parseFloat(diff)>0?"+":""}{diff}<span style={{fontSize:11}}>kg</span></div>
- <div style={{fontSize:9,color:C.mid,marginTop:1}}>depuis le début</div>
+ <div style={{fontSize:9,color:"#64748b",marginTop:1}}>depuis le début</div>
  </div>}
  </Row>
  {(()=>{
@@ -1622,7 +1642,7 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  <g key={i}>
  <circle cx={x} cy={y} r="4" fill="#ffffff" stroke="#3b82f6" strokeWidth="2"/>
  <text x={x} y={y-8} textAnchor="middle" fontSize="8" fill="#3b82f6" fontFamily="Inter,sans-serif" fontWeight="600">{w.v}</text>
- {showDate&&<text x={x} y={H-1} textAnchor={i===0?"start":i===weightLog.length-1?"end":"middle"} fontSize="7" fill="#a0b4cc" fontFamily="Inter,sans-serif">{w.date}</text>}
+ {showDate&&<text x={x} y={H-1} textAnchor={i===0?"start":i===weightLog.length-1?"end":"middle"} fontSize="7" fill="#64748b" fontFamily="Inter,sans-serif">{w.date}</text>}
  </g>
  );
  })}
@@ -1631,12 +1651,12 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  })()}
  </div>
  )}
- {weightLog.length===0&&<div style={{textAlign:"center",padding:"12px 0",fontSize:12,color:C.mid,marginBottom:10}}>Enregistrez votre première pesée pour voir votre progression.</div>}
+ {weightLog.length===0&&<div style={{textAlign:"center",padding:"12px 0",fontSize:12,color:"#64748b",marginBottom:10}}>Enregistrez votre première pesée pour voir votre progression.</div>}
  {weightLog.length===1&&(
  <Row style={{justifyContent:"space-between",marginBottom:10}}>
  <div>
- <div style={{fontFamily:"'Syne',sans-serif",fontSize:28,fontWeight:300,color:C.gold,letterSpacing:-1}}>{lastWeight?.v}<span style={{fontSize:12,color:C.mid,fontFamily:"'Inter',sans-serif"}}> kg</span></div>
- <div style={{fontSize:10,color:C.mid}}>Pesée du {lastWeight?.date}</div>
+ <div style={{fontFamily:"'Syne',sans-serif",fontSize:28,fontWeight:300,color:C.gold,letterSpacing:-1}}>{lastWeight?.v}<span style={{fontSize:12,color:"#64748b",fontFamily:"'Inter',sans-serif"}}> kg</span></div>
+ <div style={{fontSize:10,color:"#64748b"}}>Pesée du {lastWeight?.date}</div>
  </div>
  </Row>
  )}
@@ -1652,7 +1672,7 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  setNewWeight("");setShowWeightInput(false);
  push("⚖️","Poids enregistré !",`${newWeight}kg enregistré. Prochain pesée dans 2 semaines.`);
  }} style={{padding:"11px 14px",background:"rgba(59,130,246,0.08)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:9,color:"#3b82f6",cursor:"pointer",fontSize:12,fontWeight:500,fontFamily:"'Syne',sans-serif",whiteSpace:"nowrap"}}>✓ OK</button>
- <button onClick={()=>setShowWeightInput(false)} style={{padding:"11px 10px",background:C.s2,border:"0.5px solid #dce8f4",borderRadius:9,color:C.mid,cursor:"pointer",fontSize:14}}>×</button>
+ <button onClick={()=>setShowWeightInput(false)} style={{padding:"11px 10px",background:C.s2,border:"0.5px solid #dce8f4",borderRadius:9,color:"#64748b",cursor:"pointer",fontSize:14}}>×</button>
  </Row>
  ):(
  <Btn onClick={()=>setShowWeightInput(true)} v="out">⚖️ Enregistrer mon poids</Btn>
@@ -1676,22 +1696,34 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  <Box key={i} onClick={a.fn} style={{marginBottom:0,cursor:"pointer",background:a.prem?"rgba(200,150,62,0.06)":C.s1,borderColor:a.prem?C.goldB:C.s3}}>
  <div style={{fontSize:22,marginBottom:7}}>{a.icon}</div>
  <div style={{fontSize:12,fontWeight:500,color:a.prem?C.gold:C.text}}>{a.l}</div>
- <div style={{fontSize:10,color:C.mid,marginTop:2}}>{a.sub}</div>
+ <div style={{fontSize:10,color:"#64748b",marginTop:2}}>{a.sub}</div>
  </Box>
  ))}
  </G2>
- {imc&&(
- <Box style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
- <div>
- <div style={{fontSize:9,color:C.mid,letterSpacing:"1px",textTransform:"uppercase",marginBottom:3}}>IMC</div>
- <div style={{fontFamily:"'Syne',sans-serif",fontSize:30,color:C.gold,letterSpacing:-0.5,fontWeight:300}}>{imc}</div>
- </div>
- <div style={{textAlign:"right"}}>
- <div style={{fontSize:12,fontWeight:500,color:imc<18.5?C.blue:imc<25?C.green:imc<30?C.orange:C.red}}>{imc<18.5?"Maigreur":imc<25?"Normal ✓":imc<30?"Surpoids":"Obésité"}</div>
- <div style={{fontSize:10,color:C.mid,marginTop:2}}>{profil.poids}kg · {profil.taille}cm</div>
- </div>
+ {/* Bodyfat + IMC section */}
+ <Box style={{display:"grid",gridTemplateColumns:profil.bodyfat?"1fr 1fr":"1fr",gap:12}}>
+  {profil.bodyfat&&(()=>{
+   const bf=parseFloat(profil.bodyfat);
+   const cat=profil.sexe==="femme"?(bf<14?"Athlète":bf<21?"Forme":bf<25?"Acceptable":bf<32?"À améliorer":"Obésité"):(bf<6?"Athlète":bf<14?"Forme":bf<18?"Acceptable":bf<25?"À améliorer":"Obésité");
+   const col=cat==="Athlète"||cat==="Forme"?"#22c55e":cat==="Acceptable"?"#f97316":"#ef4444";
+   return(
+   <div>
+    <div style={{fontSize:9,color:"#64748b",letterSpacing:"1px",textTransform:"uppercase",marginBottom:3}}>Masse grasse</div>
+    <div style={{fontFamily:"'Syne',sans-serif",fontSize:28,color:col,fontWeight:300,letterSpacing:-0.5,lineHeight:1}}>{bf}<span style={{fontSize:12,color:"#64748b",marginLeft:2}}>%</span></div>
+    <div style={{fontSize:11,fontWeight:600,color:col,marginTop:4}}>{cat}</div>
+    <div style={{fontSize:9,color:"#94a3b8",marginTop:2}}>Fiable — ne dépend pas de la masse musculaire</div>
+   </div>
+   );
+  })()}
+  {imc&&(
+  <div>
+   <div style={{fontSize:9,color:"#64748b",letterSpacing:"1px",textTransform:"uppercase",marginBottom:3}}>IMC</div>
+   <div style={{fontFamily:"'Syne',sans-serif",fontSize:28,color:"#94a3b8",fontWeight:300,letterSpacing:-0.5,lineHeight:1}}>{imc}</div>
+   <div style={{fontSize:11,fontWeight:500,color:imc<18.5?C.blue:imc<25?C.green:imc<30?C.orange:C.red,marginTop:4}}>{imc<18.5?"Maigreur":imc<25?"Normal ✓":imc<30?"Surpoids":"Obésité"}</div>
+   <div style={{fontSize:9,color:"#94a3b8",marginTop:2}}>Ne distingue pas muscle et graisse</div>
+  </div>
+  )}
  </Box>
- )}
  </div>
  );
  };
@@ -1699,7 +1731,7 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  if(!prog)return(
  <Box style={{textAlign:"center",padding:"40px 20px",margin:"0 15px"}}>
  <div style={{fontFamily:"'Syne',sans-serif",fontSize:32,opacity:.1,fontWeight:300,marginBottom:12}}>STATS</div>
- <div style={{fontSize:13,color:C.mid,lineHeight:1.6}}>Créez un programme et enregistrez vos séances pour voir votre progression.</div>
+ <div style={{fontSize:13,color:"#64748b",lineHeight:1.6}}>Créez un programme et enregistrez vos séances pour voir votre progression.</div>
  </Box>
  );
  const allH={};
@@ -1719,9 +1751,9 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  ].map(s=>(
  <Box key={s.l} style={{marginBottom:0,textAlign:"center",padding:"14px 6px"}}>
  <div style={{fontFamily:"'Syne',sans-serif",fontSize:22,fontWeight:300,color:s.c,letterSpacing:-0.5,lineHeight:1}}>
- {s.v}{s.u&&<span style={{fontSize:11,color:C.mid,marginLeft:2,fontWeight:500}}>{s.u}</span>}
+ {s.v}{s.u&&<span style={{fontSize:11,color:"#64748b",marginLeft:2,fontWeight:500}}>{s.u}</span>}
  </div>
- <div style={{fontSize:10,color:C.mid,marginTop:5,letterSpacing:"0.3px"}}>{s.l}</div>
+ <div style={{fontSize:10,color:"#64748b",marginTop:5,letterSpacing:"0.3px"}}>{s.l}</div>
  </Box>
  ))}
  </div>
@@ -1735,8 +1767,8 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  <Row key={i} style={{marginBottom:8,paddingBottom:8,borderBottom:i<prog.jours.length-1?`1px solid ${C.s3}`:"none"}}>
  <div style={{width:8,height:8,borderRadius:"50%",background:jour.complete?C.green:int.c,marginRight:10,flexShrink:0}}/>
  <div style={{flex:1}}>
- <div style={{fontSize:12,color:jour.complete?C.text:C.mid,fontWeight:jour.complete?600:400}}>{jour.nom}</div>
- <div style={{fontSize:10,color:C.mid,marginTop:2}}>{jour.focus}</div>
+ <div style={{fontSize:12,color:jour.complete?C.text:"#64748b",fontWeight:jour.complete?600:400}}>{jour.nom}</div>
+ <div style={{fontSize:10,color:"#64748b",marginTop:2}}>{jour.focus}</div>
  </div>
  {jour.complete&&<div style={{fontSize:10,color:C.green,fontWeight:600}}>✓ {jour.date}</div>}
  </Row>
@@ -1758,7 +1790,7 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  <Box key={i}>
  <div style={{fontSize:13,fontWeight:500,marginBottom:12,fontFamily:"'Syne',sans-serif"}}>{nom}</div>
  <MiniChart data={data} color={colors[i%6]}/>
- <div style={{marginTop:10,paddingTop:10,borderTop:`1px solid ${C.s3}`,display:"flex",gap:12,fontSize:10,color:C.mid}}>
+ <div style={{marginTop:10,paddingTop:10,borderTop:`1px solid ${C.s3}`,display:"flex",gap:12,fontSize:10,color:"#64748b"}}>
  <span>{data.length} séances</span>
  <span>·</span>
  <span>Max : <span style={{color:C.gold,fontWeight:700}}>{Math.max(...data.map(d=>parseFloat(d.poids)||0))}kg</span></span>
@@ -1773,11 +1805,11 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  <Row key={i} style={{padding:"10px 0",borderBottom:i<Math.min(records.length,10)-1?`1px solid ${C.s3}`:"none",justifyContent:"space-between"}}>
  <div style={{flex:1}}>
  <div style={{fontSize:12,color:C.text}}>{r.n}</div>
- <div style={{fontSize:10,color:C.mid,marginTop:2}}>{r.c} séance{r.c>1?"s":""}</div>
+ <div style={{fontSize:10,color:"#64748b",marginTop:2}}>{r.c} séance{r.c>1?"s":""}</div>
  </div>
  <div style={{display:"flex",alignItems:"baseline",gap:3}}>
  <span style={{fontFamily:"'Syne',sans-serif",fontSize:20,fontWeight:300,color:i===0?C.gold:C.text,letterSpacing:-0.5}}>{r.max}</span>
- <span style={{fontSize:10,color:C.mid}}>kg</span>
+ <span style={{fontSize:10,color:"#64748b"}}>kg</span>
  {i===0&&<span style={{marginLeft:4,fontSize:12}}>🏆</span>}
  </div>
  </Row>
@@ -1796,7 +1828,7 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  ):(
  <Box>
  <Lbl>Courbes de progression</Lbl>
- <div style={{textAlign:"center",padding:"20px 0",fontSize:12,color:C.mid,lineHeight:1.7}}>
+ <div style={{textAlign:"center",padding:"20px 0",fontSize:12,color:"#64748b",lineHeight:1.7}}>
  Enregistrez vos poids et répétitions<br/>
  dans les séances pour voir vos courbes.
  </div>
@@ -1820,16 +1852,16 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  </div>
  <div style={{textAlign:"right"}}>
  <div style={{fontSize:11,color:C.green,fontWeight:600}}>{sf} séances</div>
- <div style={{fontSize:10,color:C.mid}}>{c.archiveDate||c.dateDebut}</div>
+ <div style={{fontSize:10,color:"#64748b"}}>{c.archiveDate||c.dateDebut}</div>
  </div>
  </Row>
  {c.morpho?.resume&&(
- <div style={{fontSize:11,color:C.mid,lineHeight:1.5,marginBottom:6,fontStyle:"italic"}}>
+ <div style={{fontSize:11,color:"#64748b",lineHeight:1.5,marginBottom:6,fontStyle:"italic"}}>
  {c.morpho.resume}
  </div>
  )}
  {c.chargesResume&&(
- <div style={{padding:"7px 9px",background:C.s2,borderRadius:7,fontSize:10,color:C.mid}}>
+ <div style={{padding:"7px 9px",background:C.s2,borderRadius:7,fontSize:10,color:"#64748b"}}>
  <span style={{color:C.gold,fontWeight:700}}>Records : </span>{c.chargesResume}
  </div>
  )}
@@ -1865,7 +1897,7 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  <div style={{position:"fixed",inset:0,background:"rgba(237,243,251,0.97)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:300,padding:18}}>
  <div style={{background:C.s1,border:"0.5px solid #dce8f4",borderRadius:14,padding:"22px 18px",width:"100%",maxWidth:360}}>
  <Lbl>{bonusModal.i} {bonusModal.l}</Lbl>
- <div style={{fontSize:12,color:C.mid,marginBottom:14}}>Durée de la séance ?</div>
+ <div style={{fontSize:12,color:"#64748b",marginBottom:14}}>Durée de la séance ?</div>
  <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:16}}>
  {["15 min","20 min","30 min","45 min"].map(dur=>(
  <div key={dur} onClick={()=>{
@@ -1888,7 +1920,7 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  <Lbl style={{marginBottom:4}}>Cycle {prog.numero||1} · {prog.duree_semaines||6} semaines</Lbl>
  <div style={{fontFamily:"'Syne',sans-serif",fontSize:14,fontWeight:500}}>{prog.titre}</div>
  {prog.methode&&<div style={{fontSize:10,color:"#3b82f6",marginTop:2,fontWeight:500}}>⚡ {prog.methode}</div>}
- {prog.dateDebut&&<div style={{fontSize:10,color:C.mid,marginTop:2}}>Démarré le {prog.dateDebut}</div>}
+ {prog.dateDebut&&<div style={{fontSize:10,color:"#64748b",marginTop:2}}>Démarré le {prog.dateDebut}</div>}
  </div>
  {jR!==null&&jR<=7&&(
  <div style={{padding:"5px 10px",background:"rgba(224,136,58,0.15)",border:"1px solid rgba(224,136,58,0.3)",borderRadius:8,fontSize:10,color:"#f97316",fontWeight:500,flexShrink:0}}>J-{jR}</div>
@@ -1898,8 +1930,8 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  {prog.analyse&&(prog.analyse.points_forts?.length>0||prog.analyse.points_faibles?.length>0)&&(
  <div style={{marginBottom:12,padding:"10px 12px",background:"#ffffff",border:"0.5px solid #dce8f4",borderRadius:10}}>
  <div style={{fontSize:9,color:"#3b82f6",fontWeight:600,letterSpacing:"1px",textTransform:"uppercase",marginBottom:8}}>🔬 Analyse morphologique</div>
- {prog.analyse.morphotype&&<div style={{fontSize:11,color:C.mid,marginBottom:6,fontStyle:"italic"}}>Morphotype : <span style={{color:C.text,fontWeight:500}}>{prog.analyse.morphotype}</span> · Humérus : {prog.analyse.humerus||"?"} · Fémurs : {prog.analyse.femurs||"?"}</div>}
- {prog.analyse.posture&&<div style={{fontSize:10,color:C.mid,marginBottom:8,padding:"6px 8px",background:"rgba(249,115,22,0.06)",borderRadius:6}}>📐 Posture : {prog.analyse.posture}</div>}
+ {prog.analyse.morphotype&&<div style={{fontSize:11,color:"#64748b",marginBottom:6,fontStyle:"italic"}}>Morphotype : <span style={{color:C.text,fontWeight:500}}>{prog.analyse.morphotype}</span> · Humérus : {prog.analyse.humerus||"?"} · Fémurs : {prog.analyse.femurs||"?"}</div>}
+ {prog.analyse.posture&&<div style={{fontSize:10,color:"#64748b",marginBottom:8,padding:"6px 8px",background:"rgba(249,115,22,0.06)",borderRadius:6}}>📐 Posture : {prog.analyse.posture}</div>}
  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
  {prog.analyse.points_forts?.length>0&&(
  <div>
@@ -1924,13 +1956,13 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  <div style={{marginBottom:12,padding:"8px 12px",background:"rgba(249,115,22,0.06)",border:"0.5px solid rgba(249,115,22,0.2)",borderRadius:8}}>
  <div style={{fontSize:9,color:"#f97316",fontWeight:600,letterSpacing:"1px",textTransform:"uppercase",marginBottom:4}}>🔧 Correction prioritaire</div>
  <div style={{fontSize:10,color:C.text}}>{prog.correction.groupes_prioritaires.join(" · ")}</div>
- {prog.correction.frequence_supplementaire&&<div style={{fontSize:10,color:C.mid,marginTop:3}}>{prog.correction.frequence_supplementaire}</div>}
+ {prog.correction.frequence_supplementaire&&<div style={{fontSize:10,color:"#64748b",marginTop:3}}>{prog.correction.frequence_supplementaire}</div>}
  </div>
  )}
  {jR===0&&(
  <div style={{padding:"12px 14px",background:"rgba(62,199,122,0.1)",border:"1px solid rgba(62,199,122,0.3)",borderRadius:10,marginBottom:12}}>
  <div style={{fontSize:13,fontWeight:500,color:C.green,marginBottom:4}}>🏆 Cycle terminé !</div>
- <div style={{fontSize:11,color:C.mid,marginBottom:10,lineHeight:1.5}}>Démarrez un nouveau cycle pour continuer votre progression.</div>
+ <div style={{fontSize:11,color:"#64748b",marginBottom:10,lineHeight:1.5}}>Démarrez un nouveau cycle pour continuer votre progression.</div>
  <Btn sm onClick={()=>{if(!premium)setPaywall(true);else{setProgView("analyse");setTab("program");}}} >Nouveau cycle personnalisé →</Btn>
  </div>
  )}
@@ -1945,31 +1977,98 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  );
  })}
  </div>
- {prog.jours.map((j,i)=>{
+ {(()=>{
+ const [viewJour,setViewJour]=useState(null);
+ if(viewJour!==null){
+   const jour=prog.jours[viewJour];
+   const int=INT[jour.intensite||"modere"];
+   return(
+   <div style={{padding:"0 0 10px"}}>
+    <button onClick={()=>setViewJour(null)} style={{background:"transparent",border:"none",color:"#3b82f6",cursor:"pointer",fontSize:13,fontWeight:600,padding:"8px 15px 12px",display:"flex",alignItems:"center",gap:5}}>← Retour</button>
+    <div style={{padding:"0 15px"}}>
+     <div style={{padding:"12px 14px",background:`${int.c}14`,border:`0.5px solid ${int.c}40`,borderRadius:12,marginBottom:12}}>
+      <div style={{fontSize:9,color:int.c,fontWeight:700,letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:3}}>{int.l}</div>
+      <div style={{fontFamily:"'Syne',sans-serif",fontSize:18,fontWeight:400,marginBottom:2}}>{jour.nom}</div>
+      <div style={{fontSize:11,color:"#64748b"}}>{jour.focus} · {jour.duree} · {jour.exercices?.length||0} exercices</div>
+     </div>
+     {(jour.exercices||[]).map((ex,k)=>{
+      const cc={principal:"#3b82f6",correctif:"#ef4444",gainage:"#22c55e",isolation:"#8b5cf6",correctiv:"#ef4444"}[ex.cat||"principal"]||"#3b82f6";
+      const [editing,setEditing]=useState(false);
+      const METHODS=["Classique","Pyramidal","Super-set","Drop-set","Rest-pause","5×5","Séries de 100","Dégressif"];
+      return(
+      <div key={k} style={{background:"#fff",border:"0.5px solid #dce8f4",borderRadius:10,marginBottom:7,overflow:"hidden"}}>
+       <div style={{padding:"10px 13px",borderLeft:`3px solid ${cc}`}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
+         <div>
+          <div style={{fontSize:12,fontWeight:600,color:"#0f1a2e",marginBottom:3}}>{ex.nom}</div>
+          <div style={{fontSize:10,color:"#64748b"}}>{ex.series}×{ex.reps} · {ex.repos} · {ex.charge}{ex.tempo?` · ${ex.tempo}`:""}{ex.methode&&ex.methode!=="Classique"?` · ${ex.methode}`:""}</div>
+         </div>
+         <button onClick={()=>setEditing(e=>!e)} style={{padding:"4px 8px",background:"rgba(59,130,246,0.08)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:6,color:"#3b82f6",cursor:"pointer",fontSize:10,flexShrink:0,marginLeft:8}}>✏️ Modifier</button>
+        </div>
+        {editing&&(
+        <div style={{marginTop:10,paddingTop:10,borderTop:"0.5px solid #dce8f4"}}>
+         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6,marginBottom:7}}>
+          {[{l:"Séries",k:"series"},{l:"Reps",k:"reps"},{l:"Repos",k:"repos"},{l:"Charge",k:"charge"}].map(pp=>(
+           <div key={pp.k}>
+            <div style={{fontSize:9,color:"#64748b",marginBottom:3,fontWeight:600}}>{pp.l}</div>
+            <div style={{display:"flex",gap:3,alignItems:"center"}}>
+             <button onClick={()=>{const u=JSON.parse(JSON.stringify(prog));const cur=parseFloat(u.jours[viewJour].exercices[k][pp.k])||0;u.jours[viewJour].exercices[k][pp.k]=String(pp.k==="repos"?Math.max(0,cur-15):Math.max(1,cur-1));setProg(u);}} style={{width:22,height:22,borderRadius:5,background:"#f1f5f9",border:"none",cursor:"pointer",fontSize:12}}>−</button>
+             <input value={ex[pp.k]||""} onChange={e=>{const u=JSON.parse(JSON.stringify(prog));u.jours[viewJour].exercices[k][pp.k]=e.target.value;setProg(u);}} style={{flex:1,padding:"4px 5px",background:"#fff",border:"0.5px solid #dce8f4",borderRadius:6,fontSize:11,textAlign:"center",fontFamily:"'Inter',sans-serif"}}/>
+             <button onClick={()=>{const u=JSON.parse(JSON.stringify(prog));const cur=parseFloat(u.jours[viewJour].exercices[k][pp.k])||0;u.jours[viewJour].exercices[k][pp.k]=String(pp.k==="repos"?cur+15:cur+1);setProg(u);}} style={{width:22,height:22,borderRadius:5,background:"#3b82f6",border:"none",color:"#fff",cursor:"pointer",fontSize:12}}>+</button>
+            </div>
+           </div>
+          ))}
+         </div>
+         <div style={{marginBottom:6}}>
+          <div style={{fontSize:9,color:"#64748b",marginBottom:3,fontWeight:600}}>TEMPO</div>
+          <input value={ex.tempo||""} onChange={e=>{const u=JSON.parse(JSON.stringify(prog));u.jours[viewJour].exercices[k].tempo=e.target.value;setProg(u);}} placeholder="Ex: 2-1-3" style={{width:"100%",padding:"7px 10px",background:"#fff",border:"0.5px solid #dce8f4",borderRadius:8,fontSize:11,fontFamily:"'Inter',sans-serif",boxSizing:"border-box"}}/>
+         </div>
+         <div>
+          <div style={{fontSize:9,color:"#64748b",marginBottom:4,fontWeight:600}}>MÉTHODE</div>
+          <div style={{display:"flex",flexWrap:"wrap",gap:4}}>
+           {METHODS.map(mm=>(
+            <button key={mm} onClick={()=>{const u=JSON.parse(JSON.stringify(prog));u.jours[viewJour].exercices[k].methode=mm;setProg(u);}} style={{padding:"3px 8px",borderRadius:12,border:`1px solid ${ex.methode===mm?"#3b82f6":"#dce8f4"}`,background:ex.methode===mm?"rgba(59,130,246,0.1)":"transparent",color:ex.methode===mm?"#3b82f6":"#64748b",cursor:"pointer",fontSize:9,fontFamily:"'Inter',sans-serif"}}>{mm}</button>
+           ))}
+          </div>
+         </div>
+        </div>
+        )}
+       </div>
+      </div>
+      );
+     })}
+    </div>
+   </div>
+   );
+ }
+ return(
+ <>{prog.jours.map((j,i)=>{
  const int=INT[j.intensite||"modere"];
  const total=j.exercices?.length||0;
  const done=j.exercices?.filter((_,idx)=>checkedEx[`${j.id}-${idx}`]).length||0;
  return(
- <Row key={i} onClick={()=>{setTab("program");setProgView("today");}} style={{padding:"10px 12px",background:C.s2,borderRadius:9,marginBottom:5,cursor:"pointer",border:"0.5px solid #dce8f4"}}>
+ <Row key={i} onClick={()=>setViewJour(i)} style={{padding:"10px 12px",background:C.s2,borderRadius:9,marginBottom:5,cursor:"pointer",border:"0.5px solid #dce8f4"}}>
  <div style={{width:3,height:36,borderRadius:1.5,background:int.c,marginRight:10,flexShrink:0}}/>
  <div style={{flex:1}}>
  <div style={{fontSize:9,color:int.c,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",marginBottom:2}}>{int.l}</div>
- <div style={{fontSize:13,fontWeight:500}}>{j.nom}</div>
- <div style={{fontSize:10,color:C.mid}}>{j.focus} · {total} exercices</div>
+ <div style={{fontSize:13,fontWeight:500,color:"#0f1a2e"}}>{j.nom}</div>
+ <div style={{fontSize:10,color:"#64748b"}}>{j.focus} · {total} exercices</div>
  </div>
  <Row style={{gap:8,alignItems:"center"}}>
  {done>0&&<div style={{fontSize:10,color:C.green,fontWeight:700}}>{done}/{total}</div>}
  {j.complete&&<div style={{fontSize:10,color:C.green}}>✓</div>}
- <div style={{color:C.dim,fontSize:16}}>›</div>
+ <div style={{color:"#94a3b8",fontSize:16}}>›</div>
  </Row>
  </Row>
  );
- })}
+ })}</>
+ );
+ })()}
  </Box>
  )}
  {!prog&&(
  <Box style={{textAlign:"center",padding:"24px 20px"}}>
- <div style={{fontSize:13,color:C.mid,marginBottom:16}}>Créez un programme pour planifier vos séances.</div>
+ <div style={{fontSize:13,color:"#64748b",marginBottom:16}}>Créez un programme pour planifier vos séances.</div>
  <Btn onClick={()=>{setTab("program");setProgView("creer");}}>Créer un programme</Btn>
  <Btn v="out" onClick={()=>{if(!premium)setPaywall(true);else{setTab("program");setProgView("analyse");}}}>Programme personnalisé ◈</Btn>
  </Box>
@@ -1988,9 +2087,9 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  <div style={{padding:"13px 14px",background:`${int.c}14`,border:`1px solid ${int.c}30`,borderRadius:11,marginBottom:10}}>
  <div style={{fontSize:9,color:int.c,fontWeight:700,letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:3}}>{int.l}</div>
  <div style={{fontFamily:"'Syne',sans-serif",fontSize:18,letterSpacing:-0.5,fontWeight:300}}>{s.nom}</div>
- <div style={{fontSize:11,color:C.mid}}>{s.focus} · {s.duree}</div>
+ <div style={{fontSize:11,color:"#64748b"}}>{s.focus} · {s.duree}</div>
  </div>
- <button onClick={()=>setChrono(true)} style={{display:"flex",alignItems:"center",gap:8,width:"100%",padding:"10px 13px",background:C.s2,border:"0.5px solid #dce8f4",borderRadius:9,color:C.mid,cursor:"pointer",fontSize:12,fontFamily:"'Inter',sans-serif",fontWeight:500,marginBottom:10}}>⏱ Chronomètre de repos</button>
+ <button onClick={()=>setChrono(true)} style={{display:"flex",alignItems:"center",gap:8,width:"100%",padding:"10px 13px",background:C.s2,border:"0.5px solid #dce8f4",borderRadius:9,color:"#64748b",cursor:"pointer",fontSize:12,fontFamily:"'Inter',sans-serif",fontWeight:500,marginBottom:10}}>⏱ Chronomètre de repos</button>
  {s.exercices.map((ex,j)=>{
  const last=ex.historique.length>0?ex.historique[ex.historique.length-1]:null;
  const gain=ex.historique.length>1?(parseFloat(ex.historique[ex.historique.length-1].poids)-parseFloat(ex.historique[0].poids)):0;
@@ -2008,8 +2107,8 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  </div>
  <div style={{display:"flex",gap:5}}>
  {gain>0&&<span style={{fontSize:10,color:C.green,fontWeight:700,alignSelf:"center"}}>+{gain}kg</span>}
- <button onClick={()=>setExEdit(e=>({...e,[j]:!e[j]}))} style={{padding:"4px 8px",background:editParams?"rgba(212,168,83,0.15)":C.s2,border:`1px solid ${editParams?C.gold:C.s3}`,borderRadius:6,color:editParams?C.gold:C.mid,cursor:"pointer",fontSize:10,fontFamily:"'Inter',sans-serif"}}>✏️</button>
- <button onClick={()=>setExDetails(e=>({...e,[j]:!e[j]}))} style={{padding:"4px 8px",background:showDetails?"rgba(77,143,224,0.15)":C.s2,border:`1px solid ${showDetails?C.blue:C.s3}`,borderRadius:6,color:showDetails?C.blue:C.mid,cursor:"pointer",fontSize:10,fontFamily:"'Inter',sans-serif"}}>{showDetails?"▲":"▼"}</button>
+ <button onClick={()=>setExEdit(e=>({...e,[j]:!e[j]}))} style={{padding:"4px 8px",background:editParams?"rgba(212,168,83,0.15)":C.s2,border:`1px solid ${editParams?C.gold:C.s3}`,borderRadius:6,color:editParams?C.gold:"#64748b",cursor:"pointer",fontSize:10,fontFamily:"'Inter',sans-serif"}}>✏️</button>
+ <button onClick={()=>setExDetails(e=>({...e,[j]:!e[j]}))} style={{padding:"4px 8px",background:showDetails?"rgba(77,143,224,0.15)":C.s2,border:`1px solid ${showDetails?C.blue:C.s3}`,borderRadius:6,color:showDetails?C.blue:"#64748b",cursor:"pointer",fontSize:10,fontFamily:"'Inter',sans-serif"}}>{showDetails?"▲":"▼"}</button>
  </div>
  </Row>
  {/* Params — affichage ou modification */}
@@ -2018,7 +2117,7 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  {[{l:"Séries",v:ex.series},{l:"Reps",v:ex.reps},{l:"Repos",v:ex.repos},{l:"Charge",v:ex.charge}].filter(s=>s.v).map(s=>(
  <div key={s.l} style={{padding:"5px 10px",background:"#ffffff",border:"0.5px solid #dce8f4",borderRadius:8,textAlign:"center",minWidth:52}}>
  <div style={{fontFamily:"'Syne',sans-serif",fontSize:15,color:"#3b82f6",fontWeight:400}}>{s.v}</div>
- <div style={{fontSize:9,color:C.mid,marginTop:1}}>{s.l}</div>
+ <div style={{fontSize:9,color:"#64748b",marginTop:1}}>{s.l}</div>
  </div>
  ))}
  </div>
@@ -2033,7 +2132,7 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  {l:"Charge",k:"charge",v:ex.charge},
  ].map(p=>(
  <div key={p.k}>
- <div style={{fontSize:9,color:C.mid,marginBottom:4,fontWeight:500}}>{p.l}</div>
+ <div style={{fontSize:9,color:"#64748b",marginBottom:4,fontWeight:500}}>{p.l}</div>
  <div style={{display:"flex",alignItems:"center",gap:4}}>
  <button onClick={()=>{
  const u=[...prog.jours];
@@ -2062,13 +2161,13 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  </div>
  )}
  {/* Morpho tip */}
- {ex.morpho_tip&&<div style={{padding:"7px 9px",background:C.goldD,borderRadius:7,fontSize:11,color:C.mid,lineHeight:1.5,marginBottom:6}}><span style={{color:C.gold,fontWeight:700}}>Morpho · </span>{ex.morpho_tip}</div>}
+ {ex.morpho_tip&&<div style={{padding:"7px 9px",background:C.goldD,borderRadius:7,fontSize:11,color:"#64748b",lineHeight:1.5,marginBottom:6}}><span style={{color:C.gold,fontWeight:700}}>Morpho · </span>{ex.morpho_tip}</div>}
  {/* Détails dépliables : tips + erreurs + variantes */}
  {showDetails&&(
  <div style={{borderTop:`1px solid ${C.s3}`,paddingTop:10,marginTop:4,marginBottom:8}}>
  {/* Morpho depuis D */}
  {exInfo?.m&&(
- <div style={{padding:"8px 10px",background:C.goldD,borderRadius:7,fontSize:11,color:C.mid,lineHeight:1.5,marginBottom:8}}>
+ <div style={{padding:"8px 10px",background:C.goldD,borderRadius:7,fontSize:11,color:"#64748b",lineHeight:1.5,marginBottom:8}}>
  <span style={{color:C.gold,fontWeight:700}}>Morpho · </span>{exInfo.m}
  </div>
  )}
@@ -2076,7 +2175,7 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  {ex.technique&&(
  <div style={{marginBottom:8}}>
  <div style={{fontSize:9,color:C.blue,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",marginBottom:4}}>Technique</div>
- <div style={{fontSize:11,color:C.mid,lineHeight:1.6,fontStyle:"italic"}}>⟡ {ex.technique}</div>
+ <div style={{fontSize:11,color:"#64748b",lineHeight:1.6,fontStyle:"italic"}}>⟡ {ex.technique}</div>
  </div>
  )}
  {/* Tips */}
@@ -2086,7 +2185,7 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  {exInfo.t.map((tip,ti)=>(
  <div key={ti} style={{display:"flex",gap:7,marginBottom:4}}>
  <div style={{width:16,height:16,borderRadius:"50%",background:"rgba(62,199,122,0.12)",border:"1px solid rgba(62,199,122,0.3)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:8,color:C.green,flexShrink:0,marginTop:1}}>{ti+1}</div>
- <div style={{fontSize:11,color:C.mid,lineHeight:1.5}}>{tip}</div>
+ <div style={{fontSize:11,color:"#64748b",lineHeight:1.5}}>{tip}</div>
  </div>
  ))}
  </div>
@@ -2107,7 +2206,7 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  {exInfo.e.map((err,ei)=>(
  <div key={ei} style={{display:"flex",gap:7,marginBottom:4}}>
  <div style={{width:16,height:16,borderRadius:"50%",background:"rgba(224,72,72,0.1)",border:"1px solid rgba(224,72,72,0.25)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:9,color:C.red,flexShrink:0,marginTop:1}}>✕</div>
- <div style={{fontSize:11,color:C.mid,lineHeight:1.5}}>{err}</div>
+ <div style={{fontSize:11,color:"#64748b",lineHeight:1.5}}>{err}</div>
  </div>
  ))}
  </div>
@@ -2139,14 +2238,14 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  const diff=vals.length>1?vals[vals.length-1]-vals[0]:0;
  return(<>
  <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",marginBottom:6}}>
- <div style={{fontFamily:"'Syne',sans-serif",fontSize:18,fontWeight:300,color:"#3b82f6",lineHeight:1}}>{vals[vals.length-1]}<span style={{fontSize:9,color:C.mid,marginLeft:2}}>kg dernier</span></div>
+ <div style={{fontFamily:"'Syne',sans-serif",fontSize:18,fontWeight:300,color:"#3b82f6",lineHeight:1}}>{vals[vals.length-1]}<span style={{fontSize:9,color:"#64748b",marginLeft:2}}>kg dernier</span></div>
  <div style={{textAlign:"right"}}>
  <div style={{fontSize:13,fontWeight:400,color:diff>=0?C.green:C.red}}>{diff>=0?"+":""}{diff.toFixed(1)}kg</div>
- <div style={{fontSize:8,color:C.mid}}>depuis début</div>
+ <div style={{fontSize:8,color:"#64748b"}}>depuis début</div>
  </div>
  <div style={{textAlign:"right"}}>
  <div style={{fontSize:13,fontWeight:400,color:C.gold}}>🏆 {best}kg</div>
- <div style={{fontSize:8,color:C.mid}}>record</div>
+ <div style={{fontSize:8,color:"#64748b"}}>record</div>
  </div>
  </div>
  <svg viewBox={`0 0 ${W} ${H}`} style={{width:"100%",height:H,display:"block",overflow:"visible"}}>
@@ -2158,7 +2257,7 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  const x=gx(i),y=gy(h.poids);
  return(<g key={i}>
  <circle cx={x} cy={y} r="3" fill="#fff" stroke="#3b82f6" strokeWidth="1.5"/>
- {(i===0||i===hist.length-1)&&<text x={x} y={H-1} textAnchor={i===0?"start":"end"} fontSize="6.5" fill="#a0b4cc" fontFamily="Inter">{h.date}</text>}
+ {(i===0||i===hist.length-1)&&<text x={x} y={H-1} textAnchor={i===0?"start":"end"} fontSize="6.5" fill="#64748b" fontFamily="Inter">{h.date}</text>}
  </g>);
  })}
  </svg>
@@ -2169,7 +2268,7 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  <div style={{maxHeight:100,overflowY:"auto"}}>
  {[...ex.historique].reverse().map((h,k)=>(
  <div key={k} style={{display:"flex",justifyContent:"space-between",padding:"4px 0",borderBottom:k<ex.historique.length-1?"0.5px solid #dce8f4":"none",fontSize:10}}>
- <span style={{color:C.mid}}>{h.date}</span>
+ <span style={{color:"#64748b"}}>{h.date}</span>
  <span style={{color:"#3b82f6",fontWeight:500}}>{h.poids}kg × {h.reps}</span>
  </div>
  ))}
@@ -2216,7 +2315,7 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  {j.complete&&<div style={{fontSize:9,color:C.green,marginLeft:"auto"}}>✓ {j.date}</div>}
  </Row>
  <div style={{fontWeight:500,fontSize:14}}>{j.nom}</div>
- <div style={{fontSize:11,color:C.mid,marginTop:2}}>{j.focus} · {j.exercices.length} ex.</div>
+ <div style={{fontSize:11,color:"#64748b",marginTop:2}}>{j.focus} · {j.exercices.length} ex.</div>
  </div>
  <div style={{color:C.dim,fontSize:18}}>›</div>
  </Row>
@@ -2230,7 +2329,7 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  </Box>
  );
  })}
- <button onClick={()=>setChrono(true)} style={{display:"flex",alignItems:"center",justifyContent:"center",gap:8,width:"100%",padding:13,background:"transparent",border:"0.5px solid #dce8f4",borderRadius:11,color:C.mid,cursor:"pointer",fontSize:12,fontFamily:"'Inter',sans-serif",marginBottom:8}}>⏱ Chronomètre de repos</button>
+ <button onClick={()=>setChrono(true)} style={{display:"flex",alignItems:"center",justifyContent:"center",gap:8,width:"100%",padding:13,background:"transparent",border:"0.5px solid #dce8f4",borderRadius:11,color:"#64748b",cursor:"pointer",fontSize:12,fontFamily:"'Inter',sans-serif",marginBottom:8}}>⏱ Chronomètre de repos</button>
  </div>
  );
  };
@@ -2256,7 +2355,7 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  <div style={{padding:"0 15px"}}>
  <div style={{display:"flex",gap:5,overflowX:"auto",marginBottom:12,paddingBottom:2}}>
  {newP.jours.map(j=>(
- <button key={j} onClick={()=>setJourActif(j)} style={{padding:"6px 12px",background:jc===j?C.goldD:C.s2,border:`1px solid ${jc===j?C.gold:C.s3}`,borderRadius:16,color:jc===j?C.gold:C.mid,cursor:"pointer",fontSize:11,whiteSpace:"nowrap",fontFamily:"'Inter',sans-serif",fontWeight:600}}>
+ <button key={j} onClick={()=>setJourActif(j)} style={{padding:"6px 12px",background:jc===j?C.goldD:C.s2,border:`1px solid ${jc===j?C.gold:C.s3}`,borderRadius:16,color:jc===j?C.gold:"#64748b",cursor:"pointer",fontSize:11,whiteSpace:"nowrap",fontFamily:"'Inter',sans-serif",fontWeight:600}}>
  {j} {newP.seances?.[j]?.exercices.length>0?`(${newP.seances[j].exercices.length})`:""}
  </button>
  ))}
@@ -2266,15 +2365,55 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  <Lbl>Intensité</Lbl>
  <div style={{display:"flex",gap:4,flexWrap:"wrap",marginBottom:10}}>
  {Object.entries(INT).map(([k,v])=>(
- <div key={k} onClick={()=>setNewP(p=>({...p,seances:{...p.seances,[jc]:{...sean,intensite:k}}}))} style={{padding:"5px 10px",background:sean.intensite===k?`${v.c}18`:C.s2,border:`1px solid ${sean.intensite===k?v.c:C.s3}`,borderRadius:7,cursor:"pointer",fontSize:11,color:sean.intensite===k?v.c:C.mid,fontWeight:sean.intensite===k?700:400}}>{v.l}</div>
+ <div key={k} onClick={()=>setNewP(p=>({...p,seances:{...p.seances,[jc]:{...sean,intensite:k}}}))} style={{padding:"5px 10px",background:sean.intensite===k?`${v.c}18`:C.s2,border:`1px solid ${sean.intensite===k?v.c:C.s3}`,borderRadius:7,cursor:"pointer",fontSize:11,color:sean.intensite===k?v.c:"#64748b",fontWeight:sean.intensite===k?700:400}}>{v.l}</div>
  ))}
  </div>
- {sean.exercices.map((ex,i)=>(
- <Row key={i} style={{justifyContent:"space-between",padding:"8px 10px",background:C.s2,borderRadius:7,marginBottom:5}}>
- <div><div style={{fontSize:12,fontWeight:600}}>{ex.nom}</div><div style={{fontSize:10,color:C.mid}}>{ex.series}×{ex.reps} · {ex.repos}</div></div>
- <button onClick={()=>setNewP(p=>({...p,seances:{...p.seances,[jc]:{...sean,exercices:sean.exercices.filter((_,j)=>j!==i)}}}))} style={{background:"transparent",border:"none",color:C.red,cursor:"pointer",fontSize:15}}>×</button>
- </Row>
- ))}
+ {sean.exercices.map((ex,i)=>{
+ const showEdit=!!editExIdx[i];
+ const METHODS=["Classique","Pyramidal","Super-set","Drop-set","Rest-pause","5×5","Séries de 100","Dégressif","Pré-fatigue","Wave loading"];
+ return(
+ <div key={i} style={{background:"#ffffff",border:"0.5px solid #dce8f4",borderRadius:10,marginBottom:6,overflow:"hidden"}}>
+  <div style={{padding:"10px 12px",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+   <div onClick={()=>setEditExIdx(m=>{const n={...m};n[i]=!n[i];return n;})} style={{flex:1,cursor:"pointer"}}>
+    <div style={{fontSize:12,fontWeight:600,color:"#0f1a2e"}}>{ex.nom}</div>
+    <div style={{fontSize:10,color:"#64748b",marginTop:1}}>{ex.series}×{ex.reps} · repos {ex.repos}{ex.methode&&ex.methode!=='Classique'?` · ${ex.methode}`:''}</div>
+   </div>
+   <div style={{display:"flex",gap:5,alignItems:"center"}}>
+    <button onClick={()=>setEditExIdx(m=>{const n={...m};n[i]=!n[i];return n;})} style={{padding:"4px 8px",background:"rgba(59,130,246,0.08)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:6,color:"#3b82f6",cursor:"pointer",fontSize:10,fontWeight:600}}>✏️</button>
+    <button onClick={()=>setNewP(p=>{const u={...p};const ses={...u.seances};const s={...ses[jc]};s.exercices=s.exercices.filter((_,j)=>j!==i);ses[jc]=s;return{...u,seances:ses};})} style={{background:"transparent",border:"none",color:"#ef4444",cursor:"pointer",fontSize:15,padding:"2px 4px"}}>×</button>
+   </div>
+  </div>
+  {showEdit&&(
+   <div style={{padding:"10px 12px",background:"rgba(59,130,246,0.03)",borderTop:"0.5px solid #dce8f4"}}>
+    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:7,marginBottom:8}}>
+     {[{l:"Séries",k:"series"},{l:"Reps",k:"reps"},{l:"Repos",k:"repos"},{l:"Charge",k:"charge"}].map(pp=>(
+      <div key={pp.k}>
+       <div style={{fontSize:9,color:"#64748b",marginBottom:3,fontWeight:600,letterSpacing:"0.5px"}}>{pp.l}</div>
+       <div style={{display:"flex",alignItems:"center",gap:3}}>
+        <button onClick={()=>{const u=[...sean.exercices];const cur=parseFloat(u[i][pp.k])||0;u[i][pp.k]=String(pp.k==="repos"?Math.max(0,cur-15):Math.max(1,cur-1));setNewP(p=>{return{...p,seances:{...p.seances,[jc]:{...sean,exercices:u}}}});}} style={{width:24,height:24,borderRadius:6,background:"#f1f5f9",border:"none",color:"#64748b",cursor:"pointer",fontSize:14,display:"flex",alignItems:"center",justifyContent:"center"}}>−</button>
+        <input value={ex[pp.k]||""} onChange={e=>{const u=[...sean.exercices];u[i][pp.k]=e.target.value;setNewP(p=>{return{...p,seances:{...p.seances,[jc]:{...sean,exercices:u}}}});}} style={{flex:1,padding:"5px 6px",background:"#fff",border:"0.5px solid #dce8f4",borderRadius:6,color:"#0f1a2e",fontSize:11,textAlign:"center",fontFamily:"'Inter',sans-serif"}}/>
+        <button onClick={()=>{const u=[...sean.exercices];const cur=parseFloat(u[i][pp.k])||0;u[i][pp.k]=String(pp.k==="repos"?cur+15:cur+1);setNewP(p=>{return{...p,seances:{...p.seances,[jc]:{...sean,exercices:u}}}});}} style={{width:24,height:24,borderRadius:6,background:"#3b82f6",border:"none",color:"#fff",cursor:"pointer",fontSize:14,display:"flex",alignItems:"center",justifyContent:"center"}}>+</button>
+       </div>
+      </div>
+     ))}
+    </div>
+    <div style={{marginBottom:7}}>
+     <div style={{fontSize:9,color:"#64748b",marginBottom:4,fontWeight:600,letterSpacing:"0.5px"}}>TEMPO (montée-contraction-descente)</div>
+     <input value={ex.tempo||""} onChange={e=>{const u=[...sean.exercices];u[i].tempo=e.target.value;setNewP(p=>{return{...p,seances:{...p.seances,[jc]:{...sean,exercices:u}}}});}} placeholder="Ex: 2-1-3" style={{width:"100%",padding:"8px 10px",background:"#fff",border:"0.5px solid #dce8f4",borderRadius:8,color:"#0f1a2e",fontSize:12,fontFamily:"'Inter',sans-serif",boxSizing:"border-box"}}/>
+    </div>
+    <div>
+     <div style={{fontSize:9,color:"#64748b",marginBottom:5,fontWeight:600,letterSpacing:"0.5px"}}>MÉTHODE D'INTENSIFICATION</div>
+     <div style={{display:"flex",flexWrap:"wrap",gap:4}}>
+      {METHODS.map(mm=>(
+       <button key={mm} onClick={()=>{const u=[...sean.exercices];u[i].methode=mm;setNewP(p=>{return{...p,seances:{...p.seances,[jc]:{...sean,exercices:u}}}});}} style={{padding:"4px 10px",borderRadius:14,border:`1px solid ${ex.methode===mm?"#3b82f6":"#dce8f4"}`,background:ex.methode===mm?"rgba(59,130,246,0.1)":"transparent",color:ex.methode===mm?"#3b82f6":"#64748b",cursor:"pointer",fontSize:10,fontWeight:ex.methode===mm?600:400,fontFamily:"'Inter',sans-serif"}}>{mm}</button>
+      ))}
+     </div>
+    </div>
+   </div>
+  )}
+ </div>
+ );
+})}
  <Lbl style={{marginTop:10}}>Bibliothèque d'exercices</Lbl>
  <div style={{display:"flex",flexWrap:"wrap",marginBottom:10}}>
  {Object.keys(EX).map(g=>(
@@ -2290,10 +2429,10 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  <div style={{flex:1}}>
  <div style={{display:"inline-block",padding:"2px 8px",background:`${cc}14`,borderRadius:5,fontSize:9,color:cc,fontWeight:600,letterSpacing:"0.5px",textTransform:"uppercase",marginBottom:5}}>{ex.cat}</div>
  <div style={{fontSize:13,fontWeight:500,color:"#0f1a2e",marginBottom:2}}>{ex.n}</div>
- <div style={{fontSize:10,color:"#a0b4cc"}}>{ex.s}×{ex.r} · {ex.rest} · {ex.ch}</div>
+ <div style={{fontSize:10,color:"#64748b"}}>{ex.s}×{ex.r} · {ex.rest} · {ex.ch}</div>
  </div>
  </Row>
- <div style={{fontSize:11,color:"#a0b4cc",fontStyle:"italic",lineHeight:1.5,marginBottom:8}}>{(ex.morpho||"").substring(0,90)}…</div>
+ <div style={{fontSize:11,color:"#64748b",fontStyle:"italic",lineHeight:1.5,marginBottom:8}}>{(ex.morpho||"").substring(0,90)}…</div>
  <Row style={{gap:7}}>
  <button onClick={()=>setNewP(p=>({...p,seances:{...p.seances,[jc]:{...sean,exercices:[...sean.exercices,{nom:ex.n,cat:ex.cat,series:ex.s,reps:ex.r,repos:ex.rest,charge:ex.ch,prog:ex.prog||"",morpho_tip:ex.morpho,historique:[],note:""}]}}}))} style={{flex:1,padding:"7px 10px",background:"#3b82f6",border:"none",borderRadius:8,color:"#ffffff",cursor:"pointer",fontSize:11,fontWeight:500,fontFamily:"'Inter',sans-serif"}}>+ Ajouter</button>
  <button onClick={e=>{e.stopPropagation();setExModal(ex);}} style={{padding:"7px 12px",background:"rgba(59,130,246,0.08)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:8,color:"#3b82f6",cursor:"pointer",fontSize:11,fontWeight:500,fontFamily:"'Inter',sans-serif"}}>Guide ›</button>
@@ -2309,21 +2448,21 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  <div style={{flex:1}}>
  <div style={{display:"inline-block",padding:"3px 10px",background:"rgba(59,130,246,0.1)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:8,fontSize:10,color:"#3b82f6",letterSpacing:"1px",textTransform:"uppercase",fontWeight:500,marginBottom:10}}>{exModal.cat}</div>
  <div style={{fontFamily:"'Syne',sans-serif",fontSize:20,fontWeight:400,lineHeight:1.2,color:"#0f1a2e",marginBottom:4}}>{exModal.n}</div>
- <div style={{fontSize:11,color:"#a0b4cc"}}>{exModal.s} séries · {exModal.r} reps · {exModal.rest}</div>
+ <div style={{fontSize:11,color:"#64748b"}}>{exModal.s} séries · {exModal.r} reps · {exModal.rest}</div>
  </div>
- <button onClick={()=>setExModal(null)} style={{background:"#edf3fb",border:"0.5px solid #dce8f4",borderRadius:10,width:36,height:36,color:"#a0b4cc",cursor:"pointer",fontSize:18,flexShrink:0,marginLeft:12}}>×</button>
+ <button onClick={()=>setExModal(null)} style={{background:"#edf3fb",border:"0.5px solid #dce8f4",borderRadius:10,width:36,height:36,color:"#64748b",cursor:"pointer",fontSize:18,flexShrink:0,marginLeft:12}}>×</button>
  </div>
  <div style={{padding:"12px 16px",display:"flex",gap:7,flexWrap:"wrap"}}>
  {[{l:"Séries",v:exModal.s},{l:"Reps",v:exModal.r},{l:"Repos",v:exModal.rest},{l:"Charge",v:exModal.ch}].map(s=>(
  <div key={s.l} style={{padding:"8px 10px",background:"#ffffff",border:"0.5px solid #dce8f4",borderRadius:10,textAlign:"center",flex:1,minWidth:60}}>
  <div style={{fontSize:14,fontWeight:400,color:"#3b82f6",fontFamily:"'Syne',sans-serif"}}>{s.v}</div>
- <div style={{fontSize:9,color:"#a0b4cc",marginTop:2}}>{s.l}</div>
+ <div style={{fontSize:9,color:"#64748b",marginTop:2}}>{s.l}</div>
  </div>
  ))}
  </div>
  <div style={{padding:"0 16px",display:"flex",gap:6,marginBottom:14}}>
  {[{id:"tips",l:"Tips"},{id:"variantes",l:"Variantes"},{id:"erreurs",l:"Erreurs"},{id:"morpho",l:"Morpho"}].map(t=>(
- <button key={t.id} onClick={()=>setExModalTab(t.id)} style={{padding:"6px 13px",background:exModalTab===t.id?"rgba(59,130,246,0.08)":"transparent",border:`0.5px solid ${exModalTab===t.id?"#3b82f6":"#dce8f4"}`,borderRadius:20,color:exModalTab===t.id?"#3b82f6":"#a0b4cc",cursor:"pointer",fontSize:11,fontWeight:500,fontFamily:"'Inter',sans-serif"}}>{t.l}</button>
+ <button key={t.id} onClick={()=>setExModalTab(t.id)} style={{padding:"6px 13px",background:exModalTab===t.id?"rgba(59,130,246,0.08)":"transparent",border:`0.5px solid ${exModalTab===t.id?"#3b82f6":"#dce8f4"}`,borderRadius:20,color:exModalTab===t.id?"#3b82f6":"#64748b",cursor:"pointer",fontSize:11,fontWeight:500,fontFamily:"'Inter',sans-serif"}}>{t.l}</button>
  ))}
  </div>
  <div style={{padding:"0 16px"}}>
@@ -2336,7 +2475,7 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  <div style={{fontSize:12,color:"#0f1a2e",lineHeight:1.6}}>{tip}</div>
  </div>
  ))}
- {exModal.prog&&<div style={{marginTop:4,padding:"10px 12px",background:"rgba(34,197,94,0.08)",border:"0.5px solid rgba(34,197,94,0.2)",borderRadius:9}}><div style={{fontSize:10,color:"#22c55e",fontWeight:500,letterSpacing:"1px",textTransform:"uppercase",marginBottom:3}}>Progression</div><div style={{fontSize:12,color:"#a0b4cc",lineHeight:1.5}}>{exModal.prog}</div></div>}
+ {exModal.prog&&<div style={{marginTop:4,padding:"10px 12px",background:"rgba(34,197,94,0.08)",border:"0.5px solid rgba(34,197,94,0.2)",borderRadius:9}}><div style={{fontSize:10,color:"#22c55e",fontWeight:500,letterSpacing:"1px",textTransform:"uppercase",marginBottom:3}}>Progression</div><div style={{fontSize:12,color:"#64748b",lineHeight:1.5}}>{exModal.prog}</div></div>}
  </Box>
  )}
  {exModalTab==="variantes"&&(
@@ -2344,7 +2483,7 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  {(exModal.variantes||[]).map((v,i)=>(
  <Box key={i}>
  <div style={{fontSize:13,fontWeight:500,color:"#0f1a2e",marginBottom:5}}>{v.nom||v}</div>
- {v.note&&<div style={{fontSize:11,color:"#a0b4cc",lineHeight:1.5}}>{v.note}</div>}
+ {v.note&&<div style={{fontSize:11,color:"#64748b",lineHeight:1.5}}>{v.note}</div>}
  </Box>
  ))}
  </div>
@@ -2413,12 +2552,12 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  {loadMsg.startsWith("Erreur")?<>
  <div style={{fontSize:36,marginBottom:14}}>❌</div>
  <div style={{fontFamily:"'Syne',sans-serif",fontSize:15,color:C.red,fontWeight:500,marginBottom:10}}>Génération échouée</div>
- <div style={{fontSize:12,color:C.mid,marginBottom:16,lineHeight:1.6}}>{loadMsg}</div>
+ <div style={{fontSize:12,color:"#64748b",marginBottom:16,lineHeight:1.6}}>{loadMsg}</div>
  <Btn onClick={()=>{setLoadIA(false);setLoadMsg("");}}>← Réessayer</Btn>
  </>:<>
  <div style={{width:48,height:48,border:`3px solid ${C.goldD}`,borderTop:`3px solid ${C.gold}`,borderRadius:"50%",animation:"spin 1s linear infinite",margin:"0 auto 18px"}}/>
  <div style={{fontFamily:"'Syne',sans-serif",fontSize:16,color:C.gold,fontWeight:300,marginBottom:8}}>{loadMsg}</div>
- <div style={{fontSize:11,color:C.mid,lineHeight:1.7}}>
+ <div style={{fontSize:11,color:"#64748b",lineHeight:1.7}}>
  Analyse morphologique + génération<br/>du programme personnalisé en cours…
  </div>
  </>}
@@ -2431,10 +2570,10 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  <div style={{display:"flex",gap:3,marginBottom:14}}>
  {steps.map((_,i)=><div key={i} style={{flex:1,height:2,borderRadius:1,background:i<=aStep?C.gold:"rgba(255,255,255,0.07)"}}/>)}
  </div>
- <div style={{fontSize:10,color:C.mid,marginBottom:12,letterSpacing:"0.5px"}}>ÉTAPE {aStep+1}/{steps.length} — {steps[aStep].toUpperCase()}</div>
+ <div style={{fontSize:10,color:"#64748b",marginBottom:12,letterSpacing:"0.5px"}}>ÉTAPE {aStep+1}/{steps.length} — {steps[aStep].toUpperCase()}</div>
  {aStep===0&&<Box>
  <Lbl>Photos de posture</Lbl>
- <div style={{padding:"10px 12px",background:"rgba(59,130,246,0.08)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:8,fontSize:12,color:C.mid,marginBottom:14,lineHeight:1.6}}>
+ <div style={{padding:"10px 12px",background:"rgba(59,130,246,0.08)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:8,fontSize:12,color:"#64748b",marginBottom:14,lineHeight:1.6}}>
  📸 3 photos permettent une analyse morphologique précise. Position droite, vêtements près du corps. Vous pouvez utiliser votre galerie ou prendre de nouvelles photos.
  </div>
  {/* 3 zones photo */}
@@ -2460,7 +2599,7 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  : <>
  <div style={{fontSize:28,marginBottom:4}}>{icon}</div>
  <div style={{fontSize:11,color:C.gold,fontWeight:600}}>Galerie ou appareil photo</div>
- <div style={{fontSize:10,color:C.mid,marginTop:2,textAlign:"center",padding:"0 10px"}}>{desc}</div>
+ <div style={{fontSize:10,color:"#64748b",marginTop:2,textAlign:"center",padding:"0 10px"}}>{desc}</div>
  </>
  }
  {photos[key]&&(
@@ -2473,7 +2612,7 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  <input ref={fileRefFace} type="file" accept="image/*" style={{display:"none"}} onChange={e=>readFile("face", e.target.files[0])}/>
  <input ref={fileRefDos} type="file" accept="image/*" style={{display:"none"}} onChange={e=>readFile("dos", e.target.files[0])}/>
  <input ref={fileRefProfil} type="file" accept="image/*" style={{display:"none"}} onChange={e=>readFile("profil",e.target.files[0])}/>
- <div style={{marginTop:6,marginBottom:10,fontSize:11,color:C.mid,textAlign:"center"}}>
+ <div style={{marginTop:6,marginBottom:10,fontSize:11,color:"#64748b",textAlign:"center"}}>
  {[photos.face,photos.dos,photos.profil].filter(Boolean).length}/3 photos ajoutées
  {photos.face&&photos.dos&&photos.profil&&<span style={{color:C.green,marginLeft:6,fontWeight:700}}>✓ Prêt !</span>}
  </div>
@@ -2484,15 +2623,15 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  {aStep===1&&<Box>
  <Lbl>Profil</Lbl>
  <div style={{fontSize:10,color:C.red,marginBottom:10}}>* Champs obligatoires</div>
- <div style={{fontSize:11,color:C.mid,marginBottom:4}}>Prénom <span style={{color:C.textMid}}>(facultatif)</span></div>
+ <div style={{fontSize:11,color:"#64748b",marginBottom:4}}>Prénom <span style={{color:C.textMid}}>(facultatif)</span></div>
  <Inp placeholder="Prénom" value={form.prenom} onChange={e=>setForm({...form,prenom:e.target.value})}/>
  <G2>
  <div>
- <div style={{fontSize:11,color:C.mid,marginBottom:4}}>Âge <span style={{color:C.red}}>*</span></div>
+ <div style={{fontSize:11,color:"#64748b",marginBottom:4}}>Âge <span style={{color:C.red}}>*</span></div>
  <Inp type="number" placeholder="Ex: 28" style={{marginBottom:0}} value={form.age} onChange={e=>setForm({...form,age:e.target.value})}/>
  </div>
  <div>
- <div style={{fontSize:11,color:C.mid,marginBottom:4}}>Sexe <span style={{color:C.red}}>*</span></div>
+ <div style={{fontSize:11,color:"#64748b",marginBottom:4}}>Sexe <span style={{color:C.red}}>*</span></div>
  <select style={{width:"100%",padding:"11px 13px",background:C.s2,border:`1px solid ${form.sexe?C.green:C.s3}`,borderRadius:9,color:C.text,fontSize:13}} value={form.sexe} onChange={e=>setForm({...form,sexe:e.target.value})}>
  <option value="">Choisir…</option><option value="homme">Homme</option><option value="femme">Femme</option>
  </select>
@@ -2500,18 +2639,18 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  </G2>
  <G2 style={{marginTop:6}}>
  <div>
- <div style={{fontSize:11,color:C.mid,marginBottom:4}}>Poids (kg) <span style={{color:C.red}}>*</span></div>
+ <div style={{fontSize:11,color:"#64748b",marginBottom:4}}>Poids (kg) <span style={{color:C.red}}>*</span></div>
  <Inp type="number" placeholder="Ex: 75" style={{marginBottom:0,borderColor:form.poids?C.green:C.s3}} value={form.poids} onChange={e=>setForm({...form,poids:e.target.value})}/>
  </div>
  <div>
- <div style={{fontSize:11,color:C.mid,marginBottom:4}}>Taille (cm) <span style={{color:C.red}}>*</span></div>
+ <div style={{fontSize:11,color:"#64748b",marginBottom:4}}>Taille (cm) <span style={{color:C.red}}>*</span></div>
  <Inp type="number" placeholder="Ex: 178" style={{marginBottom:0,borderColor:form.taille?C.green:C.s3}} value={form.taille} onChange={e=>setForm({...form,taille:e.target.value})}/>
  </div>
  </G2>
- <div style={{fontSize:11,color:C.mid,marginBottom:6,marginTop:6}}>Niveau <span style={{color:C.red}}>*</span></div>
+ <div style={{fontSize:11,color:"#64748b",marginBottom:6,marginTop:6}}>Niveau <span style={{color:C.red}}>*</span></div>
  {[{id:"debutant",l:"Débutant",d:"< 1 an"},{id:"intermediaire",l:"Intermédiaire",d:"1-3 ans"},{id:"avance",l:"Avancé",d:"> 3 ans"}].map(n=>(
  <div key={n.id} onClick={()=>setForm({...form,niveau:n.id})} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"10px 12px",background:form.niveau===n.id?C.goldD:C.s2,border:`1px solid ${form.niveau===n.id?C.gold:C.s3}`,borderRadius:9,cursor:"pointer",marginBottom:6}}>
- <span style={{fontSize:13,fontWeight:600}}>{n.l}</span><span style={{fontSize:10,color:C.mid}}>{n.d}</span>
+ <span style={{fontSize:13,fontWeight:600}}>{n.l}</span><span style={{fontSize:10,color:"#64748b"}}>{n.d}</span>
  </div>
  ))}
  {(!form.age||!form.poids||!form.taille||!form.sexe||!form.niveau)&&(
@@ -2523,14 +2662,14 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  <Btn v="ghost" onClick={()=>setAStep(0)}>← Retour</Btn>
  </Box>}
  {aStep===2&&<Box>
- <div style={{fontSize:11,color:C.mid,marginBottom:8}}>Objectif principal <span style={{color:C.red}}>*</span></div>
+ <div style={{fontSize:11,color:"#64748b",marginBottom:8}}>Objectif principal <span style={{color:C.red}}>*</span></div>
  <G2>{[{id:"hypertrophie",i:"💪",l:"Prise de muscle"},{id:"force",i:"🏋️",l:"Force"},{id:"poids",i:"🔥",l:"Perte de poids"},{id:"reathletisation",i:"🩺",l:"Réathlé"},{id:"sante",i:"❤️",l:"Santé"},{id:"performance",i:"🏆",l:"Performance"}].map(o=>(
  <div key={o.id} onClick={()=>setForm({...form,objectif:o.id})} style={{padding:"12px 8px",textAlign:"center",cursor:"pointer",background:form.objectif===o.id?C.goldD:C.s2,border:`1px solid ${form.objectif===o.id?C.gold:C.s3}`,borderRadius:10}}>
  <div style={{fontSize:20,marginBottom:4}}>{o.i}</div><div style={{fontSize:11,fontWeight:400}}>{o.l}</div>
  </div>
  ))}</G2>
  <textarea style={{width:"100%",padding:"11px 13px",background:C.s2,border:"0.5px solid #dce8f4",borderRadius:9,color:C.text,fontSize:13,minHeight:60,resize:"vertical",marginBottom:10,fontFamily:"'Inter',sans-serif"}} placeholder="Décrivez votre objectif précis (facultatif)" value={form.objectifPrecis} onChange={e=>setForm({...form,objectifPrecis:e.target.value})}/>
- <div style={{fontSize:11,color:C.mid,marginBottom:6}}>Jours d'entraînement <span style={{color:C.red}}>*</span></div>
+ <div style={{fontSize:11,color:"#64748b",marginBottom:6}}>Jours d'entraînement <span style={{color:C.red}}>*</span></div>
  <div style={{display:"flex",flexWrap:"wrap",marginBottom:6}}>
  {["Lun","Mar","Mer","Jeu","Ven","Sam","Dim"].map(j=>(
  <Tag key={j} active={form.jours.includes(j)} onClick={()=>setForm(f=>({...f,jours:f.jours.includes(j)?f.jours.filter(x=>x!==j):[...f.jours,j]}))}>{j}</Tag>
@@ -2543,7 +2682,7 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  </Box>}
  {aStep===3&&<Box>
  <Lbl>Douleurs & Pathologies</Lbl>
- <div style={{padding:"8px 10px",background:"rgba(59,130,246,0.08)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:7,fontSize:11,color:C.mid,marginBottom:10,lineHeight:1.6}}>Exercices correctifs = renforcement uniquement. Consultez un kiné pour tout diagnostic.</div>
+ <div style={{padding:"8px 10px",background:"rgba(59,130,246,0.08)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:7,fontSize:11,color:"#64748b",marginBottom:10,lineHeight:1.6}}>Exercices correctifs = renforcement uniquement. Consultez un kiné pour tout diagnostic.</div>
  {[{z:"Dos",p:["Lombalgie","Hernie discale","Scoliose","Cervicalgie"]},{z:"Épaule",p:["Conflit épaule","Coiffe rotateurs"]},{z:"Genou",p:["Ménisque","LCA","Tendinite","Arthrose"]},{z:"Autres",p:["Épicondylite","Canal carpien","Tendinite Achille","Coxarthrose"]}].map(zone=>(
  <div key={zone.z} style={{marginBottom:10}}>
  <div style={{fontSize:9,color:C.dim,textTransform:"uppercase",letterSpacing:"1px",marginBottom:4}}>{zone.z}</div>
@@ -2554,7 +2693,7 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  <div style={{marginTop:10}}><Btn disabled={form.pathologies.length===0} onClick={()=>setAStep(4)}>Continuer →</Btn><Btn v="ghost" onClick={()=>setAStep(2)}>← Retour</Btn></div>
  </Box>}
  {aStep===4&&<Box>
- <div style={{fontSize:11,color:C.mid,marginBottom:8}}>Matériel disponible <span style={{color:C.red}}>*</span></div>
+ <div style={{fontSize:11,color:"#64748b",marginBottom:8}}>Matériel disponible <span style={{color:C.red}}>*</span></div>
  <G2>{[{id:"salle_complete",i:"🏋️",l:"Salle complète"},{id:"halteres",i:"💪",l:"Haltères"},{id:"elastiques",i:"🎯",l:"Élastiques"},{id:"barre_traction",i:"⬆️",l:"Barre traction"},{id:"poids_corps",i:"🤸",l:"Poids du corps"},{id:"machines",i:"⚙️",l:"Machines"}].map(m=>(
  <div key={m.id} onClick={()=>setForm(f=>({...f,materiel:f.materiel.includes(m.id)?f.materiel.filter(x=>x!==m.id):[...f.materiel,m.id]}))} style={{padding:"12px 8px",textAlign:"center",cursor:"pointer",background:form.materiel.includes(m.id)?"rgba(59,130,246,0.08)":C.s2,border:`1px solid ${form.materiel.includes(m.id)?"#3b82f6":C.s3}`,borderRadius:10}}>
  <div style={{fontSize:20,marginBottom:4}}>{m.i}</div><div style={{fontSize:11,fontWeight:400}}>{m.l}</div>
@@ -2562,12 +2701,12 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  ))}</G2>
  {/* ─── Option corriger les points faibles ─── */}
  <div onClick={()=>setCorrigerFaibles(v=>!v)} style={{display:"flex",alignItems:"center",gap:10,padding:"12px 14px",background:corrigerFaibles?"rgba(59,130,246,0.06)":"#f8fafc",border:`0.5px solid ${corrigerFaibles?"#3b82f6":"#dce8f4"}`,borderRadius:10,cursor:"pointer",marginTop:10,transition:"all.15s"}}>
- <div style={{width:20,height:20,borderRadius:5,background:corrigerFaibles?"#3b82f6":"transparent",border:`1.5px solid ${corrigerFaibles?"#3b82f6":"#a0b4cc"}`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,transition:"all.15s"}}>
+ <div style={{width:20,height:20,borderRadius:5,background:corrigerFaibles?"#3b82f6":"transparent",border:`1.5px solid ${corrigerFaibles?"#3b82f6":"#64748b"}`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,transition:"all.15s"}}>
  {corrigerFaibles&&<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><polyline points="2,6 5,9 10,3" stroke="white" strokeWidth="1.8" strokeLinecap="round"/></svg>}
  </div>
  <div>
  <div style={{fontSize:12,fontWeight:500,color:C.text}}>Corriger mes points faibles</div>
- <div style={{fontSize:10,color:C.mid,marginTop:1}}>L'IA priorisera les groupes musculaires en retard détectés sur les photos</div>
+ <div style={{fontSize:10,color:"#64748b",marginTop:1}}>L'IA priorisera les groupes musculaires en retard détectés sur les photos</div>
  </div>
  </div>
  {form.materiel.length===0&&<div style={{fontSize:11,color:C.red,marginBottom:8,marginTop:6}}>* Sélectionne au moins un équipement</div>}
@@ -2647,7 +2786,7 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  </div>
  <div style={{textAlign:"center"}}>
  <div style={{fontSize:11,fontWeight:700,color:C.text}}>{v}g</div>
- <div style={{fontSize:9,color:C.mid}}>{label}</div>
+ <div style={{fontSize:9,color:"#64748b"}}>{label}</div>
  <div style={{fontSize:8,color:C.dim}}>/{max}g</div>
  </div>
  </div>
@@ -2660,15 +2799,15 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  <div style={{background:C.bg,minHeight:"100vh",paddingBottom:20}} className="anim">
  {/* Header */}
  <div style={{padding:"22px 16px 12px"}}>
- <div style={{fontSize:9,letterSpacing:"1.5px",color:"#a0b4cc",fontWeight:500,marginBottom:6,textTransform:"uppercase"}}>{new Date().toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long"})}</div>
+ <div style={{fontSize:9,letterSpacing:"1.5px",color:"#64748b",fontWeight:500,marginBottom:6,textTransform:"uppercase"}}>{new Date().toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long"})}</div>
  <div style={{fontFamily:"'Syne',sans-serif",fontSize:28,fontWeight:300,color:"#0f1a2e",letterSpacing:-1,lineHeight:1.1,marginBottom:2}}>Bonjour, <span style={{fontWeight:500,color:"#3b82f6"}}>{profil.prenom||"Hugo"}</span></div>
- <div style={{fontSize:11,color:"#a0b4cc"}}>{obj.l} · Cycle {prog?.numero||1}</div>
+ <div style={{fontSize:11,color:"#64748b"}}>{obj.l} · Cycle {prog?.numero||1}</div>
  </div>
 
  {/* Nav */}
  <div style={{display:"flex",gap:5,padding:"12px 15px",overflowX:"auto",paddingBottom:4}}>
  {[{id:"journal",l:"Journal"},{id:"scanner",l:"Scanner"},{id:"aliments",l:"Aliments"}].map(s=>(
- <button key={s.id} onClick={()=>setNView(s.id)} style={{padding:"7px 16px",background:nView===s.id?"rgba(59,130,246,0.08)":"transparent",border:`0.5px solid ${nView===s.id?"#3b82f6":"#dce8f4"}`,borderRadius:20,color:nView===s.id?"#3b82f6":"#a0b4cc",cursor:"pointer",fontSize:12,fontWeight:600,whiteSpace:"nowrap",fontFamily:"'Syne',sans-serif",letterSpacing:"0.3px"}}>{s.l}</button>
+ <button key={s.id} onClick={()=>setNView(s.id)} style={{padding:"7px 16px",background:nView===s.id?"rgba(59,130,246,0.08)":"transparent",border:`0.5px solid ${nView===s.id?"#3b82f6":"#dce8f4"}`,borderRadius:20,color:nView===s.id?"#3b82f6":"#64748b",cursor:"pointer",fontSize:12,fontWeight:600,whiteSpace:"nowrap",fontFamily:"'Syne',sans-serif",letterSpacing:"0.3px"}}>{s.l}</button>
  ))}
  </div>
 
@@ -2678,20 +2817,20 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"18px 16px",background:"#ffffff",borderRadius:18,marginBottom:12,border:"0.5px solid #dce8f4"}}>
  <Ring pct={calPct} color={tot.cal>calObj?"#f87171":"#3b82f6"} size={120} stroke={10}>
  <div style={{fontFamily:"'Syne',sans-serif",fontSize:22,fontWeight:300,color:tot.cal>calObj?C.red:C.text,lineHeight:1,letterSpacing:-1}}>{calLeft}</div>
- <div style={{fontSize:9,color:C.mid,marginTop:2}}>kcal restantes</div>
+ <div style={{fontSize:9,color:"#64748b",marginTop:2}}>kcal restantes</div>
  </Ring>
  <div style={{flex:1,marginLeft:20}}>
  <div style={{marginBottom:10}}>
  <Row style={{justifyContent:"space-between",marginBottom:3}}>
- <span style={{fontSize:11,color:C.mid}}>Consommé</span>
+ <span style={{fontSize:11,color:"#64748b"}}>Consommé</span>
  <span style={{fontSize:12,fontWeight:500,color:tot.cal>calObj?C.red:C.text}}>{tot.cal} kcal</span>
  </Row>
  <Row style={{justifyContent:"space-between",marginBottom:3}}>
- <span style={{fontSize:11,color:C.mid}}>Objectif</span>
+ <span style={{fontSize:11,color:"#64748b"}}>Objectif</span>
  <span style={{fontSize:12,fontWeight:500}}>{calObj} kcal</span>
  </Row>
  <Row style={{justifyContent:"space-between"}}>
- <span style={{fontSize:11,color:C.mid}}>Objectif</span>
+ <span style={{fontSize:11,color:"#64748b"}}>Objectif</span>
  <span style={{fontSize:11,color:C.gold}}>{obj.l}</span>
  </Row>
  </div>
@@ -2700,7 +2839,7 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  <div style={{fontFamily:"'Syne',sans-serif",fontSize:22,fontWeight:300,color:scoreColor,lineHeight:1}}>{scoreLettre}</div>
  <div>
  <div style={{fontSize:10,fontWeight:700,color:scoreColor}}>Score santé</div>
- <div style={{fontSize:9,color:C.mid}}>{score}/100 · Voir détail</div>
+ <div style={{fontSize:9,color:"#64748b"}}>{score}/100 · Voir détail</div>
  </div>
  </div>
  </div>
@@ -2720,7 +2859,7 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  <Row style={{justifyContent:"space-between",marginBottom:10}}>
  <div>
  <div style={{fontSize:13,fontWeight:500}}>Hydratation</div>
- <div style={{fontSize:10,color:C.mid}}>{eau*250}ml / 2000ml</div>
+ <div style={{fontSize:10,color:"#64748b"}}>{eau*250}ml / 2000ml</div>
  </div>
  <div style={{fontFamily:"'Syne',sans-serif",fontSize:22,fontWeight:300,color:eau>=8?C.green:C.blue}}>{eau}/8</div>
  </Row>
@@ -2745,7 +2884,7 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  <div style={{width:34,height:34,borderRadius:9,background:"#e4eef8",display:"flex",alignItems:"center",justifyContent:"center",fontSize:17,flexShrink:0}}>{r.i}</div>
  <div style={{flex:1}}>
  <div style={{fontSize:12,fontWeight:500,color:"#0f1a2e"}}>{r.l}</div>
- <div style={{fontSize:10,color:"#a0b4cc"}}>{repas[r.id].length>0?`${repas[r.id].length} aliment${repas[r.id].length>1?"s":""}`:"Aucun aliment"}</div>
+ <div style={{fontSize:10,color:"#64748b"}}>{repas[r.id].length>0?`${repas[r.id].length} aliment${repas[r.id].length>1?"s":""}`:"Aucun aliment"}</div>
  {rTot.cal>0&&(
  <div style={{display:"flex",gap:3,marginTop:4}}>
  <div style={{height:2,borderRadius:1,background:"#C8963E",flex:rTot.cal,maxWidth:"60%"}}/>
@@ -2774,7 +2913,7 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  </div>
  <Row style={{gap:8,alignItems:"center"}}>
  <span style={{fontSize:12,fontWeight:500,color:C.gold}}>{item.c}</span>
- <span style={{fontSize:9,color:C.mid}}>kcal</span>
+ <span style={{fontSize:9,color:"#64748b"}}>kcal</span>
  <button onClick={()=>setRepas(rp=>({...rp,[r.id]:rp[r.id].filter((_,j)=>j!==i)}))} style={{background:"transparent",border:"none",color:C.red,cursor:"pointer",fontSize:15,padding:"0 4px"}}>×</button>
  </Row>
  </Row>
@@ -2785,7 +2924,7 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  <div style={{maxHeight:180,overflowY:"auto",borderRadius:9,border:"0.5px solid #dce8f4"}}>
  {filtered.map((item,i)=>(
  <div key={i} onClick={()=>{setRepas(rp=>({...rp,[r.id]:[...rp[r.id],item]}));setSearch("");}} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"9px 12px",background:C.s2,borderBottom:`1px solid ${C.s3}`,cursor:"pointer"}}>
- <div><div style={{fontSize:12}}>{item.n}</div><div style={{fontSize:10,color:C.mid}}>{item.c}kcal</div></div>
+ <div><div style={{fontSize:12}}>{item.n}</div><div style={{fontSize:10,color:"#64748b"}}>{item.c}kcal</div></div>
  <span style={{color:C.gold,fontSize:18}}>+</span>
  </div>
  ))}
@@ -2795,7 +2934,7 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  <div style={{marginTop:8}}>
  <div style={{display:"flex",gap:4,overflowX:"auto",paddingBottom:4}}>
  {[...new Set(FOODS.map(f=>f.cat))].map(cat=>(
- <button key={cat} style={{padding:"4px 10px",background:C.s2,border:"0.5px solid #dce8f4",borderRadius:12,color:C.mid,cursor:"pointer",fontSize:10,whiteSpace:"nowrap",fontFamily:"'Inter',sans-serif"}} onClick={()=>{}}>{cat}</button>
+ <button key={cat} style={{padding:"4px 10px",background:C.s2,border:"0.5px solid #dce8f4",borderRadius:12,color:"#64748b",cursor:"pointer",fontSize:10,whiteSpace:"nowrap",fontFamily:"'Inter',sans-serif"}} onClick={()=>{}}>{cat}</button>
  ))}
  </div>
  <div style={{display:"flex",flexWrap:"wrap",gap:4,marginTop:6}}>
@@ -2821,11 +2960,11 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  <Row style={{justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
  <div>
  <Lbl style={{marginBottom:4}}>Score santé du jour</Lbl>
- <div style={{fontSize:11,color:C.mid,lineHeight:1.5}}>Basé sur la qualité de vos aliments<br/>et vos comportements nutritionnels</div>
+ <div style={{fontSize:11,color:"#64748b",lineHeight:1.5}}>Basé sur la qualité de vos aliments<br/>et vos comportements nutritionnels</div>
  </div>
  <div style={{textAlign:"center"}}>
  <div style={{fontFamily:"'Syne',sans-serif",fontSize:48,fontWeight:300,color:scoreColor,lineHeight:1,letterSpacing:-2}}>{scoreLettre}</div>
- <div style={{fontSize:10,color:C.mid}}>{score}/100</div>
+ <div style={{fontSize:10,color:"#64748b"}}>{score}/100</div>
  </div>
  </Row>
  <div style={{height:6,background:"rgba(255,255,255,0.06)",borderRadius:3,overflow:"hidden",marginBottom:16}}>
@@ -2840,7 +2979,7 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  <div style={{width:22,height:22,borderRadius:"50%",background:d.ok?"rgba(62,199,122,0.15)":"rgba(224,82,82,0.15)",border:`1px solid ${d.ok?"rgba(62,199,122,0.4)":"rgba(224,82,82,0.4)"}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,color:d.ok?C.green:C.red}}>{d.ok?"✓":"✕"}</div>
  </Row>
  ))}
- <div style={{marginTop:14,padding:"10px 12px",background:C.s2,borderRadius:9,fontSize:11,color:C.mid,lineHeight:1.6}}>
+ <div style={{marginTop:14,padding:"10px 12px",background:C.s2,borderRadius:9,fontSize:11,color:"#64748b",lineHeight:1.6}}>
  💡 {score>=85?"Excellente journée nutritionnelle ! Continuez comme ça.":score>=70?"Bonne journée, quelques petits ajustements possibles.":score>=55?"Journée correcte. Pensez à l'hydratation et la diversité.":score>=40?"Des efforts à faire sur la qualité alimentaire.":"Journée difficile nutritionnellement. Revenez aux bases demain."}
  </div>
  </Box>
@@ -2851,7 +2990,7 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  <div style={{padding:"0 15px"}}>
  <Box>
  <Lbl>Scanner un produit</Lbl>
- <div style={{padding:"9px 11px",background:"rgba(59,130,246,0.08)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:8,fontSize:11,color:C.mid,marginBottom:12,lineHeight:1.6}}>Base Open Food Facts · 3 millions de produits</div>
+ <div style={{padding:"9px 11px",background:"rgba(59,130,246,0.08)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:8,fontSize:11,color:"#64748b",marginBottom:12,lineHeight:1.6}}>Base Open Food Facts · 3 millions de produits</div>
  <Inp placeholder="Code-barres EAN (ex: 3017620422003)" inputMode="numeric" value={scanCode} onChange={e=>{setScan(e.target.value);if(e.target.value.length>=8)handleScan(e.target.value);}}/>
  {scanRes&&!scanRes.error&&(
  <div style={{padding:12,background:"rgba(62,199,122,.08)",border:"1px solid rgba(62,199,122,.2)",borderRadius:10,marginBottom:8}}>
@@ -2866,7 +3005,7 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  <button key={r.id} onClick={()=>{setRepas(rp=>({...rp,[r.id]:[...rp[r.id],scanRes]}));setScanRes(null);setScan("");setNView("journal");push("✅","Ajouté !",`${scanRes.n} ajouté au ${r.l.toLowerCase()}.`);}} style={{flex:1,padding:"7px 4px",background:C.s2,border:"0.5px solid #dce8f4",borderRadius:7,color:C.text,cursor:"pointer",fontSize:10,fontFamily:"'Syne',sans-serif",fontWeight:600}}>{r.l}</button>
  ))}
  </div>
- <button onClick={()=>{setMyFoods(f=>[...f,{...scanRes,id:Date.now()}]);setScanRes(null);setScan("");}} style={{marginTop:8,width:"100%",padding:"7px",background:"transparent",border:"0.5px solid #dce8f4",borderRadius:7,color:C.mid,cursor:"pointer",fontSize:11,fontFamily:"'Inter',sans-serif"}}>💾 Sauvegarder dans ma bibliothèque</button>
+ <button onClick={()=>{setMyFoods(f=>[...f,{...scanRes,id:Date.now()}]);setScanRes(null);setScan("");}} style={{marginTop:8,width:"100%",padding:"7px",background:"transparent",border:"0.5px solid #dce8f4",borderRadius:7,color:"#64748b",cursor:"pointer",fontSize:11,fontFamily:"'Inter',sans-serif"}}>💾 Sauvegarder dans ma bibliothèque</button>
  </div>
  )}
  {scanRes?.error&&<div style={{padding:"9px 11px",background:"rgba(224,82,82,.08)",border:"1px solid rgba(224,82,82,.2)",borderRadius:8,fontSize:11,color:C.red}}>Produit non trouvé. Ajoutez-le manuellement.</div>}
@@ -2914,11 +3053,11 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
  </div>
  <div style={{fontFamily:"'Syne',sans-serif",fontSize:20,fontWeight:300,color:"#0f1a2e",marginBottom:3}}>{profil.prenom||"Mon profil"}</div>
- <div style={{fontSize:11,color:"#a0b4cc",marginBottom:4}}>{premium?"Membre Premium ✦":"Compte gratuit"}</div>
+ <div style={{fontSize:11,color:"#64748b",marginBottom:4}}>{premium?"Membre Premium ✦":"Compte gratuit"}</div>
  </div>
  {!premium?<div style={{background:"rgba(59,130,246,0.06)",border:`0.5px solid ${C.goldB}`,borderRadius:13,padding:"20px 16px",marginBottom:9}}>
  <div style={{fontFamily:"'Syne',sans-serif",fontSize:24,letterSpacing:2,color:C.gold,textAlign:"center",marginBottom:4}}>PASSER À PREMIUM</div>
- <div style={{fontSize:12,color:C.mid,textAlign:"center",marginBottom:14}}>Programmes personnalisés selon votre morphologie</div>
+ <div style={{fontSize:12,color:"#64748b",textAlign:"center",marginBottom:14}}>Programmes personnalisés selon votre morphologie</div>
  {["Programme unique adapté à votre corps","Biomécanique et exercices correctifs","Programme nutrition sur mesure","Calendrier cycle 6 semaines"].map(f=>(
  <Row key={f} style={{marginBottom:8,gap:9}}>
  <div style={{width:15,height:15,borderRadius:"50%",background:"rgba(56,199,117,.12)",border:"1px solid rgba(56,199,117,.25)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:8,color:C.green,flexShrink:0}}>✓</div>
@@ -2926,22 +3065,31 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  </Row>
  ))}
  <div style={{textAlign:"center",margin:"12px 0"}}>
- <div style={{fontFamily:"'Syne',sans-serif",fontSize:28,color:C.gold,letterSpacing:-0.5,fontWeight:300}}>19.99€<span style={{fontSize:12,color:C.mid,fontFamily:"'Inter',sans-serif",fontWeight:400}}> /cycle</span></div>
+ <div style={{fontFamily:"'Syne',sans-serif",fontSize:28,color:C.gold,letterSpacing:-0.5,fontWeight:300}}>19.99€<span style={{fontSize:12,color:"#64748b",fontFamily:"'Inter',sans-serif",fontWeight:400}}> /cycle</span></div>
  </div>
  <Btn onClick={()=>{setPremium(true);push("🎉","Premium activé !","Accès complet activé !");}}>Commencer maintenant</Btn>
  </div>:<Box style={{background:C.goldD,borderColor:C.goldB,display:"flex",alignItems:"center",gap:11}}>
  <div style={{width:38,height:38,borderRadius:"50%",background:"rgba(200,150,62,.15)",border:`0.5px solid ${C.goldB}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,flexShrink:0}}>◈</div>
- <div><div style={{fontFamily:"'Syne',sans-serif",fontSize:16,color:C.gold,letterSpacing:-0.5,fontWeight:300}}>MEMBRE PREMIUM</div><div style={{fontSize:10,color:C.mid}}>Accès complet activé</div></div>
+ <div><div style={{fontFamily:"'Syne',sans-serif",fontSize:16,color:C.gold,letterSpacing:-0.5,fontWeight:300}}>MEMBRE PREMIUM</div><div style={{fontSize:10,color:"#64748b"}}>Accès complet activé</div></div>
  </Box>}
  <Box>
  <Lbl>Informations</Lbl>
  <Inp placeholder="Prénom" value={profil.prenom} onChange={e=>setProfil({...profil,prenom:e.target.value})}/>
  <G2><Inp type="number" placeholder="Âge" style={{marginBottom:0}} value={profil.age} onChange={e=>setProfil({...profil,age:e.target.value})}/><select style={{width:"100%",padding:"11px 13px",background:C.s2,border:"0.5px solid #dce8f4",borderRadius:9,color:C.text,fontSize:13}} value={profil.sexe} onChange={e=>setProfil({...profil,sexe:e.target.value})}><option value="">Sexe</option><option value="homme">Homme</option><option value="femme">Femme</option></select></G2>
  <G2 style={{marginTop:6}}><Inp type="number" placeholder="Poids (kg)" style={{marginBottom:0}} value={profil.poids} onChange={e=>setProfil({...profil,poids:e.target.value})}/><Inp type="number" placeholder="Taille (cm)" style={{marginBottom:0}} value={profil.taille} onChange={e=>setProfil({...profil,taille:e.target.value})}/></G2>
- {imc&&<div style={{marginTop:7,padding:"8px 11px",background:C.s2,borderRadius:7,display:"flex",justifyContent:"space-between"}}>
- <span style={{fontSize:11,color:C.mid}}>IMC</span>
- <span style={{fontFamily:"'Syne',sans-serif",fontSize:15,color:C.gold,letterSpacing:0.5}}>{imc} — {imc<18.5?"Maigreur":imc<25?"Normal ✓":imc<30?"Surpoids":"Obésité"}</span>
- </div>}
+ <div style={{marginTop:6}}>
+  <Inp type="number" placeholder="% Masse grasse (optionnel — plus fiable que l'IMC)" value={profil.bodyfat||""} onChange={e=>setProfil({...profil,bodyfat:e.target.value})}/>
+  {profil.bodyfat&&(()=>{
+   const bf=parseFloat(profil.bodyfat);
+   const cat=profil.sexe==="femme"?(bf<14?"Athlète ⚡":bf<21?"Forme ✅":bf<25?"Acceptable":bf<32?"À améliorer":"Obésité"):(bf<6?"Athlète ⚡":bf<14?"Forme ✅":bf<18?"Acceptable":bf<25?"À améliorer":"Obésité");
+   const col=cat.includes("Athlète")||cat.includes("Forme")?"#22c55e":cat==="Acceptable"?"#f97316":"#ef4444";
+   return <div style={{fontSize:11,color:col,fontWeight:600,marginTop:2,paddingLeft:4}}>📊 {cat}</div>;
+  })()}
+  {imc&&!profil.bodyfat&&<div style={{marginTop:4,padding:"6px 10px",background:"#f8fafc",border:"0.5px solid #dce8f4",borderRadius:7,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+   <span style={{fontSize:10,color:"#94a3b8"}}>IMC : {imc} — indicatif seulement</span>
+   <span style={{fontSize:10,color:imc<18.5?C.blue:imc<25?C.green:imc<30?C.orange:C.red,fontWeight:600}}>{imc<18.5?"Maigreur":imc<25?"Normal ✓":imc<30?"Surpoids":"Obésité"}</span>
+  </div>}
+ </div>
  </Box>
  <Box>
  <Lbl>Objectif</Lbl>
@@ -2955,7 +3103,7 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  <Lbl>Niveau d'activité</Lbl>
  {[{id:"sedentaire",l:"Sédentaire",d:"Bureau"},{id:"leger",l:"Léger",d:"1-3x/sem"},{id:"modere",l:"Modéré",d:"3-5x/sem"},{id:"actif",l:"Très actif",d:"6-7x/sem"}].map(n=>(
  <div key={n.id} onClick={()=>setProfil({...profil,activite:n.id})} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"10px 12px",background:profil.activite===n.id?C.goldD:C.s2,border:`1px solid ${profil.activite===n.id?C.gold:C.s3}`,borderRadius:9,cursor:"pointer",marginBottom:6}}>
- <span style={{fontSize:12,fontWeight:600}}>{n.l}</span><span style={{fontSize:10,color:C.mid}}>{n.d}</span>
+ <span style={{fontSize:12,fontWeight:600}}>{n.l}</span><span style={{fontSize:10,color:"#64748b"}}>{n.d}</span>
  </div>
  ))}
  </Box>
@@ -2964,10 +3112,10 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  {/* ─── Calorie principale ─── */}
  <div style={{display:"flex",alignItems:"baseline",gap:6,marginBottom:2}}>
  <div style={{fontFamily:"'Syne',sans-serif",fontSize:34,color:"#3b82f6",fontWeight:300,letterSpacing:-1,lineHeight:1}}>{calObj}</div>
- <div style={{fontSize:12,color:C.mid}}>kcal/jour</div>
+ <div style={{fontSize:12,color:"#64748b"}}>kcal/jour</div>
  {cycles.length>0&&<div style={{marginLeft:"auto",padding:"3px 8px",background:"rgba(59,130,246,0.08)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:6,fontSize:10,color:"#3b82f6"}}>Cycle {cycles.length+1}</div>}
  </div>
- <div style={{fontSize:11,color:C.mid,marginBottom:10}}>{obj.icon} {obj.l} · {obj.surplus>0?`+${obj.surplus} kcal surplus`:obj.surplus<0?`${obj.surplus} kcal déficit`:"Maintien"}</div>
+ <div style={{fontSize:11,color:"#64748b",marginBottom:10}}>{obj.icon} {obj.l} · {obj.surplus>0?`+${obj.surplus} kcal surplus`:obj.surplus<0?`${obj.surplus} kcal déficit`:"Maintien"}</div>
  {/* ─── Détail calcul ─── */}
  {(()=>{
  const p=parseFloat(profil.poids)||0;
@@ -2980,15 +3128,15 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  <div style={{padding:"10px 12px",background:"rgba(59,130,246,0.04)",border:"0.5px solid rgba(59,130,246,0.12)",borderRadius:10,marginBottom:12}}>
  <div style={{fontSize:9,color:"#3b82f6",fontWeight:600,letterSpacing:"1px",textTransform:"uppercase",marginBottom:6}}>📊 Détail Harris-Benedict</div>
  <div style={{display:"flex",justifyContent:"space-between",marginBottom:3}}>
- <span style={{fontSize:10,color:C.mid}}>Métabolisme de base (MB)</span>
+ <span style={{fontSize:10,color:"#64748b"}}>Métabolisme de base (MB)</span>
  <span style={{fontSize:10,fontWeight:600,color:C.text}}>{mb} kcal</span>
  </div>
  <div style={{display:"flex",justifyContent:"space-between",marginBottom:3}}>
- <span style={{fontSize:10,color:C.mid}}>TDEE (MB × {factAct})</span>
+ <span style={{fontSize:10,color:"#64748b"}}>TDEE (MB × {factAct})</span>
  <span style={{fontSize:10,fontWeight:600,color:C.text}}>{tdee} kcal</span>
  </div>
  <div style={{display:"flex",justifyContent:"space-between",borderTop:"0.5px solid #dce8f4",paddingTop:4,marginTop:2}}>
- <span style={{fontSize:10,color:C.mid}}>Objectif ({obj.l})</span>
+ <span style={{fontSize:10,color:"#64748b"}}>Objectif ({obj.l})</span>
  <span style={{fontSize:11,fontWeight:600,color:"#3b82f6"}}>{calObj} kcal</span>
  </div>
  </div>
@@ -3004,7 +3152,7 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  <div key={m.l} style={{textAlign:"center",padding:"10px 6px",background:m.bg,borderRadius:10,border:`0.5px solid ${m.c}30`}}>
  <div style={{fontFamily:"'Syne',sans-serif",fontSize:20,color:m.c,fontWeight:300}}>{m.v}<span style={{fontSize:9}}>g</span></div>
  <div style={{fontSize:9,color:C.text,fontWeight:500,marginTop:1}}>{m.l}</div>
- <div style={{fontSize:8,color:C.mid,marginTop:1}}>{m.sub}</div>
+ <div style={{fontSize:8,color:"#64748b",marginTop:1}}>{m.sub}</div>
  </div>
  ))}
  </div>
@@ -3016,7 +3164,7 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
        {/* ─── Export & Partage ─── */}
       <Box>
         <Lbl>Export & Partage</Lbl>
-        <div style={{fontSize:11,color:C.mid,marginBottom:10,lineHeight:1.5}}>Exportez vos données ou partagez votre programme.</div>
+        <div style={{fontSize:11,color:"#64748b",marginBottom:10,lineHeight:1.5}}>Exportez vos données ou partagez votre programme.</div>
         <button onClick={()=>{
           if(!prog){push("⚠️","Aucun programme","Générez d'abord un programme.");return;}
           const txt="PROGRAMME: "+prog.titre+"\nDébut: "+prog.dateDebut+"\n\n"+prog.jours.map(j=>j.nom+" - "+j.focus+"\n"+j.exercices.map(e=>"  - "+e.nom+": "+(e.series||e.s||"3")+"×"+(e.reps||e.r||"10")+" | repos: "+(e.repos||"90s")).join("\n")).join("\n\n");
@@ -3065,7 +3213,7 @@ Poids actuel: ${weightLog.length>0?weightLog[weightLog.length-1].v+"kg":"Non ren
             📤 Partager
           </button>
         </div>
-        <div style={{fontSize:10,color:C.mid,lineHeight:1.4}}>Exporte ton profil, ton historique de poids et tes statistiques. Compatible Apple Santé et Google Fit via l'import JSON.</div>
+        <div style={{fontSize:10,color:"#64748b",lineHeight:1.4}}>Exporte ton profil, ton historique de poids et tes statistiques. Compatible Apple Santé et Google Fit via l'import JSON.</div>
       </Box>
       <Box>
         <Lbl>Notifications</Lbl> <Lbl>Notifications</Lbl>
@@ -3148,16 +3296,16 @@ Poids actuel: ${weightLog.length>0?weightLog[weightLog.length-1].v+"kg":"Non ren
  <div>
  <div style={{fontSize:9,color:int.c,fontWeight:700,letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:3}}>{int.l}</div>
  <div style={{fontFamily:"'Syne',sans-serif",fontSize:18,fontWeight:400,letterSpacing:-0.5}}>{seance.nom}</div>
- <div style={{fontSize:11,color:C.mid}}>{seance.focus} · {seance.duree}</div>
+ <div style={{fontSize:11,color:"#64748b"}}>{seance.focus} · {seance.duree}</div>
  </div>
  <div style={{textAlign:"center"}}>
  <div style={{fontFamily:"'Syne',sans-serif",fontSize:22,fontWeight:300,color:pct===100?C.green:C.gold}}>{pct}%</div>
- <div style={{fontSize:9,color:C.mid}}>{done}/{total}</div>
+ <div style={{fontSize:9,color:"#64748b"}}>{done}/{total}</div>
  </div>
  </Row>
  <Bar pct={pct} color={pct===100?C.green:int.c} h={4}/>
  </div>
- <button onClick={()=>setChrono(true)} style={{display:"flex",alignItems:"center",gap:8,width:"100%",padding:"10px 13px",background:C.s2,border:"0.5px solid #dce8f4",borderRadius:9,color:C.mid,cursor:"pointer",fontSize:12,fontFamily:"'Inter',sans-serif",fontWeight:500,marginBottom:10}}>⏱ Chronomètre de repos</button>
+ <button onClick={()=>setChrono(true)} style={{display:"flex",alignItems:"center",gap:8,width:"100%",padding:"10px 13px",background:C.s2,border:"0.5px solid #dce8f4",borderRadius:9,color:"#64748b",cursor:"pointer",fontSize:12,fontFamily:"'Inter',sans-serif",fontWeight:500,marginBottom:10}}>⏱ Chronomètre de repos</button>
  {seance.exercices?.map((ex,j)=>{
  const cc={principal:C.gold,correctif:C.red,mobilite:C.blue,gainage:C.green,isolation:C.purple}[ex.cat||"principal"]||C.gold;
  const exInfo=Object.values(EX).flat().find(e=>e.n===ex.nom)||null;
@@ -3171,13 +3319,13 @@ Poids actuel: ${weightLog.length>0?weightLog[weightLog.length-1].v+"kg":"Non ren
  <div style={{flex:1}}>
  <Row style={{gap:7,marginBottom:4}}>
  <div onClick={()=>toggleCheck(seance.id,j,ex.repos)} style={{width:20,height:20,borderRadius:5,background:isChecked?C.green:"transparent",border:`2px solid ${isChecked?C.green:C.s3}`,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:11,color:"white"}}>{isChecked?"✓":""}</div>
- <div style={{fontSize:13,fontWeight:500,textDecoration:isChecked?"line-through":"none",color:isChecked?C.mid:C.text}}>{ex.nom}</div>
+ <div style={{fontSize:13,fontWeight:500,textDecoration:isChecked?"line-through":"none",color:isChecked?"#64748b":C.text}}>{ex.nom}</div>
  </Row>
  <div style={{display:"inline-block",padding:"2px 8px",background:`${cc}18`,border:`1px solid ${cc}30`,borderRadius:5,fontSize:9,color:cc,fontWeight:700,textTransform:"uppercase"}}>{ex.cat}</div>
  </div>
  <Row style={{gap:5}}>
- <button onClick={()=>setExEdit(e=>({...e,[`${seance.id}-${j}`]:!e[`${seance.id}-${j}`]}))} style={{padding:"4px 8px",background:editMd?"rgba(212,168,83,0.15)":C.s2,border:`1px solid ${editMd?C.gold:C.s3}`,borderRadius:6,color:editMd?C.gold:C.mid,cursor:"pointer",fontSize:11}}>✏️</button>
- <button onClick={()=>setExDetails(e=>({...e,[`${seance.id}-${j}`]:!e[`${seance.id}-${j}`]}))} style={{padding:"4px 8px",background:showDet?"rgba(77,143,224,0.15)":C.s2,border:`1px solid ${showDet?C.blue:C.s3}`,borderRadius:6,color:showDet?C.blue:C.mid,cursor:"pointer",fontSize:11}}>{showDet?"▲":"ℹ️"}</button>
+ <button onClick={()=>setExEdit(e=>({...e,[`${seance.id}-${j}`]:!e[`${seance.id}-${j}`]}))} style={{padding:"4px 8px",background:editMd?"rgba(212,168,83,0.15)":C.s2,border:`1px solid ${editMd?C.gold:C.s3}`,borderRadius:6,color:editMd?C.gold:"#64748b",cursor:"pointer",fontSize:11}}>✏️</button>
+ <button onClick={()=>setExDetails(e=>({...e,[`${seance.id}-${j}`]:!e[`${seance.id}-${j}`]}))} style={{padding:"4px 8px",background:showDet?"rgba(77,143,224,0.15)":C.s2,border:`1px solid ${showDet?C.blue:C.s3}`,borderRadius:6,color:showDet?C.blue:"#64748b",cursor:"pointer",fontSize:11}}>{showDet?"▲":"ℹ️"}</button>
  </Row>
  </Row>
  {!editMd?(
@@ -3185,7 +3333,7 @@ Poids actuel: ${weightLog.length>0?weightLog[weightLog.length-1].v+"kg":"Non ren
  {[{l:"Sets",v:ex.series},{l:"Reps",v:ex.reps},{l:"Repos",v:ex.repos},{l:"Charge",v:ex.charge}].filter(s=>s.v).map(s=>(
  <div key={s.l} style={{padding:"4px 9px",background:C.s2,border:"0.5px solid #dce8f4",borderRadius:6,textAlign:"center",minWidth:52}}>
  <div style={{fontFamily:"'Syne',sans-serif",fontSize:14,fontWeight:500,color:C.gold}}>{s.v}</div>
- <div style={{fontSize:9,color:C.mid}}>{s.l}</div>
+ <div style={{fontSize:9,color:"#64748b"}}>{s.l}</div>
  </div>
  ))}
  </div>
@@ -3195,7 +3343,7 @@ Poids actuel: ${weightLog.length>0?weightLog[weightLog.length-1].v+"kg":"Non ren
  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6}}>
  {[{l:"Séries",k:"series"},{l:"Reps",k:"reps"},{l:"Repos",k:"repos"},{l:"Charge",k:"charge"}].map(p=>(
  <div key={p.k}>
- <div style={{fontSize:9,color:C.mid,marginBottom:3}}>{p.l}</div>
+ <div style={{fontSize:9,color:"#64748b",marginBottom:3}}>{p.l}</div>
  <input defaultValue={ex[p.k]||""} onBlur={e=>{
  const u=[...prog.jours];
  const sIdx=prog.jours.findIndex(s=>s.id===seance.id);
@@ -3207,17 +3355,17 @@ Poids actuel: ${weightLog.length>0?weightLog[weightLog.length-1].v+"kg":"Non ren
  <button onClick={()=>setExEdit(e=>({...e,[`${seance.id}-${j}`]:false}))} style={{marginTop:8,width:"100%",padding:"7px",background:"rgba(62,199,122,0.1)",border:"1px solid rgba(62,199,122,0.3)",borderRadius:7,color:C.green,cursor:"pointer",fontSize:11,fontWeight:600}}>✓ OK</button>
  </div>
  )}
- {ex.morpho_tip&&<div style={{padding:"7px 9px",background:C.goldD,borderRadius:7,fontSize:11,color:C.mid,lineHeight:1.5,marginBottom:6}}><span style={{color:C.gold,fontWeight:700}}>Morpho · </span>{ex.morpho_tip}</div>}
+ {ex.morpho_tip&&<div style={{padding:"7px 9px",background:C.goldD,borderRadius:7,fontSize:11,color:"#64748b",lineHeight:1.5,marginBottom:6}}><span style={{color:C.gold,fontWeight:700}}>Morpho · </span>{ex.morpho_tip}</div>}
  {showDet&&(
  <div style={{borderTop:`1px solid ${C.s3}`,paddingTop:10,marginTop:4}}>
- {exInfo?.morpho&&<div style={{padding:"7px 9px",background:C.goldD,borderRadius:7,fontSize:11,color:C.mid,lineHeight:1.5,marginBottom:8}}><span style={{color:C.gold,fontWeight:700}}>Guide · </span>{exInfo.morpho}</div>}
+ {exInfo?.morpho&&<div style={{padding:"7px 9px",background:C.goldD,borderRadius:7,fontSize:11,color:"#64748b",lineHeight:1.5,marginBottom:8}}><span style={{color:C.gold,fontWeight:700}}>Guide · </span>{exInfo.morpho}</div>}
  {exInfo?.tips?.length>0&&(
  <div style={{marginBottom:8}}>
  <div style={{fontSize:9,color:C.green,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",marginBottom:5}}>Tips</div>
  {exInfo.tips.map((tip,ti)=>(
  <Row key={ti} style={{gap:7,marginBottom:4,alignItems:"flex-start"}}>
  <div style={{width:16,height:16,borderRadius:"50%",background:"rgba(62,199,122,0.12)",border:"1px solid rgba(62,199,122,0.3)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:8,color:C.green,flexShrink:0,marginTop:1}}>{ti+1}</div>
- <div style={{fontSize:11,color:C.mid,lineHeight:1.5}}>{tip}</div>
+ <div style={{fontSize:11,color:"#64748b",lineHeight:1.5}}>{tip}</div>
  </Row>
  ))}
  </div>
@@ -3236,7 +3384,7 @@ Poids actuel: ${weightLog.length>0?weightLog[weightLog.length-1].v+"kg":"Non ren
  {exInfo.erreurs.map((err,ei)=>(
  <Row key={ei} style={{gap:7,marginBottom:4,alignItems:"flex-start"}}>
  <div style={{width:16,height:16,borderRadius:"50%",background:"rgba(224,82,82,0.1)",border:"1px solid rgba(224,82,82,0.25)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:9,color:C.red,flexShrink:0,marginTop:1}}>✕</div>
- <div style={{fontSize:11,color:C.mid,lineHeight:1.5}}>{err}</div>
+ <div style={{fontSize:11,color:"#64748b",lineHeight:1.5}}>{err}</div>
  </Row>
  ))}
  </div>
@@ -3290,31 +3438,56 @@ Poids actuel: ${weightLog.length>0?weightLog[weightLog.length-1].v+"kg":"Non ren
  {todaySeance?(
  <div>
  <Lbl>Séance du jour</Lbl>
- <Box style={{borderLeft:`3px solid ${INT[todaySeance.intensite||"modere"].c}`,cursor:"pointer"}} onClick={()=>setViewSeance(todaySeance)}>
- <Row style={{justifyContent:"space-between",marginBottom:8}}>
- <div>
- <div style={{fontSize:9,color:INT[todaySeance.intensite||"modere"].c,fontWeight:700,letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:3}}>{INT[todaySeance.intensite||"modere"].l}</div>
- <div style={{fontFamily:"'Syne',sans-serif",fontSize:16,fontWeight:400}}>{todaySeance.nom}</div>
- <div style={{fontSize:11,color:C.mid}}>{todaySeance.focus} · {todaySeance.duree} · {todaySeance.exercices?.length||0} exercices</div>
- </div>
- <div style={{color:C.gold,fontSize:22}}>›</div>
- </Row>
- {todaySeance.complete&&<div style={{fontSize:11,color:C.green,fontWeight:700}}>✓ Complétée le {todaySeance.date}</div>}
- {!todaySeance.complete&&(
- <div style={{display:"flex",gap:4,flexWrap:"wrap"}}>
- {todaySeance.exercices?.slice(0,4).map((ex,i)=>(
- <div key={i} style={{padding:"3px 8px",background:C.s2,borderRadius:5,fontSize:10,color:C.mid}}>{ex.nom.split(" ")[0]}</div>
- ))}
- {(todaySeance.exercices?.length||0)>4&&<div style={{padding:"3px 8px",background:C.s2,borderRadius:5,fontSize:10,color:C.mid}}>+{(todaySeance.exercices?.length||0)-4}</div>}
- </div>
- )}
+ <Box style={{borderLeft:`3px solid ${INT[todaySeance.intensite||"modere"].c}`,padding:0,overflow:"hidden"}}>
+   {/* Header cliquable → SeanceDetail */}
+   <div onClick={()=>setViewSeance(todaySeance)} style={{padding:"12px 14px",cursor:"pointer",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+    <div>
+     <div style={{fontSize:9,color:INT[todaySeance.intensite||"modere"].c,fontWeight:700,letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:3}}>{INT[todaySeance.intensite||"modere"].l}</div>
+     <div style={{fontFamily:"'Syne',sans-serif",fontSize:16,fontWeight:400,color:"#0f1a2e"}}>{todaySeance.nom}</div>
+     <div style={{fontSize:11,color:"#64748b"}}>{todaySeance.focus} · {todaySeance.duree}</div>
+    </div>
+    <div style={{textAlign:"right"}}>
+     {(()=>{
+       const total=todaySeance.exercices?.length||0;
+       const done=todaySeance.exercices?.filter((_,idx)=>checkedEx[`${todaySeance.id}-${idx}`]).length||0;
+       const pct=total>0?Math.round(done/total*100):0;
+       return <>
+         <div style={{fontFamily:"'Syne',sans-serif",fontSize:20,fontWeight:300,color:pct===100?C.green:"#3b82f6",lineHeight:1}}>{pct}%</div>
+         <div style={{fontSize:9,color:"#64748b"}}>{done}/{total}</div>
+       </>;
+     })()}
+    </div>
+   </div>
+   {/* Liste exercices aperçu */}
+   {!todaySeance.complete&&(
+    <div style={{borderTop:"0.5px solid #dce8f4",padding:"8px 14px 10px"}}>
+     {(todaySeance.exercices||[]).map((ex,idx)=>{
+      const isChecked=!!checkedEx[`${todaySeance.id}-${idx}`];
+      const cc={principal:"#3b82f6",correctif:"#ef4444",gainage:"#22c55e",isolation:"#8b5cf6"}[ex.cat||"principal"]||"#3b82f6";
+      return(
+      <div key={idx} style={{display:"flex",alignItems:"center",gap:8,padding:"5px 0",borderBottom:idx<(todaySeance.exercices.length-1)?"0.5px solid #f1f5f9":"none",opacity:isChecked?0.5:1}}>
+       <div onClick={()=>toggleCheck(todaySeance.id,idx,ex.repos)} style={{width:16,height:16,borderRadius:4,background:isChecked?C.green:"transparent",border:`1.5px solid ${isChecked?C.green:"#dce8f4"}`,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:9,color:"#fff"}}>{isChecked?"✓":""}</div>
+       <div style={{flex:1}}>
+        <div style={{fontSize:11,fontWeight:500,color:isChecked?"#94a3b8":"#0f1a2e",textDecoration:isChecked?"line-through":"none"}}>{ex.nom}</div>
+        <div style={{fontSize:9,color:"#64748b"}}>{ex.series}×{ex.reps} · {ex.repos}{ex.methode&&ex.methode!=="Classique"?` · ${ex.methode}`:""}</div>
+       </div>
+       <div style={{width:3,height:20,borderRadius:2,background:cc,flexShrink:0}}/>
+      </div>
+      );
+     })}
+     <button onClick={()=>setViewSeance(todaySeance)} style={{width:"100%",marginTop:8,padding:"8px",background:"rgba(59,130,246,0.06)",border:"0.5px solid rgba(59,130,246,0.15)",borderRadius:8,color:"#3b82f6",cursor:"pointer",fontSize:11,fontWeight:600,fontFamily:"'Inter',sans-serif"}}>
+      Démarrer la séance →
+     </button>
+    </div>
+   )}
+   {todaySeance.complete&&<div style={{padding:"8px 14px 10px",fontSize:11,color:C.green,fontWeight:600}}>✓ Complétée le {todaySeance.date}</div>}
  </Box>
  </div>
  ):(
  <Box style={{textAlign:"center",padding:"24px 16px"}}>
  <div style={{fontSize:32,marginBottom:8}}>😴</div>
  <div style={{fontFamily:"'Syne',sans-serif",fontSize:15,fontWeight:500,marginBottom:4}}>Jour de repos</div>
- <div style={{fontSize:12,color:C.mid,marginBottom:14,lineHeight:1.6}}>Profites-en pour récupérer ou ajouter une séance bonus.</div>
+ <div style={{fontSize:12,color:"#64748b",marginBottom:14,lineHeight:1.6}}>Profites-en pour récupérer ou ajouter une séance bonus.</div>
  </Box>
  )}
  <Lbl style={{marginTop:12}}>Séance bonus</Lbl>
@@ -3330,7 +3503,7 @@ Poids actuel: ${weightLog.length>0?weightLog[weightLog.length-1].v+"kg":"Non ren
  <div style={{position:"fixed",inset:0,background:"rgba(237,243,251,0.97)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:300,padding:18}}>
  <div style={{background:C.s1,border:"0.5px solid #dce8f4",borderRadius:14,padding:"22px 18px",width:"100%",maxWidth:360}}>
  <Lbl>{bonusModal.i} {bonusModal.l}</Lbl>
- <div style={{fontSize:12,color:C.mid,marginBottom:14}}>Durée de la séance ?</div>
+ <div style={{fontSize:12,color:"#64748b",marginBottom:14}}>Durée de la séance ?</div>
  <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:16}}>
  {["15 min","20 min","30 min","45 min"].map(dur=>(
  <div key={dur} onClick={()=>{
@@ -3348,7 +3521,7 @@ Poids actuel: ${weightLog.length>0?weightLog[weightLog.length-1].v+"kg":"Non ren
  )}
  {!prog&&(
  <Box style={{textAlign:"center",padding:"20px 16px",marginTop:8}}>
- <div style={{fontSize:12,color:C.mid,marginBottom:12}}>Aucun programme actif</div>
+ <div style={{fontSize:12,color:"#64748b",marginBottom:12}}>Aucun programme actif</div>
  <Btn onClick={()=>{if(!premium)setPaywall(true);else setProgView("analyse");}}>✨ Générer mon programme</Btn>
  <Btn v="out" onClick={()=>setProgView("creer")}>Créer manuellement</Btn>
  </Box>
@@ -3366,7 +3539,7 @@ Poids actuel: ${weightLog.length>0?weightLog[weightLog.length-1].v+"kg":"Non ren
  {week.map(({day,seance,isToday},i)=>{
  if(!seance) return(
  <div key={i} style={{padding:"10px 12px",background:isToday?"rgba(212,168,83,0.05)":C.s2,border:`1px solid ${isToday?C.goldB:C.s3}`,borderRadius:9,marginBottom:6,display:"flex",alignItems:"center",gap:10}}>
- <div style={{width:36,height:36,borderRadius:"50%",background:isToday?C.goldD:C.s3,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:700,color:isToday?C.gold:C.mid,flexShrink:0}}>{day}</div>
+ <div style={{width:36,height:36,borderRadius:"50%",background:isToday?C.goldD:C.s3,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:700,color:isToday?C.gold:"#64748b",flexShrink:0}}>{day}</div>
  <div style={{fontSize:12,color:C.dim,fontStyle:"italic"}}>Repos</div>
  {isToday&&<div style={{marginLeft:"auto",fontSize:9,color:C.gold,fontWeight:700,border:`0.5px solid ${C.goldB}`,padding:"2px 7px",borderRadius:5}}>AUJOURD'HUI</div>}
  </div>
@@ -3378,10 +3551,10 @@ Poids actuel: ${weightLog.length>0?weightLog[weightLog.length-1].v+"kg":"Non ren
  <div key={i} onClick={()=>setViewSeance(seance)} style={{padding:"10px 12px",background:isToday?`${int.c}14`:C.s2,border:`1px solid ${isToday?int.c:C.s3}`,borderRadius:9,marginBottom:6,cursor:"pointer"}}>
  <Row style={{justifyContent:"space-between"}}>
  <Row style={{gap:10}}>
- <div style={{width:36,height:36,borderRadius:"50%",background:isToday?`${int.c}30`:C.s3,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:700,color:isToday?int.c:C.mid,flexShrink:0}}>{day}</div>
+ <div style={{width:36,height:36,borderRadius:"50%",background:isToday?`${int.c}30`:C.s3,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:700,color:isToday?int.c:"#64748b",flexShrink:0}}>{day}</div>
  <div>
  <div style={{fontSize:12,fontWeight:500}}>{seance.nom}</div>
- <div style={{fontSize:10,color:C.mid}}>{seance.focus} · {total} exercices</div>
+ <div style={{fontSize:10,color:"#64748b"}}>{seance.focus} · {total} exercices</div>
  </div>
  </Row>
  <Row style={{gap:8,alignItems:"center"}}>
@@ -3396,7 +3569,7 @@ Poids actuel: ${weightLog.length>0?weightLog[weightLog.length-1].v+"kg":"Non ren
  })}
  {!prog&&(
  <Box style={{textAlign:"center",padding:"20px 16px"}}>
- <div style={{fontSize:12,color:C.mid,marginBottom:12}}>Aucun programme actif</div>
+ <div style={{fontSize:12,color:"#64748b",marginBottom:12}}>Aucun programme actif</div>
  <Btn onClick={()=>setProgView("creer")}>+ Créer un programme</Btn>
  </Box>
  )}
@@ -3416,7 +3589,7 @@ Poids actuel: ${weightLog.length>0?weightLog[weightLog.length-1].v+"kg":"Non ren
  <div style={{padding:"26px 15px 12px"}}><div style={{fontFamily:"'Syne',sans-serif",fontSize:30,letterSpacing:-0.3,fontWeight:300}}>PROGRAMMATION</div></div>
  <div style={{display:"flex",gap:5,padding:"0 15px",marginBottom:14,overflowX:"auto",paddingBottom:3}}>
  {subNav.map(s=>(
- <button key={s.id} onClick={()=>{if(s.prem&&!premium)setPaywall(true);else setProgView(s.id);}} style={{padding:"7px 13px",background:progView===s.id?C.goldD:C.s2,border:`1px solid ${progView===s.id?C.gold:C.s3}`,borderRadius:18,color:progView===s.id?C.gold:C.mid,cursor:"pointer",fontSize:11.5,fontWeight:600,whiteSpace:"nowrap",fontFamily:"'Inter',sans-serif"}}>{s.l}</button>
+ <button key={s.id} onClick={()=>{if(s.prem&&!premium)setPaywall(true);else setProgView(s.id);}} style={{padding:"7px 13px",background:progView===s.id?C.goldD:C.s2,border:`1px solid ${progView===s.id?C.gold:C.s3}`,borderRadius:18,color:progView===s.id?C.gold:"#64748b",cursor:"pointer",fontSize:11.5,fontWeight:600,whiteSpace:"nowrap",fontFamily:"'Inter',sans-serif"}}>{s.l}</button>
  ))}
  </div>
  {progView==="calendar"&&Calendar()}
@@ -3431,7 +3604,7 @@ Poids actuel: ${weightLog.length>0?weightLog[weightLog.length-1].v+"kg":"Non ren
  <div style={{padding:"10px 12px",background:"rgba(59,130,246,0.08)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:9,marginBottom:12}}>
  <div style={{fontSize:9,color:C.gold,fontWeight:700,letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:3}}>Cycle {prog.numero||1} actif</div>
  <div style={{fontSize:14,fontWeight:500}}>{prog.titre}</div>
- <div style={{fontSize:10,color:C.mid,marginTop:2}}>{prog.jours?.length} séances · Démarré le {prog.dateDebut}</div>
+ <div style={{fontSize:10,color:"#64748b",marginTop:2}}>{prog.jours?.length} séances · Démarré le {prog.dateDebut}</div>
  </div>
  {prog.jours?.map((j,i)=>{
  const int=INT[j.intensite||"modere"];
@@ -3443,7 +3616,7 @@ Poids actuel: ${weightLog.length>0?weightLog[weightLog.length-1].v+"kg":"Non ren
  <div>
  <div style={{fontSize:9,color:int.c,fontWeight:700,textTransform:"uppercase",letterSpacing:"1px",marginBottom:2}}>{int.l}</div>
  <div style={{fontSize:13,fontWeight:500}}>{j.nom}</div>
- <div style={{fontSize:10,color:C.mid}}>{j.focus} · {total} exercices</div>
+ <div style={{fontSize:10,color:"#64748b"}}>{j.focus} · {total} exercices</div>
  </div>
  <Row style={{gap:8}}>
  {done>0&&<div style={{fontSize:10,color:C.green,fontWeight:700}}>{done}/{total}</div>}
@@ -3457,15 +3630,14 @@ Poids actuel: ${weightLog.length>0?weightLog[weightLog.length-1].v+"kg":"Non ren
  <div style={{height:1,background:C.s3,margin:"12px 0"}}/>
  <Btn onClick={()=>{if(!premium)setPaywall(true);else setProgView("analyse");}}>✨ Nouveau programme</Btn>
  <div style={{textAlign:"center",marginTop:4}}>
- <span onClick={()=>{setCreateStep(0);setNewP({nom:"",jours:[],seances:{}});}} style={{fontSize:11,color:C.mid,cursor:"pointer",textDecoration:"underline",textDecorationStyle:"dotted"}}>Créer manuellement</span>
+ <span onClick={()=>{setCreateStep(0);setNewP({nom:"",jours:[],seances:{}});}} style={{fontSize:11,color:"#64748b",cursor:"pointer",textDecoration:"underline",textDecorationStyle:"dotted"}}>Créer manuellement</span>
  </div>
  </div>
  ):(
  <div>
  <div style={{textAlign:"center",padding:"24px 0 8px"}}>
- <div style={{fontSize:36,marginBottom:8}}>🤖</div>
- <div style={{fontFamily:"'Syne',sans-serif",fontSize:16,fontWeight:400,color:"#0f1a2e",marginBottom:4}}>Programme sur-mesure</div>
- <div style={{fontSize:12,color:C.mid,lineHeight:1.5,marginBottom:20}}>Obtenez un programme 100% adapté à votre morphologie, niveau et objectifs grâce à notre algorithme avancé</div>
+ <div style={{fontFamily:"'Syne',sans-serif",fontSize:18,fontWeight:400,color:"#0f1a2e",marginBottom:4}}>Programme sur-mesure ✦</div>
+ <div style={{fontSize:12,color:"#64748b",lineHeight:1.5,marginBottom:20}}>Obtenez un programme 100% adapté à votre morphologie, niveau et objectifs grâce à notre algorithme avancé</div>
  </div>
  <Btn onClick={()=>{if(!premium)setPaywall(true);else setProgView("analyse");}}>✨ Générer mon programme</Btn>
 
@@ -3482,7 +3654,7 @@ Poids actuel: ${weightLog.length>0?weightLog[weightLog.length-1].v+"kg":"Non ren
  <div style={{position:"fixed",inset:0,background:"rgba(8,9,14,0.95)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:200,padding:18}}>
  <div style={{background:C.s1,border:`1px solid rgba(200,150,62,.3)`,borderRadius:14,padding:"24px 20px",width:"100%",maxWidth:400}}>
  <div style={{fontFamily:"'Syne',sans-serif",fontSize:24,letterSpacing:2,color:C.gold,textAlign:"center",marginBottom:6}}>ACCÈS PREMIUM</div>
- <div style={{fontSize:12,color:C.mid,textAlign:"center",marginBottom:16}}>Cette fonctionnalité est réservée aux membres Premium.</div>
+ <div style={{fontSize:12,color:"#64748b",textAlign:"center",marginBottom:16}}>Cette fonctionnalité est réservée aux membres Premium.</div>
  {["Programme unique selon votre morphologie","Exercices correctifs pathologies","Guides techniques avancés","Cycle 6 semaines optimisé"].map(f=>(
  <Row key={f} style={{marginBottom:8,gap:9}}>
  <div style={{width:15,height:15,borderRadius:"50%",background:"rgba(56,199,117,.12)",border:"1px solid rgba(56,199,117,.25)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:8,color:C.green,flexShrink:0}}>✓</div>
@@ -3490,7 +3662,7 @@ Poids actuel: ${weightLog.length>0?weightLog[weightLog.length-1].v+"kg":"Non ren
  </Row>
  ))}
  <div style={{textAlign:"center",margin:"14px 0"}}>
- <div style={{fontFamily:"'Syne',sans-serif",fontSize:26,color:C.gold,letterSpacing:-0.5,fontWeight:300}}>19.99€<span style={{fontSize:11,color:C.mid,fontFamily:"'Inter',sans-serif",fontWeight:400}}> /cycle</span></div>
+ <div style={{fontFamily:"'Syne',sans-serif",fontSize:26,color:C.gold,letterSpacing:-0.5,fontWeight:300}}>19.99€<span style={{fontSize:11,color:"#64748b",fontFamily:"'Inter',sans-serif",fontWeight:400}}> /cycle</span></div>
  </div>
  <Btn onClick={()=>{setPremium(true);setPaywall(false);push("🎉","Premium activé !","Bienvenue !");}}>Commencer maintenant</Btn>
  <Btn v="ghost" onClick={()=>setPaywall(false)}>Continuer en gratuit</Btn>
@@ -3522,7 +3694,7 @@ Poids actuel: ${weightLog.length>0?weightLog[weightLog.length-1].v+"kg":"Non ren
  display:"flex",alignItems:"center",justifyContent:"center",
  cursor:"pointer",
  transition:"all.15s",
- }}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={tab==="profile"?"#3b82f6":"#a0b4cc"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></button>
+ }}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={tab==="profile"?"#3b82f6":"#64748b"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></button>
  </div>
  </div>
  {showOnboarding&&Onboarding()}
@@ -3536,8 +3708,8 @@ Poids actuel: ${weightLog.length>0?weightLog[weightLog.length-1].v+"kg":"Non ren
  <nav className="np" style={{position:"fixed",bottom:0,left:0,right:0,background:"rgba(230,240,252,0.98)",backdropFilter:"blur(20px)",borderTop:"0.5px solid #c8daf0",display:"flex",zIndex:100}}>
  {NAV.map(t=>(
  <button key={t.id} onClick={()=>setTab(t.id)} style={{flex:1,padding:"10px 4px 12px",background:"transparent",border:"none",cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:3,transition:"all.15s",fontFamily:"'Inter',sans-serif"}}>
- <div style={{color:tab===t.id?"#3b82f6":"#a0b4cc",transition:"color.15s",lineHeight:1}}>{t.svg}</div>
- <span style={{fontSize:9,letterSpacing:"0.3px",fontWeight:tab===t.id?600:400,color:tab===t.id?"#3b82f6":"#a0b4cc",transition:"color.15s"}}>{t.l}</span>
+ <div style={{color:tab===t.id?"#3b82f6":"#64748b",transition:"color.15s",lineHeight:1}}>{t.svg}</div>
+ <span style={{fontSize:9,letterSpacing:"0.3px",fontWeight:tab===t.id?600:400,color:tab===t.id?"#3b82f6":"#64748b",transition:"color.15s"}}>{t.l}</span>
  {tab===t.id&&<div style={{width:20,height:2,borderRadius:1,background:"#3b82f6"}}/>}
  </button>
  ))}
