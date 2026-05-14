@@ -28,8 +28,8 @@ function useStorage(key, defaultValue) {
 
   return [value, setAndSave];
 }
-const Box = ({children,style,onClick})=>(
- <div onClick={onClick} style={{background:"#ffffff",border:"0.5px solid #dce8f4",borderRadius:16,padding:"16px 15px",marginBottom:9,cursor:onClick?"pointer":"default",...style}}>{children}</div>
+const Box = ({children,style,onClick,className=""})=>(
+ <div onClick={onClick} className={`${onClick?"tap card-hover":""} ${className}`} style={{background:"#ffffff",border:"0.5px solid #dce8f4",borderRadius:16,padding:"16px 15px",marginBottom:9,cursor:onClick?"pointer":"default",...style}}>{children}</div>
 );
 const Lbl = ({children,style})=>(
  <div style={{fontSize:9,color:"#64748b",letterSpacing:"2px",textTransform:"uppercase",fontWeight:600,marginBottom:10,...style}}>{children}</div>
@@ -45,7 +45,7 @@ const Btn = ({children,onClick,disabled,v="fill",sm})=>{
  };
  const s=vs[v]||vs.fill;
  return(
- <button onClick={onClick} disabled={disabled} style={{
+ <button onClick={onClick} disabled={disabled} className={disabled?"":"tap"} style={{
  display:"block",width:"100%",padding:sm?"9px 14px":"13px 16px",
  background:disabled?"rgba(255,255,255,0.04)":s.bg,
  color:disabled?"#64748b":s.color,border:disabled?`1px solid ${C.s3}`:s.border,
@@ -62,7 +62,7 @@ const Bar = ({pct,color=C.gold,h=4})=>(
 const Row = ({children,style})=><div style={{display:"flex",alignItems:"center",...style}}>{children}</div>;
 const G2 = ({children,gap=8,style})=><div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap,marginBottom:9,...style}}>{children}</div>;
 const Tag = ({children,active,color,onClick})=>(
- <span onClick={onClick} style={{
+ <span onClick={onClick} className={onClick?"tap-sm":""} style={{
  display:"inline-block",padding:"5px 11px",margin:"3px",
  background:active?`rgba(${color||"59,130,246"},.14)`:"rgba(255,255,255,0.03)",
  border:`1px solid ${active?`rgba(${color||"59,130,246"},.44)`:C.s3}`,
@@ -911,12 +911,12 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  <div style={{fontFamily:"'Syne',sans-serif",fontSize:26,fontWeight:300,color:C.text,letterSpacing:-0.5,lineHeight:1.1,marginBottom:12}}>
  {profil.prenom?<>Bonjour, <span style={{fontWeight:500,color:C.blue}}>{profil.prenom}</span></>:<>Bonjour <span style={{fontWeight:300,color:"#64748b"}}>👋</span></>}
  </div>
- <div style={{padding:"12px 14px",background:"rgba(59,130,246,0.06)",border:"0.5px solid rgba(59,130,246,0.15)",borderRadius:12}}>
- <div style={{fontSize:9,color:C.blue,fontWeight:600,letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:5}}>Motivation du jour</div>
- <div style={{fontSize:13,color:C.text,fontWeight:500,lineHeight:1.6}}>{motiv}</div>
+ <div className="slide-up" style={{padding:"12px 14px",background:"rgba(59,130,246,0.06)",border:"0.5px solid rgba(59,130,246,0.15)",borderRadius:12,animationDelay:"0.05s"}}>
+ <div style={{fontSize:9,color:C.blue,fontWeight:600,letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:5}}>✨ Motivation du jour</div>
+ <div style={{fontSize:13,color:C.text,fontWeight:500,lineHeight:1.6,fontStyle:"italic"}}>{motiv}</div>
  </div>
  {/* ─── Streak ─── */}
-          {(()=>{const s=getStreak;return s>0?(<div style={{display:"flex",alignItems:"center",gap:8,marginTop:8,padding:"8px 12px",background:"rgba(249,115,22,0.08)",border:"0.5px solid rgba(249,115,22,0.2)",borderRadius:10}}>
+          {(()=>{const s=getStreak;return s>0?(<div className="pop-in" style={{display:"flex",alignItems:"center",gap:8,marginTop:8,padding:"8px 12px",background:"rgba(249,115,22,0.08)",border:"0.5px solid rgba(249,115,22,0.2)",borderRadius:10}}>
             <span style={{fontSize:18}}>🔥</span>
             <div>
               <span style={{fontSize:13,fontWeight:600,color:"#f97316"}}>{s} jour{s>1?"s":""} consécutif{s>1?"s":""}</span>
@@ -935,7 +935,7 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  </div>
  )}
  {cycleStart&&(
- <Box style={{background:"rgba(59,130,246,0.06)",borderColor:C.goldB}}>
+ <Box className="slide-up" style={{background:"rgba(59,130,246,0.06)",borderColor:C.goldB,animationDelay:"0.1s"}}>
  <Row style={{justifyContent:"space-between",marginBottom:8}}>
  <div>
  <div style={{fontSize:9,color:C.gold,letterSpacing:"1.5px",fontWeight:700,textTransform:"uppercase",marginBottom:3}}>Cycle · Sem {semC+1}/6</div>
@@ -1956,21 +1956,33 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  };
  const AnalyseIA=()=>{
  if(loadIA)return(
- <div style={{padding:"0 15px"}}>
- <Box style={{textAlign:"center",padding:"46px 20px"}}>
- {loadMsg.startsWith("Erreur")?<>
- <div style={{fontSize:36,marginBottom:14}}>❌</div>
+ <div style={{padding:"0 15px"}} className="fade-in">
+ {loadMsg.startsWith("Erreur")?(
+ <Box style={{textAlign:"center",padding:"40px 20px"}} className="scale-in">
+ <div style={{fontSize:40,marginBottom:14}}>❌</div>
  <div style={{fontFamily:"'Syne',sans-serif",fontSize:15,color:C.red,fontWeight:500,marginBottom:10}}>Génération échouée</div>
- <div style={{fontSize:12,color:"#64748b",marginBottom:16,lineHeight:1.6}}>{loadMsg}</div>
+ <div style={{fontSize:12,color:"#64748b",marginBottom:20,lineHeight:1.6}}>{loadMsg}</div>
  <Btn onClick={()=>{setLoadIA(false);setLoadMsg("");}}>← Réessayer</Btn>
- </>:<>
- <div style={{width:48,height:48,border:`3px solid ${C.goldD}`,borderTop:`3px solid ${C.gold}`,borderRadius:"50%",animation:"spin 1s linear infinite",margin:"0 auto 18px"}}/>
- <div style={{fontFamily:"'Syne',sans-serif",fontSize:16,color:C.gold,fontWeight:300,marginBottom:8}}>{loadMsg}</div>
- <div style={{fontSize:11,color:"#64748b",lineHeight:1.7}}>
- Analyse morphologique + génération<br/>du programme personnalisé en cours…
- </div>
- </>}
  </Box>
+ ):(
+ <div>
+ {/* Header loading */}
+ <Box style={{textAlign:"center",padding:"32px 20px 24px"}} className="slide-up">
+ <div style={{width:56,height:56,border:`3px solid ${C.goldD}`,borderTop:`3px solid ${C.gold}`,borderRadius:"50%",animation:"spin 1s linear infinite",margin:"0 auto 20px"}}/>
+ <div style={{fontFamily:"'Syne',sans-serif",fontSize:17,color:C.gold,fontWeight:300,marginBottom:6,letterSpacing:"0.5px"}}>{loadMsg}</div>
+ <div style={{fontSize:11,color:"#64748b",lineHeight:1.8}}>Analyse morphologique + génération<br/>du programme personnalisé…</div>
+ </Box>
+ {/* Skeleton cards */}
+ {[1,2,3].map(i=>(
+ <Box key={i} style={{padding:"18px 16px",marginBottom:9}} className="slide-up" style={{animationDelay:`${i*0.08}s`}}>
+ <div className="skeleton" style={{height:10,width:"40%",marginBottom:12}}/>
+ <div className="skeleton" style={{height:8,width:"90%",marginBottom:8}}/>
+ <div className="skeleton" style={{height:8,width:"75%",marginBottom:8}}/>
+ <div className="skeleton" style={{height:8,width:"60%"}}/>
+ </Box>
+ ))}
+ </div>
+ )}
  </div>
  );
  const steps=["Photo","Profil","Objectif","Pathologies","Matériel"];
@@ -3085,7 +3097,7 @@ Poids actuel: ${weightLog.length>0?weightLog[weightLog.length-1].v+"kg":"Non ren
  <style>{CSS}</style>
  <Notif n={notif} onClose={()=>setNotif(null)}/>
  {/* Header */}
- <div className="np" style={{background:"rgba(237,243,251,0.95)",backdropFilter:"blur(16px)",borderBottom:"0.5px solid #dce8f4",padding:"12px 16px",position:"sticky",top:0,zIndex:100,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+ <div className="np" style={{background:"rgba(237,243,251,0.96)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",borderBottom:"0.5px solid #dce8f4",padding:"12px 16px",position:"sticky",top:0,zIndex:100,display:"flex",alignItems:"center",justifyContent:"space-between",boxShadow:"0 1px 0 rgba(59,130,246,0.06)"}}>
  <div style={{fontFamily:"'Syne',sans-serif",fontSize:15,letterSpacing:"3px",fontWeight:500,color:"#0f1a2e"}}>
  MORPHO<span style={{color:"#3b82f6"}}>COACH</span>
  </div>
@@ -3093,30 +3105,32 @@ Poids actuel: ${weightLog.length>0?weightLog[weightLog.length-1].v+"kg":"Non ren
  {cycleStart&&jR!==null&&jR<=7&&<span style={{fontSize:9,color:"#f97316",fontWeight:500}}>⚠️ J-{jR}</span>}
  {premium&&<span style={{fontSize:9,color:"#3b82f6",border:"0.5px solid rgba(59,130,246,0.3)",padding:"2px 8px",borderRadius:8,fontWeight:700,letterSpacing:"1px"}}>PREMIUM</span>}
  {/* Icône Profil */}
- <button onClick={()=>setTab(tab==="profile"?"home":"profile")} style={{
+ <button onClick={()=>setTab(tab==="profile"?"home":"profile")} className="tap-icon" style={{
  width:34,height:34,borderRadius:"50%",
  background:tab==="profile"?"rgba(59,130,246,0.1)":"transparent",
  border:`0.5px solid ${tab==="profile"?"#3b82f6":"#dce8f4"}`,
  display:"flex",alignItems:"center",justifyContent:"center",
  cursor:"pointer",
- transition:"all.15s",
+ transition:"all.2s cubic-bezier(.34,1.56,.64,1)",
  }}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={tab==="profile"?"#3b82f6":"#64748b"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></button>
  </div>
  </div>
  {showOnboarding&&Onboarding()}
  <div style={{maxWidth:500,margin:"0 auto",paddingBottom:72}}>
+ <div key={tab} className="page-enter">
  {tab==="home"&&Home()}
  {tab==="program"&&ProgramTab()}
  {tab==="nutrition"&&Nutrition()}
  {tab==="profile"&&Profile()}
  </div>
+ </div>
  {/* Nav — 3 onglets uniquement */}
- <nav className="np" style={{position:"fixed",bottom:0,left:0,right:0,background:"rgba(230,240,252,0.98)",backdropFilter:"blur(20px)",borderTop:"0.5px solid #c8daf0",display:"flex",zIndex:100}}>
+ <nav className="np" style={{position:"fixed",bottom:0,left:0,right:0,background:"rgba(230,240,252,0.98)",backdropFilter:"blur(24px)",WebkitBackdropFilter:"blur(24px)",borderTop:"0.5px solid #c8daf0",display:"flex",zIndex:100,boxShadow:"0 -1px 0 rgba(59,130,246,0.06)"}}>
  {NAV.map(t=>(
- <button key={t.id} onClick={()=>setTab(t.id)} style={{flex:1,padding:"10px 4px 12px",background:"transparent",border:"none",cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:3,transition:"all.15s",fontFamily:"'Inter',sans-serif"}}>
+ <button key={t.id} onClick={()=>setTab(t.id)} className="tap" style={{flex:1,padding:"10px 4px 12px",background:"transparent",border:"none",cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:3,transition:"all.15s",fontFamily:"'Inter',sans-serif"}}>
  <div style={{color:tab===t.id?"#3b82f6":"#64748b",transition:"color.15s",lineHeight:1}}>{t.svg}</div>
  <span style={{fontSize:9,letterSpacing:"0.3px",fontWeight:tab===t.id?600:400,color:tab===t.id?"#3b82f6":"#64748b",transition:"color.15s"}}>{t.l}</span>
- {tab===t.id&&<div style={{width:20,height:2,borderRadius:1,background:"#3b82f6"}}/>}
+ {tab===t.id&&<div className="nav-dot" style={{width:20,height:2,borderRadius:1,background:"#3b82f6",animation:"scaleIn .2s cubic-bezier(.34,1.56,.64,1) both"}}/>}
  </button>
  ))}
  </nav>
