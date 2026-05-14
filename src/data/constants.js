@@ -49,10 +49,37 @@ input::placeholder,textarea::placeholder{color:#c4d4e8}
 select option{background:#e4eef8}
 ::-webkit-scrollbar{width:2px;height:2px}
 ::-webkit-scrollbar-thumb{background:rgba(59,130,246,0.2);border-radius:2px}
+
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes slideDown{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes scaleIn{from{opacity:0;transform:scale(0.95)}to{opacity:1;transform:scale(1)}}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+@keyframes popIn{0%{transform:scale(0.8);opacity:0}70%{transform:scale(1.05)}100%{transform:scale(1);opacity:1}}
+@keyframes bounceIn{0%{transform:translateY(4px);opacity:0}60%{transform:translateY(-2px)}100%{transform:translateY(0);opacity:1}}
+
 .anim{animation:fadeUp .3s ease both}
 .notif{animation:slideDown .4s ease both}
+.fade-in{animation:fadeIn .25s ease both}
+.scale-in{animation:scaleIn .2s cubic-bezier(.34,1.56,.64,1) both}
+.slide-up{animation:slideUp .3s cubic-bezier(.22,1,.36,1) both}
+.pop-in{animation:popIn .25s cubic-bezier(.34,1.56,.64,1) both}
+.page-enter{animation:fadeUp .25s cubic-bezier(.22,1,.36,1) both}
+
+.tap{transition:transform .12s ease,opacity .12s ease;cursor:pointer;-webkit-user-select:none;user-select:none}
+.tap:active{transform:scale(0.96);opacity:0.85}
+.tap-sm:active{transform:scale(0.94)}
+.tap-icon:active{transform:scale(0.88)}
+
+.skeleton{background:linear-gradient(90deg,#dce8f4 25%,#e8f0f8 50%,#dce8f4 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:8px}
+
+.card-hover{transition:transform .2s ease,box-shadow .2s ease}
+.card-hover:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(59,130,246,0.08)}
+
+input:focus,textarea:focus,select:focus{border-color:rgba(59,130,246,0.4)!important;box-shadow:0 0 0 3px rgba(59,130,246,0.08);transition:box-shadow .15s,border-color .15s}
+
+@supports(-webkit-overflow-scrolling:touch){*{-webkit-overflow-scrolling:touch}}
 @media print{.np{display:none!important}}
 `;
