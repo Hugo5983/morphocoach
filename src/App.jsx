@@ -28,38 +28,6 @@ function useStorage(key, defaultValue) {
 
   return [value, setAndSave];
 }
-// ─────────────────────────────────────────────────────────────────────────────
-const C = {
- bg:"#e4eef8", s1:"#ffffff", s2:"#e4eef8", s3:"#dce8f4",
- gold:"#3b82f6", goldL:"#60a5fa", goldD:"rgba(59,130,246,0.08)", goldB:"rgba(59,130,246,0.2)",
- text:"#0f1a2e", mid:"#64748b", dim:"#c4d4e8",
- green:"#22c55e", red:"#f87171", blue:"#3b82f6", orange:"#f97316", purple:"#8b5cf6",
- cyan:"#06b6d4", accent:"#3b82f6",
-};
-const INT = {
- leger: {l:"Léger", c:"#22c55e"},
- modere: {l:"Modéré", c:"#3b82f6"},
- lourd: {l:"Lourd", c:"#f97316"},
- intense: {l:"Intense", c:"#f87171"},
- mobilite:{l:"Mobilité",c:"#8b5cf6"},
-};
-const SESS_COLORS = ["#3b82f6","#22c55e","#f97316","#f87171","#8b5cf6","#06b6d4","#ec4899","#eab308"];
-const CSS = `
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@300;400;500;700&family=Inter:wght@300;400;500&display=swap');
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
-body{background:#e4eef8;color:#0f1a2e;font-family:'Inter',sans-serif}
-input,textarea,select{outline:none;font-family:'Inter',sans-serif}
-input::placeholder,textarea::placeholder{color:${C.dim}}
-select option{background:${C.s2}}
-::-webkit-scrollbar{width:2px;height:2px}
-::-webkit-scrollbar-thumb{background:rgba(59,130,246,0.2);border-radius:2px}
-@keyframes spin{to{transform:rotate(360deg)}}
-@keyframes slideDown{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
-@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.anim{animation:fadeUp.3s ease both}
-.notif{animation:slideDown.4s ease both}
-@media print{.np{display:none!important}}
-`;
 const Box = ({children,style,onClick})=>(
  <div onClick={onClick} style={{background:"#ffffff",border:"0.5px solid #dce8f4",borderRadius:16,padding:"16px 15px",marginBottom:9,cursor:onClick?"pointer":"default",...style}}>{children}</div>
 );
@@ -2679,7 +2647,6 @@ Poids actuel: ${weightLog.length>0?weightLog[weightLog.length-1].v+"kg":"Non ren
  // ─────────────────────────────────────
  // PROGRAMME TAB
  // ─────────────────────────────────────
- ];
 
  const getTodaySeance=()=>{
  if(!prog) return null;
