@@ -145,7 +145,6 @@ export default function App(){
  // ─── État supplémentaire pour corriger les points faibles ───
  const [corrigerFaibles,setCorrigerFaibles]=useState(true);
 
- };
  const Paywall=()=>(
  <div style={{position:"fixed",inset:0,background:"rgba(8,9,14,0.95)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:200,padding:18}}>
  <div style={{background:C.s1,border:`1px solid rgba(200,150,62,.3)`,borderRadius:14,padding:"24px 20px",width:"100%",maxWidth:400}}>
