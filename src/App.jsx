@@ -552,7 +552,7 @@ export default function App(){
  const [prog,setProg]=useStorage("prog",null);
  const [cycles,setCycles]=useStorage("cycles",[]); // historique des cycles précédents
  // ─── Streak ───
- const getStreak=()=>{
+ const getStreak=useMemo(()=>{
  if(!prog) return 0;
  const dates=prog.jours.filter(j=>j.complete&&j.date).map(j=>j.date).sort((a,b)=>new Date(b.split('/').reverse().join('-'))-new Date(a.split('/').reverse().join('-')));
  if(!dates.length) return 0;
@@ -564,12 +564,12 @@ export default function App(){
  if(diff===i) streak++;
  });
  return streak;
- };
+ },[prog]);
  const [cycleStart,setCycleStart]=useStorage("cycleStart",null);
  const [seance,setSeance]=useState(null); // index
  const [exDetails,setExDetails]=useState({}); // {j: bool}
  const [exEdit,setExEdit]=useState({}); // {j: bool}
- const openSeance=(i)=>{setSeance(i);setExDetails({});setExEdit({});};
+ const openSeance=useCallback((i)=>{setSeance(i);setExDetails({});setExEdit({});},[]);
  const [createStep,setCS]=useState(0);
  const [newP,setNewP]=useState({nom:"",jours:[],seances:{}});
  const [jourActif,setJourActif]=useState(null);
@@ -581,7 +581,7 @@ export default function App(){
  const fileRefFace=useRef();
  const fileRefDos=useRef();
  const fileRefProfil=useRef();
- const readFile=(key,file)=>{if(!file)return;const r=new FileReader();r.onload=()=>setPhotos(p=>({...p,[key]:r.result}));r.readAsDataURL(file);};
+ const readFile=useCallback((key,file)=>{if(!file)return;const r=new FileReader();r.onload=()=>setPhotos(p=>({...p,[key]:r.result}));r.readAsDataURL(file);},[]);
  const [form,setForm]=useState({prenom:"",age:"",poids:"",taille:"",sexe:"",metier:"",niveau:"",jours:[],objectif:"",objectifPrecis:"",materiel:[],pathologies:[],sport:""});
  const [loadIA,setLoadIA]=useState(false);
  const [loadMsg,setLoadMsg]=useState("");
@@ -597,49 +597,43 @@ export default function App(){
  const [eau,setEau]=useStorage("eau",0);
  const [scanCode,setScan]=useState("");
  const [scanRes,setScanRes]=useState(null);
- const imc=profil.poids&&profil.taille?(profil.poids/((profil.taille/100)**2)).toFixed(1):null;
- const obj=OBJ[profil.objectif]||OBJ.sante;
+ const imc=useMemo(()=>profil.poids&&profil.taille?(profil.poids/((profil.taille/100)**2)).toFixed(1):null,[profil.poids,profil.taille]);
+ const obj=useMemo(()=>OBJ[profil.objectif]||OBJ.sante,[profil.objectif]);
 
  // ─── Calcul TDEE complet (Harris-Benedict révisé 1984) ───
- const calBase=useCallback(()=>{
+ const calObj=useMemo(()=>{
  const p=parseFloat(profil.poids)||0;
  const t=parseFloat(profil.taille)||0;
  const a=parseFloat(profil.age)||0;
  if(!p||!t||!a)return 2000;
- // MB Harris-Benedict révisé
  const mb=profil.sexe==="femme"
- ?447.593+9.247*p+3.098*t-4.330*a // Femme
- :88.362+13.397*p+4.799*t-5.677*a; // Homme (défaut)
- // TDEE = MB × facteur activité
+ ?447.593+9.247*p+3.098*t-4.330*a
+ :88.362+13.397*p+4.799*t-5.677*a;
  const factAct=ACTIVITE_FACTOR[profil.activite]||1.375;
  const tdee=Math.round(mb*factAct);
- // Ajustement objectif
- const adj=obj.surplus||0; // surplus positif = masse, négatif = sèche
- // Ajustement par cycle (bulk progressif ou sèche progressive)
+ const adj=obj.surplus||0;
  const cycleNum=cycles.length+1;
  let cycleAdj=0;
- if(profil.objectif==="hypertrophie"){
- // Bulk progressif : +50 kcal par cycle jusqu'à +500 max
- cycleAdj=Math.min((cycleNum-1)*50,200);
- } else if(profil.objectif==="poids"){
- // Déficit progressif par paliers pour éviter la stagnation
- // Cycle 1-2: -400, Cycle 3-4: -350 (réintroduction), Cycle 5+: -400
- cycleAdj=cycleNum%4<2?0:50;
- }
- return Math.max(1200, tdee+adj+cycleAdj);
+ if(profil.objectif==="hypertrophie") cycleAdj=Math.min((cycleNum-1)*50,200);
+ else if(profil.objectif==="poids") cycleAdj=cycleNum%4<2?0:50;
+ return Math.max(1200,tdee+adj+cycleAdj);
  },[profil,obj,cycles]);
-
- const calObj=calBase();
- // Macros en grammes (p:g/kg, g:g/kg, li:g/kg selon poids)
+ // Macros en grammes
+ const {pObj,lObj,gObj}=useMemo(()=>{
  const p_kg=parseFloat(profil.poids)||70;
- const pObj=Math.round(p_kg*(obj.p||2.0)); // Protéines g
- const lObj=Math.round(p_kg*(obj.li||1.0)); // Lipides g
- const calFromPL=pObj*4+lObj*9;
- const gObj=Math.max(50,Math.round((calObj-calFromPL)/4)); // Glucides g (reste)
- const totR=()=>[...repas.matin,...repas.midi,...repas.soir,...repas.snack].reduce((a,i)=>({cal:a.cal+i.c,p:a.p+i.p,g:a.g+i.g,l:a.l+i.l}),{cal:0,p:0,g:0,l:0});
- const jR=cycleStart?Math.max(0,42-Math.floor((Date.now()-cycleStart)/864e5)):null;
- const cPct=cycleStart?Math.min(100,((42-(jR||0))/42)*100):0;
- const semC=cycleStart?Math.min(5,Math.floor((42-(jR||42))/7)):0;
+ const pObj=Math.round(p_kg*(obj.p||2.0));
+ const lObj=Math.round(p_kg*(obj.li||1.0));
+ const gObj=Math.max(50,Math.round((calObj-pObj*4-lObj*9)/4));
+ return{pObj,lObj,gObj};
+ },[profil.poids,obj,calObj]);
+ const totR=useMemo(()=>[...repas.matin,...repas.midi,...repas.soir,...repas.snack].reduce((a,i)=>({cal:a.cal+i.c,p:a.p+i.p,g:a.g+i.g,l:a.l+i.l}),{cal:0,p:0,g:0,l:0}),[repas]);
+ const {jR,cPct,semC}=useMemo(()=>{
+ if(!cycleStart)return{jR:null,cPct:0,semC:0};
+ const jR=Math.max(0,42-Math.floor((Date.now()-cycleStart)/864e5));
+ const cPct=Math.min(100,((42-jR)/42)*100);
+ const semC=Math.min(5,Math.floor((42-jR)/7));
+ return{jR,cPct,semC};
+ },[cycleStart]);
  const push=useCallback((icon,title,body)=>{setNotif({icon,title,body});setTimeout(()=>setNotif(null),4500);},[]);
  useEffect(()=>{
  const t1=setTimeout(()=>push("🏋️","Séance du jour","Votre programme vous attend !"),7000);
@@ -655,7 +649,7 @@ export default function App(){
  // eslint-disable-next-line
  },[]);
 
- const handleScan=async code=>{
+ const handleScan=useCallback(async code=>{
  if(code.length<8)return;
  try{
  const r=await fetch(`https://world.openfoodfacts.org/api/v0/product/${code}.json`);
@@ -663,7 +657,7 @@ export default function App(){
  if(scanData.status===1){const n=scanData.product.nutriments||{};setScanRes({n:scanData.product.product_name_fr||"Produit",c:Math.round(n["energy-kcal_100g"]||0),p:Math.round(n.proteins_100g||0),g:Math.round(n.carbohydrates_100g||0),l:Math.round(n.fat_100g||0),cat:"Scanné"});}
  else setScanRes({error:true});
  }catch{setScanRes({error:true});}
- };
+ },[]);
  // ─── État supplémentaire pour corriger les points faibles ───
  const [corrigerFaibles,setCorrigerFaibles]=useState(true);
 
@@ -905,7 +899,7 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  }
  };
  const Home=()=>{
- const tot=totR();
+ const tot=totR;
  const today=new Date();
  const todayKey=`${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,"0")}-${String(today.getDate()).padStart(2,"0")}`;
  const todaySess=calSess[todayKey];
@@ -922,7 +916,7 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  <div style={{fontSize:13,color:C.text,fontWeight:500,lineHeight:1.6}}>{motiv}</div>
  </div>
  {/* ─── Streak ─── */}
-          {(()=>{const s=getStreak();return s>0?(<div style={{display:"flex",alignItems:"center",gap:8,marginTop:8,padding:"8px 12px",background:"rgba(249,115,22,0.08)",border:"0.5px solid rgba(249,115,22,0.2)",borderRadius:10}}>
+          {(()=>{const s=getStreak;return s>0?(<div style={{display:"flex",alignItems:"center",gap:8,marginTop:8,padding:"8px 12px",background:"rgba(249,115,22,0.08)",border:"0.5px solid rgba(249,115,22,0.2)",borderRadius:10}}>
             <span style={{fontSize:18}}>🔥</span>
             <div>
               <span style={{fontSize:13,fontWeight:600,color:"#f97316"}}>{s} jour{s>1?"s":""} consécutif{s>1?"s":""}</span>
@@ -2132,7 +2126,7 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
  );
  };
  const Nutrition=()=>{
- const tot=totR();
+ const tot=totR;
  const all=[...FOODS,...myFoods];
  const filtered=search?all.filter(f=>f.n.toLowerCase().includes(search.toLowerCase())):[];
 
@@ -2603,7 +2597,7 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
               programme:prog?{titre:prog.titre,seances_completees:prog.jours.filter(j=>j.complete).length}:null,
               calories_cible:calObj,
               macros:{proteines:pObj+"g",glucides:gObj+"g",lipides:lObj+"g"},
-              streak:getStreak(),
+              streak:getStreak,
               export_date:new Date().toLocaleDateString("fr-FR"),
             };
             const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
@@ -2619,7 +2613,7 @@ RÉPONDS UNIQUEMENT avec ce JSON compact (pas de texte, pas de markdown):
 Profil: ${profil.prenom||"Anonyme"}, ${profil.poids}kg, ${profil.taille}cm
 Objectif: ${OBJ[profil.objectif]?.l||""}
 Calories: ${calObj} kcal/j | P: ${pObj}g | G: ${gObj}g | L: ${lObj}g
-Streak: ${getStreak()} jours
+Streak: ${getStreak} jours
 Programme: ${prog?.titre||"Aucun"}
 Poids actuel: ${weightLog.length>0?weightLog[weightLog.length-1].v+"kg":"Non renseigné"}`;
             if(navigator.share){navigator.share({title:"Mon bilan MorphoCoach",text:txt}).catch(()=>{});}
