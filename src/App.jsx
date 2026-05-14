@@ -144,6 +144,8 @@ export default function App(){
  },[]);
  // ─── État supplémentaire pour corriger les points faibles ───
  const [corrigerFaibles,setCorrigerFaibles]=useState(true);
+ const [loadIA,setLoadIA]=useState(false);
+ const [loadMsg,setLoadMsg]=useState("");
 
  const Paywall=()=>(
  <div style={{position:"fixed",inset:0,background:"rgba(8,9,14,0.95)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:200,padding:18}}>
@@ -192,11 +194,11 @@ export default function App(){
  }}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={tab==="profile"?"#3b82f6":"#64748b"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></button>
  </div>
  </div>
- {showOnboarding&&<Onboarding profil={profil} setProfil={setProfil} setOnboardingDone={setOnboardingDone} push={push} C={C} />}
+ {showOnboarding&&<Onboarding profil={profil} setProfil={setProfil} setOnboardingDone={setOnboardingDone} loadIA={loadIA} setLoadIA={setLoadIA} loadMsg={loadMsg} setLoadMsg={setLoadMsg} cycles={cycles} setCycles={setCycles} setCycleStart={setCycleStart} setProg={setProg} photos={photos} setPhotos={setPhotos} readFile={readFile} corrigerFaibles={corrigerFaibles} setCorrigerFaibles={setCorrigerFaibles} push={push} C={C} />}
  <div style={{maxWidth:500,margin:"0 auto",paddingBottom:72}}>
  <div key={tab} className="page-enter">
  {tab==="home"&&<Home profil={profil} prog={prog} cycleStart={cycleStart} setTab={setTab} premium={premium} setPaywall={setPaywall} eau={eau} setEau={setEau} weightLog={weightLog} setWeightLog={setWeightLog} lastWeighIn={lastWeighIn} setLastWeighIn={setLastWeighIn} calSess={calSess} imc={imc} obj={obj} calObj={calObj} pObj={pObj} lObj={lObj} gObj={gObj} totR={totR} jR={jR} cPct={cPct} semC={semC} getStreak={getStreak} MOTIVATIONS={MOTIVATIONS} C={C} INT={INT} push={push} />}
- {tab==="program"&&<ProgramTab prog={prog} premium={premium} setPaywall={setPaywall} checkedEx={checkedEx} seance={seance} setSeance={openSeance} setChrono={setChrono} setChronoSec={setChronoSec} exDetails={exDetails} setExDetails={setExDetails} exEdit={exEdit} setExEdit={setExEdit} setProg={setProg} cycleStart={cycleStart} setCycleStart={setCycleStart} setCalSess={setCalSess} calSess={calSess} profil={profil} cycles={cycles} EX={EX} C={C} INT={INT} push={push} />}
+ {tab==="program"&&<ProgramTab prog={prog} premium={premium} setPaywall={setPaywall} checkedEx={checkedEx} seance={seance} setSeance={openSeance} setChrono={setChrono} setChronoSec={setChronoSec} exDetails={exDetails} setExDetails={setExDetails} exEdit={exEdit} setExEdit={setExEdit} setProg={setProg} cycleStart={cycleStart} setCycleStart={setCycleStart} setCalSess={setCalSess} calSess={calSess} profil={profil} cycles={cycles} EX={EX} loadIA={loadIA} setLoadIA={setLoadIA} loadMsg={loadMsg} setLoadMsg={setLoadMsg} photos={photos} setPhotos={setPhotos} readFile={readFile} corrigerFaibles={corrigerFaibles} setCorrigerFaibles={setCorrigerFaibles} C={C} INT={INT} push={push} />}
  {tab==="nutrition"&&<Nutrition profil={profil} prog={prog} repas={repas} setRepas={setRepas} myFoods={myFoods} setMyFoods={setMyFoods} eau={eau} setEau={setEau} scanRes={scanRes} setScanRes={setScanRes} obj={obj} calObj={calObj} pObj={pObj} lObj={lObj} gObj={gObj} totR={totR} handleScan={handleScan} FOODS={FOODS} C={C} INT={INT} push={push} />}
  {tab==="profile"&&<Profile profil={profil} setProfil={setProfil} prog={prog} setProg={setProg} cycles={cycles} premium={premium} setPremium={setPremium} weightLog={weightLog} setWeightLog={setWeightLog} lastWeighIn={lastWeighIn} setLastWeighIn={setLastWeighIn} checkedEx={checkedEx} setCheckedEx={setCheckedEx} imc={imc} obj={obj} calObj={calObj} pObj={pObj} lObj={lObj} gObj={gObj} getStreak={getStreak} OBJ={OBJ} ACTIVITE_FACTOR={ACTIVITE_FACTOR} EX={EX} setChrono={setChrono} setChronoSec={setChronoSec} seance={seance} exDetails={exDetails} setExDetails={setExDetails} exEdit={exEdit} setExEdit={setExEdit} C={C} INT={INT} push={push} />}
  </div>
