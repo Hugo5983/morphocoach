@@ -29,11 +29,13 @@ export function buildPrompt({ form, photos, cycles, corrigerFaibles }) {
     : "?";
   const nbPhotos = [photos.face, photos.dos, photos.profil].filter(Boolean).length;
   const pathosAdapt = form.pathologies.filter((p) => p !== "Aucune");
+  const sportLine = form.sport ? `Sport pratiqué: ${form.sport}` : "";
 
   return `Tu es un coach sportif expert en musculation et biomécanique. ${histCtx}
 
 PROFIL: ${form.prenom || "User"}, ${form.age}ans, ${form.sexe}, ${form.poids}kg/${form.taille}cm, IMC:${imc}
-Niveau:${form.niveau} | Objectif:${form.objectif} | Jours:${(form.jours || []).join("/") || "3j"} | Matériel:${(form.materiel || []).join(",") || "salle"} | Pathologies:${pathosAdapt.join(",") || "aucune"} | Cycle:${cycleNum} | Photos:${nbPhotos} | Corriger faibles:${corrigerFaibles ? "OUI" : "NON"}
+Niveau:${form.niveau} | Objectif:${form.objectif} | Jours:${(form.jours || []).join("/") || "3j"} | Matériel:${(form.materiel || []).join(",") || "salle"} | Pathologies:${pathosAdapt.join(",") || "aucune"} | Cycle:${cycleNum} | Photos:${nbPhotos} | Corriger faibles:${corrigerFaibles ? "OUI" : "NON"}${sportLine ? ` | ${sportLine}` : ""}
+${form.objectif === "prep_physique" ? "OBJECTIF PRÉPA PHYSIQUE: Priorité condition physique générale, puissance, endurance musculaire, transfert sportif. Intégrer exercices polyarticulaires explosifs, circuits, travail fonctionnel." : ""}
 
 RÈGLES DELAVIER (selon photos):
 - Humérus longs→haltères UNIQUEMENT au développé/épaules | Fémurs longs→presse PAS squat | Cage plate→pull-over OBLIGATOIRE | Antépulsion→face pull chaque séance
