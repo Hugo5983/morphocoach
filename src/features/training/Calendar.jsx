@@ -239,6 +239,162 @@ function CardioModal({ onClose, onSave, poids, C }) {
   );
 }
 
+
+// ─── SPORTS — 30 activités sportives + MET ───────────────────────────────────
+const SPORTS = [
+  {id:"football",   l:"Football",          i:"⚽", color:"#22c55e", met:8.5},
+  {id:"basketball", l:"Basketball",        i:"🏀", color:"#f97316", met:7.0},
+  {id:"tennis",     l:"Tennis",            i:"🎾", color:"#eab308", met:7.5},
+  {id:"padel",      l:"Padel",             i:"🏸", color:"#84cc16", met:7.0},
+  {id:"rugby",      l:"Rugby",             i:"🏉", color:"#a16207", met:8.5},
+  {id:"volleyball", l:"Volleyball",        i:"🏐", color:"#3b82f6", met:5.0},
+  {id:"handball",   l:"Handball",          i:"🤾", color:"#f97316", met:8.0},
+  {id:"badminton",  l:"Badminton",         i:"🏸", color:"#06b6d4", met:6.5},
+  {id:"pingpong",   l:"Tennis de table",   i:"🏓", color:"#3b82f6", met:4.5},
+  {id:"squash",     l:"Squash",            i:"🎾", color:"#f87171", met:12.0},
+  {id:"boxe",       l:"Boxe",              i:"🥊", color:"#ef4444", met:9.5},
+  {id:"mma",        l:"MMA / Kickboxing",  i:"🥋", color:"#dc2626", met:10.5},
+  {id:"judo",       l:"Judo / Jiu-jitsu",  i:"🥋", color:"#1d4ed8", met:9.0},
+  {id:"karate",     l:"Karaté / Arts mart.",i:"🥷", color:"#7c3aed", met:8.5},
+  {id:"escalade",   l:"Escalade",          i:"🧗", color:"#92400e", met:8.0},
+  {id:"yoga",       l:"Yoga",              i:"🧘", color:"#8b5cf6", met:3.0},
+  {id:"pilates",    l:"Pilates",           i:"🧘", color:"#a855f7", met:3.5},
+  {id:"crossfit",   l:"CrossFit",          i:"🏋️", color:"#f97316", met:10.0},
+  {id:"natation",   l:"Natation compét.",  i:"🏊", color:"#06b6d4", met:9.0},
+  {id:"surf",       l:"Surf",              i:"🏄", color:"#0284c7", met:6.0},
+  {id:"ski",        l:"Ski / Snowboard",   i:"⛷️", color:"#bfdbfe", met:7.5},
+  {id:"golf",       l:"Golf",              i:"⛳", color:"#16a34a", met:4.5},
+  {id:"cyclisme",   l:"Cyclisme route",    i:"🚵", color:"#f97316", met:9.0},
+  {id:"triathlon",  l:"Triathlon",         i:"🏅", color:"#0ea5e9", met:11.0},
+  {id:"athletisme", l:"Athlétisme",        i:"🏃", color:"#3b82f6", met:10.0},
+  {id:"danse",      l:"Danse / Zumba",     i:"💃", color:"#ec4899", met:6.0},
+  {id:"hockey",     l:"Hockey",            i:"🏒", color:"#64748b", met:8.0},
+  {id:"equitation", l:"Équitation",        i:"🐎", color:"#92400e", met:5.0},
+  {id:"roller",     l:"Roller / Skate",    i:"🛹", color:"#f97316", met:8.0},
+  {id:"petanque",   l:"Pétanque",          i:"🎯", color:"#6b7280", met:2.5},
+];
+
+// ─── SPORT MODAL ──────────────────────────────────────────────────────────────
+function SportModal({ onClose, onSave, poids, C }) {
+  const [sport,     setSport]     = useState(null);
+  const [duree,     setDuree]     = useState(60);
+  const [kcalManuel,setKcalManuel]= useState("");
+  const [editKcal,  setEditKcal]  = useState(false);
+
+  const kg       = parseFloat(poids) || 70;
+  const kcalAuto = sport ? Math.round(sport.met * kg * duree / 60) : 0;
+  const kcalFinal = editKcal && kcalManuel !== "" ? parseInt(kcalManuel) : kcalAuto;
+
+  const handleSave = () => {
+    onSave({
+      nom: `${sport.l} · ${duree}min`,
+      intensite: kcalAuto > 500 ? "intense" : kcalAuto > 350 ? "lourd" : kcalAuto > 200 ? "modere" : "leger",
+      color: sport.color,
+      sport: { sportId: sport.id, sportNom: sport.l, duree, kcal: kcalFinal },
+    });
+  };
+
+  return (
+    <div style={{position:"fixed",inset:0,background:"rgba(228,238,248,0.98)",zIndex:400,overflowY:"auto"}}>
+      <div style={{maxWidth:500,margin:"0 auto",paddingBottom:80}}>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"20px 16px 14px"}}>
+          <div>
+            <div style={{fontSize:9,color:"#64748b",fontWeight:700,letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:3}}>Activité sportive</div>
+            <div style={{fontFamily:"'Syne',sans-serif",fontSize:20,fontWeight:300,color:"#0f1a2e"}}>
+              {sport ? sport.l : "Choix du sport"}
+            </div>
+          </div>
+          <button onClick={onClose} style={{background:"#edf3fb",border:"0.5px solid #dce8f4",borderRadius:10,width:36,height:36,color:"#64748b",cursor:"pointer",fontSize:18}}>×</button>
+        </div>
+
+        <div style={{padding:"0 16px"}}>
+          {/* Sélection sport */}
+          {!sport && (
+            <div>
+              <div style={{fontSize:11,color:"#64748b",marginBottom:12}}>Sélectionne ton sport</div>
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:7}}>
+                {SPORTS.map(s => (
+                  <div key={s.id} onClick={() => setSport(s)}
+                    style={{padding:"11px 12px",background:"#fff",border:"0.5px solid #dce8f4",borderRadius:11,cursor:"pointer",display:"flex",alignItems:"center",gap:9,transition:"border-color .15s"}}
+                    onMouseEnter={ev => ev.currentTarget.style.borderColor = s.color}
+                    onMouseLeave={ev => ev.currentTarget.style.borderColor = "#dce8f4"}>
+                    <div style={{fontSize:20,flexShrink:0}}>{s.i}</div>
+                    <div style={{flex:1,minWidth:0}}>
+                      <div style={{fontSize:11,fontWeight:500,color:"#0f1a2e",lineHeight:1.3}}>{s.l}</div>
+                      <div style={{fontSize:9,color:"#94a3b8",marginTop:1}}>~{Math.round(s.met*70)} kcal/h</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Configuration après sélection */}
+          {sport && (
+            <div>
+              <button onClick={() => setSport(null)} style={{background:"transparent",border:"none",color:"#3b82f6",cursor:"pointer",fontSize:12,fontWeight:600,padding:"0 0 14px",display:"flex",alignItems:"center",gap:4}}>← Changer de sport</button>
+
+              {/* Sport sélectionné */}
+              <div style={{display:"flex",alignItems:"center",gap:12,padding:"12px 14px",background:`${sport.color}10`,border:`0.5px solid ${sport.color}30`,borderRadius:12,marginBottom:12}}>
+                <div style={{fontSize:28}}>{sport.i}</div>
+                <div>
+                  <div style={{fontFamily:"'Syne',sans-serif",fontSize:16,fontWeight:400,color:"#0f1a2e"}}>{sport.l}</div>
+                  <div style={{fontSize:10,color:"#64748b",marginTop:2}}>MET {sport.met} · Intensité {sport.met>=10?"élevée":sport.met>=6?"modérée":"faible"}</div>
+                </div>
+              </div>
+
+              {/* Durée */}
+              <div style={{background:"#fff",border:"0.5px solid #dce8f4",borderRadius:12,padding:"14px 16px",marginBottom:10}}>
+                <div style={{fontSize:9,color:"#64748b",fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",marginBottom:10}}>Durée</div>
+                <div style={{display:"flex",alignItems:"center",gap:10}}>
+                  <button onClick={() => setDuree(d => Math.max(5,d-5))} style={{width:36,height:36,borderRadius:9,background:"#f1f5f9",border:"none",cursor:"pointer",fontSize:18,fontWeight:300,color:"#64748b"}}>−</button>
+                  <div style={{flex:1,textAlign:"center"}}>
+                    <div style={{fontFamily:"'Syne',sans-serif",fontSize:32,fontWeight:300,color:"#0f1a2e",lineHeight:1}}>{duree}</div>
+                    <div style={{fontSize:11,color:"#64748b",marginTop:2}}>minutes</div>
+                  </div>
+                  <button onClick={() => setDuree(d => Math.min(240,d+5))} style={{width:36,height:36,borderRadius:9,background:"#3b82f6",border:"none",cursor:"pointer",fontSize:18,color:"#fff"}}>+</button>
+                </div>
+                <div style={{display:"flex",gap:6,marginTop:12}}>
+                  {[30,45,60,75,90,120].map(d => (
+                    <button key={d} onClick={() => setDuree(d)} style={{flex:1,padding:"5px 2px",background:duree===d?"rgba(59,130,246,0.1)":"transparent",border:`0.5px solid ${duree===d?"#3b82f6":"#dce8f4"}`,borderRadius:7,color:duree===d?"#3b82f6":"#64748b",cursor:"pointer",fontSize:10,fontWeight:duree===d?600:400}}>{d}'</button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Calories */}
+              <div style={{background:"#fff",border:`1px solid ${kcalAuto>0?"rgba(59,130,246,0.2)":"#dce8f4"}`,borderRadius:12,padding:"14px 16px",marginBottom:16}}>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}>
+                  <div style={{fontSize:9,color:"#64748b",fontWeight:700,letterSpacing:"1px",textTransform:"uppercase"}}>Calories brûlées <span style={{color:"#94a3b8",fontWeight:400,fontSize:8}}>(facultatif)</span></div>
+                  <button onClick={() => { setEditKcal(e=>!e); setKcalManuel(String(kcalAuto)); }} style={{fontSize:10,color:"#3b82f6",background:"transparent",border:"none",cursor:"pointer",fontWeight:600}}>{editKcal?"Auto":"Modifier"}</button>
+                </div>
+                {editKcal ? (
+                  <div style={{display:"flex",alignItems:"center",gap:8}}>
+                    <input value={kcalManuel} onChange={e=>setKcalManuel(e.target.value)} style={{flex:1,padding:"10px 12px",background:"#f8fafc",border:"0.5px solid #3b82f6",borderRadius:9,fontSize:16,fontWeight:500,color:"#0f1a2e",fontFamily:"'Syne',sans-serif"}}/>
+                    <span style={{fontSize:12,color:"#64748b"}}>kcal</span>
+                  </div>
+                ) : (
+                  <div>
+                    <div style={{display:"flex",alignItems:"baseline",gap:6}}>
+                      <div style={{fontFamily:"'Syne',sans-serif",fontSize:36,fontWeight:300,color:"#3b82f6",lineHeight:1}}>{kcalAuto}</div>
+                      <div style={{fontSize:12,color:"#64748b"}}>kcal</div>
+                    </div>
+                    <div style={{fontSize:10,color:"#94a3b8",marginTop:4}}>Estimation MET {sport.met} · {poids||70}kg · {duree}min</div>
+                  </div>
+                )}
+              </div>
+
+              <button onClick={handleSave} style={{width:"100%",padding:"14px",background:"#3b82f6",border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"'Syne',sans-serif",marginBottom:8}}>
+                ✓ Enregistrer la séance
+              </button>
+              <button onClick={onClose} style={{width:"100%",padding:"10px",background:"transparent",border:"0.5px solid #dce8f4",borderRadius:10,color:"#64748b",cursor:"pointer",fontSize:12,fontFamily:"'Inter',sans-serif"}}>Annuler</button>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ─── HELPER : chercher un exercice dans la BDD par nom ───────────────────────
 function findExInDB(nom) {
   if (!nom) return null;
@@ -398,6 +554,7 @@ export default function Calendar(props) {
 
   const [bonusModal,   setBonusModal]   = useState(null);
   const [cardioOpen,   setCardioOpen]   = useState(false);
+  const [sportOpen,    setSportOpen]    = useState(false);
   const [viewJour,     setViewJour]     = useState(null);
   const [currentWeek,  setCurrentWeek]  = useState(semC || 0);
   const [guideEx,      setGuideEx]      = useState(null);
@@ -418,6 +575,24 @@ export default function Calendar(props) {
           setCalSess(s => ({...s,[key]:sess}));
           setCardioOpen(false);
           push("🏃","Cardio enregistré !",`${sess.nom}${sess.cardio?.kcal?` · ${sess.cardio.kcal} kcal`:""}`);
+        }}
+      />
+    );
+  }
+
+  // ── Sport modal ──
+  if (sportOpen) {
+    return (
+      <SportModal
+        poids={profil?.poids}
+        C={C}
+        onClose={() => setSportOpen(false)}
+        onSave={(sess) => {
+          const today = new Date();
+          const key = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,"0")}-${String(today.getDate()).padStart(2,"0")}`;
+          setCalSess(s => ({...s,[key]:sess}));
+          setSportOpen(false);
+          push("🏆","Sport enregistré !",`${sess.nom}${sess.sport?.kcal?` · ${sess.sport.kcal} kcal`:""}`);
         }}
       />
     );
@@ -469,14 +644,18 @@ export default function Calendar(props) {
       <Lbl>Séance bonus</Lbl>
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,marginBottom:12}}>
         {[
-          {id:"etirements",i:"🧘",l:"Étirements",color:C.purple},
-          {id:"cardio",    i:"🏃",l:"Cardio",    color:C.blue},
-          {id:"mobilite",  i:"💆",l:"Mobilité",  color:C.green},
+          {id:"cardio",    i:"🏃",l:"Cardio",             color:C.blue},
+          {id:"etirements",i:"🧘",l:"Étirements & Mobilité",color:C.purple},
+          {id:"sport",     i:"🏆",l:"Autre sport",         color:"#f97316"},
         ].map(b => (
-          <div key={b.id} onClick={() => b.id==="cardio" ? setCardioOpen(true) : setBonusModal(b)}
+          <div key={b.id} onClick={() => {
+            if(b.id==="cardio") setCardioOpen(true);
+            else if(b.id==="sport") setSportOpen(true);
+            else setBonusModal(b);
+          }}
             style={{padding:"12px 8px",textAlign:"center",background:C.s2,border:"0.5px solid #dce8f4",borderRadius:10,cursor:"pointer"}}>
             <div style={{fontSize:22,marginBottom:4}}>{b.i}</div>
-            <div style={{fontSize:11,fontWeight:700,color:b.color}}>{b.l}</div>
+            <div style={{fontSize:10,fontWeight:700,color:b.color,lineHeight:1.3}}>{b.l}</div>
           </div>
         ))}
       </div>
