@@ -112,6 +112,7 @@ function ProgrammeView(props) {
   // vue interne : "list" | "seance:{progIdx}:{jourIdx}" | "creer"
   const [innerView, setInnerView] = useState("list");
   const [confirmDel, setConfirmDel] = useState(null); // {type:"prog"|"jour", progIdx, jourIdx}
+  const [isCreating, setIsCreating] = useState(false);
 
   const allProgs = progs && progs.length > 0 ? progs : (prog ? [prog] : []);
 
@@ -127,22 +128,41 @@ function ProgrammeView(props) {
   };
 
   const deleteProgAtIdx = (idx) => {
+    const delProg = allProgs[idx];
     const next = allProgs.filter((_,i) => i !== idx);
     setProgs(next);
-    // Si on supprime le prog actif, basculer sur le premier restant
-    if (prog && (prog.titre === allProgs[idx].titre || prog.id === allProgs[idx].id)) {
+    if (prog && (prog.titre === delProg.titre || prog.id === delProg.id)) {
       setProg(next[0] || null);
     }
+    // Nettoyer calSess : supprimer toutes les entrées liées aux séances de ce programme
+    if (delProg.jours && setCalSess) {
+      const joursNoms = new Set(delProg.jours.flatMap(j => [j.nom, j.focus].filter(Boolean)));
+      setCalSess(prev => {
+        const ns = {...prev};
+        Object.keys(ns).forEach(k => { if (joursNoms.has(ns[k]?.nom)) delete ns[k]; });
+        return ns;
+      });
+    }
     setConfirmDel(null);
-    push("🗑️","Programme supprimé","Le programme a été retiré.");
+    push("🗑️","Programme supprimé","Le programme et ses séances ont été retirés du calendrier.");
   };
 
   const deleteJourAtIdx = (pIdx, jIdx) => {
+    const jour = allProgs[pIdx].jours[jIdx];
     const u = JSON.parse(JSON.stringify(allProgs[pIdx]));
     u.jours.splice(jIdx, 1);
     updateProgAtIdx(pIdx, u);
+    // Nettoyer calSess : supprimer les entrées de ce jour
+    if (jour && setCalSess) {
+      const jourNoms = new Set([jour.nom, jour.focus].filter(Boolean));
+      setCalSess(prev => {
+        const ns = {...prev};
+        Object.keys(ns).forEach(k => { if (jourNoms.has(ns[k]?.nom)) delete ns[k]; });
+        return ns;
+      });
+    }
     setConfirmDel(null);
-    push("🗑️","Séance supprimée","La séance a été retirée du programme.");
+    push("🗑️","Séance supprimée","La séance a été retirée du programme et du calendrier.");
   };
 
   // Parser innerView pour séance
@@ -155,8 +175,13 @@ function ProgrammeView(props) {
     }
   }
 
-  const showCreerForm = createStep > 0 || (newP.nom !== "" || newP.jours.length > 0);
-  const creerProps = { ...props, setProgView: (v) => { if(v === "calendar") setProgView("calendar"); else setInnerView("list"); } };
+  const showCreerForm = isCreating || createStep > 0 || (newP.nom !== "" || newP.jours.length > 0);
+  const resetCreating = () => { setIsCreating(false); setCS(0); setNewP({nom:"",jours:[],seances:{}}); };
+  const creerProps = {
+    ...props,
+    onCancel: resetCreating,
+    setProgView: (v) => { resetCreating(); if(v === "calendar") setProgView("calendar"); else setInnerView("list"); },
+  };
 
   // ── Vue séance detail ──
   if (seanceView) {
@@ -203,7 +228,7 @@ function ProgrammeView(props) {
             <div style={{fontSize:12,color:"#64748b",lineHeight:1.5,marginBottom:20}}>Obtenez un programme 100% adapté à votre morphologie, niveau et objectifs grâce à notre algorithme avancé</div>
           </div>
           <Btn onClick={() => { if(!premium) setPaywall(true); else setProgView("analyse"); }}>✨ Générer mon programme</Btn>
-          <Btn v="out" onClick={() => { setCS(0); setNewP({nom:"",jours:[],seances:{}}); }}>Créer manuellement</Btn>
+          <Btn v="out" onClick={() => { setIsCreating(true); setCS(0); setNewP({nom:"",jours:[],seances:{}}); }}>Créer manuellement</Btn>
         </Box>
       )}
 
@@ -263,7 +288,7 @@ function ProgrammeView(props) {
       {allProgs.length > 0 && !showCreerForm && (
         <div style={{marginBottom:12}}>
           <Btn onClick={() => { if(!premium) setPaywall(true); else setProgView("analyse"); }}>✨ Nouveau programme IA</Btn>
-          <Btn v="out" onClick={() => { setCS(0); setNewP({nom:"",jours:[],seances:{}}); }}>+ Créer manuellement</Btn>
+          <Btn v="out" onClick={() => { setIsCreating(true); setCS(0); setNewP({nom:"",jours:[],seances:{}}); }}>+ Créer manuellement</Btn>
         </div>
       )}
 
