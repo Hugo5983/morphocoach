@@ -229,12 +229,17 @@ export default function AnalyseIA(props) {
 
       {aStep===2 && <Box>
         <div style={{fontSize:11,color:"#64748b",marginBottom:8}}>Objectif principal <span style={{color:C.red}}>*</span></div>
-        <G2>{[{id:"hypertrophie",i:"💪",l:"Prise de muscle"},{id:"force",i:"🏋️",l:"Force"},{id:"poids",i:"🔥",l:"Perte de poids"},{id:"reathletisation",i:"🩺",l:"Réathlé"},{id:"sante",i:"❤️",l:"Santé"},{id:"performance",i:"🏆",l:"Performance"}].map(o=>(
+        <G2>{[{id:"hypertrophie",i:"💪",l:"Prise de muscle"},{id:"force",i:"🏋️",l:"Force"},{id:"poids",i:"🔥",l:"Perte de poids"},{id:"prep_physique",i:"⚡",l:"Prépa physique"},{id:"reathletisation",i:"🩺",l:"Réathlé"},{id:"sante",i:"❤️",l:"Santé"}].map(o=>(
           <div key={o.id} onClick={()=>setForm({...form,objectif:o.id})} style={{padding:"12px 8px",textAlign:"center",cursor:"pointer",background:form.objectif===o.id?C.goldD:C.s2,border:`1px solid ${form.objectif===o.id?C.gold:C.s3}`,borderRadius:10}}>
             <div style={{fontSize:20,marginBottom:4}}>{o.i}</div><div style={{fontSize:11,fontWeight:400}}>{o.l}</div>
           </div>
         ))}</G2>
         <textarea style={{width:"100%",padding:"11px 13px",background:C.s2,border:"0.5px solid #dce8f4",borderRadius:9,color:C.text,fontSize:13,minHeight:60,resize:"vertical",marginBottom:10,fontFamily:"'Inter',sans-serif"}} placeholder="Décrivez votre objectif précis (facultatif)" value={form.objectifPrecis} onChange={e=>setForm({...form,objectifPrecis:e.target.value})}/>
+        {/* Sport pratiqué — facultatif */}
+        <div style={{marginBottom:10}}>
+          <div style={{fontSize:11,color:"#64748b",marginBottom:6,fontWeight:500}}>Sport pratiqué <span style={{color:"#94a3b8",fontWeight:400}}>(facultatif)</span></div>
+          <input value={form.sport||""} onChange={e=>setForm({...form,sport:e.target.value})} placeholder="Ex: Football, Tennis, Natation, Boxe…" style={{width:"100%",padding:"10px 13px",background:C.s2,border:"0.5px solid #dce8f4",borderRadius:9,color:C.text,fontSize:13,fontFamily:"'Inter',sans-serif",boxSizing:"border-box"}}/>
+        </div>
         <div style={{fontSize:11,color:"#64748b",marginBottom:6}}>Jours d'entraînement <span style={{color:C.red}}>*</span></div>
         <div style={{display:"flex",flexWrap:"wrap",marginBottom:6}}>
           {["Lun","Mar","Mer","Jeu","Ven","Sam","Dim"].map(j=>(
