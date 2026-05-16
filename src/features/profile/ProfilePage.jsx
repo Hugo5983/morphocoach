@@ -56,7 +56,7 @@ import { Box, Lbl, Inp, Btn, Bar, Row, G2, Tag, MiniChart } from "../../componen
  </Box>
  <Box>
  <Lbl>Objectif</Lbl>
- <G2>{[{id:"hypertrophie",i:"💪",l:"Prise de muscle"},{id:"force",i:"🏋️",l:"Force"},{id:"poids",i:"🔥",l:"Perte de poids"},{id:"sante",i:"❤️",l:"Santé"}].map(o=>(
+ <G2>{[{id:"hypertrophie",i:"💪",l:"Prise de muscle"},{id:"force",i:"🏋️",l:"Force"},{id:"poids",i:"🔥",l:"Perte de poids"},{id:"sante",i:"❤️",l:"Santé"},{id:"prep_physique",i:"⚡",l:"Prépa physique"},{id:"reathletisation",i:"🩺",l:"Réathlétisation"}].map(o=>(
  <div key={o.id} onClick={()=>setProfil({...profil,objectif:o.id})} style={{padding:"12px 8px",textAlign:"center",cursor:"pointer",background:profil.objectif===o.id?C.goldD:C.s2,border:`1px solid ${profil.objectif===o.id?C.gold:C.s3}`,borderRadius:10}}>
  <div style={{fontSize:20,marginBottom:5}}>{o.i}</div><div style={{fontSize:11,fontWeight:400}}>{o.l}</div>
  </div>
@@ -123,6 +123,8 @@ import { Box, Lbl, Inp, Btn, Bar, Row, G2, Tag, MiniChart } from "../../componen
  {profil.objectif==="hypertrophie"&&<div style={{padding:"8px 10px",background:"rgba(59,130,246,0.06)",border:"0.5px solid rgba(59,130,246,0.15)",borderRadius:8,fontSize:10,color:"#3b82f6",lineHeight:1.5}}>💪 Prise de masse : surplus de +{(OBJ.hypertrophie.surplus+(Math.min(cycles.length,4)*50))}kcal. Protéines à {obj.p}g/kg. Progression du surplus par cycle (+50kcal chaque cycle).</div>}
  {profil.objectif==="poids"&&<div style={{padding:"8px 10px",background:"rgba(249,115,22,0.06)",border:"0.5px solid rgba(249,115,22,0.15)",borderRadius:8,fontSize:10,color:"#f97316",lineHeight:1.5}}>🔥 Perte de graisse : déficit de 400kcal. Perte saine : 400-500g/semaine. Protéines élevées ({obj.p}g/kg) pour préserver le muscle. Méthode MATADOR recommandée : alterner 2 semaines déficit / 2 semaines maintien.</div>}
  {profil.objectif==="force"&&<div style={{padding:"8px 10px",background:"rgba(139,92,246,0.06)",border:"0.5px solid rgba(139,92,246,0.15)",borderRadius:8,fontSize:10,color:"#8b5cf6",lineHeight:1.5}}>🏋️ Force : léger surplus +{OBJ.force.surplus}kcal. Protéines à {obj.p}g/kg. Glucides élevés ({obj.g}g/kg) pour les performances.</div>}
+ {profil.objectif==="prep_physique"&&<div style={{padding:"8px 10px",background:"rgba(234,179,8,0.06)",border:"0.5px solid rgba(234,179,8,0.2)",borderRadius:8,fontSize:10,color:"#ca8a04",lineHeight:1.5}}>⚡ Prépa physique : léger surplus +{OBJ.prep_physique?.surplus||100}kcal. Protéines à {OBJ.prep_physique?.p||1.8}g/kg. Priorité aux exercices fonctionnels et polyarticulaires pour la condition physique générale.</div>}
+ {profil.objectif==="reathletisation"&&<div style={{padding:"8px 10px",background:"rgba(6,182,212,0.06)",border:"0.5px solid rgba(6,182,212,0.2)",borderRadius:8,fontSize:10,color:"#0891b2",lineHeight:1.5}}>🩺 Réathlétisation : maintenance calorique. Priorité à la récupération fonctionnelle et au renforcement progressif. Consultez un professionnel de santé pour un suivi adapté.</div>}
  </Box>}
        {/* ─── Export & Partage ─── */}
       <Box>
