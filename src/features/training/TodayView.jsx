@@ -3,98 +3,267 @@ import { INT } from "../../data/constants.js";
 import { Box, Lbl, Btn, Bar, Row } from "../../components/ui/index.jsx";
 import SeanceDetail from "./SeanceDetail.jsx";
 
-// ─── FORMULE 1RM (Epley) ──────────────────────────────────────────────────────
-// 1RM = poids × (1 + reps / 30)
-// Charge pour X reps = 1RM × (1 - X / 30) — arrondi au 0.5kg le plus proche
-const calc1RM   = (kg, reps) => !kg || !reps ? 0 : Math.round(kg * (1 + reps / 30));
-const calcKgFor = (rm1, reps) => Math.round(rm1 * (1 - reps / 30) * 2) / 2;
+// ─── FORMULE EPLEY ────────────────────────────────────────────────────────────
+const calc1RM   = (kg, reps) => (!kg || !reps || reps < 1) ? 0 : Math.round(kg * (1 + reps / 30));
+const calcKgFor = (rm1, reps) => Math.max(0, Math.round(rm1 * (1 - reps / 30) * 2) / 2);
 
-// Tableau objectifs : reps → { label, couleur, description }
-const OBJECTIFS_RM = [
-  { reps:1,  pct:100, l:"1RM Max",       color:"#8b5cf6", desc:"Force absolue"      },
-  { reps:3,  pct:93,  l:"Force lourde",  color:"#ef4444", desc:"3 reps · Force"     },
-  { reps:5,  pct:87,  l:"Force",         color:"#f97316", desc:"5 reps · 87% 1RM"   },
-  { reps:8,  pct:80,  l:"Force-Hypert.", color:"#eab308", desc:"8 reps · 80% 1RM"   },
-  { reps:10, pct:75,  l:"Hypertrophie",  color:"#3b82f6", desc:"10 reps · 75% 1RM"  },
-  { reps:12, pct:70,  l:"Hypertrophie+", color:"#06b6d4", desc:"12 reps · 70% 1RM"  },
-  { reps:15, pct:64,  l:"Endurance",     color:"#22c55e", desc:"15 reps · 64% 1RM"  },
-  { reps:20, pct:57,  l:"Endurance+",    color:"#84cc16", desc:"20 reps · 57% 1RM"  },
-];
+// ─── CIBLE PAR OBJECTIF ───────────────────────────────────────────────────────
+const OBJ_TARGET = {
+  hypertrophie:    { reps:10, pct:75, l:"Hypertrophie",    color:"#3b82f6", desc:"10 reps · Volume musculaire"      },
+  force:           { reps:5,  pct:87, l:"Force",            color:"#f97316", desc:"5 reps · Force maximale"          },
+  poids:           { reps:15, pct:64, l:"Perte de poids",   color:"#22c55e", desc:"15 reps · Brûle des calories"     },
+  sante:           { reps:12, pct:70, l:"Santé générale",   color:"#22c55e", desc:"12 reps · Maintien & tonicité"    },
+  prep_physique:   { reps:8,  pct:80, l:"Prépa physique",   color:"#eab308", desc:"8 reps · Puissance & condition"   },
+  reathletisation: { reps:15, pct:64, l:"Réathlétisation",  color:"#06b6d4", desc:"15 reps · Progression douce"      },
+};
+const DEFAULT_TARGET = { reps:10, pct:75, l:"Hypertrophie", color:"#3b82f6", desc:"10 reps · Volume musculaire" };
 
-// ─── CARD STATS RM d'un exercice ────────────────────────────────────────────
-function RMCard({ exData, C }) {
+// ─── MODAL SAISIE MANUELLE ────────────────────────────────────────────────────
+function ManualRMModal({ prog, setProg, onClose, push, C }) {
+  const [search,   setSearch]   = useState("");
+  const [selected, setSelected] = useState(null); // { jourIdx, exIdx, nom }
+  const [kg,       setKg]       = useState("");
+  const [reps,     setReps]     = useState("");
+
+  // Collecter tous les exercices du programme (dédupliqués par nom)
+  const allExos = useMemo(() => {
+    if (!prog) return [];
+    const seen = new Set();
+    const list = [];
+    prog.jours.forEach((jour, ji) => {
+      (jour.exercices || []).forEach((ex, ei) => {
+        if (!seen.has(ex.nom)) {
+          seen.add(ex.nom);
+          list.push({ nom: ex.nom, cat: ex.cat, jourNom: jour.nom, jourIdx: ji, exIdx: ei });
+        }
+      });
+    });
+    return list.sort((a, b) => a.nom.localeCompare(b.nom));
+  }, [prog]);
+
+  const filtered = search
+    ? allExos.filter(e => e.nom.toLowerCase().includes(search.toLowerCase()))
+    : allExos;
+
+  const rm1Calc = selected && kg && reps ? calc1RM(parseFloat(kg), parseInt(reps)) : 0;
+
+  const handleSave = () => {
+    if (!selected || !kg) return;
+    const u = JSON.parse(JSON.stringify(prog));
+    const entry = {
+      poids: parseFloat(kg),
+      reps:  parseInt(reps) || 1,
+      date:  new Date().toLocaleDateString("fr-FR"),
+    };
+    u.jours[selected.jourIdx].exercices[selected.exIdx].historique =
+      u.jours[selected.jourIdx].exercices[selected.exIdx].historique || [];
+    u.jours[selected.jourIdx].exercices[selected.exIdx].historique.push(entry);
+    setProg(u);
+    push("🏆", "Record enregistré !", `${selected.nom} · ${kg}kg × ${reps||1} reps · 1RM≈${rm1Calc}kg`);
+    onClose();
+  };
+
+  const cc = (cat) => ({principal:"#3b82f6",correctif:"#ef4444",gainage:"#22c55e",isolation:"#8b5cf6"}[cat||"principal"]||"#3b82f6");
+
+  return (
+    <div style={{position:"fixed",inset:0,background:"rgba(228,238,248,0.98)",zIndex:400,overflowY:"auto"}}>
+      <div style={{maxWidth:500,margin:"0 auto",paddingBottom:80}}>
+
+        {/* Header */}
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"20px 16px 14px"}}>
+          <div>
+            <div style={{fontSize:9,color:"#64748b",fontWeight:700,letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:3}}>Nouveau record</div>
+            <div style={{fontFamily:"'Syne',sans-serif",fontSize:20,fontWeight:300,color:"#0f1a2e"}}>
+              {selected ? selected.nom : "Saisie manuelle"}
+            </div>
+          </div>
+          <button onClick={onClose} style={{background:"#edf3fb",border:"0.5px solid #dce8f4",borderRadius:10,width:36,height:36,color:"#64748b",cursor:"pointer",fontSize:18}}>×</button>
+        </div>
+
+        <div style={{padding:"0 16px"}}>
+
+          {/* ── Étape 1 : choisir l'exercice ── */}
+          {!selected ? (
+            <div>
+              <div style={{fontSize:11,color:"#64748b",marginBottom:10}}>Quel exercice veux-tu enregistrer ?</div>
+
+              {/* Recherche */}
+              <div style={{position:"relative",marginBottom:12}}>
+                <input
+                  value={search}
+                  onChange={e => setSearch(e.target.value)}
+                  placeholder="Rechercher un exercice…"
+                  autoFocus
+                  style={{width:"100%",padding:"10px 14px 10px 36px",background:"#fff",border:"0.5px solid #dce8f4",borderRadius:10,fontSize:13,color:"#0f1a2e",fontFamily:"'Inter',sans-serif",boxSizing:"border-box"}}
+                />
+                <div style={{position:"absolute",left:12,top:"50%",transform:"translateY(-50%)",fontSize:14,color:"#94a3b8"}}>🔍</div>
+              </div>
+
+              {/* Liste exercices */}
+              <div style={{maxHeight:400,overflowY:"auto"}}>
+                {filtered.length === 0 && (
+                  <div style={{textAlign:"center",padding:"24px",color:"#94a3b8",fontSize:12}}>Aucun exercice trouvé</div>
+                )}
+                {filtered.map((ex, i) => (
+                  <div key={i} onClick={() => setSelected(ex)}
+                    style={{display:"flex",alignItems:"center",gap:10,padding:"11px 14px",background:"#fff",border:"0.5px solid #dce8f4",borderRadius:11,marginBottom:6,cursor:"pointer",transition:"border-color .12s"}}
+                    onMouseEnter={ev => ev.currentTarget.style.borderColor = cc(ex.cat)}
+                    onMouseLeave={ev => ev.currentTarget.style.borderColor = "#dce8f4"}>
+                    <div style={{width:4,height:36,borderRadius:2,background:cc(ex.cat),flexShrink:0}}/>
+                    <div style={{flex:1}}>
+                      <div style={{fontSize:12,fontWeight:500,color:"#0f1a2e"}}>{ex.nom}</div>
+                      <div style={{fontSize:10,color:"#64748b",marginTop:1}}>{ex.jourNom}</div>
+                    </div>
+                    <div style={{color:"#94a3b8",fontSize:14}}>›</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : (
+
+            /* ── Étape 2 : saisir kg + reps ── */
+            <div>
+              <button onClick={() => setSelected(null)} style={{background:"transparent",border:"none",color:"#3b82f6",cursor:"pointer",fontSize:12,fontWeight:600,padding:"0 0 14px",display:"flex",alignItems:"center",gap:4}}>← Changer d'exercice</button>
+
+              {/* Badge exercice */}
+              <div style={{display:"flex",alignItems:"center",gap:10,padding:"12px 14px",background:`${cc(selected.cat)}0d`,border:`0.5px solid ${cc(selected.cat)}30`,borderRadius:12,marginBottom:16}}>
+                <div style={{width:4,height:40,borderRadius:2,background:cc(selected.cat),flexShrink:0}}/>
+                <div>
+                  <div style={{fontSize:14,fontWeight:500,color:"#0f1a2e"}}>{selected.nom}</div>
+                  <div style={{fontSize:10,color:"#64748b",marginTop:2}}>{selected.jourNom}</div>
+                </div>
+              </div>
+
+              {/* Saisie charge + reps */}
+              <div style={{background:"#fff",border:"0.5px solid #dce8f4",borderRadius:12,padding:"16px",marginBottom:12}}>
+                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
+                  <div>
+                    <div style={{fontSize:10,color:"#64748b",fontWeight:600,marginBottom:8,letterSpacing:"0.5px"}}>CHARGE MAX</div>
+                    <div style={{display:"flex",alignItems:"center",gap:6}}>
+                      <input
+                        type="number"
+                        value={kg}
+                        onChange={e => setKg(e.target.value)}
+                        placeholder="ex: 80"
+                        autoFocus
+                        style={{flex:1,padding:"12px 10px",background:"#f8fafc",border:`1px solid ${kg?"#3b82f6":"#dce8f4"}`,borderRadius:9,fontSize:20,fontWeight:300,color:"#0f1a2e",fontFamily:"'Syne',sans-serif",textAlign:"center"}}
+                      />
+                      <span style={{fontSize:12,color:"#64748b",flexShrink:0}}>kg</span>
+                    </div>
+                  </div>
+                  <div>
+                    <div style={{fontSize:10,color:"#64748b",fontWeight:600,marginBottom:8,letterSpacing:"0.5px"}}>REPS EFFECTUÉES</div>
+                    <div style={{display:"flex",alignItems:"center",gap:6}}>
+                      <input
+                        type="number"
+                        value={reps}
+                        onChange={e => setReps(e.target.value)}
+                        placeholder="ex: 5"
+                        style={{flex:1,padding:"12px 10px",background:"#f8fafc",border:`1px solid ${reps?"#3b82f6":"#dce8f4"}`,borderRadius:9,fontSize:20,fontWeight:300,color:"#0f1a2e",fontFamily:"'Syne',sans-serif",textAlign:"center"}}
+                      />
+                      <span style={{fontSize:12,color:"#64748b",flexShrink:0}}>reps</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Raccourcis reps */}
+                <div style={{display:"flex",gap:5,marginTop:10}}>
+                  {[1,3,5,8,10,12].map(r => (
+                    <button key={r} onClick={() => setReps(String(r))} style={{flex:1,padding:"5px 2px",background:reps===String(r)?"rgba(59,130,246,0.1)":"transparent",border:`0.5px solid ${reps===String(r)?"#3b82f6":"#dce8f4"}`,borderRadius:7,color:reps===String(r)?"#3b82f6":"#64748b",cursor:"pointer",fontSize:10,fontWeight:reps===String(r)?600:400}}>{r}</button>
+                  ))}
+                </div>
+              </div>
+
+              {/* 1RM calculé en temps réel */}
+              {rm1Calc > 0 && (
+                <div style={{background:"rgba(59,130,246,0.06)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:12,padding:"14px 16px",marginBottom:16}}>
+                  <div style={{fontSize:9,color:"#64748b",fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",marginBottom:6}}>1RM estimé (formule Epley)</div>
+                  <div style={{display:"flex",alignItems:"baseline",gap:6}}>
+                    <div style={{fontFamily:"'Syne',sans-serif",fontSize:36,fontWeight:300,color:"#3b82f6",lineHeight:1}}>{rm1Calc}</div>
+                    <div style={{fontSize:14,color:"#64748b"}}>kg</div>
+                  </div>
+                  <div style={{fontSize:10,color:"#94a3b8",marginTop:4}}>= {kg}kg × (1 + {reps}/30)</div>
+                </div>
+              )}
+
+              <button
+                onClick={handleSave}
+                disabled={!kg || !reps}
+                style={{width:"100%",padding:"14px",background:(!kg||!reps)?"#dce8f4":"#3b82f6",border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:(!kg||!reps)?"default":"pointer",fontFamily:"'Syne',sans-serif",marginBottom:8,transition:"background .15s"}}
+              >
+                🏆 Enregistrer ce record
+              </button>
+              <button onClick={onClose} style={{width:"100%",padding:"10px",background:"transparent",border:"0.5px solid #dce8f4",borderRadius:10,color:"#64748b",cursor:"pointer",fontSize:12,fontFamily:"'Inter',sans-serif"}}>Annuler</button>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── CARD RM PAR EXERCICE ─────────────────────────────────────────────────────
+function RMCard({ exData, objectif, C }) {
   const [expanded, setExpanded] = useState(false);
+  const target = OBJ_TARGET[objectif] || DEFAULT_TARGET;
   const cc = {principal:"#3b82f6",correctif:"#ef4444",gainage:"#22c55e",isolation:"#8b5cf6"}[exData.cat||"principal"]||"#3b82f6";
-
-  const mainTargets = OBJECTIFS_RM.filter(o => [5,10,12].includes(o.reps));
-  const allTargets  = OBJECTIFS_RM;
+  const kgCible = calcKgFor(exData.rm1, target.reps);
 
   return (
     <div style={{background:"#fff",border:"0.5px solid #dce8f4",borderRadius:12,marginBottom:8,overflow:"hidden"}}>
-      {/* Header */}
-      <div onClick={() => setExpanded(e => !e)} style={{padding:"11px 14px",cursor:"pointer",borderLeft:`3px solid ${cc}`}}>
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
-          <div style={{flex:1}}>
-            <div style={{fontSize:12,fontWeight:600,color:"#0f1a2e",marginBottom:3}}>{exData.nom}</div>
-            <div style={{fontSize:10,color:"#64748b"}}>
-              Meilleur set : <span style={{fontWeight:600,color:"#0f1a2e"}}>{exData.bestKg}kg × {exData.bestReps} reps</span>
-              {" · "}
-              <span style={{color:cc,fontWeight:700}}>1RM ≈ {exData.rm1}kg</span>
-            </div>
-          </div>
-          <div style={{display:"flex",alignItems:"center",gap:8,flexShrink:0,marginLeft:10}}>
-            <div style={{textAlign:"right"}}>
-              <div style={{fontFamily:"'Syne',sans-serif",fontSize:18,fontWeight:300,color:cc,lineHeight:1}}>{exData.rm1}<span style={{fontSize:10,color:"#64748b",fontFamily:"'Inter',sans-serif",fontWeight:400}}> kg</span></div>
-              <div style={{fontSize:8,color:"#94a3b8",marginTop:1}}>1RM estimé</div>
-            </div>
-            <div style={{color:"#94a3b8",fontSize:14,transition:"transform .15s",transform:expanded?"rotate(90deg)":"rotate(0)"}}>›</div>
+      {/* Ligne principale */}
+      <div onClick={() => setExpanded(e => !e)} style={{padding:"12px 14px",cursor:"pointer",borderLeft:`3px solid ${cc}`,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+        <div style={{flex:1}}>
+          <div style={{fontSize:12,fontWeight:600,color:"#0f1a2e",marginBottom:3}}>{exData.nom}</div>
+          <div style={{fontSize:10,color:"#64748b"}}>
+            Record : <span style={{fontWeight:600,color:"#0f1a2e"}}>{exData.bestKg}kg × {exData.bestReps} reps</span>
+            {"  ·  "}
+            <span style={{color:cc,fontWeight:700}}>1RM ≈ {exData.rm1}kg</span>
           </div>
         </div>
 
-        {/* 3 cibles principales toujours visibles */}
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:5,marginTop:10}}>
-          {mainTargets.map(obj => {
-            const kg = calcKgFor(exData.rm1, obj.reps);
-            return (
-              <div key={obj.reps} style={{padding:"7px 8px",background:`${obj.color}0d`,border:`0.5px solid ${obj.color}30`,borderRadius:8,textAlign:"center"}}>
-                <div style={{fontFamily:"'Syne',sans-serif",fontSize:16,fontWeight:300,color:obj.color,lineHeight:1}}>{kg > 0 ? kg : "—"}<span style={{fontSize:9,color:"#64748b",fontFamily:"'Inter',sans-serif"}}>{kg>0?" kg":""}</span></div>
-                <div style={{fontSize:9,color:obj.color,fontWeight:600,marginTop:2}}>{obj.l}</div>
-                <div style={{fontSize:8,color:"#94a3b8"}}>{obj.reps} reps</div>
-              </div>
-            );
-          })}
+        {/* Recommandation objectif */}
+        <div style={{textAlign:"center",padding:"6px 10px",background:`${target.color}0d`,border:`0.5px solid ${target.color}30`,borderRadius:9,flexShrink:0,marginLeft:10}}>
+          <div style={{fontFamily:"'Syne',sans-serif",fontSize:18,fontWeight:300,color:target.color,lineHeight:1}}>{kgCible > 0 ? kgCible : "—"}<span style={{fontSize:9,color:"#64748b",fontFamily:"'Inter',sans-serif",fontWeight:400}}>{kgCible>0?" kg":""}</span></div>
+          <div style={{fontSize:8,color:target.color,fontWeight:600,marginTop:1}}>{target.l}</div>
+          <div style={{fontSize:7,color:"#94a3b8"}}>{target.reps} reps</div>
         </div>
+
+        <div style={{color:"#94a3b8",fontSize:14,marginLeft:8,transition:"transform .15s",transform:expanded?"rotate(90deg)":"rotate(0)"}}>›</div>
       </div>
 
-      {/* Tableau complet déplié */}
+      {/* Détail déplié */}
       {expanded && (
         <div style={{borderTop:"0.5px solid #dce8f4",padding:"12px 14px",background:"rgba(59,130,246,0.02)"}}>
-          <div style={{fontSize:9,color:"#64748b",fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",marginBottom:10}}>Tableau complet — Toutes les intensités</div>
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:5}}>
-            {allTargets.map(obj => {
+          <div style={{fontSize:9,color:"#64748b",fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",marginBottom:8}}>Tableau de charges complet</div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:5,marginBottom:10}}>
+            {Object.entries(OBJ_TARGET).map(([id, obj]) => {
               const kg = calcKgFor(exData.rm1, obj.reps);
+              const isCurrentObj = id === objectif;
               return (
-                <div key={obj.reps} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"7px 10px",background:`${obj.color}08`,border:`0.5px solid ${obj.color}25`,borderRadius:8}}>
+                <div key={id} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"7px 10px",background:isCurrentObj?`${obj.color}10`:"#f8fafc",border:`0.5px solid ${isCurrentObj?obj.color:"#e2e8f0"}`,borderRadius:8}}>
                   <div>
-                    <div style={{fontSize:10,fontWeight:600,color:obj.color}}>{obj.l}</div>
-                    <div style={{fontSize:9,color:"#94a3b8"}}>{obj.reps} reps · {obj.pct}% 1RM</div>
+                    <div style={{fontSize:10,fontWeight:isCurrentObj?700:500,color:isCurrentObj?obj.color:"#64748b"}}>{obj.l}{isCurrentObj?" ★":""}</div>
+                    <div style={{fontSize:8,color:"#94a3b8"}}>{obj.reps} reps · {obj.pct}%</div>
                   </div>
-                  <div style={{fontFamily:"'Syne',sans-serif",fontSize:15,fontWeight:400,color:obj.color}}>{kg > 0 ? `${kg}kg` : "—"}</div>
+                  <div style={{fontFamily:"'Syne',sans-serif",fontSize:14,fontWeight:400,color:isCurrentObj?obj.color:"#64748b"}}>{kg > 0 ? `${kg}kg` : "—"}</div>
                 </div>
               );
             })}
           </div>
-          {/* Historique des 3 derniers sets */}
+
+          {/* Historique 3 derniers sets */}
           {exData.historique && exData.historique.length > 0 && (
-            <div style={{marginTop:10,paddingTop:10,borderTop:"0.5px solid #dce8f4"}}>
+            <div style={{paddingTop:10,borderTop:"0.5px solid #dce8f4"}}>
               <div style={{fontSize:9,color:"#64748b",fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",marginBottom:6}}>Historique récent</div>
-              {exData.historique.slice(-3).reverse().map((h,i) => {
+              {exData.historique.slice(-3).reverse().map((h, i) => {
                 const rm = calc1RM(parseFloat(h.poids), parseInt(h.reps));
+                const isRecord = rm === exData.rm1;
                 return (
-                  <div key={i} style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}>
-                    <div style={{fontSize:11,color:"#64748b"}}>{h.date}</div>
+                  <div key={i} style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:5}}>
+                    <div style={{fontSize:10,color:"#64748b"}}>{h.date}</div>
                     <div style={{fontSize:11,fontWeight:500,color:"#0f1a2e"}}>{h.poids}kg × {h.reps} reps</div>
-                    <div style={{fontSize:10,color:cc}}>1RM≈{rm}kg</div>
+                    <div style={{fontSize:10,color:isRecord?"#f97316":cc,fontWeight:isRecord?700:400}}>{isRecord?"🏆 ":""}{rm}kg 1RM</div>
                   </div>
                 );
               })}
@@ -111,20 +280,23 @@ export default function TodayView(props) {
   const {
     prog, setProg, premium, setPaywall, push,
     checkedEx, setCheckedEx,
-    seance, C, INT, setProgView,
+    profil,
+    C, INT, setProgView,
     setChrono, setChronoSec,
     exDetails, setExDetails, exEdit, setExEdit,
   } = props;
 
-  const [viewSeance, setViewSeance] = useState(null);
-  const [rmFilter,   setRmFilter]   = useState("all"); // "all" | "today"
+  const [viewSeance,  setViewSeance]  = useState(null);
+  const [showManualRM,setShowManualRM]= useState(false);
+  const [rmFilter,    setRmFilter]    = useState("all");
+
+  const objectif = profil?.objectif || "hypertrophie";
 
   // ── Séance du jour ──
   const getTodaySeance = () => {
     if (!prog) return null;
-    const today = new Date();
     const dayNames = ["Dim","Lun","Mar","Mer","Jeu","Ven","Sam"];
-    const todayName = dayNames[today.getDay()];
+    const todayName = dayNames[new Date().getDay()];
     return prog.jours.find(j =>
       j.nom.toLowerCase().includes(todayName.toLowerCase()) ||
       j.focus?.toLowerCase().includes(todayName.toLowerCase())
@@ -142,42 +314,23 @@ export default function TodayView(props) {
     }
   };
 
-  // ── Stats RM : collecter tous les exercices avec historique ──
+  // ── Données RM ──
   const rmData = useMemo(() => {
     if (!prog) return [];
+    const todaySeance = getTodaySeance();
+    const jours = rmFilter === "today" && todaySeance ? [todaySeance] : prog.jours;
     const map = {};
-    const todaySeanceForFilter = (() => {
-      const today = new Date();
-      const dayNames = ["Dim","Lun","Mar","Mer","Jeu","Ven","Sam"];
-      const n = dayNames[today.getDay()];
-      return prog.jours.find(j =>
-        j.nom.toLowerCase().includes(n.toLowerCase()) ||
-        j.focus?.toLowerCase().includes(n.toLowerCase())
-      );
-    })();
-
-    const jours = rmFilter === "today" && todaySeanceForFilter
-      ? [todaySeanceForFilter]
-      : prog.jours;
-
     jours.forEach(jour => {
       (jour.exercices || []).forEach(ex => {
         if (!ex.historique || ex.historique.length === 0) return;
         const best = ex.historique.reduce((b, h) => {
-          const rm = calc1RM(parseFloat(h.poids)||0, parseInt(h.reps)||1);
+          const rm  = calc1RM(parseFloat(h.poids)||0, parseInt(h.reps)||1);
           const brm = calc1RM(parseFloat(b.poids)||0, parseInt(b.reps)||1);
           return rm > brm ? h : b;
         }, ex.historique[0]);
         const rm1 = calc1RM(parseFloat(best.poids)||0, parseInt(best.reps)||1);
         if (!map[ex.nom] || rm1 > map[ex.nom].rm1) {
-          map[ex.nom] = {
-            nom: ex.nom,
-            cat: ex.cat,
-            rm1,
-            bestKg:   parseFloat(best.poids) || 0,
-            bestReps: parseInt(best.reps)     || 0,
-            historique: ex.historique,
-          };
+          map[ex.nom] = { nom:ex.nom, cat:ex.cat, rm1, bestKg:parseFloat(best.poids)||0, bestReps:parseInt(best.reps)||0, historique:ex.historique };
         }
       });
     });
@@ -185,8 +338,19 @@ export default function TodayView(props) {
   }, [prog, rmFilter]);
 
   const todaySeance = getTodaySeance();
+  const currentTarget = OBJ_TARGET[objectif] || DEFAULT_TARGET;
 
-  // Early return après tous les hooks
+  // ── Early returns après les hooks ──
+  if (showManualRM) {
+    return (
+      <ManualRMModal
+        prog={prog} setProg={setProg}
+        push={push} C={C}
+        onClose={() => setShowManualRM(false)}
+      />
+    );
+  }
+
   if (viewSeance) {
     return (
       <SeanceDetail
@@ -217,8 +381,8 @@ export default function TodayView(props) {
               <div style={{textAlign:"right"}}>
                 {(() => {
                   const total = todaySeance.exercices?.length || 0;
-                  const done = todaySeance.exercices?.filter((_,idx) => checkedEx[`${todaySeance.id}-${idx}`]).length || 0;
-                  const pct = total > 0 ? Math.round(done/total*100) : 0;
+                  const done  = todaySeance.exercices?.filter((_,i) => checkedEx[`${todaySeance.id}-${i}`]).length || 0;
+                  const pct   = total > 0 ? Math.round(done/total*100) : 0;
                   return <>
                     <div style={{fontFamily:"'Syne',sans-serif",fontSize:20,fontWeight:300,color:pct===100?"#22c55e":"#3b82f6",lineHeight:1}}>{pct}%</div>
                     <div style={{fontSize:9,color:"#64748b"}}>{done}/{total}</div>
@@ -232,7 +396,7 @@ export default function TodayView(props) {
                   const isChecked = !!checkedEx[`${todaySeance.id}-${idx}`];
                   const cc = {principal:"#3b82f6",correctif:"#ef4444",gainage:"#22c55e",isolation:"#8b5cf6"}[ex.cat||"principal"]||"#3b82f6";
                   return (
-                    <div key={idx} style={{display:"flex",alignItems:"center",gap:8,padding:"5px 0",borderBottom:idx<(todaySeance.exercices.length-1)?"0.5px solid #f1f5f9":"none",opacity:isChecked?0.5:1}}>
+                    <div key={idx} style={{display:"flex",alignItems:"center",gap:8,padding:"5px 0",borderBottom:idx<todaySeance.exercices.length-1?"0.5px solid #f1f5f9":"none",opacity:isChecked?0.5:1}}>
                       <div onClick={() => toggleCheck(todaySeance.id,idx,ex.repos)} style={{width:16,height:16,borderRadius:4,background:isChecked?"#22c55e":"transparent",border:`1.5px solid ${isChecked?"#22c55e":"#dce8f4"}`,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:9,color:"#fff"}}>{isChecked?"✓":""}</div>
                       <div style={{flex:1}}>
                         <div style={{fontSize:11,fontWeight:500,color:isChecked?"#94a3b8":"#0f1a2e",textDecoration:isChecked?"line-through":"none"}}>{ex.nom}</div>
@@ -254,49 +418,50 @@ export default function TodayView(props) {
         <Box style={{textAlign:"center",padding:"24px 16px"}}>
           <div style={{fontSize:32,marginBottom:8}}>😴</div>
           <div style={{fontFamily:"'Syne',sans-serif",fontSize:15,fontWeight:500,marginBottom:4}}>Jour de repos</div>
-          <div style={{fontSize:12,color:"#64748b",lineHeight:1.6}}>Profites-en pour récupérer. Tes records sont disponibles ci-dessous.</div>
+          <div style={{fontSize:12,color:"#64748b",lineHeight:1.6}}>Tes records sont disponibles ci-dessous.</div>
         </Box>
       )}
 
-      {/* ── Stats RM ── */}
+      {/* ── Records & Objectifs ── */}
       {prog && (
         <div style={{marginTop:16}}>
+
           {/* Header */}
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
             <div>
               <div style={{fontFamily:"'Syne',sans-serif",fontSize:16,fontWeight:400,color:"#0f1a2e",letterSpacing:-0.3}}>Records & Objectifs</div>
-              <div style={{fontSize:10,color:"#64748b",marginTop:1}}>Charges recommandées par intensité</div>
+              <div style={{display:"flex",alignItems:"center",gap:5,marginTop:2}}>
+                <div style={{width:5,height:5,borderRadius:"50%",background:currentTarget.color}}/>
+                <div style={{fontSize:10,color:currentTarget.color,fontWeight:600}}>{currentTarget.l} · {currentTarget.reps} reps</div>
+                <div style={{fontSize:10,color:"#94a3b8"}}>· {currentTarget.pct}% 1RM</div>
+              </div>
             </div>
-            <div style={{display:"flex",gap:5}}>
+            <div style={{display:"flex",gap:5,alignItems:"center"}}>
               {[{id:"today",l:"Séance"},{id:"all",l:"Tout"}].map(f => (
                 <button key={f.id} onClick={() => setRmFilter(f.id)} style={{padding:"5px 11px",borderRadius:16,border:`0.5px solid ${rmFilter===f.id?"#3b82f6":"#dce8f4"}`,background:rmFilter===f.id?"rgba(59,130,246,0.08)":"transparent",color:rmFilter===f.id?"#3b82f6":"#64748b",cursor:"pointer",fontSize:11,fontWeight:rmFilter===f.id?600:400,fontFamily:"'Inter',sans-serif"}}>{f.l}</button>
               ))}
+              <button onClick={() => setShowManualRM(true)} style={{width:28,height:28,borderRadius:8,background:"#3b82f6",border:"none",color:"#fff",cursor:"pointer",fontSize:16,display:"flex",alignItems:"center",justifyContent:"center"}}>+</button>
             </div>
           </div>
 
-          {/* Légende */}
-          <div style={{padding:"10px 12px",background:"rgba(59,130,246,0.04)",border:"0.5px solid rgba(59,130,246,0.12)",borderRadius:10,marginBottom:12,display:"flex",gap:12,flexWrap:"wrap"}}>
-            {[{reps:5,l:"Force",color:"#f97316"},{reps:10,l:"Hypertrophie",color:"#3b82f6"},{reps:12,l:"Hypertrophie+",color:"#06b6d4"}].map(o => (
-              <div key={o.reps} style={{display:"flex",alignItems:"center",gap:5}}>
-                <div style={{width:6,height:6,borderRadius:"50%",background:o.color}}/>
-                <span style={{fontSize:10,color:"#64748b"}}>{o.reps} reps = <span style={{color:o.color,fontWeight:600}}>{o.l}</span></span>
-              </div>
-            ))}
-            <div style={{fontSize:10,color:"#94a3b8",width:"100%"}}>Formule Epley · Arrondis au 0.5kg · Cliquez pour le tableau complet</div>
-          </div>
-
-          {/* Liste exercices avec records */}
+          {/* Liste */}
           {rmData.length === 0 ? (
             <Box style={{textAlign:"center",padding:"24px 16px"}}>
-              <div style={{fontSize:24,marginBottom:8}}>📊</div>
+              <div style={{fontSize:28,marginBottom:8}}>📊</div>
               <div style={{fontFamily:"'Syne',sans-serif",fontSize:14,fontWeight:400,marginBottom:6}}>Pas encore de données</div>
-              <div style={{fontSize:11,color:"#64748b",lineHeight:1.6}}>Enregistre tes charges pendant les séances pour voir apparaître tes records et les charges cibles par objectif.</div>
+              <div style={{fontSize:11,color:"#64748b",lineHeight:1.6,marginBottom:16}}>
+                Enregistre tes charges pendant les séances pour voir apparaître tes records et les charges cibles pour ton objectif <span style={{color:currentTarget.color,fontWeight:600}}>{currentTarget.l}</span>.
+              </div>
+              <button onClick={() => setShowManualRM(true)} style={{width:"100%",padding:"12px 16px",background:"rgba(59,130,246,0.06)",border:"1px dashed rgba(59,130,246,0.3)",borderRadius:10,color:"#3b82f6",cursor:"pointer",fontSize:13,fontWeight:600,fontFamily:"'Syne',sans-serif",display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
+                <span style={{fontSize:16}}>🏆</span> Saisir un record manuellement
+              </button>
             </Box>
           ) : (
             <div>
-              {rmData.map((ex, i) => (
-                <RMCard key={i} exData={ex} C={C} />
-              ))}
+              {rmData.map((ex,i) => <RMCard key={i} exData={ex} objectif={objectif} C={C}/>)}
+              <button onClick={() => setShowManualRM(true)} style={{width:"100%",padding:"11px",marginTop:4,background:"transparent",border:"0.5px dashed #dce8f4",borderRadius:10,color:"#64748b",cursor:"pointer",fontSize:12,fontFamily:"'Inter',sans-serif",display:"flex",alignItems:"center",justifyContent:"center",gap:6}}>
+                <span>🏆</span> Ajouter un record
+              </button>
             </div>
           )}
         </div>
