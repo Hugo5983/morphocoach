@@ -18,7 +18,7 @@ import { Box, Lbl, Inp, Btn, Bar, Row, G2, Tag, MiniChart } from "../../componen
    exModal, setExModal,
    exModalTab, setExModalTab,
    setProgView,
-  progs, setProgsAll,
+  progs, setProgsAll, onCancel,
  } = props;
  if(createStep===0)return(
  <div style={{padding:"0 15px"}}>
@@ -32,6 +32,7 @@ import { Box, Lbl, Inp, Btn, Bar, Row, G2, Tag, MiniChart } from "../../componen
  ))}
  </div>
  <Btn disabled={!newP.nom||newP.jours.length===0} onClick={()=>{const s={};newP.jours.forEach(j=>s[j]={nom:"",intensite:"modere",exercices:[]});setNewP({...newP,seances:s});setJourActif(newP.jours[0]);setCS(1);}}>Construire les séances →</Btn>
+ {onCancel&&<Btn v="ghost" onClick={onCancel}>← Annuler</Btn>}
  </Box>
  </div>
  );
