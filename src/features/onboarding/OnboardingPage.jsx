@@ -10,7 +10,7 @@ import { Box, Lbl, Inp, Btn, Bar, Row, G2, Tag, MiniChart } from "../../componen
  export default function Onboarding(props){
  const { profil, setProfil, setOnboardingDone, push, C, INT, EX, setProg, setCycleStart, setCycles, photos, setPhotos, readFile, loadIA, setLoadIA, loadMsg, setLoadMsg, corrigerFaibles, setCorrigerFaibles, cycles } = props;
  const [oStep, setOStep] = useState(0);
- const [oData, setOData] = useState({prenom:"",sexe:"",age:"",poids:"",taille:"",objectif:"hypertrophie",activite:"modere"});
+ const [oData, setOData] = useState({prenom:"",sexe:"",age:"",poids:"",taille:"",objectif:"hypertrophie",activite:"modere",sport:""});
  const steps=[
  {id:"identity", title:"Bienvenue 👋", sub:"Commençons par te connaître"},
  {id:"body", title:"Ton corps 📏", sub:"Pour calculer tes besoins exacts"},
@@ -85,12 +85,14 @@ import { Box, Lbl, Inp, Btn, Bar, Row, G2, Tag, MiniChart } from "../../componen
  })()}
  </>}
 
- {oStep===2&&<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
+ {oStep===2&&<div>
+ <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:16}}>
  {[
  {id:"hypertrophie",l:"Prise de muscle",i:"💪",d:"Prendre du volume"},
  {id:"force", l:"Force", i:"🏋️",d:"Performances"},
  {id:"poids", l:"Perte de poids", i:"🔥",d:"Sèche & tonicité"},
  {id:"sante", l:"Santé générale", i:"❤️",d:"Bien-être"},
+ {id:"prep_physique",l:"Prépa physique",i:"⚡",d:"Sport & condition"},
  ].map(g=>(
  <div key={g.id} onClick={()=>setOData({...oData,objectif:g.id})} style={{padding:"14px 10px",textAlign:"center",borderRadius:12,border:`1.5px solid ${oData.objectif===g.id?"#3b82f6":"#dce8f4"}`,background:oData.objectif===g.id?"rgba(59,130,246,0.08)":"#fff",cursor:"pointer"}}>
  <div style={{fontSize:26,marginBottom:6}}>{g.i}</div>
@@ -98,6 +100,12 @@ import { Box, Lbl, Inp, Btn, Bar, Row, G2, Tag, MiniChart } from "../../componen
  <div style={{fontSize:10,color:"#64748b"}}>{g.d}</div>
  </div>
  ))}
+ </div>
+ {/* Question sport facultative */}
+ <div style={{marginTop:4}}>
+ <div style={{fontSize:11,color:"#64748b",marginBottom:6,fontWeight:500}}>Tu pratiques un sport ? <span style={{color:"#94a3b8",fontWeight:400}}>(facultatif)</span></div>
+ <input value={oData.sport||""} onChange={e=>setOData({...oData,sport:e.target.value})} placeholder="Ex: Football, Tennis, Natation, Crossfit…" style={{width:"100%",padding:"11px 13px",background:"#fff",border:"0.5px solid #dce8f4",borderRadius:10,fontSize:13,color:C.text,fontFamily:"'Inter',sans-serif",boxSizing:"border-box"}}/>
+ </div>
  </div>}
 
  {oStep===3&&<div style={{display:"flex",flexDirection:"column",gap:8}}>
@@ -122,7 +130,7 @@ import { Box, Lbl, Inp, Btn, Bar, Row, G2, Tag, MiniChart } from "../../componen
  <div style={{marginTop:28}}>
  {oStep===steps.length-1?(
  <button onClick={()=>{
- setProfil({...profil,...oData,bodyfat:oData.bodyfat||""});
+ setProfil({...profil,...oData,bodyfat:oData.bodyfat||"",sport:oData.sport||""});
  setOnboardingDone(true);
  }} disabled={!oData.sexe||!oData.age||!oData.poids||!oData.taille}
  style={{width:"100%",padding:"14px",background:(!oData.sexe||!oData.age||!oData.poids||!oData.taille)?"#dce8f4":"#3b82f6",border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:(!oData.sexe||!oData.age||!oData.poids||!oData.taille)?"default":"pointer",fontFamily:"'Inter',sans-serif",transition:"background.2s"}}>
