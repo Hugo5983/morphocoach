@@ -4,6 +4,241 @@ import { EX } from "../../data/exercises.js";
 import { Box, Lbl, Btn, Row } from "../../components/ui/index.jsx";
 import { MonthCal } from "../../components/ui/MonthCal.jsx";
 
+// ─── ERGOMÈTRES — définitions + calculs calories ─────────────────────────────
+const ERGOS = [
+  { id:"tapis",     l:"Tapis roulant",    i:"🏃",  color:"#3b82f6",
+    params:[{k:"vitesse",l:"Vitesse",unit:"km/h",def:"10"},{k:"pente",l:"Pente",unit:"%",def:"1"}],
+    kcal:(p,kg,min)=>{ const v=parseFloat(p.vitesse)||8,pnt=parseFloat(p.pente)||0; return Math.round((v*0.82+pnt*0.5)*kg*min/60); } },
+  { id:"marche",    l:"Marche rapide",    i:"🚶",  color:"#22c55e",
+    params:[{k:"vitesse",l:"Vitesse",unit:"km/h",def:"5"},{k:"pente",l:"Pente",unit:"%",def:"3"}],
+    kcal:(p,kg,min)=>{ const v=parseFloat(p.vitesse)||5,pnt=parseFloat(p.pente)||0; return Math.round((2.5+v*0.4+pnt*0.4)*kg*min/60); } },
+  { id:"velo",      l:"Vélo stationnaire",i:"🚴",  color:"#f97316",
+    params:[{k:"resistance",l:"Résistance",unit:"/20",def:"12"},{k:"cadence",l:"Cadence",unit:"RPM",def:"80"},{k:"watts",l:"Puissance",unit:"W",def:""}],
+    kcal:(p,kg,min)=>{ const w=parseFloat(p.watts),res=parseFloat(p.resistance)||10; return Math.round((w?w*0.014+2:3+res*0.5)*kg*min/60); } },
+  { id:"elliptique",l:"Elliptique",       i:"🔄",  color:"#8b5cf6",
+    params:[{k:"resistance",l:"Résistance",unit:"/20",def:"10"},{k:"cadence",l:"Cadence",unit:"SPM",def:"70"}],
+    kcal:(p,kg,min)=>{ const res=parseFloat(p.resistance)||8; return Math.round((4+res*0.4)*kg*min/60); } },
+  { id:"rameur",    l:"Rameur",           i:"🚣",  color:"#06b6d4",
+    params:[{k:"split",l:"Split 500m",unit:"ex: 2:10",def:""},{k:"watts",l:"Puissance",unit:"W",def:""}],
+    kcal:(p,kg,min)=>{ const w=parseFloat(p.watts); if(w) return Math.round(w*min/60*0.86*0.24); const sp=p.split||"2:15"; const parts=sp.split(":"); const sec=(parseInt(parts[0])||2)*60+(parseInt(parts[1])||15); const pw=Math.pow(2.8/(sec/500),3); return Math.round(pw*min/60*0.86*0.24); } },
+  { id:"stairmaster",l:"StairMaster",     i:"🪜",  color:"#f87171",
+    params:[{k:"vitesse",l:"Vitesse",unit:"étages/min",def:"60"}],
+    kcal:(p,kg,min)=>{ const v=parseFloat(p.vitesse)||60; return Math.round((6+v/40)*kg*min/60); } },
+  { id:"skierg",    l:"Ski Erg",          i:"⛷️",  color:"#3b82f6",
+    params:[{k:"split",l:"Split 500m",unit:"ex: 2:20",def:""},{k:"watts",l:"Puissance",unit:"W",def:""}],
+    kcal:(p,kg,min)=>{ const w=parseFloat(p.watts)||100; return Math.round(w*min/60*0.7*0.24); } },
+  { id:"assault",   l:"Assault Bike",     i:"💨",  color:"#f87171",
+    params:[{k:"rpm",l:"RPM",unit:"tr/min",def:"70"},{k:"watts",l:"Puissance",unit:"W",def:""}],
+    kcal:(p,kg,min)=>{ const w=parseFloat(p.watts),rpm=parseFloat(p.rpm)||70; return Math.round((w?w*0.75*0.24:rpm*0.3+5)*kg*min/60); } },
+  { id:"airrunner", l:"Air Runner",       i:"🌀",  color:"#f97316",
+    params:[{k:"vitesse",l:"Vitesse",unit:"km/h",def:"12"}],
+    kcal:(p,kg,min)=>{ const v=parseFloat(p.vitesse)||10; return Math.round(v*1.1*kg*min/60); } },
+  { id:"corde",     l:"Corde à sauter",   i:"🪢",  color:"#22c55e",
+    params:[{k:"rpm",l:"Sauts/min",unit:"s/min",def:"120"}],
+    kcal:(p,kg,min)=>{ const rpm=parseFloat(p.rpm)||100; return Math.round((8+rpm/100)*kg*min/60); } },
+  { id:"concept2",  l:"Concept2",         i:"⚓",  color:"#06b6d4",
+    params:[{k:"split",l:"Split 500m",unit:"ex: 2:05",def:""},{k:"watts",l:"Puissance",unit:"W",def:""}],
+    kcal:(p,kg,min)=>{ const w=parseFloat(p.watts)||150; return Math.round(w*min/60*0.86*0.24); } },
+  { id:"natation",  l:"Natation",         i:"🏊",  color:"#06b6d4",
+    params:[{k:"style",l:"Style",unit:"",def:"crawl",opts:["crawl","brasse","dos","papillon"]},{k:"distance",l:"Distance",unit:"m",def:""}],
+    kcal:(p,kg,min)=>{ const met={crawl:8.5,brasse:6,dos:7,papillon:11}[p.style||"crawl"]||8.5; return Math.round(met*kg*min/60); } },
+  { id:"velo_ext",  l:"Vélo extérieur",   i:"🚵",  color:"#f97316",
+    params:[{k:"vitesse",l:"Vitesse moy.",unit:"km/h",def:"25"},{k:"denivele",l:"Dénivelé+",unit:"m",def:"0"}],
+    kcal:(p,kg,min)=>{ const v=parseFloat(p.vitesse)||20,d=parseFloat(p.denivele)||0; return Math.round((2+v*0.3+d/100)*kg*min/60); } },
+  { id:"course",    l:"Course à pied",    i:"🏅",  color:"#3b82f6",
+    params:[{k:"vitesse",l:"Vitesse",unit:"km/h",def:"10"},{k:"denivele",l:"Dénivelé+",unit:"m",def:"0"}],
+    kcal:(p,kg,min)=>{ const v=parseFloat(p.vitesse)||10,d=parseFloat(p.denivele)||0; return Math.round((v*0.82+d/100+2)*kg*min/60); } },
+];
+
+const ZONES = [
+  {id:"z1",l:"Z1",pct:"50-60%",desc:"Récupération active",color:"#22c55e",facteur:0.85},
+  {id:"z2",l:"Z2",pct:"60-70%",desc:"Endurance aérobie",color:"#3b82f6",facteur:1.0},
+  {id:"z3",l:"Z3",pct:"70-80%",desc:"Tempo / Cardio",color:"#f97316",facteur:1.15},
+  {id:"z4",l:"Z4",pct:"80-90%",desc:"Seuil anaérobie",color:"#f87171",facteur:1.3},
+  {id:"z5",l:"Z5",pct:"90-100%",desc:"VO2max / Sprint",color:"#8b5cf6",facteur:1.5},
+];
+
+// ─── CARDIO MODAL ─────────────────────────────────────────────────────────────
+function CardioModal({ onClose, onSave, poids, C }) {
+  const [step, setStep]       = useState(0);      // 0=choix ergo, 1=config
+  const [ergo, setErgo]       = useState(null);
+  const [duree, setDuree]     = useState(30);
+  const [params, setParams]   = useState({});
+  const [zone, setZone]       = useState("z2");
+  const [bpm, setBpm]         = useState("");
+  const [kcalManuel, setKcalManuel] = useState("");
+  const [editKcal, setEditKcal]     = useState(false);
+
+  const kg = parseFloat(poids) || 70;
+
+  const kcalAuto = ergo
+    ? Math.round(ergo.kcal(params, kg, duree) * (ZONES.find(z=>z.id===zone)?.facteur||1))
+    : 0;
+
+  const kcalFinal = editKcal && kcalManuel !== "" ? parseInt(kcalManuel) : kcalAuto;
+
+  const handleSave = () => {
+    const z = ZONES.find(z => z.id === zone);
+    const intensiteMap = { z1:"leger", z2:"modere", z3:"modere", z4:"lourd", z5:"intense" };
+    const summary = Object.entries(params)
+      .filter(([,v]) => v)
+      .map(([k,v]) => { const param = ergo.params.find(p=>p.k===k); return param ? `${v}${param.unit}` : v; })
+      .join(" · ");
+    onSave({
+      nom: `${ergo.l}${summary ? " · " + summary : ""} · ${duree}min`,
+      intensite: intensiteMap[zone] || "modere",
+      color: ergo.color,
+      cardio: { ergoId: ergo.id, ergoNom: ergo.l, duree, params, zone, bpm, kcal: kcalFinal },
+    });
+  };
+
+  return (
+    <div style={{position:"fixed",inset:0,background:"rgba(228,238,248,0.98)",zIndex:400,overflowY:"auto"}}>
+      <div style={{maxWidth:500,margin:"0 auto",paddingBottom:80}}>
+
+        {/* Header */}
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"20px 16px 14px"}}>
+          <div>
+            <div style={{fontSize:9,color:"#64748b",fontWeight:700,letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:3}}>Cardio</div>
+            <div style={{fontFamily:"'Syne',sans-serif",fontSize:20,fontWeight:300,color:"#0f1a2e"}}>
+              {step===0 ? "Choix de l'ergomètre" : ergo?.l}
+            </div>
+          </div>
+          <button onClick={onClose} style={{background:"#edf3fb",border:"0.5px solid #dce8f4",borderRadius:10,width:36,height:36,color:"#64748b",cursor:"pointer",fontSize:18}}>×</button>
+        </div>
+
+        <div style={{padding:"0 16px"}}>
+
+          {/* ── STEP 0 : sélection ergomètre ── */}
+          {step === 0 && (
+            <div>
+              <div style={{fontSize:11,color:"#64748b",marginBottom:12}}>Sélectionne ta machine ou activité</div>
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:12}}>
+                {ERGOS.map(e => (
+                  <div key={e.id} onClick={() => { setErgo(e); const defs={}; e.params.forEach(p=>{ defs[p.k]=p.def||""; }); setParams(defs); setStep(1); }}
+                    style={{padding:"14px 12px",background:"#fff",border:"0.5px solid #dce8f4",borderRadius:12,cursor:"pointer",display:"flex",alignItems:"center",gap:10,transition:"border-color .15s"}}
+                    onMouseEnter={ev=>ev.currentTarget.style.borderColor=e.color}
+                    onMouseLeave={ev=>ev.currentTarget.style.borderColor="#dce8f4"}>
+                    <div style={{fontSize:22,flexShrink:0}}>{e.i}</div>
+                    <div>
+                      <div style={{fontSize:12,fontWeight:500,color:"#0f1a2e",lineHeight:1.2}}>{e.l}</div>
+                      <div style={{fontSize:9,color:e.color,fontWeight:600,marginTop:2}}>{e.params.map(p=>p.unit).filter(Boolean).slice(0,2).join(" · ")}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* ── STEP 1 : configuration ── */}
+          {step === 1 && ergo && (
+            <div>
+              <button onClick={() => setStep(0)} style={{background:"transparent",border:"none",color:"#3b82f6",cursor:"pointer",fontSize:12,fontWeight:600,padding:"0 0 14px",display:"flex",alignItems:"center",gap:4}}>← Changer d'ergomètre</button>
+
+              {/* Durée */}
+              <div style={{background:"#fff",border:"0.5px solid #dce8f4",borderRadius:12,padding:"14px 16px",marginBottom:10}}>
+                <div style={{fontSize:9,color:"#64748b",fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",marginBottom:10}}>Durée</div>
+                <div style={{display:"flex",alignItems:"center",gap:10}}>
+                  <button onClick={() => setDuree(d => Math.max(5,d-5))} style={{width:36,height:36,borderRadius:9,background:"#f1f5f9",border:"none",cursor:"pointer",fontSize:18,fontWeight:300,color:"#64748b"}}>−</button>
+                  <div style={{flex:1,textAlign:"center"}}>
+                    <div style={{fontFamily:"'Syne',sans-serif",fontSize:32,fontWeight:300,color:"#0f1a2e",lineHeight:1}}>{duree}</div>
+                    <div style={{fontSize:11,color:"#64748b",marginTop:2}}>minutes</div>
+                  </div>
+                  <button onClick={() => setDuree(d => Math.min(180,d+5))} style={{width:36,height:36,borderRadius:9,background:"#3b82f6",border:"none",cursor:"pointer",fontSize:18,color:"#fff"}}>+</button>
+                </div>
+                <div style={{display:"flex",gap:6,marginTop:12}}>
+                  {[15,20,30,45,60,90].map(d => (
+                    <button key={d} onClick={() => setDuree(d)} style={{flex:1,padding:"5px 2px",background:duree===d?"rgba(59,130,246,0.1)":"transparent",border:`0.5px solid ${duree===d?"#3b82f6":"#dce8f4"}`,borderRadius:7,color:duree===d?"#3b82f6":"#64748b",cursor:"pointer",fontSize:10,fontWeight:duree===d?600:400}}>{d}'</button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Paramètres spécifiques à l'ergomètre */}
+              <div style={{background:"#fff",border:"0.5px solid #dce8f4",borderRadius:12,padding:"14px 16px",marginBottom:10}}>
+                <div style={{fontSize:9,color:"#64748b",fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",marginBottom:10}}>Paramètres</div>
+                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
+                  {ergo.params.map(p => (
+                    <div key={p.k}>
+                      <div style={{fontSize:10,color:"#64748b",marginBottom:5,fontWeight:500}}>{p.l}{p.unit&&p.unit!=="ex: 2:10"&&p.unit!=="ex: 2:20"&&p.unit!=="ex: 2:05"&&p.unit!=="ex: 2:15" ? ` (${p.unit})` : ""}</div>
+                      {p.opts ? (
+                        <div style={{display:"flex",flexWrap:"wrap",gap:4}}>
+                          {p.opts.map(o => (
+                            <button key={o} onClick={() => setParams(pr=>({...pr,[p.k]:o}))} style={{padding:"5px 10px",borderRadius:8,border:`0.5px solid ${(params[p.k]||p.def)===o?"#3b82f6":"#dce8f4"}`,background:(params[p.k]||p.def)===o?"rgba(59,130,246,0.08)":"transparent",color:(params[p.k]||p.def)===o?"#3b82f6":"#64748b",cursor:"pointer",fontSize:11,fontWeight:500}}>{o}</button>
+                          ))}
+                        </div>
+                      ) : (
+                        <div style={{display:"flex",alignItems:"center",gap:4}}>
+                          <input
+                            value={params[p.k] ?? ""}
+                            onChange={e => setParams(pr=>({...pr,[p.k]:e.target.value}))}
+                            placeholder={p.unit.startsWith("ex:")?p.unit:p.def||"—"}
+                            style={{flex:1,padding:"8px 10px",background:"#f8fafc",border:"0.5px solid #dce8f4",borderRadius:8,fontSize:12,color:"#0f1a2e",fontFamily:"'Inter',sans-serif"}}
+                          />
+                          {p.unit&&!p.unit.startsWith("ex:")&&<span style={{fontSize:10,color:"#94a3b8",flexShrink:0}}>{p.unit}</span>}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Zones cardiaques */}
+              <div style={{background:"#fff",border:"0.5px solid #dce8f4",borderRadius:12,padding:"14px 16px",marginBottom:10}}>
+                <div style={{fontSize:9,color:"#64748b",fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",marginBottom:10}}>Zone cardiaque</div>
+                <div style={{display:"flex",gap:5,marginBottom:10}}>
+                  {ZONES.map(z => (
+                    <button key={z.id} onClick={() => setZone(z.id)} style={{flex:1,padding:"8px 2px",textAlign:"center",background:zone===z.id?`${z.color}15`:"transparent",border:`1px solid ${zone===z.id?z.color:"#dce8f4"}`,borderRadius:9,cursor:"pointer",transition:"all .12s"}}>
+                      <div style={{fontSize:10,fontWeight:700,color:zone===z.id?z.color:"#64748b"}}>{z.l}</div>
+                      <div style={{fontSize:8,color:zone===z.id?z.color:"#94a3b8",marginTop:1}}>{z.pct}</div>
+                    </button>
+                  ))}
+                </div>
+                <div style={{padding:"7px 10px",background:`${ZONES.find(z=>z.id===zone)?.color}10`,borderRadius:8,fontSize:10,color:ZONES.find(z=>z.id===zone)?.color,fontWeight:500}}>
+                  {ZONES.find(z=>z.id===zone)?.desc}
+                </div>
+                {/* BPM optionnel */}
+                <div style={{marginTop:10,display:"flex",alignItems:"center",gap:10}}>
+                  <div style={{fontSize:10,color:"#64748b",fontWeight:500,flexShrink:0}}>BPM moyen</div>
+                  <input value={bpm} onChange={e=>setBpm(e.target.value)} placeholder="ex: 145 (facultatif)" style={{flex:1,padding:"7px 10px",background:"#f8fafc",border:"0.5px solid #dce8f4",borderRadius:8,fontSize:12,color:"#0f1a2e",fontFamily:"'Inter',sans-serif"}}/>
+                </div>
+              </div>
+
+              {/* Calories */}
+              <div style={{background:"#fff",border:`1px solid ${kcalFinal>0?"rgba(59,130,246,0.2)":"#dce8f4"}`,borderRadius:12,padding:"14px 16px",marginBottom:16}}>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}>
+                  <div style={{fontSize:9,color:"#64748b",fontWeight:700,letterSpacing:"1px",textTransform:"uppercase"}}>Calories estimées</div>
+                  <button onClick={() => { setEditKcal(e=>!e); setKcalManuel(String(kcalAuto)); }} style={{fontSize:10,color:"#3b82f6",background:"transparent",border:"none",cursor:"pointer",fontWeight:600}}>{editKcal?"Auto":"Modifier"}</button>
+                </div>
+                {editKcal ? (
+                  <div style={{display:"flex",alignItems:"center",gap:8}}>
+                    <input value={kcalManuel} onChange={e=>setKcalManuel(e.target.value)} style={{flex:1,padding:"10px 12px",background:"#f8fafc",border:"0.5px solid #3b82f6",borderRadius:9,fontSize:16,fontWeight:500,color:"#0f1a2e",fontFamily:"'Syne',sans-serif"}}/>
+                    <span style={{fontSize:12,color:"#64748b"}}>kcal</span>
+                  </div>
+                ) : (
+                  <div style={{display:"flex",alignItems:"baseline",gap:6}}>
+                    <div style={{fontFamily:"'Syne',sans-serif",fontSize:36,fontWeight:300,color:kcalAuto>0?"#3b82f6":"#c4d4e8",lineHeight:1}}>{kcalAuto>0?kcalAuto:"—"}</div>
+                    {kcalAuto>0&&<div style={{fontSize:12,color:"#64748b"}}>kcal</div>}
+                  </div>
+                )}
+                {kcalAuto>0&&!editKcal&&(
+                  <div style={{fontSize:10,color:"#94a3b8",marginTop:4}}>
+                    Estimation basée sur les paramètres · {poids||"70"}kg · {duree}min
+                  </div>
+                )}
+              </div>
+
+              <button onClick={handleSave} style={{width:"100%",padding:"14px",background:"#3b82f6",border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"'Syne',sans-serif",marginBottom:8}}>
+                ✓ Enregistrer la séance
+              </button>
+              <button onClick={onClose} style={{width:"100%",padding:"10px",background:"transparent",border:"0.5px solid #dce8f4",borderRadius:10,color:"#64748b",cursor:"pointer",fontSize:12,fontFamily:"'Inter',sans-serif"}}>Annuler</button>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ─── HELPER : chercher un exercice dans la BDD par nom ───────────────────────
 function findExInDB(nom) {
   if (!nom) return null;
@@ -27,7 +262,6 @@ function GuideExModal({ exData, exSerie, onClose, C, INT }) {
   return (
     <div style={{position:"fixed",inset:0,background:"rgba(228,238,248,0.99)",zIndex:500,overflowY:"auto"}}>
       <div style={{maxWidth:500,margin:"0 auto",paddingBottom:80}}>
-        {/* Header */}
         <div style={{padding:"20px 16px 0",display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
           <div style={{flex:1}}>
             <div style={{display:"inline-block",padding:"3px 10px",background:`${cc}14`,border:`0.5px solid ${cc}40`,borderRadius:8,fontSize:10,color:cc,letterSpacing:"1px",textTransform:"uppercase",fontWeight:600,marginBottom:10}}>{exData.cat}</div>
@@ -35,48 +269,32 @@ function GuideExModal({ exData, exSerie, onClose, C, INT }) {
           </div>
           <button onClick={onClose} style={{background:"#edf3fb",border:"0.5px solid #dce8f4",borderRadius:10,width:36,height:36,color:"#64748b",cursor:"pointer",fontSize:18,flexShrink:0,marginLeft:12}}>×</button>
         </div>
-
-        {/* Stats séries/reps */}
         <div style={{padding:"12px 16px",display:"flex",gap:7,flexWrap:"wrap"}}>
-          {[
-            {l:"Séries", v: exSerie?.series || exData.s},
-            {l:"Reps",   v: exSerie?.reps   || exData.r},
-            {l:"Repos",  v: exSerie?.repos   || exData.rest},
-            {l:"Charge", v: exSerie?.charge  || exData.ch},
-          ].map(s => (
+          {[{l:"Séries",v:exSerie?.series||exData.s},{l:"Reps",v:exSerie?.reps||exData.r},{l:"Repos",v:exSerie?.repos||exData.rest},{l:"Charge",v:exSerie?.charge||exData.ch}].map(s => (
             <div key={s.l} style={{padding:"8px 10px",background:"#ffffff",border:"0.5px solid #dce8f4",borderRadius:10,textAlign:"center",flex:1,minWidth:60}}>
-              <div style={{fontSize:14,fontWeight:400,color:"#3b82f6",fontFamily:"'Syne',sans-serif"}}>{s.v || "—"}</div>
+              <div style={{fontSize:14,fontWeight:400,color:"#3b82f6",fontFamily:"'Syne',sans-serif"}}>{s.v||"—"}</div>
               <div style={{fontSize:9,color:"#64748b",marginTop:2}}>{s.l}</div>
             </div>
           ))}
         </div>
-
-        {/* Tabs */}
         <div style={{padding:"0 16px",display:"flex",gap:6,marginBottom:14}}>
           {[{id:"tips",l:"Tips"},{id:"variantes",l:"Variantes"},{id:"erreurs",l:"Erreurs"},{id:"morpho",l:"Morpho"}].map(t => (
             <button key={t.id} onClick={() => setTab(t.id)} style={{padding:"6px 13px",background:tab===t.id?"rgba(59,130,246,0.08)":"transparent",border:`0.5px solid ${tab===t.id?"#3b82f6":"#dce8f4"}`,borderRadius:20,color:tab===t.id?"#3b82f6":"#64748b",cursor:"pointer",fontSize:11,fontWeight:500,fontFamily:"'Inter',sans-serif"}}>{t.l}</button>
           ))}
         </div>
-
         <div style={{padding:"0 16px"}}>
           {tab==="tips" && (
             <div style={{background:"#fff",border:"0.5px solid #dce8f4",borderRadius:12,padding:"14px 16px"}}>
               <div style={{fontSize:9,color:"#64748b",fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",marginBottom:12}}>Conseils techniques</div>
               {(exData.tips||[]).map((tip,i) => (
-                <div key={i} style={{display:"flex",gap:12,marginBottom:14,paddingBottom:14,borderBottom:i<(exData.tips.length-1)?"0.5px solid #dce8f4":"none"}}>
+                <div key={i} style={{display:"flex",gap:12,marginBottom:14,paddingBottom:14,borderBottom:i<(exData.tips||[]).length-1?"0.5px solid #dce8f4":"none"}}>
                   <div style={{width:22,height:22,borderRadius:"50%",background:"rgba(59,130,246,0.1)",border:"0.5px solid rgba(59,130,246,0.2)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:10,fontWeight:500,color:"#3b82f6"}}>{i+1}</div>
                   <div style={{fontSize:12,color:"#0f1a2e",lineHeight:1.6}}>{tip}</div>
                 </div>
               ))}
-              {exData.prog && (
-                <div style={{marginTop:4,padding:"10px 12px",background:"rgba(34,197,94,0.08)",border:"0.5px solid rgba(34,197,94,0.2)",borderRadius:9}}>
-                  <div style={{fontSize:10,color:"#22c55e",fontWeight:500,letterSpacing:"1px",textTransform:"uppercase",marginBottom:3}}>Progression</div>
-                  <div style={{fontSize:12,color:"#64748b",lineHeight:1.5}}>{exData.prog}</div>
-                </div>
-              )}
+              {exData.prog && <div style={{marginTop:4,padding:"10px 12px",background:"rgba(34,197,94,0.08)",border:"0.5px solid rgba(34,197,94,0.2)",borderRadius:9}}><div style={{fontSize:10,color:"#22c55e",fontWeight:500,textTransform:"uppercase",marginBottom:3}}>Progression</div><div style={{fontSize:12,color:"#64748b",lineHeight:1.5}}>{exData.prog}</div></div>}
             </div>
           )}
-
           {tab==="variantes" && (
             <div>
               {(exData.variantes||[]).map((v,i) => (
@@ -85,12 +303,8 @@ function GuideExModal({ exData, exSerie, onClose, C, INT }) {
                   {v.note && <div style={{fontSize:11,color:"#64748b",lineHeight:1.5}}>{v.note}</div>}
                 </div>
               ))}
-              {(!exData.variantes || exData.variantes.length === 0) && (
-                <div style={{textAlign:"center",padding:"24px",color:"#94a3b8",fontSize:13}}>Pas de variantes renseignées.</div>
-              )}
             </div>
           )}
-
           {tab==="erreurs" && (
             <div style={{background:"#fff",border:"0.5px solid #dce8f4",borderRadius:12,padding:"14px 16px"}}>
               <div style={{fontSize:9,color:"#64748b",fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",marginBottom:12}}>Erreurs à éviter</div>
@@ -102,23 +316,19 @@ function GuideExModal({ exData, exSerie, onClose, C, INT }) {
               ))}
             </div>
           )}
-
           {tab==="morpho" && (
             <div style={{background:"#fff",border:"0.5px solid #dce8f4",borderRadius:12,padding:"14px 16px"}}>
               <div style={{fontSize:9,color:"#64748b",fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",marginBottom:12}}>Adaptation morphologique</div>
-              {(exData.morpho||"").split('\n').filter(Boolean).map((line,i,arr) => (
+              {(exData.morpho||"").split("\n").filter(Boolean).map((line,i,arr) => (
                 <div key={i} style={{display:"flex",gap:8,marginBottom:10,paddingBottom:10,borderBottom:i<arr.length-1?"0.5px solid #dce8f4":"none",alignItems:"flex-start"}}>
-                  <div style={{fontSize:13,flexShrink:0,marginTop:1}}>{line.split(':')[0].trim()}</div>
-                  <div style={{fontSize:11.5,color:"#0f1a2e",lineHeight:1.6,flex:1}}>{line.split(':').slice(1).join(':').trim()}</div>
+                  <div style={{fontSize:13,flexShrink:0,marginTop:1}}>{line.split(":")[0].trim()}</div>
+                  <div style={{fontSize:11.5,color:"#0f1a2e",lineHeight:1.6,flex:1}}>{line.split(":").slice(1).join(":").trim()}</div>
                 </div>
               ))}
-              {!(exData.morpho||"").includes('\n') && exData.morpho && (
-                <div style={{fontSize:12,color:"#0f1a2e",lineHeight:1.7}}>{exData.morpho}</div>
-              )}
+              {!(exData.morpho||"").includes("\n") && exData.morpho && <div style={{fontSize:12,color:"#0f1a2e",lineHeight:1.7}}>{exData.morpho}</div>}
             </div>
           )}
         </div>
-
         <div style={{padding:"14px 16px 0"}}>
           <button onClick={onClose} style={{width:"100%",padding:"11px",background:"transparent",border:"0.5px solid #dce8f4",borderRadius:10,color:"#64748b",cursor:"pointer",fontSize:13,fontFamily:"'Inter',sans-serif"}}>← Retour à la séance</button>
         </div>
@@ -127,7 +337,7 @@ function GuideExModal({ exData, exSerie, onClose, C, INT }) {
   );
 }
 
-// ─── EXERCICE EDITABLE (sous-composant propre, pas de hook dans .map) ────────
+// ─── EXERCICE EDITABLE ────────────────────────────────────────────────────────
 function ExerciceEditable({ ex, exIdx, jourIdx, prog, setProg, cc, METHODS, onGuide }) {
   const [editing, setEditing] = useState(false);
   const updateEx = (field, val) => {
@@ -136,49 +346,46 @@ function ExerciceEditable({ ex, exIdx, jourIdx, prog, setProg, cc, METHODS, onGu
     setProg(u);
   };
   const dbEx = findExInDB(ex.nom);
-
   return (
     <div style={{background:"#fff",border:"0.5px solid #dce8f4",borderRadius:10,marginBottom:7,overflow:"hidden"}}>
      <div style={{padding:"10px 13px",borderLeft:`3px solid ${cc}`}}>
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
-       <div style={{flex:1,cursor:"pointer"}} onClick={() => setEditing(e => !e)}>
+       <div style={{flex:1,cursor:"pointer"}} onClick={() => setEditing(e=>!e)}>
         <div style={{fontSize:12,fontWeight:600,color:"#0f1a2e",marginBottom:3}}>{ex.nom}</div>
         <div style={{fontSize:10,color:"#64748b"}}>{ex.series}×{ex.reps} · {ex.repos}{ex.charge?` · ${ex.charge}`:""}{ex.tempo?` · ${ex.tempo}`:""}{ex.methode&&ex.methode!=="Classique"?` · ${ex.methode}`:""}</div>
        </div>
        <div style={{display:"flex",gap:5,marginLeft:8,flexShrink:0}}>
-        {dbEx && onGuide && (
-          <button onClick={() => onGuide(dbEx, ex)} style={{padding:"4px 8px",background:"rgba(59,130,246,0.06)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:6,color:"#3b82f6",cursor:"pointer",fontSize:10,fontWeight:600,fontFamily:"'Inter',sans-serif"}}>Guide ›</button>
-        )}
-        <button onClick={() => setEditing(e => !e)} style={{padding:"4px 8px",background:"rgba(59,130,246,0.08)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:6,color:"#3b82f6",cursor:"pointer",fontSize:10,flexShrink:0}}>✏️</button>
+        {dbEx && onGuide && <button onClick={()=>onGuide(dbEx,ex)} style={{padding:"4px 8px",background:"rgba(59,130,246,0.06)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:6,color:"#3b82f6",cursor:"pointer",fontSize:10,fontWeight:600,fontFamily:"'Inter',sans-serif"}}>Guide ›</button>}
+        <button onClick={()=>setEditing(e=>!e)} style={{padding:"4px 8px",background:"rgba(59,130,246,0.08)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:6,color:"#3b82f6",cursor:"pointer",fontSize:10}}>✏️</button>
        </div>
       </div>
       {editing && (
-      <div style={{marginTop:10,paddingTop:10,borderTop:"0.5px solid #dce8f4"}}>
-       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6,marginBottom:7}}>
-        {[{l:"Séries",k:"series"},{l:"Reps",k:"reps"},{l:"Repos",k:"repos"},{l:"Charge",k:"charge"}].map(pp => (
-         <div key={pp.k}>
-          <div style={{fontSize:9,color:"#64748b",marginBottom:3,fontWeight:600}}>{pp.l}</div>
-          <div style={{display:"flex",gap:3,alignItems:"center"}}>
-           <button onClick={() => {const cur=parseFloat(ex[pp.k])||0; updateEx(pp.k,String(pp.k==="repos"?Math.max(0,cur-15):Math.max(1,cur-1)));}} style={{width:22,height:22,borderRadius:5,background:"#f1f5f9",border:"none",cursor:"pointer",fontSize:12}}>−</button>
-           <input value={ex[pp.k]||""} onChange={e => updateEx(pp.k,e.target.value)} style={{flex:1,padding:"4px 5px",background:"#fff",border:"0.5px solid #dce8f4",borderRadius:6,fontSize:11,textAlign:"center",fontFamily:"'Inter',sans-serif"}}/>
-           <button onClick={() => {const cur=parseFloat(ex[pp.k])||0; updateEx(pp.k,String(pp.k==="repos"?cur+15:cur+1));}} style={{width:22,height:22,borderRadius:5,background:"#3b82f6",border:"none",color:"#fff",cursor:"pointer",fontSize:12}}>+</button>
+       <div style={{marginTop:10,paddingTop:10,borderTop:"0.5px solid #dce8f4"}}>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6,marginBottom:7}}>
+         {[{l:"Séries",k:"series"},{l:"Reps",k:"reps"},{l:"Repos",k:"repos"},{l:"Charge",k:"charge"}].map(pp=>(
+          <div key={pp.k}>
+           <div style={{fontSize:9,color:"#64748b",marginBottom:3,fontWeight:600}}>{pp.l}</div>
+           <div style={{display:"flex",gap:3,alignItems:"center"}}>
+            <button onClick={()=>{const c=parseFloat(ex[pp.k])||0;updateEx(pp.k,String(pp.k==="repos"?Math.max(0,c-15):Math.max(1,c-1)));}} style={{width:22,height:22,borderRadius:5,background:"#f1f5f9",border:"none",cursor:"pointer",fontSize:12}}>−</button>
+            <input value={ex[pp.k]||""} onChange={e=>updateEx(pp.k,e.target.value)} style={{flex:1,padding:"4px 5px",background:"#fff",border:"0.5px solid #dce8f4",borderRadius:6,fontSize:11,textAlign:"center",fontFamily:"'Inter',sans-serif"}}/>
+            <button onClick={()=>{const c=parseFloat(ex[pp.k])||0;updateEx(pp.k,String(pp.k==="repos"?c+15:c+1));}} style={{width:22,height:22,borderRadius:5,background:"#3b82f6",border:"none",color:"#fff",cursor:"pointer",fontSize:12}}>+</button>
+           </div>
           </div>
-         </div>
-        ))}
-       </div>
-       <div style={{marginBottom:6}}>
-        <div style={{fontSize:9,color:"#64748b",marginBottom:3,fontWeight:600}}>TEMPO</div>
-        <input value={ex.tempo||""} onChange={e => updateEx("tempo",e.target.value)} placeholder="Ex: 2-1-3" style={{width:"100%",padding:"7px 10px",background:"#fff",border:"0.5px solid #dce8f4",borderRadius:8,fontSize:11,fontFamily:"'Inter',sans-serif",boxSizing:"border-box"}}/>
-       </div>
-       <div>
-        <div style={{fontSize:9,color:"#64748b",marginBottom:4,fontWeight:600}}>MÉTHODE</div>
-        <div style={{display:"flex",flexWrap:"wrap",gap:4}}>
-         {METHODS.map(mm => (
-          <button key={mm} onClick={() => updateEx("methode",mm)} style={{padding:"3px 8px",borderRadius:12,border:`1px solid ${ex.methode===mm?"#3b82f6":"#dce8f4"}`,background:ex.methode===mm?"rgba(59,130,246,0.1)":"transparent",color:ex.methode===mm?"#3b82f6":"#64748b",cursor:"pointer",fontSize:9,fontFamily:"'Inter',sans-serif"}}>{mm}</button>
          ))}
         </div>
+        <div style={{marginBottom:6}}>
+         <div style={{fontSize:9,color:"#64748b",marginBottom:3,fontWeight:600}}>TEMPO</div>
+         <input value={ex.tempo||""} onChange={e=>updateEx("tempo",e.target.value)} placeholder="Ex: 2-1-3" style={{width:"100%",padding:"7px 10px",background:"#fff",border:"0.5px solid #dce8f4",borderRadius:8,fontSize:11,fontFamily:"'Inter',sans-serif",boxSizing:"border-box"}}/>
+        </div>
+        <div>
+         <div style={{fontSize:9,color:"#64748b",marginBottom:4,fontWeight:600}}>MÉTHODE</div>
+         <div style={{display:"flex",flexWrap:"wrap",gap:4}}>
+          {METHODS.map(mm=>(
+           <button key={mm} onClick={()=>updateEx("methode",mm)} style={{padding:"3px 8px",borderRadius:12,border:`1px solid ${ex.methode===mm?"#3b82f6":"#dce8f4"}`,background:ex.methode===mm?"rgba(59,130,246,0.1)":"transparent",color:ex.methode===mm?"#3b82f6":"#64748b",cursor:"pointer",fontSize:9,fontFamily:"'Inter',sans-serif"}}>{mm}</button>
+          ))}
+         </div>
+        </div>
        </div>
-      </div>
       )}
      </div>
     </div>
@@ -187,29 +394,41 @@ function ExerciceEditable({ ex, exIdx, jourIdx, prog, setProg, cc, METHODS, onGu
 
 // ─── CALENDAR ─────────────────────────────────────────────────────────────────
 export default function Calendar(props) {
-  const { prog, setProg, progs, setProgs, cycleStart, setTab, premium, setPaywall, push, calSess, setCalSess, checkedEx, jR, semC, C, INT, setProgView } = props;
+  const { prog, setProg, progs, setProgs, cycleStart, setTab, premium, setPaywall, push, calSess, setCalSess, checkedEx, jR, semC, C, INT, setProgView, profil } = props;
 
-  const [bonusModal, setBonusModal]   = useState(null);
-  const [viewJour,   setViewJour]     = useState(null);
-  const [currentWeek, setCurrentWeek] = useState(semC || 0);
-  const [guideEx,    setGuideEx]      = useState(null); // { dbEx, serieEx }
+  const [bonusModal,   setBonusModal]   = useState(null);
+  const [cardioOpen,   setCardioOpen]   = useState(false);
+  const [viewJour,     setViewJour]     = useState(null);
+  const [currentWeek,  setCurrentWeek]  = useState(semC || 0);
+  const [guideEx,      setGuideEx]      = useState(null);
 
   const WEEK_INTENSITY = ["modere","modere","lourd","lourd","intense","leger"];
   const METHODS = ["Classique","Pyramidal","Super-set","Drop-set","Rest-pause","5×5","Séries de 100","Dégressif"];
 
-  // ── Guide modal ──
-  if (guideEx) {
+  // ── Cardio modal ──
+  if (cardioOpen) {
     return (
-      <GuideExModal
-        exData={guideEx.dbEx}
-        exSerie={guideEx.serieEx}
-        onClose={() => setGuideEx(null)}
-        C={C} INT={INT}
+      <CardioModal
+        poids={profil?.poids}
+        C={C}
+        onClose={() => setCardioOpen(false)}
+        onSave={(sess) => {
+          const today = new Date();
+          const key = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,"0")}-${String(today.getDate()).padStart(2,"0")}`;
+          setCalSess(s => ({...s,[key]:sess}));
+          setCardioOpen(false);
+          push("🏃","Cardio enregistré !",`${sess.nom}${sess.cardio?.kcal?` · ${sess.cardio.kcal} kcal`:""}`);
+        }}
       />
     );
   }
 
-  // ── Vue détail d'une séance (exercices) ──
+  // ── Guide modal ──
+  if (guideEx) {
+    return <GuideExModal exData={guideEx.dbEx} exSerie={guideEx.serieEx} onClose={() => setGuideEx(null)} C={C} INT={INT} />;
+  }
+
+  // ── Vue détail séance ──
   if (viewJour !== null && prog) {
     const jour = prog.jours[viewJour];
     const weekInt = INT[WEEK_INTENSITY[currentWeek]];
@@ -217,33 +436,19 @@ export default function Calendar(props) {
     return (
       <div style={{padding:"0 15px"}}>
         <button onClick={() => setViewJour(null)} style={{background:"transparent",border:"none",color:"#3b82f6",cursor:"pointer",fontSize:13,fontWeight:600,padding:"16px 0 12px",display:"flex",alignItems:"center",gap:5}}>← Retour aux séances</button>
-
-        {/* Header séance */}
         <div style={{padding:"12px 14px",background:`${int.c}14`,border:`0.5px solid ${int.c}40`,borderRadius:12,marginBottom:4}}>
           <div style={{fontSize:9,color:int.c,fontWeight:700,letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:3}}>{int.l}</div>
           <div style={{fontFamily:"'Syne',sans-serif",fontSize:18,fontWeight:400,marginBottom:2}}>{jour.nom}</div>
           <div style={{fontSize:11,color:"#64748b"}}>{jour.focus} · {jour.duree} · {jour.exercices?.length||0} exercices</div>
         </div>
-
-        {/* Badge intensité semaine sélectionnée */}
         <div style={{display:"flex",alignItems:"center",gap:6,padding:"7px 12px",background:`${weekInt.c}10`,border:`0.5px solid ${weekInt.c}30`,borderRadius:8,marginBottom:12}}>
           <div style={{width:6,height:6,borderRadius:"50%",background:weekInt.c,flexShrink:0}}/>
           <div style={{fontSize:10,color:weekInt.c,fontWeight:600}}>Semaine {currentWeek+1} — {weekInt.l}</div>
         </div>
-
-        {(jour.exercices||[]).length === 0 && (
-          <div style={{textAlign:"center",padding:"24px 0",color:"#64748b",fontSize:13}}>Aucun exercice dans cette séance.</div>
-        )}
+        {(jour.exercices||[]).length === 0 && <div style={{textAlign:"center",padding:"24px 0",color:"#64748b",fontSize:13}}>Aucun exercice dans cette séance.</div>}
         {(jour.exercices||[]).map((ex,k) => {
           const cc = {principal:"#3b82f6",correctif:"#ef4444",gainage:"#22c55e",isolation:"#8b5cf6",correctiv:"#ef4444"}[ex.cat||"principal"]||"#3b82f6";
-          return (
-            <ExerciceEditable
-              key={k} ex={ex} exIdx={k} jourIdx={viewJour}
-              prog={prog} setProg={setProg}
-              cc={cc} METHODS={METHODS}
-              onGuide={(dbEx, serieEx) => setGuideEx({dbEx, serieEx})}
-            />
-          );
+          return <ExerciceEditable key={k} ex={ex} exIdx={k} jourIdx={viewJour} prog={prog} setProg={setProg} cc={cc} METHODS={METHODS} onGuide={(dbEx,serieEx)=>setGuideEx({dbEx,serieEx})} />;
         })}
       </div>
     );
@@ -252,7 +457,6 @@ export default function Calendar(props) {
   return (
     <div style={{padding:"0 15px"}}>
 
-      {/* Calendrier mensuel */}
       <Box>
         <Lbl>Calendrier mensuel</Lbl>
         <MonthCal sessions={calSess} onUpdate={(date,sess) => {
@@ -264,8 +468,13 @@ export default function Calendar(props) {
       {/* Séances bonus */}
       <Lbl>Séance bonus</Lbl>
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,marginBottom:12}}>
-        {[{id:"etirements",i:"🧘",l:"Étirements",color:C.purple},{id:"cardio",i:"🏃",l:"Cardio",color:C.blue},{id:"mobilite",i:"💆",l:"Mobilité",color:C.green}].map(b => (
-          <div key={b.id} onClick={() => setBonusModal(b)} style={{padding:"12px 8px",textAlign:"center",background:C.s2,border:"0.5px solid #dce8f4",borderRadius:10,cursor:"pointer"}}>
+        {[
+          {id:"etirements",i:"🧘",l:"Étirements",color:C.purple},
+          {id:"cardio",    i:"🏃",l:"Cardio",    color:C.blue},
+          {id:"mobilite",  i:"💆",l:"Mobilité",  color:C.green},
+        ].map(b => (
+          <div key={b.id} onClick={() => b.id==="cardio" ? setCardioOpen(true) : setBonusModal(b)}
+            style={{padding:"12px 8px",textAlign:"center",background:C.s2,border:"0.5px solid #dce8f4",borderRadius:10,cursor:"pointer"}}>
             <div style={{fontSize:22,marginBottom:4}}>{b.i}</div>
             <div style={{fontSize:11,fontWeight:700,color:b.color}}>{b.l}</div>
           </div>
@@ -293,7 +502,7 @@ export default function Calendar(props) {
         </div>
       )}
 
-      {/* Bloc programme + semaines S1-S6 */}
+      {/* Programme + semaines S1-S6 */}
       {cycleStart && prog && (
         <Box style={{background:"rgba(59,130,246,0.06)",borderColor:C.goldB}}>
           <Row style={{justifyContent:"space-between",alignItems:"flex-start",marginBottom:10}}>
@@ -308,29 +517,17 @@ export default function Calendar(props) {
             )}
           </Row>
 
-          {/* Analyse morpho IA */}
           {prog.analyse && (prog.analyse.points_forts?.length>0 || prog.analyse.points_faibles?.length>0) && (
             <div style={{marginBottom:12,padding:"10px 12px",background:"#ffffff",border:"0.5px solid #dce8f4",borderRadius:10}}>
               <div style={{fontSize:9,color:"#3b82f6",fontWeight:600,letterSpacing:"1px",textTransform:"uppercase",marginBottom:8}}>🔬 Analyse morphologique</div>
-              {prog.analyse.morphotype && <div style={{fontSize:11,color:"#64748b",marginBottom:6,fontStyle:"italic"}}>Morphotype : <span style={{color:C.text,fontWeight:500}}>{prog.analyse.morphotype}</span> · Humérus : {prog.analyse.humerus||"?"} · Fémurs : {prog.analyse.femurs||"?"}</div>}
+              {prog.analyse.morphotype && <div style={{fontSize:11,color:"#64748b",marginBottom:6,fontStyle:"italic"}}>Morphotype : <span style={{color:C.text,fontWeight:500}}>{prog.analyse.morphotype}</span></div>}
               <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
-                {prog.analyse.points_forts?.length>0 && (
-                  <div>
-                    <div style={{fontSize:9,color:C.green,fontWeight:600,letterSpacing:"0.5px",marginBottom:4}}>✅ POINTS FORTS</div>
-                    {prog.analyse.points_forts.map((p,i) => <div key={i} style={{fontSize:10,color:C.text,padding:"2px 0"}}>{p}</div>)}
-                  </div>
-                )}
-                {prog.analyse.points_faibles?.length>0 && (
-                  <div>
-                    <div style={{fontSize:9,color:C.red,fontWeight:600,letterSpacing:"0.5px",marginBottom:4}}>🎯 À DÉVELOPPER</div>
-                    {prog.analyse.points_faibles.map((p,i) => <div key={i} style={{fontSize:10,color:C.text,padding:"2px 0"}}>{p}</div>)}
-                  </div>
-                )}
+                {prog.analyse.points_forts?.length>0 && <div><div style={{fontSize:9,color:C.green,fontWeight:600,marginBottom:4}}>✅ POINTS FORTS</div>{prog.analyse.points_forts.map((p,i)=><div key={i} style={{fontSize:10,color:C.text,padding:"2px 0"}}>{p}</div>)}</div>}
+                {prog.analyse.points_faibles?.length>0 && <div><div style={{fontSize:9,color:C.red,fontWeight:600,marginBottom:4}}>🎯 À DÉVELOPPER</div>{prog.analyse.points_faibles.map((p,i)=><div key={i} style={{fontSize:10,color:C.text,padding:"2px 0"}}>{p}</div>)}</div>}
               </div>
             </div>
           )}
 
-          {/* Correction points faibles */}
           {prog.correction?.groupes_prioritaires?.length>0 && (
             <div style={{marginBottom:12,padding:"8px 12px",background:"rgba(249,115,22,0.06)",border:"0.5px solid rgba(249,115,22,0.2)",borderRadius:8}}>
               <div style={{fontSize:9,color:"#f97316",fontWeight:600,letterSpacing:"1px",textTransform:"uppercase",marginBottom:4}}>🔧 Correction prioritaire</div>
@@ -338,7 +535,6 @@ export default function Calendar(props) {
             </div>
           )}
 
-          {/* Fin de cycle */}
           {jR === 0 && (
             <div style={{padding:"12px 14px",background:"rgba(62,199,122,0.1)",border:"1px solid rgba(62,199,122,0.3)",borderRadius:10,marginBottom:12}}>
               <div style={{fontSize:13,fontWeight:500,color:C.green,marginBottom:4}}>🏆 Cycle terminé !</div>
@@ -347,7 +543,7 @@ export default function Calendar(props) {
             </div>
           )}
 
-          {/* ── Sélecteur semaines S1-S6 (CLIQUABLE) ── */}
+          {/* Sélecteur semaines S1-S6 */}
           <div style={{fontSize:9,color:"#64748b",fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",marginBottom:6}}>Planification 6 semaines</div>
           <div style={{display:"grid",gridTemplateColumns:"repeat(6,1fr)",gap:4,marginBottom:8}}>
             {WEEK_INTENSITY.map((k,w) => {
@@ -355,13 +551,7 @@ export default function Calendar(props) {
               const isSelected = w === currentWeek;
               const isDone = w < semC;
               return (
-                <div key={w} onClick={() => setCurrentWeek(w)} style={{
-                  padding:"9px 4px",
-                  background: isSelected ? `${int.c}20` : isDone ? "rgba(34,197,94,0.1)" : C.s2,
-                  border:`1px solid ${isSelected ? int.c : isDone ? "rgba(56,199,117,.25)" : C.s3}`,
-                  borderRadius:9,textAlign:"center",cursor:"pointer",
-                  transition:"all .12s",
-                }}>
+                <div key={w} onClick={() => setCurrentWeek(w)} style={{padding:"9px 4px",background:isSelected?`${int.c}20`:isDone?"rgba(34,197,94,0.1)":C.s2,border:`1px solid ${isSelected?int.c:isDone?"rgba(56,199,117,.25)":C.s3}`,borderRadius:9,textAlign:"center",cursor:"pointer",transition:"all .12s"}}>
                   <div style={{fontSize:9,color:isSelected?int.c:isDone?C.green:C.dim,fontWeight:700,fontFamily:"'Syne',sans-serif"}}>S{w+1}</div>
                   <div style={{width:4,height:4,borderRadius:"50%",background:isSelected?int.c:isDone?"#22c55e":C.dim,margin:"4px auto 0"}}/>
                   {isSelected && <div style={{fontSize:7,color:int.c,marginTop:2,fontWeight:600}}>●</div>}
@@ -370,7 +560,7 @@ export default function Calendar(props) {
             })}
           </div>
 
-          {/* Badge intensité semaine sélectionnée */}
+          {/* Badge intensité semaine */}
           {(() => {
             const wi = WEEK_INTENSITY[currentWeek];
             const int = INT[wi];
@@ -386,19 +576,14 @@ export default function Calendar(props) {
             );
           })()}
 
-          {/* Liste des séances de la semaine sélectionnée */}
+          {/* Séances de la semaine */}
           <div style={{fontSize:9,color:"#64748b",fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",marginBottom:8}}>Séances — Semaine {currentWeek+1}</div>
           {prog.jours.map((j, i) => {
-            const weekIntKey = WEEK_INTENSITY[currentWeek];
-            const int = INT[weekIntKey];
+            const int = INT[WEEK_INTENSITY[currentWeek]];
             const total = j.exercices?.length || 0;
             const done = j.exercices?.filter((_,idx) => checkedEx[`${j.id}-${idx}`]).length || 0;
             return (
-              <Row key={i} onClick={() => setViewJour(i)} style={{
-                padding:"11px 13px",background:"#fff",borderRadius:10,marginBottom:6,
-                cursor:"pointer",border:`0.5px solid ${int.c}25`,
-                borderLeft:`3px solid ${int.c}`,
-              }}>
+              <Row key={i} onClick={() => setViewJour(i)} style={{padding:"11px 13px",background:"#fff",borderRadius:10,marginBottom:6,cursor:"pointer",border:`0.5px solid ${int.c}25`,borderLeft:`3px solid ${int.c}`}}>
                 <div style={{flex:1}}>
                   <div style={{fontSize:9,color:int.c,fontWeight:700,textTransform:"uppercase",letterSpacing:"1px",marginBottom:2}}>{int.l}</div>
                   <div style={{fontSize:13,fontWeight:500,color:"#0f1a2e"}}>{j.nom}</div>
