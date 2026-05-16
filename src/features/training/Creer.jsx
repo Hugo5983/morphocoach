@@ -18,6 +18,7 @@ import { Box, Lbl, Inp, Btn, Bar, Row, G2, Tag, MiniChart } from "../../componen
    exModal, setExModal,
    exModalTab, setExModalTab,
    setProgView,
+  progs, setProgsAll,
  } = props;
  if(createStep===0)return(
  <div style={{padding:"0 15px"}}>
@@ -206,7 +207,10 @@ import { Box, Lbl, Inp, Btn, Bar, Row, G2, Tag, MiniChart } from "../../componen
  </Box>
  <Btn onClick={()=>{
  const jours=newP.jours.map((j,i)=>({id:i+1,nom:newP.seances[j]?.nom||`Séance ${j}`,focus:j,duree:"45-60 min",intensite:newP.seances[j]?.intensite||"modere",exercices:(newP.seances[j]?.exercices||[]).map(ex=>({...ex,historique:[],note:""})),complete:false,date:null,note:""}));
- const newProg={titre:newP.nom,type:"custom",jours};
+ const newProg={titre:newP.nom,type:"custom",id:`custom_${Date.now()}`,dateDebut:new Date().toLocaleDateString("fr-FR"),jours};
+ // Ajouter à la liste des progs + définir comme actif
+ if(setProgsAll) { setProgsAll([...(progs||[]),newProg]); }
+ else { setProg(newProg); }
  setProg(newProg);setCycleStart(Date.now());
  const today=new Date();
  const joursMap={"Lun":1,"Mar":2,"Mer":3,"Jeu":4,"Ven":5,"Sam":6,"Dim":0};
@@ -223,7 +227,7 @@ import { Box, Lbl, Inp, Btn, Bar, Row, G2, Tag, MiniChart } from "../../componen
  }
  });
  setCalSess(prev=>({...prev,...newSess}));
- setProgView("calendar");setCS(0);
+ setProgView("calendar");setCS(0);setNewP({nom:"",jours:[],seances:{}});
  push("✅","Programme créé !",`${newP.nom} · Calendrier mis à jour !`);
  }}>✓ Enregistrer le programme</Btn>
  <Btn v="ghost" onClick={()=>setCS(0)}>← Retour</Btn>
