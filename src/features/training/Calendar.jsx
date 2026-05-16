@@ -8,9 +8,61 @@ import { MonthCal } from "../../components/ui/MonthCal.jsx";
 
 // ─── CALENDAR ──────────────────────────────────────────────────────────────
 
+// ─── EXERCICE EDITABLE (sous-composant pour éviter hook dans .map) ────────────
+function ExerciceEditable({ ex, exIdx, jourIdx, prog, setProg, cc, METHODS }) {
+  const [editing, setEditing] = useState(false);
+  const updateEx = (field, val) => {
+    const u = JSON.parse(JSON.stringify(prog));
+    u.jours[jourIdx].exercices[exIdx][field] = val;
+    setProg(u);
+  };
+  return (
+    <div style={{background:"#fff",border:"0.5px solid #dce8f4",borderRadius:10,marginBottom:7,overflow:"hidden"}}>
+     <div style={{padding:"10px 13px",borderLeft:`3px solid ${cc}`}}>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
+       <div style={{flex:1}}>
+        <div style={{fontSize:12,fontWeight:600,color:"#0f1a2e",marginBottom:3}}>{ex.nom}</div>
+        <div style={{fontSize:10,color:"#64748b"}}>{ex.series}×{ex.reps} · {ex.repos}{ex.charge?` · ${ex.charge}`:""}{ex.tempo?` · ${ex.tempo}`:""}{ex.methode&&ex.methode!=="Classique"?` · ${ex.methode}`:""}</div>
+       </div>
+       <button onClick={()=>setEditing(e=>!e)} style={{padding:"4px 8px",background:"rgba(59,130,246,0.08)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:6,color:"#3b82f6",cursor:"pointer",fontSize:10,flexShrink:0,marginLeft:8}}>✏️ Modifier</button>
+      </div>
+      {editing&&(
+      <div style={{marginTop:10,paddingTop:10,borderTop:"0.5px solid #dce8f4"}}>
+       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6,marginBottom:7}}>
+        {[{l:"Séries",k:"series"},{l:"Reps",k:"reps"},{l:"Repos",k:"repos"},{l:"Charge",k:"charge"}].map(pp=>(
+         <div key={pp.k}>
+          <div style={{fontSize:9,color:"#64748b",marginBottom:3,fontWeight:600}}>{pp.l}</div>
+          <div style={{display:"flex",gap:3,alignItems:"center"}}>
+           <button onClick={()=>{const cur=parseFloat(ex[pp.k])||0;updateEx(pp.k,String(pp.k==="repos"?Math.max(0,cur-15):Math.max(1,cur-1)));}} style={{width:22,height:22,borderRadius:5,background:"#f1f5f9",border:"none",cursor:"pointer",fontSize:12}}>−</button>
+           <input value={ex[pp.k]||""} onChange={e=>updateEx(pp.k,e.target.value)} style={{flex:1,padding:"4px 5px",background:"#fff",border:"0.5px solid #dce8f4",borderRadius:6,fontSize:11,textAlign:"center",fontFamily:"'Inter',sans-serif"}}/>
+           <button onClick={()=>{const cur=parseFloat(ex[pp.k])||0;updateEx(pp.k,String(pp.k==="repos"?cur+15:cur+1));}} style={{width:22,height:22,borderRadius:5,background:"#3b82f6",border:"none",color:"#fff",cursor:"pointer",fontSize:12}}>+</button>
+          </div>
+         </div>
+        ))}
+       </div>
+       <div style={{marginBottom:6}}>
+        <div style={{fontSize:9,color:"#64748b",marginBottom:3,fontWeight:600}}>TEMPO</div>
+        <input value={ex.tempo||""} onChange={e=>updateEx("tempo",e.target.value)} placeholder="Ex: 2-1-3" style={{width:"100%",padding:"7px 10px",background:"#fff",border:"0.5px solid #dce8f4",borderRadius:8,fontSize:11,fontFamily:"'Inter',sans-serif",boxSizing:"border-box"}}/>
+       </div>
+       <div>
+        <div style={{fontSize:9,color:"#64748b",marginBottom:4,fontWeight:600}}>MÉTHODE</div>
+        <div style={{display:"flex",flexWrap:"wrap",gap:4}}>
+         {METHODS.map(mm=>(
+          <button key={mm} onClick={()=>updateEx("methode",mm)} style={{padding:"3px 8px",borderRadius:12,border:`1px solid ${ex.methode===mm?"#3b82f6":"#dce8f4"}`,background:ex.methode===mm?"rgba(59,130,246,0.1)":"transparent",color:ex.methode===mm?"#3b82f6":"#64748b",cursor:"pointer",fontSize:9,fontFamily:"'Inter',sans-serif"}}>{mm}</button>
+         ))}
+        </div>
+       </div>
+      </div>
+      )}
+     </div>
+    </div>
+  );
+}
+
  export default function Calendar(props){
- const { prog, setProg, cycleStart, setTab, premium, setPaywall, push, calSess, setCalSess, checkedEx, jR, semC, C, INT, setProgView } = props;
+ const { prog, setProg, progs, setProgs, cycleStart, setTab, premium, setPaywall, push, calSess, setCalSess, checkedEx, jR, semC, C, INT, setProgView } = props;
  const [bonusModal, setBonusModal] = useState(null);
+ const [viewJour, setViewJour] = useState(null);
  return(
  <div style={{padding:"0 15px"}}>
  <Box>
@@ -114,95 +166,54 @@ import { MonthCal } from "../../components/ui/MonthCal.jsx";
  );
  })}
  </div>
- {(()=>{
- const [viewJour,setViewJour]=useState(null);
- if(viewJour!==null){
+
+ {viewJour!==null && prog && (()=>{
    const jour=prog.jours[viewJour];
    const int=INT[jour.intensite||"modere"];
+   const METHODS=["Classique","Pyramidal","Super-set","Drop-set","Rest-pause","5×5","Séries de 100","Dégressif"];
    return(
    <div style={{padding:"0 0 10px"}}>
-    <button onClick={()=>setViewJour(null)} style={{background:"transparent",border:"none",color:"#3b82f6",cursor:"pointer",fontSize:13,fontWeight:600,padding:"8px 15px 12px",display:"flex",alignItems:"center",gap:5}}>← Retour</button>
-    <div style={{padding:"0 15px"}}>
-     <div style={{padding:"12px 14px",background:`${int.c}14`,border:`0.5px solid ${int.c}40`,borderRadius:12,marginBottom:12}}>
-      <div style={{fontSize:9,color:int.c,fontWeight:700,letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:3}}>{int.l}</div>
-      <div style={{fontFamily:"'Syne',sans-serif",fontSize:18,fontWeight:400,marginBottom:2}}>{jour.nom}</div>
-      <div style={{fontSize:11,color:"#64748b"}}>{jour.focus} · {jour.duree} · {jour.exercices?.length||0} exercices</div>
-     </div>
-     {(jour.exercices||[]).map((ex,k)=>{
-      const cc={principal:"#3b82f6",correctif:"#ef4444",gainage:"#22c55e",isolation:"#8b5cf6",correctiv:"#ef4444"}[ex.cat||"principal"]||"#3b82f6";
-      const [editing,setEditing]=useState(false);
-      const METHODS=["Classique","Pyramidal","Super-set","Drop-set","Rest-pause","5×5","Séries de 100","Dégressif"];
-      return(
-      <div key={k} style={{background:"#fff",border:"0.5px solid #dce8f4",borderRadius:10,marginBottom:7,overflow:"hidden"}}>
-       <div style={{padding:"10px 13px",borderLeft:`3px solid ${cc}`}}>
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
-         <div>
-          <div style={{fontSize:12,fontWeight:600,color:"#0f1a2e",marginBottom:3}}>{ex.nom}</div>
-          <div style={{fontSize:10,color:"#64748b"}}>{ex.series}×{ex.reps} · {ex.repos} · {ex.charge}{ex.tempo?` · ${ex.tempo}`:""}{ex.methode&&ex.methode!=="Classique"?` · ${ex.methode}`:""}</div>
-         </div>
-         <button onClick={()=>setEditing(e=>!e)} style={{padding:"4px 8px",background:"rgba(59,130,246,0.08)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:6,color:"#3b82f6",cursor:"pointer",fontSize:10,flexShrink:0,marginLeft:8}}>✏️ Modifier</button>
-        </div>
-        {editing&&(
-        <div style={{marginTop:10,paddingTop:10,borderTop:"0.5px solid #dce8f4"}}>
-         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6,marginBottom:7}}>
-          {[{l:"Séries",k:"series"},{l:"Reps",k:"reps"},{l:"Repos",k:"repos"},{l:"Charge",k:"charge"}].map(pp=>(
-           <div key={pp.k}>
-            <div style={{fontSize:9,color:"#64748b",marginBottom:3,fontWeight:600}}>{pp.l}</div>
-            <div style={{display:"flex",gap:3,alignItems:"center"}}>
-             <button onClick={()=>{const u=JSON.parse(JSON.stringify(prog));const cur=parseFloat(u.jours[viewJour].exercices[k][pp.k])||0;u.jours[viewJour].exercices[k][pp.k]=String(pp.k==="repos"?Math.max(0,cur-15):Math.max(1,cur-1));setProg(u);}} style={{width:22,height:22,borderRadius:5,background:"#f1f5f9",border:"none",cursor:"pointer",fontSize:12}}>−</button>
-             <input value={ex[pp.k]||""} onChange={e=>{const u=JSON.parse(JSON.stringify(prog));u.jours[viewJour].exercices[k][pp.k]=e.target.value;setProg(u);}} style={{flex:1,padding:"4px 5px",background:"#fff",border:"0.5px solid #dce8f4",borderRadius:6,fontSize:11,textAlign:"center",fontFamily:"'Inter',sans-serif"}}/>
-             <button onClick={()=>{const u=JSON.parse(JSON.stringify(prog));const cur=parseFloat(u.jours[viewJour].exercices[k][pp.k])||0;u.jours[viewJour].exercices[k][pp.k]=String(pp.k==="repos"?cur+15:cur+1);setProg(u);}} style={{width:22,height:22,borderRadius:5,background:"#3b82f6",border:"none",color:"#fff",cursor:"pointer",fontSize:12}}>+</button>
-            </div>
-           </div>
-          ))}
-         </div>
-         <div style={{marginBottom:6}}>
-          <div style={{fontSize:9,color:"#64748b",marginBottom:3,fontWeight:600}}>TEMPO</div>
-          <input value={ex.tempo||""} onChange={e=>{const u=JSON.parse(JSON.stringify(prog));u.jours[viewJour].exercices[k].tempo=e.target.value;setProg(u);}} placeholder="Ex: 2-1-3" style={{width:"100%",padding:"7px 10px",background:"#fff",border:"0.5px solid #dce8f4",borderRadius:8,fontSize:11,fontFamily:"'Inter',sans-serif",boxSizing:"border-box"}}/>
-         </div>
-         <div>
-          <div style={{fontSize:9,color:"#64748b",marginBottom:4,fontWeight:600}}>MÉTHODE</div>
-          <div style={{display:"flex",flexWrap:"wrap",gap:4}}>
-           {METHODS.map(mm=>(
-            <button key={mm} onClick={()=>{const u=JSON.parse(JSON.stringify(prog));u.jours[viewJour].exercices[k].methode=mm;setProg(u);}} style={{padding:"3px 8px",borderRadius:12,border:`1px solid ${ex.methode===mm?"#3b82f6":"#dce8f4"}`,background:ex.methode===mm?"rgba(59,130,246,0.1)":"transparent",color:ex.methode===mm?"#3b82f6":"#64748b",cursor:"pointer",fontSize:9,fontFamily:"'Inter',sans-serif"}}>{mm}</button>
-           ))}
-          </div>
-         </div>
-        </div>
-        )}
-       </div>
-      </div>
-      );
-     })}
+    <button onClick={()=>setViewJour(null)} style={{background:"transparent",border:"none",color:"#3b82f6",cursor:"pointer",fontSize:13,fontWeight:600,padding:"8px 0 12px",display:"flex",alignItems:"center",gap:5}}>← Retour aux séances</button>
+    <div style={{padding:"12px 14px",background:`${int.c}14`,border:`0.5px solid ${int.c}40`,borderRadius:12,marginBottom:12}}>
+     <div style={{fontSize:9,color:int.c,fontWeight:700,letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:3}}>{int.l}</div>
+     <div style={{fontFamily:"'Syne',sans-serif",fontSize:18,fontWeight:400,marginBottom:2}}>{jour.nom}</div>
+     <div style={{fontSize:11,color:"#64748b"}}>{jour.focus} · {jour.duree} · {jour.exercices?.length||0} exercices</div>
     </div>
+    {(jour.exercices||[]).map((ex,k)=>{
+     const cc={principal:"#3b82f6",correctif:"#ef4444",gainage:"#22c55e",isolation:"#8b5cf6",correctiv:"#ef4444"}[ex.cat||"principal"]||"#3b82f6";
+     return(
+     <ExerciceEditable key={k} ex={ex} exIdx={k} jourIdx={viewJour} prog={prog} setProg={setProg} cc={cc} METHODS={METHODS}/>
+     );
+    })}
    </div>
    );
- }
- return(
- <>{prog.jours.map((j,i)=>{
- const int=INT[j.intensite||"modere"];
- const total=j.exercices?.length||0;
- const done=j.exercices?.filter((_,idx)=>checkedEx[`${j.id}-${idx}`]).length||0;
- return(
- <Row key={i} onClick={()=>setViewJour(i)} style={{padding:"10px 12px",background:C.s2,borderRadius:9,marginBottom:5,cursor:"pointer",border:"0.5px solid #dce8f4"}}>
- <div style={{width:3,height:36,borderRadius:1.5,background:int.c,marginRight:10,flexShrink:0}}/>
- <div style={{flex:1}}>
- <div style={{fontSize:9,color:int.c,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",marginBottom:2}}>{int.l}</div>
- <div style={{fontSize:13,fontWeight:500,color:"#0f1a2e"}}>{j.nom}</div>
- <div style={{fontSize:10,color:"#64748b"}}>{j.focus} · {total} exercices</div>
- </div>
- <Row style={{gap:8,alignItems:"center"}}>
- {done>0&&<div style={{fontSize:10,color:C.green,fontWeight:700}}>{done}/{total}</div>}
- {j.complete&&<div style={{fontSize:10,color:C.green}}>✓</div>}
- <div style={{color:"#94a3b8",fontSize:16}}>›</div>
- </Row>
- </Row>
- );
- })}</>
- );
  })()}
+
+ {viewJour===null && prog && (<>
+  {prog.jours.map((j,i)=>{
+   const int=INT[j.intensite||"modere"];
+   const total=j.exercices?.length||0;
+   const done=j.exercices?.filter((_,idx)=>checkedEx[`${j.id}-${idx}`]).length||0;
+   return(
+   <Row key={i} onClick={()=>setViewJour(i)} style={{padding:"10px 12px",background:C.s2,borderRadius:9,marginBottom:5,cursor:"pointer",border:"0.5px solid #dce8f4"}}>
+   <div style={{width:3,height:36,borderRadius:1.5,background:int.c,marginRight:10,flexShrink:0}}/>
+   <div style={{flex:1}}>
+   <div style={{fontSize:9,color:int.c,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",marginBottom:2}}>{int.l}</div>
+   <div style={{fontSize:13,fontWeight:500,color:"#0f1a2e"}}>{j.nom}</div>
+   <div style={{fontSize:10,color:"#64748b"}}>{j.focus} · {total} exercices</div>
+   </div>
+   <Row style={{gap:8,alignItems:"center"}}>
+   {done>0&&<div style={{fontSize:10,color:C.green,fontWeight:700}}>{done}/{total}</div>}
+   {j.complete&&<div style={{fontSize:10,color:C.green}}>✓</div>}
+   <div style={{color:"#94a3b8",fontSize:16}}>›</div>
+   </Row>
+   </Row>
+   );
+  })}
+ </>)}
  </Box>
  )}
+
  {!prog&&(
  <Box style={{textAlign:"center",padding:"24px 20px"}}>
  <div style={{fontSize:13,color:"#64748b",marginBottom:16}}>Créez un programme pour planifier vos séances.</div>
@@ -213,4 +224,3 @@ import { MonthCal } from "../../components/ui/MonthCal.jsx";
  </div>
  );
  }
-
