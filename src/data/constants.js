@@ -28,6 +28,7 @@ export const OBJ = {
   force:        { l:"Force athlétique",  icon:"🏋️", surplus:200,  p:2.0, g:3.5, li:1.1 },
   poids:        { l:"Perte de poids",    icon:"🔥", deficit:-400, p:2.4, g:2.5, li:0.9 },
   sante:        { l:"Santé générale",    icon:"❤️", surplus:0,   p:1.6, g:3.0, li:1.0 },
+  prep_physique:{ l:"Prépa physique",    icon:"⚡", surplus:100,  p:1.8, g:3.5, li:1.0 },
 };
 
 // ─── FACTEURS D'ACTIVITÉ TDEE ─────────────────────────────────────────────────
