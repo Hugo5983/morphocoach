@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import { INT } from "../../data/constants.js";
+import { EX } from "../../data/exercises.js";
 import { Box, Lbl, Btn, Bar, Row } from "../../components/ui/index.jsx";
 import SeanceDetail from "./SeanceDetail.jsx";
 
@@ -25,21 +26,16 @@ function ManualRMModal({ prog, setProg, onClose, push, C }) {
   const [kg,       setKg]       = useState("");
   const [reps,     setReps]     = useState("");
 
-  // Collecter tous les exercices du programme (dédupliqués par nom)
+  // Tous les exercices de la bibliothèque complète
   const allExos = useMemo(() => {
-    if (!prog) return [];
-    const seen = new Set();
     const list = [];
-    prog.jours.forEach((jour, ji) => {
-      (jour.exercices || []).forEach((ex, ei) => {
-        if (!seen.has(ex.nom)) {
-          seen.add(ex.nom);
-          list.push({ nom: ex.nom, cat: ex.cat, jourNom: jour.nom, jourIdx: ji, exIdx: ei });
-        }
+    Object.entries(EX).forEach(([group, exercises]) => {
+      exercises.forEach(ex => {
+        list.push({ nom: ex.n, cat: ex.cat, group });
       });
     });
     return list.sort((a, b) => a.nom.localeCompare(b.nom));
-  }, [prog]);
+  }, []);
 
   const filtered = search
     ? allExos.filter(e => e.nom.toLowerCase().includes(search.toLowerCase()))
@@ -54,10 +50,25 @@ function ManualRMModal({ prog, setProg, onClose, push, C }) {
       poids: parseFloat(kg),
       reps:  parseInt(reps) || 1,
       date:  new Date().toLocaleDateString("fr-FR"),
+      cat:   selected.cat,
     };
-    u.jours[selected.jourIdx].exercices[selected.exIdx].historique =
-      u.jours[selected.jourIdx].exercices[selected.exIdx].historique || [];
-    u.jours[selected.jourIdx].exercices[selected.exIdx].historique.push(entry);
+    // Chercher dans prog.jours d'abord
+    let found = false;
+    u.jours.forEach(jour => {
+      (jour.exercices || []).forEach(ex => {
+        if (ex.nom === selected.nom) {
+          ex.historique = ex.historique || [];
+          ex.historique.push(entry);
+          found = true;
+        }
+      });
+    });
+    // Sinon sauvegarder dans prog.records (exercices hors programme)
+    if (!found) {
+      u.records = u.records || {};
+      u.records[selected.nom] = u.records[selected.nom] || [];
+      u.records[selected.nom].push(entry);
+    }
     setProg(u);
     push("🏆", "Record enregistré !", `${selected.nom} · ${kg}kg × ${reps||1} reps · 1RM≈${rm1Calc}kg`);
     onClose();
@@ -112,7 +123,7 @@ function ManualRMModal({ prog, setProg, onClose, push, C }) {
                     <div style={{width:4,height:36,borderRadius:2,background:cc(ex.cat),flexShrink:0}}/>
                     <div style={{flex:1}}>
                       <div style={{fontSize:12,fontWeight:500,color:"#0f1a2e"}}>{ex.nom}</div>
-                      <div style={{fontSize:10,color:"#64748b",marginTop:1}}>{ex.jourNom}</div>
+                      <div style={{fontSize:10,color:"#64748b",marginTop:1}}>{ex.group}</div>
                     </div>
                     <div style={{color:"#94a3b8",fontSize:14}}>›</div>
                   </div>
@@ -130,7 +141,7 @@ function ManualRMModal({ prog, setProg, onClose, push, C }) {
                 <div style={{width:4,height:40,borderRadius:2,background:cc(selected.cat),flexShrink:0}}/>
                 <div>
                   <div style={{fontSize:14,fontWeight:500,color:"#0f1a2e"}}>{selected.nom}</div>
-                  <div style={{fontSize:10,color:"#64748b",marginTop:2}}>{selected.jourNom}</div>
+                  <div style={{fontSize:10,color:"#64748b",marginTop:2}}>{selected.group}</div>
                 </div>
               </div>
 
@@ -288,7 +299,7 @@ export default function TodayView(props) {
 
   const [viewSeance,  setViewSeance]  = useState(null);
   const [showManualRM,setShowManualRM]= useState(false);
-  const [rmFilter,    setRmFilter]    = useState("all");
+  const rmFilter = "all";
 
   const objectif = profil?.objectif || "hypertrophie";
 
@@ -334,6 +345,21 @@ export default function TodayView(props) {
         }
       });
     });
+    // Lire aussi prog.records (exercices saisis hors programme)
+    if (prog.records) {
+      Object.entries(prog.records).forEach(([nom, history]) => {
+        if (!history || history.length === 0) return;
+        const best = history.reduce((b, h) => {
+          const rm  = calc1RM(parseFloat(h.poids)||0, parseInt(h.reps)||1);
+          const brm = calc1RM(parseFloat(b.poids)||0, parseInt(b.reps)||1);
+          return rm > brm ? h : b;
+        }, history[0]);
+        const rm1 = calc1RM(parseFloat(best.poids)||0, parseInt(best.reps)||1);
+        if (!map[nom] || rm1 > map[nom].rm1) {
+          map[nom] = { nom, cat: best.cat || "principal", rm1, bestKg: parseFloat(best.poids)||0, bestReps: parseInt(best.reps)||0, historique: history };
+        }
+      });
+    }
     return Object.values(map).sort((a,b) => b.rm1 - a.rm1);
   }, [prog, rmFilter]);
 
@@ -435,12 +461,6 @@ export default function TodayView(props) {
                 <div style={{fontSize:10,color:currentTarget.color,fontWeight:600}}>{currentTarget.l} · {currentTarget.reps} reps</div>
                 <div style={{fontSize:10,color:"#94a3b8"}}>· {currentTarget.pct}% 1RM</div>
               </div>
-            </div>
-            <div style={{display:"flex",gap:5,alignItems:"center"}}>
-              {[{id:"today",l:"Séance"},{id:"all",l:"Tout"}].map(f => (
-                <button key={f.id} onClick={() => setRmFilter(f.id)} style={{padding:"5px 11px",borderRadius:16,border:`0.5px solid ${rmFilter===f.id?"#3b82f6":"#dce8f4"}`,background:rmFilter===f.id?"rgba(59,130,246,0.08)":"transparent",color:rmFilter===f.id?"#3b82f6":"#64748b",cursor:"pointer",fontSize:11,fontWeight:rmFilter===f.id?600:400,fontFamily:"'Inter',sans-serif"}}>{f.l}</button>
-              ))}
-              <button onClick={() => setShowManualRM(true)} style={{width:28,height:28,borderRadius:8,background:"#3b82f6",border:"none",color:"#fff",cursor:"pointer",fontSize:16,display:"flex",alignItems:"center",justifyContent:"center"}}>+</button>
             </div>
           </div>
 
