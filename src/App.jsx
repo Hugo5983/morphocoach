@@ -56,6 +56,7 @@ export default function App() {
 
   // Programme & Cycles
   const [prog, setProg] = useStorage("prog", null);
+  const [progs, setProgs] = useStorage("progs", []);
   const [cycles, setCycles] = useStorage("cycles", []);
   const [cycleStart, setCycleStart] = useStorage("cycleStart", null);
   const [calSess, setCalSess] = useStorage("calSess", {});
@@ -89,6 +90,14 @@ export default function App() {
 
   // Reset eau quotidien
   useDailyReset("eauDate", setEau, 0);
+
+  // Migration : si prog existe mais progs est vide, initialiser la liste
+  useEffect(() => {
+    if (prog && progs.length === 0) {
+      setProgs([{ ...prog, id: prog.id || "legacy" }]);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Scan code-barres
   const handleScan = useCallback(async (code) => {
@@ -129,7 +138,7 @@ export default function App() {
   };
 
   const programProps = {
-    prog, setProg, premium, setPaywall, checkedEx, setCheckedEx,
+    prog, setProg, progs, setProgs, premium, setPaywall, checkedEx, setCheckedEx,
     seance, setSeance: openSeance, setChrono, setChronoSec,
     exDetails, setExDetails, exEdit, setExEdit,
     cycleStart, setCycleStart, calSess, setCalSess,
