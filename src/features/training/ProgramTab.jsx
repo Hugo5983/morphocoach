@@ -1,14 +1,87 @@
 import { useState } from "react";
 import { INT } from "../../data/constants.js";
+import { EX } from "../../data/exercises.js";
 import { Box, Lbl, Btn, Row } from "../../components/ui/index.jsx";
 import Calendar from "./Calendar.jsx";
 import TodayView from "./TodayView.jsx";
 import Creer from "./Creer.jsx";
 import AnalyseIA from "../ai/AnalyseIA.jsx";
 
+// ─── HELPER : chercher un exercice dans la BDD ──────────────────────────────
+function findExInDB(nom) {
+  if (!nom) return null;
+  const n = nom.toLowerCase();
+  for (const group of Object.values(EX)) {
+    const found = group.find(e =>
+      e.n.toLowerCase() === n ||
+      n.includes(e.n.toLowerCase().split(" ")[0]) ||
+      e.n.toLowerCase().includes(n.split(" ")[0])
+    );
+    if (found) return found;
+  }
+  return null;
+}
+
+// ─── GUIDE MODAL exercice (Tips / Variantes / Erreurs / Morpho) ──────────────
+function GuideExModal({ exData, exSerie, onClose, C }) {
+  const [tab, setTab] = useState("tips");
+  const cc = {principal:"#3b82f6",correctif:"#ef4444",gainage:"#22c55e",isolation:"#8b5cf6",mobilite:"#06b6d4"}[exData.cat] || "#3b82f6";
+  return (
+    <div style={{position:"fixed",inset:0,background:"rgba(228,238,248,0.99)",zIndex:500,overflowY:"auto"}}>
+      <div style={{maxWidth:500,margin:"0 auto",paddingBottom:80}}>
+        <div style={{padding:"20px 16px 0",display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
+          <div style={{flex:1}}>
+            <div style={{display:"inline-block",padding:"3px 10px",background:`${cc}14`,border:`0.5px solid ${cc}40`,borderRadius:8,fontSize:10,color:cc,letterSpacing:"1px",textTransform:"uppercase",fontWeight:600,marginBottom:10}}>{exData.cat}</div>
+            <div style={{fontFamily:"'Syne',sans-serif",fontSize:20,fontWeight:400,lineHeight:1.2,color:"#0f1a2e",marginBottom:4}}>{exData.n}</div>
+          </div>
+          <button onClick={onClose} style={{background:"#edf3fb",border:"0.5px solid #dce8f4",borderRadius:10,width:36,height:36,color:"#64748b",cursor:"pointer",fontSize:18,flexShrink:0,marginLeft:12}}>×</button>
+        </div>
+        <div style={{padding:"12px 16px",display:"flex",gap:7,flexWrap:"wrap"}}>
+          {[{l:"Séries",v:exSerie?.series||exData.s},{l:"Reps",v:exSerie?.reps||exData.r},{l:"Repos",v:exSerie?.repos||exData.rest},{l:"Charge",v:exSerie?.charge||exData.ch}].map(s=>(
+            <div key={s.l} style={{padding:"8px 10px",background:"#ffffff",border:"0.5px solid #dce8f4",borderRadius:10,textAlign:"center",flex:1,minWidth:60}}>
+              <div style={{fontSize:14,fontWeight:400,color:"#3b82f6",fontFamily:"'Syne',sans-serif"}}>{s.v||"—"}</div>
+              <div style={{fontSize:9,color:"#64748b",marginTop:2}}>{s.l}</div>
+            </div>
+          ))}
+        </div>
+        <div style={{padding:"0 16px",display:"flex",gap:6,marginBottom:14}}>
+          {[{id:"tips",l:"Tips"},{id:"variantes",l:"Variantes"},{id:"erreurs",l:"Erreurs"},{id:"morpho",l:"Morpho"}].map(t=>(
+            <button key={t.id} onClick={()=>setTab(t.id)} style={{padding:"6px 13px",background:tab===t.id?"rgba(59,130,246,0.08)":"transparent",border:`0.5px solid ${tab===t.id?"#3b82f6":"#dce8f4"}`,borderRadius:20,color:tab===t.id?"#3b82f6":"#64748b",cursor:"pointer",fontSize:11,fontWeight:500,fontFamily:"'Inter',sans-serif"}}>{t.l}</button>
+          ))}
+        </div>
+        <div style={{padding:"0 16px"}}>
+          {tab==="tips"&&(<div style={{background:"#fff",border:"0.5px solid #dce8f4",borderRadius:12,padding:"14px 16px"}}>
+            <div style={{fontSize:9,color:"#64748b",fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",marginBottom:12}}>Conseils techniques</div>
+            {(exData.tips||[]).map((tip,i)=>(<div key={i} style={{display:"flex",gap:12,marginBottom:14,paddingBottom:14,borderBottom:i<(exData.tips||[]).length-1?"0.5px solid #dce8f4":"none"}}><div style={{width:22,height:22,borderRadius:"50%",background:"rgba(59,130,246,0.1)",border:"0.5px solid rgba(59,130,246,0.2)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:10,fontWeight:500,color:"#3b82f6"}}>{i+1}</div><div style={{fontSize:12,color:"#0f1a2e",lineHeight:1.6}}>{tip}</div></div>))}
+            {exData.prog&&<div style={{marginTop:4,padding:"10px 12px",background:"rgba(34,197,94,0.08)",border:"0.5px solid rgba(34,197,94,0.2)",borderRadius:9}}><div style={{fontSize:10,color:"#22c55e",fontWeight:500,letterSpacing:"1px",textTransform:"uppercase",marginBottom:3}}>Progression</div><div style={{fontSize:12,color:"#64748b",lineHeight:1.5}}>{exData.prog}</div></div>}
+          </div>)}
+          {tab==="variantes"&&(<div>{(exData.variantes||[]).map((v,i)=>(<div key={i} style={{background:"#fff",border:"0.5px solid #dce8f4",borderRadius:12,padding:"14px 16px",marginBottom:8}}><div style={{fontSize:13,fontWeight:500,color:"#0f1a2e",marginBottom:5}}>{v.nom||v}</div>{v.note&&<div style={{fontSize:11,color:"#64748b",lineHeight:1.5}}>{v.note}</div>}</div>))}</div>)}
+          {tab==="erreurs"&&(<div style={{background:"#fff",border:"0.5px solid #dce8f4",borderRadius:12,padding:"14px 16px"}}>
+            <div style={{fontSize:9,color:"#64748b",fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",marginBottom:12}}>Erreurs à éviter</div>
+            {(exData.erreurs||[]).map((e,i)=>(<div key={i} style={{display:"flex",gap:10,marginBottom:12,alignItems:"flex-start"}}><div style={{width:20,height:20,borderRadius:"50%",background:"rgba(248,113,113,0.1)",border:"0.5px solid rgba(248,113,113,0.3)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:10,color:"#f87171"}}>✕</div><div style={{fontSize:12,color:"#0f1a2e",lineHeight:1.5}}>{e}</div></div>))}
+          </div>)}
+          {tab==="morpho"&&(<div style={{background:"#fff",border:"0.5px solid #dce8f4",borderRadius:12,padding:"14px 16px"}}>
+            <div style={{fontSize:9,color:"#64748b",fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",marginBottom:12}}>Adaptation morphologique</div>
+            {(exData.morpho||"").split("\n").filter(Boolean).map((line,i,arr)=>(<div key={i} style={{display:"flex",gap:8,marginBottom:10,paddingBottom:10,borderBottom:i<arr.length-1?"0.5px solid #dce8f4":"none",alignItems:"flex-start"}}><div style={{fontSize:13,flexShrink:0,marginTop:1}}>{line.split(":")[0].trim()}</div><div style={{fontSize:11.5,color:"#0f1a2e",lineHeight:1.6,flex:1}}>{line.split(":").slice(1).join(":").trim()}</div></div>))}
+            {!(exData.morpho||"").includes("\n")&&exData.morpho&&<div style={{fontSize:12,color:"#0f1a2e",lineHeight:1.7}}>{exData.morpho}</div>}
+          </div>)}
+        </div>
+        <div style={{padding:"14px 16px 0"}}>
+          <button onClick={onClose} style={{width:"100%",padding:"11px",background:"transparent",border:"0.5px solid #dce8f4",borderRadius:10,color:"#64748b",cursor:"pointer",fontSize:13,fontFamily:"'Inter',sans-serif"}}>← Retour à la séance</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ─── SÉANCE DETAIL (vue exercices d'une séance depuis Programme) ─────────────
 function SeanceDetailModal({ jour, jourIdx, prog, setProg, onClose, C, INT }) {
   const [editEx, setEditEx] = useState({});
+  const [guideEx, setGuideEx] = useState(null); // { dbEx, serieEx }
+
+  if (guideEx) {
+    return <GuideExModal exData={guideEx.dbEx} exSerie={guideEx.serieEx} onClose={() => setGuideEx(null)} C={C} />;
+  }
   const int = INT[jour.intensite || "modere"];
   const METHODS = ["Classique","Pyramidal","Super-set","Drop-set","Rest-pause","5×5","Séries de 100","Dégressif","Pré-fatigue","Wave loading"];
 
@@ -53,6 +126,9 @@ function SeanceDetailModal({ jour, jourIdx, prog, setProg, onClose, C, INT }) {
                       <div style={{fontSize:10,color:"#64748b"}}>{ex.series}×{ex.reps} · {ex.repos}{ex.charge ? ` · ${ex.charge}` : ""}{ex.tempo ? ` · ${ex.tempo}` : ""}{ex.methode && ex.methode !== "Classique" ? ` · ${ex.methode}` : ""}</div>
                     </div>
                     <div style={{display:"flex",gap:5,marginLeft:8}}>
+                      {findExInDB(ex.nom) && (
+                        <button onClick={() => { const d=findExInDB(ex.nom); if(d) setGuideEx({dbEx:d,serieEx:ex}); }} style={{padding:"4px 8px",background:"rgba(59,130,246,0.06)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:6,color:"#3b82f6",cursor:"pointer",fontSize:10,fontWeight:600,fontFamily:"'Inter',sans-serif"}}>Guide ›</button>
+                      )}
                       <button onClick={() => setEditEx(m => ({...m,[k]:!m[k]}))} style={{padding:"4px 8px",background:"rgba(59,130,246,0.08)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:6,color:"#3b82f6",cursor:"pointer",fontSize:10,fontWeight:600}}>✏️</button>
                       <button onClick={() => deleteEx(k)} style={{padding:"4px 8px",background:"rgba(248,113,113,0.08)",border:"0.5px solid rgba(248,113,113,0.25)",borderRadius:6,color:"#f87171",cursor:"pointer",fontSize:10}}>×</button>
                     </div>
