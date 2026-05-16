@@ -6,11 +6,280 @@ import TodayView from "./TodayView.jsx";
 import Creer from "./Creer.jsx";
 import AnalyseIA from "../ai/AnalyseIA.jsx";
 
+// ─── SÉANCE DETAIL (vue exercices d'une séance depuis Programme) ─────────────
+function SeanceDetailModal({ jour, jourIdx, prog, setProg, onClose, C, INT }) {
+  const [editEx, setEditEx] = useState({});
+  const int = INT[jour.intensite || "modere"];
+  const METHODS = ["Classique","Pyramidal","Super-set","Drop-set","Rest-pause","5×5","Séries de 100","Dégressif","Pré-fatigue","Wave loading"];
+
+  const updateEx = (exIdx, field, val) => {
+    const u = JSON.parse(JSON.stringify(prog));
+    u.jours[jourIdx].exercices[exIdx][field] = val;
+    setProg(u);
+  };
+  const deleteEx = (exIdx) => {
+    const u = JSON.parse(JSON.stringify(prog));
+    u.jours[jourIdx].exercices.splice(exIdx, 1);
+    setProg(u);
+  };
+
+  return (
+    <div style={{position:"fixed",inset:0,background:"rgba(228,238,248,0.98)",zIndex:400,overflowY:"auto"}}>
+      <div style={{maxWidth:500,margin:"0 auto",paddingBottom:80}}>
+        {/* Header */}
+        <div style={{padding:"20px 15px 0",display:"flex",alignItems:"center",gap:12,marginBottom:14}}>
+          <button onClick={onClose} style={{background:"transparent",border:"none",color:C.gold,cursor:"pointer",fontSize:13,fontWeight:600,padding:0,display:"flex",alignItems:"center",gap:4}}>← Retour</button>
+        </div>
+        <div style={{padding:"0 15px"}}>
+          <div style={{padding:"14px 16px",background:`${int.c}14`,border:`0.5px solid ${int.c}40`,borderRadius:12,marginBottom:14}}>
+            <div style={{fontSize:9,color:int.c,fontWeight:700,letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:3}}>{int.l}</div>
+            <div style={{fontFamily:"'Syne',sans-serif",fontSize:20,fontWeight:400,marginBottom:4}}>{jour.nom}</div>
+            <div style={{fontSize:11,color:"#64748b"}}>{jour.focus} · {jour.duree || "45-60 min"} · {jour.exercices?.length || 0} exercices</div>
+          </div>
+
+          {(jour.exercices || []).length === 0 && (
+            <div style={{textAlign:"center",padding:"24px 0",color:"#64748b",fontSize:13}}>Aucun exercice dans cette séance.</div>
+          )}
+
+          {(jour.exercices || []).map((ex, k) => {
+            const cc = {principal:"#3b82f6",correctif:"#ef4444",gainage:"#22c55e",isolation:"#8b5cf6"}[ex.cat||"principal"] || "#3b82f6";
+            const isEditing = !!editEx[k];
+            return (
+              <div key={k} style={{background:"#fff",border:"0.5px solid #dce8f4",borderRadius:11,marginBottom:8,overflow:"hidden"}}>
+                <div style={{padding:"11px 13px",borderLeft:`3px solid ${cc}`}}>
+                  <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
+                    <div style={{flex:1}}>
+                      <div style={{fontSize:12,fontWeight:600,color:"#0f1a2e",marginBottom:3}}>{ex.nom}</div>
+                      <div style={{fontSize:10,color:"#64748b"}}>{ex.series}×{ex.reps} · {ex.repos}{ex.charge ? ` · ${ex.charge}` : ""}{ex.tempo ? ` · ${ex.tempo}` : ""}{ex.methode && ex.methode !== "Classique" ? ` · ${ex.methode}` : ""}</div>
+                    </div>
+                    <div style={{display:"flex",gap:5,marginLeft:8}}>
+                      <button onClick={() => setEditEx(m => ({...m,[k]:!m[k]}))} style={{padding:"4px 8px",background:"rgba(59,130,246,0.08)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:6,color:"#3b82f6",cursor:"pointer",fontSize:10,fontWeight:600}}>✏️</button>
+                      <button onClick={() => deleteEx(k)} style={{padding:"4px 8px",background:"rgba(248,113,113,0.08)",border:"0.5px solid rgba(248,113,113,0.25)",borderRadius:6,color:"#f87171",cursor:"pointer",fontSize:10}}>×</button>
+                    </div>
+                  </div>
+
+                  {isEditing && (
+                    <div style={{marginTop:10,paddingTop:10,borderTop:"0.5px solid #dce8f4"}}>
+                      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6,marginBottom:8}}>
+                        {[{l:"Séries",k:"series"},{l:"Reps",k:"reps"},{l:"Repos",k:"repos"},{l:"Charge",k:"charge"}].map(pp => (
+                          <div key={pp.k}>
+                            <div style={{fontSize:9,color:"#64748b",marginBottom:3,fontWeight:600}}>{pp.l}</div>
+                            <div style={{display:"flex",gap:3,alignItems:"center"}}>
+                              <button onClick={() => { const cur=parseFloat(ex[pp.k])||0; updateEx(k,pp.k,String(pp.k==="repos"?Math.max(0,cur-15):Math.max(1,cur-1))); }} style={{width:24,height:24,borderRadius:6,background:"#f1f5f9",border:"none",cursor:"pointer",fontSize:13}}>−</button>
+                              <input value={ex[pp.k]||""} onChange={e => updateEx(k,pp.k,e.target.value)} style={{flex:1,padding:"5px 4px",background:"#fff",border:"0.5px solid #dce8f4",borderRadius:6,fontSize:11,textAlign:"center",fontFamily:"'Inter',sans-serif"}}/>
+                              <button onClick={() => { const cur=parseFloat(ex[pp.k])||0; updateEx(k,pp.k,String(pp.k==="repos"?cur+15:cur+1)); }} style={{width:24,height:24,borderRadius:6,background:"#3b82f6",border:"none",color:"#fff",cursor:"pointer",fontSize:13}}>+</button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      <div style={{marginBottom:7}}>
+                        <div style={{fontSize:9,color:"#64748b",marginBottom:3,fontWeight:600}}>TEMPO</div>
+                        <input value={ex.tempo||""} onChange={e => updateEx(k,"tempo",e.target.value)} placeholder="Ex: 2-1-3" style={{width:"100%",padding:"7px 10px",background:"#fff",border:"0.5px solid #dce8f4",borderRadius:8,fontSize:11,fontFamily:"'Inter',sans-serif",boxSizing:"border-box"}}/>
+                      </div>
+                      <div>
+                        <div style={{fontSize:9,color:"#64748b",marginBottom:4,fontWeight:600}}>MÉTHODE</div>
+                        <div style={{display:"flex",flexWrap:"wrap",gap:4}}>
+                          {METHODS.map(mm => (
+                            <button key={mm} onClick={() => updateEx(k,"methode",mm)} style={{padding:"3px 9px",borderRadius:12,border:`1px solid ${ex.methode===mm?"#3b82f6":"#dce8f4"}`,background:ex.methode===mm?"rgba(59,130,246,0.1)":"transparent",color:ex.methode===mm?"#3b82f6":"#64748b",cursor:"pointer",fontSize:9,fontFamily:"'Inter',sans-serif"}}>{mm}</button>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── PROGRAMMEVIEW : liste multi-programmes + création ──────────────────────
+function ProgrammeView(props) {
+  const {
+    prog, setProg, progs, setProgs,
+    premium, setPaywall, push,
+    calSess, setCalSess,
+    checkedEx,
+    createStep, setCS, newP, setNewP,
+    jourActif, setJourActif, groupe, setGroupe,
+    editExIdx, setEditExIdx, exModal, setExModal, exModalTab, setExModalTab,
+    C, INT, EX, setProgView, cycleStart, setCycleStart,
+  } = props;
+
+  // vue interne : "list" | "seance:{progIdx}:{jourIdx}" | "creer"
+  const [innerView, setInnerView] = useState("list");
+  const [confirmDel, setConfirmDel] = useState(null); // {type:"prog"|"jour", progIdx, jourIdx}
+
+  const allProgs = progs && progs.length > 0 ? progs : (prog ? [prog] : []);
+
+  // Synchro : quand on modifie un prog de la liste, mettre à jour prog actif si c'est le même
+  const updateProgAtIdx = (idx, updatedP) => {
+    const next = [...allProgs];
+    next[idx] = updatedP;
+    setProgs(next);
+    // Mettre à jour prog actif si même titre/id
+    if (prog && (prog.id === updatedP.id || prog.titre === allProgs[idx].titre)) {
+      setProg(updatedP);
+    }
+  };
+
+  const deleteProgAtIdx = (idx) => {
+    const next = allProgs.filter((_,i) => i !== idx);
+    setProgs(next);
+    // Si on supprime le prog actif, basculer sur le premier restant
+    if (prog && (prog.titre === allProgs[idx].titre || prog.id === allProgs[idx].id)) {
+      setProg(next[0] || null);
+    }
+    setConfirmDel(null);
+    push("🗑️","Programme supprimé","Le programme a été retiré.");
+  };
+
+  const deleteJourAtIdx = (pIdx, jIdx) => {
+    const u = JSON.parse(JSON.stringify(allProgs[pIdx]));
+    u.jours.splice(jIdx, 1);
+    updateProgAtIdx(pIdx, u);
+    setConfirmDel(null);
+    push("🗑️","Séance supprimée","La séance a été retirée du programme.");
+  };
+
+  // Parser innerView pour séance
+  let seanceView = null;
+  if (innerView.startsWith("seance:")) {
+    const [,pi,ji] = innerView.split(":");
+    const pIdx = parseInt(pi), jIdx = parseInt(ji);
+    if (allProgs[pIdx] && allProgs[pIdx].jours[jIdx]) {
+      seanceView = { pIdx, jIdx, prog: allProgs[pIdx] };
+    }
+  }
+
+  const showCreerForm = createStep > 0 || (newP.nom !== "" || newP.jours.length > 0);
+  const creerProps = { ...props, setProgView: (v) => { if(v === "calendar") setProgView("calendar"); else setInnerView("list"); } };
+
+  // ── Vue séance detail ──
+  if (seanceView) {
+    return (
+      <SeanceDetailModal
+        jour={seanceView.prog.jours[seanceView.jIdx]}
+        jourIdx={seanceView.jIdx}
+        prog={seanceView.prog}
+        setProg={(u) => updateProgAtIdx(seanceView.pIdx, u)}
+        onClose={() => setInnerView("list")}
+        C={C} INT={INT}
+      />
+    );
+  }
+
+  return (
+    <div style={{padding:"0 15px"}}>
+
+      {/* ── Modal confirmation suppression ── */}
+      {confirmDel && (
+        <div style={{position:"fixed",inset:0,background:"rgba(15,26,46,0.45)",zIndex:500,display:"flex",alignItems:"center",justifyContent:"center",padding:20}}>
+          <div style={{background:"#fff",borderRadius:16,padding:"22px 20px",width:"100%",maxWidth:340,boxShadow:"0 8px 32px rgba(0,0,0,0.12)"}}>
+            <div style={{fontFamily:"'Syne',sans-serif",fontSize:16,fontWeight:500,marginBottom:8,color:"#0f1a2e"}}>
+              {confirmDel.type==="prog" ? "Supprimer ce programme ?" : "Supprimer cette séance ?"}
+            </div>
+            <div style={{fontSize:12,color:"#64748b",marginBottom:20,lineHeight:1.5}}>
+              {confirmDel.type==="prog"
+                ? "Toutes les séances de ce programme seront perdues. Cette action est irréversible."
+                : "La séance et tous ses exercices seront supprimés définitivement."}
+            </div>
+            <div style={{display:"flex",gap:10}}>
+              <button onClick={() => setConfirmDel(null)} style={{flex:1,padding:"10px",background:"#f1f5f9",border:"none",borderRadius:9,cursor:"pointer",fontSize:13,fontWeight:500,color:"#64748b",fontFamily:"'Inter',sans-serif"}}>Annuler</button>
+              <button onClick={() => confirmDel.type==="prog" ? deleteProgAtIdx(confirmDel.pIdx) : deleteJourAtIdx(confirmDel.pIdx, confirmDel.jIdx)} style={{flex:1,padding:"10px",background:"#f87171",border:"none",borderRadius:9,cursor:"pointer",fontSize:13,fontWeight:600,color:"#fff",fontFamily:"'Inter',sans-serif"}}>Supprimer</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Liste des programmes ── */}
+      {allProgs.length === 0 && !showCreerForm && (
+        <Box>
+          <div style={{textAlign:"center",padding:"24px 0 8px"}}>
+            <div style={{fontFamily:"'Syne',sans-serif",fontSize:18,fontWeight:400,color:"#0f1a2e",marginBottom:4}}>Programme sur-mesure ✦</div>
+            <div style={{fontSize:12,color:"#64748b",lineHeight:1.5,marginBottom:20}}>Obtenez un programme 100% adapté à votre morphologie, niveau et objectifs grâce à notre algorithme avancé</div>
+          </div>
+          <Btn onClick={() => { if(!premium) setPaywall(true); else setProgView("analyse"); }}>✨ Générer mon programme</Btn>
+          <Btn v="out" onClick={() => { setCS(0); setNewP({nom:"",jours:[],seances:{}}); }}>Créer manuellement</Btn>
+        </Box>
+      )}
+
+      {allProgs.map((p, pIdx) => {
+        const isActive = prog && (prog.titre === p.titre || prog.id === p.id);
+        return (
+          <Box key={pIdx} style={{marginBottom:12,border:isActive?"1px solid rgba(59,130,246,0.3)":"0.5px solid #dce8f4"}}>
+            {/* Header programme */}
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:10}}>
+              <div style={{flex:1}}>
+                {isActive && <div style={{fontSize:9,color:C.gold,fontWeight:700,letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:3}}>● ACTIF</div>}
+                <div style={{fontFamily:"'Syne',sans-serif",fontSize:15,fontWeight:500,color:"#0f1a2e"}}>{p.titre}</div>
+                <div style={{fontSize:10,color:"#64748b",marginTop:2}}>{p.jours?.length || 0} séances{p.dateDebut ? ` · Créé le ${p.dateDebut}` : ""}</div>
+              </div>
+              <div style={{display:"flex",gap:6,alignItems:"center"}}>
+                {!isActive && (
+                  <button onClick={() => { setProg(p); push("✅","Programme activé",p.titre); }} style={{padding:"5px 10px",background:"rgba(34,197,94,0.08)",border:"0.5px solid rgba(34,197,94,0.3)",borderRadius:7,color:"#22c55e",cursor:"pointer",fontSize:10,fontWeight:600,fontFamily:"'Inter',sans-serif"}}>Activer</button>
+                )}
+                <button onClick={() => setConfirmDel({type:"prog",pIdx})} style={{padding:"5px 8px",background:"rgba(248,113,113,0.08)",border:"0.5px solid rgba(248,113,113,0.25)",borderRadius:7,color:"#f87171",cursor:"pointer",fontSize:11}}>🗑</button>
+              </div>
+            </div>
+
+            {/* Séances */}
+            {(p.jours || []).map((j, jIdx) => {
+              const int = INT[j.intensite || "modere"];
+              const total = j.exercices?.length || 0;
+              const done = j.exercices?.filter((_,idx) => checkedEx[`${j.id}-${idx}`]).length || 0;
+              return (
+                <div key={jIdx} style={{display:"flex",alignItems:"center",gap:6,marginBottom:5}}>
+                  {/* Ligne séance cliquable */}
+                  <div onClick={() => setInnerView(`seance:${pIdx}:${jIdx}`)} style={{flex:1,padding:"9px 11px",background:C.s2,border:"0.5px solid #dce8f4",borderRadius:9,cursor:"pointer",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+                    <div style={{flex:1}}>
+                      <div style={{fontSize:9,color:int.c,fontWeight:700,textTransform:"uppercase",letterSpacing:"1px",marginBottom:1}}>{int.l}</div>
+                      <div style={{fontSize:12,fontWeight:500,color:"#0f1a2e"}}>{j.nom}</div>
+                      <div style={{fontSize:10,color:"#64748b"}}>{j.focus ? `${j.focus} · ` : ""}{total} exercice{total!==1?"s":""}</div>
+                    </div>
+                    <div style={{display:"flex",gap:6,alignItems:"center"}}>
+                      {done>0 && <div style={{fontSize:9,color:C.green,fontWeight:700}}>{done}/{total}</div>}
+                      {j.complete && <div style={{fontSize:10,color:C.green}}>✓</div>}
+                      <div style={{color:"#94a3b8",fontSize:15}}>›</div>
+                    </div>
+                  </div>
+                  {/* Bouton supprimer séance */}
+                  <button onClick={() => setConfirmDel({type:"jour",pIdx,jIdx})} style={{padding:"8px 9px",background:"rgba(248,113,113,0.06)",border:"0.5px solid rgba(248,113,113,0.2)",borderRadius:8,color:"#f87171",cursor:"pointer",fontSize:12,flexShrink:0,lineHeight:1}}>×</button>
+                </div>
+              );
+            })}
+
+            {(p.jours||[]).length === 0 && (
+              <div style={{textAlign:"center",padding:"10px 0 4px",fontSize:11,color:"#94a3b8"}}>Aucune séance dans ce programme.</div>
+            )}
+          </Box>
+        );
+      })}
+
+      {/* ── Boutons d'action ── */}
+      {allProgs.length > 0 && !showCreerForm && (
+        <div style={{marginBottom:12}}>
+          <Btn onClick={() => { if(!premium) setPaywall(true); else setProgView("analyse"); }}>✨ Nouveau programme IA</Btn>
+          <Btn v="out" onClick={() => { setCS(0); setNewP({nom:"",jours:[],seances:{}}); }}>+ Créer manuellement</Btn>
+        </div>
+      )}
+
+      {/* ── Formulaire de création ── */}
+      {showCreerForm && (
+        <Creer {...creerProps} progs={allProgs} setProgsAll={(next) => { setProgs(next); if(next.length>0) setProg(next[next.length-1]); }} />
+      )}
+    </div>
+  );
+}
+
 // ─── PROGRAMTAB ──────────────────────────────────────────────────────────────
 
 export default function ProgramTab(props){
   const {
-    prog, setProg, cycleStart, setCycleStart,
+    prog, setProg, progs, setProgs, cycleStart, setCycleStart,
     premium, setPaywall, push,
     calSess, setCalSess,
     checkedEx,
@@ -51,7 +320,7 @@ export default function ProgramTab(props){
 
   // Props partagés pour tous les sous-composants
   const sharedProps = {
-    prog, setProg, cycleStart, setCycleStart,
+    prog, setProg, progs, setProgs, cycleStart, setCycleStart,
     premium, setPaywall, push,
     calSess, setCalSess,
     checkedEx,
@@ -93,8 +362,6 @@ export default function ProgramTab(props){
     push, C, INT, EX,
   };
 
-  const showCreerForm = createStep > 0 || (!prog && (newP.nom !== "" || newP.jours.length > 0));
-
   return(
     <div style={{paddingBottom:16}}>
       <div style={{padding:"26px 15px 12px"}}>
@@ -128,62 +395,7 @@ export default function ProgramTab(props){
 
       {/* ── Programme (creer) ── */}
       {progView==="creer" && (
-        <div style={{padding:"0 15px"}}>
-          <Box>
-            <Lbl>Mon programme</Lbl>
-            {prog ? (
-              <div>
-                <div style={{padding:"10px 12px",background:"rgba(59,130,246,0.08)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:9,marginBottom:12}}>
-                  <div style={{fontSize:9,color:C.gold,fontWeight:700,letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:3}}>Cycle {prog.numero||1} actif</div>
-                  <div style={{fontSize:14,fontWeight:500}}>{prog.titre}</div>
-                  <div style={{fontSize:10,color:"#64748b",marginTop:2}}>{prog.jours?.length} séances · Démarré le {prog.dateDebut}</div>
-                </div>
-                {prog.jours?.map((j,i)=>{
-                  const int=INT[j.intensite||"modere"];
-                  const total=j.exercices?.length||0;
-                  const done=j.exercices?.filter((_,idx)=>checkedEx[`${j.id}-${idx}`]).length||0;
-                  return(
-                    <div key={i} onClick={()=>setProgView("today")} style={{padding:"10px 12px",background:C.s2,border:"0.5px solid #dce8f4",borderRadius:9,marginBottom:6,cursor:"pointer"}}>
-                      <Row style={{justifyContent:"space-between"}}>
-                        <div>
-                          <div style={{fontSize:9,color:int.c,fontWeight:700,textTransform:"uppercase",letterSpacing:"1px",marginBottom:2}}>{int.l}</div>
-                          <div style={{fontSize:13,fontWeight:500}}>{j.nom}</div>
-                          <div style={{fontSize:10,color:"#64748b"}}>{j.focus} · {total} exercices</div>
-                        </div>
-                        <Row style={{gap:8}}>
-                          {done>0&&<div style={{fontSize:10,color:C.green,fontWeight:700}}>{done}/{total}</div>}
-                          {j.complete&&<div style={{fontSize:12,color:C.green}}>✓</div>}
-                          <div style={{color:C.dim,fontSize:16}}>›</div>
-                        </Row>
-                      </Row>
-                    </div>
-                  );
-                })}
-                <div style={{height:1,background:C.s3,margin:"12px 0"}}/>
-                <Btn onClick={()=>{ if(!premium) setPaywall(true); else setProgView("analyse"); }}>✨ Nouveau programme</Btn>
-                <div style={{textAlign:"center",marginTop:4}}>
-                  <span
-                    onClick={()=>{ setCS(0); setNewP({nom:"",jours:[],seances:{}}); }}
-                    style={{fontSize:11,color:"#64748b",cursor:"pointer",textDecoration:"underline",textDecorationStyle:"dotted"}}
-                  >Créer manuellement</span>
-                </div>
-              </div>
-            ):(
-              <div>
-                <div style={{textAlign:"center",padding:"24px 0 8px"}}>
-                  <div style={{fontFamily:"'Syne',sans-serif",fontSize:18,fontWeight:400,color:"#0f1a2e",marginBottom:4}}>Programme sur-mesure ✦</div>
-                  <div style={{fontSize:12,color:"#64748b",lineHeight:1.5,marginBottom:20}}>Obtenez un programme 100% adapté à votre morphologie, niveau et objectifs grâce à notre algorithme avancé</div>
-                </div>
-                <Btn onClick={()=>{ if(!premium) setPaywall(true); else setProgView("analyse"); }}>✨ Générer mon programme</Btn>
-                <Btn v="out" onClick={()=>{ setCS(0); setNewP({nom:"",jours:[],seances:{}}); }}>Créer manuellement</Btn>
-              </div>
-            )}
-          </Box>
-          {/* Formulaire de création manuelle */}
-          {showCreerForm && <Creer {...creerProps} />}
-          {/* Si pas de programme, afficher le formulaire vide directement */}
-          {!prog && !showCreerForm && <Creer {...creerProps} />}
-        </div>
+        <ProgrammeView {...creerProps} />
       )}
 
       {/* ── Programme Pro (AnalyseIA) ── */}
