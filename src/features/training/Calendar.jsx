@@ -87,8 +87,8 @@ function CardioModal({ onClose, onSave, poids, C }) {
   };
 
   return (
-    <div style={{position:"fixed",inset:0,background:"rgba(228,238,248,0.98)",zIndex:400,overflowY:"auto"}}>
-      <div style={{maxWidth:500,margin:"0 auto",paddingBottom:80}}>
+    <div style={{minHeight:"100vh",background:"#e4eef8"}}>
+      <div style={{paddingBottom:80}}>
 
         {/* Header */}
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"20px 16px 14px"}}>
@@ -288,8 +288,8 @@ function SportModal({ onClose, onSave, poids, C }) {
   };
 
   return (
-    <div style={{position:"fixed",inset:0,background:"rgba(228,238,248,0.98)",zIndex:400,overflowY:"auto"}}>
-      <div style={{maxWidth:500,margin:"0 auto",paddingBottom:80}}>
+    <div style={{minHeight:"100vh",background:"#e4eef8"}}>
+      <div style={{paddingBottom:80}}>
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"20px 16px 14px"}}>
           <div>
             <div style={{fontSize:9,color:"#64748b",fontWeight:700,letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:3}}>Activité sportive</div>
@@ -409,8 +409,8 @@ function GuideExModal({ exData, exSerie, onClose, C, INT }) {
   const cc = {principal:"#3b82f6",correctif:"#ef4444",gainage:"#22c55e",isolation:"#8b5cf6",mobilite:"#06b6d4"}[exData.cat] || "#3b82f6";
 
   return (
-    <div style={{position:"fixed",inset:0,background:"rgba(228,238,248,0.99)",zIndex:500,overflowY:"auto"}}>
-      <div style={{maxWidth:500,margin:"0 auto",paddingBottom:80}}>
+    <div style={{minHeight:"100vh",background:"#e4eef8"}}>
+      <div style={{paddingBottom:80}}>
         <div style={{padding:"20px 16px 0",display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
           <div style={{flex:1}}>
             <div style={{display:"inline-block",padding:"3px 10px",background:`${cc}14`,border:`0.5px solid ${cc}40`,borderRadius:8,fontSize:10,color:cc,letterSpacing:"1px",textTransform:"uppercase",fontWeight:600,marginBottom:10}}>{exData.cat}</div>
