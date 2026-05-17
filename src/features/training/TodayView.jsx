@@ -138,28 +138,30 @@ function ManualRMModal({ prog, setProg, onClose, push, C }) {
               </div>
 
               {/* Saisie */}
-              <div style={{background:"#fff",border:"0.5px solid #dce8f4",borderRadius:12,padding:"16px",marginBottom:12}}>
-                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
+              <div style={{background:"#fff",border:"0.5px solid #dce8f4",borderRadius:12,padding:"12px 14px",marginBottom:10}}>
+                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:8}}>
                   <div>
-                    <div style={{fontSize:10,color:"#64748b",fontWeight:600,marginBottom:8}}>CHARGE MAX</div>
-                    <div style={{display:"flex",alignItems:"center",gap:6}}>
-                      <input type="number" value={kg} onChange={e=>setKg(e.target.value)} placeholder="ex: 80" autoFocus
-                        style={{flex:1,padding:"12px 8px",background:"#f8fafc",border:`1px solid ${kg?"#3b82f6":"#dce8f4"}`,borderRadius:9,fontSize:22,fontWeight:300,color:"#0f1a2e",fontFamily:"'Syne',sans-serif",textAlign:"center"}}/>
-                      <span style={{fontSize:12,color:"#64748b"}}>kg</span>
+                    <div style={{fontSize:9,color:"#64748b",fontWeight:600,marginBottom:5,letterSpacing:"0.5px"}}>CHARGE (kg)</div>
+                    <div style={{display:"flex",alignItems:"center",gap:5}}>
+                      <button onClick={()=>setKg(k=>String(Math.max(0,parseFloat(k)||0)-2.5))} style={{width:26,height:26,borderRadius:7,background:"#f1f5f9",border:"none",cursor:"pointer",fontSize:14,color:"#64748b",flexShrink:0}}>−</button>
+                      <input type="number" value={kg} onChange={e=>setKg(e.target.value)} placeholder="80" autoFocus
+                        style={{flex:1,padding:"6px 4px",background:"#f8fafc",border:`1px solid ${kg?"#3b82f6":"#dce8f4"}`,borderRadius:7,fontSize:14,fontWeight:500,color:"#0f1a2e",fontFamily:"'Inter',sans-serif",textAlign:"center",minWidth:0}}/>
+                      <button onClick={()=>setKg(k=>String((parseFloat(k)||0)+2.5))} style={{width:26,height:26,borderRadius:7,background:"#3b82f6",border:"none",cursor:"pointer",fontSize:14,color:"#fff",flexShrink:0}}>+</button>
                     </div>
                   </div>
                   <div>
-                    <div style={{fontSize:10,color:"#64748b",fontWeight:600,marginBottom:8}}>REPS</div>
-                    <div style={{display:"flex",alignItems:"center",gap:6}}>
-                      <input type="number" value={reps} onChange={e=>setReps(e.target.value)} placeholder="ex: 5"
-                        style={{flex:1,padding:"12px 8px",background:"#f8fafc",border:`1px solid ${reps?"#3b82f6":"#dce8f4"}`,borderRadius:9,fontSize:22,fontWeight:300,color:"#0f1a2e",fontFamily:"'Syne',sans-serif",textAlign:"center"}}/>
-                      <span style={{fontSize:12,color:"#64748b"}}>reps</span>
+                    <div style={{fontSize:9,color:"#64748b",fontWeight:600,marginBottom:5,letterSpacing:"0.5px"}}>REPS</div>
+                    <div style={{display:"flex",alignItems:"center",gap:5}}>
+                      <button onClick={()=>setReps(r=>String(Math.max(1,parseInt(r)||0)-1))} style={{width:26,height:26,borderRadius:7,background:"#f1f5f9",border:"none",cursor:"pointer",fontSize:14,color:"#64748b",flexShrink:0}}>−</button>
+                      <input type="number" value={reps} onChange={e=>setReps(e.target.value)} placeholder="5"
+                        style={{flex:1,padding:"6px 4px",background:"#f8fafc",border:`1px solid ${reps?"#3b82f6":"#dce8f4"}`,borderRadius:7,fontSize:14,fontWeight:500,color:"#0f1a2e",fontFamily:"'Inter',sans-serif",textAlign:"center",minWidth:0}}/>
+                      <button onClick={()=>setReps(r=>String((parseInt(r)||0)+1))} style={{width:26,height:26,borderRadius:7,background:"#3b82f6",border:"none",cursor:"pointer",fontSize:14,color:"#fff",flexShrink:0}}>+</button>
                     </div>
                   </div>
                 </div>
-                <div style={{display:"flex",gap:5,marginTop:10}}>
+                <div style={{display:"flex",gap:4}}>
                   {[1,3,5,8,10,12].map(r=>(
-                    <button key={r} onClick={()=>setReps(String(r))} style={{flex:1,padding:"5px 2px",background:reps===String(r)?"rgba(59,130,246,0.1)":"transparent",border:`0.5px solid ${reps===String(r)?"#3b82f6":"#dce8f4"}`,borderRadius:7,color:reps===String(r)?"#3b82f6":"#64748b",cursor:"pointer",fontSize:10,fontWeight:reps===String(r)?600:400}}>{r}</button>
+                    <button key={r} onClick={()=>setReps(String(r))} style={{flex:1,padding:"4px 2px",background:reps===String(r)?"rgba(59,130,246,0.1)":"transparent",border:`0.5px solid ${reps===String(r)?"#3b82f6":"#dce8f4"}`,borderRadius:6,color:reps===String(r)?"#3b82f6":"#64748b",cursor:"pointer",fontSize:10,fontWeight:reps===String(r)?600:400}}>{r}</button>
                   ))}
                 </div>
               </div>
@@ -267,7 +269,7 @@ export default function TodayView(props) {
     prog, setProg, premium, setPaywall, push,
     checkedEx, setCheckedEx,
     profil,
-    C, INT, setProgView,
+    C, INT, setProgView, setTab,
     setChrono, setChronoSec,
     exDetails, setExDetails, exEdit, setExEdit,
   } = props;
@@ -469,6 +471,18 @@ export default function TodayView(props) {
           <Btn onClick={() => { if(!premium) setPaywall(true); else setProgView("analyse"); }}>✨ Générer mon programme</Btn>
           <Btn v="out" onClick={() => setProgView("creer")}>Créer manuellement</Btn>
         </Box>
+      )}
+
+      {/* ── Bouton créer séance ── */}
+      {prog && (
+        <div style={{marginTop:16,marginBottom:8}}>
+          <button
+            onClick={() => { setProgView("creer"); if(setTab) setTab("program"); }}
+            style={{width:"100%",padding:"13px 16px",background:"#fff",border:"1px dashed rgba(59,130,246,0.35)",borderRadius:12,color:"#3b82f6",cursor:"pointer",fontSize:13,fontWeight:600,fontFamily:"'Syne',sans-serif",display:"flex",alignItems:"center",justifyContent:"center",gap:8}}
+          >
+            <span style={{fontSize:16,lineHeight:1}}>+</span> Créer une séance
+          </button>
+        </div>
       )}
     </div>
   );
