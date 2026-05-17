@@ -27,8 +27,8 @@ function GuideExModal({ exData, exSerie, onClose, C }) {
   const [tab, setTab] = useState("tips");
   const cc = {principal:"#3b82f6",correctif:"#ef4444",gainage:"#22c55e",isolation:"#8b5cf6",mobilite:"#06b6d4"}[exData.cat] || "#3b82f6";
   return (
-    <div style={{position:"fixed",inset:0,background:"rgba(228,238,248,0.99)",zIndex:500,overflowY:"auto"}}>
-      <div style={{maxWidth:500,margin:"0 auto",paddingBottom:80}}>
+    <div style={{minHeight:"100vh",background:"#e4eef8"}}>
+      <div style={{paddingBottom:80}}>
         <div style={{padding:"20px 16px 0",display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
           <div style={{flex:1}}>
             <div style={{display:"inline-block",padding:"3px 10px",background:`${cc}14`,border:`0.5px solid ${cc}40`,borderRadius:8,fontSize:10,color:cc,letterSpacing:"1px",textTransform:"uppercase",fontWeight:600,marginBottom:10}}>{exData.cat}</div>
@@ -133,8 +133,8 @@ function SeanceDetailModal({ jour, jourIdx, prog, setProg, onClose, C, INT }) {
   // ── Vue formulaire ajout exercice ──
   if (newExForm) {
     return (
-      <div style={{position:"fixed",inset:0,background:"rgba(228,238,248,0.98)",zIndex:410,overflowY:"auto"}}>
-        <div style={{maxWidth:500,margin:"0 auto",padding:"20px 16px",paddingBottom:80}}>
+      <div style={{minHeight:"100vh",background:"#e4eef8"}}>
+        <div style={{padding:"20px 16px",paddingBottom:80}}>
           <button onClick={()=>setNewExForm(null)} style={{background:"transparent",border:"none",color:"#3b82f6",cursor:"pointer",fontSize:13,fontWeight:600,display:"flex",alignItems:"center",gap:4,marginBottom:16}}>← Retour à la bibliothèque</button>
           <div style={{display:"flex",alignItems:"center",gap:10,padding:"12px 14px",background:`${cc(newExForm.cat)}0d`,border:`0.5px solid ${cc(newExForm.cat)}30`,borderRadius:12,marginBottom:16}}>
             <div style={{width:4,height:40,borderRadius:2,background:cc(newExForm.cat),flexShrink:0}}/>
@@ -174,8 +174,8 @@ function SeanceDetailModal({ jour, jourIdx, prog, setProg, onClose, C, INT }) {
   // ── Vue bibliothèque ──
   if (showBiblio) {
     return (
-      <div style={{position:"fixed",inset:0,background:"rgba(228,238,248,0.98)",zIndex:410,overflowY:"auto"}}>
-        <div style={{maxWidth:500,margin:"0 auto",padding:"20px 16px",paddingBottom:80}}>
+      <div style={{minHeight:"100vh",background:"#e4eef8"}}>
+        <div style={{padding:"20px 16px",paddingBottom:80}}>
           <button onClick={()=>{setShowBiblio(false);setSearch("");setGroupe(null);}} style={{background:"transparent",border:"none",color:"#3b82f6",cursor:"pointer",fontSize:13,fontWeight:600,display:"flex",alignItems:"center",gap:4,marginBottom:16}}>← Retour à la séance</button>
           <div style={{fontFamily:"'Syne',sans-serif",fontSize:18,fontWeight:300,color:"#0f1a2e",marginBottom:14}}>Ajouter un exercice</div>
 
@@ -220,8 +220,8 @@ function SeanceDetailModal({ jour, jourIdx, prog, setProg, onClose, C, INT }) {
   }
 
   return (
-    <div style={{position:"fixed",inset:0,background:"rgba(228,238,248,0.98)",zIndex:400,overflowY:"auto"}}>
-      <div style={{maxWidth:500,margin:"0 auto",paddingBottom:80}}>
+    <div style={{minHeight:"100vh",background:"#e4eef8"}}>
+      <div style={{paddingBottom:80}}>
         {/* Header */}
         <div style={{padding:"20px 15px 0",display:"flex",alignItems:"center",gap:12,marginBottom:14}}>
           <button onClick={onClose} style={{background:"transparent",border:"none",color:C.gold,cursor:"pointer",fontSize:13,fontWeight:600,padding:0,display:"flex",alignItems:"center",gap:4}}>← Retour</button>
