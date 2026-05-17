@@ -190,6 +190,171 @@ function ManualRMModal({ prog, setProg, onClose, push, C }) {
   );
 }
 
+// ─── MINI MODAL CRÉATION SÉANCE DU JOUR ─────────────────────────────────────
+function CreateSeanceModal({ prog, setProg, push, onClose, C }) {
+  const [search,   setSearch]   = useState("");
+  const [groupe,   setGroupe]   = useState(null);
+  const [seNom,    setSeNom]    = useState("");
+  const [intensite,setInt]      = useState("modere");
+  const [exos,     setExos]     = useState([]);
+  const [newExForm,setNewExForm]= useState(null);
+
+  const cc = (cat) => ({principal:"#3b82f6",correctif:"#ef4444",gainage:"#22c55e",isolation:"#8b5cf6"}[cat||"principal"]||"#3b82f6");
+  const INT_COLORS = {leger:"#22c55e",modere:"#3b82f6",lourd:"#f97316",intense:"#f87171",mobilite:"#8b5cf6"};
+  const INT_LABELS = {leger:"Léger",modere:"Modéré",lourd:"Lourd",intense:"Intense",mobilite:"Mobilité"};
+
+  const searchList = search
+    ? Object.entries(EX).flatMap(([g,arr]) => arr.map(ex => ({nom:ex.n,cat:ex.cat,group:g})))
+        .filter(e => e.nom.toLowerCase().includes(search.toLowerCase()))
+    : groupe ? (EX[groupe]||[]).map(ex => ({nom:ex.n,cat:ex.cat,group:groupe})) : [];
+
+  const addEx = (ex) => {
+    if (exos.find(e=>e.nom===ex.nom)) return;
+    setExos(prev => [...prev, {nom:ex.nom,cat:ex.cat,series:"4",reps:"10",repos:"90s"}]);
+  };
+  const removeEx = (nom) => setExos(prev => prev.filter(e=>e.nom!==nom));
+  const updateExField = (i, field, val) => setExos(prev => prev.map((e,idx) => idx===i?{...e,[field]:val}:e));
+
+  const handleSave = () => {
+    if (!prog) return;
+    const u = JSON.parse(JSON.stringify(prog));
+    const today = new Date();
+    const dayNames = ["Dim","Lun","Mar","Mer","Jeu","Ven","Sam"];
+    const dayName = dayNames[today.getDay()];
+    const nomFinal = seNom || (exos.length>0 ? `Séance ${dayName}` : `Séance ${dayName}`);
+    const newJour = {
+      id: Date.now(),
+      nom: nomFinal,
+      focus: dayName,
+      duree: "45-60 min",
+      intensite,
+      exercices: exos.map(ex => ({...ex, historique:[], note:""})),
+      complete: false,
+      date: today.toLocaleDateString("fr-FR"),
+      note: "",
+      custom: true,
+    };
+    u.jours = u.jours || [];
+    u.jours.push(newJour);
+    setProg(u);
+    push("✅","Séance créée !",`${nomFinal} · ${exos.length} exercice${exos.length!==1?"s":""}`);
+    onClose();
+  };
+
+  // Vue formulaire config d'un exercice sélectionné
+  if (newExForm !== null) {
+    const ex = exos[newExForm];
+    return (
+      <div style={{minHeight:"100vh",background:"#e4eef8"}}>
+        <div style={{padding:"20px 16px",paddingBottom:80}}>
+          <button onClick={()=>setNewExForm(null)} style={{background:"transparent",border:"none",color:"#3b82f6",cursor:"pointer",fontSize:13,fontWeight:600,display:"flex",alignItems:"center",gap:4,marginBottom:16}}>← Retour</button>
+          <div style={{fontFamily:"'Syne',sans-serif",fontSize:16,fontWeight:400,marginBottom:12}}>{ex?.nom}</div>
+          <div style={{background:"#fff",border:"0.5px solid #dce8f4",borderRadius:12,padding:"14px",marginBottom:10}}>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:8}}>
+              {[{l:"Séries",k:"series"},{l:"Reps",k:"reps"},{l:"Repos",k:"repos"}].map(pp=>(
+                <div key={pp.k}>
+                  <div style={{fontSize:9,color:"#64748b",fontWeight:600,marginBottom:5}}>{pp.l}</div>
+                  <input value={ex?.[pp.k]||""} onChange={e=>updateExField(newExForm,pp.k,e.target.value)}
+                    style={{width:"100%",padding:"8px",background:"#f8fafc",border:"0.5px solid #dce8f4",borderRadius:8,fontSize:13,textAlign:"center",fontFamily:"'Inter',sans-serif",boxSizing:"border-box"}}/>
+                </div>
+              ))}
+            </div>
+          </div>
+          <button onClick={()=>setNewExForm(null)} style={{width:"100%",padding:"12px",background:"#3b82f6",border:"none",borderRadius:10,color:"#fff",fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:"'Syne',sans-serif"}}>✓ Valider</button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{minHeight:"100vh",background:"#e4eef8"}}>
+      <div style={{padding:"20px 16px",paddingBottom:80}}>
+        <button onClick={onClose} style={{background:"transparent",border:"none",color:"#3b82f6",cursor:"pointer",fontSize:13,fontWeight:600,display:"flex",alignItems:"center",gap:4,marginBottom:16}}>← Retour</button>
+        <div style={{fontFamily:"'Syne',sans-serif",fontSize:20,fontWeight:300,color:"#0f1a2e",marginBottom:16}}>Créer une séance</div>
+
+        {/* Nom */}
+        <div style={{background:"#fff",border:"0.5px solid #dce8f4",borderRadius:12,padding:"12px 14px",marginBottom:10}}>
+          <div style={{fontSize:9,color:"#64748b",fontWeight:600,marginBottom:6,letterSpacing:"0.5px"}}>NOM DE LA SÉANCE</div>
+          <input value={seNom} onChange={e=>setSeNom(e.target.value)} placeholder="Ex: Push, Dos & Biceps…"
+            style={{width:"100%",padding:"8px 10px",background:"#f8fafc",border:"0.5px solid #dce8f4",borderRadius:8,fontSize:13,color:"#0f1a2e",fontFamily:"'Inter',sans-serif",boxSizing:"border-box"}}/>
+        </div>
+
+        {/* Intensité */}
+        <div style={{background:"#fff",border:"0.5px solid #dce8f4",borderRadius:12,padding:"12px 14px",marginBottom:10}}>
+          <div style={{fontSize:9,color:"#64748b",fontWeight:600,marginBottom:8,letterSpacing:"0.5px"}}>INTENSITÉ</div>
+          <div style={{display:"flex",gap:5,flexWrap:"wrap"}}>
+            {Object.entries(INT_LABELS).map(([k,l])=>(
+              <button key={k} onClick={()=>setInt(k)} style={{padding:"5px 11px",background:intensite===k?`${INT_COLORS[k]}15`:"transparent",border:`1px solid ${intensite===k?INT_COLORS[k]:"#dce8f4"}`,borderRadius:16,color:intensite===k?INT_COLORS[k]:"#64748b",cursor:"pointer",fontSize:11,fontWeight:intensite===k?600:400,fontFamily:"'Inter',sans-serif"}}>{l}</button>
+            ))}
+          </div>
+        </div>
+
+        {/* Exercices ajoutés */}
+        {exos.length > 0 && (
+          <div style={{background:"#fff",border:"0.5px solid #dce8f4",borderRadius:12,padding:"12px 14px",marginBottom:10}}>
+            <div style={{fontSize:9,color:"#64748b",fontWeight:600,marginBottom:8,letterSpacing:"0.5px"}}>EXERCICES ({exos.length})</div>
+            {exos.map((ex,i)=>(
+              <div key={i} style={{display:"flex",alignItems:"center",gap:8,padding:"7px 0",borderBottom:i<exos.length-1?"0.5px solid #f1f5f9":"none"}}>
+                <div style={{width:3,height:28,borderRadius:2,background:cc(ex.cat),flexShrink:0}}/>
+                <div style={{flex:1}} onClick={()=>setNewExForm(i)}>
+                  <div style={{fontSize:12,fontWeight:500,color:"#0f1a2e",cursor:"pointer"}}>{ex.nom}</div>
+                  <div style={{fontSize:10,color:"#64748b"}}>{ex.series}×{ex.reps} · {ex.repos} <span style={{color:"#3b82f6",fontSize:9}}>✏️ Modifier</span></div>
+                </div>
+                <button onClick={()=>removeEx(ex.nom)} style={{background:"transparent",border:"none",color:"#f87171",cursor:"pointer",fontSize:16,padding:"0 2px",flexShrink:0}}>×</button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Bibliothèque */}
+        <div style={{background:"#fff",border:"0.5px solid #dce8f4",borderRadius:12,overflow:"hidden",marginBottom:14}}>
+          <div style={{padding:"10px 14px",borderBottom:"0.5px solid #dce8f4"}}>
+            <div style={{fontSize:9,color:"#64748b",fontWeight:600,marginBottom:7,letterSpacing:"0.5px"}}>AJOUTER DES EXERCICES</div>
+            <div style={{position:"relative"}}>
+              <input value={search} onChange={e=>{setSearch(e.target.value);setGroupe(null);}} placeholder="Rechercher…"
+                style={{width:"100%",padding:"7px 10px 7px 28px",background:"#f8fafc",border:"0.5px solid #dce8f4",borderRadius:8,fontSize:12,fontFamily:"'Inter',sans-serif",boxSizing:"border-box"}}/>
+              <div style={{position:"absolute",left:9,top:"50%",transform:"translateY(-50%)",fontSize:12,color:"#94a3b8"}}>🔍</div>
+            </div>
+          </div>
+          {!search && (
+            <div style={{padding:"8px 10px",display:"flex",flexWrap:"wrap",gap:5,maxHeight:110,overflowY:"auto"}}>
+              {Object.keys(EX).map(g=>(
+                <button key={g} onClick={()=>setGroupe(g===groupe?null:g)}
+                  style={{padding:"4px 10px",background:groupe===g?"rgba(59,130,246,0.1)":"#f8fafc",border:`1px solid ${groupe===g?"#3b82f6":"#dce8f4"}`,borderRadius:14,color:groupe===g?"#3b82f6":"#64748b",cursor:"pointer",fontSize:10,fontWeight:groupe===g?600:400,fontFamily:"'Inter',sans-serif"}}>
+                  {g} <span style={{fontSize:9,color:"#94a3b8"}}>({(EX[g]||[]).length})</span>
+                </button>
+              ))}
+            </div>
+          )}
+          {searchList.length > 0 && (
+            <div style={{maxHeight:180,overflowY:"auto",padding:"4px 10px"}}>
+              {searchList.map((ex,i)=>{
+                const already = !!exos.find(e=>e.nom===ex.nom);
+                return (
+                  <div key={i} onClick={()=>!already&&addEx(ex)}
+                    style={{display:"flex",alignItems:"center",gap:8,padding:"7px 6px",borderRadius:8,cursor:already?"default":"pointer",opacity:already?0.45:1,marginBottom:1}}
+                    onMouseEnter={ev=>{if(!already)ev.currentTarget.style.background="#f1f5f9";}}
+                    onMouseLeave={ev=>ev.currentTarget.style.background="transparent"}>
+                    <div style={{width:3,height:24,borderRadius:2,background:cc(ex.cat),flexShrink:0}}/>
+                    <div style={{flex:1,fontSize:12,color:"#0f1a2e"}}>{ex.nom}{search&&<span style={{fontSize:9,color:"#94a3b8",marginLeft:5}}>{ex.group}</span>}</div>
+                    <div style={{fontSize:10,fontWeight:600,color:already?"#22c55e":"#3b82f6"}}>{already?"✓":"+ Ajouter"}</div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+          {!search && !groupe && <div style={{padding:"14px",textAlign:"center",fontSize:11,color:"#94a3b8"}}>Sélectionne un groupe ou recherche</div>}
+        </div>
+
+        <button onClick={handleSave} style={{width:"100%",padding:"13px",background:"#3b82f6",border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"'Syne',sans-serif",marginBottom:8}}>
+          ✓ Créer la séance
+        </button>
+        <button onClick={onClose} style={{width:"100%",padding:"10px",background:"transparent",border:"0.5px solid #dce8f4",borderRadius:10,color:"#64748b",cursor:"pointer",fontSize:12,fontFamily:"'Inter',sans-serif"}}>Annuler</button>
+      </div>
+    </div>
+  );
+}
+
 // ─── CARD RM PAR EXERCICE ─────────────────────────────────────────────────────
 function RMCard({ exData, objectif, C }) {
   const [expanded, setExpanded] = useState(false);
@@ -274,8 +439,9 @@ export default function TodayView(props) {
     exDetails, setExDetails, exEdit, setExEdit,
   } = props;
 
-  const [viewSeance,  setViewSeance]  = useState(null);
-  const [showManualRM,setShowManualRM]= useState(false);
+  const [viewSeance,     setViewSeance]     = useState(null);
+  const [showManualRM,   setShowManualRM]   = useState(false);
+  const [showCreateSeance,setShowCreateSeance] = useState(false);
   const rmFilter = "all";
 
   const objectif = profil?.objectif || "hypertrophie";
@@ -344,6 +510,16 @@ export default function TodayView(props) {
   const currentTarget = OBJ_TARGET[objectif] || DEFAULT_TARGET;
 
   // ── Early returns après les hooks ──
+  if (showCreateSeance) {
+    return (
+      <CreateSeanceModal
+        prog={prog} setProg={setProg}
+        push={push} C={C}
+        onClose={() => setShowCreateSeance(false)}
+      />
+    );
+  }
+
   if (showManualRM) {
     return (
       <ManualRMModal
@@ -418,10 +594,14 @@ export default function TodayView(props) {
           </Box>
         </div>
       ) : (
-        <Box style={{textAlign:"center",padding:"24px 16px"}}>
+        <Box style={{textAlign:"center",padding:"20px 16px"}}>
           <div style={{fontSize:32,marginBottom:8}}>😴</div>
           <div style={{fontFamily:"'Syne',sans-serif",fontSize:15,fontWeight:500,marginBottom:4}}>Jour de repos</div>
-          <div style={{fontSize:12,color:"#64748b",lineHeight:1.6}}>Tes records sont disponibles ci-dessous.</div>
+          <div style={{fontSize:12,color:"#64748b",lineHeight:1.5,marginBottom:14}}>Tes records sont disponibles ci-dessous.</div>
+          <button onClick={() => setShowCreateSeance(true)}
+            style={{width:"100%",padding:"11px 16px",background:"rgba(59,130,246,0.06)",border:"1px dashed rgba(59,130,246,0.3)",borderRadius:10,color:"#3b82f6",cursor:"pointer",fontSize:13,fontWeight:600,fontFamily:"'Syne',sans-serif",display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
+            <span style={{fontSize:15}}>+</span> Créer une séance aujourd'hui
+          </button>
         </Box>
       )}
 
@@ -473,17 +653,7 @@ export default function TodayView(props) {
         </Box>
       )}
 
-      {/* ── Bouton créer séance ── */}
-      {prog && (
-        <div style={{marginTop:16,marginBottom:8}}>
-          <button
-            onClick={() => { setProgView("creer"); if(setTab) setTab("program"); }}
-            style={{width:"100%",padding:"13px 16px",background:"#fff",border:"1px dashed rgba(59,130,246,0.35)",borderRadius:12,color:"#3b82f6",cursor:"pointer",fontSize:13,fontWeight:600,fontFamily:"'Syne',sans-serif",display:"flex",alignItems:"center",justifyContent:"center",gap:8}}
-          >
-            <span style={{fontSize:16,lineHeight:1}}>+</span> Créer une séance
-          </button>
-        </div>
-      )}
+
     </div>
   );
 }
