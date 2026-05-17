@@ -191,7 +191,7 @@ function ManualRMModal({ prog, setProg, onClose, push, C }) {
 }
 
 // ─── MINI MODAL CRÉATION SÉANCE DU JOUR ─────────────────────────────────────
-function CreateSeanceModal({ prog, setProg, push, onClose, C }) {
+function CreateSeanceModal({ prog, setProg, setCalSess, push, onClose, C }) {
   const [search,   setSearch]   = useState("");
   const [groupe,   setGroupe]   = useState(null);
   const [seNom,    setSeNom]    = useState("");
@@ -217,27 +217,64 @@ function CreateSeanceModal({ prog, setProg, push, onClose, C }) {
 
   const handleSave = () => {
     if (!prog) return;
+    const today     = new Date();
+    const dayNames  = ["Dim","Lun","Mar","Mer","Jeu","Ven","Sam"];
+    const dayName   = dayNames[today.getDay()];
+    const todayKey  = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,"0")}-${String(today.getDate()).padStart(2,"0")}`;
+    const nomFinal  = seNom || `Séance ${dayName}`;
+    const intColor  = {leger:"#22c55e",modere:"#3b82f6",lourd:"#f97316",intense:"#f87171",mobilite:"#8b5cf6"}[intensite]||"#3b82f6";
+
+    // ── 1. Chercher si un jour du programme correspond à aujourd'hui ──
     const u = JSON.parse(JSON.stringify(prog));
-    const today = new Date();
-    const dayNames = ["Dim","Lun","Mar","Mer","Jeu","Ven","Sam"];
-    const dayName = dayNames[today.getDay()];
-    const nomFinal = seNom || (exos.length>0 ? `Séance ${dayName}` : `Séance ${dayName}`);
-    const newJour = {
-      id: Date.now(),
-      nom: nomFinal,
-      focus: dayName,
-      duree: "45-60 min",
-      intensite,
-      exercices: exos.map(ex => ({...ex, historique:[], note:""})),
-      complete: false,
-      date: today.toLocaleDateString("fr-FR"),
-      note: "",
-      custom: true,
-    };
     u.jours = u.jours || [];
-    u.jours.push(newJour);
+    const jourExistant = u.jours.find(j =>
+      j.focus?.toLowerCase().includes(dayName.toLowerCase()) ||
+      j.nom?.toLowerCase().includes(dayName.toLowerCase())
+    );
+
+    if (jourExistant) {
+      // Ajouter les exercices au jour existant
+      jourExistant.exercices = jourExistant.exercices || [];
+      exos.forEach(ex => {
+        if (!jourExistant.exercices.find(e => e.nom === ex.nom)) {
+          jourExistant.exercices.push({...ex, historique:[], note:""});
+        }
+      });
+      if (seNom) jourExistant.nom = seNom;
+    } else {
+      // Créer un nouveau jour dans le programme
+      u.jours.push({
+        id:       Date.now(),
+        nom:      nomFinal,
+        focus:    dayName,
+        duree:    "45-60 min",
+        intensite,
+        exercices: exos.map(ex => ({...ex, historique:[], note:""})),
+        complete: false,
+        date:     today.toLocaleDateString("fr-FR"),
+        note:     "",
+        custom:   true,
+      });
+    }
     setProg(u);
-    push("✅","Séance créée !",`${nomFinal} · ${exos.length} exercice${exos.length!==1?"s":""}`);
+
+    // ── 2. Ajouter au calendrier aujourd'hui ──
+    if (setCalSess) {
+      setCalSess(prev => ({
+        ...prev,
+        [todayKey]: {
+          nom:      nomFinal,
+          intensite,
+          color:    intColor,
+          musculation: exos.length > 0 ? { exercices: exos } : undefined,
+        },
+      }));
+    }
+
+    const detail = jourExistant
+      ? `Exercices ajoutés à "${jourExistant.nom}" · Calendrier mis à jour`
+      : `Ajoutée au programme · Calendrier mis à jour`;
+    push("✅", "Séance créée !", detail);
     onClose();
   };
 
@@ -433,6 +470,7 @@ export default function TodayView(props) {
   const {
     prog, setProg, premium, setPaywall, push,
     checkedEx, setCheckedEx,
+    calSess, setCalSess,
     profil,
     C, INT, setProgView, setTab,
     setChrono, setChronoSec,
@@ -514,6 +552,7 @@ export default function TodayView(props) {
     return (
       <CreateSeanceModal
         prog={prog} setProg={setProg}
+        setCalSess={setCalSess}
         push={push} C={C}
         onClose={() => setShowCreateSeance(false)}
       />
