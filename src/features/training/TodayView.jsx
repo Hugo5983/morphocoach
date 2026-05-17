@@ -57,8 +57,8 @@ function ManualRMModal({ prog, setProg, onClose, push, C }) {
   };
 
   return (
-    <div style={{position:"fixed",inset:0,background:"rgba(228,238,248,0.98)",zIndex:400,overflowY:"auto"}}>
-      <div style={{maxWidth:500,margin:"0 auto",paddingBottom:80}}>
+    <div style={{minHeight:"100vh",background:"#e4eef8"}}>
+      <div style={{paddingBottom:80}}>
 
         {/* Header */}
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"20px 16px 14px"}}>
