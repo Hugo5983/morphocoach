@@ -486,9 +486,71 @@ function GuideExModal({ exData, exSerie, onClose, C, INT }) {
   );
 }
 
+// ─── INFO MODAL (tips + erreurs rapides, version compacte du Guide) ─────────
+function InfoExModal({ ex, dbEx, onClose, onOpenGuide }) {
+  return (
+    <div style={{minHeight:"100vh",background:"#e4eef8"}}>
+      <div style={{padding:"20px 16px",paddingBottom:80}}>
+        <button onClick={onClose} style={{background:"transparent",border:"none",color:"#3b82f6",cursor:"pointer",fontSize:13,fontWeight:600,padding:"0 0 14px",display:"flex",alignItems:"center",gap:4}}>← Retour</button>
+
+        <div style={{fontFamily:"'Syne',sans-serif",fontSize:20,fontWeight:300,color:"#0f1a2e",marginBottom:4}}>{ex.nom}</div>
+        <div style={{fontSize:11,color:"#64748b",marginBottom:14}}>{ex.series}×{ex.reps} · Repos {ex.repos}{ex.charge?` · ${ex.charge}`:""}</div>
+
+        {!dbEx && (
+          <div style={{padding:"16px 14px",background:"#fff",border:"0.5px solid #dce8f4",borderRadius:12,textAlign:"center"}}>
+            <div style={{fontSize:24,marginBottom:8}}>📖</div>
+            <div style={{fontSize:13,color:"#64748b",lineHeight:1.5,marginBottom:6}}>Aucune information détaillée n'est disponible pour cet exercice dans la bibliothèque.</div>
+            <div style={{fontSize:11,color:"#94a3b8"}}>Exercice personnalisé ou nom non reconnu.</div>
+          </div>
+        )}
+
+        {dbEx && (
+          <>
+            {/* Tips */}
+            {dbEx.tips?.length > 0 && (
+              <div style={{background:"#fff",border:"0.5px solid #dce8f4",borderRadius:12,padding:"14px 16px",marginBottom:10}}>
+                <div style={{fontSize:9,color:"#22c55e",fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",marginBottom:10}}>💡 Tips techniques</div>
+                {dbEx.tips.map((tip,i) => (
+                  <div key={i} style={{display:"flex",gap:10,marginBottom:10,paddingBottom:10,borderBottom:i<dbEx.tips.length-1?"0.5px solid #f1f5f9":"none",alignItems:"flex-start"}}>
+                    <div style={{width:20,height:20,borderRadius:"50%",background:"rgba(34,197,94,0.1)",border:"0.5px solid rgba(34,197,94,0.3)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:10,fontWeight:500,color:"#22c55e",marginTop:1}}>{i+1}</div>
+                    <div style={{fontSize:12,color:"#0f1a2e",lineHeight:1.6,flex:1}}>{tip}</div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Erreurs fréquentes */}
+            {dbEx.erreurs?.length > 0 && (
+              <div style={{background:"#fff",border:"0.5px solid #dce8f4",borderRadius:12,padding:"14px 16px",marginBottom:10}}>
+                <div style={{fontSize:9,color:"#f87171",fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",marginBottom:10}}>⚠️ Erreurs à éviter</div>
+                {dbEx.erreurs.map((err,i) => (
+                  <div key={i} style={{display:"flex",gap:10,marginBottom:8,alignItems:"flex-start"}}>
+                    <div style={{width:18,height:18,borderRadius:"50%",background:"rgba(248,113,113,0.1)",border:"0.5px solid rgba(248,113,113,0.3)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:10,color:"#f87171",marginTop:1}}>✕</div>
+                    <div style={{fontSize:12,color:"#0f1a2e",lineHeight:1.5,flex:1}}>{err}</div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Bouton voir guide complet */}
+            {onOpenGuide && (
+              <button onClick={()=>onOpenGuide(dbEx,ex)} style={{width:"100%",padding:"12px",background:"rgba(59,130,246,0.06)",border:"0.5px solid rgba(59,130,246,0.25)",borderRadius:11,color:"#3b82f6",cursor:"pointer",fontSize:13,fontWeight:600,fontFamily:"'Syne',sans-serif",marginTop:4}}>
+                Voir le guide complet ›
+              </button>
+            )}
+          </>
+        )}
+
+        <button onClick={onClose} style={{width:"100%",padding:"10px",marginTop:10,background:"transparent",border:"0.5px solid #dce8f4",borderRadius:10,color:"#64748b",cursor:"pointer",fontSize:12,fontFamily:"'Inter',sans-serif"}}>Fermer</button>
+      </div>
+    </div>
+  );
+}
+
 // ─── EXERCICE EDITABLE ────────────────────────────────────────────────────────
-function ExerciceEditable({ ex, exIdx, jourIdx, prog, setProg, cc, METHODS, onGuide }) {
+function ExerciceEditable({ ex, exIdx, jourIdx, prog, setProg, cc, METHODS, onGuide, onInfo, checkedEx, toggleCheck, seanceId }) {
   const [editing, setEditing] = useState(false);
+  const isChecked = !!(checkedEx && checkedEx[`${seanceId}-${exIdx}`]);
   const updateEx = (field, val) => {
     const u = JSON.parse(JSON.stringify(prog));
     u.jours[jourIdx].exercices[exIdx][field] = val;
@@ -496,16 +558,20 @@ function ExerciceEditable({ ex, exIdx, jourIdx, prog, setProg, cc, METHODS, onGu
   };
   const dbEx = findExInDB(ex.nom);
   return (
-    <div style={{background:"#fff",border:"0.5px solid #dce8f4",borderRadius:10,marginBottom:7,overflow:"hidden"}}>
+    <div style={{background:"#fff",border:"0.5px solid #dce8f4",borderRadius:10,marginBottom:7,overflow:"hidden",opacity:isChecked?0.6:1,transition:"opacity .15s"}}>
      <div style={{padding:"10px 13px",borderLeft:`3px solid ${cc}`}}>
-      <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:8}}>
+       {toggleCheck && (
+        <div onClick={(e)=>{e.stopPropagation();toggleCheck(seanceId,exIdx,ex.repos);}} style={{width:22,height:22,borderRadius:6,background:isChecked?"#22c55e":"transparent",border:`2px solid ${isChecked?"#22c55e":"#dce8f4"}`,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:12,color:"#fff",marginTop:1,transition:"all .15s"}}>{isChecked?"✓":""}</div>
+       )}
        <div style={{flex:1,cursor:"pointer"}} onClick={() => setEditing(e=>!e)}>
-        <div style={{fontSize:12,fontWeight:600,color:"#0f1a2e",marginBottom:3}}>{ex.nom}</div>
+        <div style={{fontSize:12,fontWeight:600,color:isChecked?"#94a3b8":"#0f1a2e",marginBottom:3,textDecoration:isChecked?"line-through":"none"}}>{ex.nom}</div>
         <div style={{fontSize:10,color:"#64748b"}}>{ex.series}×{ex.reps} · {ex.repos}{ex.charge?` · ${ex.charge}`:""}{ex.tempo?` · ${ex.tempo}`:""}{ex.methode&&ex.methode!=="Classique"?` · ${ex.methode}`:""}</div>
        </div>
-       <div style={{display:"flex",gap:5,marginLeft:8,flexShrink:0}}>
-        {dbEx && onGuide && <button onClick={()=>onGuide(dbEx,ex)} style={{padding:"4px 8px",background:"rgba(59,130,246,0.06)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:6,color:"#3b82f6",cursor:"pointer",fontSize:10,fontWeight:600,fontFamily:"'Inter',sans-serif"}}>Guide ›</button>}
-        <button onClick={()=>setEditing(e=>!e)} style={{padding:"4px 8px",background:"rgba(59,130,246,0.08)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:6,color:"#3b82f6",cursor:"pointer",fontSize:10}}>✏️</button>
+       <div style={{display:"flex",gap:4,flexShrink:0}}>
+        {onInfo && <button onClick={(e)=>{e.stopPropagation();onInfo(ex);}} title="Infos" style={{padding:"4px 7px",background:"rgba(6,182,212,0.06)",border:"0.5px solid rgba(6,182,212,0.25)",borderRadius:6,color:"#06b6d4",cursor:"pointer",fontSize:10,fontWeight:700,fontFamily:"'Inter',sans-serif"}}>i</button>}
+        {dbEx && onGuide && <button onClick={(e)=>{e.stopPropagation();onGuide(dbEx,ex);}} style={{padding:"4px 8px",background:"rgba(59,130,246,0.06)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:6,color:"#3b82f6",cursor:"pointer",fontSize:10,fontWeight:600,fontFamily:"'Inter',sans-serif"}}>Guide ›</button>}
+        <button onClick={(e)=>{e.stopPropagation();setEditing(ed=>!ed);}} style={{padding:"4px 8px",background:"rgba(59,130,246,0.08)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:6,color:"#3b82f6",cursor:"pointer",fontSize:10}}>✏️</button>
        </div>
       </div>
       {editing && (
@@ -543,7 +609,7 @@ function ExerciceEditable({ ex, exIdx, jourIdx, prog, setProg, cc, METHODS, onGu
 
 // ─── CALENDAR ─────────────────────────────────────────────────────────────────
 export default function Calendar(props) {
-  const { prog, setProg, progs, setProgs, cycleStart, setTab, premium, setPaywall, push, calSess, setCalSess, checkedEx, jR, semC, C, INT, setProgView, profil } = props;
+  const { prog, setProg, progs, setProgs, cycleStart, setTab, premium, setPaywall, push, calSess, setCalSess, checkedEx, setCheckedEx, setChrono, setChronoSec, jR, semC, C, INT, setProgView, profil } = props;
 
   const [bonusModal,   setBonusModal]   = useState(null);
   const [cardioOpen,   setCardioOpen]   = useState(false);
@@ -551,6 +617,20 @@ export default function Calendar(props) {
   const [viewJour,     setViewJour]     = useState(null);
   const [currentWeek,  setCurrentWeek]  = useState(semC || 0);
   const [guideEx,      setGuideEx]      = useState(null);
+  const [infoEx,       setInfoEx]       = useState(null);
+
+  // Toggle de validation d'un exercice (avec déclenchement chrono)
+  const toggleCheck = (seanceId, exIdx, repos) => {
+    if (!setCheckedEx) return;
+    const key = `${seanceId}-${exIdx}`;
+    const wasChecked = checkedEx?.[key];
+    setCheckedEx(prev => ({...prev, [key]: !prev[key]}));
+    if (!wasChecked && repos && setChrono && setChronoSec) {
+      const sec = parseInt((repos+"").replace(/[^0-9]/g,"")) || 90;
+      setChronoSec(sec);
+      setChrono(true);
+    }
+  };
 
   const WEEK_INTENSITY = ["modere","modere","lourd","lourd","intense","leger"];
   const METHODS = ["Classique","Pyramidal","Super-set","Drop-set","Rest-pause","5×5","Séries de 100","Dégressif"];
@@ -591,6 +671,18 @@ export default function Calendar(props) {
     );
   }
 
+  // ── Info modal ──
+  if (infoEx) {
+    return (
+      <InfoExModal
+        ex={infoEx.ex}
+        dbEx={infoEx.dbEx}
+        onClose={() => setInfoEx(null)}
+        onOpenGuide={infoEx.dbEx ? (dbEx, serieEx) => { setInfoEx(null); setGuideEx({dbEx, serieEx}); } : null}
+      />
+    );
+  }
+
   // ── Guide modal ──
   if (guideEx) {
     return <GuideExModal exData={guideEx.dbEx} exSerie={guideEx.serieEx} onClose={() => setGuideEx(null)} C={C} INT={INT} />;
@@ -616,7 +708,7 @@ export default function Calendar(props) {
         {(jour.exercices||[]).length === 0 && <div style={{textAlign:"center",padding:"24px 0",color:"#64748b",fontSize:13}}>Aucun exercice dans cette séance.</div>}
         {(jour.exercices||[]).map((ex,k) => {
           const cc = {principal:"#3b82f6",correctif:"#ef4444",gainage:"#22c55e",isolation:"#8b5cf6",correctiv:"#ef4444"}[ex.cat||"principal"]||"#3b82f6";
-          return <ExerciceEditable key={k} ex={ex} exIdx={k} jourIdx={viewJour} prog={prog} setProg={setProg} cc={cc} METHODS={METHODS} onGuide={(dbEx,serieEx)=>setGuideEx({dbEx,serieEx})} />;
+          return <ExerciceEditable key={k} ex={ex} exIdx={k} jourIdx={viewJour} prog={prog} setProg={setProg} cc={cc} METHODS={METHODS} onGuide={(dbEx,serieEx)=>setGuideEx({dbEx,serieEx})} onInfo={(exo)=>setInfoEx({ex:exo,dbEx:findExInDB(exo.nom)})} checkedEx={checkedEx} toggleCheck={toggleCheck} seanceId={prog.jours[viewJour].id} />;
         })}
       </div>
     );
