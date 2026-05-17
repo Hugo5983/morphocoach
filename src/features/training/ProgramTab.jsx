@@ -76,14 +76,15 @@ function GuideExModal({ exData, exSerie, onClose, C }) {
 
 // ─── SÉANCE DETAIL (vue exercices d'une séance depuis Programme) ─────────────
 function SeanceDetailModal({ jour, jourIdx, prog, setProg, onClose, C, INT }) {
-  const [editEx, setEditEx] = useState({});
-  const [guideEx, setGuideEx] = useState(null); // { dbEx, serieEx }
+  const [editEx,    setEditEx]    = useState({});
+  const [guideEx,   setGuideEx]   = useState(null);
+  const [showBiblio,setShowBiblio]= useState(false);
+  const [search,    setSearch]    = useState("");
+  const [groupe,    setGroupe]    = useState(null);
+  const [newExForm, setNewExForm] = useState(null); // exercice en cours d'ajout
 
-  if (guideEx) {
-    return <GuideExModal exData={guideEx.dbEx} exSerie={guideEx.serieEx} onClose={() => setGuideEx(null)} C={C} />;
-  }
-  const int = INT[jour.intensite || "modere"];
   const METHODS = ["Classique","Pyramidal","Super-set","Drop-set","Rest-pause","5×5","Séries de 100","Dégressif","Pré-fatigue","Wave loading"];
+  const cc = (cat) => ({principal:"#3b82f6",correctif:"#ef4444",gainage:"#22c55e",isolation:"#8b5cf6"}[cat||"principal"]||"#3b82f6");
 
   const updateEx = (exIdx, field, val) => {
     const u = JSON.parse(JSON.stringify(prog));
@@ -95,6 +96,128 @@ function SeanceDetailModal({ jour, jourIdx, prog, setProg, onClose, C, INT }) {
     u.jours[jourIdx].exercices.splice(exIdx, 1);
     setProg(u);
   };
+  const addEx = () => {
+    if (!newExForm?.nom) return;
+    const u = JSON.parse(JSON.stringify(prog));
+    u.jours[jourIdx].exercices = u.jours[jourIdx].exercices || [];
+    u.jours[jourIdx].exercices.push({
+      nom: newExForm.nom,
+      cat: newExForm.cat || "principal",
+      series: newExForm.series || "4",
+      reps:   newExForm.reps   || "10",
+      repos:  newExForm.repos  || "90s",
+      charge: newExForm.charge || "",
+      methode:"Classique",
+      historique: [],
+    });
+    setProg(u);
+    setNewExForm(null);
+    setShowBiblio(false);
+    setSearch("");
+    setGroupe(null);
+  };
+
+  // Exercices à afficher dans la biblio
+  const exosList = search
+    ? Object.entries(EX).flatMap(([g,arr]) => arr.map(ex => ({nom:ex.n,cat:ex.cat,group:g,raw:ex})))
+        .filter(e => e.nom.toLowerCase().includes(search.toLowerCase()))
+    : groupe ? (EX[groupe]||[]).map(ex => ({nom:ex.n,cat:ex.cat,group:groupe,raw:ex})) : [];
+
+  if (guideEx) {
+    return <GuideExModal exData={guideEx.dbEx} exSerie={guideEx.serieEx} onClose={() => setGuideEx(null)} C={C} />;
+  }
+
+  const int = INT[jour.intensite || "modere"];
+  const exercices = prog.jours[jourIdx]?.exercices || [];
+
+  // ── Vue formulaire ajout exercice ──
+  if (newExForm) {
+    return (
+      <div style={{position:"fixed",inset:0,background:"rgba(228,238,248,0.98)",zIndex:410,overflowY:"auto"}}>
+        <div style={{maxWidth:500,margin:"0 auto",padding:"20px 16px",paddingBottom:80}}>
+          <button onClick={()=>setNewExForm(null)} style={{background:"transparent",border:"none",color:"#3b82f6",cursor:"pointer",fontSize:13,fontWeight:600,display:"flex",alignItems:"center",gap:4,marginBottom:16}}>← Retour à la bibliothèque</button>
+          <div style={{display:"flex",alignItems:"center",gap:10,padding:"12px 14px",background:`${cc(newExForm.cat)}0d`,border:`0.5px solid ${cc(newExForm.cat)}30`,borderRadius:12,marginBottom:16}}>
+            <div style={{width:4,height:40,borderRadius:2,background:cc(newExForm.cat),flexShrink:0}}/>
+            <div>
+              <div style={{fontSize:14,fontWeight:500,color:"#0f1a2e"}}>{newExForm.nom}</div>
+              <div style={{fontSize:10,color:"#64748b",marginTop:2}}>{newExForm.group}</div>
+            </div>
+          </div>
+          <div style={{background:"#fff",border:"0.5px solid #dce8f4",borderRadius:12,padding:"16px",marginBottom:12}}>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:10}}>
+              {[{l:"Séries",k:"series",def:"4"},{l:"Reps",k:"reps",def:"10"},{l:"Repos",k:"repos",def:"90s"},{l:"Charge",k:"charge",def:""}].map(pp=>(
+                <div key={pp.k}>
+                  <div style={{fontSize:10,color:"#64748b",fontWeight:600,marginBottom:6}}>{pp.l}</div>
+                  <input value={newExForm[pp.k]||""} onChange={e=>setNewExForm(f=>({...f,[pp.k]:e.target.value}))} placeholder={pp.def}
+                    style={{width:"100%",padding:"9px 10px",background:"#f8fafc",border:"0.5px solid #dce8f4",borderRadius:8,fontSize:13,color:"#0f1a2e",fontFamily:"'Inter',sans-serif",boxSizing:"border-box"}}/>
+                </div>
+              ))}
+            </div>
+            <div>
+              <div style={{fontSize:10,color:"#64748b",fontWeight:600,marginBottom:6}}>MÉTHODE</div>
+              <div style={{display:"flex",flexWrap:"wrap",gap:4}}>
+                {METHODS.slice(0,6).map(mm=>(
+                  <button key={mm} onClick={()=>setNewExForm(f=>({...f,methode:mm}))} style={{padding:"4px 10px",borderRadius:12,border:`1px solid ${newExForm.methode===mm?"#3b82f6":"#dce8f4"}`,background:newExForm.methode===mm?"rgba(59,130,246,0.1)":"transparent",color:newExForm.methode===mm?"#3b82f6":"#64748b",cursor:"pointer",fontSize:10,fontFamily:"'Inter',sans-serif"}}>{mm}</button>
+                ))}
+              </div>
+            </div>
+          </div>
+          <button onClick={addEx} style={{width:"100%",padding:"13px",background:"#3b82f6",border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"'Syne',sans-serif",marginBottom:8}}>
+            + Ajouter à la séance
+          </button>
+          <button onClick={()=>setNewExForm(null)} style={{width:"100%",padding:"10px",background:"transparent",border:"0.5px solid #dce8f4",borderRadius:10,color:"#64748b",cursor:"pointer",fontSize:12,fontFamily:"'Inter',sans-serif"}}>Annuler</button>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Vue bibliothèque ──
+  if (showBiblio) {
+    return (
+      <div style={{position:"fixed",inset:0,background:"rgba(228,238,248,0.98)",zIndex:410,overflowY:"auto"}}>
+        <div style={{maxWidth:500,margin:"0 auto",padding:"20px 16px",paddingBottom:80}}>
+          <button onClick={()=>{setShowBiblio(false);setSearch("");setGroupe(null);}} style={{background:"transparent",border:"none",color:"#3b82f6",cursor:"pointer",fontSize:13,fontWeight:600,display:"flex",alignItems:"center",gap:4,marginBottom:16}}>← Retour à la séance</button>
+          <div style={{fontFamily:"'Syne',sans-serif",fontSize:18,fontWeight:300,color:"#0f1a2e",marginBottom:14}}>Ajouter un exercice</div>
+
+          {/* Recherche */}
+          <div style={{position:"relative",marginBottom:12}}>
+            <input value={search} onChange={e=>{setSearch(e.target.value);setGroupe(null);}} placeholder="Rechercher…"
+              style={{width:"100%",padding:"10px 14px 10px 36px",background:"#fff",border:"0.5px solid #dce8f4",borderRadius:10,fontSize:13,color:"#0f1a2e",fontFamily:"'Inter',sans-serif",boxSizing:"border-box"}}/>
+            <div style={{position:"absolute",left:12,top:"50%",transform:"translateY(-50%)",fontSize:14,color:"#94a3b8"}}>🔍</div>
+          </div>
+
+          {/* Groupes musculaires */}
+          {!search && (
+            <div style={{display:"flex",flexWrap:"wrap",gap:6,marginBottom:14}}>
+              {Object.keys(EX).map(g => (
+                <button key={g} onClick={()=>setGroupe(g===groupe?null:g)}
+                  style={{padding:"6px 12px",background:groupe===g?"rgba(59,130,246,0.1)":"#fff",border:`1px solid ${groupe===g?"#3b82f6":"#dce8f4"}`,borderRadius:16,color:groupe===g?"#3b82f6":"#64748b",cursor:"pointer",fontSize:11,fontWeight:groupe===g?600:400,fontFamily:"'Inter',sans-serif"}}>
+                  {g} <span style={{fontSize:9,color:"#94a3b8"}}>({(EX[g]||[]).length})</span>
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Liste */}
+          {exosList.map((ex, i) => (
+            <div key={i} onClick={()=>setNewExForm({nom:ex.nom,cat:ex.cat,group:ex.group,series:"4",reps:"10",repos:"90s",charge:"",methode:"Classique"})}
+              style={{display:"flex",alignItems:"center",gap:10,padding:"10px 13px",background:"#fff",border:"0.5px solid #dce8f4",borderRadius:10,marginBottom:6,cursor:"pointer"}}
+              onMouseEnter={ev=>ev.currentTarget.style.borderColor=cc(ex.cat)}
+              onMouseLeave={ev=>ev.currentTarget.style.borderColor="#dce8f4"}>
+              <div style={{width:4,height:32,borderRadius:2,background:cc(ex.cat),flexShrink:0}}/>
+              <div style={{flex:1}}>
+                <div style={{fontSize:12,fontWeight:500,color:"#0f1a2e"}}>{ex.nom}</div>
+                {search && <div style={{fontSize:9,color:"#64748b",marginTop:1}}>{ex.group}</div>}
+              </div>
+              <div style={{fontSize:10,color:"#3b82f6",fontWeight:600}}>+ Ajouter</div>
+            </div>
+          ))}
+          {!search && !groupe && <div style={{textAlign:"center",padding:"20px 0",fontSize:11,color:"#94a3b8"}}>Sélectionne un groupe ou recherche</div>}
+          {search && exosList.length===0 && <div style={{textAlign:"center",padding:"20px 0",fontSize:11,color:"#94a3b8"}}>Aucun résultat pour "{search}"</div>}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={{position:"fixed",inset:0,background:"rgba(228,238,248,0.98)",zIndex:400,overflowY:"auto"}}>
@@ -107,56 +230,58 @@ function SeanceDetailModal({ jour, jourIdx, prog, setProg, onClose, C, INT }) {
           <div style={{padding:"14px 16px",background:`${int.c}14`,border:`0.5px solid ${int.c}40`,borderRadius:12,marginBottom:14}}>
             <div style={{fontSize:9,color:int.c,fontWeight:700,letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:3}}>{int.l}</div>
             <div style={{fontFamily:"'Syne',sans-serif",fontSize:20,fontWeight:400,marginBottom:4}}>{jour.nom}</div>
-            <div style={{fontSize:11,color:"#64748b"}}>{jour.focus} · {jour.duree || "45-60 min"} · {jour.exercices?.length || 0} exercices</div>
+            <div style={{fontSize:11,color:"#64748b"}}>{jour.focus} · {jour.duree || "45-60 min"} · {exercices.length} exercice{exercices.length!==1?"s":""}</div>
           </div>
 
-          {(jour.exercices || []).length === 0 && (
-            <div style={{textAlign:"center",padding:"24px 0",color:"#64748b",fontSize:13}}>Aucun exercice dans cette séance.</div>
+          {exercices.length === 0 && (
+            <div style={{textAlign:"center",padding:"28px 0 16px"}}>
+              <div style={{fontSize:28,marginBottom:8}}>🏋️</div>
+              <div style={{fontSize:13,color:"#64748b",marginBottom:16}}>Aucun exercice dans cette séance.</div>
+            </div>
           )}
 
-          {(jour.exercices || []).map((ex, k) => {
-            const cc = {principal:"#3b82f6",correctif:"#ef4444",gainage:"#22c55e",isolation:"#8b5cf6"}[ex.cat||"principal"] || "#3b82f6";
+          {exercices.map((ex, k) => {
+            const colour = cc(ex.cat);
             const isEditing = !!editEx[k];
             return (
               <div key={k} style={{background:"#fff",border:"0.5px solid #dce8f4",borderRadius:11,marginBottom:8,overflow:"hidden"}}>
-                <div style={{padding:"11px 13px",borderLeft:`3px solid ${cc}`}}>
+                <div style={{padding:"11px 13px",borderLeft:`3px solid ${colour}`}}>
                   <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
                     <div style={{flex:1}}>
                       <div style={{fontSize:12,fontWeight:600,color:"#0f1a2e",marginBottom:3}}>{ex.nom}</div>
-                      <div style={{fontSize:10,color:"#64748b"}}>{ex.series}×{ex.reps} · {ex.repos}{ex.charge ? ` · ${ex.charge}` : ""}{ex.tempo ? ` · ${ex.tempo}` : ""}{ex.methode && ex.methode !== "Classique" ? ` · ${ex.methode}` : ""}</div>
+                      <div style={{fontSize:10,color:"#64748b"}}>{ex.series}×{ex.reps} · {ex.repos}{ex.charge?` · ${ex.charge}`:""}{ex.tempo?` · ${ex.tempo}`:""}{ex.methode&&ex.methode!=="Classique"?` · ${ex.methode}`:""}</div>
                     </div>
                     <div style={{display:"flex",gap:5,marginLeft:8}}>
                       {findExInDB(ex.nom) && (
-                        <button onClick={() => { const d=findExInDB(ex.nom); if(d) setGuideEx({dbEx:d,serieEx:ex}); }} style={{padding:"4px 8px",background:"rgba(59,130,246,0.06)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:6,color:"#3b82f6",cursor:"pointer",fontSize:10,fontWeight:600,fontFamily:"'Inter',sans-serif"}}>Guide ›</button>
+                        <button onClick={()=>{const d=findExInDB(ex.nom);if(d)setGuideEx({dbEx:d,serieEx:ex});}} style={{padding:"4px 8px",background:"rgba(59,130,246,0.06)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:6,color:"#3b82f6",cursor:"pointer",fontSize:10,fontWeight:600,fontFamily:"'Inter',sans-serif"}}>Guide ›</button>
                       )}
-                      <button onClick={() => setEditEx(m => ({...m,[k]:!m[k]}))} style={{padding:"4px 8px",background:"rgba(59,130,246,0.08)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:6,color:"#3b82f6",cursor:"pointer",fontSize:10,fontWeight:600}}>✏️</button>
-                      <button onClick={() => deleteEx(k)} style={{padding:"4px 8px",background:"rgba(248,113,113,0.08)",border:"0.5px solid rgba(248,113,113,0.25)",borderRadius:6,color:"#f87171",cursor:"pointer",fontSize:10}}>×</button>
+                      <button onClick={()=>setEditEx(m=>({...m,[k]:!m[k]}))} style={{padding:"4px 8px",background:"rgba(59,130,246,0.08)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:6,color:"#3b82f6",cursor:"pointer",fontSize:10,fontWeight:600}}>✏️</button>
+                      <button onClick={()=>deleteEx(k)} style={{padding:"4px 8px",background:"rgba(248,113,113,0.08)",border:"0.5px solid rgba(248,113,113,0.25)",borderRadius:6,color:"#f87171",cursor:"pointer",fontSize:10}}>×</button>
                     </div>
                   </div>
-
                   {isEditing && (
                     <div style={{marginTop:10,paddingTop:10,borderTop:"0.5px solid #dce8f4"}}>
                       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6,marginBottom:8}}>
-                        {[{l:"Séries",k:"series"},{l:"Reps",k:"reps"},{l:"Repos",k:"repos"},{l:"Charge",k:"charge"}].map(pp => (
+                        {[{l:"Séries",k:"series"},{l:"Reps",k:"reps"},{l:"Repos",k:"repos"},{l:"Charge",k:"charge"}].map(pp=>(
                           <div key={pp.k}>
                             <div style={{fontSize:9,color:"#64748b",marginBottom:3,fontWeight:600}}>{pp.l}</div>
                             <div style={{display:"flex",gap:3,alignItems:"center"}}>
-                              <button onClick={() => { const cur=parseFloat(ex[pp.k])||0; updateEx(k,pp.k,String(pp.k==="repos"?Math.max(0,cur-15):Math.max(1,cur-1))); }} style={{width:24,height:24,borderRadius:6,background:"#f1f5f9",border:"none",cursor:"pointer",fontSize:13}}>−</button>
-                              <input value={ex[pp.k]||""} onChange={e => updateEx(k,pp.k,e.target.value)} style={{flex:1,padding:"5px 4px",background:"#fff",border:"0.5px solid #dce8f4",borderRadius:6,fontSize:11,textAlign:"center",fontFamily:"'Inter',sans-serif"}}/>
-                              <button onClick={() => { const cur=parseFloat(ex[pp.k])||0; updateEx(k,pp.k,String(pp.k==="repos"?cur+15:cur+1)); }} style={{width:24,height:24,borderRadius:6,background:"#3b82f6",border:"none",color:"#fff",cursor:"pointer",fontSize:13}}>+</button>
+                              <button onClick={()=>{const cur=parseFloat(ex[pp.k])||0;updateEx(k,pp.k,String(pp.k==="repos"?Math.max(0,cur-15):Math.max(1,cur-1)));}} style={{width:24,height:24,borderRadius:6,background:"#f1f5f9",border:"none",cursor:"pointer",fontSize:13}}>−</button>
+                              <input value={ex[pp.k]||""} onChange={e=>updateEx(k,pp.k,e.target.value)} style={{flex:1,padding:"5px 4px",background:"#fff",border:"0.5px solid #dce8f4",borderRadius:6,fontSize:11,textAlign:"center",fontFamily:"'Inter',sans-serif"}}/>
+                              <button onClick={()=>{const cur=parseFloat(ex[pp.k])||0;updateEx(k,pp.k,String(pp.k==="repos"?cur+15:cur+1));}} style={{width:24,height:24,borderRadius:6,background:"#3b82f6",border:"none",color:"#fff",cursor:"pointer",fontSize:13}}>+</button>
                             </div>
                           </div>
                         ))}
                       </div>
                       <div style={{marginBottom:7}}>
                         <div style={{fontSize:9,color:"#64748b",marginBottom:3,fontWeight:600}}>TEMPO</div>
-                        <input value={ex.tempo||""} onChange={e => updateEx(k,"tempo",e.target.value)} placeholder="Ex: 2-1-3" style={{width:"100%",padding:"7px 10px",background:"#fff",border:"0.5px solid #dce8f4",borderRadius:8,fontSize:11,fontFamily:"'Inter',sans-serif",boxSizing:"border-box"}}/>
+                        <input value={ex.tempo||""} onChange={e=>updateEx(k,"tempo",e.target.value)} placeholder="Ex: 2-1-3" style={{width:"100%",padding:"7px 10px",background:"#fff",border:"0.5px solid #dce8f4",borderRadius:8,fontSize:11,fontFamily:"'Inter',sans-serif",boxSizing:"border-box"}}/>
                       </div>
                       <div>
                         <div style={{fontSize:9,color:"#64748b",marginBottom:4,fontWeight:600}}>MÉTHODE</div>
                         <div style={{display:"flex",flexWrap:"wrap",gap:4}}>
-                          {METHODS.map(mm => (
-                            <button key={mm} onClick={() => updateEx(k,"methode",mm)} style={{padding:"3px 9px",borderRadius:12,border:`1px solid ${ex.methode===mm?"#3b82f6":"#dce8f4"}`,background:ex.methode===mm?"rgba(59,130,246,0.1)":"transparent",color:ex.methode===mm?"#3b82f6":"#64748b",cursor:"pointer",fontSize:9,fontFamily:"'Inter',sans-serif"}}>{mm}</button>
+                          {METHODS.map(mm=>(
+                            <button key={mm} onClick={()=>updateEx(k,"methode",mm)} style={{padding:"3px 9px",borderRadius:12,border:`1px solid ${ex.methode===mm?"#3b82f6":"#dce8f4"}`,background:ex.methode===mm?"rgba(59,130,246,0.1)":"transparent",color:ex.methode===mm?"#3b82f6":"#64748b",cursor:"pointer",fontSize:9,fontFamily:"'Inter',sans-serif"}}>{mm}</button>
                           ))}
                         </div>
                       </div>
@@ -166,6 +291,11 @@ function SeanceDetailModal({ jour, jourIdx, prog, setProg, onClose, C, INT }) {
               </div>
             );
           })}
+
+          {/* Bouton ajouter exercice */}
+          <button onClick={()=>setShowBiblio(true)} style={{width:"100%",padding:"12px",background:"transparent",border:"1px dashed #3b82f6",borderRadius:10,color:"#3b82f6",cursor:"pointer",fontSize:13,fontWeight:600,fontFamily:"'Syne',sans-serif",display:"flex",alignItems:"center",justifyContent:"center",gap:8,marginTop:4}}>
+            <span style={{fontSize:18,lineHeight:1}}>+</span> Ajouter un exercice
+          </button>
         </div>
       </div>
     </div>
