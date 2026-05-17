@@ -22,59 +22,39 @@ const DEFAULT_TARGET = { reps:10, pct:75, l:"Hypertrophie", color:"#3b82f6", des
 // ─── MODAL SAISIE MANUELLE ────────────────────────────────────────────────────
 function ManualRMModal({ prog, setProg, onClose, push, C }) {
   const [search,   setSearch]   = useState("");
-  const [selected, setSelected] = useState(null); // { jourIdx, exIdx, nom }
+  const [groupe,   setGroupe]   = useState(null);
+  const [selected, setSelected] = useState(null);
   const [kg,       setKg]       = useState("");
   const [reps,     setReps]     = useState("");
 
-  // Tous les exercices de la bibliothèque complète
-  const allExos = useMemo(() => {
-    const list = [];
-    Object.entries(EX).forEach(([group, exercises]) => {
-      exercises.forEach(ex => {
-        list.push({ nom: ex.n, cat: ex.cat, group });
-      });
-    });
-    return list.sort((a, b) => a.nom.localeCompare(b.nom));
-  }, []);
+  const groupes = Object.keys(EX);
+  const cc = (cat) => ({principal:"#3b82f6",correctif:"#ef4444",gainage:"#22c55e",isolation:"#8b5cf6"}[cat||"principal"]||"#3b82f6");
 
-  const filtered = search
-    ? allExos.filter(e => e.nom.toLowerCase().includes(search.toLowerCase()))
-    : allExos;
+  // Liste d'exercices à afficher selon recherche ou groupe sélectionné
+  const exosList = search
+    ? Object.entries(EX).flatMap(([g, arr]) => arr.map(ex => ({ nom:ex.n, cat:ex.cat, group:g, raw:ex })))
+        .filter(e => e.nom.toLowerCase().includes(search.toLowerCase()))
+    : groupe
+      ? (EX[groupe]||[]).map(ex => ({ nom:ex.n, cat:ex.cat, group:groupe, raw:ex }))
+      : [];
 
   const rm1Calc = selected && kg && reps ? calc1RM(parseFloat(kg), parseInt(reps)) : 0;
 
   const handleSave = () => {
     if (!selected || !kg) return;
     const u = JSON.parse(JSON.stringify(prog));
-    const entry = {
-      poids: parseFloat(kg),
-      reps:  parseInt(reps) || 1,
-      date:  new Date().toLocaleDateString("fr-FR"),
-      cat:   selected.cat,
-    };
-    // Chercher dans prog.jours d'abord
+    const entry = { poids:parseFloat(kg), reps:parseInt(reps)||1, date:new Date().toLocaleDateString("fr-FR"), cat:selected.cat };
     let found = false;
     u.jours.forEach(jour => {
-      (jour.exercices || []).forEach(ex => {
-        if (ex.nom === selected.nom) {
-          ex.historique = ex.historique || [];
-          ex.historique.push(entry);
-          found = true;
-        }
+      (jour.exercices||[]).forEach(ex => {
+        if (ex.nom === selected.nom) { ex.historique = ex.historique||[]; ex.historique.push(entry); found = true; }
       });
     });
-    // Sinon sauvegarder dans prog.records (exercices hors programme)
-    if (!found) {
-      u.records = u.records || {};
-      u.records[selected.nom] = u.records[selected.nom] || [];
-      u.records[selected.nom].push(entry);
-    }
+    if (!found) { u.records = u.records||{}; u.records[selected.nom] = u.records[selected.nom]||[]; u.records[selected.nom].push(entry); }
     setProg(u);
-    push("🏆", "Record enregistré !", `${selected.nom} · ${kg}kg × ${reps||1} reps · 1RM≈${rm1Calc}kg`);
+    push("🏆","Record enregistré !",`${selected.nom} · ${kg}kg × ${reps||1} reps · 1RM≈${rm1Calc}kg`);
     onClose();
   };
-
-  const cc = (cat) => ({principal:"#3b82f6",correctif:"#ef4444",gainage:"#22c55e",isolation:"#8b5cf6"}[cat||"principal"]||"#3b82f6");
 
   return (
     <div style={{position:"fixed",inset:0,background:"rgba(228,238,248,0.98)",zIndex:400,overflowY:"auto"}}>
@@ -92,49 +72,61 @@ function ManualRMModal({ prog, setProg, onClose, push, C }) {
         </div>
 
         <div style={{padding:"0 16px"}}>
-
-          {/* ── Étape 1 : choisir l'exercice ── */}
           {!selected ? (
             <div>
-              <div style={{fontSize:11,color:"#64748b",marginBottom:10}}>Quel exercice veux-tu enregistrer ?</div>
-
               {/* Recherche */}
               <div style={{position:"relative",marginBottom:12}}>
-                <input
-                  value={search}
-                  onChange={e => setSearch(e.target.value)}
+                <input value={search} onChange={e=>{setSearch(e.target.value);setGroupe(null);}}
                   placeholder="Rechercher un exercice…"
-                  autoFocus
                   style={{width:"100%",padding:"10px 14px 10px 36px",background:"#fff",border:"0.5px solid #dce8f4",borderRadius:10,fontSize:13,color:"#0f1a2e",fontFamily:"'Inter',sans-serif",boxSizing:"border-box"}}
                 />
                 <div style={{position:"absolute",left:12,top:"50%",transform:"translateY(-50%)",fontSize:14,color:"#94a3b8"}}>🔍</div>
               </div>
 
-              {/* Liste exercices */}
-              <div style={{maxHeight:400,overflowY:"auto"}}>
-                {filtered.length === 0 && (
-                  <div style={{textAlign:"center",padding:"24px",color:"#94a3b8",fontSize:12}}>Aucun exercice trouvé</div>
-                )}
-                {filtered.map((ex, i) => (
-                  <div key={i} onClick={() => setSelected(ex)}
-                    style={{display:"flex",alignItems:"center",gap:10,padding:"11px 14px",background:"#fff",border:"0.5px solid #dce8f4",borderRadius:11,marginBottom:6,cursor:"pointer",transition:"border-color .12s"}}
-                    onMouseEnter={ev => ev.currentTarget.style.borderColor = cc(ex.cat)}
-                    onMouseLeave={ev => ev.currentTarget.style.borderColor = "#dce8f4"}>
-                    <div style={{width:4,height:36,borderRadius:2,background:cc(ex.cat),flexShrink:0}}/>
-                    <div style={{flex:1}}>
-                      <div style={{fontSize:12,fontWeight:500,color:"#0f1a2e"}}>{ex.nom}</div>
-                      <div style={{fontSize:10,color:"#64748b",marginTop:1}}>{ex.group}</div>
-                    </div>
-                    <div style={{color:"#94a3b8",fontSize:14}}>›</div>
+              {/* Groupes musculaires */}
+              {!search && (
+                <div>
+                  <div style={{fontSize:10,color:"#64748b",fontWeight:600,marginBottom:8}}>Choisir un groupe musculaire</div>
+                  <div style={{display:"flex",flexWrap:"wrap",gap:6,marginBottom:12}}>
+                    {groupes.map(g => (
+                      <button key={g} onClick={() => setGroupe(g===groupe?null:g)}
+                        style={{padding:"6px 12px",background:groupe===g?"rgba(59,130,246,0.1)":C.s2||"#e4eef8",border:`1px solid ${groupe===g?"#3b82f6":"#dce8f4"}`,borderRadius:16,color:groupe===g?"#3b82f6":"#64748b",cursor:"pointer",fontSize:11,fontWeight:groupe===g?600:400,fontFamily:"'Inter',sans-serif"}}>
+                        {g} <span style={{fontSize:9,color:"#94a3b8"}}>({(EX[g]||[]).length})</span>
+                      </button>
+                    ))}
                   </div>
-                ))}
-              </div>
+                </div>
+              )}
+
+              {/* Liste exercices (recherche ou groupe sélectionné) */}
+              {exosList.length > 0 && (
+                <div>
+                  {groupe && !search && <div style={{fontSize:10,color:"#3b82f6",fontWeight:600,marginBottom:8}}>{groupe} · {exosList.length} exercices</div>}
+                  {exosList.map((ex, i) => (
+                    <div key={i} onClick={() => setSelected(ex)}
+                      style={{display:"flex",alignItems:"center",gap:10,padding:"10px 13px",background:"#fff",border:"0.5px solid #dce8f4",borderRadius:10,marginBottom:6,cursor:"pointer"}}
+                      onMouseEnter={ev=>ev.currentTarget.style.borderColor=cc(ex.cat)}
+                      onMouseLeave={ev=>ev.currentTarget.style.borderColor="#dce8f4"}>
+                      <div style={{width:4,height:32,borderRadius:2,background:cc(ex.cat),flexShrink:0}}/>
+                      <div style={{flex:1}}>
+                        <div style={{fontSize:12,fontWeight:500,color:"#0f1a2e"}}>{ex.nom}</div>
+                        {search && <div style={{fontSize:9,color:"#64748b",marginTop:1}}>{ex.group}</div>}
+                      </div>
+                      <div style={{color:"#94a3b8",fontSize:14}}>›</div>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {!search && !groupe && (
+                <div style={{textAlign:"center",padding:"20px 0",fontSize:11,color:"#94a3b8"}}>Sélectionne un groupe ou recherche un exercice</div>
+              )}
+              {search && exosList.length === 0 && (
+                <div style={{textAlign:"center",padding:"20px 0",fontSize:11,color:"#94a3b8"}}>Aucun exercice trouvé pour "{search}"</div>
+              )}
             </div>
           ) : (
-
-            /* ── Étape 2 : saisir kg + reps ── */
             <div>
-              <button onClick={() => setSelected(null)} style={{background:"transparent",border:"none",color:"#3b82f6",cursor:"pointer",fontSize:12,fontWeight:600,padding:"0 0 14px",display:"flex",alignItems:"center",gap:4}}>← Changer d'exercice</button>
+              <button onClick={()=>{setSelected(null);setKg("");setReps("");}} style={{background:"transparent",border:"none",color:"#3b82f6",cursor:"pointer",fontSize:12,fontWeight:600,padding:"0 0 14px",display:"flex",alignItems:"center",gap:4}}>← Changer d'exercice</button>
 
               {/* Badge exercice */}
               <div style={{display:"flex",alignItems:"center",gap:10,padding:"12px 14px",background:`${cc(selected.cat)}0d`,border:`0.5px solid ${cc(selected.cat)}30`,borderRadius:12,marginBottom:16}}>
@@ -145,63 +137,46 @@ function ManualRMModal({ prog, setProg, onClose, push, C }) {
                 </div>
               </div>
 
-              {/* Saisie charge + reps */}
+              {/* Saisie */}
               <div style={{background:"#fff",border:"0.5px solid #dce8f4",borderRadius:12,padding:"16px",marginBottom:12}}>
                 <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
                   <div>
-                    <div style={{fontSize:10,color:"#64748b",fontWeight:600,marginBottom:8,letterSpacing:"0.5px"}}>CHARGE MAX</div>
+                    <div style={{fontSize:10,color:"#64748b",fontWeight:600,marginBottom:8}}>CHARGE MAX</div>
                     <div style={{display:"flex",alignItems:"center",gap:6}}>
-                      <input
-                        type="number"
-                        value={kg}
-                        onChange={e => setKg(e.target.value)}
-                        placeholder="ex: 80"
-                        autoFocus
-                        style={{flex:1,padding:"12px 10px",background:"#f8fafc",border:`1px solid ${kg?"#3b82f6":"#dce8f4"}`,borderRadius:9,fontSize:20,fontWeight:300,color:"#0f1a2e",fontFamily:"'Syne',sans-serif",textAlign:"center"}}
-                      />
-                      <span style={{fontSize:12,color:"#64748b",flexShrink:0}}>kg</span>
+                      <input type="number" value={kg} onChange={e=>setKg(e.target.value)} placeholder="ex: 80" autoFocus
+                        style={{flex:1,padding:"12px 8px",background:"#f8fafc",border:`1px solid ${kg?"#3b82f6":"#dce8f4"}`,borderRadius:9,fontSize:22,fontWeight:300,color:"#0f1a2e",fontFamily:"'Syne',sans-serif",textAlign:"center"}}/>
+                      <span style={{fontSize:12,color:"#64748b"}}>kg</span>
                     </div>
                   </div>
                   <div>
-                    <div style={{fontSize:10,color:"#64748b",fontWeight:600,marginBottom:8,letterSpacing:"0.5px"}}>REPS EFFECTUÉES</div>
+                    <div style={{fontSize:10,color:"#64748b",fontWeight:600,marginBottom:8}}>REPS</div>
                     <div style={{display:"flex",alignItems:"center",gap:6}}>
-                      <input
-                        type="number"
-                        value={reps}
-                        onChange={e => setReps(e.target.value)}
-                        placeholder="ex: 5"
-                        style={{flex:1,padding:"12px 10px",background:"#f8fafc",border:`1px solid ${reps?"#3b82f6":"#dce8f4"}`,borderRadius:9,fontSize:20,fontWeight:300,color:"#0f1a2e",fontFamily:"'Syne',sans-serif",textAlign:"center"}}
-                      />
-                      <span style={{fontSize:12,color:"#64748b",flexShrink:0}}>reps</span>
+                      <input type="number" value={reps} onChange={e=>setReps(e.target.value)} placeholder="ex: 5"
+                        style={{flex:1,padding:"12px 8px",background:"#f8fafc",border:`1px solid ${reps?"#3b82f6":"#dce8f4"}`,borderRadius:9,fontSize:22,fontWeight:300,color:"#0f1a2e",fontFamily:"'Syne',sans-serif",textAlign:"center"}}/>
+                      <span style={{fontSize:12,color:"#64748b"}}>reps</span>
                     </div>
                   </div>
                 </div>
-
-                {/* Raccourcis reps */}
                 <div style={{display:"flex",gap:5,marginTop:10}}>
-                  {[1,3,5,8,10,12].map(r => (
-                    <button key={r} onClick={() => setReps(String(r))} style={{flex:1,padding:"5px 2px",background:reps===String(r)?"rgba(59,130,246,0.1)":"transparent",border:`0.5px solid ${reps===String(r)?"#3b82f6":"#dce8f4"}`,borderRadius:7,color:reps===String(r)?"#3b82f6":"#64748b",cursor:"pointer",fontSize:10,fontWeight:reps===String(r)?600:400}}>{r}</button>
+                  {[1,3,5,8,10,12].map(r=>(
+                    <button key={r} onClick={()=>setReps(String(r))} style={{flex:1,padding:"5px 2px",background:reps===String(r)?"rgba(59,130,246,0.1)":"transparent",border:`0.5px solid ${reps===String(r)?"#3b82f6":"#dce8f4"}`,borderRadius:7,color:reps===String(r)?"#3b82f6":"#64748b",cursor:"pointer",fontSize:10,fontWeight:reps===String(r)?600:400}}>{r}</button>
                   ))}
                 </div>
               </div>
 
-              {/* 1RM calculé en temps réel */}
               {rm1Calc > 0 && (
-                <div style={{background:"rgba(59,130,246,0.06)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:12,padding:"14px 16px",marginBottom:16}}>
-                  <div style={{fontSize:9,color:"#64748b",fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",marginBottom:6}}>1RM estimé (formule Epley)</div>
+                <div style={{background:"rgba(59,130,246,0.06)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:12,padding:"12px 16px",marginBottom:16}}>
+                  <div style={{fontSize:9,color:"#64748b",fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",marginBottom:4}}>1RM estimé (Epley)</div>
                   <div style={{display:"flex",alignItems:"baseline",gap:6}}>
                     <div style={{fontFamily:"'Syne',sans-serif",fontSize:36,fontWeight:300,color:"#3b82f6",lineHeight:1}}>{rm1Calc}</div>
                     <div style={{fontSize:14,color:"#64748b"}}>kg</div>
                   </div>
-                  <div style={{fontSize:10,color:"#94a3b8",marginTop:4}}>= {kg}kg × (1 + {reps}/30)</div>
+                  <div style={{fontSize:10,color:"#94a3b8",marginTop:3}}>= {kg}kg × (1 + {reps}/30)</div>
                 </div>
               )}
 
-              <button
-                onClick={handleSave}
-                disabled={!kg || !reps}
-                style={{width:"100%",padding:"14px",background:(!kg||!reps)?"#dce8f4":"#3b82f6",border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:(!kg||!reps)?"default":"pointer",fontFamily:"'Syne',sans-serif",marginBottom:8,transition:"background .15s"}}
-              >
+              <button onClick={handleSave} disabled={!kg||!reps}
+                style={{width:"100%",padding:"14px",background:(!kg||!reps)?"#dce8f4":"#3b82f6",border:"none",borderRadius:12,color:"#fff",fontSize:14,fontWeight:600,cursor:(!kg||!reps)?"default":"pointer",fontFamily:"'Syne',sans-serif",marginBottom:8}}>
                 🏆 Enregistrer ce record
               </button>
               <button onClick={onClose} style={{width:"100%",padding:"10px",background:"transparent",border:"0.5px solid #dce8f4",borderRadius:10,color:"#64748b",cursor:"pointer",fontSize:12,fontFamily:"'Inter',sans-serif"}}>Annuler</button>
