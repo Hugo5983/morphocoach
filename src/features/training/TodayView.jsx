@@ -216,49 +216,15 @@ function CreateSeanceModal({ prog, setProg, setCalSess, push, onClose, C }) {
   const updateExField = (i, field, val) => setExos(prev => prev.map((e,idx) => idx===i?{...e,[field]:val}:e));
 
   const handleSave = () => {
-    if (!prog) return;
-    const today     = new Date();
-    const dayNames  = ["Dim","Lun","Mar","Mer","Jeu","Ven","Sam"];
-    const dayName   = dayNames[today.getDay()];
-    const todayKey  = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,"0")}-${String(today.getDate()).padStart(2,"0")}`;
-    const nomFinal  = seNom || `Séance ${dayName}`;
-    const intColor  = {leger:"#22c55e",modere:"#3b82f6",lourd:"#f97316",intense:"#f87171",mobilite:"#8b5cf6"}[intensite]||"#3b82f6";
+    const today    = new Date();
+    const dayNames = ["Dim","Lun","Mar","Mer","Jeu","Ven","Sam"];
+    const dayName  = dayNames[today.getDay()];
+    const todayKey = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,"0")}-${String(today.getDate()).padStart(2,"0")}`;
+    const nomFinal = seNom || `Séance ${dayName}`;
+    const intColor = {leger:"#22c55e",modere:"#3b82f6",lourd:"#f97316",intense:"#f87171",mobilite:"#8b5cf6"}[intensite]||"#3b82f6";
+    const seanceId = `today_${todayKey}`;
 
-    // ── 1. Chercher si un jour du programme correspond à aujourd'hui ──
-    const u = JSON.parse(JSON.stringify(prog));
-    u.jours = u.jours || [];
-    const jourExistant = u.jours.find(j =>
-      j.focus?.toLowerCase().includes(dayName.toLowerCase()) ||
-      j.nom?.toLowerCase().includes(dayName.toLowerCase())
-    );
-
-    if (jourExistant) {
-      // Ajouter les exercices au jour existant
-      jourExistant.exercices = jourExistant.exercices || [];
-      exos.forEach(ex => {
-        if (!jourExistant.exercices.find(e => e.nom === ex.nom)) {
-          jourExistant.exercices.push({...ex, historique:[], note:""});
-        }
-      });
-      if (seNom) jourExistant.nom = seNom;
-    } else {
-      // Créer un nouveau jour dans le programme
-      u.jours.push({
-        id:       Date.now(),
-        nom:      nomFinal,
-        focus:    dayName,
-        duree:    "45-60 min",
-        intensite,
-        exercices: exos.map(ex => ({...ex, historique:[], note:""})),
-        complete: false,
-        date:     today.toLocaleDateString("fr-FR"),
-        note:     "",
-        custom:   true,
-      });
-    }
-    setProg(u);
-
-    // ── 2. Ajouter au calendrier aujourd'hui ──
+    // ── Uniquement dans le calendrier du jour (pas dans prog.jours = pas visible S1-S6) ──
     if (setCalSess) {
       setCalSess(prev => ({
         ...prev,
@@ -266,15 +232,14 @@ function CreateSeanceModal({ prog, setProg, setCalSess, push, onClose, C }) {
           nom:      nomFinal,
           intensite,
           color:    intColor,
+          seanceId,
+          exercices: exos.map(ex => ({...ex, historique:[], note:"", checked:false})),
           musculation: exos.length > 0 ? { exercices: exos } : undefined,
         },
       }));
     }
 
-    const detail = jourExistant
-      ? `Exercices ajoutés à "${jourExistant.nom}" · Calendrier mis à jour`
-      : `Ajoutée au programme · Calendrier mis à jour`;
-    push("✅", "Séance créée !", detail);
+    push("✅", "Séance créée !", `${nomFinal} · ${exos.length} exercice${exos.length!==1?"s":""} · Ajoutée au calendrier`);
     onClose();
   };
 
@@ -392,8 +357,110 @@ function CreateSeanceModal({ prog, setProg, setCalSess, push, onClose, C }) {
   );
 }
 
+// ─── MODAL MODIFIER RECORD ───────────────────────────────────────────────────
+function EditRecordModal({ exData, prog, setProg, push, onClose }) {
+  const [entries, setEntries] = useState(
+    (exData.historique || []).map((h,i) => ({...h, idx:i}))
+  );
+  const [adding, setAdding] = useState(false);
+  const [newKg,  setNewKg]  = useState("");
+  const [newReps,setNewReps]= useState("");
+
+  const calc1RMLocal = (kg, reps) => (!kg||!reps) ? 0 : Math.round(kg*(1+reps/30));
+
+  const saveAll = (updatedEntries) => {
+    const u = JSON.parse(JSON.stringify(prog));
+    // Chercher dans prog.jours
+    let found = false;
+    u.jours.forEach(jour => {
+      (jour.exercices||[]).forEach(ex => {
+        if (ex.nom === exData.nom) {
+          ex.historique = updatedEntries.map(({idx,...h})=>h);
+          found = true;
+        }
+      });
+    });
+    // Sinon dans prog.records
+    if (!found && u.records?.[exData.nom]) {
+      u.records[exData.nom] = updatedEntries.map(({idx,...h})=>h);
+    }
+    setProg(u);
+  };
+
+  const deleteEntry = (i) => {
+    const next = entries.filter((_,j)=>j!==i);
+    setEntries(next);
+    saveAll(next);
+    push("🗑️","Record supprimé","Entrée retirée de l'historique.");
+  };
+
+  const addEntry = () => {
+    if (!newKg) return;
+    const entry = { poids:parseFloat(newKg), reps:parseInt(newReps)||1, date:new Date().toLocaleDateString("fr-FR") };
+    const next = [...entries, {...entry, idx:entries.length}];
+    setEntries(next);
+    saveAll(next);
+    setAdding(false); setNewKg(""); setNewReps("");
+    push("✅","Record mis à jour",`${exData.nom} · ${newKg}kg × ${newReps||1} reps`);
+  };
+
+  return (
+    <div style={{minHeight:"100vh",background:"#e4eef8"}}>
+      <div style={{padding:"20px 16px",paddingBottom:80}}>
+        <button onClick={onClose} style={{background:"transparent",border:"none",color:"#3b82f6",cursor:"pointer",fontSize:13,fontWeight:600,display:"flex",alignItems:"center",gap:4,marginBottom:16}}>← Retour</button>
+        <div style={{fontFamily:"'Syne',sans-serif",fontSize:18,fontWeight:300,color:"#0f1a2e",marginBottom:4}}>{exData.nom}</div>
+        <div style={{fontSize:11,color:"#64748b",marginBottom:16}}>1RM actuel : <span style={{color:"#3b82f6",fontWeight:700}}>{exData.rm1} kg</span></div>
+
+        {/* Liste historique */}
+        {entries.length === 0 && <div style={{textAlign:"center",padding:"20px",color:"#94a3b8",fontSize:12}}>Aucune entrée enregistrée.</div>}
+        {entries.map((h,i) => {
+          const rm = calc1RMLocal(parseFloat(h.poids), parseInt(h.reps));
+          return (
+            <div key={i} style={{background:"#fff",border:"0.5px solid #dce8f4",borderRadius:10,padding:"11px 14px",marginBottom:6,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+              <div>
+                <div style={{fontSize:13,fontWeight:500,color:"#0f1a2e"}}>{h.poids}kg × {h.reps} reps</div>
+                <div style={{fontSize:10,color:"#64748b",marginTop:2}}>{h.date} · 1RM≈{rm}kg</div>
+              </div>
+              <button onClick={()=>deleteEntry(i)} style={{background:"rgba(248,113,113,0.08)",border:"0.5px solid rgba(248,113,113,0.25)",borderRadius:8,padding:"5px 10px",color:"#f87171",cursor:"pointer",fontSize:11,fontFamily:"'Inter',sans-serif"}}>Supprimer</button>
+            </div>
+          );
+        })}
+
+        {/* Ajouter nouvelle entrée */}
+        {adding ? (
+          <div style={{background:"#fff",border:"0.5px solid #3b82f6",borderRadius:12,padding:"14px",marginTop:8}}>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:10}}>
+              <div>
+                <div style={{fontSize:9,color:"#64748b",fontWeight:600,marginBottom:5}}>CHARGE (kg)</div>
+                <input type="number" value={newKg} onChange={e=>setNewKg(e.target.value)} placeholder="ex: 100" autoFocus
+                  style={{width:"100%",padding:"8px",background:"#f8fafc",border:"0.5px solid #dce8f4",borderRadius:8,fontSize:14,textAlign:"center",fontFamily:"'Inter',sans-serif",boxSizing:"border-box"}}/>
+              </div>
+              <div>
+                <div style={{fontSize:9,color:"#64748b",fontWeight:600,marginBottom:5}}>REPS</div>
+                <input type="number" value={newReps} onChange={e=>setNewReps(e.target.value)} placeholder="ex: 3"
+                  style={{width:"100%",padding:"8px",background:"#f8fafc",border:"0.5px solid #dce8f4",borderRadius:8,fontSize:14,textAlign:"center",fontFamily:"'Inter',sans-serif",boxSizing:"border-box"}}/>
+              </div>
+            </div>
+            {newKg && newReps && (
+              <div style={{textAlign:"center",fontSize:11,color:"#3b82f6",marginBottom:8,fontWeight:600}}>1RM estimé : {calc1RMLocal(parseFloat(newKg),parseInt(newReps))} kg</div>
+            )}
+            <div style={{display:"flex",gap:8}}>
+              <button onClick={()=>{setAdding(false);setNewKg("");setNewReps("");}} style={{flex:1,padding:"10px",background:"#f1f5f9",border:"none",borderRadius:9,cursor:"pointer",fontSize:12,color:"#64748b",fontFamily:"'Inter',sans-serif"}}>Annuler</button>
+              <button onClick={addEntry} disabled={!newKg} style={{flex:2,padding:"10px",background:newKg?"#3b82f6":"#dce8f4",border:"none",borderRadius:9,cursor:newKg?"pointer":"default",color:"#fff",fontSize:12,fontWeight:600,fontFamily:"'Syne',sans-serif"}}>+ Ajouter</button>
+            </div>
+          </div>
+        ) : (
+          <button onClick={()=>setAdding(true)} style={{width:"100%",marginTop:8,padding:"11px",background:"transparent",border:"1px dashed #3b82f6",borderRadius:10,color:"#3b82f6",cursor:"pointer",fontSize:12,fontWeight:600,fontFamily:"'Syne',sans-serif",display:"flex",alignItems:"center",justifyContent:"center",gap:6}}>
+            + Ajouter un set
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // ─── CARD RM PAR EXERCICE ─────────────────────────────────────────────────────
-function RMCard({ exData, objectif, C }) {
+function RMCard({ exData, objectif, C, onEdit }) {
   const [expanded, setExpanded] = useState(false);
   const target = OBJ_TARGET[objectif] || DEFAULT_TARGET;
   const cc = {principal:"#3b82f6",correctif:"#ef4444",gainage:"#22c55e",isolation:"#8b5cf6"}[exData.cat||"principal"]||"#3b82f6";
@@ -419,7 +486,10 @@ function RMCard({ exData, objectif, C }) {
           <div style={{fontSize:7,color:"#94a3b8"}}>{target.reps} reps</div>
         </div>
 
-        <div style={{color:"#94a3b8",fontSize:14,marginLeft:8,transition:"transform .15s",transform:expanded?"rotate(90deg)":"rotate(0)"}}>›</div>
+        <div style={{display:"flex",alignItems:"center",gap:6,marginLeft:8,flexShrink:0}}>
+          {onEdit && <button onClick={e=>{e.stopPropagation();onEdit(exData);}} style={{padding:"3px 8px",background:"rgba(59,130,246,0.06)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:6,color:"#3b82f6",cursor:"pointer",fontSize:10,fontWeight:600}}>✏️</button>}
+          <div style={{color:"#94a3b8",fontSize:14,transition:"transform .15s",transform:expanded?"rotate(90deg)":"rotate(0)"}}>›</div>
+        </div>
       </div>
 
       {/* Détail déplié */}
@@ -477,25 +547,46 @@ export default function TodayView(props) {
     exDetails, setExDetails, exEdit, setExEdit,
   } = props;
 
-  const [viewSeance,     setViewSeance]     = useState(null);
-  const [showManualRM,   setShowManualRM]   = useState(false);
-  const [showCreateSeance,setShowCreateSeance] = useState(false);
+  const [viewSeance,      setViewSeance]      = useState(null);
+  const [showManualRM,    setShowManualRM]    = useState(false);
+  const [showCreateSeance,setShowCreateSeance]= useState(false);
+  const [editRecord,      setEditRecord]      = useState(null); // exData à éditer
   const rmFilter = "all";
 
   const objectif = profil?.objectif || "hypertrophie";
 
   // ── Séance du jour ──
   const getTodaySeance = () => {
-    if (!prog) return null;
+    const today    = new Date();
     const dayNames = ["Dim","Lun","Mar","Mer","Jeu","Ven","Sam"];
-    const todayName = dayNames[new Date().getDay()];
+    const todayKey = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,"0")}-${String(today.getDate()).padStart(2,"0")}`;
+    const todayName = dayNames[today.getDay()];
+
+    // 1. Chercher dans calSess (séance créée depuis "Aujourd'hui")
+    const calSeance = calSess?.[todayKey];
+    if (calSeance?.exercices?.length > 0) {
+      return {
+        id:        calSeance.seanceId || `today_${todayKey}`,
+        nom:       calSeance.nom,
+        focus:     todayName,
+        duree:     "aujourd'hui",
+        intensite: calSeance.intensite || "modere",
+        exercices: calSeance.exercices,
+        complete:  false,
+        _fromCal:  true,
+        _calKey:   todayKey,
+      };
+    }
+
+    // 2. Sinon chercher dans le programme actif
+    if (!prog) return null;
     return prog.jours.find(j =>
-      j.nom.toLowerCase().includes(todayName.toLowerCase()) ||
+      j.nom?.toLowerCase().includes(todayName.toLowerCase()) ||
       j.focus?.toLowerCase().includes(todayName.toLowerCase())
     ) || null;
   };
 
-  const toggleCheck = (seanceId, exIdx, repos) => {
+  const toggleCheck = (seanceId, exIdx, repos, calKey) => {
     const key = `${seanceId}-${exIdx}`;
     const wasChecked = checkedEx[key];
     setCheckedEx(prev => ({...prev,[key]:!prev[key]}));
@@ -503,6 +594,15 @@ export default function TodayView(props) {
       const sec = parseInt((repos||"90s").replace(/[^0-9]/g,"")) || 90;
       setChronoSec(sec);
       setChrono(true);
+    }
+    // Persister dans calSess si la séance vient du calendrier
+    if (calKey && setCalSess) {
+      setCalSess(prev => {
+        if (!prev[calKey]) return prev;
+        const exos = [...(prev[calKey].exercices || [])];
+        if (exos[exIdx]) exos[exIdx] = {...exos[exIdx], checked: !wasChecked};
+        return {...prev, [calKey]: {...prev[calKey], exercices: exos}};
+      });
     }
   };
 
@@ -548,6 +648,17 @@ export default function TodayView(props) {
   const currentTarget = OBJ_TARGET[objectif] || DEFAULT_TARGET;
 
   // ── Early returns après les hooks ──
+  if (editRecord) {
+    return (
+      <EditRecordModal
+        exData={editRecord}
+        prog={prog} setProg={setProg}
+        push={push}
+        onClose={() => setEditRecord(null)}
+      />
+    );
+  }
+
   if (showCreateSeance) {
     return (
       <CreateSeanceModal
@@ -574,7 +685,8 @@ export default function TodayView(props) {
       <SeanceDetail
         seance={viewSeance} onBack={() => setViewSeance(null)}
         prog={prog} setProg={setProg}
-        checkedEx={checkedEx} toggleCheck={toggleCheck}
+        checkedEx={checkedEx}
+        toggleCheck={(id, idx, repos) => toggleCheck(id, idx, repos, viewSeance._calKey)}
         exDetails={exDetails} setExDetails={setExDetails}
         exEdit={exEdit} setExEdit={setExEdit}
         setChrono={setChrono} push={push}
@@ -615,7 +727,7 @@ export default function TodayView(props) {
                   const cc = {principal:"#3b82f6",correctif:"#ef4444",gainage:"#22c55e",isolation:"#8b5cf6"}[ex.cat||"principal"]||"#3b82f6";
                   return (
                     <div key={idx} style={{display:"flex",alignItems:"center",gap:8,padding:"5px 0",borderBottom:idx<todaySeance.exercices.length-1?"0.5px solid #f1f5f9":"none",opacity:isChecked?0.5:1}}>
-                      <div onClick={() => toggleCheck(todaySeance.id,idx,ex.repos)} style={{width:16,height:16,borderRadius:4,background:isChecked?"#22c55e":"transparent",border:`1.5px solid ${isChecked?"#22c55e":"#dce8f4"}`,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:9,color:"#fff"}}>{isChecked?"✓":""}</div>
+                      <div onClick={() => toggleCheck(todaySeance.id,idx,ex.repos,todaySeance._calKey)} style={{width:16,height:16,borderRadius:4,background:isChecked?"#22c55e":"transparent",border:`1.5px solid ${isChecked?"#22c55e":"#dce8f4"}`,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:9,color:"#fff"}}>{isChecked?"✓":""}</div>
                       <div style={{flex:1}}>
                         <div style={{fontSize:11,fontWeight:500,color:isChecked?"#94a3b8":"#0f1a2e",textDecoration:isChecked?"line-through":"none"}}>{ex.nom}</div>
                         <div style={{fontSize:9,color:"#64748b"}}>{ex.series}×{ex.reps} · {ex.repos}{ex.methode&&ex.methode!=="Classique"?` · ${ex.methode}`:""}</div>
@@ -674,7 +786,7 @@ export default function TodayView(props) {
             </Box>
           ) : (
             <div>
-              {rmData.map((ex,i) => <RMCard key={i} exData={ex} objectif={objectif} C={C}/>)}
+              {rmData.map((ex,i) => <RMCard key={i} exData={ex} objectif={objectif} C={C} onEdit={setEditRecord}/>)}
               <button onClick={() => setShowManualRM(true)} style={{width:"100%",padding:"11px",marginTop:4,background:"transparent",border:"0.5px dashed #dce8f4",borderRadius:10,color:"#64748b",cursor:"pointer",fontSize:12,fontFamily:"'Inter',sans-serif",display:"flex",alignItems:"center",justifyContent:"center",gap:6}}>
                 <span>🏆</span> Ajouter un record
               </button>
