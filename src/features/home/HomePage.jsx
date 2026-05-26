@@ -85,7 +85,7 @@ export default function Home(props){
           <div style={{marginTop:6,fontFamily:SERIF,fontSize:36,fontWeight:400,letterSpacing:-1.4,color:C.text,lineHeight:1.05}}>
             {profil.prenom?<>Bonjour, <span style={{fontStyle:'italic',color:C.goldL}}>{profil.prenom}</span></>:<>Bonjour <span style={{color:C.dim}}>👋</span></>}
           </div>
-          {prog&&<div style={{fontSize:12,fontWeight:500,color:C.mid,marginTop:6}}>{obj} · {prog?.jours?.length||0} séances/semaine</div>}
+          {prog&&<div style={{fontSize:12,fontWeight:500,color:C.mid,marginTop:6}}>{obj.l} · {prog?.jours?.length||0} séances/semaine</div>}
         </div>
 
         {/* ── Streak ── */}
