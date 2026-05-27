@@ -2,29 +2,30 @@
 // Chaque recette : macros, temps, portions, catégorie repas, tags, ingrédients, étapes.
 // tags possibles : "vegan", "anti_inflammatoire", "sante", "proteine", "rapide"
 
+// ─── Photos Unsplash — licence gratuite, usage commercial autorisé ───────────
 const IMG = {
-  bowl:       "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&q=80",
-  oats:       "https://images.unsplash.com/photo-1565299507177-b0ac66763828?w=600&q=80",
-  yaourt:     "https://images.unsplash.com/photo-1488477181946-6428a0291777?w=600&q=80",
-  pancakes:   "https://images.unsplash.com/photo-1484723091739-30a097e8f929?w=600&q=80",
-  smoothieB:  "https://images.unsplash.com/photo-1511690656952-34342bb7c2f2?w=600&q=80",
-  oeufs:      "https://images.unsplash.com/photo-1525351484163-7529414344d8?w=600&q=80",
-  poulet:     "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=600&q=80",
-  pates:      "https://images.unsplash.com/photo-1551892374-ecf8754cf8b0?w=600&q=80",
-  salade:     "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&q=80",
-  wrap:       "https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=600&q=80",
-  saumon:     "https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=600&q=80",
-  miso:       "https://images.unsplash.com/photo-1547592180-85f173990554?w=600&q=80",
-  curry:      "https://images.unsplash.com/photo-1631292784640-2b24be784d5d?w=600&q=80",
-  thon:       "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=600&q=80",
-  smoothie:   "https://images.unsplash.com/photo-1505252585461-04db1eb84625?w=600&q=80",
-  energy:     "https://images.unsplash.com/photo-1490474504059-bf2db5ab2348?w=600&q=80",
-  buddha:     "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&q=80",
-  legumes:    "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=600&q=80",
-  porridge:   "https://images.unsplash.com/photo-1517673400267-0251440c45dc?w=600&q=80",
-  poke:       "https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=600&q=80",
-  soupe:      "https://images.unsplash.com/photo-1476718406336-bb5a9690ee2a?w=600&q=80",
-  tofu:       "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&q=80",
+  // Petit-déjeuner
+  oats:      "https://images.unsplash.com/photo-1587314168485-3236d6710814?w=600&q=80", // overnight oats myrtilles
+  yaourt:    "https://images.unsplash.com/photo-1488477181946-6428a0291777?w=600&q=80", // bowl yaourt granola fruits
+  pancakes:  "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=600&q=80", // pancakes dorés
+  smoothieB: "https://images.unsplash.com/photo-1638176066666-ffb2f013c7dd?w=600&q=80", // smoothie bowl mangue orange
+  oeufs:     "https://images.unsplash.com/photo-1525351484163-7529414344d8?w=600&q=80", // œufs brouillés épinards
+  // Déjeuner
+  bowl:      "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&q=80",   // bowl quinoa avocat
+  poulet:    "https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?w=600&q=80", // poulet grillé riz légumes
+  poke:      "https://images.unsplash.com/photo-1617196034183-421b4040ed20?w=600&q=80", // poke bowl saumon edamame
+  wrap:      "https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=600&q=80", // wrap poulet avocat
+  buddha:    "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&q=80", // buddha bowl coloré légumes
+  // Dîner
+  saumon:    "https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=600&q=80", // saumon rôti brocoli
+  miso:      "https://images.unsplash.com/photo-1547592180-85f173990554?w=600&q=80",    // soupe miso tofu
+  curry:     "https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=600&q=80", // curry jaune pois chiches
+  thon:      "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=600&q=80", // steak thon grillé
+  // Collations
+  smoothie:  "https://images.unsplash.com/photo-1553530666-ba11a7da3888?w=600&q=80",    // smoothie mangue orange
+  energy:    "https://images.unsplash.com/photo-1604329760661-e71dc83f8f26?w=600&q=80", // energy balls chocolat
+  porridge:  "https://images.unsplash.com/photo-1517093602195-b40af9e53e35?w=600&q=80", // porridge cannelle pomme
+  toast:     "https://images.unsplash.com/photo-1484723091739-30a097e8f929?w=600&q=80", // toast avocat œuf
 };
 
 export const RECIPES = [
@@ -370,7 +371,7 @@ export const RECIPES = [
     id:18, nom:"Toast avocat & œuf poché", repas:"col",
     tags:["sante","proteine","rapide"],
     kcal:310, prot:16, gluc:24, lip:18, temps:10, portions:1, difficulte:"Facile",
-    img:IMG.bowl,
+    img:IMG.toast,
     desc:"Une collation équilibrée et rassasiante. L'avocat fournit de bons lipides et l'œuf des protéines de qualité.",
     ingredients:[
       { nom:"Pain complet", qte:"1 tranche" },
