@@ -77,6 +77,7 @@ export default function App() {
 
   // Nutrition
   const [repas, setRepas] = useStorage("repas", { matin: [], midi: [], soir: [], snack: [] });
+  const [repasLog, setRepasLog] = useStorage("repasLog", {});
   const [myFoods, setMyFoods] = useStorage("myFoods", []);
   const [eau, setEau] = useStorage("eau", 0);
   const [scanRes, setScanRes] = useState(null);
@@ -153,7 +154,7 @@ export default function App() {
   };
 
   const nutritionProps = {
-    profil, prog, repas, setRepas, myFoods, setMyFoods,
+    profil, prog, repas, setRepas, repasLog, setRepasLog, myFoods, setMyFoods,
     eau, setEau, scanRes, setScanRes,
     obj, calObj, pObj, lObj, gObj, totR, handleScan,
     FOODS, ...commonProps,
