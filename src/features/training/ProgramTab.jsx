@@ -660,23 +660,6 @@ export default function ProgramTab(props){
 
   return(
     <div style={{paddingBottom:16}}>
-      {/* ── Wordmark header (mockup) ── */}
-      <div style={{padding:"18px 20px 0",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-        <div style={{display:"flex",alignItems:"center",gap:7}}>
-          <svg width={16} height={16} viewBox="0 0 32 32">
-            <defs><linearGradient id="ptLogo" x1="0" y1="1" x2="1" y2="0"><stop offset="0%" stopColor={C.blue}/><stop offset="55%" stopColor="#A07AE8"/><stop offset="100%" stopColor={C.gold}/></linearGradient></defs>
-            <rect x="3" y="20" width="5" height="9" rx="1.5" fill="url(#ptLogo)" opacity=".75"/>
-            <rect x="10" y="14" width="5" height="15" rx="1.5" fill="url(#ptLogo)" opacity=".88"/>
-            <rect x="17" y="6" width="5" height="23" rx="1.5" fill="url(#ptLogo)"/>
-            <circle cx="26" cy="6" r="2.2" fill={C.gold}/>
-          </svg>
-          <span style={{fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",fontWeight:700,fontSize:11,letterSpacing:0.5,color:C.text,textTransform:"uppercase"}}>Morpho<span style={{color:C.gold}}>·</span>Coach</span>
-        </div>
-        <button onClick={()=>props.setTab&&props.setTab("profile")} className="tap" style={{width:34,height:34,borderRadius:999,background:`linear-gradient(145deg, ${C.gold}, ${C.amberDk})`,border:"1px solid rgba(255,255,255,0.22)",color:"#1A1308",display:"grid",placeItems:"center",padding:0,fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",fontSize:13,fontWeight:800,cursor:"pointer",boxShadow:`0 4px 10px ${C.amberDk}55, inset 0 1px 0 rgba(255,255,255,0.4)`}}>
-          {(profil?.prenom||"J").charAt(0).toUpperCase()}
-        </button>
-      </div>
-
       {/* ── Segmented TopTabs (mockup) ── */}
       <div style={{padding:"16px 20px 0"}}>
         <div style={{display:"flex",gap:6,padding:4,borderRadius:14,background:"rgba(7,10,20,0.7)",border:`1px solid ${C.bd}`}}>
