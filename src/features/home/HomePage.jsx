@@ -200,7 +200,7 @@ export default function Home(props) {
             : <>Bonjour</>}
         </div>
         {prog && (
-          <div style={{ marginTop:8 }}>
+          <div style={{ marginTop:8, display:"flex", alignItems:"center", gap:6, flexWrap:"wrap" }}>
             <span style={{ display:"inline-flex", alignItems:"center", gap:5,
               padding:"4px 10px", borderRadius:8,
               background:"rgba(59,130,246,0.10)",
@@ -208,10 +208,18 @@ export default function Home(props) {
               fontSize:11.5, color:"#93C5FD", fontWeight:500, fontFamily:FONT }}>
               <span style={{ width:6, height:6, borderRadius:"50%",
                 background:"#3B82F6", display:"inline-block" }}/>
-              {cycleStart && jR !== null
-                ? `Cycle ${(semC||0)+1} · J${jR}`
-                : `${obj.l} · ${prog?.jours?.length||0} séances/sem.`}
+              {obj.l} · {prog?.jours?.length||0} séances/sem.
             </span>
+            {cycleStart && jR !== null && (
+              <span style={{ display:"inline-flex", alignItems:"center", gap:5,
+                padding:"4px 10px", borderRadius:8,
+                background:"rgba(255,255,255,0.05)",
+                border:"1px solid rgba(255,255,255,0.10)",
+                fontSize:11.5, color:"rgba(242,244,247,0.60)",
+                fontWeight:500, fontFamily:FONT }}>
+                Cycle {(semC||0)+1} · J{jR}
+              </span>
+            )}
           </div>
         )}
       </div>
@@ -318,42 +326,7 @@ export default function Home(props) {
         </div>
       )}
 
-      {/* ── Progression du cycle ── */}
-      {cycleStart && prog && (
-        <div style={{ ...card }}>
-          <div style={{ display:"flex", justifyContent:"space-between",
-            alignItems:"center", marginBottom:14 }}>
-            <div>
-              <div style={{ fontSize:10, fontWeight:600, letterSpacing:"1.2px",
-                textTransform:"uppercase", color:"rgba(242,244,247,0.38)",
-                fontFamily:FONT, marginBottom:4 }}>
-                Cycle · Semaine {(semC||0)+1}/6
-              </div>
-              <div style={{ fontFamily:FONT, fontSize:16, fontWeight:700,
-                color:"#F2F4F7" }}>{prog?.titre}</div>
-            </div>
-            <div style={{ fontFamily:SERIF, fontSize:34, color:"#F2F4F7",
-              letterSpacing:-1, ...NUM }}>
-              {jR}<span style={{ fontSize:12, color:"rgba(242,244,247,0.38)",
-                marginLeft:2 }}>j</span>
-            </div>
-          </div>
-          <div style={{ height:5, background:"rgba(255,255,255,0.06)",
-            borderRadius:3, overflow:"hidden" }}>
-            <div style={{ height:"100%",
-              width:`${Math.min(100, cPct||0)}%`,
-              background:"#3B82F6", borderRadius:3,
-              transition:"width .5s ease" }}/>
-          </div>
-          <div style={{ display:"flex", gap:4, marginTop:10 }}>
-            {[0,1,2,3,4,5].map(w => (
-              <div key={w} style={{ flex:1, height:3, borderRadius:2,
-                background: w <= semC ? "#3B82F6" : "rgba(255,255,255,0.06)",
-                transition:"background .3s" }}/>
-            ))}
-          </div>
-        </div>
-      )}
+
 
       {/* ── Énergie / Macros ── */}
       {profil.poids && profil.taille && profil.age && profil.sexe ? (
