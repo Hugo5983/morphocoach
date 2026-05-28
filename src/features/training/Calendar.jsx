@@ -718,13 +718,10 @@ export default function Calendar(props) {
   return (
     <div style={{padding:"0 15px"}}>
 
-      <Box>
-        <Lbl>Calendrier mensuel</Lbl>
-        <MonthCal sessions={calSess} onUpdate={(date,sess) => {
-          if (sess) setCalSess(s => ({...s,[date]:sess}));
-          else setCalSess(s => { const ns={...s}; delete ns[date]; return ns; });
-        }}/>
-      </Box>
+      <MonthCal sessions={calSess} onUpdate={(date,sess) => {
+        if (sess) setCalSess(s => ({...s,[date]:sess}));
+        else setCalSess(s => { const ns={...s}; delete ns[date]; return ns; });
+      }}/>
 
 
 
