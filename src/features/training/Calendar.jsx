@@ -826,13 +826,7 @@ export default function Calendar(props) {
         </Box>
       )}
 
-      {!prog && (
-        <Box style={{textAlign:"center",padding:"24px 20px"}}>
-          <div style={{fontSize:13,color:"rgba(245,241,232,0.50)",marginBottom:16}}>Créez un programme pour planifier vos séances.</div>
-          <Btn onClick={() => { setTab("program"); setProgView("creer"); }}>Créer un programme</Btn>
-          <Btn v="out" onClick={() => { if(!premium) setPaywall(true); else { setTab("program"); setProgView("analyse"); }}}>Programme personnalisé ◈</Btn>
-        </Box>
-      )}
+
     </div>
   );
 }
