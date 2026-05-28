@@ -720,11 +720,11 @@ export default function Calendar(props) {
 
       {/* ── Header planning ── */}
       <div style={{marginBottom:20,paddingTop:4}}>
-        <div style={{fontSize:9,fontWeight:700,letterSpacing:'1.4px',textTransform:'uppercase',color:'rgba(242,244,247,0.38)',fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",marginBottom:8}}>Planning</div>
+        <div style={{fontSize:9,fontWeight:700,letterSpacing:'1.4px',textTransform:'uppercase',color:'#3B82F6',fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",marginBottom:8}}>Planning</div>
         <div style={{fontFamily:"'DM Serif Display','Georgia',serif",fontSize:34,fontWeight:400,letterSpacing:-1.2,color:'#F2F4F7',lineHeight:1.05,marginBottom:2}}>
           Ton mois
         </div>
-        <div style={{fontFamily:"'DM Serif Display','Georgia',serif",fontSize:34,fontWeight:400,letterSpacing:-1.2,color:'rgba(242,244,247,0.40)',lineHeight:1.05,fontStyle:'italic',marginBottom:12}}>
+        <div style={{fontFamily:"'DM Serif Display','Georgia',serif",fontSize:34,fontWeight:400,letterSpacing:-1.2,color:'#3B82F6',lineHeight:1.05,fontStyle:'italic',marginBottom:12}}>
           en clair.
         </div>
         <div style={{fontSize:12.5,color:'rgba(242,244,247,0.45)',lineHeight:1.6,fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",fontWeight:400}}>
