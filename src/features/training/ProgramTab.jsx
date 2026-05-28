@@ -330,6 +330,7 @@ function ProgrammeView(props) {
     jourActif, setJourActif, groupe, setGroupe,
     editExIdx, setEditExIdx, exModal, setExModal, exModalTab, setExModalTab,
     C, INT, EX, setProgView, cycleStart, setCycleStart, semC, jR,
+    profil,
   } = props;
 
   // vue interne : "list" | "seance:{progIdx}:{jourIdx}" | "creer"
@@ -420,7 +421,55 @@ function ProgrammeView(props) {
     );
   }
 
-  // ── Phases du mésocycle (déduites des semaines) ──
+  // ── Messages de phase adaptés à l'objectif ──────────────────────────────
+  const obj = profil?.objectif || "hypertrophie";
+
+  const PHASE_MSG = {
+    hypertrophie: {
+      1: { titre: <>Installe la <span style={{color:"#34D399"}}>mécanique.</span></>, desc: "Volume modéré, 10–12 reps, RPE 6–7. Maîtrise chaque mouvement avant d'augmenter la charge." },
+      2: { titre: <>Le volume <span style={{color:"#34D399"}}>augmente.</span></>, desc: "Charge progressive, 8–12 reps, RPE 7–8. C'est ici que l'hypertrophie se construit vraiment." },
+      3: { titre: <>Tonnage en <span style={{color:"#34D399"}}>hausse de +8%.</span></>, desc: "3 séances par groupe, 6–10 reps, RPE 7–8. Charge progressive sur les composés." },
+      4: { titre: <>Accumulation <span style={{color:"#F59E0B"}}>maximale.</span></>, desc: "Séries longues, 10–15 reps, pump recherché. Surcharge mécanique et métabolique." },
+      5: { titre: <>Intensification. <span style={{color:"#F87171"}}>Charge lourde.</span></>, desc: "Passe à 6–8 reps avec plus de poids. Le stimulus de force favorise la densité musculaire." },
+      6: { titre: <>Deload. <span style={{color:"#818CF8"}}>Récupère.</span></>, desc: "Volume réduit de 40%, intensité maintenue. Ton corps consolide les gains. Ne skip pas." },
+    },
+    force: {
+      1: { titre: <>Construis <span style={{color:"#3B82F6"}}>tes bases.</span></>, desc: "Séries de 5 reps, RPE 7. Focus sur le squat, développé et soulevé de terre. Technique avant tout." },
+      2: { titre: <>Progressions <span style={{color:"#3B82F6"}}>linéaires.</span></>, desc: "Ajoute 2,5–5kg à chaque séance sur les composés. C'est la phase la plus rentable du cycle." },
+      3: { titre: <>Charge <span style={{color:"#818CF8"}}>lourde. 3×3–5.</span></>, desc: "Intensité à 85–90% de ton max. RPE 8–9. Vise tes records sur les mouvements fondamentaux." },
+      4: { titre: <>Pic de <span style={{color:"#F87171"}}>force.</span></>, desc: "Doubles et simples à 90–95% de ton max. Repos complets 3–5 min. Prépare tes PRs." },
+      5: { titre: <>Spécialisation. <span style={{color:"#F87171"}}>Vise les records.</span></>, desc: "Séances courtes et intenses. 1–3 reps lourdes. C'est la semaine pour battre tes records personnels." },
+      6: { titre: <>Deload actif. <span style={{color:"#34D399"}}>Récupère fort.</span></>, desc: "50–60% du volume habituel. Maintiens l'intensité. Tu arrives frais et plus fort au prochain bloc." },
+    },
+    poids: {
+      1: { titre: <>Déficit géré, <span style={{color:"#F59E0B"}}>muscle préservé.</span></>, desc: "Charge modérée, 10–15 reps. L'objectif est de maintenir le tissu musculaire en déficit calorique." },
+      2: { titre: <>Métabolisme <span style={{color:"#F59E0B"}}>activé.</span></>, desc: "Circuit training et supersets. Dépense calorique maximisée tout en stimulant les muscles." },
+      3: { titre: <>Densité <span style={{color:"#F59E0B"}}>d'effort.</span></>, desc: "Temps de repos courts, 8–12 reps. Maintiens le volume pour éviter la perte musculaire." },
+      4: { titre: <>Intensification <span style={{color:"#F87171"}}>métabolique.</span></>, desc: "HIIT en fin de séance. Le muscle consomme du gras même au repos — construis-en." },
+      5: { titre: <>Force. <span style={{color:"#F87171"}}>Le muscle brûle.</span></>, desc: "Séries lourdes, 5–8 reps. Plus de masse musculaire = métabolisme de base plus élevé." },
+      6: { titre: <>Récupération. <span style={{color:"#34D399"}}>Bilan positif.</span></>, desc: "Volume léger. Ton corps recalibres ses hormones. Prépare le prochain bloc avec une meilleure composition." },
+    },
+    prep_physique: {
+      1: { titre: <>Fondations <span style={{color:"#3B82F6"}}>athlétiques.</span></>, desc: "Gainage, mobilité et force de base. Un athlète solide part de la stabilité." },
+      2: { titre: <>Puissance <span style={{color:"#3B82F6"}}>en construction.</span></>, desc: "Exercices explosifs intégrés. Pliométrie légère sur les membres inférieurs." },
+      3: { titre: <>Endurance <span style={{color:"#818CF8"}}>de force.</span></>, desc: "Séries longues à haute densité. RPE 7–8 maintenu sur toute la séance. Conditioning." },
+      4: { titre: <>Capacité de <span style={{color:"#F59E0B"}}>travail max.</span></>, desc: "Volume le plus élevé du cycle. Teste tes limites. C'est ici que l'athlète se forme." },
+      5: { titre: <>Pics d'intensité. <span style={{color:"#F87171"}}>Explosivité.</span></>, desc: "Efforts courts et maximaux. Pliométrie avancée, sprints, charges explosives." },
+      6: { titre: <>Récupération <span style={{color:"#34D399"}}>stratégique.</span></>, desc: "Mobilité, étirements, récupération active. Prépare ton corps pour surpasser le cycle précédent." },
+    },
+    sante: {
+      1: { titre: <>Mouvement <span style={{color:"#34D399"}}>régulier.</span></>, desc: "3–4 séances par semaine, effort agréable, RPE 5–6. L'objectif est la régularité avant tout." },
+      2: { titre: <>Progression <span style={{color:"#34D399"}}>douce.</span></>, desc: "Légère augmentation du volume. Le corps s'adapte à son rythme, sans se blesser." },
+      3: { titre: <>Effort <span style={{color:"#3B82F6"}}>soutenu.</span></>, desc: "RPE 6–7. Tu dois pouvoir parler en séance. Construis l'habitude profondément." },
+      4: { titre: <>Renforcement <span style={{color:"#3B82F6"}}>complet.</span></>, desc: "Travaille toutes les chaînes musculaires. Mobilité incluse. Équilibre le corps." },
+      5: { titre: <>Intensité <span style={{color:"#F59E0B"}}>maîtrisée.</span></>, desc: "RPE 7–8 sur les séries principales. Tu sens la progression. Continue sur cette lancée." },
+      6: { titre: <>Récupère, <span style={{color:"#34D399"}}>tu le mérites.</span></>, desc: "Volume réduit, étirements, marche active. La santé c'est aussi savoir se reposer." },
+    },
+  };
+
+  const weekIdx    = Math.min(Math.max((semC||0)+1, 1), 6);
+  const msgObj     = PHASE_MSG[obj]?.[weekIdx] || PHASE_MSG.hypertrophie[weekIdx];
+
   const PHASES_MESO = [
     { n:"S1", phase:"Volume",  int:"modere",  h:38 },
     { n:"S2", phase:"Volume",  int:"modere",  h:52 },
@@ -516,16 +565,10 @@ function ProgrammeView(props) {
             <div style={{fontSize:9,fontWeight:700,letterSpacing:"1.3px",textTransform:"uppercase",color:C.blue,fontFamily:DISP_F}}>Phase active · Semaine {week}</div>
           </div>
           <div style={{fontFamily:SERIF_F,fontSize:19,fontWeight:400,color:C.text,lineHeight:1.3,marginBottom:8}}>
-            {week<=2 ? <>Construis ta base, maîtrise <span style={{color:"#34D399"}}>la technique.</span></>
-            : week<=4 ? <>Augmente le tonnage de <span style={{color:"#34D399"}}>+8%</span> cette semaine.</>
-            : week===5 ? <>Pousse au maximum, <span style={{color:"#F87171"}}>c'est la semaine de force.</span></>
-            : <>Récupération active, <span style={{color:"#F59E0B"}}>prépare le prochain cycle.</span></>}
+            {msgObj.titre}
           </div>
           <div style={{fontSize:11,color:"rgba(242,244,247,0.45)",lineHeight:1.6,fontFamily:DISP_F}}>
-            {week<=2 ? "Charge modérée, 8–12 reps, RPE 6–7. Focus sur la forme avant tout."
-            : week<=4 ? "3 séances par groupe, 6–10 reps, RPE 7–8. Charge progressive sur les composés."
-            : week===5 ? "Séries lourdes, 4–6 reps, RPE 8–9. Vise tes records personnels."
-            : "Volume réduit de 40%, intensité maintenue. Prépare ton corps pour le prochain bloc."}
+            {msgObj.desc}
           </div>
         </div>
       )}
