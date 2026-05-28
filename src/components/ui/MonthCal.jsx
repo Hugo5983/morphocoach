@@ -242,105 +242,97 @@ function BilanMois({ sessions, year, month }) {
   const stats = useMemo(() => {
     const prefix = `${year}-${String(month+1).padStart(2,'0')}`;
     const monthEntries = Object.entries(sessions).filter(([k]) => k.startsWith(prefix));
-
-    // Flatten : chaque entrée peut être un array ou un objet
     const allSess = monthEntries.flatMap(([,v]) => Array.isArray(v) ? v : (v ? [v] : []));
-
     const count = allSess.length;
 
-    // Tonnage estimé depuis les exercices muscu
+    // Tonnage estimé
     let tonnage = 0;
     allSess.forEach(s => {
       (s.musculation?.exercices||[]).forEach(ex => {
-        const ser = parseInt(ex.series)||4;
-        const rep = parseInt(ex.reps)||10;
-        const ch  = parseFloat(ex.charge)||0;
-        tonnage += ser * rep * ch / 1000;
+        tonnage += (parseInt(ex.series)||4) * (parseInt(ex.reps)||10) * (parseFloat(ex.charge)||0) / 1000;
       });
     });
 
-    // Répartition intensités
+    // Intensités
     const intCounts = {};
-    allSess.forEach(s => { const k = s.intensite||'modere'; intCounts[k]=(intCounts[k]||0)+1; });
+    allSess.forEach(s => { const k=s.intensite||'modere'; intCounts[k]=(intCounts[k]||0)+1; });
 
-    // Jours uniques avec séance
+    // Jours avec séance vs jours dans le mois
     const uniqueDays = new Set(monthEntries.filter(([,v])=>(Array.isArray(v)?v:v?[v]:[]).length>0).map(([k])=>k)).size;
-
-    // Nombre de jours écoulés ce mois
     const today = new Date();
-    const isCurrentMonth = today.getFullYear()===year && today.getMonth()===month;
-    const daysElapsed = isCurrentMonth ? today.getDate() : new Date(year,month+1,0).getDate();
-    const assiduité = daysElapsed > 0 ? Math.round((uniqueDays / daysElapsed) * 100) : 0;
+    const isCurrent = today.getFullYear()===year && today.getMonth()===month;
+    const totalDays = isCurrent ? today.getDate() : new Date(year,month+1,0).getDate();
+    const assiduité = totalDays > 0 ? Math.round((uniqueDays/totalDays)*100) : 0;
 
-    return { count, tonnage: tonnage.toFixed(1), intCounts, uniqueDays, assiduité };
+    // Charge dominante
+    const topInt = Object.entries(intCounts).sort((a,b)=>b[1]-a[1])[0];
+
+    return { count, tonnage: tonnage.toFixed(1), intCounts, uniqueDays, totalDays, assiduité, topInt };
   }, [sessions, year, month]);
 
-  // Dominant intensity
-  const topInt = Object.entries(stats.intCounts).sort((a,b)=>b[1]-a[1])[0];
-
-  const statCard = (label, value, unit, color) => (
-    <div style={{flex:1,background:C.s2,borderRadius:12,padding:'12px 10px'}}>
-      <div style={{...ey,marginBottom:5}}>{label}</div>
-      <div style={{fontFamily:DISPLAY,fontSize:20,fontWeight:700,color:color||C.text,...NUM}}>
-        {value}<span style={{fontSize:11,fontWeight:400,color:'rgba(242,244,247,0.40)',marginLeft:3}}>{unit}</span>
+  // Carte bilan — design exact maquette
+  const Card = ({ label, main, sub, delta, deltaOk, accent }) => (
+    <div style={{flex:1,background:'#111827',border:`1px solid rgba(255,255,255,0.07)`,borderRadius:14,padding:'14px 12px',minWidth:0}}>
+      <div style={{...ey,marginBottom:8}}>{label}</div>
+      <div style={{fontFamily:DISPLAY,fontSize:28,fontWeight:700,color:C.text,letterSpacing:-0.8,lineHeight:1,...NUM}}>
+        {main}
+        {sub&&<span style={{fontSize:13,fontWeight:400,color:'rgba(242,244,247,0.35)',marginLeft:3}}>{sub}</span>}
       </div>
+      {delta&&(
+        <div style={{fontSize:11,fontWeight:700,color:deltaOk?'#34D399':'#F87171',marginTop:6,fontFamily:DISPLAY,...NUM}}>{delta}</div>
+      )}
+      {accent&&<div style={{marginTop:8}}>{accent}</div>}
     </div>
   );
 
-  return (
-    <div style={{marginTop:22}}>
+  if (stats.count===0) return (
+    <div style={{marginTop:20}}>
       <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:12}}>
         <div style={{fontFamily:DISPLAY,fontSize:17,fontWeight:700,color:C.text,letterSpacing:-0.4}}>Bilan du mois</div>
         <div style={{...ey}}>VS. MOIS PRÉC.</div>
       </div>
-      {stats.count===0 ? (
-        <div style={{padding:'20px',textAlign:'center',background:C.s2,borderRadius:14,fontSize:12,color:'rgba(242,244,247,0.35)'}}>
-          Aucune séance planifiée ce mois
-        </div>
-      ) : (
-        <>
-          {/* Row 1 */}
-          <div style={{display:'flex',gap:8,marginBottom:8}}>
-            {statCard('Séances', stats.count, '', '#3B82F6')}
-            {statCard('Tonnage', stats.tonnage, 't', '#A78BFA')}
-          </div>
-          {/* Row 2 */}
-          <div style={{display:'flex',gap:8,marginBottom:8}}>
-            {statCard('Assiduité', stats.assiduité, '%', '#34D399')}
-            <div style={{flex:1,background:C.s2,borderRadius:12,padding:'12px 10px'}}>
-              <div style={{...ey,marginBottom:5}}>Charge</div>
-              {topInt ? (
-                <div style={{display:'flex',alignItems:'center',gap:6}}>
-                  <div style={{width:8,height:8,borderRadius:'50%',background:INT[topInt[0]]?.c||'#3B82F6',flexShrink:0}}/>
-                  <div style={{fontFamily:DISPLAY,fontSize:14,fontWeight:700,color:INT[topInt[0]]?.c||C.text}}>{INT[topInt[0]]?.l}</div>
-                </div>
-              ) : <div style={{fontSize:12,color:'rgba(242,244,247,0.35)'}}>—</div>}
-            </div>
-          </div>
-          {/* Intensity breakdown */}
-          {Object.keys(stats.intCounts).length>0&&(
-            <div style={{background:C.s2,borderRadius:12,padding:'12px 14px'}}>
-              <div style={{...ey,marginBottom:10}}>Répartition intensité</div>
-              <div style={{display:'flex',flexDirection:'column',gap:7}}>
-                {Object.entries(stats.intCounts).sort((a,b)=>b[1]-a[1]).map(([k,v])=>{
-                  const intData=INT[k];
-                  const pct=Math.round(v/stats.count*100);
-                  return (
-                    <div key={k} style={{display:'flex',alignItems:'center',gap:10}}>
-                      <div style={{width:8,height:8,borderRadius:'50%',background:intData?.c||'#3B82F6',flexShrink:0}}/>
-                      <div style={{fontSize:11,color:C.text,fontFamily:DISPLAY,width:70,flexShrink:0}}>{intData?.l||k}</div>
-                      <div style={{flex:1,height:4,background:'rgba(255,255,255,0.06)',borderRadius:4,overflow:'hidden'}}>
-                        <div style={{height:'100%',width:`${pct}%`,background:intData?.c||'#3B82F6',borderRadius:4,transition:'width .6s ease'}}/>
-                      </div>
-                      <div style={{fontSize:10,color:'rgba(242,244,247,0.45)',fontFamily:DISPLAY,...NUM,width:28,textAlign:'right'}}>{v}x</div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-        </>
-      )}
+      <div style={{padding:'20px',textAlign:'center',background:'#111827',border:'1px solid rgba(255,255,255,0.07)',borderRadius:14,fontSize:12,color:'rgba(242,244,247,0.30)',fontFamily:DISPLAY}}>
+        Aucune séance ce mois
+      </div>
+    </div>
+  );
+
+  const topIntData = stats.topInt ? INT[stats.topInt[0]] : null;
+
+  // Barre assiduité
+  const assBarre = (
+    <div>
+      <div style={{height:3,background:'rgba(255,255,255,0.06)',borderRadius:3,overflow:'hidden',marginBottom:3}}>
+        <div style={{height:'100%',width:`${stats.assiduité}%`,background:'#34D399',borderRadius:3,transition:'width .8s ease'}}/>
+      </div>
+      <div style={{fontSize:9,color:'rgba(242,244,247,0.35)',fontFamily:DISPLAY,...NUM}}>{stats.uniqueDays} j / {stats.totalDays} j</div>
+    </div>
+  );
+
+  // Barre charge
+  const chargeBarre = topIntData ? (
+    <div style={{display:'flex',alignItems:'center',gap:6,marginTop:2}}>
+      <div style={{width:8,height:8,borderRadius:'50%',background:topIntData.c,flexShrink:0,boxShadow:`0 0 5px ${topIntData.c}`}}/>
+      <div style={{fontSize:13,fontWeight:700,color:topIntData.c,fontFamily:DISPLAY}}>{topIntData.l}</div>
+    </div>
+  ) : <div style={{fontSize:12,color:'rgba(242,244,247,0.35)'}}>—</div>;
+
+  return (
+    <div style={{marginTop:20}}>
+      <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:12}}>
+        <div style={{fontFamily:DISPLAY,fontSize:17,fontWeight:700,color:C.text,letterSpacing:-0.4}}>Bilan du mois</div>
+        <div style={{...ey}}>VS. MOIS PRÉC.</div>
+      </div>
+      {/* Row 1 */}
+      <div style={{display:'flex',gap:8,marginBottom:8}}>
+        <Card label="Séances" main={stats.count} sub={`/${stats.totalDays}j`} delta="↑ données en cours" deltaOk={true}/>
+        <Card label="Tonnage" main={parseFloat(stats.tonnage)>0?stats.tonnage:'—'} sub={parseFloat(stats.tonnage)>0?'t':''} delta={parseFloat(stats.tonnage)>0?"↑ connecté prog.":null} deltaOk={true}/>
+      </div>
+      {/* Row 2 */}
+      <div style={{display:'flex',gap:8}}>
+        <Card label="Charge" main=" " accent={chargeBarre}/>
+        <Card label="Assiduité" main={`${stats.assiduité}`} sub="%" accent={assBarre}/>
+      </div>
     </div>
   );
 }
