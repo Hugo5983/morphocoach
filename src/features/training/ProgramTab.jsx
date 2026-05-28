@@ -420,53 +420,117 @@ function ProgrammeView(props) {
     );
   }
 
+  // ── Phases du mésocycle (déduites des semaines) ──
+  const PHASES_MESO = [
+    { n:"S1", phase:"Volume",  int:"modere",  h:38 },
+    { n:"S2", phase:"Volume",  int:"modere",  h:52 },
+    { n:"S3", phase:"Volume",  int:"lourd",   h:68, active: (semC||0)===2 },
+    { n:"S4", phase:"Force",   int:"lourd",   h:68, active: (semC||0)===3 },
+    { n:"S5", phase:"Force",   int:"intense", h:58, active: (semC||0)===4 },
+    { n:"S6", phase:"Deload",  int:"leger",   h:28, active: (semC||0)===5 },
+  ];
+  const totalW = 6;
+  const week   = (semC||0)+1;
+  const SERIF_F  = "'DM Serif Display','Georgia',serif";
+  const DISP_F   = "'Outfit','DM Sans',system-ui,sans-serif";
+
   return (
     <div style={{padding:"0 15px"}}>
 
-      {/* ── Cycle progress hero (mockup) ── */}
-      {prog && cycleStart && (() => {
-        const week = (semC||0)+1, totalW = 6;
-        return (
-          <div style={{position:"relative",borderRadius:22,overflow:"hidden",marginBottom:14,padding:20,background:`linear-gradient(160deg, ${C.s2} 0%, ${C.s1} 100%)`,border:`1px solid ${C.bd}`,boxShadow:"inset 0 1px 0 rgba(255,255,255,0.03)"}}>
-            <div style={{position:"absolute",top:-50,right:-50,width:200,height:200,borderRadius:"50%",background:`radial-gradient(closest-side, ${C.gold}20, transparent 70%)`,filter:"blur(20px)",pointerEvents:"none"}}/>
-            <div style={{position:"relative"}}>
-              <div style={{fontSize:9,fontWeight:700,color:C.gold,letterSpacing:2,textTransform:"uppercase",fontFamily:"'Outfit','DM Sans',system-ui,sans-serif"}}>Cycle en cours · {prog.titre}</div>
-              <div style={{display:"flex",alignItems:"baseline",gap:6,marginTop:8}}>
-                <span style={{fontFamily:"'Instrument Serif',serif",fontSize:56,fontWeight:400,letterSpacing:-2,color:C.text,lineHeight:1}}>{week}</span>
-                <span style={{fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",fontSize:18,color:C.mid,fontWeight:600}}>/ {totalW}</span>
-                <span style={{fontSize:9,fontWeight:700,color:C.dim,letterSpacing:2,textTransform:"uppercase",fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",marginLeft:4}}>sem.</span>
-              </div>
-              <div style={{marginTop:18,display:"flex",gap:5}}>
-                {Array.from({length:totalW}).map((_,i)=>{
-                  const done=i<week-1, current=i===week-1;
-                  return(
-                    <div key={i} style={{flex:1}}>
-                      <div style={{height:6,borderRadius:3,background:done?`linear-gradient(90deg, ${C.blue}, ${C.gold})`:current?`linear-gradient(90deg, ${C.gold} 50%, rgba(255,171,93,0.15) 50%)`:"rgba(190,180,255,0.08)",boxShadow:(done||current)?`0 0 8px ${C.gold}55`:"none"}}/>
-                      <div style={{marginTop:6,fontSize:9,fontWeight:700,fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",letterSpacing:0.3,color:(done||current)?C.mid:C.dim,textAlign:"center"}}>S{i+1}</div>
-                    </div>
-                  );
-                })}
-              </div>
-              <div style={{marginTop:14,display:"flex",justifyContent:"space-between"}}>
-                {[
-                  {v:(prog.jours?.length||0)*Math.max(1,week),u:"séances",c:C.gold},
-                  {v:`${prog.jours?.length||0}/sem`,u:"rythme",c:C.blue},
-                  {v:`J${jR??"—"}`,u:"prochain",c:C.mint},
-                  {v:`${Math.round(week/totalW*100)}%`,u:"cycle",c:C.lavender},
-                ].map(s=>(
-                  <div key={s.u} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:3}}>
-                    <span style={{width:18,height:2,background:s.c,borderRadius:2,boxShadow:`0 0 6px ${s.c}`}}/>
-                    <span style={{fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",fontSize:13,fontWeight:700,color:C.text,letterSpacing:-0.2}}>{s.v}</span>
-                    <span style={{fontSize:8,fontWeight:700,color:C.dim,letterSpacing:1.5,textTransform:"uppercase",fontFamily:"'Outfit','DM Sans',system-ui,sans-serif"}}>{s.u}</span>
+      {/* ── Hero header ── */}
+      <div style={{marginBottom:20,paddingTop:4}}>
+        <div style={{fontSize:9,fontWeight:700,letterSpacing:"1.4px",textTransform:"uppercase",color:C.blue,fontFamily:DISP_F,marginBottom:8}}>Programme</div>
+        <div style={{fontFamily:SERIF_F,fontSize:34,fontWeight:400,letterSpacing:-1.2,color:C.text,lineHeight:1.05}}>
+          Ton <span style={{fontStyle:"italic",color:C.blue}}>cycle</span>
+        </div>
+        <div style={{fontSize:12,color:"rgba(242,244,247,0.50)",marginTop:8,lineHeight:1.6,fontFamily:DISP_F}}>
+          {prog
+            ? "Mésocycle périodisé selon ta morphologie et ton historique."
+            : "Crée ton premier programme pour commencer."}
+        </div>
+      </div>
+
+      {/* ── Mésocycle bars (si prog actif) ── */}
+      {prog && cycleStart && (
+        <div style={{background:C.s1,border:`1px solid ${C.bd}`,borderRadius:16,padding:"14px",marginBottom:10,boxShadow:"0 1px 3px rgba(0,0,0,0.3)"}}>
+          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:12}}>
+            <div>
+              <div style={{fontSize:9,fontWeight:700,letterSpacing:"1.3px",textTransform:"uppercase",color:"#818CF8",fontFamily:DISP_F,marginBottom:4}}>Mésocycle · {prog.titre}</div>
+              <div style={{fontSize:15,fontWeight:700,color:C.text,fontFamily:DISP_F}}>{totalW} semaines · {prog.jours?.map(j=>j.nom?.split(" ")[0]).slice(0,3).join(" / ") || "Programme"}</div>
+            </div>
+            <div style={{fontSize:13,fontWeight:700,color:"#818CF8",fontVariantNumeric:"tabular-nums",fontFamily:DISP_F}}>S{week}/{totalW}</div>
+          </div>
+          {/* Barres */}
+          <div style={{display:"flex",gap:5,alignItems:"flex-end",height:90,marginBottom:10}}>
+            {PHASES_MESO.map((s,i)=>{
+              const intData = INT[s.int]||INT.modere;
+              const isDone  = i < (semC||0);
+              const isActive= i === (semC||0);
+              return (
+                <div key={i} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:4}}>
+                  <div style={{
+                    width:"100%",height:s.h,borderRadius:7,
+                    background: isActive
+                      ? `linear-gradient(180deg,${intData.c},${intData.c}99)`
+                      : isDone
+                        ? `${intData.c}45`
+                        : "rgba(255,255,255,0.05)",
+                    border: isActive ? `1.5px solid ${intData.c}` : "1px solid rgba(255,255,255,0.07)",
+                    boxShadow: isActive ? `0 4px 14px ${intData.c}45` : "none",
+                    position:"relative",overflow:"hidden",
+                  }}>
+                    {isActive&&<div style={{position:"absolute",inset:0,background:"radial-gradient(120% 50% at 50% 0%,rgba(255,255,255,0.18),transparent 60%)"}}/>}
                   </div>
-                ))}
-              </div>
+                  <div style={{fontSize:9,fontWeight:700,color:isActive?intData.c:"rgba(242,244,247,0.35)",fontFamily:DISP_F,letterSpacing:0.3}}>{s.n}</div>
+                  <div style={{fontSize:7.5,color:isActive?"rgba(242,244,247,0.55)":"rgba(242,244,247,0.25)",fontFamily:DISP_F,textAlign:"center"}}>{s.phase}</div>
+                </div>
+              );
+            })}
+          </div>
+          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",paddingTop:10,borderTop:`1px solid ${C.bd}`}}>
+            <div style={{display:"flex",alignItems:"center",gap:6}}>
+              <div style={{width:8,height:8,borderRadius:2,background:"#818CF8"}}/>
+              <span style={{fontSize:10,color:"rgba(242,244,247,0.45)",fontFamily:DISP_F}}>Intensité prévue</span>
+            </div>
+            <div style={{display:"flex",gap:14}}>
+              {[
+                {v:`${prog.jours?.length||0}/sem`, u:"rythme", c:C.blue},
+                {v:`J${jR??"—"}`, u:"prochain", c:C.mint},
+                {v:`${Math.round(week/totalW*100)}%`, u:"cycle", c:"#818CF8"},
+              ].map(s=>(
+                <div key={s.u} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:2}}>
+                  <div style={{fontSize:13,fontWeight:700,color:s.c,fontFamily:DISP_F,fontVariantNumeric:"tabular-nums"}}>{s.v}</div>
+                  <div style={{fontSize:8,fontWeight:700,color:"rgba(242,244,247,0.35)",letterSpacing:1.2,textTransform:"uppercase",fontFamily:DISP_F}}>{s.u}</div>
+                </div>
+              ))}
             </div>
           </div>
-        );
-      })()}
+        </div>
+      )}
 
-      {/* ── Modal confirmation suppression ── */}
+      {/* ── Phase active (coach message) ── */}
+      {prog && cycleStart && (
+        <div style={{background:"linear-gradient(135deg,#0D1E3A,#111827)",border:"1px solid rgba(59,130,246,0.20)",borderRadius:16,padding:"14px",marginBottom:14}}>
+          <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:10}}>
+            <div style={{width:6,height:6,borderRadius:"50%",background:C.blue,boxShadow:`0 0 6px ${C.blue}`}}/>
+            <div style={{fontSize:9,fontWeight:700,letterSpacing:"1.3px",textTransform:"uppercase",color:C.blue,fontFamily:DISP_F}}>Phase active · Semaine {week}</div>
+          </div>
+          <div style={{fontFamily:SERIF_F,fontSize:19,fontWeight:400,color:C.text,lineHeight:1.3,marginBottom:8}}>
+            {week<=2 ? <>Construis ta base, maîtrise <span style={{color:"#34D399"}}>la technique.</span></>
+            : week<=4 ? <>Augmente le tonnage de <span style={{color:"#34D399"}}>+8%</span> cette semaine.</>
+            : week===5 ? <>Pousse au maximum, <span style={{color:"#F87171"}}>c'est la semaine de force.</span></>
+            : <>Récupération active, <span style={{color:"#F59E0B"}}>prépare le prochain cycle.</span></>}
+          </div>
+          <div style={{fontSize:11,color:"rgba(242,244,247,0.45)",lineHeight:1.6,fontFamily:DISP_F}}>
+            {week<=2 ? "Charge modérée, 8–12 reps, RPE 6–7. Focus sur la forme avant tout."
+            : week<=4 ? "3 séances par groupe, 6–10 reps, RPE 7–8. Charge progressive sur les composés."
+            : week===5 ? "Séries lourdes, 4–6 reps, RPE 8–9. Vise tes records personnels."
+            : "Volume réduit de 40%, intensité maintenue. Prépare ton corps pour le prochain bloc."}
+          </div>
+        </div>
+      )}
+
+      {/* ── Modal confirmation suppression ── */}      {/* ── Modal confirmation suppression ── */}
       {confirmDel && (
         <div style={{position:"fixed",inset:0,background:"rgba(15,26,46,0.45)",zIndex:500,display:"flex",alignItems:"center",justifyContent:"center",padding:20}}>
           <div style={{background:"#111827",borderRadius:16,padding:"22px 20px",width:"100%",maxWidth:340,boxShadow:"0 8px 32px rgba(0,0,0,0.12)"}}>
@@ -486,72 +550,93 @@ function ProgrammeView(props) {
         </div>
       )}
 
-      {/* ── Liste des programmes ── */}
-      {allProgs.length === 0 && !showCreerForm && (
-        <Box>
-          <div style={{textAlign:"center",padding:"24px 0 8px"}}>
-            <div style={{fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",fontSize:18,fontWeight:400,color:"#F2F4F7",marginBottom:4}}>Programme sur-mesure ✦</div>
-            <div style={{fontSize:12,color:"rgba(242,244,247,0.50)",lineHeight:1.5,marginBottom:20}}>Obtenez un programme 100% adapté à votre morphologie, niveau et objectifs grâce à notre algorithme avancé</div>
-          </div>
-          <Btn onClick={() => { if(!premium) setPaywall(true); else setProgView("analyse"); }}>✨ Générer mon programme</Btn>
-          <Btn v="out" onClick={() => { setIsCreating(true); setCS(0); setNewP({nom:"",jours:[],seances:{}}); }}>Créer manuellement</Btn>
-        </Box>
-      )}
-
-      {allProgs.map((p, pIdx) => {
-        const isActive = prog && (prog.titre === p.titre || prog.id === p.id);
-        return (
-          <Box key={pIdx} style={{marginBottom:12,border:isActive?"1px solid rgba(59,130,246,0.3)":"0.5px solid rgba(190,180,255,0.07)"}}>
-            {/* Header programme */}
-            <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:10}}>
-              <div style={{flex:1}}>
-                {isActive && <div style={{fontSize:9,color:C.gold,fontWeight:700,letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:3}}>● ACTIF</div>}
-                <div style={{fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",fontSize:15,fontWeight:500,color:"#F2F4F7"}}>{p.titre}</div>
-                <div style={{fontSize:10,color:"rgba(242,244,247,0.50)",marginTop:2}}>{p.jours?.length || 0} séances{p.dateDebut ? ` · Créé le ${p.dateDebut}` : ""}</div>
-              </div>
-              <div style={{display:"flex",gap:6,alignItems:"center"}}>
-                {!isActive && (
-                  <button onClick={() => { setProg(p); push("✅","Programme activé",p.titre); }} style={{padding:"5px 10px",background:"rgba(34,197,94,0.08)",border:"0.5px solid rgba(34,197,94,0.3)",borderRadius:7,color:"#5FE0A5",cursor:"pointer",fontSize:10,fontWeight:600,fontFamily:"'Inter',sans-serif"}}>Activer</button>
-                )}
-                <button onClick={() => setConfirmDel({type:"prog",pIdx})} style={{padding:"5px 8px",background:"rgba(248,113,113,0.08)",border:"0.5px solid rgba(248,113,113,0.25)",borderRadius:7,color:"#FF7A6B",cursor:"pointer",fontSize:11}}>🗑</button>
-              </div>
+      {/* ── Séances de la semaine (si programme actif) ── */}
+      {prog && prog.jours && prog.jours.length > 0 && (
+        <div style={{marginBottom:14}}>
+          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:10}}>
+            <div style={{fontSize:15,fontWeight:700,color:C.text,fontFamily:DISP_F}}>Semaine {week} · Split</div>
+            <div style={{fontSize:9,fontWeight:700,color:C.blue,letterSpacing:"1.2px",textTransform:"uppercase",fontFamily:DISP_F}}>
+              {prog.jours.length} séances
             </div>
-
-            {/* Séances */}
-            {(p.jours || []).map((j, jIdx) => {
-              const int = INT[j.intensite || "modere"];
+          </div>
+          <div style={{background:C.s1,border:`1px solid ${C.bd}`,borderRadius:16,overflow:"hidden"}}>
+            {prog.jours.map((j, jIdx) => {
+              const int   = INT[j.intensite || "modere"];
               const total = j.exercices?.length || 0;
-              const done = j.exercices?.filter((_,idx) => checkedEx[`${j.id}-${idx}`]).length || 0;
+              const done  = j.exercices?.filter((_,idx) => checkedEx[`${j.id}-${idx}`]).length || 0;
+              const isFirst = jIdx===0;
               return (
-                <div key={jIdx} style={{display:"flex",alignItems:"center",gap:6,marginBottom:5}}>
-                  {/* Ligne séance cliquable */}
-                  <div onClick={() => setInnerView(`seance:${pIdx}:${jIdx}`)} style={{flex:1,padding:"9px 11px",background:C.s2,border:"0.5px solid rgba(255,255,255,0.07)",borderRadius:9,cursor:"pointer",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-                    <div style={{flex:1}}>
-                      <div style={{fontSize:9,color:int.c,fontWeight:700,textTransform:"uppercase",letterSpacing:"1px",marginBottom:1}}>{int.l}</div>
-                      <div style={{fontSize:12,fontWeight:500,color:"#F2F4F7"}}>{j.nom}</div>
-                      <div style={{fontSize:10,color:"rgba(242,244,247,0.50)"}}>{j.focus ? `${j.focus} · ` : ""}{total} exercice{total!==1?"s":""}</div>
-                    </div>
-                    <div style={{display:"flex",gap:6,alignItems:"center"}}>
-                      {done>0 && <div style={{fontSize:9,color:C.green,fontWeight:700}}>{done}/{total}</div>}
-                      {j.complete && <div style={{fontSize:10,color:C.green}}>✓</div>}
-                      <div style={{color:"rgba(242,244,247,0.50)",fontSize:15}}>›</div>
-                    </div>
+                <div key={jIdx} style={{
+                  display:"flex",alignItems:"center",gap:12,padding:"12px 14px",
+                  borderBottom: jIdx<prog.jours.length-1 ? `1px solid ${C.bd}` : "none",
+                  background: j.complete ? `${int.c}05` : "transparent",
+                }}>
+                  {/* Icône check */}
+                  <div style={{
+                    width:30,height:30,borderRadius:9,flexShrink:0,
+                    background: j.complete ? `${int.c}18` : isFirst ? `${C.blue}12` : C.s2,
+                    border: j.complete ? `1px solid ${int.c}35` : isFirst ? `1px solid ${C.blue}30` : `1px solid ${C.bd}`,
+                    display:"grid",placeItems:"center",
+                  }}>
+                    {j.complete
+                      ? <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={int.c} strokeWidth="2.4" strokeLinecap="round"><path d="M20 6 9 17l-5-5"/></svg>
+                      : isFirst
+                        ? <div style={{width:6,height:6,borderRadius:"50%",background:C.blue}}/>
+                        : null}
                   </div>
-                  {/* Bouton supprimer séance */}
-                  <button onClick={() => setConfirmDel({type:"jour",pIdx,jIdx})} style={{padding:"8px 9px",background:"rgba(248,113,113,0.06)",border:"0.5px solid rgba(248,113,113,0.2)",borderRadius:8,color:"#FF7A6B",cursor:"pointer",fontSize:12,flexShrink:0,lineHeight:1}}>×</button>
+                  {/* Info séance */}
+                  <div onClick={() => setInnerView(`seance:0:${jIdx}`)} style={{flex:1,minWidth:0,cursor:"pointer"}}>
+                    <div style={{display:"flex",alignItems:"center",gap:7,marginBottom:2}}>
+                      <span style={{fontSize:13,fontWeight:700,color:j.complete?"rgba(242,244,247,0.45)":C.text,fontFamily:DISP_F}}>{j.nom}</span>
+                      {j.complete && <span style={{fontSize:8,fontWeight:700,color:"rgba(242,244,247,0.35)",letterSpacing:"1px",fontFamily:DISP_F}}>FAIT</span>}
+                    </div>
+                    <div style={{fontSize:9,fontWeight:700,color:int.c,letterSpacing:"1px",textTransform:"uppercase",fontFamily:DISP_F,marginBottom:1}}>{int.l}</div>
+                    <div style={{fontSize:10.5,color:"rgba(242,244,247,0.40)",fontFamily:DISP_F}}>{j.focus?`${j.focus} · `:""}{total} exercice{total!==1?"s":""}</div>
+                  </div>
+                  {/* Stats */}
+                  <div style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:4,flexShrink:0}}>
+                    {done>0 && <div style={{fontSize:11,fontWeight:700,color:int.c,fontVariantNumeric:"tabular-nums"}}>{done}/{total}</div>}
+                    <button onClick={() => setConfirmDel({type:"jour",pIdx:0,jIdx})} style={{padding:"5px 7px",background:"rgba(248,113,113,0.07)",border:"1px solid rgba(248,113,113,0.18)",borderRadius:7,color:"#FF7A6B",cursor:"pointer",fontSize:11,lineHeight:1}}>✕</button>
+                  </div>
                 </div>
               );
             })}
+          </div>
+        </div>
+      )}
 
-            {(p.jours||[]).length === 0 && (
-              <div style={{textAlign:"center",padding:"10px 0 4px",fontSize:11,color:"rgba(242,244,247,0.50)"}}>Aucune séance dans ce programme.</div>
-            )}
-          </Box>
-        );
-      })}
+      {/* ── Liste des autres programmes ── */}
+      {allProgs.length > 1 && (
+        <div style={{marginBottom:14}}>
+          <div style={{fontSize:9,fontWeight:700,letterSpacing:"1.3px",textTransform:"uppercase",color:C.blue,fontFamily:DISP_F,marginBottom:10}}>Autres programmes</div>
+          {allProgs.map((p, pIdx) => {
+            const isActive = prog && (prog.titre === p.titre || prog.id === p.id);
+            if (isActive) return null;
+            return (
+              <div key={pIdx} style={{display:"flex",alignItems:"center",gap:10,padding:"10px 12px",background:C.s1,border:`1px solid ${C.bd}`,borderRadius:12,marginBottom:6}}>
+                <div style={{flex:1,minWidth:0}}>
+                  <div style={{fontSize:13,fontWeight:600,color:C.text,fontFamily:DISP_F}}>{p.titre}</div>
+                  <div style={{fontSize:10.5,color:"rgba(242,244,247,0.40)",marginTop:1}}>{p.jours?.length||0} séances</div>
+                </div>
+                <button onClick={() => { setProg(p); push("✅","Programme activé",p.titre); }} style={{padding:"6px 10px",background:"rgba(52,211,153,0.10)",border:"1px solid rgba(52,211,153,0.25)",borderRadius:8,color:"#34D399",cursor:"pointer",fontSize:10,fontWeight:700,fontFamily:DISP_F}}>Activer</button>
+                <button onClick={() => setConfirmDel({type:"prog",pIdx})} style={{padding:"6px 8px",background:"rgba(248,113,113,0.07)",border:"1px solid rgba(248,113,113,0.18)",borderRadius:8,color:"#FF7A6B",cursor:"pointer",fontSize:11}}>🗑</button>
+              </div>
+            );
+          })}
+        </div>
+      )}
 
-      {/* ── Boutons d'action ── */}
-      {allProgs.length > 0 && !showCreerForm && (
+      {/* ── Empty state ── */}
+      {allProgs.length === 0 && !showCreerForm && (
+        <div style={{textAlign:"center",padding:"32px 0 16px"}}>
+          <div style={{fontSize:40,marginBottom:14}}>🏋️</div>
+          <div style={{fontFamily:SERIF_F,fontSize:22,fontWeight:400,color:C.text,marginBottom:8}}>Aucun programme</div>
+          <div style={{fontSize:12,color:"rgba(242,244,247,0.45)",lineHeight:1.6,maxWidth:240,margin:"0 auto 24px",fontFamily:DISP_F}}>Génère un programme IA adapté à ta morphologie ou crée-le manuellement.</div>
+        </div>
+      )}
+
+      {/* ── CTAs ── */}
+      {!showCreerForm && (
         <div style={{marginBottom:12}}>
           <Btn onClick={() => { if(!premium) setPaywall(true); else setProgView("analyse"); }}>✨ Nouveau programme IA</Btn>
           <Btn v="out" onClick={() => { setIsCreating(true); setCS(0); setNewP({nom:"",jours:[],seances:{}}); }}>+ Créer manuellement</Btn>
