@@ -6,7 +6,7 @@ import { Inp, Btn } from "./index.jsx";
 const DISPLAY = "'Outfit','DM Sans',system-ui,sans-serif";
 const SERIF   = "'DM Serif Display','Georgia',serif";
 const NUM     = { fontVariantNumeric:'tabular-nums', fontFeatureSettings:'"tnum"' };
-const ey      = { fontSize:9, fontWeight:700, letterSpacing:'1.3px', textTransform:'uppercase', color:'rgba(242,244,247,0.38)', fontFamily:DISPLAY };
+const ey      = { fontSize:9, fontWeight:700, letterSpacing:'1.3px', textTransform:'uppercase', color:'#3B82F6', fontFamily:DISPLAY };
 
 function I({name,size=18,color='currentColor',stroke=1.7}){
   const p={width:size,height:size,viewBox:'0 0 24 24',fill:'none',stroke:color,strokeWidth:stroke,strokeLinecap:'round',strokeLinejoin:'round'};
@@ -312,7 +312,7 @@ function BilanMois({ sessions, year, month }) {
       {/* ── Séparateur aéré ── */}
       <div style={{display:'flex',alignItems:'center',gap:12,marginBottom:22}}>
         <div style={{flex:1,height:1,background:'rgba(255,255,255,0.07)'}}/>
-        <div style={{...ey,color:'rgba(242,244,247,0.25)',letterSpacing:'1.6px',flexShrink:0}}>Bilan du mois</div>
+        <div style={{...ey,letterSpacing:'1.6px',flexShrink:0}}>Bilan du mois</div>
         <div style={{flex:1,height:1,background:'rgba(255,255,255,0.07)'}}/>
       </div>
 
@@ -397,7 +397,7 @@ export const MonthCal = memo(function MonthCal({ sessions, onUpdate }) {
           <div style={{textAlign:'center'}}>
             <div style={{...ey,color:'#3B82F6',marginBottom:3}}>Calendrier</div>
             <div style={{fontFamily:DISPLAY,fontSize:19,fontWeight:700,color:C.text,letterSpacing:-0.5}}>
-              {MONTHS[m]} <span style={{color:'rgba(242,244,247,0.35)',fontWeight:400,fontStyle:'italic',fontFamily:SERIF}}>{y}</span>
+              {MONTHS[m]} <span style={{color:'#60A5FA',fontWeight:400,fontStyle:'italic',fontFamily:SERIF}}>{y}</span>
             </div>
           </div>
           <button onClick={()=>canNext&&setDate(new Date(y,m+1,1))} disabled={!canNext} className="tap"
