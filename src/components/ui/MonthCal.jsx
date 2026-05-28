@@ -285,53 +285,70 @@ function BilanMois({ sessions, year, month }) {
     </div>
   );
 
-  if (stats.count===0) return (
-    <div style={{marginTop:20}}>
-      <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:12}}>
-        <div style={{fontFamily:DISPLAY,fontSize:17,fontWeight:700,color:C.text,letterSpacing:-0.4}}>Bilan du mois</div>
-        <div style={{...ey}}>VS. MOIS PRÉC.</div>
-      </div>
-      <div style={{padding:'20px',textAlign:'center',background:'#111827',border:'1px solid rgba(255,255,255,0.07)',borderRadius:14,fontSize:12,color:'rgba(242,244,247,0.30)',fontFamily:DISPLAY}}>
-        Aucune séance ce mois
-      </div>
-    </div>
-  );
-
   const topIntData = stats.topInt ? INT[stats.topInt[0]] : null;
 
-  // Barre assiduité
   const assBarre = (
     <div>
       <div style={{height:3,background:'rgba(255,255,255,0.06)',borderRadius:3,overflow:'hidden',marginBottom:3}}>
         <div style={{height:'100%',width:`${stats.assiduité}%`,background:'#34D399',borderRadius:3,transition:'width .8s ease'}}/>
       </div>
-      <div style={{fontSize:9,color:'rgba(242,244,247,0.35)',fontFamily:DISPLAY,...NUM}}>{stats.uniqueDays} j / {stats.totalDays} j</div>
+      <div style={{fontSize:9,color:'rgba(242,244,247,0.35)',fontFamily:DISPLAY,...NUM}}>
+        {stats.uniqueDays} j / {stats.totalDays} j
+      </div>
     </div>
   );
 
-  // Barre charge
   const chargeBarre = topIntData ? (
     <div style={{display:'flex',alignItems:'center',gap:6,marginTop:2}}>
       <div style={{width:8,height:8,borderRadius:'50%',background:topIntData.c,flexShrink:0,boxShadow:`0 0 5px ${topIntData.c}`}}/>
       <div style={{fontSize:13,fontWeight:700,color:topIntData.c,fontFamily:DISPLAY}}>{topIntData.l}</div>
     </div>
-  ) : <div style={{fontSize:12,color:'rgba(242,244,247,0.35)'}}>—</div>;
+  ) : (
+    <div style={{fontSize:12,color:'rgba(242,244,247,0.30)',fontFamily:DISPLAY,marginTop:2}}>Aucune donnée</div>
+  );
 
   return (
-    <div style={{marginTop:20}}>
-      <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:12}}>
-        <div style={{fontFamily:DISPLAY,fontSize:17,fontWeight:700,color:C.text,letterSpacing:-0.4}}>Bilan du mois</div>
+    <div style={{marginTop:28}}>
+      {/* ── Séparateur aéré ── */}
+      <div style={{display:'flex',alignItems:'center',gap:12,marginBottom:22}}>
+        <div style={{flex:1,height:1,background:'rgba(255,255,255,0.07)'}}/>
+        <div style={{...ey,color:'rgba(242,244,247,0.25)',letterSpacing:'1.6px',flexShrink:0}}>Bilan du mois</div>
+        <div style={{flex:1,height:1,background:'rgba(255,255,255,0.07)'}}/>
+      </div>
+
+      <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:14}}>
+        <div style={{fontFamily:DISPLAY,fontSize:18,fontWeight:700,color:C.text,letterSpacing:-0.5}}>
+          {['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'][month]}
+        </div>
         <div style={{...ey}}>VS. MOIS PRÉC.</div>
       </div>
+
       {/* Row 1 */}
       <div style={{display:'flex',gap:8,marginBottom:8}}>
-        <Card label="Séances" main={stats.count} sub={`/${stats.totalDays}j`} delta="↑ données en cours" deltaOk={true}/>
-        <Card label="Tonnage" main={parseFloat(stats.tonnage)>0?stats.tonnage:'—'} sub={parseFloat(stats.tonnage)>0?'t':''} delta={parseFloat(stats.tonnage)>0?"↑ connecté prog.":null} deltaOk={true}/>
+        <Card
+          label="Séances"
+          main={stats.count}
+          sub={`/${stats.totalDays}j`}
+          delta={stats.count > 0 ? `${stats.uniqueDays} jour${stats.uniqueDays>1?'s':''} actif${stats.uniqueDays>1?'s':''}` : 'Aucune séance'}
+          deltaOk={stats.count > 0}
+        />
+        <Card
+          label="Tonnage"
+          main={parseFloat(stats.tonnage) > 0 ? stats.tonnage : '0'}
+          sub="t"
+          delta={parseFloat(stats.tonnage) > 0 ? '↑ connecté aux charges' : 'Loguer des charges'}
+          deltaOk={parseFloat(stats.tonnage) > 0}
+        />
       </div>
       {/* Row 2 */}
       <div style={{display:'flex',gap:8}}>
-        <Card label="Charge" main=" " accent={chargeBarre}/>
-        <Card label="Assiduité" main={`${stats.assiduité}`} sub="%" accent={assBarre}/>
+        <Card label="Charge" main={topIntData ? '' : '—'} accent={chargeBarre}/>
+        <Card
+          label="Assiduité"
+          main={`${stats.assiduité}`}
+          sub="%"
+          accent={assBarre}
+        />
       </div>
     </div>
   );
