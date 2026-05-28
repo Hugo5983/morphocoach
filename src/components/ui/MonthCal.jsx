@@ -386,93 +386,75 @@ export const MonthCal = memo(function MonthCal({ sessions, onUpdate }) {
 
   return (
     <div style={{paddingBottom:4}}>
-      {/* Month header */}
-      <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:14}}>
-        <button onClick={()=>canPrev&&setDate(new Date(y,m-1,1))} disabled={!canPrev} className="tap"
-          style={{width:32,height:32,borderRadius:10,background:C.s2,border:`1px solid ${C.bd}`,color:canPrev?C.mid:C.dim,cursor:canPrev?'pointer':'not-allowed',display:'grid',placeItems:'center',padding:0}}>
-          <I name="chevL" size={14} stroke={2} color={canPrev?C.mid:C.dim}/>
-        </button>
-        <div style={{textAlign:'center'}}>
-          <div style={{...ey,color:'#3B82F6',marginBottom:3}}>Calendrier</div>
-          <div style={{fontFamily:DISPLAY,fontSize:20,fontWeight:700,color:C.text,letterSpacing:-0.5}}>
-            {MONTHS[m]} <span style={{color:'rgba(242,244,247,0.40)',fontWeight:400,fontStyle:'italic',fontFamily:SERIF}}>{y}</span>
+
+      {/* ── Calendrier card ── */}
+      <div style={{background:C.s1,border:`1px solid ${C.bd}`,borderRadius:18,padding:'16px 14px 14px'}}>
+        <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:14}}>
+          <button onClick={()=>canPrev&&setDate(new Date(y,m-1,1))} disabled={!canPrev} className="tap"
+            style={{width:30,height:30,borderRadius:9,background:C.s2,border:`1px solid ${C.bd}`,color:canPrev?C.mid:C.dim,cursor:canPrev?'pointer':'not-allowed',display:'grid',placeItems:'center',padding:0,flexShrink:0}}>
+            <I name="chevL" size={13} stroke={2} color={canPrev?C.mid:C.dim}/>
+          </button>
+          <div style={{textAlign:'center'}}>
+            <div style={{...ey,color:'#3B82F6',marginBottom:3}}>Calendrier</div>
+            <div style={{fontFamily:DISPLAY,fontSize:19,fontWeight:700,color:C.text,letterSpacing:-0.5}}>
+              {MONTHS[m]} <span style={{color:'rgba(242,244,247,0.35)',fontWeight:400,fontStyle:'italic',fontFamily:SERIF}}>{y}</span>
+            </div>
           </div>
+          <button onClick={()=>canNext&&setDate(new Date(y,m+1,1))} disabled={!canNext} className="tap"
+            style={{width:30,height:30,borderRadius:9,background:C.s2,border:`1px solid ${C.bd}`,color:canNext?C.mid:C.dim,cursor:canNext?'pointer':'not-allowed',display:'grid',placeItems:'center',padding:0,flexShrink:0}}>
+            <I name="chevR" size={13} stroke={2} color={canNext?C.mid:C.dim}/>
+          </button>
         </div>
-        <button onClick={()=>canNext&&setDate(new Date(y,m+1,1))} disabled={!canNext} className="tap"
-          style={{width:32,height:32,borderRadius:10,background:C.s2,border:`1px solid ${C.bd}`,color:canNext?C.mid:C.dim,cursor:canNext?'pointer':'not-allowed',display:'grid',placeItems:'center',padding:0}}>
-          <I name="chevR" size={14} stroke={2} color={canNext?C.mid:C.dim}/>
-        </button>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(7,1fr)',gap:3,marginBottom:5}}>
+          {DAYS.map((d,i)=>(
+            <div key={i} style={{textAlign:'center',fontSize:9,color:'rgba(242,244,247,0.28)',fontWeight:700,letterSpacing:0.8,fontFamily:DISPLAY}}>{d}</div>
+          ))}
+        </div>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(7,1fr)',gap:3}}>
+          {[...Array(first)].map((_,i)=><div key={`e${i}`}/>)}
+          {[...Array(daysInMonth)].map((_,i)=>{
+            const d = i+1;
+            const key = ds(d);
+            const daySess = getSess(key);
+            const isToday = key===todayStr;
+            const isPast  = key < todayStr;
+            const color   = getDayColor(key);
+            const dotColors = daySess.map(s=>s.color||'#3B82F6').slice(0,3);
+            return (
+              <button key={d} onClick={()=>setModal({date:key,sessions:daySess})} className="tap" style={{
+                aspectRatio:'1/1', borderRadius:10, padding:0, cursor:'pointer',
+                background: isToday ? '#3B82F6' : daySess.length>0 ? `${color}18` : isPast ? 'rgba(255,255,255,0.025)' : C.s2,
+                border: isToday ? '1.5px solid #60A5FA' : daySess.length>0 ? `1px solid ${color}35` : `1px solid ${C.bd}`,
+                display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:3,
+                boxShadow: isToday ? '0 4px 12px rgba(59,130,246,0.35)' : 'none',
+                opacity: isPast && daySess.length===0 ? 0.4 : 1,
+              }}>
+                <span style={{fontFamily:DISPLAY,fontSize:11,fontWeight:isToday?700:500,color:isToday?'#fff':isPast&&!daySess.length?'rgba(242,244,247,0.30)':C.text,...NUM}}>{d}</span>
+                {dotColors.length>0&&(
+                  <div style={{display:'flex',gap:2,alignItems:'center'}}>
+                    {dotColors.map((dc,di)=>(
+                      <span key={di} style={{width:4,height:4,borderRadius:'50%',background:isToday?'rgba(255,255,255,0.8)':dc}}/>
+                    ))}
+                  </div>
+                )}
+              </button>
+            );
+          })}
+        </div>
+        <div style={{marginTop:12,paddingTop:12,borderTop:`1px solid ${C.bd}`,display:'flex',flexWrap:'wrap',gap:8,alignItems:'center'}}>
+          <div style={{...ey,marginRight:4}}>Intensité</div>
+          {Object.entries(INT).map(([k,v])=>(
+            <div key={k} style={{display:'flex',alignItems:'center',gap:4}}>
+              <div style={{width:6,height:6,borderRadius:2,background:v.c,flexShrink:0}}/>
+              <span style={{fontSize:9.5,color:'rgba(242,244,247,0.40)',fontFamily:DISPLAY}}>{v.l}</span>
+            </div>
+          ))}
+        </div>
       </div>
 
-      {/* Weekday headers */}
-      <div style={{display:'grid',gridTemplateColumns:'repeat(7,1fr)',gap:3,marginBottom:6}}>
-        {DAYS.map((d,i)=>(
-          <div key={i} style={{textAlign:'center',fontSize:9,color:'rgba(242,244,247,0.30)',fontWeight:700,letterSpacing:1,fontFamily:DISPLAY}}>{d}</div>
-        ))}
-      </div>
-
-      {/* Day cells */}
-      <div style={{display:'grid',gridTemplateColumns:'repeat(7,1fr)',gap:4}}>
-        {[...Array(first)].map((_,i)=><div key={`e${i}`}/>)}
-        {[...Array(daysInMonth)].map((_,i)=>{
-          const d = i+1;
-          const key = ds(d);
-          const daySess = getSess(key);
-          const isToday = key===todayStr;
-          const isPast  = key < todayStr;
-          const color   = getDayColor(key);
-          const dotColors = daySess.map(s=>s.color||'#3B82F6').slice(0,3);
-
-          return (
-            <button key={d} onClick={()=>setModal({date:key,sessions:daySess})} className="tap" style={{
-              aspectRatio:'1/1', borderRadius:11, padding:0, cursor:'pointer',
-              background: isToday
-                ? '#3B82F6'
-                : daySess.length>0
-                  ? `${color}18`
-                  : isPast ? 'rgba(255,255,255,0.03)' : C.s2,
-              border: isToday
-                ? '1.5px solid #60A5FA'
-                : daySess.length>0
-                  ? `1px solid ${color}40`
-                  : `1px solid ${C.bd}`,
-              display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:3,
-              boxShadow: isToday ? '0 4px 12px rgba(59,130,246,0.35)' : 'none',
-              opacity: isPast && daySess.length===0 ? 0.45 : 1,
-            }}>
-              <span style={{fontFamily:DISPLAY,fontSize:11,fontWeight:isToday?700:500,color:isToday?'#fff':isPast&&!daySess.length?'rgba(242,244,247,0.35)':C.text,...NUM}}>{d}</span>
-              {dotColors.length>0&&(
-                <div style={{display:'flex',gap:2,alignItems:'center'}}>
-                  {dotColors.map((dc,di)=>(
-                    <span key={di} style={{width:4,height:4,borderRadius:'50%',background:isToday?'rgba(255,255,255,0.8)':dc,boxShadow:!isToday?`0 0 4px ${dc}`:''}}/>
-                  ))}
-                </div>
-              )}
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Legend */}
-      <div style={{marginTop:14,display:'flex',flexWrap:'wrap',gap:10}}>
-        {Object.entries(INT).map(([k,v])=>(
-          <div key={k} style={{display:'flex',alignItems:'center',gap:5}}>
-            <div style={{width:6,height:6,borderRadius:'50%',background:v.c,boxShadow:`0 0 4px ${v.c}`}}/>
-            <span style={{fontSize:10,color:'rgba(242,244,247,0.45)',fontFamily:DISPLAY}}>{v.l}</span>
-          </div>
-        ))}
-        {BONUS.map(b=>(
-          <div key={b.id} style={{display:'flex',alignItems:'center',gap:5}}>
-            <div style={{width:6,height:6,borderRadius:'50%',background:b.color}}/>
-            <span style={{fontSize:10,color:'rgba(242,244,247,0.45)',fontFamily:DISPLAY}}>{b.label.split(' ')[0]}</span>
-          </div>
-        ))}
-      </div>
-
-      {/* Bilan du mois */}
+      {/* ── Bilan hors card ── */}
       <BilanMois sessions={sessions} year={y} month={m}/>
 
-      {/* Modal */}
       {modal&&(
         <DayModal
           date={modal.date}
