@@ -26,11 +26,12 @@ export function BottomNav({ tab, setTab }) {
   return (
     <nav className="np" style={{
       position:"fixed", bottom:0, left:0, right:0,
-      background:"rgba(11,18,32,0.94)",
+      background:"rgba(8,14,26,0.96)",
       backdropFilter:"blur(24px)", WebkitBackdropFilter:"blur(24px)",
       borderTop:`1px solid ${C.bd}`,
       display:"flex", alignItems:"center", zIndex:100,
-      padding:"6px 4px 10px",
+      padding:"8px 4px",
+      paddingBottom:"calc(10px + env(safe-area-inset-bottom, 0px))",
     }}>
       {ITEMS.map((t) => {
         if (t.center) {
