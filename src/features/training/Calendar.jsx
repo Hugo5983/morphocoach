@@ -718,6 +718,20 @@ export default function Calendar(props) {
   return (
     <div style={{padding:"0 15px"}}>
 
+      {/* ── Header planning ── */}
+      <div style={{marginBottom:20,paddingTop:4}}>
+        <div style={{fontSize:9,fontWeight:700,letterSpacing:'1.4px',textTransform:'uppercase',color:'rgba(242,244,247,0.38)',fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",marginBottom:8}}>Planning</div>
+        <div style={{fontFamily:"'DM Serif Display','Georgia',serif",fontSize:34,fontWeight:400,letterSpacing:-1.2,color:'#F2F4F7',lineHeight:1.05,marginBottom:2}}>
+          Ton mois
+        </div>
+        <div style={{fontFamily:"'DM Serif Display','Georgia',serif",fontSize:34,fontWeight:400,letterSpacing:-1.2,color:'rgba(242,244,247,0.40)',lineHeight:1.05,fontStyle:'italic',marginBottom:12}}>
+          en clair.
+        </div>
+        <div style={{fontSize:12.5,color:'rgba(242,244,247,0.45)',lineHeight:1.6,fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",fontWeight:400}}>
+          Densité d'effort, séances planifiées, jours de récupération.
+        </div>
+      </div>
+
       <MonthCal sessions={calSess} onUpdate={(date,sess) => {
         if (sess) setCalSess(s => ({...s,[date]:sess}));
         else setCalSess(s => { const ns={...s}; delete ns[date]; return ns; });
