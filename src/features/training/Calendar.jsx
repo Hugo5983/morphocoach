@@ -726,46 +726,7 @@ export default function Calendar(props) {
         }}/>
       </Box>
 
-      {/* Séances bonus */}
-      <Lbl>Séance bonus</Lbl>
-      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,marginBottom:12}}>
-        {[
-          {id:"cardio",    i:"🏃",l:"Cardio",             color:C.blue},
-          {id:"etirements",i:"🧘",l:"Étirements & Mobilité",color:C.purple},
-          {id:"sport",     i:"🏆",l:"Autre sport",         color:"#FFAB5D"},
-        ].map(b => (
-          <div key={b.id} onClick={() => {
-            if(b.id==="cardio") setCardioOpen(true);
-            else if(b.id==="sport") setSportOpen(true);
-            else setBonusModal(b);
-          }}
-            style={{padding:"12px 8px",textAlign:"center",background:C.s2,border:"0.5px solid rgba(190,180,255,0.07)",borderRadius:10,cursor:"pointer"}}>
-            <div style={{fontSize:22,marginBottom:4}}>{b.i}</div>
-            <div style={{fontSize:10,fontWeight:700,color:b.color,lineHeight:1.3}}>{b.l}</div>
-          </div>
-        ))}
-      </div>
 
-      {bonusModal && (
-        <div style={{position:"fixed",inset:0,background:"rgba(11,15,31,0.97)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:300,padding:18}}>
-          <div style={{background:C.s1,border:"0.5px solid rgba(190,180,255,0.07)",borderRadius:14,padding:"22px 18px",width:"100%",maxWidth:360}}>
-            <Lbl>{bonusModal.i} {bonusModal.l}</Lbl>
-            <div style={{fontSize:12,color:"rgba(245,241,232,0.50)",marginBottom:14}}>Durée de la séance ?</div>
-            <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:16}}>
-              {["15 min","20 min","30 min","45 min"].map(dur => (
-                <div key={dur} onClick={() => {
-                  const today = new Date();
-                  const key = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,"0")}-${String(today.getDate()).padStart(2,"0")}`;
-                  setCalSess(s => ({...s,[key]:{nom:`${bonusModal.l} ${dur}`,intensite:"mobilite",color:bonusModal.color}}));
-                  setBonusModal(null);
-                  push("✅",`${bonusModal.l} ajouté !`,`${dur} enregistré dans le calendrier.`);
-                }} style={{padding:"10px 16px",background:C.s2,border:"0.5px solid rgba(190,180,255,0.07)",borderRadius:9,cursor:"pointer",fontSize:13,fontWeight:600,color:C.text}}>{dur}</div>
-              ))}
-            </div>
-            <Btn v="ghost" onClick={() => setBonusModal(null)}>Annuler</Btn>
-          </div>
-        </div>
-      )}
 
       {/* Programme + semaines S1-S6 */}
       {cycleStart && prog && (
