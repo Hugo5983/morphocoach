@@ -58,7 +58,7 @@ export const ACTIVITE_FACTOR = {
 export const GLOBAL_CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Serif+Display:ital@0;1&display=swap');
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
-body{background:#0B1220;color:#F2F4F7;font-family:'DM Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+body{background:#080E1A;color:#F2F4F7;font-family:'DM Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
 input,textarea,select{outline:none;font-family:'DM Sans',sans-serif;color:#F2F4F7}
 input::placeholder,textarea::placeholder{color:rgba(242,244,247,0.30)}
 select option{background:#111827;color:#F2F4F7}
@@ -96,6 +96,9 @@ select option{background:#111827;color:#F2F4F7}
 .card-hover:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(0,0,0,0.25)}
 
 input:focus,textarea:focus,select:focus{border-color:rgba(59,130,246,0.50)!important;box-shadow:0 0 0 3px rgba(59,130,246,0.10);transition:box-shadow .15s,border-color .15s}
+
+/* ── Global section spacing ── */
+section + section { margin-top: 28px; }
 
 @supports(-webkit-overflow-scrolling:touch){*{-webkit-overflow-scrolling:touch}}
 @media print{.np{display:none!important}}
