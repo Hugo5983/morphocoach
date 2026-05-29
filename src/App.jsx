@@ -11,6 +11,7 @@ import { Spinner } from "./components/ui/Loader.jsx";
 import { Header } from "./components/layout/Header.jsx";
 import { BottomNav } from "./components/layout/BottomNav.jsx";
 import { Paywall } from "./components/layout/Paywall.jsx";
+import { PaywallNutrition } from "./components/layout/PaywallNutrition.jsx";
 import { Screen } from "./components/layout/Screen.jsx";
 import { PageContainer } from "./components/layout/PageContainer.jsx";
 
@@ -42,8 +43,10 @@ import { scanBarcode } from "./services/nutritionService.js";
 export default function App() {
   // Navigation & UI
   const [tab, setTab] = useState("home");
-  const [premium, setPremium] = useState(false);
+  const [premium, setPremium] = useState(false);           // Coach PRO (programme IA)
   const [paywall, setPaywall] = useState(false);
+  const [premiumNutrition, setPremiumNutrition] = useState(false); // Nutrition PRO
+  const [paywallNutrition, setPaywallNutrition] = useState(false);
   const [showChrono, setChrono] = useState(false);
   const [chronoSec, setChronoSec] = useState(90);
   const { notif, push, dismiss } = useNotif();
@@ -157,7 +160,10 @@ export default function App() {
     profil, prog, repas, setRepas, repasLog, setRepasLog, myFoods, setMyFoods,
     eau, setEau, scanRes, setScanRes,
     obj, calObj, pObj, lObj, gObj, totR, handleScan,
-    FOODS, ...commonProps,
+    FOODS,
+    premium: premiumNutrition,
+    setPaywall: setPaywallNutrition,
+    ...commonProps,
   };
 
   const profileProps = {
@@ -206,7 +212,7 @@ export default function App() {
               {tab === "program"   && <ProgramTab {...programProps} />}
               {tab === "nutrition" && <Nutrition {...nutritionProps} />}
               {tab === "profile"   && <Profile   {...profileProps} />}
-              {tab === "recipes"   && <Recipes   C={C} />}
+              {tab === "recipes"   && <Recipes   C={C} premium={premiumNutrition} setPaywall={setPaywallNutrition} push={push} />}
             </Suspense>
           )}
         </div>
@@ -221,9 +227,20 @@ export default function App() {
           onSubscribe={() => {
             setPremium(true);
             setPaywall(false);
-            push("🎉", "Premium activé !", "Bienvenue !");
+            push("🎉", "Coach PRO activé !", "Accès au programme IA débloqué !");
           }}
           onClose={() => setPaywall(false)}
+        />
+      )}
+
+      {paywallNutrition && (
+        <PaywallNutrition
+          onSubscribe={() => {
+            setPremiumNutrition(true);
+            setPaywallNutrition(false);
+            push("🥗", "Nutrition PRO activé !", "Bilan, recettes complètes et macros personnalisés débloqués !");
+          }}
+          onClose={() => setPaywallNutrition(false)}
         />
       )}
     </Screen>
