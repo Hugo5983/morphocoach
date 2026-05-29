@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { C, OBJ, ACTIVITE_FACTOR } from "../../data/constants.js";
-import { Box, Lbl, Inp, Btn, Bar, G2, MiniChart } from "../../components/ui/index.jsx";
+import { Inp, Btn } from "../../components/ui/index.jsx";
 
 // ─── HELPERS ────────────────────────────────────────────────────────────────
 const pct = (v, t) => Math.min((v / t) * 100, 100);
