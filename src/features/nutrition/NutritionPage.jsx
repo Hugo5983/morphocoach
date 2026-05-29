@@ -99,17 +99,10 @@ export default function Nutrition(props){
   const [search,setSearch]=useState("");
   const [newFood,setNewFood]=useState({nom:"",cal:"",p:"",g:"",l:""});
   const [scanCode,setScan]=useState("");
-  const [showBilan,setShowBilan]=useState(false);
   const tot=totR;
   const all=[...FOODS,...myFoods];
   const filtered=search?all.filter(f=>f.n.toLowerCase().includes(search.toLowerCase())):[];
   const { score, lettre:scoreLettre, color:scoreColor, details:scoreDetails } = computeHealthScore(repas,eau,tot,pObj);
-
-  // Bilan — accès PRO uniquement
-  const openBilan = () => {
-    if (!premium) { if (setPaywall) setPaywall(true); return; }
-    setShowBilan(true);
-  };
 
   // Données historiques simplifiées (14 jours simulés depuis repas actuels)
   const repasHistory = Array.from({ length:14 }, (_, i) => ({
@@ -119,17 +112,6 @@ export default function Nutrition(props){
     lip:  tot.l  * (0.80 + Math.random() * 0.40),
     eau:  eau    * (0.70 + Math.random() * 0.60),
   }));
-
-  if (showBilan) {
-    return (
-      <BilanNutrition
-        onBack={() => setShowBilan(false)}
-        repasHistory={repasHistory}
-        calObj={calObj} pObj={pObj} gObj={gObj} lObj={lObj}
-        profil={profil} obj={obj} premium={premium}
-      />
-    );
-  }
 
   // Meal config — colors from mockup
   const MEALS=[
@@ -177,14 +159,25 @@ export default function Nutrition(props){
 
           {/* Segmented nav (journal/scanner/aliments) */}
           <div style={{position:'relative',marginTop:16,display:'flex',padding:3,borderRadius:12,background:'rgba(7,10,20,0.7)',border:`1px solid ${C.bd}`}}>
-            {[{id:"journal",l:"Journal"},{id:"scanner",l:"Scanner"},{id:"aliments",l:"Aliments"}].map(s=>{
+            {[{id:"journal",l:"Journal"},{id:"bilan",l:"Bilan PRO"}].map(s=>{
               const on=nView===s.id||(nView==="score"&&s.id==="journal");
+              const isBilan=s.id==="bilan";
               return(
-                <button key={s.id} onClick={()=>setNView(s.id)} style={{position:'relative',zIndex:1,flex:1,padding:'8px 0',borderRadius:9,background:on?C.s2:'transparent',border:on?`1px solid ${C.bdHi}`:'1px solid transparent',color:on?C.text:C.dim,fontSize:12,fontWeight:700,letterSpacing:0.2,fontFamily:DISPLAY,cursor:'pointer',transition:'all .25s ease',boxShadow:on?'0 2px 6px rgba(0,0,0,0.25)':'none'}}>{s.l}</button>
+                <button key={s.id} onClick={()=>{ if(isBilan){ if(!premium){ if(setPaywall)setPaywall(true); return; } } setNView(s.id); }} style={{position:'relative',zIndex:1,flex:1,padding:'8px 0',borderRadius:9,background:on?(isBilan?'rgba(59,130,246,0.15)':C.s2):'transparent',border:on?`1px solid ${isBilan?'rgba(59,130,246,0.35)':C.bdHi}`:'1px solid transparent',color:on?(isBilan?'#93C5FD':C.text):C.dim,fontSize:12,fontWeight:700,letterSpacing:0.2,fontFamily:DISPLAY,cursor:'pointer',transition:'all .25s ease',boxShadow:on?'0 2px 6px rgba(0,0,0,0.25)':'none'}}>{s.l}{isBilan&&!premium&&<span style={{fontSize:8,marginLeft:4,padding:'1px 4px',borderRadius:3,background:'rgba(59,130,246,0.25)',color:'#93C5FD',fontWeight:700,verticalAlign:'middle'}}>PRO</span>}</button>
               );
             })}
           </div>
         </div>
+
+        {/* ════ BILAN PRO ════ */}
+        {nView==="bilan"&&premium&&(
+          <BilanNutrition
+            onBack={()=>setNView("journal")}
+            repasHistory={repasHistory}
+            calObj={calObj} pObj={pObj} gObj={gObj} lObj={lObj}
+            profil={profil} obj={obj} premium={premium}
+          />
+        )}
 
         {/* ════ JOURNAL ════ */}
         {nView==="journal"&&(
@@ -216,9 +209,9 @@ export default function Nutrition(props){
             {/* Macro cards */}
             <div style={{padding:'24px 20px 0'}}>
               <div style={{display:'flex',gap:10}}>
-                <MacroCard label="Protéines" value={tot.p} goal={pObj} color={C.blue} colorDk={C.accentDk}/>
-                <MacroCard label="Glucides" value={tot.g} goal={gObj} color={C.accent} colorDk={C.accentDk}/>
-                <MacroCard label="Lipides" value={tot.l} goal={lObj} color={C.lavender} colorDk="#7559C7"/>
+                <MacroCard label="Protéines" value={tot.p} goal={pObj} color="#60A5FA" colorDk="#3B82F6"/>
+                <MacroCard label="Glucides" value={tot.g} goal={gObj} color="#22D3EE" colorDk="#0EA5E9"/>
+                <MacroCard label="Lipides" value={tot.l} goal={lObj} color="#34D399" colorDk="#10B981"/>
               </div>
             </div>
 
@@ -226,7 +219,7 @@ export default function Nutrition(props){
             <div style={{padding:'26px 20px 0'}}>
               <div style={{display:'flex',alignItems:'baseline',justifyContent:'space-between',marginBottom:8}}>
                 <span style={{fontFamily:DISPLAY,fontSize:20,fontWeight:700,color:C.text,letterSpacing:-0.6}}>Repas du jour</span>
-                <button className="tap" onClick={()=>setNView("scanner")} style={{display:'inline-flex',alignItems:'center',gap:6,padding:'7px 11px',background:C.s1,border:`1px solid ${C.bd}`,borderRadius:999,color:C.text,fontSize:11,fontWeight:700,fontFamily:DISPLAY,letterSpacing:0.2,cursor:'pointer'}}>
+                <button className="tap" onClick={()=>setNView("journal")} style={{display:'inline-flex',alignItems:'center',gap:6,padding:'7px 11px',background:C.s1,border:`1px solid ${C.bd}`,borderRadius:999,color:C.text,fontSize:11,fontWeight:700,fontFamily:DISPLAY,letterSpacing:0.2,cursor:'pointer'}}>
                   <I name="scan" size={12} stroke={1.8}/> SCANNER
                 </button>
               </div>
@@ -270,9 +263,9 @@ export default function Nutrition(props){
                               <div style={{flex:1,minWidth:0}}>
                                 <div style={{fontSize:12,fontWeight:600,color:C.text}}>{item.n}</div>
                                 <div style={{display:'flex',gap:8,marginTop:2}}>
-                                  <span style={{fontSize:9,color:C.blue}}>P {item.p}g</span>
-                                  <span style={{fontSize:9,color:C.gold}}>G {item.g}g</span>
-                                  <span style={{fontSize:9,color:C.lavender}}>L {item.l}g</span>
+                                  <span style={{fontSize:9,color:"#60A5FA"}}>P {item.p}g</span>
+                                  <span style={{fontSize:9,color:"#22D3EE"}}>G {item.g}g</span>
+                                  <span style={{fontSize:9,color:"#34D399"}}>L {item.l}g</span>
                                 </div>
                               </div>
                               <span style={{fontSize:12,fontWeight:700,color:C.text,fontFamily:DISPLAY,...NUM}}>{item.c}</span>
