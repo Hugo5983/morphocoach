@@ -2,82 +2,184 @@ import { useState } from "react";
 import { C, OBJ, ACTIVITE_FACTOR } from "../../data/constants.js";
 import { Inp } from "../../components/ui/index.jsx";
 
-// ─── UI HELPERS ──────────────────────────────────────────────────────────────
+// ─── WEIGHT CHART ────────────────────────────────────────────────────────────
+// Smooth bezier SVG line chart — Linear / Stripe quality
 
-const SectionTitle = ({ children }) => (
-  <div style={{
-    fontSize: 10, fontWeight: 700, color: "rgba(242,244,247,0.30)",
-    letterSpacing: "1.5px", textTransform: "uppercase", marginBottom: 10,
-  }}>{children}</div>
-);
+function WeightChart({ data }) {
+  if (!data || data.length < 2) return null;
 
-const Card = ({ children, style }) => (
-  <div style={{
-    background: C.s1, border: `1px solid ${C.bd}`,
-    borderRadius: 18, padding: "4px 16px", marginBottom: 12, ...style,
-  }}>{children}</div>
-);
+  const W = 320, H = 120, PAD = { top: 16, right: 16, bottom: 28, left: 36 };
+  const innerW = W - PAD.left - PAD.right;
+  const innerH = H - PAD.top - PAD.bottom;
 
-const Divider = () => (
-  <div style={{ height: 1, background: "rgba(255,255,255,0.05)", margin: "0 -16px" }} />
-);
+  const vals  = data.map(d => parseFloat(d.poids));
+  const dates = data.map(d => d.date ? new Date(d.date) : null);
+  const minV  = Math.min(...vals) - 0.5;
+  const maxV  = Math.max(...vals) + 0.5;
 
-// Ligne cliquable : affiche la valeur, passe en input au tap
-function EditableRow({ label, value, displayValue, type = "text", onChange, options }) {
+  const x = i => PAD.left + (i / (vals.length - 1)) * innerW;
+  const y = v => PAD.top + innerH - ((v - minV) / (maxV - minV)) * innerH;
+
+  // Smooth bezier points
+  const pts = vals.map((v, i) => ({ x: x(i), y: y(v) }));
+  const path = pts.reduce((acc, pt, i) => {
+    if (i === 0) return `M ${pt.x} ${pt.y}`;
+    const prev = pts[i - 1];
+    const cp1x = prev.x + (pt.x - prev.x) * 0.5;
+    const cp2x = pt.x  - (pt.x - prev.x) * 0.5;
+    return `${acc} C ${cp1x} ${prev.y}, ${cp2x} ${pt.y}, ${pt.x} ${pt.y}`;
+  }, "");
+
+  const areaPath = `${path} L ${pts.at(-1).x} ${PAD.top + innerH} L ${pts[0].x} ${PAD.top + innerH} Z`;
+
+  const delta  = vals.at(-1) - vals[0];
+  const isGain = delta >= 0;
+  const lineColor = C.accent;
+
+  const formatDate = (d) => {
+    if (!d) return "";
+    return d.toLocaleDateString("fr-FR", { day: "2-digit", month: "short" });
+  };
+
+  // Y axis ticks (3 values)
+  const yTicks = [minV + 0.5, (minV + maxV) / 2, maxV - 0.5].map(v => ({
+    v: v.toFixed(1), y: y(v),
+  }));
+
+  return (
+    <div style={{ position: "relative" }}>
+      {/* Stats row */}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 16 }}>
+        <div>
+          <div style={{ fontSize: 10, color: "rgba(242,244,247,0.30)", letterSpacing: 1.2, textTransform: "uppercase", marginBottom: 3 }}>
+            Poids actuel
+          </div>
+          <div style={{ display: "flex", alignItems: "baseline", gap: 5 }}>
+            <span style={{ fontSize: 32, fontWeight: 700, letterSpacing: -1.5, color: C.text, lineHeight: 1 }}>
+              {vals.at(-1)}
+            </span>
+            <span style={{ fontSize: 13, color: "rgba(242,244,247,0.40)", fontWeight: 400 }}>kg</span>
+          </div>
+        </div>
+        <div style={{ textAlign: "right" }}>
+          <div style={{ fontSize: 10, color: "rgba(242,244,247,0.30)", letterSpacing: 1, textTransform: "uppercase", marginBottom: 3 }}>
+            Évolution
+          </div>
+          <div style={{
+            display: "inline-flex", alignItems: "center", gap: 4,
+            background: isGain ? "rgba(59,130,246,0.10)" : "rgba(52,211,153,0.10)",
+            border: `1px solid ${isGain ? "rgba(59,130,246,0.20)" : "rgba(52,211,153,0.20)"}`,
+            borderRadius: 8, padding: "4px 10px",
+          }}>
+            <span style={{ fontSize: 13, fontWeight: 700, color: isGain ? C.accent : C.green }}>
+              {isGain ? "+" : ""}{delta.toFixed(1)} kg
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* SVG Chart */}
+      <svg
+        viewBox={`0 0 ${W} ${H}`}
+        width="100%" height={H}
+        style={{ overflow: "visible", display: "block" }}
+      >
+        <defs>
+          <linearGradient id="wGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"   stopColor={lineColor} stopOpacity="0.18" />
+            <stop offset="100%" stopColor={lineColor} stopOpacity="0"    />
+          </linearGradient>
+          <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%"   stopColor={lineColor} stopOpacity="0.4" />
+            <stop offset="100%" stopColor={lineColor} stopOpacity="1"   />
+          </linearGradient>
+        </defs>
+
+        {/* Horizontal grid lines */}
+        {yTicks.map((t, i) => (
+          <line key={i}
+            x1={PAD.left} y1={t.y} x2={W - PAD.right} y2={t.y}
+            stroke="rgba(255,255,255,0.04)" strokeWidth="1"
+          />
+        ))}
+
+        {/* Y axis labels */}
+        {yTicks.map((t, i) => (
+          <text key={i}
+            x={PAD.left - 8} y={t.y + 4}
+            textAnchor="end" fill="rgba(242,244,247,0.25)"
+            fontSize="9" fontFamily="'DM Sans',sans-serif"
+          >{t.v}</text>
+        ))}
+
+        {/* Area fill */}
+        <path d={areaPath} fill="url(#wGrad)" />
+
+        {/* Line */}
+        <path d={path} fill="none" stroke="url(#lineGrad)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+
+        {/* Data points */}
+        {pts.map((pt, i) => (
+          <g key={i}>
+            <circle cx={pt.x} cy={pt.y} r="3.5" fill={C.s1} stroke={lineColor} strokeWidth="1.5" />
+            {i === pts.length - 1 && (
+              <circle cx={pt.x} cy={pt.y} r="5.5" fill="none" stroke={lineColor} strokeWidth="1" opacity="0.35" />
+            )}
+          </g>
+        ))}
+
+        {/* X axis date labels */}
+        {pts.map((pt, i) => {
+          if (pts.length > 6 && i % 2 !== 0 && i !== pts.length - 1) return null;
+          return (
+            <text key={i}
+              x={pt.x} y={H - 4}
+              textAnchor="middle" fill="rgba(242,244,247,0.25)"
+              fontSize="9" fontFamily="'DM Sans',sans-serif"
+            >{dates[i] ? formatDate(dates[i]) : `J${i + 1}`}</text>
+          );
+        })}
+      </svg>
+    </div>
+  );
+}
+
+// ─── INLINE EDIT PRIMITIVES ───────────────────────────────────────────────────
+
+function EditableRow({ label, value, displayValue, type = "text", onChange, options, unit }) {
   const [editing, setEditing] = useState(false);
-
-  const handleBlur = () => setEditing(false);
-  const handleKeyDown = (e) => { if (e.key === "Enter") setEditing(false); };
-
   return (
     <div
       onClick={() => !editing && setEditing(true)}
       style={{
-        padding: "12px 0",
+        padding: "14px 0",
         display: "flex", justifyContent: "space-between", alignItems: "center",
         cursor: editing ? "default" : "pointer",
-        transition: "background 0.1s",
+        userSelect: "none",
       }}
     >
-      <span style={{ fontSize: 12, color: "rgba(242,244,247,0.40)", flexShrink: 0 }}>{label}</span>
-
+      <span style={{ fontSize: 13, color: "rgba(242,244,247,0.40)", fontWeight: 500 }}>{label}</span>
       {editing ? (
         options
-          // Select
-          ? <select
-              autoFocus
-              value={value || ""}
+          ? <select autoFocus value={value || ""}
               onChange={e => { onChange(e.target.value); setEditing(false); }}
-              onBlur={handleBlur}
-              style={{
-                background: C.s2, border: `1px solid rgba(59,130,246,0.45)`,
-                borderRadius: 8, color: C.text, fontSize: 13, padding: "5px 8px",
-                outline: "none", boxShadow: "0 0 0 3px rgba(59,130,246,0.10)",
-              }}
-            >
+              onBlur={() => setEditing(false)}
+              style={{ background: C.s2, border: `1px solid rgba(59,130,246,0.5)`, borderRadius: 9, color: C.text, fontSize: 13, padding: "6px 10px", outline: "none", boxShadow: "0 0 0 3px rgba(59,130,246,0.08)" }}>
               {options.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
             </select>
-          // Input
-          : <Inp
-              autoFocus
-              type={type}
-              value={value || ""}
-              onChange={e => onChange(e.target.value)}
-              onBlur={handleBlur}
-              onKeyDown={handleKeyDown}
-              style={{
-                marginBottom: 0, maxWidth: 140, padding: "5px 10px", fontSize: 13,
-                textAlign: "right", border: `1px solid rgba(59,130,246,0.45)`,
-                boxShadow: "0 0 0 3px rgba(59,130,246,0.10)",
-              }}
-            />
+          : <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <Inp autoFocus type={type} value={value || ""}
+                onChange={e => onChange(e.target.value)}
+                onBlur={() => setEditing(false)}
+                onKeyDown={e => e.key === "Enter" && setEditing(false)}
+                style={{ marginBottom: 0, maxWidth: 120, padding: "6px 10px", fontSize: 13, textAlign: "right", border: `1px solid rgba(59,130,246,0.5)`, boxShadow: "0 0 0 3px rgba(59,130,246,0.08)", borderRadius: 9 }}
+              />
+              {unit && <span style={{ fontSize: 12, color: "rgba(242,244,247,0.30)" }}>{unit}</span>}
+            </div>
       ) : (
-        <span style={{
-          fontSize: 13, fontWeight: 600, color: value ? C.text : "rgba(242,244,247,0.20)",
-          display: "flex", alignItems: "center", gap: 6,
-        }}>
-          {displayValue || value || "Appuyer pour modifier"}
-          <span style={{ fontSize: 10, color: "rgba(242,244,247,0.15)" }}>✏️</span>
+        <span style={{ fontSize: 14, fontWeight: 600, color: value ? C.text : "rgba(242,244,247,0.18)", display: "flex", alignItems: "center", gap: 6 }}>
+          {displayValue || value || <span style={{ fontSize: 12, color: "rgba(242,244,247,0.20)", fontWeight: 400 }}>Ajouter</span>}
+          {unit && value && <span style={{ fontSize: 11, color: "rgba(242,244,247,0.30)", fontWeight: 400 }}>{unit}</span>}
         </span>
       )}
     </div>
@@ -86,69 +188,79 @@ function EditableRow({ label, value, displayValue, type = "text", onChange, opti
 
 function EditableMetricRow({ label, icon, color, value, unit, onChange }) {
   const [editing, setEditing] = useState(false);
-  const max = { bodyfat: 40, muscleMass: 80, boneMass: 6, waterPct: 80, visceralFat: 20 };
-  const barMax = max[label] || 100;
-  const val = parseFloat(value) || null;
-  const barW = val ? Math.min((val / barMax) * 100, 100) : 0;
+  const MAX = { "Masse grasse": 40, "Masse musculaire": 80, "Masse osseuse": 6, "Eau corporelle": 80, "Graisse viscérale": 20 };
+  const val  = parseFloat(value) || 0;
+  const barW = val ? Math.min((val / (MAX[label] || 100)) * 100, 100) : 0;
 
   return (
-    <div onClick={() => !editing && setEditing(true)} style={{ padding: "10px 0", cursor: editing ? "default" : "pointer" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 5 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <span style={{ fontSize: 15 }}>{icon}</span>
-          <span style={{ fontSize: 12, color: C.mid }}>{label}</span>
+    <div onClick={() => !editing && setEditing(true)} style={{ padding: "12px 0", cursor: editing ? "default" : "pointer" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <span style={{ fontSize: 16 }}>{icon}</span>
+          <span style={{ fontSize: 13, color: "rgba(242,244,247,0.55)", fontWeight: 500 }}>{label}</span>
         </div>
         {editing
           ? <Inp autoFocus type="number" placeholder="—"
-              style={{ marginBottom: 0, maxWidth: 80, padding: "4px 8px", fontSize: 13, textAlign: "right", border: `1px solid rgba(59,130,246,0.45)`, boxShadow: "0 0 0 3px rgba(59,130,246,0.10)" }}
+              style={{ marginBottom: 0, maxWidth: 90, padding: "5px 9px", fontSize: 13, textAlign: "right", border: `1px solid rgba(59,130,246,0.5)`, boxShadow: "0 0 0 3px rgba(59,130,246,0.08)", borderRadius: 9 }}
               value={value || ""}
               onChange={e => onChange(e.target.value)}
               onBlur={() => setEditing(false)}
               onKeyDown={e => e.key === "Enter" && setEditing(false)}
             />
-          : <span style={{ fontSize: 14, fontWeight: 700, color: val ? color : "rgba(242,244,247,0.15)", display: "flex", alignItems: "center", gap: 4 }}>
-              {val ? `${val}${unit}` : "—"}
-              <span style={{ fontSize: 10, color: "rgba(242,244,247,0.15)" }}>✏️</span>
+          : <span style={{ fontSize: 15, fontWeight: 700, color: val ? color : "rgba(242,244,247,0.18)" }}>
+              {val ? `${val}${unit}` : <span style={{ fontSize: 12, fontWeight: 400, color: "rgba(242,244,247,0.20)" }}>Ajouter</span>}
             </span>}
       </div>
-      <div style={{ background: "rgba(255,255,255,0.05)", borderRadius: 4, height: 3, overflow: "hidden" }}>
-        <div style={{ width: `${barW}%`, height: "100%", background: color, borderRadius: 4, boxShadow: `0 0 6px ${color}55`, transition: "width 0.3s" }} />
+      <div style={{ height: 2, background: "rgba(255,255,255,0.06)", borderRadius: 2 }}>
+        <div style={{ height: "100%", width: `${barW}%`, background: color, borderRadius: 2, opacity: val ? 1 : 0, transition: "width 0.4s cubic-bezier(.16,1,.3,1)" }} />
       </div>
     </div>
   );
 }
 
-function EditableMensurationRow({ label, icon, fieldKey, profil, setProfil }) {
+function EditableMensRow({ label, icon, fieldKey, profil, setProfil }) {
   const [editing, setEditing] = useState(false);
-  const value = profil[fieldKey] || "";
-
+  const val = profil[fieldKey] || "";
   return (
     <div onClick={() => !editing && setEditing(true)}
-      style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "11px 0", cursor: editing ? "default" : "pointer" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-        <span style={{ fontSize: 14 }}>{icon}</span>
-        <span style={{ fontSize: 12, color: C.mid }}>{label}</span>
+      style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "13px 0", cursor: editing ? "default" : "pointer" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+        <span style={{ fontSize: 15 }}>{icon}</span>
+        <span style={{ fontSize: 13, color: "rgba(242,244,247,0.55)", fontWeight: 500 }}>{label}</span>
       </div>
-      <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-        {editing
-          ? <Inp autoFocus type="number" placeholder="—"
-              style={{ marginBottom: 0, width: 70, padding: "4px 8px", fontSize: 13, textAlign: "right", border: `1px solid rgba(59,130,246,0.45)`, boxShadow: "0 0 0 3px rgba(59,130,246,0.10)" }}
-              value={value}
+      {editing
+        ? <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <Inp autoFocus type="number"
+              style={{ marginBottom: 0, width: 80, padding: "5px 9px", fontSize: 13, textAlign: "right", border: `1px solid rgba(59,130,246,0.5)`, boxShadow: "0 0 0 3px rgba(59,130,246,0.08)", borderRadius: 9 }}
+              value={val}
               onChange={e => setProfil({ ...profil, [fieldKey]: e.target.value })}
               onBlur={() => setEditing(false)}
               onKeyDown={e => e.key === "Enter" && setEditing(false)}
             />
-          : <span style={{ fontSize: 14, fontWeight: 700, color: value ? C.text : "rgba(242,244,247,0.15)", display: "flex", alignItems: "center", gap: 4 }}>
-              {value || "—"}
-              <span style={{ fontSize: 10, color: "rgba(242,244,247,0.15)" }}>✏️</span>
-            </span>}
-        <span style={{ fontSize: 10, color: "rgba(242,244,247,0.25)" }}>cm</span>
-      </div>
+            <span style={{ fontSize: 11, color: "rgba(242,244,247,0.30)" }}>cm</span>
+          </div>
+        : <span style={{ fontSize: 14, fontWeight: 600, color: val ? C.text : "rgba(242,244,247,0.18)", display: "flex", alignItems: "center", gap: 5 }}>
+            {val || <span style={{ fontSize: 12, fontWeight: 400, color: "rgba(242,244,247,0.20)" }}>Ajouter</span>}
+            {val && <span style={{ fontSize: 11, color: "rgba(242,244,247,0.30)", fontWeight: 400 }}>cm</span>}
+          </span>}
     </div>
   );
 }
 
-// ─── TABS ────────────────────────────────────────────────────────────────────
+// ─── SHARED ──────────────────────────────────────────────────────────────────
+
+const Sep = () => <div style={{ height: 1, background: "rgba(255,255,255,0.05)" }} />;
+
+const Section = ({ title, children, style }) => (
+  <div style={{ marginBottom: 32, ...style }}>
+    <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(242,244,247,0.25)", letterSpacing: "1.8px", textTransform: "uppercase", marginBottom: 14 }}>
+      {title}
+    </div>
+    <div style={{ background: C.s1, border: `1px solid ${C.bd}`, borderRadius: 20, padding: "0 20px" }}>
+      {children}
+    </div>
+  </div>
+);
 
 const TABS = [
   { key: "profil",       label: "Profil"  },
@@ -158,127 +270,104 @@ const TABS = [
 
 const ACTIVITE_LABELS = {
   sedentaire: "Sédentaire",
-  leger:      "Léger (1-3x/sem)",
-  modere:     "Modéré (3-5x/sem)",
-  actif:      "Très actif (6-7x/sem)",
+  leger:      "Léger · 1–3×/sem",
+  modere:     "Modéré · 3–5×/sem",
+  actif:      "Très actif · 6–7×/sem",
 };
 
 // ─── TAB PROFIL ──────────────────────────────────────────────────────────────
 
 function TabProfil({ profil, setProfil, calObj, pObj, lObj, gObj, obj, weightLog }) {
-  const set = (key) => (val) => setProfil({ ...profil, [key]: val });
-  const last5 = weightLog?.slice(-5) || [];
-  const maxW  = last5.length ? Math.max(...last5.map(d => parseFloat(d.poids))) : 0;
-  const minW  = last5.length ? Math.min(...last5.map(d => parseFloat(d.poids))) : 0;
+  const set = key => val => setProfil({ ...profil, [key]: val });
 
   return (
     <div>
-      <SectionTitle>Informations</SectionTitle>
-      <Card>
+      {/* Identité */}
+      <Section title="Identité">
         <EditableRow label="Prénom" value={profil.prenom} onChange={set("prenom")} />
-        <Divider />
-        <div style={{ display: "flex" }}>
+        <Sep />
+        <div style={{ display: "flex", gap: 0 }}>
           <div style={{ flex: 1 }}>
             <EditableRow label="Âge" value={profil.age} displayValue={profil.age ? `${profil.age} ans` : null} type="number" onChange={set("age")} />
           </div>
-          <div style={{ width: 1, background: "rgba(255,255,255,0.05)", margin: "8px 0" }} />
-          <div style={{ flex: 1, paddingLeft: 12 }}>
-            <EditableRow
-              label="Genre" value={profil.sexe}
+          <div style={{ width: 1, background: "rgba(255,255,255,0.05)", alignSelf: "stretch" }} />
+          <div style={{ flex: 1, paddingLeft: 16 }}>
+            <EditableRow label="Genre" value={profil.sexe}
               displayValue={profil.sexe === "homme" ? "Homme" : profil.sexe === "femme" ? "Femme" : null}
               onChange={set("sexe")}
               options={[{ value: "", label: "—" }, { value: "homme", label: "Homme" }, { value: "femme", label: "Femme" }]}
             />
           </div>
         </div>
-        <Divider />
+        <Sep />
         <div style={{ display: "flex" }}>
           <div style={{ flex: 1 }}>
-            <EditableRow label="Poids" value={profil.poids} displayValue={profil.poids ? `${profil.poids} kg` : null} type="number" onChange={set("poids")} />
+            <EditableRow label="Poids" value={profil.poids} displayValue={profil.poids ? `${profil.poids}` : null} unit="kg" type="number" onChange={set("poids")} />
           </div>
-          <div style={{ width: 1, background: "rgba(255,255,255,0.05)", margin: "8px 0" }} />
-          <div style={{ flex: 1, paddingLeft: 12 }}>
-            <EditableRow label="Taille" value={profil.taille} displayValue={profil.taille ? `${profil.taille} cm` : null} type="number" onChange={set("taille")} />
+          <div style={{ width: 1, background: "rgba(255,255,255,0.05)", alignSelf: "stretch" }} />
+          <div style={{ flex: 1, paddingLeft: 16 }}>
+            <EditableRow label="Taille" value={profil.taille} displayValue={profil.taille ? `${profil.taille}` : null} unit="cm" type="number" onChange={set("taille")} />
           </div>
         </div>
-      </Card>
+      </Section>
 
-      {last5.length >= 2 && (
-        <>
-          <SectionTitle>Évolution du poids</SectionTitle>
-          <Card style={{ padding: "14px 16px" }}>
-            <div style={{ display: "flex", alignItems: "flex-end", gap: 6, height: 70 }}>
-              {last5.map((d, i) => {
-                const h = ((parseFloat(d.poids) - minW) / (maxW - minW + 0.1)) * 50 + 16;
-                const isLast = i === last5.length - 1;
-                return (
-                  <div key={i} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 3 }}>
-                    <span style={{ fontSize: 9, color: C.accent, fontWeight: 700 }}>{d.poids}</span>
-                    <div style={{ width: "100%", height: h, borderRadius: "4px 4px 2px 2px", background: isLast ? `linear-gradient(180deg, ${C.accent}, ${C.accentDk})` : "rgba(59,130,246,0.18)" }} />
-                    <span style={{ fontSize: 9, color: "rgba(242,244,247,0.25)" }}>
-                      {d.date ? new Date(d.date).toLocaleDateString("fr-FR", { day: "2-digit", month: "short" }) : "—"}
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
-            <div style={{ marginTop: 10, display: "flex", justifyContent: "space-between", fontSize: 10, color: "rgba(242,244,247,0.30)" }}>
-              <span>Dernière pesée : {last5.at(-1)?.date ? new Date(last5.at(-1).date).toLocaleDateString("fr-FR") : "aujourd'hui"}</span>
-              <span style={{ color: (parseFloat(last5.at(-1).poids) - parseFloat(last5[0].poids)) >= 0 ? C.green : C.red, fontWeight: 700 }}>
-                {(parseFloat(last5.at(-1).poids) - parseFloat(last5[0].poids)) >= 0 ? "+" : ""}
-                {(parseFloat(last5.at(-1).poids) - parseFloat(last5[0].poids)).toFixed(1)} kg
-              </span>
-            </div>
-          </Card>
-        </>
+      {/* Graphique poids */}
+      {weightLog?.length >= 2 && (
+        <div style={{ marginBottom: 32 }}>
+          <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(242,244,247,0.25)", letterSpacing: "1.8px", textTransform: "uppercase", marginBottom: 14 }}>
+            Historique
+          </div>
+          <div style={{ background: C.s1, border: `1px solid ${C.bd}`, borderRadius: 20, padding: "20px" }}>
+            <WeightChart data={weightLog.slice(-12)} />
+          </div>
+        </div>
       )}
 
-      <SectionTitle>Objectif & Activité</SectionTitle>
-      <Card>
-        <EditableRow
-          label="Objectif" value={profil.objectif}
+      {/* Objectif */}
+      <Section title="Programme">
+        <EditableRow label="Objectif" value={profil.objectif}
           displayValue={obj?.icon ? `${obj.icon} ${obj.l}` : null}
           onChange={set("objectif")}
           options={Object.entries(OBJ).map(([k, v]) => ({ value: k, label: `${v.icon} ${v.l}` }))}
         />
-        <Divider />
-        <EditableRow
-          label="Activité" value={profil.activite}
+        <Sep />
+        <EditableRow label="Activité" value={profil.activite}
           displayValue={ACTIVITE_LABELS[profil.activite] || null}
           onChange={set("activite")}
           options={Object.entries(ACTIVITE_FACTOR).map(([k]) => ({ value: k, label: ACTIVITE_LABELS[k] || k }))}
         />
         {calObj && (
           <>
-            <Divider />
-            <div style={{ padding: "12px 0", display: "flex", justifyContent: "space-between" }}>
-              <span style={{ fontSize: 12, color: "rgba(242,244,247,0.40)" }}>Besoins caloriques</span>
-              <span style={{ fontSize: 13, fontWeight: 600, color: C.accent }}>{calObj.toLocaleString()} kcal/jour</span>
+            <Sep />
+            <div style={{ padding: "14px 0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span style={{ fontSize: 13, color: "rgba(242,244,247,0.40)", fontWeight: 500 }}>Besoins caloriques</span>
+              <span style={{ fontSize: 14, fontWeight: 700, color: C.accent }}>{calObj.toLocaleString()} <span style={{ fontSize: 11, fontWeight: 400, color: "rgba(242,244,247,0.40)" }}>kcal/j</span></span>
             </div>
           </>
         )}
-      </Card>
+      </Section>
 
+      {/* Macros */}
       {calObj && (
-        <>
-          <SectionTitle>Macros journaliers</SectionTitle>
-          <Card style={{ padding: "14px 16px" }}>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
-              {[
-                { l: "Protéines", v: pObj, color: "#FF7A6B", bg: "rgba(239,68,68,0.08)"  },
-                { l: "Glucides",  v: gObj, color: "#FFAB5D", bg: "rgba(249,115,22,0.08)" },
-                { l: "Lipides",   v: lObj, color: "#34D399", bg: "rgba(34,197,94,0.08)"  },
-              ].map(m => (
-                <div key={m.l} style={{ textAlign: "center", padding: "10px 6px", background: m.bg, borderRadius: 12, border: `1px solid ${m.color}25` }}>
-                  <div style={{ fontSize: 20, fontWeight: 700, color: m.color, lineHeight: 1 }}>
-                    {m.v}<span style={{ fontSize: 9 }}>g</span>
-                  </div>
-                  <div style={{ fontSize: 9, color: C.mid, marginTop: 3 }}>{m.l}</div>
+        <div style={{ marginBottom: 32 }}>
+          <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(242,244,247,0.25)", letterSpacing: "1.8px", textTransform: "uppercase", marginBottom: 14 }}>
+            Macros cibles
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10 }}>
+            {[
+              { l: "Protéines", v: pObj, color: "#FF7A6B", bg: "rgba(239,68,68,0.07)"  },
+              { l: "Glucides",  v: gObj, color: "#FFAB5D", bg: "rgba(249,115,22,0.07)" },
+              { l: "Lipides",   v: lObj, color: "#34D399", bg: "rgba(34,197,94,0.07)"  },
+            ].map(m => (
+              <div key={m.l} style={{ background: m.bg, border: `1px solid ${m.color}20`, borderRadius: 16, padding: "14px 10px", textAlign: "center" }}>
+                <div style={{ fontSize: 22, fontWeight: 700, color: m.color, letterSpacing: -1, lineHeight: 1 }}>
+                  {m.v}<span style={{ fontSize: 10, fontWeight: 500, letterSpacing: 0 }}>g</span>
                 </div>
-              ))}
-            </div>
-          </Card>
-        </>
+                <div style={{ fontSize: 10, color: "rgba(242,244,247,0.35)", marginTop: 5, fontWeight: 500 }}>{m.l}</div>
+              </div>
+            ))}
+          </div>
+        </div>
       )}
     </div>
   );
@@ -302,53 +391,51 @@ function TabComposition({ profil, setProfil }) {
 
   return (
     <div>
-      <SectionTitle>Bilan général</SectionTitle>
-      <div style={{ display: "flex", gap: 10, marginBottom: 12 }}>
-        <div style={{ flex: 1, background: C.s1, border: `1px solid ${C.bd}`, borderRadius: 16, padding: "14px" }}>
-          <div style={{ fontSize: 10, color: "rgba(242,244,247,0.30)", letterSpacing: 1, textTransform: "uppercase", marginBottom: 4 }}>Poids actuel</div>
-          <div style={{ fontSize: 28, fontWeight: 700, color: C.accent, lineHeight: 1 }}>
-            {profil.poids || "—"}<span style={{ fontSize: 12, color: C.mid, fontWeight: 400 }}>kg</span>
+      {/* IMC */}
+      <div style={{ display: "flex", gap: 10, marginBottom: 32 }}>
+        <div style={{ flex: 1, background: C.s1, border: `1px solid ${C.bd}`, borderRadius: 20, padding: "18px" }}>
+          <div style={{ fontSize: 10, color: "rgba(242,244,247,0.25)", letterSpacing: 1.5, textTransform: "uppercase", marginBottom: 6 }}>Poids</div>
+          <div style={{ fontSize: 30, fontWeight: 700, color: C.accent, letterSpacing: -1.2, lineHeight: 1 }}>
+            {profil.poids || "—"}<span style={{ fontSize: 13, color: "rgba(242,244,247,0.35)", fontWeight: 400, letterSpacing: 0 }}> kg</span>
           </div>
         </div>
-        <div style={{ flex: 1, background: C.s1, border: `1px solid ${C.bd}`, borderRadius: 16, padding: "14px" }}>
-          <div style={{ fontSize: 10, color: "rgba(242,244,247,0.30)", letterSpacing: 1, textTransform: "uppercase", marginBottom: 4 }}>IMC</div>
-          <div style={{ fontSize: 28, fontWeight: 700, lineHeight: 1, color: imc < 25 ? C.green : "#FFAB5D" }}>
+        <div style={{ flex: 1, background: C.s1, border: `1px solid ${C.bd}`, borderRadius: 20, padding: "18px" }}>
+          <div style={{ fontSize: 10, color: "rgba(242,244,247,0.25)", letterSpacing: 1.5, textTransform: "uppercase", marginBottom: 6 }}>IMC</div>
+          <div style={{ fontSize: 30, fontWeight: 700, letterSpacing: -1.2, lineHeight: 1, color: imc < 25 ? C.green : "#FFAB5D" }}>
             {imc || "—"}
           </div>
-          {imc && <div style={{ fontSize: 9, color: C.mid, marginTop: 2 }}>
+          {imc && <div style={{ fontSize: 10, color: "rgba(242,244,247,0.30)", marginTop: 4, fontWeight: 500 }}>
             {imc < 18.5 ? "Maigreur" : imc < 25 ? "Normal ✓" : imc < 30 ? "Surpoids" : "Obésité"}
           </div>}
         </div>
       </div>
 
-      <SectionTitle>Composition corporelle</SectionTitle>
-      <Card>
+      <Section title="Composition">
         {METRICS.map((m, i) => (
           <div key={m.key}>
-            <EditableMetricRow
-              label={m.label} icon={m.icon} color={m.color} unit={m.unit}
+            <EditableMetricRow label={m.label} icon={m.icon} color={m.color} unit={m.unit}
               value={profil[m.key]}
               onChange={val => setProfil({ ...profil, [m.key]: val })}
             />
-            {i < METRICS.length - 1 && <Divider />}
+            {i < METRICS.length - 1 && <Sep />}
           </div>
         ))}
-      </Card>
+      </Section>
 
       {bf && (
-        <Card style={{ padding: "12px 14px" }}>
+        <div style={{ background: C.s1, border: `1px solid ${C.bd}`, borderRadius: 20, padding: "16px 20px", marginTop: -20, marginBottom: 32 }}>
           {(() => {
             const cat = profil.sexe === "femme"
-              ? (bf < 14 ? { l: "Athlète ⚡", c: C.green } : bf < 21 ? { l: "Forme ✅", c: C.green } : bf < 25 ? { l: "Acceptable", c: "#FFAB5D" } : { l: "À améliorer", c: "#F87171" })
-              : (bf < 6  ? { l: "Athlète ⚡", c: C.green } : bf < 14 ? { l: "Forme ✅", c: C.green } : bf < 18 ? { l: "Acceptable", c: "#FFAB5D" } : { l: "À améliorer", c: "#F87171" });
+              ? (bf < 14 ? { l: "Athlète", c: C.green } : bf < 21 ? { l: "Forme", c: C.green } : bf < 25 ? { l: "Acceptable", c: "#FFAB5D" } : { l: "À améliorer", c: "#F87171" })
+              : (bf < 6  ? { l: "Athlète", c: C.green } : bf < 14 ? { l: "Forme", c: C.green } : bf < 18 ? { l: "Acceptable", c: "#FFAB5D" } : { l: "À améliorer", c: "#F87171" });
             return (
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <span style={{ fontSize: 12, color: C.mid }}>Catégorie masse grasse</span>
-                <span style={{ fontSize: 12, fontWeight: 700, color: cat.c }}>{cat.l}</span>
+                <span style={{ fontSize: 12, color: "rgba(242,244,247,0.35)" }}>Catégorie masse grasse</span>
+                <span style={{ fontSize: 13, fontWeight: 700, color: cat.c }}>{cat.l}</span>
               </div>
             );
           })()}
-        </Card>
+        </div>
       )}
     </div>
   );
@@ -356,39 +443,47 @@ function TabComposition({ profil, setProfil }) {
 
 // ─── TAB MENSURATIONS ────────────────────────────────────────────────────────
 
-const MEASUREMENTS = [
-  { key: "mChest",      label: "Tour de poitrine", icon: "📐" },
-  { key: "mWaist",      label: "Tour de taille",   icon: "📐" },
-  { key: "mHips",       label: "Tour de hanches",  icon: "📐" },
-  { key: "mLeftArm",    label: "Bras gauche",      icon: "💪" },
-  { key: "mRightArm",   label: "Bras droit",       icon: "💪" },
-  { key: "mLeftThigh",  label: "Cuisse gauche",    icon: "🦵" },
-  { key: "mRightThigh", label: "Cuisse droite",    icon: "🦵" },
-  { key: "mLeftCalf",   label: "Mollet gauche",    icon: "🦵" },
-  { key: "mRightCalf",  label: "Mollet droit",     icon: "🦵" },
+const MGROUPS = [
+  { title: "Tronc",  items: [
+    { key: "mChest", label: "Poitrine", icon: "📐" },
+    { key: "mWaist", label: "Taille",   icon: "📐" },
+    { key: "mHips",  label: "Hanches",  icon: "📐" },
+  ]},
+  { title: "Bras",   items: [
+    { key: "mLeftArm",  label: "Bras gauche", icon: "💪" },
+    { key: "mRightArm", label: "Bras droit",  icon: "💪" },
+  ]},
+  { title: "Jambes", items: [
+    { key: "mLeftThigh",  label: "Cuisse gauche",  icon: "🦵" },
+    { key: "mRightThigh", label: "Cuisse droite",  icon: "🦵" },
+    { key: "mLeftCalf",   label: "Mollet gauche",  icon: "🦵" },
+    { key: "mRightCalf",  label: "Mollet droit",   icon: "🦵" },
+  ]},
 ];
 
 function TabMensurations({ profil, setProfil }) {
   return (
     <div>
-      <SectionTitle>Mes mensurations</SectionTitle>
-      <div style={{ background: "rgba(255,255,255,0.02)", border: `1px dashed ${C.bd}`, borderRadius: 16, padding: 14, marginBottom: 12, textAlign: "center" }}>
-        <div style={{ fontSize: 36 }}>🧍</div>
-        <div style={{ fontSize: 11, color: "rgba(242,244,247,0.25)", marginTop: 4 }}>
-          Appuie sur une ligne pour la modifier
+      <div style={{ background: C.s1, border: `1px solid ${C.bd}`, borderRadius: 20, padding: "20px", marginBottom: 32, display: "flex", alignItems: "center", gap: 16 }}>
+        <span style={{ fontSize: 40 }}>🧍</span>
+        <div>
+          <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 3 }}>Mensurations corporelles</div>
+          <div style={{ fontSize: 12, color: "rgba(242,244,247,0.35)", lineHeight: 1.5 }}>
+            Appuie sur une ligne pour la modifier
+          </div>
         </div>
       </div>
-      <Card>
-        {MEASUREMENTS.map((m, i) => (
-          <div key={m.key}>
-            <EditableMensurationRow
-              label={m.label} icon={m.icon} fieldKey={m.key}
-              profil={profil} setProfil={setProfil}
-            />
-            {i < MEASUREMENTS.length - 1 && <Divider />}
-          </div>
-        ))}
-      </Card>
+
+      {MGROUPS.map(g => (
+        <Section key={g.title} title={g.title}>
+          {g.items.map((m, i) => (
+            <div key={m.key}>
+              <EditableMensRow label={m.label} icon={m.icon} fieldKey={m.key} profil={profil} setProfil={setProfil} />
+              {i < g.items.length - 1 && <Sep />}
+            </div>
+          ))}
+        </Section>
+      ))}
     </div>
   );
 }
@@ -404,81 +499,69 @@ export default function Profile(props) {
   const [activeTab, setActiveTab] = useState("profil");
 
   return (
-    <div style={{ padding: "0 16px 32px", fontFamily: "'DM Sans', -apple-system, sans-serif" }} className="anim">
+    <div style={{ padding: "0 20px 48px", fontFamily: "'DM Sans', -apple-system, sans-serif", minHeight: "100vh" }} className="anim">
 
       {/* HEADER */}
-      <div style={{ padding: "26px 0 20px" }}>
-        <span style={{ fontSize: 17, fontWeight: 700, letterSpacing: -0.3 }}>Mon Profil</span>
-      </div>
-
-      {/* AVATAR */}
-      <div style={{ textAlign: "center", marginBottom: 20 }}>
-        <div style={{
-          width: 80, height: 80, borderRadius: "50%", margin: "0 auto 12px",
-          background: "rgba(59,130,246,0.08)", border: "1px solid rgba(59,130,246,0.20)",
-          boxShadow: "0 0 0 3px rgba(59,130,246,0.08), 0 0 24px rgba(59,130,246,0.10)",
-          display: "flex", alignItems: "center", justifyContent: "center",
-        }}>
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none"
-            stroke="rgba(59,130,246,0.7)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <circle cx="12" cy="8" r="4"/>
-            <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
-          </svg>
-        </div>
-        <div style={{ fontSize: 20, fontWeight: 700, letterSpacing: -0.4, marginBottom: 5 }}>
+      <div style={{ paddingTop: 28, paddingBottom: 28 }}>
+        <div style={{ fontSize: 24, fontWeight: 700, letterSpacing: -0.8, marginBottom: 2 }}>
           {profil?.prenom || "Mon profil"}
         </div>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           {premium
-            ? <span style={{ background: "rgba(59,130,246,0.12)", border: "1px solid rgba(59,130,246,0.25)", borderRadius: 20, padding: "3px 10px", fontSize: 10, fontWeight: 700, color: C.accent }}>✦ PREMIUM</span>
-            : <span style={{ background: "rgba(255,255,255,0.04)", border: `1px solid ${C.bd}`, borderRadius: 20, padding: "3px 10px", fontSize: 10, fontWeight: 600, color: "rgba(242,244,247,0.35)" }}>Compte gratuit</span>
+            ? <span style={{ background: "rgba(59,130,246,0.12)", border: "1px solid rgba(59,130,246,0.22)", borderRadius: 20, padding: "3px 10px", fontSize: 10, fontWeight: 700, color: C.accent, letterSpacing: 0.5 }}>✦ PREMIUM</span>
+            : <span style={{ background: "rgba(255,255,255,0.04)", border: `1px solid ${C.bd}`, borderRadius: 20, padding: "3px 10px", fontSize: 10, fontWeight: 600, color: "rgba(242,244,247,0.30)", letterSpacing: 0.5 }}>GRATUIT</span>
           }
           {profil?.age && profil?.sexe && (
-            <span style={{ fontSize: 11, color: "rgba(242,244,247,0.35)" }}>
-              · {profil.age} ans · {profil.sexe === "homme" ? "Homme" : "Femme"}
+            <span style={{ fontSize: 12, color: "rgba(242,244,247,0.30)" }}>
+              {profil.age} ans · {profil.sexe === "homme" ? "Homme" : "Femme"}
             </span>
           )}
         </div>
       </div>
 
-      {/* QUICK STATS */}
+      {/* STATS PILLS */}
       {(profil?.poids || profil?.taille) && (
-        <div style={{ display: "flex", gap: 10, marginBottom: 20 }}>
+        <div style={{ display: "flex", gap: 8, marginBottom: 28 }}>
           {[
-            { label: "Poids",  value: profil.poids,  unit: "kg", icon: "⚖️", color: "#4FC3F7" },
-            { label: "Taille", value: profil.taille, unit: "cm", icon: "📏", color: "#81C784" },
-            { label: "IMC",    value: imc,           unit: "",   icon: "📊", color: "#FFB74D" },
+            { label: "Poids",  value: profil.poids,  unit: "kg", color: "#4FC3F7" },
+            { label: "Taille", value: profil.taille, unit: "cm", color: "#81C784" },
+            { label: "IMC",    value: imc,           unit: "",   color: "#FFB74D" },
           ].map((s, i) => (
-            <div key={i} style={{ flex: 1, background: C.s1, border: `1px solid ${C.bd}`, borderRadius: 14, padding: "10px 8px", textAlign: "center" }}>
-              <div style={{ fontSize: 16, marginBottom: 3 }}>{s.icon}</div>
-              <div style={{ fontSize: 17, fontWeight: 800, color: s.color, lineHeight: 1 }}>
-                {s.value || "—"}<span style={{ fontSize: 10, fontWeight: 400, color: "rgba(242,244,247,0.30)" }}>{s.unit}</span>
+            <div key={i} style={{ flex: 1, background: C.s1, border: `1px solid ${C.bd}`, borderRadius: 16, padding: "12px 8px", textAlign: "center" }}>
+              <div style={{ fontSize: 18, fontWeight: 800, color: s.color, letterSpacing: -0.8, lineHeight: 1 }}>
+                {s.value || "—"}
+                {s.unit && <span style={{ fontSize: 10, fontWeight: 500, color: "rgba(242,244,247,0.30)", letterSpacing: 0 }}> {s.unit}</span>}
               </div>
-              <div style={{ fontSize: 9, color: "rgba(242,244,247,0.25)", marginTop: 2 }}>{s.label}</div>
+              <div style={{ fontSize: 10, color: "rgba(242,244,247,0.28)", marginTop: 4, fontWeight: 500, letterSpacing: 0.3 }}>{s.label}</div>
             </div>
           ))}
         </div>
       )}
 
       {/* TABS */}
-      <div style={{ display: "flex", background: "rgba(255,255,255,0.03)", border: `1px solid ${C.bd}`, borderRadius: 12, padding: 3, gap: 2, marginBottom: 20 }}>
+      <div style={{
+        display: "flex",
+        background: "rgba(255,255,255,0.03)",
+        border: `1px solid ${C.bd}`,
+        borderRadius: 14, padding: 3, gap: 2, marginBottom: 28,
+      }}>
         {TABS.map(tab => (
           <button key={tab.key} onClick={() => setActiveTab(tab.key)} style={{
             flex: 1,
-            background: activeTab === tab.key ? "rgba(59,130,246,0.15)" : "transparent",
-            border: `1px solid ${activeTab === tab.key ? "rgba(59,130,246,0.30)" : "transparent"}`,
-            borderRadius: 9, padding: "8px 4px",
-            color: activeTab === tab.key ? C.accent : "rgba(242,244,247,0.30)",
-            fontSize: 11, fontWeight: 700, cursor: "pointer",
-            letterSpacing: 0.3, textTransform: "uppercase", transition: "all 0.15s",
+            background: activeTab === tab.key ? C.s1 : "transparent",
+            border: `1px solid ${activeTab === tab.key ? C.bd : "transparent"}`,
+            borderRadius: 11, padding: "9px 4px",
+            color: activeTab === tab.key ? C.text : "rgba(242,244,247,0.28)",
+            fontSize: 12, fontWeight: activeTab === tab.key ? 600 : 500,
+            cursor: "pointer", letterSpacing: 0.1,
+            transition: "all 0.15s",
+            boxShadow: activeTab === tab.key ? "0 1px 4px rgba(0,0,0,0.3)" : "none",
           }}>{tab.label}</button>
         ))}
       </div>
 
-      {/* TAB CONTENT */}
       {activeTab === "profil" && (
-        <TabProfil
-          profil={profil} setProfil={setProfil}
+        <TabProfil profil={profil} setProfil={setProfil}
           calObj={calObj} pObj={pObj} lObj={lObj} gObj={gObj}
           obj={obj} cycles={cycles} weightLog={weightLog || []}
         />
@@ -490,39 +573,34 @@ export default function Profile(props) {
         <TabMensurations profil={profil} setProfil={setProfil} />
       )}
 
-      {/* PREMIUM UPSELL */}
+      {/* PREMIUM */}
       {!premium && (
-        <div style={{ marginTop: 8, background: "rgba(59,130,246,0.05)", border: "1px solid rgba(59,130,246,0.15)", borderRadius: 18, padding: "16px" }}>
-          <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 4 }}>Passer en Premium</div>
-          <div style={{ fontSize: 12, color: "rgba(242,244,247,0.45)", marginBottom: 14, lineHeight: 1.5 }}>
-            Accède à l'analyse morphologique complète, la planification 6 semaines et le suivi nutritionnel avancé.
+        <div style={{ marginBottom: 24, background: "rgba(59,130,246,0.04)", border: "1px solid rgba(59,130,246,0.12)", borderRadius: 20, padding: "20px" }}>
+          <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 6, letterSpacing: -0.3 }}>Passer en Premium</div>
+          <div style={{ fontSize: 13, color: "rgba(242,244,247,0.40)", marginBottom: 18, lineHeight: 1.6 }}>
+            Analyse morphologique complète, planification 6 semaines et suivi nutritionnel avancé.
           </div>
           <button onClick={() => { setPremium?.(true); push?.("🎉", "Premium activé !", "Accès complet activé !"); }}
-            style={{ width: "100%", padding: "13px 16px", background: C.accent, border: "none", borderRadius: 12, color: "#fff", fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: "'DM Sans',sans-serif" }}>
-            Activer Premium · 9,99€/mois
+            style={{ width: "100%", padding: "14px", background: C.accent, border: "none", borderRadius: 14, color: "#fff", fontSize: 14, fontWeight: 600, cursor: "pointer", letterSpacing: -0.1, boxShadow: "0 4px 16px rgba(59,130,246,0.30)" }}>
+            Activer Premium · 9,99€ / mois
           </button>
         </div>
       )}
 
       {/* EXPORT */}
-      <div style={{ marginTop: 12 }}>
-        <SectionTitle>Export</SectionTitle>
-        <Card style={{ padding: "14px 16px" }}>
-          <button onClick={() => {
-            const txt = `${profil?.prenom || "Utilisateur"} — ${profil?.poids}kg, ${profil?.taille}cm\nObjectif : ${obj?.l || "—"}\nCalories : ${calObj || "—"} kcal/j`;
-            if (navigator.share) navigator.share({ title: "Mon profil MorphoCoach", text: txt });
-            else push?.("✅", "Copié !", "Profil copié dans le presse-papier.");
-          }} style={{
-            width: "100%", padding: "10px 14px",
-            background: "rgba(59,130,246,0.08)", border: "1px solid rgba(59,130,246,0.20)",
-            borderRadius: 10, color: C.accent, cursor: "pointer",
-            fontSize: 12, fontWeight: 600, fontFamily: "'DM Sans',sans-serif",
-            display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-          }}>
-            📤 Partager mon profil
-          </button>
-        </Card>
-      </div>
+      <button onClick={() => {
+        const txt = `${profil?.prenom || "Utilisateur"} — ${profil?.poids}kg, ${profil?.taille}cm\nObjectif : ${obj?.l || "—"}\nCalories : ${calObj || "—"} kcal/j`;
+        if (navigator.share) navigator.share({ title: "Mon profil MorphoCoach", text: txt });
+        else push?.("✅", "Copié !", "Profil copié dans le presse-papier.");
+      }} style={{
+        width: "100%", padding: "13px",
+        background: "rgba(255,255,255,0.04)", border: `1px solid ${C.bd}`,
+        borderRadius: 14, color: "rgba(242,244,247,0.50)", cursor: "pointer",
+        fontSize: 13, fontWeight: 500, fontFamily: "'DM Sans',sans-serif",
+        display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+      }}>
+        <span>📤</span> Partager mon profil
+      </button>
 
     </div>
   );
