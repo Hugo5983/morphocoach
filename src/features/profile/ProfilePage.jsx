@@ -1,197 +1,551 @@
-import { useState, useRef, useEffect, useCallback, useMemo } from "react";
-import { C, INT, SESS_COLORS, OBJ, ACTIVITE_FACTOR, GLOBAL_CSS as CSS } from "../../data/constants.js";
-import { FOODS } from "../../data/foods.js";
-import { EX } from "../../data/exercises.js";
-import { MOTIVATIONS } from "../../data/motivations.js";
-import { Box, Lbl, Inp, Btn, Bar, Row, G2, Tag, MiniChart } from "../../components/ui/index.jsx";
+import { useState } from "react";
+import { C, OBJ, ACTIVITE_FACTOR } from "../../data/constants.js";
+import { Box, Lbl, Inp, Btn, Bar, G2, MiniChart } from "../../components/ui/index.jsx";
 
-// ─── PROFILE ──────────────────────────────────────────────────────────────
+// ─── HELPERS ────────────────────────────────────────────────────────────────
+const pct = (v, t) => Math.min((v / t) * 100, 100);
 
- export default function Profile(props){
- const { profil, setProfil, prog, setProg, cycles, premium, setPremium, push, setChrono, setChronoSec, weightLog, setWeightLog, lastWeighIn, setLastWeighIn, checkedEx, setCheckedEx, seance, exDetails, setExDetails, exEdit, setExEdit, imc, obj, calObj, pObj, lObj, gObj, getStreak, C, INT, OBJ, ACTIVITE_FACTOR, EX } = props;
- return (
- <div style={{padding:"0 15px 16px"}} className="anim">
- <div style={{padding:"26px 0 14px",display:"flex",flexDirection:"column",alignItems:"center"}}>
- <div style={{width:68,height:68,borderRadius:"50%",background:"rgba(59,130,246,0.08)",border:"0.5px solid rgba(59,130,246,0.2)",display:"flex",alignItems:"center",justifyContent:"center",marginBottom:12}}>
- <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#4D8BFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
- </div>
- <div style={{fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",fontSize:20,fontWeight:300,color:"#F5F1E8",marginBottom:3}}>{profil.prenom||"Mon profil"}</div>
- <div style={{fontSize:11,color:"rgba(245,241,232,0.50)",marginBottom:4}}>{premium?"Membre Premium ✦":"Compte gratuit"}</div>
- </div>
- {!premium?<div style={{background:"rgba(59,130,246,0.06)",border:`0.5px solid ${C.goldB}`,borderRadius:13,padding:"20px 16px",marginBottom:9}}>
- <div style={{fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",fontSize:24,letterSpacing:2,color:C.gold,textAlign:"center",marginBottom:4}}>PASSER À PREMIUM</div>
- <div style={{fontSize:12,color:"rgba(245,241,232,0.50)",textAlign:"center",marginBottom:14}}>Programmes personnalisés selon votre morphologie</div>
- {["Programme unique adapté à votre corps","Biomécanique et exercices correctifs","Programme nutrition sur mesure","Calendrier cycle 6 semaines"].map(f=>(
- <Row key={f} style={{marginBottom:8,gap:9}}>
- <div style={{width:15,height:15,borderRadius:"50%",background:"rgba(56,199,117,.12)",border:"1px solid rgba(56,199,117,.25)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:8,color:C.green,flexShrink:0}}>✓</div>
- <span style={{fontSize:12}}>{f}</span>
- </Row>
- ))}
- <div style={{textAlign:"center",margin:"12px 0"}}>
- <div style={{fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",fontSize:28,color:C.gold,letterSpacing:-0.5,fontWeight:300}}>19.99€<span style={{fontSize:12,color:"rgba(245,241,232,0.50)",fontFamily:"'Inter',sans-serif",fontWeight:400}}> /cycle</span></div>
- </div>
- <Btn onClick={()=>{setPremium(true);push("🎉","Premium activé !","Accès complet activé !");}}>Commencer maintenant</Btn>
- </div>:<Box style={{background:C.goldD,borderColor:C.goldB,display:"flex",alignItems:"center",gap:11}}>
- <div style={{width:38,height:38,borderRadius:"50%",background:"rgba(200,150,62,.15)",border:`0.5px solid ${C.goldB}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,flexShrink:0}}>◈</div>
- <div><div style={{fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",fontSize:16,color:C.gold,letterSpacing:-0.5,fontWeight:300}}>MEMBRE PREMIUM</div><div style={{fontSize:10,color:"rgba(245,241,232,0.50)"}}>Accès complet activé</div></div>
- </Box>}
- <Box>
- <Lbl>Informations</Lbl>
- <Inp placeholder="Prénom" value={profil.prenom} onChange={e=>setProfil({...profil,prenom:e.target.value})}/>
- <G2><Inp type="number" placeholder="Âge" style={{marginBottom:0}} value={profil.age} onChange={e=>setProfil({...profil,age:e.target.value})}/><select style={{width:"100%",padding:"11px 13px",background:C.s2,border:"0.5px solid rgba(190,180,255,0.07)",borderRadius:9,color:C.text,fontSize:13}} value={profil.sexe} onChange={e=>setProfil({...profil,sexe:e.target.value})}><option value="">Sexe</option><option value="homme">Homme</option><option value="femme">Femme</option></select></G2>
- <G2 style={{marginTop:6}}><Inp type="number" placeholder="Poids (kg)" style={{marginBottom:0}} value={profil.poids} onChange={e=>setProfil({...profil,poids:e.target.value})}/><Inp type="number" placeholder="Taille (cm)" style={{marginBottom:0}} value={profil.taille} onChange={e=>setProfil({...profil,taille:e.target.value})}/></G2>
- <div style={{marginTop:6}}>
-  <Inp type="number" placeholder="% Masse grasse (optionnel — plus fiable que l'IMC)" value={profil.bodyfat||""} onChange={e=>setProfil({...profil,bodyfat:e.target.value})}/>
-  {profil.bodyfat&&(()=>{
-   const bf=parseFloat(profil.bodyfat);
-   const cat=profil.sexe==="femme"?(bf<14?"Athlète ⚡":bf<21?"Forme ✅":bf<25?"Acceptable":bf<32?"À améliorer":"Obésité"):(bf<6?"Athlète ⚡":bf<14?"Forme ✅":bf<18?"Acceptable":bf<25?"À améliorer":"Obésité");
-   const col=cat.includes("Athlète")||cat.includes("Forme")?"#5FE0A5":cat==="Acceptable"?"#FFAB5D":"#FF7A6B";
-   return <div style={{fontSize:11,color:col,fontWeight:600,marginTop:2,paddingLeft:4}}>📊 {cat}</div>;
-  })()}
-  {imc&&!profil.bodyfat&&<div style={{marginTop:4,padding:"6px 10px",background:"#1C2440",border:"0.5px solid rgba(190,180,255,0.07)",borderRadius:7,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-   <span style={{fontSize:10,color:"rgba(245,241,232,0.50)"}}>IMC : {imc} — indicatif seulement</span>
-   <span style={{fontSize:10,color:imc<18.5?C.blue:imc<25?C.green:imc<30?C.orange:C.red,fontWeight:600}}>{imc<18.5?"Maigreur":imc<25?"Normal ✓":imc<30?"Surpoids":"Obésité"}</span>
-  </div>}
- </div>
- </Box>
- <Box>
- <Lbl>Objectif</Lbl>
- <G2>{[{id:"hypertrophie",i:"💪",l:"Prise de muscle"},{id:"force",i:"🏋️",l:"Force"},{id:"poids",i:"🔥",l:"Perte de poids"},{id:"sante",i:"❤️",l:"Santé"},{id:"prep_physique",i:"⚡",l:"Prépa physique"},{id:"reathletisation",i:"🩺",l:"Réathlétisation"}].map(o=>(
- <div key={o.id} onClick={()=>setProfil({...profil,objectif:o.id})} style={{padding:"12px 8px",textAlign:"center",cursor:"pointer",background:profil.objectif===o.id?C.goldD:C.s2,border:`1px solid ${profil.objectif===o.id?C.gold:C.s3}`,borderRadius:10}}>
- <div style={{fontSize:20,marginBottom:5}}>{o.i}</div><div style={{fontSize:11,fontWeight:400}}>{o.l}</div>
- </div>
- ))}</G2>
- </Box>
- <Box>
- <Lbl>Niveau d'activité</Lbl>
- {[{id:"sedentaire",l:"Sédentaire",d:"Bureau"},{id:"leger",l:"Léger",d:"1-3x/sem"},{id:"modere",l:"Modéré",d:"3-5x/sem"},{id:"actif",l:"Très actif",d:"6-7x/sem"}].map(n=>(
- <div key={n.id} onClick={()=>setProfil({...profil,activite:n.id})} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"10px 12px",background:profil.activite===n.id?C.goldD:C.s2,border:`1px solid ${profil.activite===n.id?C.gold:C.s3}`,borderRadius:9,cursor:"pointer",marginBottom:6}}>
- <span style={{fontSize:12,fontWeight:600}}>{n.l}</span><span style={{fontSize:10,color:"rgba(245,241,232,0.50)"}}>{n.d}</span>
- </div>
- ))}
- </Box>
- {profil.poids&&profil.taille&&profil.age&&profil.sexe&&<Box>
- <Lbl>Besoins calculés</Lbl>
- {/* ─── Calorie principale ─── */}
- <div style={{display:"flex",alignItems:"baseline",gap:6,marginBottom:2}}>
- <div style={{fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",fontSize:34,color:"#4D8BFF",fontWeight:300,letterSpacing:-1,lineHeight:1}}>{calObj}</div>
- <div style={{fontSize:12,color:"rgba(245,241,232,0.50)"}}>kcal/jour</div>
- {cycles.length>0&&<div style={{marginLeft:"auto",padding:"3px 8px",background:"rgba(59,130,246,0.08)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:6,fontSize:10,color:"#4D8BFF"}}>Cycle {cycles.length+1}</div>}
- </div>
- <div style={{fontSize:11,color:"rgba(245,241,232,0.50)",marginBottom:10}}>{obj.icon} {obj.l} · {obj.surplus>0?`+${obj.surplus} kcal surplus`:obj.surplus<0?`${obj.surplus} kcal déficit`:"Maintien"}</div>
- {/* ─── Détail calcul ─── */}
- {(()=>{
- const p=parseFloat(profil.poids)||0;
- const t=parseFloat(profil.taille)||0;
- const a=parseFloat(profil.age)||0;
- const mb=profil.sexe==="femme"?Math.round(447.593+9.247*p+3.098*t-4.330*a):Math.round(88.362+13.397*p+4.799*t-5.677*a);
- const factAct=ACTIVITE_FACTOR[profil.activite]||1.375;
- const tdee=Math.round(mb*factAct);
- return(
- <div style={{padding:"10px 12px",background:"rgba(59,130,246,0.04)",border:"0.5px solid rgba(59,130,246,0.12)",borderRadius:10,marginBottom:12}}>
- <div style={{fontSize:9,color:"#4D8BFF",fontWeight:600,letterSpacing:"1px",textTransform:"uppercase",marginBottom:6}}>📊 Détail Harris-Benedict</div>
- <div style={{display:"flex",justifyContent:"space-between",marginBottom:3}}>
- <span style={{fontSize:10,color:"rgba(245,241,232,0.50)"}}>Métabolisme de base (MB)</span>
- <span style={{fontSize:10,fontWeight:600,color:C.text}}>{mb} kcal</span>
- </div>
- <div style={{display:"flex",justifyContent:"space-between",marginBottom:3}}>
- <span style={{fontSize:10,color:"rgba(245,241,232,0.50)"}}>TDEE (MB × {factAct})</span>
- <span style={{fontSize:10,fontWeight:600,color:C.text}}>{tdee} kcal</span>
- </div>
- <div style={{display:"flex",justifyContent:"space-between",borderTop:"0.5px solid rgba(190,180,255,0.07)",paddingTop:4,marginTop:2}}>
- <span style={{fontSize:10,color:"rgba(245,241,232,0.50)"}}>Objectif ({obj.l})</span>
- <span style={{fontSize:11,fontWeight:600,color:"#4D8BFF"}}>{calObj} kcal</span>
- </div>
- </div>
- );
- })()}
- {/* ─── Macros en g/kg ─── */}
- <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:7,marginBottom:10}}>
- {[
- {l:"Protéines",v:pObj,sub:`${obj.p}g/kg`,c:"#FF7A6B",bg:"rgba(239,68,68,0.08)"},
- {l:"Glucides", v:gObj,sub:"reste cal", c:"#FFAB5D",bg:"rgba(249,115,22,0.08)"},
- {l:"Lipides", v:lObj,sub:`${obj.li}g/kg`,c:"#5FE0A5",bg:"rgba(34,197,94,0.08)"},
- ].map(m=>(
- <div key={m.l} style={{textAlign:"center",padding:"10px 6px",background:m.bg,borderRadius:10,border:`0.5px solid ${m.c}30`}}>
- <div style={{fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",fontSize:20,color:m.c,fontWeight:300}}>{m.v}<span style={{fontSize:9}}>g</span></div>
- <div style={{fontSize:9,color:C.text,fontWeight:500,marginTop:1}}>{m.l}</div>
- <div style={{fontSize:8,color:"rgba(245,241,232,0.50)",marginTop:1}}>{m.sub}</div>
- </div>
- ))}
- </div>
- {/* ─── Conseil selon objectif ─── */}
- {profil.objectif==="hypertrophie"&&<div style={{padding:"8px 10px",background:"rgba(59,130,246,0.06)",border:"0.5px solid rgba(59,130,246,0.15)",borderRadius:8,fontSize:10,color:"#4D8BFF",lineHeight:1.5}}>💪 Prise de masse : surplus de +{(OBJ.hypertrophie.surplus+(Math.min(cycles.length,4)*50))}kcal. Protéines à {obj.p}g/kg. Progression du surplus par cycle (+50kcal chaque cycle).</div>}
- {profil.objectif==="poids"&&<div style={{padding:"8px 10px",background:"rgba(249,115,22,0.06)",border:"0.5px solid rgba(249,115,22,0.15)",borderRadius:8,fontSize:10,color:"#FFAB5D",lineHeight:1.5}}>🔥 Perte de graisse : déficit de 400kcal. Perte saine : 400-500g/semaine. Protéines élevées ({obj.p}g/kg) pour préserver le muscle. Méthode MATADOR recommandée : alterner 2 semaines déficit / 2 semaines maintien.</div>}
- {profil.objectif==="force"&&<div style={{padding:"8px 10px",background:"rgba(139,92,246,0.06)",border:"0.5px solid rgba(139,92,246,0.15)",borderRadius:8,fontSize:10,color:"#B69DFF",lineHeight:1.5}}>🏋️ Force : léger surplus +{OBJ.force.surplus}kcal. Protéines à {obj.p}g/kg. Glucides élevés ({obj.g}g/kg) pour les performances.</div>}
- {profil.objectif==="prep_physique"&&<div style={{padding:"8px 10px",background:"rgba(234,179,8,0.06)",border:"0.5px solid rgba(234,179,8,0.2)",borderRadius:8,fontSize:10,color:"#ca8a04",lineHeight:1.5}}>⚡ Prépa physique : léger surplus +{OBJ.prep_physique?.surplus||100}kcal. Protéines à {OBJ.prep_physique?.p||1.8}g/kg. Priorité aux exercices fonctionnels et polyarticulaires pour la condition physique générale.</div>}
- {profil.objectif==="reathletisation"&&<div style={{padding:"8px 10px",background:"rgba(6,182,212,0.06)",border:"0.5px solid rgba(6,182,212,0.2)",borderRadius:8,fontSize:10,color:"#0891b2",lineHeight:1.5}}>🩺 Réathlétisation : maintenance calorique. Priorité à la récupération fonctionnelle et au renforcement progressif. Consultez un professionnel de santé pour un suivi adapté.</div>}
- </Box>}
-       {/* ─── Export & Partage ─── */}
-      <Box>
-        <Lbl>Export & Partage</Lbl>
-        <div style={{fontSize:11,color:"rgba(245,241,232,0.50)",marginBottom:10,lineHeight:1.5}}>Exportez vos données ou partagez votre programme.</div>
-        <button onClick={()=>{
-          if(!prog){push("⚠️","Aucun programme","Générez d'abord un programme.");return;}
-          const txt="PROGRAMME: "+prog.titre+"\nDébut: "+prog.dateDebut+"\n\n"+prog.jours.map(j=>j.nom+" - "+j.focus+"\n"+j.exercices.map(e=>"  - "+e.nom+": "+(e.series||e.s||"3")+"×"+(e.reps||e.r||"10")+" | repos: "+(e.repos||"90s")).join("\n")).join("\n\n");
-          if(navigator.share){navigator.share({title:"Mon programme MorphoCoach",text:txt});}
-          else{navigator.clipboard?.writeText(txt).then(()=>push("✅","Copié !","Programme copié dans le presse-papier."));}
-        }} style={{width:"100%",padding:"11px 14px",background:"rgba(59,130,246,0.08)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:10,color:"#4D8BFF",cursor:"pointer",fontSize:12,fontFamily:"'Inter',sans-serif",fontWeight:500,marginBottom:8,display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
-          📤 Partager mon programme
+const SectionTitle = ({ children }) => (
+  <div style={{
+    fontSize: 10, fontWeight: 700, color: "rgba(242,244,247,0.30)",
+    letterSpacing: "1.5px", textTransform: "uppercase",
+    marginBottom: 10,
+  }}>{children}</div>
+);
+
+const Card = ({ children, style }) => (
+  <div style={{
+    background: C.s1,
+    border: `1px solid ${C.bd}`,
+    borderRadius: 18,
+    padding: "4px 16px",
+    marginBottom: 12,
+    ...style,
+  }}>{children}</div>
+);
+
+const Divider = () => (
+  <div style={{ height: 1, background: "rgba(255,255,255,0.05)", margin: "0 -16px" }} />
+);
+
+const FieldRow = ({ label, children }) => (
+  <div style={{
+    padding: "12px 0",
+    display: "flex", justifyContent: "space-between", alignItems: "center",
+  }}>
+    <span style={{ fontSize: 12, color: "rgba(242,244,247,0.40)" }}>{label}</span>
+    {children}
+  </div>
+);
+
+const FieldVal = ({ children, highlight }) => (
+  <span style={{
+    fontSize: 13, fontWeight: 600,
+    color: highlight ? C.accent : C.text,
+  }}>{children}</span>
+);
+
+// ─── TABS ───────────────────────────────────────────────────────────────────
+const TABS = [
+  { key: "profil",        label: "Profil" },
+  { key: "compo",         label: "Compo." },
+  { key: "mensurations",  label: "Mesures" },
+];
+
+// ─── TAB PROFIL ─────────────────────────────────────────────────────────────
+function TabProfil({ profil, setProfil, editMode, calObj, pObj, lObj, gObj, obj, cycles, weightLog, ACTIVITE_FACTOR, OBJ }) {
+  const maxW = weightLog?.length ? Math.max(...weightLog.map(d => parseFloat(d.poids))) : 0;
+  const minW = weightLog?.length ? Math.min(...weightLog.map(d => parseFloat(d.poids))) : 0;
+  const last5 = weightLog?.slice(-5) || [];
+
+  const activiteLabels = {
+    sedentaire: "Sédentaire",
+    leger: "Léger (1-3x/sem)",
+    modere: "Modéré (3-5x/sem)",
+    actif: "Très actif (6-7x/sem)",
+  };
+
+  return (
+    <div>
+      {/* Infos personnelles */}
+      <SectionTitle>Informations</SectionTitle>
+      <Card>
+        <FieldRow label="Prénom">
+          {editMode
+            ? <Inp style={{ marginBottom: 0, maxWidth: 160, padding: "6px 10px", fontSize: 13 }}
+                value={profil.prenom || ""} onChange={e => setProfil({ ...profil, prenom: e.target.value })} />
+            : <FieldVal>{profil.prenom || "—"}</FieldVal>}
+        </FieldRow>
+        <Divider />
+        <div style={{ display: "flex", gap: 0 }}>
+          <div style={{ flex: 1 }}>
+            <FieldRow label="Âge">
+              {editMode
+                ? <Inp type="number" style={{ marginBottom: 0, maxWidth: 80, padding: "6px 10px", fontSize: 13 }}
+                    value={profil.age || ""} onChange={e => setProfil({ ...profil, age: e.target.value })} />
+                : <FieldVal>{profil.age ? `${profil.age} ans` : "—"}</FieldVal>}
+            </FieldRow>
+          </div>
+          <div style={{ flex: 1 }}>
+            <FieldRow label="Genre">
+              {editMode
+                ? <select style={{ background: C.s2, border: `1px solid ${C.bd}`, borderRadius: 8, color: C.text, fontSize: 13, padding: "6px 8px" }}
+                    value={profil.sexe || ""} onChange={e => setProfil({ ...profil, sexe: e.target.value })}>
+                    <option value="">—</option>
+                    <option value="homme">Homme</option>
+                    <option value="femme">Femme</option>
+                  </select>
+                : <FieldVal>{profil.sexe === "homme" ? "Homme" : profil.sexe === "femme" ? "Femme" : "—"}</FieldVal>}
+            </FieldRow>
+          </div>
+        </div>
+        <Divider />
+        <div style={{ display: "flex" }}>
+          <div style={{ flex: 1 }}>
+            <FieldRow label="Poids">
+              {editMode
+                ? <Inp type="number" style={{ marginBottom: 0, maxWidth: 90, padding: "6px 10px", fontSize: 13 }}
+                    value={profil.poids || ""} onChange={e => setProfil({ ...profil, poids: e.target.value })} />
+                : <FieldVal>{profil.poids ? `${profil.poids} kg` : "—"}</FieldVal>}
+            </FieldRow>
+          </div>
+          <div style={{ flex: 1 }}>
+            <FieldRow label="Taille">
+              {editMode
+                ? <Inp type="number" style={{ marginBottom: 0, maxWidth: 90, padding: "6px 10px", fontSize: 13 }}
+                    value={profil.taille || ""} onChange={e => setProfil({ ...profil, taille: e.target.value })} />
+                : <FieldVal>{profil.taille ? `${profil.taille} cm` : "—"}</FieldVal>}
+            </FieldRow>
+          </div>
+        </div>
+      </Card>
+
+      {/* Évolution du poids */}
+      {last5.length >= 2 && (
+        <>
+          <SectionTitle>Évolution du poids</SectionTitle>
+          <Card style={{ padding: "14px 16px" }}>
+            <div style={{ display: "flex", alignItems: "flex-end", gap: 6, height: 70 }}>
+              {last5.map((d, i) => {
+                const h = ((parseFloat(d.poids) - minW) / (maxW - minW + 0.1)) * 50 + 16;
+                const isLast = i === last5.length - 1;
+                return (
+                  <div key={i} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 3 }}>
+                    <span style={{ fontSize: 9, color: C.accent, fontWeight: 700 }}>{d.poids}</span>
+                    <div style={{
+                      width: "100%", height: h, borderRadius: "4px 4px 2px 2px",
+                      background: isLast
+                        ? `linear-gradient(180deg, ${C.accent}, ${C.accentDk || C.blueDk})`
+                        : `rgba(59,130,246,0.18)`,
+                    }} />
+                    <span style={{ fontSize: 9, color: "rgba(242,244,247,0.25)" }}>
+                      {d.date ? new Date(d.date).toLocaleDateString("fr-FR", { day: "2-digit", month: "short" }) : "—"}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+            <div style={{ marginTop: 10, display: "flex", justifyContent: "space-between", fontSize: 10, color: "rgba(242,244,247,0.30)" }}>
+              <span>Dernière pesée : {last5.at(-1)?.date ? new Date(last5.at(-1).date).toLocaleDateString("fr-FR") : "aujourd'hui"}</span>
+              {last5.length >= 2 && (() => {
+                const delta = (parseFloat(last5.at(-1).poids) - parseFloat(last5[0].poids)).toFixed(1);
+                return <span style={{ color: delta >= 0 ? C.green : C.red, fontWeight: 700 }}>{delta >= 0 ? "+" : ""}{delta} kg</span>;
+              })()}
+            </div>
+          </Card>
+        </>
+      )}
+
+      {/* Objectif */}
+      <SectionTitle>Objectif & Activité</SectionTitle>
+      <Card>
+        <FieldRow label="Objectif">
+          {editMode
+            ? <select style={{ background: C.s2, border: `1px solid ${C.bd}`, borderRadius: 8, color: C.text, fontSize: 13, padding: "6px 8px" }}
+                value={profil.objectif || ""} onChange={e => setProfil({ ...profil, objectif: e.target.value })}>
+                {Object.entries(OBJ).map(([k, v]) => <option key={k} value={k}>{v.icon} {v.l}</option>)}
+              </select>
+            : <FieldVal>{obj?.icon} {obj?.l || "—"}</FieldVal>}
+        </FieldRow>
+        <Divider />
+        <FieldRow label="Niveau d'activité">
+          {editMode
+            ? <select style={{ background: C.s2, border: `1px solid ${C.bd}`, borderRadius: 8, color: C.text, fontSize: 13, padding: "6px 8px" }}
+                value={profil.activite || ""} onChange={e => setProfil({ ...profil, activite: e.target.value })}>
+                {Object.entries(ACTIVITE_FACTOR).map(([k]) => <option key={k} value={k}>{activiteLabels[k] || k}</option>)}
+              </select>
+            : <FieldVal>{activiteLabels[profil.activite] || "—"}</FieldVal>}
+        </FieldRow>
+        {calObj && <><Divider /><FieldRow label="Besoins caloriques"><FieldVal highlight>{calObj.toLocaleString()} kcal/jour</FieldVal></FieldRow></>}
+      </Card>
+
+      {/* Macros */}
+      {calObj && (
+        <>
+          <SectionTitle>Macros journaliers</SectionTitle>
+          <Card style={{ padding: "14px 16px" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
+              {[
+                { l: "Protéines", v: pObj, unit: "g", color: "#FF7A6B", bg: "rgba(239,68,68,0.08)" },
+                { l: "Glucides",  v: gObj, unit: "g", color: "#FFAB5D", bg: "rgba(249,115,22,0.08)" },
+                { l: "Lipides",   v: lObj, unit: "g", color: "#34D399", bg: "rgba(34,197,94,0.08)" },
+              ].map(m => (
+                <div key={m.l} style={{
+                  textAlign: "center", padding: "10px 6px",
+                  background: m.bg, borderRadius: 12,
+                  border: `1px solid ${m.color}25`,
+                }}>
+                  <div style={{ fontSize: 20, fontWeight: 700, color: m.color, lineHeight: 1 }}>
+                    {m.v}<span style={{ fontSize: 9 }}>{m.unit}</span>
+                  </div>
+                  <div style={{ fontSize: 9, color: C.mid, marginTop: 3 }}>{m.l}</div>
+                </div>
+              ))}
+            </div>
+          </Card>
+        </>
+      )}
+    </div>
+  );
+}
+
+// ─── TAB COMPOSITION ────────────────────────────────────────────────────────
+function TabComposition({ profil, setProfil, editMode }) {
+  const bf = parseFloat(profil.bodyfat) || null;
+  const imc = profil.poids && profil.taille
+    ? (parseFloat(profil.poids) / Math.pow(parseFloat(profil.taille) / 100, 2)).toFixed(1)
+    : null;
+
+  const METRICS = [
+    { key: "bodyfat",      label: "Masse grasse",     unit: "%",    icon: "🔥", color: "#FF7043", max: 40 },
+    { key: "muscleMass",   label: "Masse musculaire",  unit: "kg",   icon: "💪", color: "#42A5F5", max: 80 },
+    { key: "boneMass",     label: "Masse osseuse",     unit: "kg",   icon: "🦴", color: "#AB47BC", max: 6  },
+    { key: "waterPct",     label: "Eau corporelle",    unit: "%",    icon: "💧", color: "#26C6DA", max: 80 },
+    { key: "visceralFat",  label: "Graisse viscérale", unit: "/20",  icon: "🫀", color: "#EF5350", max: 20 },
+  ];
+
+  return (
+    <div>
+      {/* IMC + Poids */}
+      <SectionTitle>Bilan général</SectionTitle>
+      <div style={{ display: "flex", gap: 10, marginBottom: 12 }}>
+        <div style={{
+          flex: 1, background: C.s1, border: `1px solid ${C.bd}`,
+          borderRadius: 16, padding: "14px",
+        }}>
+          <div style={{ fontSize: 10, color: "rgba(242,244,247,0.30)", letterSpacing: 1, textTransform: "uppercase", marginBottom: 4 }}>Poids actuel</div>
+          <div style={{ fontSize: 28, fontWeight: 700, color: C.accent, lineHeight: 1 }}>
+            {profil.poids || "—"}<span style={{ fontSize: 12, color: C.mid, fontWeight: 400 }}>kg</span>
+          </div>
+        </div>
+        <div style={{
+          flex: 1, background: C.s1, border: `1px solid ${C.bd}`,
+          borderRadius: 16, padding: "14px",
+        }}>
+          <div style={{ fontSize: 10, color: "rgba(242,244,247,0.30)", letterSpacing: 1, textTransform: "uppercase", marginBottom: 4 }}>IMC</div>
+          <div style={{ fontSize: 28, fontWeight: 700, lineHeight: 1, color: imc < 25 ? C.green : "#FFAB5D" }}>
+            {imc || "—"}
+          </div>
+          {imc && <div style={{ fontSize: 9, color: C.mid, marginTop: 2 }}>
+            {imc < 18.5 ? "Maigreur" : imc < 25 ? "Normal ✓" : imc < 30 ? "Surpoids" : "Obésité"}
+          </div>}
+        </div>
+      </div>
+
+      {/* Métriques balance */}
+      <SectionTitle>Composition corporelle</SectionTitle>
+      <Card>
+        {METRICS.map((m, i) => {
+          const val = parseFloat(profil[m.key]) || null;
+          const p = val ? Math.min((val / m.max) * 100, 100) : 0;
+          return (
+            <div key={m.key}>
+              <div style={{ padding: "10px 0" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 5 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <span style={{ fontSize: 15 }}>{m.icon}</span>
+                    <span style={{ fontSize: 12, color: C.mid }}>{m.label}</span>
+                  </div>
+                  {editMode
+                    ? <Inp type="number" placeholder="—"
+                        style={{ marginBottom: 0, maxWidth: 80, padding: "4px 8px", fontSize: 13, textAlign: "right" }}
+                        value={profil[m.key] || ""}
+                        onChange={e => setProfil({ ...profil, [m.key]: e.target.value })} />
+                    : <span style={{ fontSize: 15, fontWeight: 700, color: val ? m.color : C.dim }}>
+                        {val ? `${val}${m.unit}` : "—"}
+                      </span>}
+                </div>
+                <div style={{ background: "rgba(255,255,255,0.05)", borderRadius: 4, height: 3, overflow: "hidden" }}>
+                  <div style={{ width: `${p}%`, height: "100%", background: m.color, borderRadius: 4, boxShadow: `0 0 6px ${m.color}55` }} />
+                </div>
+              </div>
+              {i < METRICS.length - 1 && <Divider />}
+            </div>
+          );
+        })}
+      </Card>
+
+      {/* Conseil masse grasse */}
+      {bf && (
+        <Card style={{ padding: "12px 14px" }}>
+          {(() => {
+            const cat = profil.sexe === "femme"
+              ? (bf < 14 ? { l: "Athlète ⚡", c: C.green } : bf < 21 ? { l: "Forme ✅", c: C.green } : bf < 25 ? { l: "Acceptable", c: "#FFAB5D" } : { l: "À améliorer", c: "#F87171" })
+              : (bf < 6  ? { l: "Athlète ⚡", c: C.green } : bf < 14 ? { l: "Forme ✅", c: C.green } : bf < 18 ? { l: "Acceptable", c: "#FFAB5D" } : { l: "À améliorer", c: "#F87171" });
+            return (
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <span style={{ fontSize: 12, color: C.mid }}>Catégorie masse grasse</span>
+                <span style={{ fontSize: 12, fontWeight: 700, color: cat.c }}>{cat.l}</span>
+              </div>
+            );
+          })()}
+        </Card>
+      )}
+    </div>
+  );
+}
+
+// ─── TAB MENSURATIONS ───────────────────────────────────────────────────────
+const MEASUREMENTS = [
+  { key: "mChest",       label: "Tour de poitrine",  icon: "📐" },
+  { key: "mWaist",       label: "Tour de taille",    icon: "📐" },
+  { key: "mHips",        label: "Tour de hanches",   icon: "📐" },
+  { key: "mLeftArm",     label: "Bras gauche",       icon: "💪" },
+  { key: "mRightArm",    label: "Bras droit",        icon: "💪" },
+  { key: "mLeftThigh",   label: "Cuisse gauche",     icon: "🦵" },
+  { key: "mRightThigh",  label: "Cuisse droite",     icon: "🦵" },
+  { key: "mLeftCalf",    label: "Mollet gauche",     icon: "🦵" },
+  { key: "mRightCalf",   label: "Mollet droit",      icon: "🦵" },
+];
+
+function TabMensurations({ profil, setProfil, editMode }) {
+  return (
+    <div>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+        <SectionTitle>Mes mensurations</SectionTitle>
+      </div>
+
+      <div style={{
+        background: "rgba(255,255,255,0.02)",
+        border: `1px dashed ${C.bd}`,
+        borderRadius: 16, padding: 14,
+        marginBottom: 12,
+        textAlign: "center",
+      }}>
+        <div style={{ fontSize: 36 }}>🧍</div>
+        <div style={{ fontSize: 11, color: "rgba(242,244,247,0.25)", marginTop: 4 }}>
+          {editMode ? "Active le mode édition pour remplir tes mesures" : "Clique sur Éditer pour mettre à jour"}
+        </div>
+      </div>
+
+      <Card>
+        {MEASUREMENTS.map((m, i) => (
+          <div key={m.key}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "11px 0" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <span style={{ fontSize: 14 }}>{m.icon}</span>
+                <span style={{ fontSize: 12, color: C.mid }}>{m.label}</span>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                {editMode
+                  ? <Inp type="number" placeholder="—"
+                      style={{ marginBottom: 0, width: 70, padding: "4px 8px", fontSize: 13, textAlign: "right" }}
+                      value={profil[m.key] || ""}
+                      onChange={e => setProfil({ ...profil, [m.key]: e.target.value })} />
+                  : <span style={{ fontSize: 14, fontWeight: 700, color: profil[m.key] ? C.text : C.dim }}>
+                      {profil[m.key] || "—"}
+                    </span>}
+                <span style={{ fontSize: 10, color: "rgba(242,244,247,0.25)" }}>cm</span>
+              </div>
+            </div>
+            {i < MEASUREMENTS.length - 1 && <Divider />}
+          </div>
+        ))}
+      </Card>
+    </div>
+  );
+}
+
+// ─── MAIN PROFILE PAGE ──────────────────────────────────────────────────────
+export default function Profile(props) {
+  const {
+    profil, setProfil, premium, setPremium, push,
+    weightLog, imc, obj, calObj, pObj, lObj, gObj,
+    cycles, C: propsC, OBJ: propsOBJ, ACTIVITE_FACTOR: propsAF,
+  } = props;
+
+  const [activeTab, setActiveTab] = useState("profil");
+  const [editMode, setEditMode]   = useState(false);
+
+  const usedOBJ = propsOBJ || OBJ;
+  const usedAF  = propsAF  || ACTIVITE_FACTOR;
+
+  const handleSave = () => {
+    setEditMode(false);
+    push?.("✅", "Profil mis à jour", "Tes informations ont été sauvegardées.");
+  };
+
+  return (
+    <div style={{ padding: "0 16px 32px", fontFamily: "'DM Sans', -apple-system, sans-serif" }} className="anim">
+
+      {/* ── HEADER ── */}
+      <div style={{
+        display: "flex", alignItems: "center", justifyContent: "space-between",
+        padding: "26px 0 20px",
+      }}>
+        <span style={{ fontSize: 17, fontWeight: 700, letterSpacing: -0.3 }}>Mon Profil</span>
+        <button
+          onClick={editMode ? handleSave : () => setEditMode(true)}
+          style={{
+            background: editMode ? "rgba(59,130,246,0.15)" : "rgba(255,255,255,0.05)",
+            border: `1px solid ${editMode ? "rgba(59,130,246,0.35)" : C.bd}`,
+            borderRadius: 10, padding: "7px 14px",
+            color: editMode ? C.accent : "rgba(242,244,247,0.50)",
+            fontSize: 12, fontWeight: 600, cursor: "pointer",
+          }}
+        >
+          {editMode ? "Sauvegarder" : "Éditer"}
         </button>
-        <div style={{padding:"8px 10px",background:"rgba(139,92,246,0.06)",border:"0.5px solid rgba(139,92,246,0.15)",borderRadius:8,fontSize:10,color:"#B69DFF",lineHeight:1.5}}>
-          💜 Synchro Apple Health & Google Fit — disponible dans la version app native (bientôt)
+      </div>
+
+      {/* ── AVATAR + NOM ── */}
+      <div style={{ textAlign: "center", marginBottom: 20 }}>
+        <div style={{
+          width: 80, height: 80, borderRadius: "50%", margin: "0 auto 12px",
+          background: "rgba(59,130,246,0.08)",
+          border: `1px solid rgba(59,130,246,0.20)`,
+          boxShadow: "0 0 0 3px rgba(59,130,246,0.08), 0 0 24px rgba(59,130,246,0.10)",
+          display: "flex", alignItems: "center", justifyContent: "center",
+        }}>
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none"
+            stroke="rgba(59,130,246,0.7)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="8" r="4"/>
+            <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+          </svg>
         </div>
-      </Box>
-      {/* ─── Export données santé ─── */}
-      <Box>
-        <Lbl>Exporter mes données</Lbl>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:8}}>
-          <button onClick={()=>{
-            const data={
-              profil,
-              poids_historique:weightLog,
-              programme:prog?{titre:prog.titre,seances_completees:prog.jours.filter(j=>j.complete).length}:null,
-              calories_cible:calObj,
-              macros:{proteines:pObj+"g",glucides:gObj+"g",lipides:lObj+"g"},
-              streak:getStreak,
-              export_date:new Date().toLocaleDateString("fr-FR"),
-            };
-            const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
-            const url=URL.createObjectURL(blob);
-            const a=document.createElement("a");
-            a.href=url;a.download=`morphocoach_${new Date().toLocaleDateString("fr-FR").replace(/\//g,"-")}.json`;
-            a.click();URL.revokeObjectURL(url);
-          }} style={{padding:"10px",background:"rgba(59,130,246,0.08)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:10,color:"#4D8BFF",cursor:"pointer",fontSize:11,fontWeight:500,fontFamily:"'Inter',sans-serif"}}>
-            📥 Exporter JSON
-          </button>
-          <button onClick={()=>{
-            const txt=`MorphoCoach — Bilan du ${new Date().toLocaleDateString("fr-FR")}
-Profil: ${profil.prenom||"Anonyme"}, ${profil.poids}kg, ${profil.taille}cm
-Objectif: ${OBJ[profil.objectif]?.l||""}
-Calories: ${calObj} kcal/j | P: ${pObj}g | G: ${gObj}g | L: ${lObj}g
-Streak: ${getStreak} jours
-Programme: ${prog?.titre||"Aucun"}
-Poids actuel: ${weightLog.length>0?weightLog[weightLog.length-1].v+"kg":"Non renseigné"}`;
-            if(navigator.share){navigator.share({title:"Mon bilan MorphoCoach",text:txt}).catch(()=>{});}
-            else{navigator.clipboard.writeText(txt).then(()=>push("✅","Copié !","Bilan copié dans le presse-papier"));}
-          }} style={{padding:"10px",background:"rgba(34,197,94,0.08)",border:"0.5px solid rgba(34,197,94,0.2)",borderRadius:10,color:"#5FE0A5",cursor:"pointer",fontSize:11,fontWeight:500,fontFamily:"'Inter',sans-serif"}}>
-            📤 Partager
-          </button>
+        <div style={{ fontSize: 20, fontWeight: 700, letterSpacing: -0.4, marginBottom: 5 }}>
+          {profil?.prenom || "Mon profil"}
         </div>
-        <div style={{fontSize:10,color:"rgba(245,241,232,0.50)",lineHeight:1.4}}>Exporte ton profil, ton historique de poids et tes statistiques. Compatible Apple Santé et Google Fit via l'import JSON.</div>
-      </Box>
-      <Box>
-        <Lbl>Notifications</Lbl> <Lbl>Notifications</Lbl>
- {[{i:"🏋️",l:"Rappel de séance"},{i:"🥗",l:"Journal alimentaire"},{i:"💧",l:"Hydratation"},{i:"🔔",l:"Fin de cycle"}].map((n,i)=>(
- <Row key={i} style={{marginBottom:10,justifyContent:"space-between"}}>
- <Row style={{gap:10}}><span style={{fontSize:17}}>{n.i}</span><span style={{fontSize:12,fontWeight:500}}>{n.l}</span></Row>
- <div style={{width:34,height:19,borderRadius:10,background:C.green,display:"flex",alignItems:"center",paddingRight:3}}>
- <div style={{width:13,height:13,borderRadius:"50%",background:"white",marginLeft:"auto"}}/>
- </div>
- </Row>
- ))}
- <button onClick={()=>push("🔔","Test réussi !","Les notifications fonctionnent correctement.")} style={{background:"rgba(59,130,246,0.08)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:7,padding:"7px 14px",color:C.gold,cursor:"pointer",fontSize:11,fontFamily:"'Inter',sans-serif",fontWeight:700}}>Tester les notifications</button>
- </Box>
- </div>
- );
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+          {premium
+            ? <span style={{
+                background: "rgba(59,130,246,0.12)", border: "1px solid rgba(59,130,246,0.25)",
+                borderRadius: 20, padding: "3px 10px", fontSize: 10, fontWeight: 700, color: C.accent,
+              }}>✦ PREMIUM</span>
+            : <span style={{
+                background: "rgba(255,255,255,0.04)", border: `1px solid ${C.bd}`,
+                borderRadius: 20, padding: "3px 10px", fontSize: 10, fontWeight: 600, color: "rgba(242,244,247,0.35)",
+              }}>Compte gratuit</span>
+          }
+          {profil?.age && profil?.sexe && (
+            <span style={{ fontSize: 11, color: "rgba(242,244,247,0.35)" }}>
+              · {profil.age} ans · {profil.sexe === "homme" ? "Homme" : "Femme"}
+            </span>
+          )}
+        </div>
+      </div>
+
+      {/* ── QUICK STATS ── */}
+      {(profil?.poids || profil?.taille) && (
+        <div style={{ display: "flex", gap: 10, marginBottom: 20 }}>
+          {[
+            { label: "Poids",  value: profil.poids, unit: "kg", color: "#4FC3F7" },
+            { label: "Taille", value: profil.taille, unit: "cm", color: "#81C784" },
+            { label: "IMC",    value: imc, unit: "",             color: "#FFB74D" },
+          ].map((s, i) => (
+            <div key={i} style={{
+              flex: 1, background: C.s1, border: `1px solid ${C.bd}`,
+              borderRadius: 14, padding: "10px 8px", textAlign: "center",
+            }}>
+              <div style={{ fontSize: 16, marginBottom: 3 }}>
+                {i === 0 ? "⚖️" : i === 1 ? "📏" : "📊"}
+              </div>
+              <div style={{ fontSize: 17, fontWeight: 800, color: s.color, lineHeight: 1 }}>
+                {s.value || "—"}
+                <span style={{ fontSize: 10, fontWeight: 400, color: "rgba(242,244,247,0.30)" }}>{s.unit}</span>
+              </div>
+              <div style={{ fontSize: 9, color: "rgba(242,244,247,0.25)", marginTop: 2 }}>{s.label}</div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* ── TABS ── */}
+      <div style={{
+        display: "flex", background: "rgba(255,255,255,0.03)",
+        border: `1px solid ${C.bd}`, borderRadius: 12, padding: 3, gap: 2, marginBottom: 20,
+      }}>
+        {TABS.map(tab => (
+          <button key={tab.key} onClick={() => setActiveTab(tab.key)} style={{
+            flex: 1, background: activeTab === tab.key ? "rgba(59,130,246,0.15)" : "transparent",
+            border: `1px solid ${activeTab === tab.key ? "rgba(59,130,246,0.30)" : "transparent"}`,
+            borderRadius: 9, padding: "8px 4px",
+            color: activeTab === tab.key ? C.accent : "rgba(242,244,247,0.30)",
+            fontSize: 11, fontWeight: 700, cursor: "pointer",
+            letterSpacing: 0.3, textTransform: "uppercase",
+            transition: "all 0.15s",
+          }}>{tab.label}</button>
+        ))}
+      </div>
+
+      {/* ── CONTENU TABS ── */}
+      {activeTab === "profil" && (
+        <TabProfil
+          profil={profil} setProfil={setProfil}
+          editMode={editMode} calObj={calObj}
+          pObj={pObj} lObj={lObj} gObj={gObj}
+          obj={obj} cycles={cycles}
+          weightLog={weightLog || []}
+          ACTIVITE_FACTOR={usedAF} OBJ={usedOBJ}
+        />
+      )}
+      {activeTab === "compo" && (
+        <TabComposition profil={profil} setProfil={setProfil} editMode={editMode} />
+      )}
+      {activeTab === "mensurations" && (
+        <TabMensurations profil={profil} setProfil={setProfil} editMode={editMode} />
+      )}
+
+      {/* ── SECTION PREMIUM (si gratuit) ── */}
+      {!premium && (
+        <div style={{
+          marginTop: 8,
+          background: "rgba(59,130,246,0.05)",
+          border: `1px solid rgba(59,130,246,0.15)`,
+          borderRadius: 18, padding: "16px",
+        }}>
+          <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 4 }}>Passer en Premium</div>
+          <div style={{ fontSize: 12, color: "rgba(242,244,247,0.45)", marginBottom: 14, lineHeight: 1.5 }}>
+            Accède à l'analyse morphologique complète, la planification 6 semaines et le suivi nutritionnel avancé.
+          </div>
+          <Btn onClick={() => { setPremium?.(true); push?.("🎉", "Premium activé !", "Accès complet activé !"); }}>
+            Activer Premium · 9,99€/mois
+          </Btn>
+        </div>
+      )}
+
+      {/* ── EXPORT ── */}
+      <div style={{ marginTop: 12 }}>
+        <SectionTitle>Export</SectionTitle>
+        <Card style={{ padding: "14px 16px" }}>
+          <button onClick={() => {
+            if (navigator.share) {
+              navigator.share({ title: "Mon profil MorphoCoach", text: `${profil?.prenom || "Utilisateur"} — ${profil?.poids}kg, ${profil?.taille}cm\nObjectif : ${obj?.l || "—"}\nCalories : ${calObj || "—"} kcal/j` });
+            } else {
+              push?.("✅", "Copié !", "Profil copié dans le presse-papier.");
+            }
+          }} style={{
+            width: "100%", padding: "10px 14px",
+            background: "rgba(59,130,246,0.08)", border: `1px solid rgba(59,130,246,0.20)`,
+            borderRadius: 10, color: C.accent, cursor: "pointer",
+            fontSize: 12, fontWeight: 600, fontFamily: "'DM Sans',sans-serif",
+            display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+          }}>
+            📤 Partager mon profil
+          </button>
+        </Card>
+      </div>
+
+    </div>
+  );
 }
