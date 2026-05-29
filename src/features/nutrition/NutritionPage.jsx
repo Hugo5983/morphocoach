@@ -134,18 +134,6 @@ export default function Nutrition(props){
           <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
             <div style={{...eyebrowS,color:C.mid}}>{new Date().toLocaleDateString("fr-FR",{weekday:'long',day:'numeric',month:'long'})}</div>
             <div style={{display:'flex',alignItems:'center',gap:8}}>
-              {/* Bouton bilan bi-mensuel */}
-              <button onClick={openBilan} className="tap" style={{
-                padding:'5px 10px', borderRadius:8,
-                background:'rgba(59,130,246,0.08)', border:'1px solid rgba(59,130,246,0.20)',
-                display:'flex', alignItems:'center', gap:5,
-                fontSize:11, color:'#93C5FD', fontWeight:600,
-                fontFamily:"'Outfit',sans-serif", cursor:'pointer',
-              }}>
-                📊 Bilan
-                {!premium && <span style={{fontSize:9,padding:'1px 4px',borderRadius:3,
-                  background:'rgba(59,130,246,0.20)',color:'#93C5FD',fontWeight:700}}>PRO</span>}
-              </button>
               <div style={{padding:'6px 10px',borderRadius:999,background:C.s1,border:`1px solid ${C.bd}`,display:'flex',alignItems:'center',gap:6,fontSize:10.5,color:C.mid,fontWeight:700,fontFamily:DISPLAY,letterSpacing:0.2}}>
                 <span style={{width:5,height:5,borderRadius:'50%',background:C.mint,boxShadow:`0 0 6px ${C.mint}`}}/>
                 CYCLE {prog?.numero||1}
