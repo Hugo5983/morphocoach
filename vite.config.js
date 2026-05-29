@@ -9,16 +9,17 @@ export default defineConfig({
       output: {
         manualChunks: {
           vendor: ['react', 'react-dom'],
+          zxing: ['@zxing/browser', '@zxing/library'],
         },
       },
     },
     target: 'es2015',
     minify: 'esbuild',
     sourcemap: false,
-    chunkSizeWarningLimit: 600,
+    chunkSizeWarningLimit: 1000,
   },
 
   optimizeDeps: {
-    include: ['react', 'react-dom'],
+    include: ['react', 'react-dom', '@zxing/browser', '@zxing/library'],
   },
 })
