@@ -3,6 +3,7 @@ import { C } from "../../data/constants.js";
 import { Btn, Inp, G2 } from "../../components/ui/index.jsx";
 import { computeHealthScore } from "./utils/healthScore.js";
 import BilanNutrition from "./BilanNutrition.jsx";
+import BarcodeScanner from "./BarcodeScanner.jsx";
 
 const SERIF   = "'DM Serif Display','Georgia',serif";
 const DISPLAY = "'Outfit','DM Sans',system-ui,sans-serif";
@@ -121,11 +122,20 @@ export default function Nutrition(props){
   const [newFood, setNewFood] = useState({nom:"",cal:"",p:"",g:"",l:""});
   const [scanCode,setScan]    = useState("");
   const [dayOff,  setDayOff]  = useState(0); // 0=today, -1=hier…
+  const [showCamera, setShowCamera] = useState(false);
+  const [fruitsV, setFruitsV] = useState({ fruits:0, legumes:0 }); // portions F&V du jour
 
   const tot     = totR;
   const all     = [...FOODS,...myFoods];
   const filtered= search ? all.filter(f=>f.n.toLowerCase().includes(search.toLowerCase())) : [];
   const { score, lettre:scoreLettre, color:scoreColor, details:scoreDetails } = computeHealthScore(repas,eau,tot,pObj);
+
+  // Callback quand un code-barres est détecté par la caméra
+  const handleCameraScan = async (code) => {
+    setShowCamera(false);
+    setScan(code);
+    if (code.length >= 8) handleScan(code);
+  };
 
   const repasHistory = useMemo(()=>Array.from({length:14},()=>({
     kcal: tot.cal*(0.85+Math.random()*0.30),
@@ -138,6 +148,13 @@ export default function Nutrition(props){
   const isToday = dayOff===0;
 
   return(
+    <>
+    {showCamera && (
+      <BarcodeScanner
+        onDetected={handleCameraScan}
+        onClose={() => setShowCamera(false)}
+      />
+    )}
     <div className="anim" style={{position:'relative',paddingBottom:20}}>
       <div style={{position:'absolute',top:130,left:'50%',transform:'translateX(-50%)',width:340,height:280,borderRadius:'50%',background:'radial-gradient(closest-side,rgba(59,130,246,0.12),transparent 70%)',filter:'blur(40px)',pointerEvents:'none'}}/>
 
@@ -244,8 +261,8 @@ export default function Nutrition(props){
                   Repas {isToday?"du jour":formatDate(dayOff).toLowerCase()}
                 </span>
                 {isToday&&(
-                  <button className="tap" onClick={()=>setNView("scanner")} style={{display:'inline-flex',alignItems:'center',gap:5,padding:'5px 10px',background:C.s1,border:`1px solid ${C.bd}`,borderRadius:999,color:C.text,fontSize:10.5,fontWeight:700,fontFamily:DISPLAY,cursor:'pointer'}}>
-                    <I name="scan" size={11} stroke={1.8}/> Scanner
+                  <button className="tap" onClick={()=>setShowCamera(true)} style={{display:'inline-flex',alignItems:'center',gap:5,padding:'5px 10px',background:'rgba(59,130,246,0.10)',border:'1px solid rgba(59,130,246,0.25)',borderRadius:999,color:'#93C5FD',fontSize:10.5,fontWeight:700,fontFamily:DISPLAY,cursor:'pointer'}}>
+                    <I name="scan" size={11} stroke={1.8} color="#93C5FD"/> Scanner
                   </button>
                 )}
               </div>
@@ -404,6 +421,74 @@ export default function Nutrition(props){
               </div>
             </div>
 
+            {/* Fruits & Légumes */}
+            <div style={{padding:'8px 16px 0'}}>
+              <div style={{...card,padding:16}}>
+                <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:13}}>
+                  <div style={{display:'flex',alignItems:'center',gap:11}}>
+                    <div style={{width:40,height:40,borderRadius:12,
+                      background:'linear-gradient(145deg,#34D399,#10B981)',
+                      display:'grid',placeItems:'center',fontSize:20,
+                      boxShadow:'0 4px 10px rgba(52,211,153,0.40), inset 0 1px 0 rgba(255,255,255,0.3)',
+                      position:'relative',overflow:'hidden'}}>
+                      <div style={{position:'absolute',inset:0,background:'radial-gradient(110% 60% at 30% 10%,rgba(255,255,255,0.35),transparent 60%)',pointerEvents:'none'}}/>
+                      🥦
+                    </div>
+                    <div>
+                      <div style={{fontSize:14,fontWeight:700,color:C.text,fontFamily:DISPLAY}}>Fruits & Légumes</div>
+                      <div style={{fontSize:11.5,marginTop:2,fontFamily:DISPLAY}}>
+                        <span style={{color:C.text,fontWeight:700,...NUM}}>{fruitsV.fruits+fruitsV.legumes} {fruitsV.fruits+fruitsV.legumes>1?"portions":"portion"}</span>
+                        <span style={{color:C.dim}}> · objectif 5/j</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div style={{fontSize:10,color:C.dim,fontFamily:DISPLAY,textAlign:'right',lineHeight:1.5}}>
+                    🍎 {fruitsV.fruits}<br/>🥦 {fruitsV.legumes}
+                  </div>
+                </div>
+                {/* Ligne fruits */}
+                <div style={{marginBottom:10}}>
+                  <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:6}}>
+                    <span style={{fontSize:11.5,color:C.mid,fontFamily:DISPLAY,fontWeight:600}}>🍎 Fruits</span>
+                    <div style={{display:'flex',gap:5}}>
+                      <button onClick={()=>setFruitsV(f=>({...f,fruits:Math.max(0,f.fruits-1)}))} style={{width:24,height:24,borderRadius:7,background:'rgba(255,255,255,0.06)',border:`1px solid ${C.bd}`,color:C.mid,cursor:'pointer',fontSize:14,display:'grid',placeItems:'center'}}>−</button>
+                      <span style={{width:22,textAlign:'center',fontSize:13,fontWeight:700,color:C.text,fontFamily:DISPLAY,...NUM}}>{fruitsV.fruits}</span>
+                      <button onClick={()=>setFruitsV(f=>({...f,fruits:Math.min(10,f.fruits+1)}))} style={{width:24,height:24,borderRadius:7,background:'rgba(245,158,11,0.12)',border:'1px solid rgba(245,158,11,0.30)',color:'#F59E0B',cursor:'pointer',fontSize:14,display:'grid',placeItems:'center'}}>+</button>
+                    </div>
+                  </div>
+                  <div style={{display:'flex',gap:4}}>
+                    {Array.from({length:5}).map((_,i)=>{
+                      const on=i<fruitsV.fruits;
+                      return <button key={i} onClick={()=>setFruitsV(f=>({...f,fruits:i+1===f.fruits?i:i+1}))} className="tap" style={{flex:1,height:22,borderRadius:6,background:on?'linear-gradient(180deg,#F59E0B,#D97706)':'rgba(255,255,255,0.04)',border:`1px solid ${on?'rgba(245,158,11,0.60)':C.bd}`,boxShadow:on?'0 0 8px rgba(245,158,11,0.40), inset 0 1px 0 rgba(255,255,255,0.3)':'none',padding:0,display:'grid',placeItems:'center',fontSize:10,color:on?'#1A1308':'transparent'}}>{on?'🍎':''}</button>;
+                    })}
+                  </div>
+                </div>
+                {/* Ligne légumes */}
+                <div>
+                  <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:6}}>
+                    <span style={{fontSize:11.5,color:C.mid,fontFamily:DISPLAY,fontWeight:600}}>🥦 Légumes</span>
+                    <div style={{display:'flex',gap:5}}>
+                      <button onClick={()=>setFruitsV(f=>({...f,legumes:Math.max(0,f.legumes-1)}))} style={{width:24,height:24,borderRadius:7,background:'rgba(255,255,255,0.06)',border:`1px solid ${C.bd}`,color:C.mid,cursor:'pointer',fontSize:14,display:'grid',placeItems:'center'}}>−</button>
+                      <span style={{width:22,textAlign:'center',fontSize:13,fontWeight:700,color:C.text,fontFamily:DISPLAY,...NUM}}>{fruitsV.legumes}</span>
+                      <button onClick={()=>setFruitsV(f=>({...f,legumes:Math.min(10,f.legumes+1)}))} style={{width:24,height:24,borderRadius:7,background:'rgba(52,211,153,0.12)',border:'1px solid rgba(52,211,153,0.30)',color:'#34D399',cursor:'pointer',fontSize:14,display:'grid',placeItems:'center'}}>+</button>
+                    </div>
+                  </div>
+                  <div style={{display:'flex',gap:4}}>
+                    {Array.from({length:5}).map((_,i)=>{
+                      const on=i<fruitsV.legumes;
+                      return <button key={i} onClick={()=>setFruitsV(f=>({...f,legumes:i+1===f.legumes?i:i+1}))} className="tap" style={{flex:1,height:22,borderRadius:6,background:on?'linear-gradient(180deg,#34D399,#2DA67D)':'rgba(255,255,255,0.04)',border:`1px solid ${on?'rgba(52,211,153,0.60)':C.bd}`,boxShadow:on?'0 0 8px rgba(52,211,153,0.40), inset 0 1px 0 rgba(255,255,255,0.3)':'none',padding:0,display:'grid',placeItems:'center',fontSize:10,color:on?'#0B1F18':'transparent'}}>{on?'🥦':''}</button>;
+                    })}
+                  </div>
+                </div>
+                {/* Badge objectif atteint */}
+                {(fruitsV.fruits+fruitsV.legumes)>=5&&(
+                  <div style={{marginTop:12,padding:'8px 12px',background:'rgba(52,211,153,0.08)',border:'1px solid rgba(52,211,153,0.25)',borderRadius:10,fontSize:12,color:'#34D399',fontWeight:600,fontFamily:DISPLAY,textAlign:'center'}}>
+                    🎉 Objectif 5 portions atteint aujourd'hui !
+                  </div>
+                )}
+              </div>
+            </div>
+
             {/* Score santé — en bas */}
             <div style={{padding:'10px 16px 0'}}>
               <div onClick={()=>setNView("score")} className="tap"
@@ -492,10 +577,18 @@ export default function Nutrition(props){
                   boxShadow:'0 4px 10px rgba(59,130,246,0.40), inset 0 1px 0 rgba(255,255,255,0.3)'}}>
                   <I name="scan" size={18} stroke={2} color="#141A2E"/>
                 </div>
-                <div>
+                <div style={{flex:1}}>
                   <div style={{fontSize:15,fontWeight:700,color:C.text,fontFamily:DISPLAY}}>Scanner un produit</div>
                   <div style={{fontSize:10.5,color:C.mid,marginTop:1}}>Open Food Facts · 3M+ produits</div>
                 </div>
+                <button className="tap" onClick={()=>setShowCamera(true)} style={{
+                  padding:'8px 14px',background:'rgba(59,130,246,0.10)',
+                  border:'1px solid rgba(59,130,246,0.25)',borderRadius:12,
+                  color:'#93C5FD',fontSize:12,fontWeight:600,fontFamily:DISPLAY,
+                  display:'flex',alignItems:'center',gap:6,cursor:'pointer'}}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                  Caméra
+                </button>
               </div>
               <Inp placeholder="Code-barres EAN (ex: 3017620422003)" inputMode="numeric"
                 value={scanCode} onChange={e=>{setScan(e.target.value);if(e.target.value.length>=8)handleScan(e.target.value);}}/>
@@ -541,5 +634,6 @@ export default function Nutrition(props){
         )}
       </div>
     </div>
+    </>
   );
 }
