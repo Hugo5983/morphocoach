@@ -12,6 +12,7 @@ function RecipeCard({ r, liked, onLike, onOpen }) {
     <div onClick={() => onOpen(r)} className="tap" style={{
       background:"#111827", border:"1px solid rgba(255,255,255,0.07)",
       borderRadius:14, overflow:"hidden", cursor:"pointer",
+      position:"relative",
     }}>
       <div style={{ position:"relative", height:110, background:"#1A2336" }}>
         <img
@@ -57,13 +58,24 @@ function RecipeCard({ r, liked, onLike, onOpen }) {
 
 // ─── RECIPES PAGE ─────────────────────────────────────────────────────────────
 export default function Recipes(props) {
-  const push = props?.push;
+  const push     = props?.push;
+  const premium  = props?.premium || false;
+  const setPaywall = props?.setPaywall;
   const [filtre,   setFiltre]   = useState("all");
   const [search,   setSearch]   = useState("");
   const [liked,    setLiked]    = useState({});
   const [selected, setSelected] = useState(null);
 
   const toggleLike = (id) => setLiked(p => ({ ...p, [id]: !p[id] }));
+
+  // Ouvrir une recette — PRO requis pour le détail complet
+  const openRecipe = (r) => {
+    if (!premium) {
+      if (setPaywall) setPaywall(true);
+      return;
+    }
+    setSelected(r);
+  };
 
   // ── Vue détail ──
   if (selected) {
@@ -117,6 +129,40 @@ export default function Recipes(props) {
           </svg>
         </button>
       </div>
+
+      {/* ── Banner PRO ── */}
+      {!premium && (
+        <div onClick={() => setPaywall && setPaywall(true)} style={{
+          display:"flex", alignItems:"center", gap:12,
+          background:"rgba(59,130,246,0.06)",
+          border:"1px solid rgba(59,130,246,0.20)",
+          borderRadius:14, padding:"12px 14px", marginBottom:12,
+          cursor:"pointer",
+        }}>
+          <div style={{
+            width:38, height:38, borderRadius:11, flexShrink:0,
+            background:"rgba(59,130,246,0.12)",
+            border:"1px solid rgba(59,130,246,0.22)",
+            display:"grid", placeItems:"center", fontSize:18,
+          }}>🍽️</div>
+          <div style={{ flex:1 }}>
+            <div style={{ fontSize:13, fontWeight:700, color:"#F2F4F7",
+              fontFamily:"'Outfit',sans-serif" }}>
+              Nutrition PRO — 6.99€/mois
+            </div>
+            <div style={{ fontSize:11.5, color:"rgba(242,244,247,0.50)",
+              marginTop:2, fontFamily:"'Outfit',sans-serif" }}>
+              Accès complet à toutes les recettes
+            </div>
+          </div>
+          <div style={{
+            padding:"4px 10px", borderRadius:7,
+            background:"#3B82F6", fontSize:11,
+            color:"#fff", fontWeight:700,
+            fontFamily:"'Outfit',sans-serif",
+          }}>Voir</div>
+        </div>
+      )}
 
       {/* ── Recherche ── */}
       <div style={{ display:"flex", gap:8, marginBottom:14 }}>
@@ -249,7 +295,7 @@ export default function Recipes(props) {
             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8 }}>
               {section.recettes.map(r => (
                 <RecipeCard key={r.id} r={r}
-                  liked={!!liked[r.id]} onLike={toggleLike} onOpen={setSelected}/>
+                  liked={!!liked[r.id]} onLike={toggleLike} onOpen={openRecipe}/>
               ))}
             </div>
           </div>
