@@ -138,7 +138,7 @@ export default function App() {
   const commonProps = { C, INT, push };
 
   const homeProps = {
-    profil, prog, cycleStart, setTab, premium, setPaywall,
+    profil, prog, cycleStart, setTab, premium, setPaywall, setPaywallNutrition,
     eau, setEau, weightLog, setWeightLog, lastWeighIn, setLastWeighIn,
     calSess, imc, obj, calObj, pObj, lObj, gObj, totR, jR, cPct, semC, getStreak,
     MOTIVATIONS, ...commonProps,
