@@ -21,6 +21,12 @@ export const C = {
   surfHi:"#1A2336",
 };
 
+// ─── POLICES CENTRALISÉES ─────────────────────────────────────────────────────
+// Source unique de vérité pour la typographie. Importer depuis ici partout.
+export const FONT  = "'Outfit','DM Sans',system-ui,sans-serif";
+export const SERIF = "'DM Serif Display','Georgia',serif";
+export const NUM   = { fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"' };
+
 // ─── INTENSITÉS DE SÉANCE ─────────────────────────────────────────────────────
 export const INT = {
   leger:    { l:"Léger",    c:"#34D399" },
