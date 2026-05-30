@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { C, FONT, SERIF, NUM } from "../../data/constants.js";
 import { Card, Eyebrow } from "../../components/ui/index.jsx";
 import {
