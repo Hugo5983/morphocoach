@@ -383,7 +383,7 @@ export default function Home(props) {
         <div style={{
           background:"#111827",
           border:"1px solid rgba(255,255,255,0.07)",
-          borderRadius:20, padding:"18px 18px 16px", marginBottom:12,
+          borderRadius:20, padding:"18px 18px 16px", marginBottom:28,
         }}>
           <div style={{ display:"flex", justifyContent:"space-between",
             alignItems:"center", marginBottom:18 }}>
@@ -471,62 +471,6 @@ export default function Home(props) {
           <I d={ic.chev} size={16} color="rgba(242,244,247,0.35)"/>
         </div>
       )}
-
-      {/* ── HYDRATATION ──────────────────────────────────────── */}
-      <div style={{
-        background:"#111827",
-        border:"1px solid rgba(255,255,255,0.07)",
-        borderRadius:20, padding:"18px 18px 16px", marginBottom:28,
-      }}>
-        <div style={{ display:"flex", alignItems:"center",
-          justifyContent:"space-between", marginBottom:12 }}>
-          <div style={{ display:"flex", alignItems:"center", gap:10 }}>
-            <div style={{
-              width:36, height:36, borderRadius:10,
-              background:"rgba(52,211,153,0.10)",
-              border:"1px solid rgba(52,211,153,0.18)",
-              display:"grid", placeItems:"center", flexShrink:0,
-            }}>
-              <I d={ic.drop} size={16} color="#34D399" sw={2}/>
-            </div>
-            <div>
-              <div style={{ fontSize:10, fontWeight:700, letterSpacing:"1.2px",
-                textTransform:"uppercase", color:"rgba(242,244,247,0.38)",
-                fontFamily:FONT, marginBottom:2 }}>Hydratation</div>
-              <div style={{ fontFamily:FONT, fontWeight:700, fontSize:14,
-                color:"#F2F4F7", ...NUM }}>
-                {(eau * 0.25).toFixed(2).replace(".", ",")} L
-                <span style={{ fontSize:11.5, color:"rgba(242,244,247,0.38)",
-                  marginLeft:6, fontWeight:500 }}>{eau}/8 verres</span>
-              </div>
-            </div>
-          </div>
-          <button className="tap" onClick={() => setEau(e => Math.min(8, e + 1))} style={{
-            padding:"7px 12px", borderRadius:9,
-            background:"rgba(52,211,153,0.08)",
-            border:"1px solid rgba(52,211,153,0.20)",
-            color:"#34D399", fontSize:11.5, fontWeight:700,
-            fontFamily:FONT, cursor:"pointer",
-            display:"flex", alignItems:"center", gap:4,
-          }}>
-            <I d={ic.plus} size={10} color="#34D399" sw={2.4}/>250ml
-          </button>
-        </div>
-        <div style={{ display:"flex", gap:4 }}>
-          {Array.from({ length:8 }).map((_, i) => {
-            const on = i < eau;
-            return (
-              <button key={i} onClick={() => setEau(i + 1 === eau ? i : i + 1)}
-                className="tap" style={{
-                  flex:1, height:18, borderRadius:5, padding:0,
-                  background: on ? "#3B82F6" : "rgba(255,255,255,0.05)",
-                  border:`1px solid ${on ? "rgba(59,130,246,0.40)" : "rgba(255,255,255,0.07)"}`,
-                  transition:"background .15s",
-                }}/>
-            );
-          })}
-        </div>
-      </div>
 
       {/* ── MES PROGRAMMES ───────────────────────────────────── */}
       <div style={{ marginBottom:8 }}>
