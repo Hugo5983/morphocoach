@@ -4,12 +4,12 @@ const FONT  = "'Outfit','DM Sans',system-ui,sans-serif";
 const SERIF = "'DM Serif Display','Georgia',serif";
 
 const FEATURES = [
-  { icon:"📊", label:"Bilan nutritionnel bi-mensuel",   sub:"Analyse complète toutes les 2 semaines" },
-  { icon:"📷", label:"Analyse photo de repas",           sub:"120 analyses/mois — estimation macros" },
-  { icon:"🍽️", label:"49 recettes premium complètes",  sub:"Ingrédients, étapes, curseur calories" },
-  { icon:"🎯", label:"Macros personnalisés",             sub:"Selon ton objectif, profil et régime" },
-  { icon:"🥦", label:"Suivi fruits & légumes",           sub:"Tracker quotidien avec objectifs" },
-  { icon:"📈", label:"Recommandations nutritionnelles",  sub:"Conseils concrets et actionnables" },
+  { icon:"📚", label:"+500 recettes premium complètes",       sub:"Ingrédients, étapes détaillées, curseur calories" },
+  { icon:"🎯", label:"Conseils nutritionnels personnalisés",   sub:"Selon ton objectif, profil et régime alimentaire" },
+  { icon:"📷", label:"Estimation macros par photo de repas",   sub:"Analyse instantanée — jusqu'à 120 photos/mois" },
+  { icon:"📊", label:"Bilan nutritionnel bi-mensuel",          sub:"Analyse complète de tes apports toutes les 2 semaines" },
+  { icon:"🥦", label:"Suivi fruits & légumes quotidien",       sub:"Tracker avec objectifs personnalisés" },
+  { icon:"📈", label:"Recommandations actionnables",           sub:"Conseils concrets pour progresser chaque semaine" },
 ];
 
 export function PaywallNutrition({ onSubscribe, onClose }) {
