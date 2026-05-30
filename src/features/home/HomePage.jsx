@@ -75,12 +75,20 @@ function PackCard({ type, onUnlock }) {
     : <><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></>;
   const title      = isTraining ? "Entraînement Pro" : "Nutrition Pro";
   const eyebrow    = isTraining ? "Pack" : "Pack";
-  const free       = isTraining
-    ? ["Créer un programme sur mesure", "Planification manuelle"]
-    : ["Suivi calories quotidien", "Suivi des macronutriments"];
+  const free       = [];
   const locked     = isTraining
-    ? ["Analyse morphologique complète", "Planning 6 semaines personnalisé"]
-    : ["Analyse micronutriments", "Recettes & conseils personnalisés"];
+    ? [
+        "Programme sur mesure selon ta morphologie",
+        "Planification 6 semaines optimisée",
+        "Analyse morphologique complète",
+        "Bilan de progression toutes les 2 semaines",
+      ]
+    : [
+        "+500 recettes premium complètes",
+        "Conseils nutritionnels personnalisés",
+        "Estimation macros par photo de repas",
+        "Bilan nutritionnel bi-mensuel",
+      ];
   const btnBg      = isTraining
     ? "linear-gradient(135deg,#1D4ED8,#3B82F6)"
     : "linear-gradient(135deg,#059669,#10B981)";
@@ -136,20 +144,6 @@ function PackCard({ type, onUnlock }) {
       {/* Features */}
       <div style={{ display:"flex", flexDirection:"column", gap:8,
         marginBottom:16, position:"relative", zIndex:1 }}>
-        {free.map(f => (
-          <div key={f} style={{ display:"flex", alignItems:"center", gap:9 }}>
-            <div style={{
-              width:18, height:18, borderRadius:5, flexShrink:0,
-              background:`${accent}20`, border:`1px solid ${accent}35`,
-              display:"grid", placeItems:"center",
-            }}>
-              <I d={ic.check} size={10} color={accentLt} sw={2.8}/>
-            </div>
-            <span style={{ fontSize:13, color:"rgba(242,244,247,0.80)",
-              fontFamily:FONT, fontWeight:500 }}>{f}</span>
-          </div>
-        ))}
-        <div style={{ height:1, background:"rgba(255,255,255,0.06)", margin:"3px 0" }}/>
         {locked.map(f => (
           <div key={f} style={{ display:"flex", alignItems:"center", gap:9 }}>
             <div style={{
@@ -159,7 +153,7 @@ function PackCard({ type, onUnlock }) {
             }}>
               <I d={ic.lock} size={9} color="rgba(242,244,247,0.30)" sw={2}/>
             </div>
-            <span style={{ fontSize:13, color:"rgba(242,244,247,0.30)",
+            <span style={{ fontSize:13, color:"rgba(242,244,247,0.55)",
               fontFamily:FONT, fontWeight:500 }}>{f}</span>
           </div>
         ))}
@@ -183,7 +177,7 @@ function PackCard({ type, onUnlock }) {
 // ─── HOME ────────────────────────────────────────────────────────────────
 export default function Home(props) {
   const {
-    profil, prog, cycleStart, setTab, premium, setPaywall,
+    profil, prog, cycleStart, setTab, premium, setPaywall, setPaywallNutrition,
     push, eau, setEau, weightLog, setWeightLog, lastWeighIn,
     setLastWeighIn, calSess, imc, obj, calObj, pObj, lObj, gObj,
     totR, jR, cPct, semC, getStreak, C, INT, MOTIVATIONS,
@@ -483,8 +477,8 @@ export default function Home(props) {
         </div>
 
         <div style={{ display:"flex", flexDirection:"column", gap:12 }}>
-          <PackCard type="training" onUnlock={() => setPaywall(true)}/>
-          <PackCard type="nutrition" onUnlock={() => setPaywall(true)}/>
+          <PackCard type="training"  onUnlock={() => setPaywall(true)}/>
+          <PackCard type="nutrition" onUnlock={() => setPaywallNutrition(true)}/>
         </div>
       </div>
 
