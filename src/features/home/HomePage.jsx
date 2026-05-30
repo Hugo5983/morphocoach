@@ -1,10 +1,6 @@
 import { useState } from "react";
-import { C, INT } from "../../data/constants.js";
-import { Row } from "../../components/ui/index.jsx";
-
-const FONT  = "'Outfit','DM Sans',system-ui,sans-serif";
-const SERIF = "'DM Serif Display','Georgia',serif";
-const NUM   = { fontVariantNumeric:"tabular-nums", fontFeatureSettings:'"tnum"' };
+import { C, INT, FONT, SERIF, NUM } from "../../data/constants.js";
+import { Card, Eyebrow, Pill, Bar } from "../../components/ui/index.jsx";
 
 // ─── Icône SVG ───────────────────────────────────────────────────────────
 function I({ d, size=18, color="currentColor", sw=1.8, fill="none" }) {
@@ -22,13 +18,8 @@ const ic = {
   plus:     <path d="M12 5v14M5 12h14"/>,
   chev:     <path d="m9 6 6 6-6 6"/>,
   play:     <path d="m8 5 12 7-12 7z"/>,
-  arrowUp:  <path d="m6 14 6-6 6 6"/>,
-  arrowDn:  <path d="m6 10 6 6 6-6"/>,
   drop:     <path d="M12 3s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11Z"/>,
   lock:     <><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></>,
-  check:    <polyline points="20 6 9 17 4 12"/>,
-  dumbbell: <path d="M6.5 6.5 17.5 17.5M4 8l4-4M16 20l4-4M2 10l2-2M20 16l2-2M9 4l3 3M15 17l3 3"/>,
-  leaf:     <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/>,
   star:     <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor" stroke="none"/>,
 };
 
@@ -64,7 +55,6 @@ function MacroBar({ label, value, goal, color, unit }) {
 function PackCard({ type, onUnlock }) {
   const isTraining = type === "training";
   const accent     = isTraining ? "#3B82F6" : "#10B981";
-  const accentDk   = isTraining ? "#1D4ED8" : "#059669";
   const accentLt   = isTraining ? "#93C5FD" : "#6EE7B7";
   const bg         = isTraining
     ? "linear-gradient(145deg,#0D1A3E 0%,#0F1629 100%)"
@@ -74,8 +64,6 @@ function PackCard({ type, onUnlock }) {
     ? <path d="M6.5 6.5 17.5 17.5M4 8l4-4M16 20l4-4M2 10l2-2M20 16l2-2M9 4l3 3M15 17l3 3"/>
     : <><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></>;
   const title      = isTraining ? "Entraînement Pro" : "Nutrition Pro";
-  const eyebrow    = isTraining ? "Pack" : "Pack";
-  const free       = [];
   const locked     = isTraining
     ? [
         "Programme sur mesure selon ta morphologie",
@@ -94,13 +82,13 @@ function PackCard({ type, onUnlock }) {
     : "linear-gradient(135deg,#059669,#10B981)";
 
   return (
-    <div className="tap" onClick={onUnlock} style={{
+    <Card onClick={onUnlock} className="tap" padding="none" style={{
       background: bg,
       border: `1px solid ${borderClr}`,
-      borderRadius: 20,
       padding: "20px 20px 18px",
       position: "relative",
       overflow: "hidden",
+      marginBottom: 0,
     }}>
       {/* Glow */}
       <div style={{
@@ -123,22 +111,15 @@ function PackCard({ type, onUnlock }) {
             <I d={iconPath} size={17} color={accentLt} sw={2.2}/>
           </div>
           <div>
-            <div style={{ fontSize:10, fontWeight:700, letterSpacing:"0.08em",
-              textTransform:"uppercase", color:accentLt,
-              fontFamily:FONT, marginBottom:2 }}>{eyebrow}</div>
+            <Eyebrow color={accentLt} style={{ letterSpacing:"0.08em", marginBottom:2 }}>Pack</Eyebrow>
             <div style={{ fontSize:17, fontWeight:700, color:"#F2F4F7",
               fontFamily:FONT, letterSpacing:-0.4, lineHeight:1 }}>{title}</div>
           </div>
         </div>
-        <div style={{
-          display:"flex", alignItems:"center", gap:4,
-          background:`${accent}18`, border:`1px solid ${accent}30`,
-          borderRadius:99, padding:"4px 10px",
-        }}>
+        <Pill color={accent} style={{ padding:"4px 10px", fontSize:10.5, fontWeight:700, letterSpacing:"0.04em", color:accentLt, background:`${accent}18`, border:`1px solid ${accent}30` }}>
           <I d={ic.star} size={10} color={accentLt} sw={0} fill={accentLt}/>
-          <span style={{ color:accentLt, fontSize:10.5, fontWeight:700,
-            fontFamily:FONT, letterSpacing:"0.04em" }}>Premium</span>
-        </div>
+          Premium
+        </Pill>
       </div>
 
       {/* Features */}
@@ -170,18 +151,13 @@ function PackCard({ type, onUnlock }) {
       }}>
         Débloquer le pack <I d={ic.chev} size={13} color="#fff" sw={2.4}/>
       </button>
-    </div>
+    </Card>
   );
 }
 
 // ─── HOME ────────────────────────────────────────────────────────────────
 export default function Home(props) {
-  const {
-    profil, prog, cycleStart, setTab, premium, setPaywall, setPaywallNutrition,
-    push, eau, setEau, weightLog, setWeightLog, lastWeighIn,
-    setLastWeighIn, calSess, imc, obj, calObj, pObj, lObj, gObj,
-    totR, jR, cPct, semC, getStreak, C, INT, MOTIVATIONS,
-  } = props;
+  const { profil, prog, cycleStart, setTab, premium, setPaywall, setPaywallNutrition, push, eau, setEau, weightLog, setWeightLog, lastWeighIn, setLastWeighIn, calSess, imc, obj, calObj, pObj, lObj, gObj, totR, jR, cPct, semC, getStreak, INT, MOTIVATIONS } = props;
 
   const goProgram = (view) => {
     try { localStorage.setItem("mc_progView", view); } catch {}
@@ -196,11 +172,6 @@ export default function Home(props) {
   const streak     = getStreak;
   const tot        = totR;
 
-  const todayD        = new Date();
-  const daysSinceLast = lastWeighIn
-    ? Math.floor((todayD - new Date(lastWeighIn)) / (1000*60*60*24))
-    : 999;
-
   // Macros
   const consumed  = tot.cal || 0;
   const goal      = calObj || 1;
@@ -208,14 +179,6 @@ export default function Home(props) {
   const pct       = Math.min(consumed / goal, 1);
   const over      = consumed > goal;
   const r = 54, circum = 2 * Math.PI * r;
-
-  const sectionTitle = (label) => (
-    <div style={{
-      fontSize:12, fontWeight:700, letterSpacing:"0.08em",
-      textTransform:"uppercase", color:"rgba(242,244,247,0.35)",
-      fontFamily:FONT, marginBottom:12,
-    }}>{label}</div>
-  );
 
   return (
     <div className="anim" style={{ padding:"0 16px 28px" }}>
@@ -234,17 +197,9 @@ export default function Home(props) {
         </div>
         {prog && (
           <div style={{ marginTop:10, display:"flex", alignItems:"center", gap:7, flexWrap:"wrap" }}>
-            <span style={{
-              display:"inline-flex", alignItems:"center", gap:5,
-              padding:"5px 11px", borderRadius:99,
-              background:"rgba(59,130,246,0.10)",
-              border:"1px solid rgba(59,130,246,0.20)",
-              fontSize:11.5, color:"#93C5FD", fontWeight:600, fontFamily:FONT,
-            }}>
-              <span style={{ width:6, height:6, borderRadius:"50%",
-                background:"#3B82F6", display:"inline-block" }}/>
+            <Pill color="#3B82F6" dot style={{ color:"#93C5FD", background:"rgba(59,130,246,0.10)", border:"1px solid rgba(59,130,246,0.20)" }}>
               {obj?.l} · {prog?.jours?.length||0} séances/sem.
-            </span>
+            </Pill>
             {cycleStart && jR !== null && (
               <span style={{
                 display:"inline-flex", padding:"5px 11px", borderRadius:99,
@@ -262,9 +217,7 @@ export default function Home(props) {
 
       {/* ── STREAK ───────────────────────────────────────────── */}
       {streak > 0 && (
-        <div className="pop-in" style={{
-          background:"#111827",
-          border:"1px solid rgba(255,255,255,0.07)",
+        <Card className="pop-in" padding="none" style={{
           borderRadius:16, padding:"13px 16px",
           display:"flex", alignItems:"center", gap:11, marginBottom:12,
         }}>
@@ -282,29 +235,23 @@ export default function Home(props) {
               {streak >= 7 ? "Semaine parfaite !" : streak >= 3 ? "Continue comme ça !" : "Bonne lancée !"}
             </div>
           </div>
-        </div>
+        </Card>
       )}
 
       {/* ── CITATION ─────────────────────────────────────────── */}
-      <div style={{
-        background:"#111827",
-        border:"1px solid rgba(255,255,255,0.07)",
+      <Card padding="none" style={{
         borderLeft:"3px solid #3B82F6",
         borderRadius:"0 14px 14px 0",
         padding:"13px 16px", marginBottom:12,
       }}>
-        <div style={{
-          fontSize:10, fontWeight:700, letterSpacing:"1.2px",
-          textTransform:"uppercase", color:"#3B82F6",
-          fontFamily:FONT, marginBottom:5,
-        }}>Citation du jour</div>
+        <Eyebrow color="#3B82F6" style={{ letterSpacing:"1.2px", marginBottom:5 }}>Citation du jour</Eyebrow>
         <div style={{ fontFamily:SERIF, fontStyle:"italic", fontSize:14,
           color:"rgba(242,244,247,0.80)", lineHeight:1.6 }}>"{motiv}"</div>
-      </div>
+      </Card>
 
       {/* ── SÉANCE DU JOUR ───────────────────────────────────── */}
       {todaySess ? (
-        <div style={{
+        <Card padding="none" style={{
           background:"linear-gradient(135deg,#1E40AF 0%,#2563EB 50%,#3B82F6 100%)",
           border:"1px solid rgba(255,255,255,0.15)",
           borderRadius:20, padding:"20px 20px 18px", marginBottom:12,
@@ -324,9 +271,7 @@ export default function Home(props) {
               <I d={ic.bolt} size={22} color="#fff" sw={2.2}/>
             </div>
             <div style={{ flex:1 }}>
-              <div style={{ fontSize:10, fontWeight:700, letterSpacing:"1.2px",
-                textTransform:"uppercase", color:"rgba(255,255,255,0.65)",
-                fontFamily:FONT, marginBottom:3 }}>Séance du jour</div>
+              <Eyebrow color="rgba(255,255,255,0.65)" style={{ letterSpacing:"1.2px", marginBottom:3 }}>Séance du jour</Eyebrow>
               <div style={{ fontSize:18, fontWeight:700, color:"#fff",
                 fontFamily:FONT, letterSpacing:-0.4 }}>{todaySess.nom}</div>
               {todaySess.intensite && (
@@ -349,14 +294,11 @@ export default function Home(props) {
             <I d={ic.play} size={13} color="#fff" sw={0} fill="#fff"/>
             Démarrer la séance
           </button>
-        </div>
+        </Card>
       ) : !prog && (
-        <div onClick={() => goProgram("creer")} className="tap" style={{
-          background:"#111827",
-          border:"1px solid rgba(255,255,255,0.07)",
+        <Card onClick={() => goProgram("creer")} className="tap" padding="none" style={{
           borderRadius:16, padding:"16px",
-          cursor:"pointer", display:"flex",
-          alignItems:"center", gap:12, marginBottom:12,
+          display:"flex", alignItems:"center", gap:12, marginBottom:12,
         }}>
           <div style={{ width:42, height:42, borderRadius:12,
             background:"rgba(59,130,246,0.10)",
@@ -369,14 +311,12 @@ export default function Home(props) {
               marginTop:2, fontFamily:FONT }}>Démarre en quelques secondes</div>
           </div>
           <I d={ic.chev} size={16} color="rgba(242,244,247,0.35)"/>
-        </div>
+        </Card>
       )}
 
       {/* ── ÉNERGIE DU JOUR ──────────────────────────────────── */}
       {profil.poids && profil.taille && profil.age && profil.sexe ? (
-        <div style={{
-          background:"#111827",
-          border:"1px solid rgba(255,255,255,0.07)",
+        <Card padding="none" style={{
           borderRadius:20, padding:"18px 18px 16px", marginBottom:28,
         }}>
           <div style={{ display:"flex", justifyContent:"space-between",
@@ -416,11 +356,9 @@ export default function Home(props) {
               </svg>
               <div style={{ position:"absolute", inset:0, display:"flex",
                 flexDirection:"column", alignItems:"center", justifyContent:"center" }}>
-                <div style={{ fontSize:9, fontWeight:700,
-                  color:"rgba(242,244,247,0.35)", letterSpacing:"1px",
-                  textTransform:"uppercase", fontFamily:FONT, marginBottom:3 }}>
+                <Eyebrow style={{ fontSize:9, letterSpacing:"1px", marginBottom:3, color:"rgba(242,244,247,0.35)" }}>
                   {over ? "Dépassé" : "Restant"}
-                </div>
+                </Eyebrow>
                 <div style={{ fontFamily:SERIF, fontSize:30,
                   color: over ? "#F87171" : "#F2F4F7",
                   lineHeight:1, ...NUM }}>
@@ -441,14 +379,11 @@ export default function Home(props) {
                 color="#34D399" unit="g"/>
             </div>
           </div>
-        </div>
+        </Card>
       ) : (
-        <div onClick={() => setTab("profile")} className="tap" style={{
-          background:"#111827",
-          border:"1px solid rgba(255,255,255,0.07)",
+        <Card onClick={() => setTab("profile")} className="tap" padding="none" style={{
           borderRadius:16, padding:"16px",
-          cursor:"pointer", display:"flex",
-          alignItems:"center", gap:12, marginBottom:12,
+          display:"flex", alignItems:"center", gap:12, marginBottom:12,
         }}>
           <div style={{ width:42, height:42, borderRadius:12,
             background:"rgba(59,130,246,0.10)",
@@ -463,15 +398,13 @@ export default function Home(props) {
             </div>
           </div>
           <I d={ic.chev} size={16} color="rgba(242,244,247,0.35)"/>
-        </div>
+        </Card>
       )}
 
       {/* ── MES PROGRAMMES ───────────────────────────────────── */}
       <div style={{ marginBottom:8 }}>
         <div style={{ marginBottom:5 }}>
-          <div style={{ fontSize:11, fontWeight:700, letterSpacing:"0.09em",
-            textTransform:"uppercase", color:"rgba(242,244,247,0.35)",
-            fontFamily:FONT, marginBottom:4 }}>Passer au niveau supérieur</div>
+          <Eyebrow style={{ fontSize:11, letterSpacing:"0.09em", marginBottom:4 }}>Passer au niveau supérieur</Eyebrow>
           <div style={{ fontSize:22, fontWeight:700, color:"#F2F4F7",
             fontFamily:FONT, letterSpacing:-0.6, marginBottom:14 }}>Mes programmes</div>
         </div>
