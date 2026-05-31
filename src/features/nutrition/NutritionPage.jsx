@@ -154,6 +154,17 @@ export default function Nutrition(props){
         onClose={() => setShowCamera(false)}
       />
     )}
+    {showPhoto && (
+      <PhotoAnalyse
+        onClose={()=>setShowPhoto(false)}
+        onAdd={(aliment, repasId)=>{
+          setRepas(rp=>({...rp,[repasId]:[...(rp[repasId]||[]),aliment]}));
+        }}
+        premium={premium}
+        setPaywall={setPaywall}
+        push={push}
+      />
+    )}
     <div className="anim" style={{position:'relative',paddingBottom:20}}>
       <div style={{position:'absolute',top:130,left:'50%',transform:'translateX(-50%)',width:340,height:280,borderRadius:'50%',background:'radial-gradient(closest-side,rgba(59,130,246,0.12),transparent 70%)',filter:'blur(40px)',pointerEvents:'none'}}/>
 
@@ -260,14 +271,31 @@ export default function Nutrition(props){
                   Repas {isToday?"du jour":formatDate(dayOff).toLowerCase()}
                 </span>
                 {isToday&&(
-                  <div style={{display:'flex',alignItems:'center',gap:6}}>
-                    <button className="tap" onClick={()=>setShowCamera(true)} style={{display:'inline-flex',alignItems:'center',gap:5,padding:'5px 10px',background:'rgba(59,130,246,0.10)',border:'1px solid rgba(59,130,246,0.25)',borderRadius:999,color:'#93C5FD',fontSize:10.5,fontWeight:700,fontFamily:DISPLAY,cursor:'pointer'}}>
-                      <I name="scan" size={11} stroke={1.8} color="#93C5FD"/> Scanner
+                  <div style={{display:'flex',alignItems:'center',gap:8}}>
+                    <button className="tap" onClick={()=>setShowCamera(true)} style={{
+                      display:'inline-flex',alignItems:'center',gap:6,
+                      padding:'8px 14px',
+                      background:'rgba(59,130,246,0.12)',
+                      border:'1px solid rgba(59,130,246,0.30)',
+                      borderRadius:12,color:'#93C5FD',
+                      fontSize:12.5,fontWeight:700,fontFamily:DISPLAY,cursor:'pointer',
+                    }}>
+                      <I name="scan" size={13} stroke={2} color="#93C5FD"/> Scanner
                     </button>
-                    <button className="tap" onClick={()=>setShowPhoto(true)} style={{display:'inline-flex',alignItems:'center',gap:5,padding:'5px 10px',background: premium ? 'rgba(59,130,246,0.10)' : 'rgba(255,255,255,0.05)',border: premium ? '1px solid rgba(59,130,246,0.25)' : '1px solid rgba(255,255,255,0.10)',borderRadius:999,color: premium ? '#93C5FD' : 'rgba(242,244,247,0.40)',fontSize:10.5,fontWeight:700,fontFamily:DISPLAY,cursor:'pointer'}}>
-                      {!premium && <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>}
-                      {premium && <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#93C5FD" strokeWidth="1.8" strokeLinecap="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>}
-                      Photo IA
+                    <button className="tap" onClick={()=>setShowPhoto(true)} style={{
+                      display:'inline-flex',alignItems:'center',gap:6,
+                      padding:'8px 14px',
+                      background: premium ? 'rgba(99,102,241,0.12)' : 'rgba(255,255,255,0.06)',
+                      border: premium ? '1px solid rgba(99,102,241,0.35)' : '1px solid rgba(255,255,255,0.12)',
+                      borderRadius:12,
+                      color: premium ? '#A5B4FC' : 'rgba(242,244,247,0.50)',
+                      fontSize:12.5,fontWeight:700,fontFamily:DISPLAY,cursor:'pointer',
+                    }}>
+                      {!premium
+                        ? <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                        : <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#A5B4FC" strokeWidth="1.8" strokeLinecap="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                      }
+                      Photo
                     </button>
                   </div>
                 )}
