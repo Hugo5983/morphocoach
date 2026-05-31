@@ -1,6 +1,6 @@
 // @ts-check
 // ─── PHOTO ANALYSE — Analyse macros par photo d'assiette ──────────────────────
-// Feature Premium : 2 analyses gratuites/mois, illimité pour les abonnés.
+// Feature Premium : 3 analyses/mois gratuites, 120/mois pour les abonnés PRO.
 // Flow : Upload photo → Claude Vision → Résultat macros → Choix repas → Ajout journal
 
 import { useState, useRef, useCallback } from "react";
@@ -8,7 +8,8 @@ import { C, FONT, SERIF } from "../../data/constants.js";
 
 // ─── Constantes ───────────────────────────────────────────────────────────────
 const STORAGE_KEY_PREFIX = "mc_photoAnalyses_";
-const FREE_LIMIT = 2;
+const FREE_LIMIT = 3;
+const PRO_LIMIT   = 120;
 
 const MEALS = [
   { id: "matin", l: "Petit-déj." },
@@ -143,7 +144,10 @@ export default function PhotoAnalyse({ onClose, onAdd, premium, setPaywall, push
   // Compteur mensuel
   const usedCount  = getUsedCount();
   const remaining  = Math.max(0, FREE_LIMIT - usedCount);
-  const canAnalyse = premium || remaining > 0;
+  const proUsed    = getUsedCount();
+  const canAnalyse = premium
+    ? proUsed < PRO_LIMIT          // PRO : limité à 120/mois
+    : remaining > 0;               // Gratuit : limité à 3/mois
 
   // ── Sélection photo ──────────────────────────────────────────────────────
   const handleFile = useCallback(async (file) => {
@@ -270,7 +274,7 @@ export default function PhotoAnalyse({ onClose, onAdd, premium, setPaywall, push
               background: "rgba(59,130,246,0.12)", border: "1px solid rgba(59,130,246,0.25)",
               fontSize: 10, fontWeight: 700, color: "#93C5FD", fontFamily: FONT,
             }}>
-              <SparkIcon size={10}/> Illimité
+              <SparkIcon size={10}/> {PRO_LIMIT - proUsed} photos restantes
             </span>
           ) : (
             <span style={{
@@ -281,7 +285,7 @@ export default function PhotoAnalyse({ onClose, onAdd, premium, setPaywall, push
               color: newRemain > 0 ? "#FBBF24" : "#F87171",
               fontFamily: FONT,
             }}>
-              {newRemain > 0 ? `${newRemain} analyse${newRemain > 1 ? "s" : ""} gratuite${newRemain > 1 ? "s" : ""}` : "Limite atteinte"}
+              {newRemain > 0 ? `${newRemain} photo${newRemain > 1 ? "s" : ""} restante${newRemain > 1 ? "s" : ""}` : "Limite atteinte"}
             </span>
           )}
         </div>
@@ -302,7 +306,7 @@ export default function PhotoAnalyse({ onClose, onAdd, premium, setPaywall, push
           Analyse <span style={{ fontStyle: "italic" }}>photo</span>
         </div>
         <div style={{ fontSize: 12, color: "rgba(242,244,247,0.45)", fontFamily: FONT }}>
-          Prends en photo ton repas — l'IA estime les macros
+          Prends en photo ton repas pour estimer les macros
         </div>
       </div>
 
@@ -429,7 +433,7 @@ export default function PhotoAnalyse({ onClose, onAdd, premium, setPaywall, push
                 marginTop: 10, textAlign: "center",
                 fontSize: 10.5, color: "rgba(242,244,247,0.30)", fontFamily: FONT,
               }}>
-                {newRemain} analyse{newRemain > 1 ? "s" : ""} gratuite{newRemain > 1 ? "s" : ""} restante{newRemain > 1 ? "s" : ""} ce mois-ci · Illimité avec Nutrition PRO
+                {newRemain} photo{newRemain > 1 ? "s" : ""} restante{newRemain > 1 ? "s" : ""} ce mois · {PRO_LIMIT} photos/mois avec Nutrition PRO
               </div>
             )}
           </>
