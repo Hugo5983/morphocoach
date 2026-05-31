@@ -599,37 +599,20 @@ export default function Nutrition(props){
                 const okColor = d.status==='ok'?'#34D399':d.status==='warn'?'#FBBF24':'#F87171';
                 const okBg    = d.status==='ok'?'rgba(52,211,153,0.10)':d.status==='warn'?'rgba(251,191,36,0.10)':'rgba(248,113,113,0.10)';
                 const okBd    = d.status==='ok'?'rgba(52,211,153,0.25)':d.status==='warn'?'rgba(251,191,36,0.25)':'rgba(248,113,113,0.25)';
-                const pts     = `${d.pts}/${d.max}`;
+                const badgeLabel = d.status==='ok'?'Optimal':
+                  d.id==='sucres'||d.id==='sodium'||d.id==='lipides'?(d.status==='warn'?'Élevé':'Trop élevé'):
+                  d.status==='warn'?'Insuffisant':'Faible';
                 return (
                   <div key={d.id} style={{padding:'14px 0',borderBottom:i<scoreDetails.length-1?`1px solid rgba(255,255,255,0.05)`:'none'}}>
                     <div style={{display:'flex',alignItems:'center',gap:12}}>
-                      <div style={{width:40,height:40,borderRadius:12,background:okBg,border:`1px solid ${okBd}`,display:'grid',placeItems:'center',flexShrink:0,fontSize:18}}>{d.icon}</div>
+                      <div style={{width:42,height:42,borderRadius:12,background:okBg,border:`1px solid ${okBd}`,display:'grid',placeItems:'center',flexShrink:0,fontSize:20}}>{d.icon}</div>
                       <div style={{flex:1,minWidth:0}}>
-                        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:3}}>
-                          <span style={{fontSize:13,fontWeight:700,color:C.text,fontFamily:DISPLAY}}>{d.label}</span>
-                          <span style={{fontSize:11,fontWeight:700,color:okColor,fontFamily:DISPLAY,flexShrink:0,marginLeft:8}}>{pts} pts</span>
-                        </div>
-                        <div style={{fontSize:11,color:'rgba(242,244,247,0.45)',fontFamily:DISPLAY,marginBottom:4}}>{d.value}</div>
-                        {/* Mini barre de pts */}
-                        <div style={{height:3,background:'rgba(255,255,255,0.07)',borderRadius:99,overflow:'hidden'}}>
-                          <div style={{height:'100%',width:`${Math.round(d.pts/d.max*100)}%`,background:okColor,borderRadius:99,transition:'width .6s ease'}}/>
-                        </div>
+                        <span style={{fontSize:14,fontWeight:700,color:C.text,fontFamily:DISPLAY}}>{d.label}</span>
                       </div>
-                      <div style={{width:26,height:26,borderRadius:'50%',background:okBg,border:`1px solid ${okBd}`,display:'grid',placeItems:'center',flexShrink:0}}>
-                        {d.status==='ok'
-                          ? <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={okColor} strokeWidth="3" strokeLinecap="round"><polyline points="20 6 9 17 4 12"/></svg>
-                          : d.status==='warn'
-                            ? <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={okColor} strokeWidth="3" strokeLinecap="round"><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="16" r="1" fill={okColor}/></svg>
-                            : <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={okColor} strokeWidth="3" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                        }
+                      <div style={{padding:'5px 12px',borderRadius:20,flexShrink:0,background:okBg,border:`1px solid ${okBd}`,fontSize:11,fontWeight:700,color:okColor,fontFamily:DISPLAY}}>
+                        {badgeLabel}
                       </div>
                     </div>
-                    {/* Conseil contextuel */}
-                    {d.status!=='ok'&&(
-                      <div style={{marginTop:8,marginLeft:52,fontSize:11,color:'rgba(242,244,247,0.45)',fontStyle:'italic',fontFamily:DISPLAY,lineHeight:1.5}}>
-                        💡 {d.tip}
-                      </div>
-                    )}
                   </div>
                 );
               })}
