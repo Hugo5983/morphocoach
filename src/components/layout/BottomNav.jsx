@@ -7,8 +7,8 @@ function NavIcon({ name, active }) {
   const d = {
     home:      <><path d="M3 11 12 3l9 8"/><path d="M5 10v10h14V10"/></>,
     dumbbell:  <><path d="M6.5 6.5 17.5 17.5M4 8l4-4M16 20l4-4M2 10l2-2M20 16l2-2M9 4l3 3M15 17l3 3"/></>,
-    nutrition: <><path d="M12 2a9 9 0 0 1 9 9c0 4-2.5 7.5-6 9l-3 2-3-2C5.5 18.5 3 15 3 11a9 9 0 0 1 9-9z"/><path d="M12 6v6l4 2"/></>,
-    recipes:   <><path d="M6 9h11v6a4 4 0 0 1-4 4H10a4 4 0 0 1-4-4V9Z"/><path d="M17 11h2a2 2 0 0 1 0 4h-2"/><path d="M9 3v3M13 3v3"/></>,
+    nutrition: <><path d="M6 9h11v6a4 4 0 0 1-4 4H10a4 4 0 0 1-4-4V9Z"/><path d="M17 11h2a2 2 0 0 1 0 4h-2"/><path d="M9 3v3M13 3v3"/></>,
+    recipes:   <><path d="M4 3h13v18H6a2 2 0 0 1-2-2V3Z"/><path d="M4 19a2 2 0 0 1 2-2h11M9 7h6M9 11h6"/></>,
   };
   return <svg {...p}>{d[name]}</svg>;
 }
