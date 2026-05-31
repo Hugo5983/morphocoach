@@ -599,34 +599,40 @@ export default function Nutrition(props){
                 const okColor = d.status==='ok'?'#34D399':d.status==='warn'?'#FBBF24':'#F87171';
                 const okBg    = d.status==='ok'?'rgba(52,211,153,0.10)':d.status==='warn'?'rgba(251,191,36,0.10)':'rgba(248,113,113,0.10)';
                 const okBd    = d.status==='ok'?'rgba(52,211,153,0.25)':d.status==='warn'?'rgba(251,191,36,0.25)':'rgba(248,113,113,0.25)';
-                const pts     = `${d.pts}/${d.max}`;
+                const badgeLabel = d.status==='ok'?'Optimal':d.status==='warn'?'Moyen':'Faible';
+                // Icônes SVG cohérentes avec l'app (pas d'emoji)
+                const ICONS = {
+                  macros:   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={okColor} strokeWidth="1.8" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>,
+                  qualProt: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={okColor} strokeWidth="1.8" strokeLinecap="round"><path d="M6.5 6.5 17.5 17.5M4 8l4-4M16 20l4-4M2 10l2-2M20 16l2-2M9 4l3 3M15 17l3 3"/></svg>,
+                  fibres:   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={okColor} strokeWidth="1.8" strokeLinecap="round"><path d="M12 2a7 7 0 0 1 7 7c0 5-7 13-7 13S5 14 5 9a7 7 0 0 1 7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>,
+                  hydra:    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={okColor} strokeWidth="1.8" strokeLinecap="round"><path d="M12 3s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11z"/></svg>,
+                  densite:  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={okColor} strokeWidth="1.8" strokeLinecap="round"><path d="M12 2 2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>,
+                  lipides:  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={okColor} strokeWidth="1.8" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/></svg>,
+                  sucres:   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={okColor} strokeWidth="1.8" strokeLinecap="round"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2v-4M9 21H5a2 2 0 0 1-2-2v-4m0 0h18"/></svg>,
+                  sodium:   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={okColor} strokeWidth="1.8" strokeLinecap="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>,
+                };
                 return (
                   <div key={d.id} style={{padding:'14px 0',borderBottom:i<scoreDetails.length-1?`1px solid rgba(255,255,255,0.05)`:'none'}}>
                     <div style={{display:'flex',alignItems:'center',gap:12}}>
-                      <div style={{width:40,height:40,borderRadius:12,background:okBg,border:`1px solid ${okBd}`,display:'grid',placeItems:'center',flexShrink:0,fontSize:18}}>{d.icon}</div>
+                      {/* Icône SVG */}
+                      <div style={{width:42,height:42,borderRadius:12,background:okBg,border:`1px solid ${okBd}`,display:'grid',placeItems:'center',flexShrink:0}}>
+                        {ICONS[d.id]}
+                      </div>
+                      {/* Label + valeur */}
                       <div style={{flex:1,minWidth:0}}>
-                        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:3}}>
-                          <span style={{fontSize:13,fontWeight:700,color:C.text,fontFamily:DISPLAY}}>{d.label}</span>
-                          <span style={{fontSize:11,fontWeight:700,color:okColor,fontFamily:DISPLAY,flexShrink:0,marginLeft:8}}>{pts} pts</span>
-                        </div>
-                        <div style={{fontSize:11,color:'rgba(242,244,247,0.45)',fontFamily:DISPLAY,marginBottom:4}}>{d.value}</div>
-                        {/* Mini barre de pts */}
-                        <div style={{height:3,background:'rgba(255,255,255,0.07)',borderRadius:99,overflow:'hidden'}}>
-                          <div style={{height:'100%',width:`${Math.round(d.pts/d.max*100)}%`,background:okColor,borderRadius:99,transition:'width .6s ease'}}/>
-                        </div>
+                        <div style={{fontSize:14,fontWeight:700,color:C.text,fontFamily:DISPLAY,marginBottom:2}}>{d.label}</div>
+                        <div style={{fontSize:11,color:'rgba(242,244,247,0.45)',fontFamily:DISPLAY}}>{d.value}</div>
                       </div>
-                      <div style={{width:26,height:26,borderRadius:'50%',background:okBg,border:`1px solid ${okBd}`,display:'grid',placeItems:'center',flexShrink:0}}>
-                        {d.status==='ok'
-                          ? <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={okColor} strokeWidth="3" strokeLinecap="round"><polyline points="20 6 9 17 4 12"/></svg>
-                          : d.status==='warn'
-                            ? <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={okColor} strokeWidth="3" strokeLinecap="round"><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="16" r="1" fill={okColor}/></svg>
-                            : <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={okColor} strokeWidth="3" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                        }
-                      </div>
+                      {/* Badge statut style screen */}
+                      <div style={{
+                        padding:'5px 11px',borderRadius:20,flexShrink:0,
+                        background:okBg,border:`1px solid ${okBd}`,
+                        fontSize:11,fontWeight:700,color:okColor,fontFamily:DISPLAY,
+                      }}>{badgeLabel}</div>
                     </div>
                     {/* Conseil contextuel */}
                     {d.status!=='ok'&&(
-                      <div style={{marginTop:8,marginLeft:52,fontSize:11,color:'rgba(242,244,247,0.45)',fontStyle:'italic',fontFamily:DISPLAY,lineHeight:1.5}}>
+                      <div style={{marginTop:7,marginLeft:54,fontSize:11,color:'rgba(242,244,247,0.40)',fontStyle:'italic',fontFamily:DISPLAY,lineHeight:1.5}}>
                         💡 {d.tip}
                       </div>
                     )}
