@@ -41,15 +41,16 @@ const ic = {
 function Stepper({ label, value, onChange, min=1, step=1, unit="" }) {
   const n = parseFloat(value) || 0;
   return (
-    <div style={{ flex:1, background:"rgba(255,255,255,0.04)", border:"1px solid rgba(255,255,255,0.08)", borderRadius:14, padding:"10px 8px" }}>
-      <div style={{ fontSize:9, fontWeight:700, letterSpacing:"1.2px", color:"rgba(242,244,247,0.30)", textTransform:"uppercase", textAlign:"center", fontFamily:DISP, marginBottom:8 }}>{label}</div>
-      <div style={{ display:"flex", alignItems:"center", gap:4 }}>
-        <button onClick={() => onChange(String(Math.max(min, n - step)))} style={{ width:28, height:28, borderRadius:8, background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.10)", color:"rgba(242,244,247,0.60)", cursor:"pointer", fontSize:16, display:"grid", placeItems:"center" }}>−</button>
-        <input value={value} onChange={e => onChange(e.target.value)}
-          style={{ flex:1, background:"transparent", border:"none", outline:"none", textAlign:"center", color:"#F2F4F7", fontSize:15, fontWeight:800, fontFamily:DISP }}/>
-        <button onClick={() => onChange(String(n + step))} style={{ width:28, height:28, borderRadius:8, background:C.accent, border:"none", color:"#fff", cursor:"pointer", fontSize:16, display:"grid", placeItems:"center" }}>+</button>
+    <div style={{ background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.07)", borderRadius:18, padding:"16px 16px 14px" }}>
+      <div style={{ fontSize:9, fontWeight:700, letterSpacing:"1.5px", color:"rgba(242,244,247,0.28)", textTransform:"uppercase", textAlign:"center", fontFamily:DISP, marginBottom:14 }}>{label}</div>
+      <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", gap:0 }}>
+        <button onClick={() => onChange(String(Math.max(min, n - step)))} style={{ width:38, height:38, borderRadius:11, background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.10)", color:"rgba(242,244,247,0.50)", cursor:"pointer", fontSize:20, display:"grid", placeItems:"center", fontWeight:300 }}>−</button>
+        <div style={{ textAlign:"center", flex:1 }}>
+          <div style={{ fontSize:32, fontWeight:800, color:"#F2F4F7", fontFamily:DISP, lineHeight:1 }}>{value}</div>
+          {unit && <div style={{ fontSize:10, color:"rgba(242,244,247,0.25)", marginTop:4, fontFamily:DISP }}>{unit}</div>}
+        </div>
+        <button onClick={() => onChange(String(n + step))} style={{ width:38, height:38, borderRadius:11, background:C.accent, border:"none", color:"#fff", cursor:"pointer", fontSize:20, display:"grid", placeItems:"center", boxShadow:"0 4px 14px rgba(59,130,246,0.40)" }}>+</button>
       </div>
-      {unit && <div style={{ fontSize:9, color:"rgba(242,244,247,0.25)", textAlign:"center", marginTop:4, fontFamily:DISP }}>{unit}</div>}
     </div>
   );
 }
@@ -115,7 +116,7 @@ function ExCard({ ex, idx, onUpdate, onRemove }) {
       {/* Éditeur étendu */}
       {expanded && (
         <div style={{ padding:"14px 14px 16px", borderTop:"1px solid rgba(255,255,255,0.06)", background:"rgba(255,255,255,0.02)" }}>
-          <div style={{ display:"flex", gap:8, marginBottom:12 }}>
+          <div style={{ display:"flex", flexDirection:"column", gap:12, marginBottom:16 }}>
             <Stepper label="Séries" value={ex.series} onChange={v => onUpdate({...ex, series:v})} min={1}/>
             <Stepper label="Reps" value={ex.reps} onChange={v => onUpdate({...ex, reps:v})} min={1}/>
             <Stepper label="Repos" value={ex.repos} onChange={v => onUpdate({...ex, repos:v})} min={0} step={15} unit="sec"/>
