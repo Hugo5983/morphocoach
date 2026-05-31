@@ -127,7 +127,7 @@ export default function Nutrition(props){
   const tot     = totR;
   const all     = [...FOODS,...myFoods];
   const filtered= search ? all.filter(f=>f.n.toLowerCase().includes(search.toLowerCase())) : [];
-  const { score, lettre:scoreLettre, color:scoreColor, details:scoreDetails } = computeHealthScore(repas,eau,tot,pObj);
+  const { score, lettre:scoreLettre, color:scoreColor, details:scoreDetails } = computeHealthScore(repas,eau,tot,pObj,gObj,lObj,profil);
 
   // Callback quand un code-barres est détecté par la caméra
   const handleCameraScan = async (code) => {
@@ -551,44 +551,100 @@ export default function Nutrition(props){
 
         {/* ════ SCORE ════ */}
         {nView==="score"&&(
-          <div style={{padding:'16px 16px 0'}}>
+          <div style={{padding:'16px 16px 0',paddingBottom:32}}>
             <button onClick={()=>setNView("journal")}
               style={{display:'flex',alignItems:'center',gap:5,background:'transparent',
-                border:'none',color:'#F59E0B',cursor:'pointer',fontSize:13,
-                fontWeight:700,fontFamily:DISPLAY,padding:'4px 0',marginBottom:12}}>
+                border:'none',color:'#3B82F6',cursor:'pointer',fontSize:13,
+                fontWeight:700,fontFamily:DISPLAY,padding:'4px 0',marginBottom:16}}>
               <I name="chevL" size={15} stroke={2}/> Retour
             </button>
-            <div style={{background:C.s1, border:`1px solid ${C.bd}`, borderRadius:16, boxShadow:'0 1px 3px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.04)', padding:18}}>
-              <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:16}}>
+
+            {/* ── Hero score ── */}
+            <div style={{background:C.s1,border:`1px solid ${C.bd}`,borderRadius:20,padding:'22px 20px 18px',marginBottom:10,position:'relative',overflow:'hidden'}}>
+              <div style={{position:'absolute',top:-30,right:-30,width:120,height:120,borderRadius:'50%',background:`radial-gradient(circle,${scoreColor}22 0%,transparent 70%)`,pointerEvents:'none'}}/>
+              <div style={{...eyebrowS,marginBottom:12}}>Score santé du jour</div>
+              <div style={{display:'flex',alignItems:'flex-end',justifyContent:'space-between',marginBottom:18}}>
                 <div>
-                  <div style={{...eyebrowS,marginBottom:4}}>Score santé du jour</div>
-                  <div style={{fontSize:11,color:C.mid,lineHeight:1.5}}>Qualité alimentaire<br/>et comportements nutritionnels</div>
-                </div>
-                <div style={{textAlign:'center'}}>
-                  <div style={{fontFamily:SERIF,fontSize:52,fontWeight:400,color:scoreColor,lineHeight:1,letterSpacing:-2}}>{scoreLettre}</div>
-                  <div style={{fontSize:10,color:C.dim,...NUM}}>{score}/100</div>
-                </div>
-              </div>
-              <div style={{height:6,background:'rgba(255,255,255,0.06)',borderRadius:3,overflow:'hidden',marginBottom:16}}>
-                <div style={{height:'100%',width:`${score}%`,background:'linear-gradient(90deg,#F87171,#F59E0B,#34D399)',borderRadius:3,transition:'width .8s'}}/>
-              </div>
-              {scoreDetails.map((d,i)=>(
-                <div key={i} style={{display:'flex',alignItems:'center',justifyContent:'space-between',
-                  padding:'10px 0',borderBottom:i<scoreDetails.length-1?`1px solid ${C.bd}`:'none'}}>
-                  <div style={{display:'flex',alignItems:'center',gap:10}}>
-                    <span style={{fontSize:18}}>{d.icon}</span>
-                    <span style={{fontSize:12,color:C.text}}>{d.l}</span>
+                  <div style={{fontFamily:SERIF,fontSize:64,fontWeight:400,color:scoreColor,lineHeight:1,letterSpacing:-2}}>{scoreLettre}</div>
+                  <div style={{fontSize:11,color:'rgba(242,244,247,0.45)',marginTop:4,maxWidth:180,lineHeight:1.4,fontFamily:DISPLAY}}>
+                    Qualité alimentaire et comportements nutritionnels
                   </div>
-                  <div style={{width:22,height:22,borderRadius:'50%',
-                    background:d.ok?'rgba(52,211,153,0.15)':'rgba(248,113,113,0.15)',
-                    border:`1px solid ${d.ok?'rgba(52,211,153,0.40)':'rgba(248,113,113,0.40)'}`,
-                    display:'grid',placeItems:'center',fontSize:11,
-                    color:d.ok?'#34D399':'#F87171'}}>{d.ok?'✓':'✕'}</div>
                 </div>
-              ))}
-              <div style={{marginTop:14,padding:'10px 12px',background:C.s2,borderRadius:12,
-                fontSize:11,color:C.mid,lineHeight:1.6}}>
-                💡 {score>=85?"Excellente journée nutritionnelle !":score>=70?"Bonne journée, quelques ajustements possibles.":score>=55?"Journée correcte. Pensez à l'hydratation.":score>=40?"Des efforts à faire sur la qualité alimentaire.":"Revenez aux bases demain, sans pression !"}
+                <div style={{textAlign:'right'}}>
+                  <div style={{fontSize:40,fontWeight:800,color:C.text,letterSpacing:-1.5,lineHeight:1,...NUM}}>{score}</div>
+                  <div style={{fontSize:11,color:'rgba(242,244,247,0.35)',fontFamily:DISPLAY}}>/100 points</div>
+                  <div style={{marginTop:6,padding:'3px 10px',background:`${scoreColor}18`,border:`1px solid ${scoreColor}35`,borderRadius:99,display:'inline-block'}}>
+                    <span style={{fontSize:10,fontWeight:700,color:scoreColor,fontFamily:DISPLAY}}>
+                      {score>=85?'Excellent':score>=70?'Bien':score>=55?'Correct':score>=40?'À améliorer':'Insuffisant'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              {/* Barre avec repères */}
+              <div>
+                <div style={{height:8,background:'rgba(255,255,255,0.07)',borderRadius:99,overflow:'hidden',marginBottom:5}}>
+                  <div style={{height:'100%',width:`${score}%`,background:'linear-gradient(90deg,#F87171,#F59E0B,#34D399)',borderRadius:99,transition:'width .8s ease'}}/>
+                </div>
+                <div style={{display:'flex',justifyContent:'space-between'}}>
+                  {['E','D','C','B','A'].map(l=>(
+                    <span key={l} style={{fontSize:9,color:l===scoreLettre?scoreColor:'rgba(242,244,247,0.20)',fontWeight:l===scoreLettre?700:400,fontFamily:DISPLAY}}>{l}</span>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* ── Critères détaillés ── */}
+            <div style={{background:C.s1,border:`1px solid ${C.bd}`,borderRadius:20,padding:'4px 16px',marginBottom:10}}>
+              {scoreDetails.map((d,i)=>{
+                const okColor = d.status==='ok'?'#34D399':d.status==='warn'?'#FBBF24':'#F87171';
+                const okBg    = d.status==='ok'?'rgba(52,211,153,0.10)':d.status==='warn'?'rgba(251,191,36,0.10)':'rgba(248,113,113,0.10)';
+                const okBd    = d.status==='ok'?'rgba(52,211,153,0.25)':d.status==='warn'?'rgba(251,191,36,0.25)':'rgba(248,113,113,0.25)';
+                const pts     = `${d.pts}/${d.max}`;
+                return (
+                  <div key={d.id} style={{padding:'14px 0',borderBottom:i<scoreDetails.length-1?`1px solid rgba(255,255,255,0.05)`:'none'}}>
+                    <div style={{display:'flex',alignItems:'center',gap:12}}>
+                      <div style={{width:40,height:40,borderRadius:12,background:okBg,border:`1px solid ${okBd}`,display:'grid',placeItems:'center',flexShrink:0,fontSize:18}}>{d.icon}</div>
+                      <div style={{flex:1,minWidth:0}}>
+                        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:3}}>
+                          <span style={{fontSize:13,fontWeight:700,color:C.text,fontFamily:DISPLAY}}>{d.label}</span>
+                          <span style={{fontSize:11,fontWeight:700,color:okColor,fontFamily:DISPLAY,flexShrink:0,marginLeft:8}}>{pts} pts</span>
+                        </div>
+                        <div style={{fontSize:11,color:'rgba(242,244,247,0.45)',fontFamily:DISPLAY,marginBottom:4}}>{d.value}</div>
+                        {/* Mini barre de pts */}
+                        <div style={{height:3,background:'rgba(255,255,255,0.07)',borderRadius:99,overflow:'hidden'}}>
+                          <div style={{height:'100%',width:`${Math.round(d.pts/d.max*100)}%`,background:okColor,borderRadius:99,transition:'width .6s ease'}}/>
+                        </div>
+                      </div>
+                      <div style={{width:26,height:26,borderRadius:'50%',background:okBg,border:`1px solid ${okBd}`,display:'grid',placeItems:'center',flexShrink:0}}>
+                        {d.status==='ok'
+                          ? <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={okColor} strokeWidth="3" strokeLinecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                          : d.status==='warn'
+                            ? <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={okColor} strokeWidth="3" strokeLinecap="round"><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="16" r="1" fill={okColor}/></svg>
+                            : <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={okColor} strokeWidth="3" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                        }
+                      </div>
+                    </div>
+                    {/* Conseil contextuel */}
+                    {d.status!=='ok'&&(
+                      <div style={{marginTop:8,marginLeft:52,fontSize:11,color:'rgba(242,244,247,0.45)',fontStyle:'italic',fontFamily:DISPLAY,lineHeight:1.5}}>
+                        💡 {d.tip}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* ── Conseil global ── */}
+            <div style={{background:'rgba(59,130,246,0.07)',border:'1px solid rgba(59,130,246,0.18)',borderRadius:16,padding:'14px 16px',display:'flex',alignItems:'flex-start',gap:10}}>
+              <span style={{fontSize:20,flexShrink:0}}>💡</span>
+              <div>
+                <div style={{fontSize:13,fontWeight:600,color:C.text,fontFamily:DISPLAY,marginBottom:3}}>
+                  {score>=85?'Excellente journée nutritionnelle !':score>=70?'Bonne journée, quelques ajustements possibles.':score>=55?'Journée correcte, on peut faire mieux.':score>=40?'Des efforts à faire sur la qualité alimentaire.':'Revenez aux bases demain, sans pression !'}
+                </div>
+                <div style={{fontSize:11,color:'rgba(242,244,247,0.45)',fontFamily:DISPLAY,lineHeight:1.5}}>
+                  Score calculé sur {scoreDetails.length} critères nutritionnels
+                </div>
               </div>
             </div>
           </div>
