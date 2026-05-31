@@ -1,204 +1,275 @@
 import { useState } from "react";
-import { C, OBJ, ACTIVITE_FACTOR, FONT, NUM } from "../../data/constants.js";
-import { Card, Eyebrow, Pill, Bar, Inp, G2 } from "../../components/ui/index.jsx";
+import { C, OBJ, ACTIVITE_FACTOR, FONT, SERIF, NUM } from "../../data/constants.js";
 
-// ─── WEIGHT CHART ─────────────────────────────────────────────────────────────
-function WeightChart({ data }) {
-  if (!data || data.length < 2) return null;
-  const W = 320, H = 120, PAD = { top: 16, right: 16, bottom: 28, left: 36 };
-  const innerW = W - PAD.left - PAD.right;
-  const innerH = H - PAD.top - PAD.bottom;
-  const vals  = data.map(d => parseFloat(d.poids));
-  const dates = data.map(d => d.date ? new Date(d.date) : null);
-  const minV  = Math.min(...vals) - 0.5;
-  const maxV  = Math.max(...vals) + 0.5;
-  const x = i => PAD.left + (i / (vals.length - 1)) * innerW;
-  const y = v => PAD.top + innerH - ((v - minV) / (maxV - minV)) * innerH;
-  const pts = vals.map((v, i) => ({ x: x(i), y: y(v) }));
-  const path = pts.reduce((acc, pt, i) => {
-    if (i === 0) return `M ${pt.x} ${pt.y}`;
-    const prev = pts[i - 1];
-    const cp1x = prev.x + (pt.x - prev.x) * 0.5;
-    const cp2x = pt.x  - (pt.x - prev.x) * 0.5;
-    return `${acc} C ${cp1x} ${prev.y}, ${cp2x} ${pt.y}, ${pt.x} ${pt.y}`;
-  }, "");
-  const areaPath = `${path} L ${pts.at(-1).x} ${PAD.top + innerH} L ${pts[0].x} ${PAD.top + innerH} Z`;
-  const delta  = vals.at(-1) - vals[0];
-  const isGain = delta >= 0;
-  const lineColor = C.accent;
-  const yTicks = [minV + 0.5, (minV + maxV) / 2, maxV - 0.5].map(v => ({ v: v.toFixed(1), y: y(v) }));
-  const formatDate = d => d ? d.toLocaleDateString("fr-FR", { day: "2-digit", month: "short" }) : "";
-
+// ─── Icônes SVG inline ────────────────────────────────────────────────────────
+function I({ d, size = 18, color = "currentColor", sw = 1.8, fill = "none" }) {
   return (
-    <div style={{ position: "relative" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 16 }}>
-        <div>
-          <Eyebrow style={{ marginBottom: 3 }}>Poids actuel</Eyebrow>
-          <div style={{ display: "flex", alignItems: "baseline", gap: 5 }}>
-            <span style={{ fontSize: 32, fontWeight: 700, letterSpacing: -1.5, color: C.text, lineHeight: 1, ...NUM }}>{vals.at(-1)}</span>
-            <span style={{ fontSize: 13, color: "rgba(242,244,247,0.40)", fontWeight: 400 }}>kg</span>
-          </div>
-        </div>
-        <div style={{ textAlign: "right" }}>
-          <Eyebrow style={{ marginBottom: 3 }}>Évolution</Eyebrow>
-          <Pill color={isGain ? C.accent : C.green} style={{ fontSize: 13, fontWeight: 700 }}>
-            {isGain ? "+" : ""}{delta.toFixed(1)} kg
-          </Pill>
-        </div>
-      </div>
-      <svg viewBox={`0 0 ${W} ${H}`} width="100%" height={H} style={{ overflow: "visible", display: "block" }}>
-        <defs>
-          <linearGradient id="wGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%"   stopColor={lineColor} stopOpacity="0.18" />
-            <stop offset="100%" stopColor={lineColor} stopOpacity="0"    />
-          </linearGradient>
-          <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%"   stopColor={lineColor} stopOpacity="0.4" />
-            <stop offset="100%" stopColor={lineColor} stopOpacity="1"   />
-          </linearGradient>
-        </defs>
-        {yTicks.map((t, i) => (
-          <line key={i} x1={PAD.left} y1={t.y} x2={W - PAD.right} y2={t.y} stroke="rgba(255,255,255,0.04)" strokeWidth="1"/>
-        ))}
-        {yTicks.map((t, i) => (
-          <text key={i} x={PAD.left - 8} y={t.y + 4} textAnchor="end"
-            fill="rgba(242,244,247,0.25)" fontSize="9" fontFamily="'DM Sans',sans-serif">{t.v}</text>
-        ))}
-        <path d={areaPath} fill="url(#wGrad)" />
-        <path d={path} fill="none" stroke="url(#lineGrad)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-        {pts.map((pt, i) => (
-          <g key={i}>
-            <circle cx={pt.x} cy={pt.y} r="3.5" fill={C.s1} stroke={lineColor} strokeWidth="1.5" />
-            {i === pts.length - 1 && <circle cx={pt.x} cy={pt.y} r="5.5" fill="none" stroke={lineColor} strokeWidth="1" opacity="0.35" />}
-          </g>
-        ))}
-        {pts.map((pt, i) => {
-          if (pts.length > 6 && i % 2 !== 0 && i !== pts.length - 1) return null;
-          return (
-            <text key={i} x={pt.x} y={H - 4} textAnchor="middle"
-              fill="rgba(242,244,247,0.25)" fontSize="9" fontFamily="'DM Sans',sans-serif">
-              {dates[i] ? formatDate(dates[i]) : `J${i + 1}`}
-            </text>
-          );
-        })}
-      </svg>
+    <svg width={size} height={size} viewBox="0 0 24 24"
+      fill={fill} stroke={color} strokeWidth={sw}
+      strokeLinecap="round" strokeLinejoin="round">
+      {d}
+    </svg>
+  );
+}
+
+const ic = {
+  flame:    <path d="M12 2c0 6-6 8-6 14a6 6 0 0 0 12 0c0-6-6-8-6-14z"/>,
+  dumbbell: <path d="M6.5 6.5 17.5 17.5M4 8l4-4M16 20l4-4M2 10l2-2M20 16l2-2M9 4l3 3M15 17l3 3"/>,
+  bone:     <><path d="M17 10c.7-.7 1.69-.9 2.5-.5.8.4 1.4 1.3 1.4 2.2s-.6 1.8-1.4 2.2c-.8.4-1.8.2-2.5-.5l-7-7c-.7-.7-.9-1.69-.5-2.5.4-.8 1.3-1.4 2.2-1.4s1.8.6 2.2 1.4c.4.81.2 1.81-.5 2.5M7 14c-.7.7-1.69.9-2.5.5-.8-.4-1.4-1.3-1.4-2.2s.6-1.8 1.4-2.2c.8-.4 1.8-.2 2.5.5l7 7c.7.7.9 1.69.5 2.5-.4.8-1.3 1.4-2.2 1.4s-1.8-.6-2.2-1.4c-.4-.81-.2-1.81.5-2.5"/></>,
+  drop:     <path d="M12 3s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11z"/>,
+  heart:    <><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></>,
+  ruler:    <><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.4 2.4 0 0 1 0-3.4l2.6-2.6a2.4 2.4 0 0 1 3.4 0z"/><path d="m14.5 12.5 2-2M11.5 9.5l2-2M8.5 6.5l2-2"/></>,
+  target:   <><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></>,
+  zap:      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>,
+  activity: <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>,
+  crown:    <path d="M2 20h20M5 20 3 7l7 5 4-8 4 8 7-5-2 13"/>,
+  upload:   <><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></>,
+  chev:     <path d="m9 18 6-6-6-6"/>,
+};
+
+// ─── Carte Glass ──────────────────────────────────────────────────────────────
+function Glass({ children, style = {}, glow, pad = 18, onClick }) {
+  return (
+    <div onClick={onClick} style={{
+      position: "relative",
+      borderRadius: 22,
+      padding: pad,
+      background: "linear-gradient(160deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01))",
+      border: "1px solid rgba(255,255,255,0.07)",
+      boxShadow: glow
+        ? `0 18px 40px -22px ${glow}, inset 0 1px 0 rgba(255,255,255,0.08)`
+        : "0 18px 40px -28px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.06)",
+      cursor: onClick ? "pointer" : "default",
+      ...style,
+    }}>
+      {children}
     </div>
   );
 }
 
-// ─── PRIMITIVES ÉDITION ───────────────────────────────────────────────────────
-function EditableRow({ label, value, displayValue, type = "text", onChange, options, unit }) {
+// ─── Stat Card ────────────────────────────────────────────────────────────────
+function StatCard({ value, unit, label, color }) {
+  return (
+    <Glass pad={0} style={{ flex: 1 }}>
+      <div style={{ padding: "20px 8px 16px", textAlign: "center", position: "relative", overflow: "hidden", borderRadius: 22 }}>
+        <div style={{
+          position: "absolute", top: -30, left: "50%", transform: "translateX(-50%)",
+          width: 120, height: 120, borderRadius: "50%",
+          background: `radial-gradient(circle, ${color}33, transparent 70%)`,
+          pointerEvents: "none",
+        }}/>
+        <div style={{ position: "relative" }}>
+          <span style={{ fontSize: 28, fontWeight: 800, color, letterSpacing: -1, fontFamily: FONT, ...NUM }}>{value ?? "—"}</span>
+          {unit && <span style={{ fontSize: 13, fontWeight: 600, color: "rgba(242,244,247,0.40)", marginLeft: 2, fontFamily: FONT }}>{unit}</span>}
+        </div>
+        <div style={{ position: "relative", fontSize: 11.5, color: "rgba(242,244,247,0.40)", marginTop: 4, fontFamily: FONT }}>{label}</div>
+      </div>
+    </Glass>
+  );
+}
+
+// ─── Tabs ─────────────────────────────────────────────────────────────────────
+function Tabs({ active, setActive }) {
+  const items = ["Profil", "Compo.", "Mesures"];
+  const idx = items.indexOf(active);
+  return (
+    <div style={{
+      position: "relative", display: "flex", padding: 5, borderRadius: 18,
+      background: "rgba(255,255,255,0.035)", border: "1px solid rgba(255,255,255,0.06)",
+      boxShadow: "inset 0 1px 2px rgba(0,0,0,0.4)",
+    }}>
+      <div style={{
+        position: "absolute", top: 5, bottom: 5, left: 5,
+        width: "calc((100% - 10px) / 3)",
+        transform: `translateX(${idx * 100}%)`,
+        borderRadius: 14,
+        background: "linear-gradient(180deg, rgba(59,130,246,0.28), rgba(59,130,246,0.12))",
+        border: "1px solid rgba(96,165,250,0.4)",
+        boxShadow: "0 8px 22px -10px rgba(59,130,246,0.9)",
+        transition: "transform .35s cubic-bezier(.65,0,.35,1)",
+      }}/>
+      {items.map(it => (
+        <button key={it} onClick={() => setActive(it)} style={{
+          flex: 1, position: "relative", zIndex: 1, background: "transparent",
+          border: "none", padding: "12px 0", borderRadius: 14, cursor: "pointer",
+          fontFamily: FONT, fontSize: 14, fontWeight: active === it ? 700 : 500,
+          color: active === it ? "#fff" : "rgba(242,244,247,0.40)", transition: "color .25s",
+        }}>{it}</button>
+      ))}
+    </div>
+  );
+}
+
+// ─── Section Label ────────────────────────────────────────────────────────────
+function SectionLabel({ children, icon }) {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 8, margin: "26px 4px 12px" }}>
+      {icon && <I d={icon} size={13} color="#60a5fa"/>}
+      <span style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: "2.5px", color: "rgba(242,244,247,0.35)", fontFamily: FONT, textTransform: "uppercase" }}>{children}</span>
+    </div>
+  );
+}
+
+// ─── Row (affichage) ──────────────────────────────────────────────────────────
+function Row({ label, value, accent, last }) {
+  return (
+    <div style={{
+      display: "flex", justifyContent: "space-between", alignItems: "center",
+      padding: "16px 18px",
+      borderBottom: last ? "none" : "1px solid rgba(255,255,255,0.05)",
+    }}>
+      <span style={{ color: "rgba(242,244,247,0.40)", fontSize: 14, fontFamily: FONT }}>{label}</span>
+      <span style={{ color: accent || C.text, fontSize: 15, fontWeight: 700, fontFamily: FONT }}>{value || "—"}</span>
+    </div>
+  );
+}
+
+// ─── Ligne éditable ───────────────────────────────────────────────────────────
+function EditRow({ label, value, displayValue, type = "text", onChange, options, unit, last }) {
   const [editing, setEditing] = useState(false);
   return (
     <div onClick={() => !editing && setEditing(true)} style={{
-      padding: "14px 0",
       display: "flex", justifyContent: "space-between", alignItems: "center",
-      cursor: editing ? "default" : "pointer", userSelect: "none",
+      padding: "16px 18px",
+      borderBottom: last ? "none" : "1px solid rgba(255,255,255,0.05)",
+      cursor: editing ? "default" : "pointer",
     }}>
-      <span style={{ fontSize: 13, color: "rgba(242,244,247,0.40)", fontWeight: 500, fontFamily: FONT }}>{label}</span>
+      <span style={{ color: "rgba(242,244,247,0.40)", fontSize: 14, fontFamily: FONT }}>{label}</span>
       {editing ? (
         options
-          ? <select autoFocus value={value || ""}
-              onChange={e => { onChange(e.target.value); setEditing(false); }}
+          ? <select autoFocus value={value || ""} onChange={e => { onChange(e.target.value); setEditing(false); }}
               onBlur={() => setEditing(false)}
-              style={{ background: C.s2, border: `1px solid rgba(59,130,246,0.5)`, borderRadius: 9, color: C.text, fontSize: 13, padding: "6px 10px", outline: "none", boxShadow: "0 0 0 3px rgba(59,130,246,0.08)" }}>
+              style={{ background: C.s2, border: "1px solid rgba(59,130,246,0.5)", borderRadius: 9, color: C.text, fontSize: 13, padding: "6px 10px", outline: "none" }}>
               {options.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
             </select>
           : <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-              <Inp autoFocus type={type} value={value || ""}
+              <input autoFocus type={type} value={value || ""}
                 onChange={e => onChange(e.target.value)}
                 onBlur={() => setEditing(false)}
                 onKeyDown={e => e.key === "Enter" && setEditing(false)}
-                style={{ marginBottom: 0, maxWidth: 120, padding: "6px 10px", fontSize: 13, textAlign: "right", border: `1px solid rgba(59,130,246,0.5)`, boxShadow: "0 0 0 3px rgba(59,130,246,0.08)", borderRadius: 9 }}
+                style={{ background: C.s2, border: "1px solid rgba(59,130,246,0.5)", borderRadius: 9, color: C.text, fontSize: 13, padding: "6px 10px", outline: "none", maxWidth: 90, textAlign: "right" }}
               />
-              {unit && <span style={{ fontSize: 12, color: "rgba(242,244,247,0.30)" }}>{unit}</span>}
+              {unit && <span style={{ fontSize: 11, color: "rgba(242,244,247,0.30)", fontFamily: FONT }}>{unit}</span>}
             </div>
       ) : (
-        <span style={{ fontSize: 14, fontWeight: 600, color: value ? C.text : "rgba(242,244,247,0.18)", display: "flex", alignItems: "center", gap: 6, fontFamily: FONT }}>
-          {displayValue || value || <span style={{ fontSize: 12, color: "rgba(242,244,247,0.20)", fontWeight: 400 }}>Ajouter</span>}
-          {unit && value && <span style={{ fontSize: 11, color: "rgba(242,244,247,0.30)", fontWeight: 400 }}>{unit}</span>}
+        <span style={{ fontSize: 15, fontWeight: 700, color: value ? C.text : "rgba(242,244,247,0.20)", fontFamily: FONT }}>
+          {displayValue || value || <span style={{ fontSize: 12, fontWeight: 400, color: "rgba(242,244,247,0.20)" }}>Ajouter</span>}
+          {unit && value && <span style={{ fontSize: 11, color: "rgba(242,244,247,0.30)", fontWeight: 400, marginLeft: 4 }}>{unit}</span>}
         </span>
       )}
     </div>
   );
 }
 
-function EditableMetricRow({ label, icon, color, value, unit, onChange }) {
+// ─── Add Row (mensuration) ────────────────────────────────────────────────────
+function AddRow({ icon, color, label, value, unit, onChange, last }) {
   const [editing, setEditing] = useState(false);
-  const MAX = { "Masse grasse": 40, "Masse musculaire": 80, "Masse osseuse": 6, "Eau corporelle": 80, "Graisse viscérale": 20 };
-  const val  = parseFloat(value) || 0;
-  const barW = val ? Math.min((val / (MAX[label] || 100)) * 100, 100) : 0;
   return (
-    <div onClick={() => !editing && setEditing(true)} style={{ padding: "12px 0", cursor: editing ? "default" : "pointer" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <span style={{ fontSize: 16 }}>{icon}</span>
-          <span style={{ fontSize: 13, color: "rgba(242,244,247,0.55)", fontWeight: 500, fontFamily: FONT }}>{label}</span>
-        </div>
-        {editing
-          ? <Inp autoFocus type="number" placeholder="—"
-              style={{ marginBottom: 0, maxWidth: 90, padding: "5px 9px", fontSize: 13, textAlign: "right", border: `1px solid rgba(59,130,246,0.5)`, boxShadow: "0 0 0 3px rgba(59,130,246,0.08)", borderRadius: 9 }}
-              value={value || ""}
+    <div onClick={() => !editing && setEditing(true)} style={{
+      display: "flex", alignItems: "center", gap: 14,
+      padding: "15px 18px",
+      borderBottom: last ? "none" : "1px solid rgba(255,255,255,0.05)",
+      cursor: editing ? "default" : "pointer",
+    }}>
+      <div style={{
+        width: 38, height: 38, borderRadius: 12, display: "grid", placeItems: "center", flexShrink: 0,
+        background: `linear-gradient(160deg, ${color}26, ${color}0d)`,
+        border: `1px solid ${color}33`,
+      }}>
+        <I d={icon} size={17} color={color} sw={1.8}/>
+      </div>
+      <span style={{ flex: 1, color: C.text, fontSize: 15, fontWeight: 500, fontFamily: FONT }}>{label}</span>
+      {editing
+        ? <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <input autoFocus type="number" value={value || ""}
               onChange={e => onChange(e.target.value)}
               onBlur={() => setEditing(false)}
               onKeyDown={e => e.key === "Enter" && setEditing(false)}
-            />
-          : <span style={{ fontSize: 15, fontWeight: 700, color: val ? color : "rgba(242,244,247,0.18)", fontFamily: FONT }}>
-              {val ? `${val}${unit}` : <span style={{ fontSize: 12, fontWeight: 400, color: "rgba(242,244,247,0.20)" }}>Ajouter</span>}
-            </span>}
-      </div>
-      <div style={{ height: 2, background: "rgba(255,255,255,0.06)", borderRadius: 2 }}>
-        <div style={{ height: "100%", width: `${barW}%`, background: color, borderRadius: 2, opacity: val ? 1 : 0, transition: "width 0.4s cubic-bezier(.16,1,.3,1)" }} />
-      </div>
-    </div>
-  );
-}
-
-function EditableMensRow({ label, icon, fieldKey, profil, setProfil }) {
-  const [editing, setEditing] = useState(false);
-  const val = profil[fieldKey] || "";
-  return (
-    <div onClick={() => !editing && setEditing(true)}
-      style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "13px 0", cursor: editing ? "default" : "pointer" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-        <span style={{ fontSize: 15 }}>{icon}</span>
-        <span style={{ fontSize: 13, color: "rgba(242,244,247,0.55)", fontWeight: 500, fontFamily: FONT }}>{label}</span>
-      </div>
-      {editing
-        ? <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-            <Inp autoFocus type="number"
-              style={{ marginBottom: 0, width: 80, padding: "5px 9px", fontSize: 13, textAlign: "right", border: `1px solid rgba(59,130,246,0.5)`, boxShadow: "0 0 0 3px rgba(59,130,246,0.08)", borderRadius: 9 }}
-              value={val}
-              onChange={e => setProfil({ ...profil, [fieldKey]: e.target.value })}
-              onBlur={() => setEditing(false)}
-              onKeyDown={e => e.key === "Enter" && setEditing(false)}
+              style={{ background: C.s2, border: "1px solid rgba(59,130,246,0.5)", borderRadius: 9, color: C.text, fontSize: 13, padding: "6px 10px", outline: "none", width: 70, textAlign: "right" }}
             />
             <span style={{ fontSize: 11, color: "rgba(242,244,247,0.30)" }}>cm</span>
           </div>
-        : <span style={{ fontSize: 14, fontWeight: 600, color: val ? C.text : "rgba(242,244,247,0.18)", display: "flex", alignItems: "center", gap: 5, fontFamily: FONT }}>
-            {val || <span style={{ fontSize: 12, fontWeight: 400, color: "rgba(242,244,247,0.20)" }}>Ajouter</span>}
-            {val && <span style={{ fontSize: 11, color: "rgba(242,244,247,0.30)", fontWeight: 400 }}>cm</span>}
-          </span>}
+        : value
+          ? <span style={{ fontSize: 15, fontWeight: 700, color: color, fontFamily: FONT }}>{value} cm</span>
+          : <span style={{ fontSize: 13, fontWeight: 600, color: "#60a5fa", display: "flex", alignItems: "center", gap: 2, fontFamily: FONT }}>
+              Ajouter <I d={ic.chev} size={14} color="#60a5fa" sw={2}/>
+            </span>
+      }
     </div>
   );
 }
 
-// ─── COMPOSANTS PARTAGÉS ──────────────────────────────────────────────────────
-const Sep = () => <div style={{ height: 1, background: "rgba(255,255,255,0.05)" }} />;
+// ─── Macro Ring ───────────────────────────────────────────────────────────────
+function MacroRing({ value, max, label, color }) {
+  const r = 30, circ = 2 * Math.PI * r;
+  const pct = max > 0 ? Math.min(value / max, 1) : 0;
+  return (
+    <Glass pad={14} style={{ flex: 1, textAlign: "center" }} glow={`${color}55`}>
+      <div style={{ position: "relative", width: 76, height: 76, margin: "0 auto" }}>
+        <svg width="76" height="76" style={{ transform: "rotate(-90deg)" }}>
+          <circle cx="38" cy="38" r={r} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="7"/>
+          <circle cx="38" cy="38" r={r} fill="none" stroke={color} strokeWidth="7" strokeLinecap="round"
+            strokeDasharray={circ} strokeDashoffset={circ * (1 - pct)}
+            style={{ transition: "stroke-dashoffset 1s cubic-bezier(.65,0,.35,1)" }}
+          />
+        </svg>
+        <div style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center" }}>
+          <div>
+            <div style={{ fontSize: 18, fontWeight: 800, color, fontFamily: FONT, ...NUM }}>{value || 0}</div>
+            <div style={{ fontSize: 10, color: "rgba(242,244,247,0.35)", marginTop: -2 }}>g</div>
+          </div>
+        </div>
+      </div>
+      <div style={{ fontSize: 12, color: "rgba(242,244,247,0.40)", marginTop: 8, fontFamily: FONT }}>{label}</div>
+    </Glass>
+  );
+}
 
-const Section = ({ title, children, style }) => (
-  <div style={{ marginBottom: 32, ...style }}>
-    <Eyebrow style={{ letterSpacing: "1.8px", marginBottom: 14 }}>{title}</Eyebrow>
-    <Card padding="none" style={{ padding: "0 20px" }}>{children}</Card>
-  </div>
-);
+// ─── Compo Bar ────────────────────────────────────────────────────────────────
+function CompoBar({ icon, color, label, value, unit, onChange, pct, last }) {
+  const [editing, setEditing] = useState(false);
+  const pctVal = pct || 0;
+  return (
+    <div style={{ padding: "16px 18px", borderBottom: last ? "none" : "1px solid rgba(255,255,255,0.05)" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 10 }}>
+        <div style={{
+          width: 34, height: 34, borderRadius: 11, display: "grid", placeItems: "center", flexShrink: 0,
+          background: `linear-gradient(160deg, ${color}26, ${color}0d)`,
+          border: `1px solid ${color}33`,
+        }}>
+          <I d={icon} size={16} color={color} sw={1.8}/>
+        </div>
+        <span style={{ flex: 1, color: C.text, fontSize: 14, fontWeight: 500, fontFamily: FONT }}>{label}</span>
+        {editing
+          ? <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+              <input autoFocus type="number"
+                value={value || ""}
+                onChange={e => onChange(e.target.value)}
+                onBlur={() => setEditing(false)}
+                onKeyDown={e => e.key === "Enter" && setEditing(false)}
+                style={{ background: C.s2, border: "1px solid rgba(59,130,246,0.5)", borderRadius: 9, color: C.text, fontSize: 13, padding: "5px 9px", outline: "none", width: 70, textAlign: "right" }}
+              />
+              <span style={{ fontSize: 11, color: "rgba(242,244,247,0.30)" }}>{unit}</span>
+            </div>
+          : <span onClick={() => setEditing(true)}
+              style={{ fontSize: 14, fontWeight: 700, color: value ? color : "#60a5fa", cursor: "pointer", fontFamily: FONT }}>
+              {value ? `${value}${unit}` : <span style={{ fontSize: 12, color: "#60a5fa" }}>Ajouter</span>}
+            </span>
+        }
+      </div>
+      {/* Barre de progression */}
+      <div style={{ height: 7, borderRadius: 99, background: "rgba(255,255,255,0.06)", overflow: "hidden" }}>
+        <div style={{
+          height: "100%", width: `${pctVal}%`, borderRadius: 99,
+          background: `linear-gradient(90deg, ${color}, ${color}99)`,
+          transition: "width 1s cubic-bezier(.65,0,.35,1)",
+        }}/>
+      </div>
+    </div>
+  );
+}
 
-const TABS = [
-  { key: "profil",       label: "Profil"  },
-  { key: "compo",        label: "Compo."  },
-  { key: "mensurations", label: "Mesures" },
-];
-
+// ─── ACTIVITE LABELS ──────────────────────────────────────────────────────────
 const ACTIVITE_LABELS = {
   sedentaire: "Sédentaire",
   leger:      "Léger · 1–3×/sem",
@@ -206,305 +277,234 @@ const ACTIVITE_LABELS = {
   actif:      "Très actif · 6–7×/sem",
 };
 
-// ─── TAB PROFIL ───────────────────────────────────────────────────────────────
-function TabProfil({ profil, setProfil, calObj, pObj, lObj, gObj, obj, weightLog }) {
-  const set = key => val => setProfil({ ...profil, [key]: val });
-  return (
-    <div>
-      <Section title="Identité">
-        <EditableRow label="Prénom" value={profil.prenom} onChange={set("prenom")} />
-        <Sep />
-        <div style={{ display: "flex", gap: 0 }}>
-          <div style={{ flex: 1 }}>
-            <EditableRow label="Âge" value={profil.age} displayValue={profil.age ? `${profil.age} ans` : null} type="number" onChange={set("age")} />
-          </div>
-          <div style={{ width: 1, background: "rgba(255,255,255,0.05)", alignSelf: "stretch" }} />
-          <div style={{ flex: 1, paddingLeft: 16 }}>
-            <EditableRow label="Genre" value={profil.sexe}
-              displayValue={profil.sexe === "homme" ? "Homme" : profil.sexe === "femme" ? "Femme" : null}
-              onChange={set("sexe")}
-              options={[{ value: "", label: "—" }, { value: "homme", label: "Homme" }, { value: "femme", label: "Femme" }]}
-            />
-          </div>
-        </div>
-        <Sep />
-        <div style={{ display: "flex" }}>
-          <div style={{ flex: 1 }}>
-            <EditableRow label="Poids" value={profil.poids} displayValue={profil.poids ? `${profil.poids}` : null} unit="kg" type="number" onChange={set("poids")} />
-          </div>
-          <div style={{ width: 1, background: "rgba(255,255,255,0.05)", alignSelf: "stretch" }} />
-          <div style={{ flex: 1, paddingLeft: 16 }}>
-            <EditableRow label="Taille" value={profil.taille} displayValue={profil.taille ? `${profil.taille}` : null} unit="cm" type="number" onChange={set("taille")} />
-          </div>
-        </div>
-      </Section>
-
-      {weightLog?.length >= 2 && (
-        <div style={{ marginBottom: 32 }}>
-          <Eyebrow style={{ letterSpacing: "1.8px", marginBottom: 14 }}>Historique</Eyebrow>
-          <Card padding="lg"><WeightChart data={weightLog.slice(-12)} /></Card>
-        </div>
-      )}
-
-      <Section title="Programme">
-        <EditableRow label="Objectif" value={profil.objectif}
-          displayValue={obj?.icon ? `${obj.icon} ${obj.l}` : null}
-          onChange={set("objectif")}
-          options={Object.entries(OBJ).map(([k, v]) => ({ value: k, label: `${v.icon} ${v.l}` }))}
-        />
-        <Sep />
-        <EditableRow label="Activité" value={profil.activite}
-          displayValue={ACTIVITE_LABELS[profil.activite] || null}
-          onChange={set("activite")}
-          options={Object.entries(ACTIVITE_FACTOR).map(([k]) => ({ value: k, label: ACTIVITE_LABELS[k] || k }))}
-        />
-        {calObj && (
-          <>
-            <Sep />
-            <div style={{ padding: "14px 0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <span style={{ fontSize: 13, color: "rgba(242,244,247,0.40)", fontWeight: 500, fontFamily: FONT }}>Besoins caloriques</span>
-              <span style={{ fontSize: 14, fontWeight: 700, color: C.accent, fontFamily: FONT }}>{calObj.toLocaleString()} <span style={{ fontSize: 11, fontWeight: 400, color: "rgba(242,244,247,0.40)" }}>kcal/j</span></span>
-            </div>
-          </>
-        )}
-      </Section>
-
-      {calObj && (
-        <div style={{ marginBottom: 32 }}>
-          <Eyebrow style={{ letterSpacing: "1.8px", marginBottom: 14 }}>Macros cibles</Eyebrow>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10 }}>
-            {[
-              { l: "Protéines", v: pObj, color: "#FF7A6B", bg: "rgba(239,68,68,0.07)"  },
-              { l: "Glucides",  v: gObj, color: "#FFAB5D", bg: "rgba(249,115,22,0.07)" },
-              { l: "Lipides",   v: lObj, color: "#34D399", bg: "rgba(34,197,94,0.07)"  },
-            ].map(m => (
-              <div key={m.l} style={{ background: m.bg, border: `1px solid ${m.color}20`, borderRadius: 16, padding: "14px 10px", textAlign: "center" }}>
-                <div style={{ fontSize: 22, fontWeight: 700, color: m.color, letterSpacing: -1, lineHeight: 1, fontFamily: FONT, ...NUM }}>
-                  {m.v}<span style={{ fontSize: 10, fontWeight: 500, letterSpacing: 0 }}>g</span>
-                </div>
-                <div style={{ fontSize: 10, color: "rgba(242,244,247,0.35)", marginTop: 5, fontWeight: 500, fontFamily: FONT }}>{m.l}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-// ─── TAB COMPOSITION ──────────────────────────────────────────────────────────
-const METRICS = [
-  { key: "bodyfat",     label: "Masse grasse",     unit: "%",   icon: "🔥", color: "#FF7043" },
-  { key: "muscleMass",  label: "Masse musculaire",  unit: "kg",  icon: "💪", color: "#42A5F5" },
-  { key: "boneMass",    label: "Masse osseuse",     unit: "kg",  icon: "🦴", color: "#AB47BC" },
-  { key: "waterPct",    label: "Eau corporelle",    unit: "%",   icon: "💧", color: "#26C6DA" },
-  { key: "visceralFat", label: "Graisse viscérale", unit: "/20", icon: "🫀", color: "#EF5350" },
-];
-
-function TabComposition({ profil, setProfil }) {
-  const imc = profil.poids && profil.taille
-    ? (parseFloat(profil.poids) / Math.pow(parseFloat(profil.taille) / 100, 2)).toFixed(1)
-    : null;
-  const bf = parseFloat(profil.bodyfat) || null;
-  return (
-    <div>
-      <G2 style={{ marginBottom: 32 }}>
-        <Card padding="lg" style={{ marginBottom: 0 }}>
-          <Eyebrow style={{ marginBottom: 6 }}>Poids</Eyebrow>
-          <div style={{ fontSize: 30, fontWeight: 700, color: C.accent, letterSpacing: -1.2, lineHeight: 1, fontFamily: FONT, ...NUM }}>
-            {profil.poids || "—"}<span style={{ fontSize: 13, color: "rgba(242,244,247,0.35)", fontWeight: 400, letterSpacing: 0 }}> kg</span>
-          </div>
-        </Card>
-        <Card padding="lg" style={{ marginBottom: 0 }}>
-          <Eyebrow style={{ marginBottom: 6 }}>IMC</Eyebrow>
-          <div style={{ fontSize: 30, fontWeight: 700, letterSpacing: -1.2, lineHeight: 1, color: imc < 25 ? C.green : "#FFAB5D", fontFamily: FONT, ...NUM }}>
-            {imc || "—"}
-          </div>
-          {imc && <div style={{ fontSize: 10, color: "rgba(242,244,247,0.30)", marginTop: 4, fontWeight: 500, fontFamily: FONT }}>
-            {imc < 18.5 ? "Maigreur" : imc < 25 ? "Normal ✓" : imc < 30 ? "Surpoids" : "Obésité"}
-          </div>}
-        </Card>
-      </G2>
-
-      <Section title="Composition">
-        {METRICS.map((m, i) => (
-          <div key={m.key}>
-            <EditableMetricRow label={m.label} icon={m.icon} color={m.color} unit={m.unit}
-              value={profil[m.key]}
-              onChange={val => setProfil({ ...profil, [m.key]: val })}
-            />
-            {i < METRICS.length - 1 && <Sep />}
-          </div>
-        ))}
-      </Section>
-
-      {bf && (
-        <Card padding="md" style={{ marginTop: -20, marginBottom: 32 }}>
-          {(() => {
-            const cat = profil.sexe === "femme"
-              ? (bf < 14 ? { l: "Athlète", c: C.green } : bf < 21 ? { l: "Forme", c: C.green } : bf < 25 ? { l: "Acceptable", c: "#FFAB5D" } : { l: "À améliorer", c: "#F87171" })
-              : (bf < 6  ? { l: "Athlète", c: C.green } : bf < 14 ? { l: "Forme", c: C.green } : bf < 18 ? { l: "Acceptable", c: "#FFAB5D" } : { l: "À améliorer", c: "#F87171" });
-            return (
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <span style={{ fontSize: 12, color: "rgba(242,244,247,0.35)", fontFamily: FONT }}>Catégorie masse grasse</span>
-                <span style={{ fontSize: 13, fontWeight: 700, color: cat.c, fontFamily: FONT }}>{cat.l}</span>
-              </div>
-            );
-          })()}
-        </Card>
-      )}
-    </div>
-  );
-}
-
-// ─── TAB MENSURATIONS ─────────────────────────────────────────────────────────
-const MGROUPS = [
-  { title: "Tronc",  items: [
-    { key: "mChest", label: "Poitrine", icon: "📐" },
-    { key: "mWaist", label: "Taille",   icon: "📐" },
-    { key: "mHips",  label: "Hanches",  icon: "📐" },
-  ]},
-  { title: "Bras",   items: [
-    { key: "mLeftArm",  label: "Bras gauche", icon: "💪" },
-    { key: "mRightArm", label: "Bras droit",  icon: "💪" },
-  ]},
-  { title: "Jambes", items: [
-    { key: "mLeftThigh",  label: "Cuisse gauche",  icon: "🦵" },
-    { key: "mRightThigh", label: "Cuisse droite",  icon: "🦵" },
-    { key: "mLeftCalf",   label: "Mollet gauche",  icon: "🦵" },
-    { key: "mRightCalf",  label: "Mollet droit",   icon: "🦵" },
-  ]},
-];
-
-function TabMensurations({ profil, setProfil }) {
-  return (
-    <div>
-      <Card padding="lg" style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 32 }}>
-        <span style={{ fontSize: 40 }}>🧍</span>
-        <div>
-          <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 3, color: C.text, fontFamily: FONT }}>Mensurations corporelles</div>
-          <div style={{ fontSize: 12, color: "rgba(242,244,247,0.35)", lineHeight: 1.5, fontFamily: FONT }}>
-            Appuie sur une ligne pour la modifier
-          </div>
-        </div>
-      </Card>
-      {MGROUPS.map(g => (
-        <Section key={g.title} title={g.title}>
-          {g.items.map((m, i) => (
-            <div key={m.key}>
-              <EditableMensRow label={m.label} icon={m.icon} fieldKey={m.key} profil={profil} setProfil={setProfil} />
-              {i < g.items.length - 1 && <Sep />}
-            </div>
-          ))}
-        </Section>
-      ))}
-    </div>
-  );
-}
-
-// ─── MAIN ─────────────────────────────────────────────────────────────────────
+// ─── MAIN PROFILE PAGE ────────────────────────────────────────────────────────
 export default function Profile(props) {
-  const { profil, setProfil, premium, setPremium, push, weightLog, imc, obj, calObj, pObj, lObj, gObj, cycles } = props;
-  const [activeTab, setActiveTab] = useState("profil");
+  const { profil, setProfil, premium, setPremium, push,
+    weightLog, imc, obj, calObj, pObj, lObj, gObj } = props;
+
+  const [activeTab, setActiveTab] = useState("Profil");
+  const set = key => val => setProfil({ ...profil, [key]: val });
+
+  // IMC catégorie
+  const imcVal = parseFloat(imc) || 0;
+  const imcCat = imcVal < 18.5 ? "Maigreur" : imcVal < 25 ? "Normal" : imcVal < 30 ? "Surpoids" : "Obésité";
+  const imcColor = imcVal < 18.5 ? "#60a5fa" : imcVal < 25 ? "#34D399" : imcVal < 30 ? "#fb923c" : "#f87171";
+  const imcPct = Math.min(100, Math.max(0, ((imcVal - 15) / (40 - 15)) * 100));
+
+  // Macros cibles
+  const macros = [
+    { label: "Protéines", value: pObj || 0, max: Math.round((pObj || 0) * 1.2), color: "#f87171" },
+    { label: "Glucides",  value: gObj || 0, max: Math.round((gObj || 0) * 1.2), color: "#fb923c" },
+    { label: "Lipides",   value: lObj || 0, max: Math.round((lObj || 0) * 1.2), color: "#34D399" },
+  ];
+
+  // Compo bars pct estimé
+  const bfVal  = parseFloat(profil.bodyfat)    || 0;
+  const mmVal  = parseFloat(profil.muscleMass) || 0;
+  const bmVal  = parseFloat(profil.boneMass)   || 0;
+  const wPct   = parseFloat(profil.waterPct)   || 0;
+  const vfVal  = parseFloat(profil.visceralFat)|| 0;
 
   return (
-    <div style={{ padding: "0 20px 48px", fontFamily: FONT, minHeight: "100vh" }} className="anim">
+    <div className="anim" style={{
+      minHeight: "100vh", fontFamily: FONT, color: C.text,
+      padding: "22px 18px 48px",
+      background: `radial-gradient(800px 400px at 70% -10%, rgba(59,130,246,0.14), transparent 60%), ${C.bg}`,
+    }}>
+      <style>{`@keyframes rise { from { opacity:0; transform:translateY(12px)} to {opacity:1;transform:none} }`}</style>
 
-      {/* HEADER */}
-      <div style={{ paddingTop: 28, paddingBottom: 28 }}>
-        <div style={{ fontSize: 24, fontWeight: 700, letterSpacing: -0.8, marginBottom: 8, color: C.text, fontFamily: FONT }}>
-          {profil?.prenom || "Mon profil"}
+      {/* ── Header ──────────────────────────────────────────────────── */}
+      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 22 }}>
+        <div style={{ animation: "rise .4s both" }}>
+          <div style={{ fontFamily: SERIF, fontSize: 36, color: C.text, letterSpacing: -1.2, lineHeight: 1.05, marginBottom: 10 }}>
+            {profil.prenom
+              ? <>Bonjour, <span style={{ fontStyle: "italic" }}>{profil.prenom}</span></>
+              : "Mon profil"}
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            {premium
+              ? <span style={{
+                  display: "inline-flex", alignItems: "center", gap: 6,
+                  fontSize: 12, fontWeight: 700, letterSpacing: "1.5px",
+                  color: "#fde68a", padding: "6px 12px", borderRadius: 11,
+                  background: "linear-gradient(160deg, rgba(251,191,36,0.18), rgba(251,191,36,0.05))",
+                  border: "1px solid rgba(251,191,36,0.35)",
+                  fontFamily: FONT,
+                }}>
+                  <I d={ic.crown} size={13} color="#fbbf24" fill="none" sw={2}/> PREMIUM
+                </span>
+              : <span style={{
+                  background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)",
+                  borderRadius: 11, padding: "4px 10px", fontSize: 10, fontWeight: 600,
+                  color: "rgba(242,244,247,0.28)", letterSpacing: "0.5px", fontFamily: FONT,
+                }}>GRATUIT</span>
+            }
+            {profil.age && profil.sexe && (
+              <span style={{ fontSize: 13, color: "rgba(242,244,247,0.40)", fontFamily: FONT }}>
+                {profil.age} ans · {profil.sexe === "homme" ? "Homme" : "Femme"}
+              </span>
+            )}
+          </div>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          {premium
-            ? <Pill color={C.accent} style={{ fontSize: 10, fontWeight: 700, letterSpacing: 0.5 }}>✦ PREMIUM</Pill>
-            : <span style={{ background: "rgba(255,255,255,0.04)", border: `1px solid ${C.bd}`, borderRadius: 20, padding: "3px 10px", fontSize: 10, fontWeight: 600, color: "rgba(242,244,247,0.30)", letterSpacing: 0.5, fontFamily: FONT }}>GRATUIT</span>
-          }
-          {profil?.age && profil?.sexe && (
-            <span style={{ fontSize: 12, color: "rgba(242,244,247,0.30)", fontFamily: FONT }}>
-              {profil.age} ans · {profil.sexe === "homme" ? "Homme" : "Femme"}
-            </span>
+      </div>
+
+      {/* ── Stats ───────────────────────────────────────────────────── */}
+      <div style={{ display: "flex", gap: 10, marginBottom: 22, animation: "rise .4s .08s both" }}>
+        <StatCard value={profil.poids} unit="kg"  label="Poids"  color="#60a5fa"/>
+        <StatCard value={profil.taille} unit="cm" label="Taille" color="#34D399"/>
+        <StatCard value={imc}           unit=""   label="IMC"    color={imcColor}/>
+      </div>
+
+      {/* ── Tabs ────────────────────────────────────────────────────── */}
+      <div style={{ marginBottom: 4, animation: "rise .4s .12s both" }}>
+        <Tabs active={activeTab} setActive={setActiveTab}/>
+      </div>
+
+      {/* ══════ PROFIL ══════════════════════════════════════════════ */}
+      {activeTab === "Profil" && (
+        <div key="profil">
+          <SectionLabel icon={ic.target}>Identité</SectionLabel>
+          <Glass pad={0} style={{ animation: "rise .4s both" }}>
+            <EditRow label="Prénom" value={profil.prenom} onChange={set("prenom")}/>
+            <div style={{ display: "flex", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+              <div style={{ flex: 1, borderRight: "1px solid rgba(255,255,255,0.05)" }}>
+                <EditRow label="Âge" value={profil.age} displayValue={profil.age ? `${profil.age} ans` : null} type="number" onChange={set("age")} last/>
+              </div>
+              <div style={{ flex: 1 }}>
+                <EditRow label="Genre" value={profil.sexe}
+                  displayValue={profil.sexe === "homme" ? "Homme" : profil.sexe === "femme" ? "Femme" : null}
+                  onChange={set("sexe")}
+                  options={[{ value: "", label: "—" }, { value: "homme", label: "Homme" }, { value: "femme", label: "Femme" }]}
+                  last/>
+              </div>
+            </div>
+            <div style={{ display: "flex" }}>
+              <div style={{ flex: 1, borderRight: "1px solid rgba(255,255,255,0.05)" }}>
+                <EditRow label="Poids" value={profil.poids} displayValue={profil.poids ? `${profil.poids} kg` : null} unit="kg" type="number" onChange={set("poids")} last/>
+              </div>
+              <div style={{ flex: 1 }}>
+                <EditRow label="Taille" value={profil.taille} displayValue={profil.taille ? `${profil.taille} cm` : null} unit="cm" type="number" onChange={set("taille")} last/>
+              </div>
+            </div>
+          </Glass>
+
+          <SectionLabel icon={ic.zap}>Programme</SectionLabel>
+          <Glass pad={0} style={{ animation: "rise .4s .08s both" }}>
+            <EditRow label="Objectif" value={profil.objectif}
+              displayValue={obj ? `${obj.icon} ${obj.l}` : null}
+              onChange={set("objectif")}
+              options={Object.entries(OBJ).map(([k, v]) => ({ value: k, label: `${v.icon} ${v.l}` }))}
+            />
+            <EditRow label="Activité" value={profil.activite}
+              displayValue={ACTIVITE_LABELS[profil.activite] || null}
+              onChange={set("activite")}
+              options={Object.entries(ACTIVITE_FACTOR).map(([k]) => ({ value: k, label: ACTIVITE_LABELS[k] || k }))}
+            />
+            {calObj > 0 && (
+              <Row label="Besoins caloriques" value={`${calObj.toLocaleString()} kcal/j`} accent="#60a5fa" last/>
+            )}
+          </Glass>
+
+          {calObj > 0 && (
+            <>
+              <SectionLabel icon={ic.flame}>Macros cibles</SectionLabel>
+              <div style={{ display: "flex", gap: 10, animation: "rise .4s .16s both" }}>
+                {macros.map(m => (
+                  <MacroRing key={m.label} value={m.value} max={m.max} label={m.label} color={m.color}/>
+                ))}
+              </div>
+            </>
           )}
         </div>
-      </div>
+      )}
 
-      {/* STATS PILLS */}
-      {(profil?.poids || profil?.taille) && (
-        <div style={{ display: "flex", gap: 8, marginBottom: 28 }}>
-          {[
-            { label: "Poids",  value: profil.poids,  unit: "kg", color: "#4FC3F7" },
-            { label: "Taille", value: profil.taille, unit: "cm", color: "#81C784" },
-            { label: "IMC",    value: imc,           unit: "",   color: "#FFB74D" },
-          ].map((s, i) => (
-            <Card key={i} padding="none" style={{ flex: 1, padding: "12px 8px", textAlign: "center", marginBottom: 0, borderRadius: 16 }}>
-              <div style={{ fontSize: 18, fontWeight: 800, color: s.color, letterSpacing: -0.8, lineHeight: 1, fontFamily: FONT, ...NUM }}>
-                {s.value || "—"}
-                {s.unit && <span style={{ fontSize: 10, fontWeight: 500, color: "rgba(242,244,247,0.30)", letterSpacing: 0 }}> {s.unit}</span>}
-              </div>
-              <div style={{ fontSize: 10, color: "rgba(242,244,247,0.28)", marginTop: 4, fontWeight: 500, letterSpacing: 0.3, fontFamily: FONT }}>{s.label}</div>
-            </Card>
-          ))}
+      {/* ══════ COMPO ═══════════════════════════════════════════════ */}
+      {activeTab === "Compo." && (
+        <div key="compo">
+          <div style={{ display: "flex", gap: 10, marginTop: 22, animation: "rise .4s both" }}>
+            <Glass style={{ flex: 1 }}>
+              <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "1.5px", color: "rgba(242,244,247,0.35)", fontFamily: FONT, marginBottom: 8 }}>POIDS</div>
+              <span style={{ fontSize: 30, fontWeight: 800, color: "#60a5fa", fontFamily: FONT }}>{profil.poids || "—"}</span>
+              <span style={{ fontSize: 14, color: "rgba(242,244,247,0.40)", fontWeight: 600 }}> kg</span>
+            </Glass>
+            <Glass style={{ flex: 1 }} glow={`${imcColor}44`}>
+              <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "1.5px", color: "rgba(242,244,247,0.35)", fontFamily: FONT, marginBottom: 8 }}>IMC</div>
+              <span style={{ fontSize: 30, fontWeight: 800, color: imcColor, fontFamily: FONT }}>{imc || "—"}</span>
+              <div style={{ fontSize: 12, color: imcColor, marginTop: 3, fontFamily: FONT }}>{imc ? imcCat : ""}</div>
+              {imc && (
+                <div style={{ height: 6, borderRadius: 99, marginTop: 10, background: "linear-gradient(90deg,#34d399,#fbbf24,#f87171)", position: "relative" }}>
+                  <div style={{ position: "absolute", top: -3, left: `${imcPct}%`, width: 12, height: 12, borderRadius: "50%", background: "#fff", border: "2px solid #070b16", boxShadow: "0 2px 6px rgba(0,0,0,0.6)", transform: "translateX(-50%)" }}/>
+                </div>
+              )}
+            </Glass>
+          </div>
+
+          <SectionLabel icon={ic.activity}>Composition</SectionLabel>
+          <Glass pad={0} style={{ animation: "rise .4s .1s both" }}>
+            <CompoBar icon={ic.flame}    color="#fb923c" label="Masse grasse"     value={profil.bodyfat}     unit="%"   onChange={set("bodyfat")}     pct={bfVal * 2.5}  />
+            <CompoBar icon={ic.dumbbell} color="#34D399" label="Masse musculaire" value={profil.muscleMass}  unit="kg"  onChange={set("muscleMass")}  pct={mmVal * 1.2}  />
+            <CompoBar icon={ic.bone}     color="#cbd5e1" label="Masse osseuse"    value={profil.boneMass}    unit="kg"  onChange={set("boneMass")}    pct={bmVal * 16}   />
+            <CompoBar icon={ic.drop}     color="#38bdf8" label="Eau corporelle"   value={profil.waterPct}    unit="%"   onChange={set("waterPct")}    pct={wPct * 1.2}   />
+            <CompoBar icon={ic.heart}    color="#f87171" label="Graisse viscérale" value={profil.visceralFat} unit="/20" onChange={set("visceralFat")} pct={vfVal * 5} last/>
+          </Glass>
         </div>
       )}
 
-      {/* TABS */}
-      <div style={{
-        display: "flex",
-        background: "rgba(255,255,255,0.03)",
-        border: `1px solid ${C.bd}`,
-        borderRadius: 14, padding: 3, gap: 2, marginBottom: 28,
-      }}>
-        {TABS.map(tab => (
-          <button key={tab.key} onClick={() => setActiveTab(tab.key)} style={{
-            flex: 1,
-            background: activeTab === tab.key ? C.s1 : "transparent",
-            border: `1px solid ${activeTab === tab.key ? C.bd : "transparent"}`,
-            borderRadius: 11, padding: "9px 4px",
-            color: activeTab === tab.key ? C.text : "rgba(242,244,247,0.28)",
-            fontSize: 12, fontWeight: activeTab === tab.key ? 600 : 500,
-            cursor: "pointer", letterSpacing: 0.1, fontFamily: FONT,
-            transition: "all 0.15s",
-            boxShadow: activeTab === tab.key ? "0 1px 4px rgba(0,0,0,0.3)" : "none",
-          }}>{tab.label}</button>
-        ))}
-      </div>
+      {/* ══════ MESURES ═════════════════════════════════════════════ */}
+      {activeTab === "Mesures" && (
+        <div key="mesures">
+          <Glass style={{ marginTop: 22, display: "flex", alignItems: "center", gap: 16, animation: "rise .4s both" }}>
+            <div style={{
+              width: 52, height: 52, borderRadius: 16, display: "grid", placeItems: "center", flexShrink: 0,
+              background: "linear-gradient(160deg, rgba(59,130,246,0.25), rgba(59,130,246,0.08))",
+              border: "1px solid rgba(96,165,250,0.35)",
+            }}>
+              <I d={ic.ruler} size={24} color="#60a5fa" sw={1.8}/>
+            </div>
+            <div>
+              <div style={{ fontSize: 16, fontWeight: 700, color: C.text, fontFamily: FONT }}>Mensurations corporelles</div>
+              <div style={{ fontSize: 13, color: "rgba(242,244,247,0.40)", marginTop: 3, fontFamily: FONT }}>Appuie sur une ligne pour la modifier</div>
+            </div>
+          </Glass>
 
-      {activeTab === "profil" && (
-        <TabProfil profil={profil} setProfil={setProfil}
-          calObj={calObj} pObj={pObj} lObj={lObj} gObj={gObj}
-          obj={obj} cycles={cycles} weightLog={weightLog || []}
-        />
-      )}
-      {activeTab === "compo"  && <TabComposition  profil={profil} setProfil={setProfil} />}
-      {activeTab === "mensurations" && <TabMensurations profil={profil} setProfil={setProfil} />}
+          <SectionLabel>Tronc</SectionLabel>
+          <Glass pad={0} style={{ animation: "rise .4s .08s both" }}>
+            <AddRow icon={ic.ruler} color="#60a5fa" label="Poitrine"  value={profil.mChest}  onChange={set("mChest")} />
+            <AddRow icon={ic.ruler} color="#60a5fa" label="Taille"    value={profil.mWaist}  onChange={set("mWaist")} />
+            <AddRow icon={ic.ruler} color="#60a5fa" label="Hanches"   value={profil.mHips}   onChange={set("mHips")}  last/>
+          </Glass>
 
-      {/* PREMIUM */}
-      {!premium && (
-        <Card variant="accent" padding="lg" style={{ marginBottom: 24 }}>
-          <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 6, letterSpacing: -0.3, color: C.text, fontFamily: FONT }}>Passer en Premium</div>
-          <div style={{ fontSize: 13, color: "rgba(242,244,247,0.40)", marginBottom: 18, lineHeight: 1.6, fontFamily: FONT }}>
-            Analyse morphologique complète, planification 6 semaines et suivi nutritionnel avancé.
-          </div>
-          <button onClick={() => { setPremium?.(true); push?.("🎉", "Premium activé !", "Accès complet activé !"); }}
-            style={{ width: "100%", padding: "14px", background: C.accent, border: "none", borderRadius: 14, color: "#fff", fontSize: 14, fontWeight: 600, cursor: "pointer", letterSpacing: -0.1, boxShadow: "0 4px 16px rgba(59,130,246,0.30)", fontFamily: FONT }}>
-            Activer Premium · 9,99€ / mois
-          </button>
-        </Card>
+          <SectionLabel>Bras</SectionLabel>
+          <Glass pad={0} style={{ animation: "rise .4s .14s both" }}>
+            <AddRow icon={ic.dumbbell} color="#34D399" label="Bras gauche" value={profil.mLeftArm}  onChange={set("mLeftArm")} />
+            <AddRow icon={ic.dumbbell} color="#34D399" label="Bras droit"  value={profil.mRightArm} onChange={set("mRightArm")} last/>
+          </Glass>
+
+          <SectionLabel>Jambes</SectionLabel>
+          <Glass pad={0} style={{ animation: "rise .4s .2s both" }}>
+            <AddRow icon={ic.activity} color="#fb923c" label="Cuisse gauche"  value={profil.mLeftThigh}  onChange={set("mLeftThigh")} />
+            <AddRow icon={ic.activity} color="#fb923c" label="Cuisse droite"  value={profil.mRightThigh} onChange={set("mRightThigh")} />
+            <AddRow icon={ic.activity} color="#fb923c" label="Mollet gauche"  value={profil.mLeftCalf}   onChange={set("mLeftCalf")} />
+            <AddRow icon={ic.activity} color="#fb923c" label="Mollet droit"   value={profil.mRightCalf}  onChange={set("mRightCalf")} last/>
+          </Glass>
+        </div>
       )}
 
-      {/* EXPORT */}
+      {/* ── Partager ────────────────────────────────────────────────── */}
       <button onClick={() => {
-        const txt = `${profil?.prenom || "Utilisateur"} — ${profil?.poids}kg, ${profil?.taille}cm\nObjectif : ${obj?.l || "—"}\nCalories : ${calObj || "—"} kcal/j`;
+        const txt = `${profil.prenom || "Utilisateur"} — ${profil.poids}kg, ${profil.taille}cm\nObjectif : ${obj?.l || "—"}\nCalories : ${calObj || "—"} kcal/j`;
         if (navigator.share) navigator.share({ title: "Mon profil MorphoCoach", text: txt });
         else push?.("✅", "Copié !", "Profil copié dans le presse-papier.");
       }} style={{
-        width: "100%", padding: "13px",
-        background: "rgba(255,255,255,0.04)", border: `1px solid ${C.bd}`,
-        borderRadius: 14, color: "rgba(242,244,247,0.50)", cursor: "pointer",
-        fontSize: 13, fontWeight: 500, fontFamily: FONT,
-        display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+        width: "100%", marginTop: 26, padding: "17px", borderRadius: 18,
+        background: "linear-gradient(160deg, rgba(59,130,246,0.20), rgba(59,130,246,0.06))",
+        border: "1px solid rgba(96,165,250,0.30)", color: "#fff", fontFamily: FONT,
+        fontSize: 15, fontWeight: 600, cursor: "pointer",
+        display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
+        boxShadow: "0 14px 30px -16px rgba(59,130,246,0.8)",
+        animation: "rise .4s .3s both",
       }}>
-        <span>📤</span> Partager mon profil
+        <I d={ic.upload} size={18} color="#60a5fa" sw={2}/> Partager mon profil
       </button>
 
     </div>
