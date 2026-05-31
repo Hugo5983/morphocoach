@@ -4,6 +4,7 @@ import { Card, Eyebrow, Btn, Inp, G2 } from "../../components/ui/index.jsx";
 import { computeHealthScore } from "./utils/healthScore.js";
 import BilanNutrition from "./BilanNutrition.jsx";
 import BarcodeScanner from "./BarcodeScanner.jsx";
+import PhotoAnalyse from "./PhotoAnalyse.jsx";
 
 
 // Alias locaux → tokens centraux
@@ -115,6 +116,7 @@ export default function Nutrition(props){
 
   const [nView,   setNView]   = useState("journal");
   const [repasA,  setRepasA]  = useState(null);
+  const [showPhoto, setShowPhoto] = useState(false);
   const [search,  setSearch]  = useState("");
   const [newFood, setNewFood] = useState({nom:"",cal:"",p:"",g:"",l:""});
   const [scanCode,setScan]    = useState("");
@@ -258,9 +260,16 @@ export default function Nutrition(props){
                   Repas {isToday?"du jour":formatDate(dayOff).toLowerCase()}
                 </span>
                 {isToday&&(
-                  <button className="tap" onClick={()=>setShowCamera(true)} style={{display:'inline-flex',alignItems:'center',gap:5,padding:'5px 10px',background:'rgba(59,130,246,0.10)',border:'1px solid rgba(59,130,246,0.25)',borderRadius:999,color:'#93C5FD',fontSize:10.5,fontWeight:700,fontFamily:DISPLAY,cursor:'pointer'}}>
-                    <I name="scan" size={11} stroke={1.8} color="#93C5FD"/> Scanner
-                  </button>
+                  <div style={{display:'flex',alignItems:'center',gap:6}}>
+                    <button className="tap" onClick={()=>setShowCamera(true)} style={{display:'inline-flex',alignItems:'center',gap:5,padding:'5px 10px',background:'rgba(59,130,246,0.10)',border:'1px solid rgba(59,130,246,0.25)',borderRadius:999,color:'#93C5FD',fontSize:10.5,fontWeight:700,fontFamily:DISPLAY,cursor:'pointer'}}>
+                      <I name="scan" size={11} stroke={1.8} color="#93C5FD"/> Scanner
+                    </button>
+                    <button className="tap" onClick={()=>setShowPhoto(true)} style={{display:'inline-flex',alignItems:'center',gap:5,padding:'5px 10px',background: premium ? 'rgba(59,130,246,0.10)' : 'rgba(255,255,255,0.05)',border: premium ? '1px solid rgba(59,130,246,0.25)' : '1px solid rgba(255,255,255,0.10)',borderRadius:999,color: premium ? '#93C5FD' : 'rgba(242,244,247,0.40)',fontSize:10.5,fontWeight:700,fontFamily:DISPLAY,cursor:'pointer'}}>
+                      {!premium && <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>}
+                      {premium && <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#93C5FD" strokeWidth="1.8" strokeLinecap="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>}
+                      Photo IA
+                    </button>
+                  </div>
                 )}
               </div>
 
