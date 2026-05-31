@@ -166,15 +166,13 @@ function ProgrammeView(props) {
     <div style={{padding:"0 15px"}}>
 
       {/* ── Hero header ── */}
-      <div style={{marginBottom:20,paddingTop:4}}>
-        <div style={{fontSize:9,fontWeight:700,letterSpacing:"1.4px",textTransform:"uppercase",color:C.blue,fontFamily:DISP_F,marginBottom:8}}>Programme</div>
-        <div style={{fontFamily:SERIF_F,fontSize:34,fontWeight:400,letterSpacing:-1.2,color:C.text,lineHeight:1.05}}>
+      <div style={{paddingTop:6,marginBottom:16}}>
+        <div style={{fontSize:10,fontWeight:700,letterSpacing:"2px",textTransform:"uppercase",color:C.blue,fontFamily:DISP_F,marginBottom:5}}>Programme</div>
+        <div style={{fontFamily:SERIF_F,fontSize:28,color:C.text,lineHeight:1.1,letterSpacing:-1}}>
           Ton <span style={{fontStyle:"italic",color:C.blue}}>cycle</span>
         </div>
-        <div style={{fontSize:12,color:"rgba(242,244,247,0.50)",marginTop:8,lineHeight:1.6,fontFamily:DISP_F}}>
-          {prog
-            ? "Mésocycle périodisé selon ta morphologie et ton historique."
-            : "Crée ton premier programme pour commencer."}
+        <div style={{fontSize:11,color:"rgba(242,244,247,0.38)",marginTop:5,fontFamily:DISP_F}}>
+          {prog ? "Mésocycle périodisé selon ta morphologie." : "Crée ton premier programme pour commencer."}
         </div>
       </div>
 
@@ -236,17 +234,18 @@ function ProgrammeView(props) {
         </div>
       )}
 
-      {/* ── Phase active (coach message) ── */}
+      {/* ── Phase active ── */}
       {prog && cycleStart && (
-        <div style={{background:"linear-gradient(135deg,#0D1E3A,#111827)",border:"1px solid rgba(59,130,246,0.20)",borderRadius:16,padding:"14px",marginBottom:14}}>
-          <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:10}}>
-            <div style={{width:6,height:6,borderRadius:"50%",background:C.blue,boxShadow:`0 0 6px ${C.blue}`}}/>
-            <div style={{fontSize:9,fontWeight:700,letterSpacing:"1.3px",textTransform:"uppercase",color:C.blue,fontFamily:DISP_F}}>Phase active · Semaine {week}</div>
+        <div style={{background:"linear-gradient(135deg,#0a1628,#0f172a)",border:"1px solid rgba(59,130,246,0.18)",borderRadius:18,padding:"16px",marginBottom:14,position:"relative",overflow:"hidden"}}>
+          <div style={{position:"absolute",top:-30,right:-30,width:100,height:100,borderRadius:"50%",background:"rgba(59,130,246,0.08)",pointerEvents:"none"}}/>
+          <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:8}}>
+            <div style={{width:6,height:6,borderRadius:"50%",background:C.blue,boxShadow:`0 0 8px ${C.blue}`}}/>
+            <div style={{fontSize:8.5,fontWeight:700,letterSpacing:"1.5px",textTransform:"uppercase",color:"#60a5fa",fontFamily:DISP_F}}>Phase active · Semaine {week}</div>
           </div>
-          <div style={{fontFamily:SERIF_F,fontSize:19,fontWeight:400,color:C.text,lineHeight:1.3,marginBottom:8}}>
+          <div style={{fontFamily:SERIF_F,fontSize:18,color:C.text,lineHeight:1.25,marginBottom:6}}>
             {msgObj.titre}
           </div>
-          <div style={{fontSize:11,color:"rgba(242,244,247,0.45)",lineHeight:1.6,fontFamily:DISP_F}}>
+          <div style={{fontSize:11,color:"rgba(242,244,247,0.42)",lineHeight:1.55,fontFamily:DISP_F}}>
             {msgObj.desc}
           </div>
         </div>
@@ -272,16 +271,16 @@ function ProgrammeView(props) {
         </div>
       )}
 
-      {/* ── Séances de la semaine (si programme actif) ── */}
+      {/* ── Séances de la semaine ── */}
       {prog && prog.jours && prog.jours.length > 0 && (
         <div style={{marginBottom:14}}>
           <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:10}}>
-            <div style={{fontSize:15,fontWeight:700,color:C.text,fontFamily:DISP_F}}>Semaine {week} · Split</div>
+            <div style={{fontSize:17,fontWeight:700,color:C.text,fontFamily:DISP_F,letterSpacing:-0.4}}>Semaine {week} · Split</div>
             <div style={{fontSize:9,fontWeight:700,color:C.blue,letterSpacing:"1.2px",textTransform:"uppercase",fontFamily:DISP_F}}>
               {prog.jours.length} séances
             </div>
           </div>
-          <div style={{background:C.s1,border:`1px solid ${C.bd}`,borderRadius:16,overflow:"hidden"}}>
+          <div style={{background:C.s1,border:`1px solid ${C.bd}`,borderRadius:18,overflow:"hidden"}}>
             {prog.jours.map((j, jIdx) => {
               const int   = INT[j.intensite || "modere"];
               const total = j.exercices?.length || 0;
@@ -289,36 +288,33 @@ function ProgrammeView(props) {
               const isFirst = jIdx===0;
               return (
                 <div key={jIdx} style={{
-                  display:"flex",alignItems:"center",gap:12,padding:"12px 14px",
+                  display:"flex",alignItems:"center",gap:12,padding:"14px 16px",
                   borderBottom: jIdx<prog.jours.length-1 ? `1px solid ${C.bd}` : "none",
-                  background: j.complete ? `${int.c}05` : "transparent",
                 }}>
-                  {/* Icône check */}
+                  {/* Icône */}
                   <div style={{
-                    width:30,height:30,borderRadius:9,flexShrink:0,
-                    background: j.complete ? `${int.c}18` : isFirst ? `${C.blue}12` : C.s2,
-                    border: j.complete ? `1px solid ${int.c}35` : isFirst ? `1px solid ${C.blue}30` : `1px solid ${C.bd}`,
-                    display:"grid",placeItems:"center",
+                    width:36,height:36,borderRadius:11,flexShrink:0,display:"grid",placeItems:"center",
+                    background: j.complete ? `${int.c}18` : isFirst ? `${int.c}15` : "rgba(255,255,255,0.04)",
+                    border: j.complete ? `1px solid ${int.c}35` : isFirst ? `1px solid ${int.c}30` : `1px solid ${C.bd}`,
                   }}>
                     {j.complete
-                      ? <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={int.c} strokeWidth="2.4" strokeLinecap="round"><path d="M20 6 9 17l-5-5"/></svg>
-                      : isFirst
-                        ? <div style={{width:6,height:6,borderRadius:"50%",background:C.blue}}/>
-                        : null}
+                      ? <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={int.c} strokeWidth="2.5" strokeLinecap="round"><path d="M20 6 9 17l-5-5"/></svg>
+                      : <div style={{width:8,height:8,borderRadius:"50%",background:isFirst?int.c:"rgba(255,255,255,0.15)"}}/>}
                   </div>
-                  {/* Info séance */}
+                  {/* Info */}
                   <div onClick={() => setInnerView(`seance:0:${jIdx}`)} style={{flex:1,minWidth:0,cursor:"pointer"}}>
-                    <div style={{display:"flex",alignItems:"center",gap:7,marginBottom:2}}>
-                      <span style={{fontSize:13,fontWeight:700,color:j.complete?"rgba(242,244,247,0.45)":C.text,fontFamily:DISP_F}}>{j.nom}</span>
-                      {j.complete && <span style={{fontSize:8,fontWeight:700,color:"rgba(242,244,247,0.35)",letterSpacing:"1px",fontFamily:DISP_F}}>FAIT</span>}
+                    <div style={{display:"flex",alignItems:"center",gap:7,marginBottom:3}}>
+                      <span style={{fontSize:14,fontWeight:700,color:j.complete?"rgba(242,244,247,0.40)":C.text,fontFamily:DISP_F,letterSpacing:-0.2}}>{j.nom}</span>
+                      {j.complete && <span style={{fontSize:8,fontWeight:700,color:"rgba(242,244,247,0.30)",letterSpacing:"0.8px",fontFamily:DISP_F}}>FAIT</span>}
                     </div>
-                    <div style={{fontSize:9,fontWeight:700,color:int.c,letterSpacing:"1px",textTransform:"uppercase",fontFamily:DISP_F,marginBottom:1}}>{int.l}</div>
-                    <div style={{fontSize:10.5,color:"rgba(242,244,247,0.40)",fontFamily:DISP_F}}>{j.focus?`${j.focus} · `:""}{total} exercice{total!==1?"s":""}</div>
+                    <div style={{fontSize:9.5,fontWeight:700,color:int.c,letterSpacing:"0.8px",textTransform:"uppercase",fontFamily:DISP_F}}>
+                      {int.l}{j.focus?` · ${j.focus}`:""} · {total} ex.
+                    </div>
                   </div>
-                  {/* Stats */}
-                  <div style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:4,flexShrink:0}}>
+                  {/* Droite */}
+                  <div style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:5,flexShrink:0}}>
                     {done>0 && <div style={{fontSize:11,fontWeight:700,color:int.c,fontVariantNumeric:"tabular-nums"}}>{done}/{total}</div>}
-                    <button onClick={() => setConfirmDel({type:"jour",pIdx:0,jIdx})} style={{padding:"5px 7px",background:"rgba(248,113,113,0.07)",border:"1px solid rgba(248,113,113,0.18)",borderRadius:7,color:"#FF7A6B",cursor:"pointer",fontSize:11,lineHeight:1}}>✕</button>
+                    <button onClick={() => setConfirmDel({type:"jour",pIdx:0,jIdx})} style={{padding:"5px 8px",background:"rgba(248,113,113,0.07)",border:"1px solid rgba(248,113,113,0.18)",borderRadius:8,color:"#FF7A6B",cursor:"pointer",fontSize:11,lineHeight:1}}>✕</button>
                   </div>
                 </div>
               );
