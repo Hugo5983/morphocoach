@@ -101,63 +101,6 @@ function ProgrammeView(props) {
   }
 
   // ── Messages de phase adaptés à l'objectif ──────────────────────────────
-  const obj = profil?.objectif || "hypertrophie";
-
-  const PHASE_MSG = {
-    hypertrophie: {
-      1: { titre: <>Installe la <span style={{color:"#34D399"}}>mécanique.</span></>, desc: "Volume modéré, 10–12 reps, RPE 6–7. Maîtrise chaque mouvement avant d'augmenter la charge." },
-      2: { titre: <>Le volume <span style={{color:"#34D399"}}>augmente.</span></>, desc: "Charge progressive, 8–12 reps, RPE 7–8. C'est ici que l'hypertrophie se construit vraiment." },
-      3: { titre: <>Tonnage en <span style={{color:"#34D399"}}>hausse de +8%.</span></>, desc: "3 séances par groupe, 6–10 reps, RPE 7–8. Charge progressive sur les composés." },
-      4: { titre: <>Accumulation <span style={{color:"#F59E0B"}}>maximale.</span></>, desc: "Séries longues, 10–15 reps, pump recherché. Surcharge mécanique et métabolique." },
-      5: { titre: <>Intensification. <span style={{color:"#F87171"}}>Charge lourde.</span></>, desc: "Passe à 6–8 reps avec plus de poids. Le stimulus de force favorise la densité musculaire." },
-      6: { titre: <>Deload. <span style={{color:"#818CF8"}}>Récupère.</span></>, desc: "Volume réduit de 40%, intensité maintenue. Ton corps consolide les gains. Ne skip pas." },
-    },
-    force: {
-      1: { titre: <>Construis <span style={{color:"#3B82F6"}}>tes bases.</span></>, desc: "Séries de 5 reps, RPE 7. Focus sur le squat, développé et soulevé de terre. Technique avant tout." },
-      2: { titre: <>Progressions <span style={{color:"#3B82F6"}}>linéaires.</span></>, desc: "Ajoute 2,5–5kg à chaque séance sur les composés. C'est la phase la plus rentable du cycle." },
-      3: { titre: <>Charge <span style={{color:"#818CF8"}}>lourde. 3×3–5.</span></>, desc: "Intensité à 85–90% de ton max. RPE 8–9. Vise tes records sur les mouvements fondamentaux." },
-      4: { titre: <>Pic de <span style={{color:"#F87171"}}>force.</span></>, desc: "Doubles et simples à 90–95% de ton max. Repos complets 3–5 min. Prépare tes PRs." },
-      5: { titre: <>Spécialisation. <span style={{color:"#F87171"}}>Vise les records.</span></>, desc: "Séances courtes et intenses. 1–3 reps lourdes. C'est la semaine pour battre tes records personnels." },
-      6: { titre: <>Deload actif. <span style={{color:"#34D399"}}>Récupère fort.</span></>, desc: "50–60% du volume habituel. Maintiens l'intensité. Tu arrives frais et plus fort au prochain bloc." },
-    },
-    poids: {
-      1: { titre: <>Déficit géré, <span style={{color:"#F59E0B"}}>muscle préservé.</span></>, desc: "Charge modérée, 10–15 reps. L'objectif est de maintenir le tissu musculaire en déficit calorique." },
-      2: { titre: <>Métabolisme <span style={{color:"#F59E0B"}}>activé.</span></>, desc: "Circuit training et supersets. Dépense calorique maximisée tout en stimulant les muscles." },
-      3: { titre: <>Densité <span style={{color:"#F59E0B"}}>d'effort.</span></>, desc: "Temps de repos courts, 8–12 reps. Maintiens le volume pour éviter la perte musculaire." },
-      4: { titre: <>Intensification <span style={{color:"#F87171"}}>métabolique.</span></>, desc: "HIIT en fin de séance. Le muscle consomme du gras même au repos — construis-en." },
-      5: { titre: <>Force. <span style={{color:"#F87171"}}>Le muscle brûle.</span></>, desc: "Séries lourdes, 5–8 reps. Plus de masse musculaire = métabolisme de base plus élevé." },
-      6: { titre: <>Récupération. <span style={{color:"#34D399"}}>Bilan positif.</span></>, desc: "Volume léger. Ton corps recalibres ses hormones. Prépare le prochain bloc avec une meilleure composition." },
-    },
-    prep_physique: {
-      1: { titre: <>Fondations <span style={{color:"#3B82F6"}}>athlétiques.</span></>, desc: "Gainage, mobilité et force de base. Un athlète solide part de la stabilité." },
-      2: { titre: <>Puissance <span style={{color:"#3B82F6"}}>en construction.</span></>, desc: "Exercices explosifs intégrés. Pliométrie légère sur les membres inférieurs." },
-      3: { titre: <>Endurance <span style={{color:"#818CF8"}}>de force.</span></>, desc: "Séries longues à haute densité. RPE 7–8 maintenu sur toute la séance. Conditioning." },
-      4: { titre: <>Capacité de <span style={{color:"#F59E0B"}}>travail max.</span></>, desc: "Volume le plus élevé du cycle. Teste tes limites. C'est ici que l'athlète se forme." },
-      5: { titre: <>Pics d'intensité. <span style={{color:"#F87171"}}>Explosivité.</span></>, desc: "Efforts courts et maximaux. Pliométrie avancée, sprints, charges explosives." },
-      6: { titre: <>Récupération <span style={{color:"#34D399"}}>stratégique.</span></>, desc: "Mobilité, étirements, récupération active. Prépare ton corps pour surpasser le cycle précédent." },
-    },
-    sante: {
-      1: { titre: <>Mouvement <span style={{color:"#34D399"}}>régulier.</span></>, desc: "3–4 séances par semaine, effort agréable, RPE 5–6. L'objectif est la régularité avant tout." },
-      2: { titre: <>Progression <span style={{color:"#34D399"}}>douce.</span></>, desc: "Légère augmentation du volume. Le corps s'adapte à son rythme, sans se blesser." },
-      3: { titre: <>Effort <span style={{color:"#3B82F6"}}>soutenu.</span></>, desc: "RPE 6–7. Tu dois pouvoir parler en séance. Construis l'habitude profondément." },
-      4: { titre: <>Renforcement <span style={{color:"#3B82F6"}}>complet.</span></>, desc: "Travaille toutes les chaînes musculaires. Mobilité incluse. Équilibre le corps." },
-      5: { titre: <>Intensité <span style={{color:"#F59E0B"}}>maîtrisée.</span></>, desc: "RPE 7–8 sur les séries principales. Tu sens la progression. Continue sur cette lancée." },
-      6: { titre: <>Récupère, <span style={{color:"#34D399"}}>tu le mérites.</span></>, desc: "Volume réduit, étirements, marche active. La santé c'est aussi savoir se reposer." },
-    },
-  };
-
-  const weekIdx    = Math.min(Math.max((semC||0)+1, 1), 6);
-  const msgObj     = PHASE_MSG[obj]?.[weekIdx] || PHASE_MSG.hypertrophie[weekIdx];
-
-  const PHASES_MESO = [
-    { n:"S1", phase:"Volume",  int:"modere",  h:38 },
-    { n:"S2", phase:"Volume",  int:"modere",  h:52 },
-    { n:"S3", phase:"Volume",  int:"lourd",   h:68, active: (semC||0)===2 },
-    { n:"S4", phase:"Force",   int:"lourd",   h:68, active: (semC||0)===3 },
-    { n:"S5", phase:"Force",   int:"intense", h:58, active: (semC||0)===4 },
-    { n:"S6", phase:"Deload",  int:"leger",   h:28, active: (semC||0)===5 },
-  ];
-  const totalW = 6;
   const week   = (semC||0)+1;
   const SERIF_F  = "'DM Serif Display','Georgia',serif";
   const DISP_F   = "'Outfit','DM Sans',system-ui,sans-serif";
@@ -169,87 +112,16 @@ function ProgrammeView(props) {
       <div style={{paddingTop:6,marginBottom:16}}>
         <div style={{fontSize:10,fontWeight:700,letterSpacing:"2px",textTransform:"uppercase",color:C.blue,fontFamily:DISP_F,marginBottom:5}}>Programme</div>
         <div style={{fontFamily:SERIF_F,fontSize:28,color:C.text,lineHeight:1.1,letterSpacing:-1}}>
-          Ton <span style={{fontStyle:"italic",color:C.blue}}>cycle</span>
+          Ton <span style={{fontStyle:"italic",color:C.blue}}>programme</span>
         </div>
         <div style={{fontSize:11,color:"rgba(242,244,247,0.38)",marginTop:5,fontFamily:DISP_F}}>
-          {prog ? "Mésocycle périodisé selon ta morphologie." : "Crée ton premier programme pour commencer."}
+          {prog ? `${prog.titre} · ${prog.jours?.length||0} séances/sem` : "Crée ton premier programme pour commencer."}
         </div>
       </div>
 
-      {/* ── Mésocycle bars (si prog actif) ── */}
-      {prog && cycleStart && (
-        <div style={{background:C.s1,border:`1px solid ${C.bd}`,borderRadius:16,padding:"14px",marginBottom:10,boxShadow:"0 1px 3px rgba(0,0,0,0.3)"}}>
-          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:12}}>
-            <div>
-              <div style={{fontSize:9,fontWeight:700,letterSpacing:"1.3px",textTransform:"uppercase",color:"#818CF8",fontFamily:DISP_F,marginBottom:4}}>Mésocycle · {prog.titre}</div>
-              <div style={{fontSize:15,fontWeight:700,color:C.text,fontFamily:DISP_F}}>{totalW} semaines · {prog.jours?.map(j=>j.nom?.split(" ")[0]).slice(0,3).join(" / ") || "Programme"}</div>
-            </div>
-            <div style={{fontSize:13,fontWeight:700,color:"#818CF8",fontVariantNumeric:"tabular-nums",fontFamily:DISP_F}}>S{week}/{totalW}</div>
-          </div>
-          {/* Barres */}
-          <div style={{display:"flex",gap:5,alignItems:"flex-end",height:90,marginBottom:10}}>
-            {PHASES_MESO.map((s,i)=>{
-              const intData = INT[s.int]||INT.modere;
-              const isDone  = i < (semC||0);
-              const isActive= i === (semC||0);
-              return (
-                <div key={i} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:4}}>
-                  <div style={{
-                    width:"100%",height:s.h,borderRadius:7,
-                    background: isActive
-                      ? `linear-gradient(180deg,${intData.c},${intData.c}99)`
-                      : isDone
-                        ? `${intData.c}45`
-                        : "rgba(255,255,255,0.05)",
-                    border: isActive ? `1.5px solid ${intData.c}` : "1px solid rgba(255,255,255,0.07)",
-                    boxShadow: isActive ? `0 4px 14px ${intData.c}45` : "none",
-                    position:"relative",overflow:"hidden",
-                  }}>
-                    {isActive&&<div style={{position:"absolute",inset:0,background:"radial-gradient(120% 50% at 50% 0%,rgba(255,255,255,0.18),transparent 60%)"}}/>}
-                  </div>
-                  <div style={{fontSize:9,fontWeight:700,color:isActive?intData.c:"rgba(242,244,247,0.35)",fontFamily:DISP_F,letterSpacing:0.3}}>{s.n}</div>
-                  <div style={{fontSize:7.5,color:isActive?"rgba(242,244,247,0.55)":"rgba(242,244,247,0.25)",fontFamily:DISP_F,textAlign:"center"}}>{s.phase}</div>
-                </div>
-              );
-            })}
-          </div>
-          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",paddingTop:10,borderTop:`1px solid ${C.bd}`}}>
-            <div style={{display:"flex",alignItems:"center",gap:6}}>
-              <div style={{width:8,height:8,borderRadius:2,background:"#818CF8"}}/>
-              <span style={{fontSize:10,color:"rgba(242,244,247,0.45)",fontFamily:DISP_F}}>Intensité prévue</span>
-            </div>
-            <div style={{display:"flex",gap:14}}>
-              {[
-                {v:`${prog.jours?.length||0}/sem`, u:"rythme", c:C.blue},
-                {v:`J${jR??"—"}`, u:"prochain", c:C.mint},
-                {v:`${Math.round(week/totalW*100)}%`, u:"cycle", c:"#818CF8"},
-              ].map(s=>(
-                <div key={s.u} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:2}}>
-                  <div style={{fontSize:13,fontWeight:700,color:s.c,fontFamily:DISP_F,fontVariantNumeric:"tabular-nums"}}>{s.v}</div>
-                  <div style={{fontSize:8,fontWeight:700,color:"rgba(242,244,247,0.35)",letterSpacing:1.2,textTransform:"uppercase",fontFamily:DISP_F}}>{s.u}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
 
-      {/* ── Phase active ── */}
-      {prog && cycleStart && (
-        <div style={{background:"linear-gradient(135deg,#0a1628,#0f172a)",border:"1px solid rgba(59,130,246,0.18)",borderRadius:18,padding:"16px",marginBottom:14,position:"relative",overflow:"hidden"}}>
-          <div style={{position:"absolute",top:-30,right:-30,width:100,height:100,borderRadius:"50%",background:"rgba(59,130,246,0.08)",pointerEvents:"none"}}/>
-          <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:8}}>
-            <div style={{width:6,height:6,borderRadius:"50%",background:C.blue,boxShadow:`0 0 8px ${C.blue}`}}/>
-            <div style={{fontSize:8.5,fontWeight:700,letterSpacing:"1.5px",textTransform:"uppercase",color:"#60a5fa",fontFamily:DISP_F}}>Phase active · Semaine {week}</div>
-          </div>
-          <div style={{fontFamily:SERIF_F,fontSize:18,color:C.text,lineHeight:1.25,marginBottom:6}}>
-            {msgObj.titre}
-          </div>
-          <div style={{fontSize:11,color:"rgba(242,244,247,0.42)",lineHeight:1.55,fontFamily:DISP_F}}>
-            {msgObj.desc}
-          </div>
-        </div>
-      )}
+
+
 
       {/* ── Modal confirmation suppression ── */}      {/* ── Modal confirmation suppression ── */}
       {confirmDel && (
