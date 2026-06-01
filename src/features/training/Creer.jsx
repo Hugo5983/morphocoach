@@ -520,29 +520,6 @@ export default function Creer(props) {
             flexShrink:0 }}>{step}/3</div>
         </div>
 
-        {/* ── Onglets jours — flex child, jamais dans le scroll ── */}
-        {step===2 && sortedDays.length>0 && (
-          <div style={{ flexShrink:0, background:BG,
-            padding:"10px 20px 10px", borderBottom:`1px solid ${BD}` }}>
-            <div style={{ display:"flex", gap:9, overflowX:"auto" }} className="mc-scroll">
-              {sortedDays.map(d => {
-                const empty = sess(d).ex.length===0;
-                return (
-                  <button key={d}
-                    className={`mc-dtab${ad===d?" on":""}${empty?" miss":""}`}
-                    onClick={() => setActiveDay(d)}>
-                    {d}
-                    <span style={{ position:"absolute", top:7, right:8, width:7, height:7,
-                      borderRadius:"50%",
-                      background:empty?"#f87171":GRN,
-                      boxShadow:empty?"0 0 0 3px rgba(248,113,113,.2)":"0 0 0 3px rgba(52,211,153,.2)" }}/>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
         {/* ── Contenu scrollable ── */}
         <div style={{ flex:1, minHeight:0, overflowY:"auto", padding:"16px 20px 20px" }} className="mc-scroll">
 
@@ -630,6 +607,28 @@ export default function Creer(props) {
           )}
 
           {/* ══ STEP 2 — Séance par séance ══ */}
+          {step===2 && sortedDays.length>0 && (
+            <div style={{ position:"sticky", top:0, zIndex:9,
+              background:BG, padding:"10px 20px",
+              borderBottom:`1px solid ${BD}`, marginBottom:4 }}>
+              <div style={{ display:"flex", gap:9, overflowX:"auto" }} className="mc-scroll">
+                {sortedDays.map(d => {
+                  const empty = sess(d).ex.length===0;
+                  return (
+                    <button key={d}
+                      className={`mc-dtab${ad===d?" on":""}${empty?" miss":""}`}
+                      onClick={() => setActiveDay(d)}>
+                      {d}
+                      <span style={{ position:"absolute", top:7, right:8, width:7, height:7,
+                        borderRadius:"50%",
+                        background:empty?"#f87171":GRN,
+                        boxShadow:empty?"0 0 0 3px rgba(248,113,113,.2)":"0 0 0 3px rgba(52,211,153,.2)" }}/>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
           {step===2 && ad && s && (
             <div className="mc-page" key={"s2-"+ad}>
               <div style={{ fontSize:11, fontWeight:800, letterSpacing:"2.5px",
