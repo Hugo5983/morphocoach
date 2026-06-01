@@ -253,7 +253,7 @@ function BiblioSheet({ onClose, onAdd, addedNoms }) {
     : (EX[muscle]||[]).map(e=>({...e,group:muscle}));
 
   if (guideEx) return (
-    <div style={{ position:"fixed", inset:0, background:BG, zIndex:300, overflowY:"auto" }}>
+    <div style={{ position:"fixed", inset:0, background:BG, zIndex:10003, overflowY:"auto" }}>
       <div style={{ maxWidth:500, margin:"0 auto", padding:"20px 20px 100px" }}>
         <button onClick={() => setGuideEx(null)} style={{ background:"transparent", border:"none",
           color:BL, cursor:"pointer", fontSize:13, fontWeight:700, display:"flex",
@@ -317,11 +317,11 @@ function BiblioSheet({ onClose, onAdd, addedNoms }) {
   return (
     <>
       <div onClick={onClose} style={{ position:"fixed", inset:0,
-        background:"rgba(3,5,10,.72)", backdropFilter:"blur(4px)", zIndex:250 }}/>
+        background:"rgba(3,5,10,.82)", backdropFilter:"blur(4px)", zIndex:10001 }}/>
       <div style={{ position:"fixed", bottom:0, left:"50%", transform:"translateX(-50%)",
         width:"100%", maxWidth:480, background:"#0A1020",
         borderRadius:"28px 28px 0 0", borderTop:`1px solid ${BLBR}`,
-        zIndex:251, height:"82%", display:"flex", flexDirection:"column",
+        zIndex:10002, height:"82%", display:"flex", flexDirection:"column",
         boxShadow:"0 -30px 60px -20px rgba(0,0,0,.8)" }}>
         <div style={{ width:40, height:5, borderRadius:3,
           background:"rgba(255,255,255,.2)", margin:"14px auto 6px" }}/>
@@ -607,18 +607,13 @@ export default function Creer(props) {
 
           {/* ══ STEP 2 — Séance par séance ══ */}
           {step===2 && ad && s && (
-            <div className="mc-page" key={"s2-"+ad}>
-              <div style={{ fontSize:11, fontWeight:800, letterSpacing:"2.5px",
-                textTransform:"uppercase", color:BL, marginBottom:8 }}>Construis tes séances</div>
-              <h1 style={{ fontFamily:SF, fontSize:36, fontWeight:700, letterSpacing:"-.8px",
-                lineHeight:1.05, color:TEXT, margin:"0 0 22px" }}>
-                Séance par <em style={{ fontStyle:"italic", color:BL }}>séance.</em>
-              </h1>
-
-              {/* Onglets jours — sticky */}
+            <>
+              {/* Onglets jours — STICKY : doit être direct child du scroll container,
+                  PAS dans mc-page (transform brise position:sticky) */}
               <div style={{ position:"sticky", top:0, zIndex:9,
-                background:`${BG}f0`, backdropFilter:"blur(12px)",
-                paddingBottom:14, marginBottom:4 }}>
+                background:BG,
+                paddingBottom:12, marginBottom:8,
+                borderBottom:`1px solid ${BD}` }}>
                 <div style={{ display:"flex", gap:9, overflowX:"auto", paddingBottom:2 }}
                   className="mc-scroll">
                   {sortedDays.map(d => {
@@ -637,6 +632,14 @@ export default function Creer(props) {
                   })}
                 </div>
               </div>
+
+              <div className="mc-page" key={"s2-"+ad}>
+              <div style={{ fontSize:11, fontWeight:800, letterSpacing:"2.5px",
+                textTransform:"uppercase", color:BL, marginBottom:8 }}>Construis tes séances</div>
+              <h1 style={{ fontFamily:SF, fontSize:36, fontWeight:700, letterSpacing:"-.8px",
+                lineHeight:1.05, color:TEXT, margin:"0 0 22px" }}>
+                Séance par <em style={{ fontStyle:"italic", color:BL }}>séance.</em>
+              </h1>
 
               {/* Nom séance */}
               <input className="mc-field" style={{ marginBottom:22 }}
@@ -706,6 +709,7 @@ export default function Creer(props) {
                 </div>
               )}
             </div>
+            </>
           )}
 
           {/* ══ STEP 3 — Récap ══ */}
