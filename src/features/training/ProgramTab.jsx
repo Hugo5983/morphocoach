@@ -10,7 +10,7 @@ import { findExInDB } from "../../utils/training.js";
 import { GuideExModal, SeanceDetailModal } from "./components/ProgramTabModals.jsx";
 
 function ProgrammeView(props) {
-  const { prog, setProg, progs, setProgs, premium, setPaywall, push, calSess, setCalSess, checkedEx, createStep, setCS, newP, setNewP, jourActif, setJourActif, groupe, setGroupe, editExIdx, setEditExIdx, exModal, setExModal, exModalTab, setExModalTab, INT, EX, setProgView, cycleStart, setCycleStart, semC, jR, profil, onOpenCreer } = props;
+  const { prog, setProg, progs, setProgs, premium, setPaywall, push, calSess, setCalSess, checkedEx, createStep, setCS, newP, setNewP, jourActif, setJourActif, groupe, setGroupe, editExIdx, setEditExIdx, exModal, setExModal, exModalTab, setExModalTab, INT, EX, setProgView, cycleStart, setCycleStart, semC, jR, profil } = props;
 
   // vue interne : "list" | "seance:{progIdx}:{jourIdx}" | "creer"
   const [innerView, setInnerView] = useState("list");
@@ -78,6 +78,7 @@ function ProgrammeView(props) {
     }
   }
 
+  const showCreerForm = isCreating || createStep > 0 || (newP.nom !== "" || newP.jours.length > 0);
   const resetCreating = () => { setIsCreating(false); setCS(0); setNewP({nom:"",jours:[],seances:{}}); };
   const creerProps = {
     ...props,
@@ -225,12 +226,16 @@ function ProgrammeView(props) {
       )}
 
       {/* ── CTAs ── */}
-      <div style={{marginBottom:12}}>
-        <Btn onClick={() => { if(!premium) setPaywall(true); else setProgView("analyse"); }}>✨ Nouveau programme IA</Btn>
-        <Btn v="out" onClick={() => { if(onOpenCreer) onOpenCreer(); else { setIsCreating(true); setCS(0); setNewP({nom:"",jours:[],seances:{}}); } }}>+ Créer manuellement</Btn>
-      </div>
+      {!showCreerForm && (
+        <div style={{marginBottom:12}}>
+          <Btn onClick={() => { if(!premium) setPaywall(true); else setProgView("analyse"); }}>✨ Nouveau programme IA</Btn>
+          <Btn v="out" onClick={() => { setIsCreating(true); setCS(0); setNewP({nom:"",jours:[],seances:{}}); }}>+ Créer manuellement</Btn>
+        </div>
+      )}
 
-      {/* ── Sheet Creer rendue depuis App.jsx via showCreer prop ── */}
+      {showCreerForm && (
+        <Creer {...creerProps} progs={allProgs} setProgsAll={(next) => { setProgs(next); if(next.length>0) setProg(next[next.length-1]); }} />
+      )}
     </div>
   );
 }
