@@ -709,21 +709,25 @@ export default function Creer(props) {
           {/* ══ STEP 3 — Récap ══ */}
           {step===3 && (
             <div className="mc-page">
+              {/* Hero */}
               <div style={{ fontSize:11, fontWeight:800, letterSpacing:"2.5px",
                 textTransform:"uppercase", color:BL, marginBottom:8 }}>Récapitulatif</div>
-              <h1 style={{ fontFamily:SF, fontSize:38, fontWeight:700, letterSpacing:"-.8px",
-                lineHeight:1.05, color:TEXT, margin:"0 0 12px" }}>
+              <h1 style={{ fontFamily:SF, fontSize:36, fontWeight:700, letterSpacing:"-.6px",
+                lineHeight:1.05, color:TEXT, margin:"0 0 8px" }}>
                 Tout est <em style={{ fontStyle:"italic", color:BL }}>prêt.</em>
               </h1>
-              <p style={{ fontSize:15, color:MID, lineHeight:1.5, marginBottom:24 }}>
+              <p style={{ fontSize:15, color:MID, lineHeight:1.5, marginBottom:22 }}>
                 Vérifie ton programme avant de le créer.
               </p>
 
+              {/* Alerte si incomplet */}
               {!allComplete && (
                 <div className="mc-warn" style={{ marginBottom:18 }}>
                   <span style={{ color:RED, fontSize:18 }}>⚠</span>
                   <div>
-                    <div style={{ fontSize:14, fontWeight:700, color:"#ffb4b4", marginBottom:3 }}>Validation impossible</div>
+                    <div style={{ fontSize:14, fontWeight:700, color:"#ffb4b4", marginBottom:3 }}>
+                      Validation impossible
+                    </div>
                     <div style={{ fontSize:13, color:MID, lineHeight:1.4 }}>
                       Il reste {missingDays.length} séance{missingDays.length>1?"s":""} sans exercice.
                     </div>
@@ -731,49 +735,120 @@ export default function Creer(props) {
                 </div>
               )}
 
-              <div className="mc-recap-card">
-                <div style={{ fontSize:20, fontWeight:700, fontFamily:SF, color:TEXT,
-                  letterSpacing:-.4, marginBottom:4 }}>{name||"Programme sans nom"}</div>
-                <div style={{ fontSize:13, color:MID, marginBottom:16 }}>
-                  {activeSplit?.name||"Personnalisé"} · {sortedDays.length} séances/sem · {totalEx} exercices
+              {/* Carte programme */}
+              <div style={{ background:S1, borderRadius:22, border:`1px solid ${BD}`,
+                overflow:"hidden", marginBottom:14 }}>
+
+                {/* Header carte */}
+                <div style={{ padding:"18px 20px 14px",
+                  background:"linear-gradient(135deg,rgba(59,130,246,.1),rgba(59,130,246,.03))",
+                  borderBottom:`1px solid ${BD}` }}>
+                  <div style={{ fontSize:20, fontWeight:700, fontFamily:SF,
+                    color:TEXT, letterSpacing:"-.3px", marginBottom:10 }}>
+                    {name||"Programme sans nom"}
+                  </div>
+                  <div style={{ display:"flex", gap:8, flexWrap:"wrap" }}>
+                    {[
+                      { icon:"◐", val:activeSplit?.name||"Personnalisé" },
+                      { icon:"📅", val:`${sortedDays.length} séances/sem` },
+                      { icon:"🏋", val:`${totalEx} exercices` },
+                    ].map((p,i) => (
+                      <span key={i} style={{ display:"inline-flex", alignItems:"center", gap:5,
+                        fontSize:12, fontWeight:600, color:MID,
+                        background:"rgba(255,255,255,.05)", padding:"5px 10px",
+                        borderRadius:9, border:`1px solid ${BD}` }}>
+                        {p.icon} {p.val}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-                {sortedDays.map(d => {
-                  const ds = sess(d);
-                  const it = INTENSITIES.find(i=>i.id===ds.intensity)||INTENSITIES[1];
-                  const empty = ds.ex.length===0;
-                  return (
-                    <div key={d} className="mc-recap-day">
-                      <div style={{ width:48, height:48, borderRadius:14, flexShrink:0,
-                        background:empty?"rgba(248,113,113,.1)":BLS,
-                        border:`1px solid ${empty?"rgba(248,113,113,.4)":BLBR}`,
-                        display:"flex", alignItems:"center", justifyContent:"center",
-                        fontWeight:800, fontSize:14,
-                        color:empty?"#ff8a8a":BL }}>{d}</div>
-                      <div style={{ flex:1 }}>
-                        <div style={{ fontSize:15, fontWeight:700, fontFamily:F, color:TEXT }}>
-                          {ds.name||`Séance ${d}`}
+
+                {/* Lignes de séances */}
+                <div style={{ padding:"6px 20px 10px" }}>
+                  {sortedDays.map((d,i) => {
+                    const ds = sess(d);
+                    const it = INTENSITIES.find(x=>x.id===ds.intensity)||INTENSITIES[1];
+                    const empty = ds.ex.length===0;
+                    return (
+                      <div key={d} style={{ display:"flex", alignItems:"center", gap:14,
+                        padding:"13px 0",
+                        borderTop:i>0?`1px solid rgba(255,255,255,.05)`:"none" }}>
+                        {/* Badge jour */}
+                        <div style={{ width:50, height:50, borderRadius:15, flexShrink:0,
+                          background:empty?"rgba(248,113,113,.1)":`${it.color}12`,
+                          border:`1.5px solid ${empty?"rgba(248,113,113,.4)":`${it.color}40`}`,
+                          display:"flex", alignItems:"center", justifyContent:"center",
+                          fontWeight:800, fontSize:14,
+                          color:empty?"#ff8a8a":it.color }}>
+                          {d}
                         </div>
-                        <div style={{ fontSize:13, color:MID, marginTop:2,
-                          display:"flex", alignItems:"center", gap:6 }}>
-                          <span style={{ width:7, height:7, borderRadius:"50%",
-                            background:it.color, display:"inline-block" }}/>
-                          {it.label} · {ds.ex.length||"—"} exercices
+                        {/* Infos */}
+                        <div style={{ flex:1, minWidth:0 }}>
+                          <div style={{ fontSize:15, fontWeight:700, color:TEXT,
+                            letterSpacing:"-.2px", marginBottom:4 }}>
+                            {ds.name||`Séance ${d}`}
+                          </div>
+                          <div style={{ fontSize:13, color:MID,
+                            display:"flex", alignItems:"center", gap:7 }}>
+                            <span style={{ width:7, height:7, borderRadius:"50%", flexShrink:0,
+                              background:it.color, boxShadow:`0 0 6px ${it.color}` }}/>
+                            {it.label}
+                            <span style={{ color:"rgba(255,255,255,.2)" }}>·</span>
+                            {ds.ex.length||"—"} exercices
+                          </div>
                         </div>
-                      </div>
-                      {empty
-                        ? <span style={{ fontSize:11, fontWeight:700, color:"#ff8a8a",
+                        {/* Droite */}
+                        {empty ? (
+                          <span style={{ fontSize:11, fontWeight:700, color:"#ff8a8a",
                             background:"rgba(255,90,90,.1)", border:"1px solid rgba(255,90,90,.3)",
-                            padding:"3px 9px", borderRadius:7 }}>À compléter</span>
-                        : <div style={{ fontSize:14, fontWeight:700, color:MID }}>{ds.ex.length}</div>}
-                    </div>
-                  );
-                })}
+                            padding:"4px 10px", borderRadius:8, flexShrink:0 }}>
+                            À compléter
+                          </span>
+                        ) : (
+                          <div style={{ display:"flex", flexDirection:"column",
+                            alignItems:"flex-end", gap:5, flexShrink:0 }}>
+                            <span style={{ fontSize:16, fontWeight:800, color:TEXT }}>
+                              {ds.ex.length}
+                            </span>
+                            <div style={{ height:3, width:32, borderRadius:2,
+                              background:`${it.color}25` }}>
+                              <div style={{ height:"100%", borderRadius:2,
+                                width:`${Math.min((ds.ex.length/6)*100,100)}%`,
+                                background:it.color }}/>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
 
-              <div style={{ padding:"14px 16px", borderRadius:16, background:BLS,
-                border:`1px solid ${BLBR}`, display:"flex", gap:10, alignItems:"flex-start" }}>
+              {/* Stats */}
+              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr",
+                gap:10, marginBottom:14 }}>
+                {[
+                  { label:"Séances",   val:String(sortedDays.length), sub:"/ semaine" },
+                  { label:"Exercices", val:String(totalEx),            sub:"au total"  },
+                  { label:"Durée moy", val:"~65",                      sub:"minutes"   },
+                ].map((st,i) => (
+                  <div key={i} style={{ background:S1, border:`1px solid ${BD}`,
+                    borderRadius:16, padding:"14px 12px", textAlign:"center" }}>
+                    <div style={{ fontSize:20, fontWeight:800, color:BL,
+                      fontFamily:SF }}>{st.val}</div>
+                    <div style={{ fontSize:11, fontWeight:700, color:MID,
+                      marginTop:3, lineHeight:1.3 }}>{st.label}</div>
+                    <div style={{ fontSize:10, color:DIM }}>{st.sub}</div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Tip */}
+              <div style={{ display:"flex", gap:12, alignItems:"flex-start",
+                padding:"14px 16px", borderRadius:16,
+                background:BLS, border:`1px solid ${BLBR}` }}>
                 <span style={{ fontSize:18, flexShrink:0 }}>✨</span>
-                <span style={{ fontSize:13, color:MID, lineHeight:1.5 }}>
+                <span style={{ fontSize:13, color:MID, lineHeight:1.55 }}>
                   Tu pourras ajuster charges, tempo et méthodes à tout moment depuis le planning.
                 </span>
               </div>
