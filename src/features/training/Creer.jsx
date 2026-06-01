@@ -616,7 +616,7 @@ export default function Creer(props) {
               </h1>
 
               {/* Onglets jours — sticky */}
-              <div style={{ position:"sticky", top:78, zIndex:9,
+              <div style={{ position:"sticky", top:0, zIndex:9,
                 background:`${BG}f0`, backdropFilter:"blur(12px)",
                 paddingBottom:14, marginBottom:4 }}>
                 <div style={{ display:"flex", gap:9, overflowX:"auto", paddingBottom:2 }}
@@ -845,12 +845,13 @@ export default function Creer(props) {
           )}
         </div>
 
-        {/* Bibliothèque */}
-        {sheet && (
-          <BiblioSheet onClose={() => setSheet(false)} onAdd={addEx(ad)}
-            addedNoms={(s?.ex||[]).map(e=>e.nom)}/>
-        )}
       </div>
+
+      {/* Bibliothèque — hors du container flex pour que position:fixed fonctionne */}
+      {sheet && (
+        <BiblioSheet onClose={() => setSheet(false)} onAdd={addEx(ad)}
+          addedNoms={(s?.ex||[]).map(e=>e.nom)}/>
+      )}
     </>,
     document.body
   );
