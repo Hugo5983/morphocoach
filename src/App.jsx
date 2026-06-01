@@ -4,7 +4,6 @@ import { FOODS } from "./data/foods.js";
 import { EX } from "./data/exercises.js";
 import { MOTIVATIONS } from "./data/motivations.js";
 
-// Layout (chargés immédiatement — présents sur toutes les pages)
 import { Notif }           from "./components/ui/Notif.jsx";
 import { Chrono }          from "./components/ui/Chrono.jsx";
 import { Spinner }         from "./components/ui/Loader.jsx";
@@ -14,24 +13,15 @@ import { Paywall }         from "./components/layout/Paywall.jsx";
 import { PaywallNutrition} from "./components/layout/PaywallNutrition.jsx";
 import { Screen }          from "./components/layout/Screen.jsx";
 import { PageContainer }   from "./components/layout/PageContainer.jsx";
-
-// Context
 import AppContext           from "./context/AppContext.jsx";
-
-// Sheet création programme
-import Creer from "./features/training/Creer.jsx";
-
-// Home — chargé immédiatement (première page visible)
 import Home from "./features/home/HomePage.jsx";
 
-// Features — chargées à la demande (bundle initial réduit)
 const Onboarding = lazy(() => import("./features/onboarding/OnboardingPage.jsx"));
 const Nutrition  = lazy(() => import("./features/nutrition/NutritionPage.jsx"));
 const Profile    = lazy(() => import("./features/profile/ProfilePage.jsx"));
 const ProgramTab = lazy(() => import("./features/training/ProgramTab.jsx"));
 const Recipes    = lazy(() => import("./features/recipes/RecipesPage.jsx"));
 
-// Hooks
 import { useStorage }       from "./hooks/useStorage.js";
 import { useNotif }         from "./hooks/useNotif.js";
 import { useMacros }        from "./hooks/useMacros.js";
@@ -40,28 +30,20 @@ import { useStreak }        from "./hooks/useStreak.js";
 import { useTotalRepas }    from "./hooks/useTotalRepas.js";
 import { useFileReader }    from "./hooks/useFileReader.js";
 import { useDailyReset }    from "./hooks/useDailyReset.js";
-
-// Services
 import { scanBarcode } from "./services/nutritionService.js";
-
-// ─── APP ──────────────────────────────────────────────────────────────────────
 
 export default function App() {
 
-  // ── Navigation & UI ────────────────────────────────────────────────────────
   const [tab,              setTab]              = useState("home");
   const [paywall,          setPaywall]          = useState(false);
-  const [showCreer,        setShowCreer]        = useState(false);
   const [paywallNutrition, setPaywallNutrition] = useState(false);
   const [showChrono,       setChrono]           = useState(false);
   const [chronoSec,        setChronoSec]        = useState(90);
   const { notif, push, dismiss } = useNotif();
 
-  // ── Premium (persisté) ─────────────────────────────────────────────────────
   const [premium,          setPremium]          = useStorage("premium", false);
   const [premiumNutrition, setPremiumNutrition] = useStorage("premiumNutrition", false);
 
-  // ── Profil & Onboarding ────────────────────────────────────────────────────
   const [profil, setProfil] = useStorage("profil", {
     prenom: "", age: "", poids: "", taille: "", sexe: "",
     objectif: "hypertrophie", activite: "modere", bodyfat: "",
@@ -70,7 +52,6 @@ export default function App() {
   const profilComplet  = profil.poids && profil.taille && profil.age && profil.sexe;
   const showOnboarding = !onboardingDone && !profilComplet;
 
-  // ── Programme & Cycles ─────────────────────────────────────────────────────
   const [prog,       setProg]       = useStorage("prog", null);
   const [progs,      setProgs]      = useStorage("progs", []);
   const [cycles,     setCycles]     = useStorage("cycles", []);
@@ -81,31 +62,26 @@ export default function App() {
   const [exEdit,     setExEdit]     = useState({});
   const [checkedEx,  setCheckedEx]  = useStorage("checkedEx", {});
 
-  // ── Photos & IA ────────────────────────────────────────────────────────────
   const [photos,           setPhotos]           = useState({ face: null, dos: null, profil: null });
   const readFile                                = useFileReader(setPhotos);
   const [loadIA,           setLoadIA]           = useState(false);
   const [loadMsg,          setLoadMsg]          = useState("");
   const [corrigerFaibles,  setCorrigerFaibles]  = useState(true);
 
-  // ── Nutrition ──────────────────────────────────────────────────────────────
   const [repas,    setRepas]    = useStorage("repas", { matin: [], midi: [], soir: [], snack: [] });
   const [repasLog, setRepasLog] = useStorage("repasLog", {});
   const [myFoods,  setMyFoods]  = useStorage("myFoods", []);
   const [eau,      setEau]      = useStorage("eau", 0);
   const [scanRes,  setScanRes]  = useState(null);
 
-  // ── Suivi corporel ─────────────────────────────────────────────────────────
   const [weightLog,    setWeightLog]    = useStorage("weightLog", []);
   const [lastWeighIn,  setLastWeighIn]  = useStorage("lastWeighIn", null);
 
-  // ── Calculs dérivés ────────────────────────────────────────────────────────
   const { imc, obj, calObj, pObj, lObj, gObj } = useMacros(profil, cycles);
   const totR      = useTotalRepas(repas);
   const { jR, cPct, semC } = useCycleProgress(cycleStart);
   const getStreak = useStreak(prog);
 
-  // ── Effets ─────────────────────────────────────────────────────────────────
   useDailyReset("eauDate", setEau, 0);
 
   useEffect(() => {
@@ -131,7 +107,6 @@ export default function App() {
     return () => clearTimeout(t);
   }, []);
 
-  // ── Callbacks ──────────────────────────────────────────────────────────────
   const handleScan = useCallback(async (code) => {
     const result = await scanBarcode(code);
     if (result) setScanRes(result);
@@ -141,37 +116,24 @@ export default function App() {
     setSeance(i); setExDetails({}); setExEdit({});
   }, []);
 
-  // ── Valeur du contexte global ──────────────────────────────────────────────
-  // Tout ce dont une feature peut avoir besoin — sans props drilling.
   const contextValue = {
-    // Navigation
     tab, setTab,
-    // Premium
     premium, setPremium, premiumNutrition, setPremiumNutrition,
     setPaywall, setPaywallNutrition,
-    // Notif
     push,
-    // Profil
     profil, setProfil,
-    // Programme
     prog, setProg, progs, setProgs,
     cycles, setCycles, cycleStart, setCycleStart,
     calSess, setCalSess, checkedEx, setCheckedEx,
-    // Nutrition
     repas, setRepas, repasLog, setRepasLog,
     myFoods, setMyFoods, eau, setEau,
     scanRes, setScanRes,
-    // Suivi
     weightLog, setWeightLog, lastWeighIn, setLastWeighIn,
-    // Calculs
     imc, obj, calObj, pObj, lObj, gObj, totR, jR, cPct, semC, getStreak,
-    // Chrono
     setChrono, setChronoSec,
-    // Constantes
     INT, MOTIVATIONS,
   };
 
-  // ── Props features (inchangées — rétrocompatibilité totale) ────────────────
   const commonProps = { INT, push };
 
   const homeProps = {
@@ -182,7 +144,6 @@ export default function App() {
   };
 
   const programProps = {
-    onOpenCreer: () => { setShowCreer(true); setNewP({ nom:"", split:null, jours:[], seances:{} }); },
     prog, setProg, progs, setProgs, premium, setPaywall, checkedEx, setCheckedEx,
     seance, setSeance: openSeance, setChrono, setChronoSec,
     exDetails, setExDetails, exEdit, setExEdit,
@@ -229,7 +190,6 @@ export default function App() {
     </div>
   );
 
-  // ── Rendu ──────────────────────────────────────────────────────────────────
   return (
     <AppContext.Provider value={contextValue}>
       <Screen>
@@ -281,53 +241,6 @@ export default function App() {
             }}
             onClose={() => setPaywallNutrition(false)}
           />
-        )}
-
-        {/* ── Sheet Créer un programme ── */}
-        {showCreer && (
-          <>
-            <div
-              onClick={() => setShowCreer(false)}
-              style={{
-                position:"fixed", inset:0,
-                background:"rgba(3,5,10,0.80)",
-                backdropFilter:"blur(8px)",
-                WebkitBackdropFilter:"blur(8px)",
-                zIndex:400,
-              }}
-            />
-            <div style={{
-              position:"fixed", bottom:0, left:"50%",
-              transform:"translateX(-50%)",
-              width:"100%", maxWidth:500,
-              height:"93vh",
-              background:"#07080f",
-              borderRadius:"24px 24px 0 0",
-              border:"1px solid rgba(255,255,255,0.08)",
-              borderBottom:"none",
-              zIndex:401,
-              display:"flex", flexDirection:"column",
-              boxShadow:"0 -40px 80px -20px rgba(0,0,0,0.90)",
-              overflowY:"auto",
-            }}>
-              <div style={{padding:"12px 0 4px", display:"flex", justifyContent:"center", flexShrink:0}}>
-                <div style={{width:36, height:4, borderRadius:99, background:"rgba(255,255,255,0.18)"}}/>
-              </div>
-              <Creer
-                {...programProps}
-                onCancel={() => setShowCreer(false)}
-                setProgView={(v) => {
-                  setShowCreer(false);
-                  if (v === "calendar") setTab("program");
-                }}
-                progs={progs}
-                setProgsAll={(next) => {
-                  setProgs(next);
-                  if (next.length > 0) setProg(next[next.length - 1]);
-                }}
-              />
-            </div>
-          </>
         )}
       </Screen>
     </AppContext.Provider>
