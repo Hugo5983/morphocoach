@@ -227,43 +227,10 @@ function ProgrammeView(props) {
       {/* ── CTAs ── */}
       <div style={{marginBottom:12}}>
         <Btn onClick={() => { if(!premium) setPaywall(true); else setProgView("analyse"); }}>✨ Nouveau programme IA</Btn>
-        <Btn v="out" onClick={() => { setIsCreating(true); setCS(0); setNewP({nom:"",jours:[],seances:{}}); }}>+ Créer manuellement</Btn>
+        <Btn v="out" onClick={() => { if(props.onOpenCreer) props.onOpenCreer(); else { setIsCreating(true); setCS(0); setNewP({nom:"",jours:[],seances:{}}); } }}>+ Créer manuellement</Btn>
       </div>
 
-      {/* ── Bottom sheet création ── */}
-      {isCreating && (
-        <>
-          {/* Overlay */}
-          <div onClick={resetCreating} style={{
-            position:"fixed",inset:0,
-            background:"rgba(3,5,10,0.75)",
-            backdropFilter:"blur(6px)",
-            WebkitBackdropFilter:"blur(6px)",
-            zIndex:200,
-          }}/>
-          {/* Sheet */}
-          <div style={{
-            position:"fixed",bottom:0,left:"50%",
-            transform:"translateX(-50%)",
-            width:"100%",maxWidth:500,
-            height:"93vh",
-            background:"#07080f",
-            borderRadius:"24px 24px 0 0",
-            border:"1px solid rgba(255,255,255,0.08)",
-            borderBottom:"none",
-            zIndex:201,
-            display:"flex",flexDirection:"column",
-            boxShadow:"0 -30px 60px -20px rgba(0,0,0,0.8)",
-            overflowY:"auto",
-          }}>
-            {/* Handle */}
-            <div style={{padding:"12px 0 4px",display:"flex",justifyContent:"center",flexShrink:0}}>
-              <div style={{width:36,height:4,borderRadius:99,background:"rgba(255,255,255,0.18)"}}/>
-            </div>
-            <Creer {...creerProps} progs={allProgs} setProgsAll={(next) => { setProgs(next); if(next.length>0) setProg(next[next.length-1]); }} />
-          </div>
-        </>
-      )}
+      {/* ── Sheet Creer rendue depuis App.jsx via showCreer prop ── */}
     </div>
   );
 }
