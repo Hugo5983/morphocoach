@@ -253,7 +253,7 @@ function BiblioSheet({ onClose, onAdd, addedNoms }) {
     : (EX[muscle]||[]).map(e=>({...e,group:muscle}));
 
   if (guideEx) return (
-    <div style={{ position:"fixed", inset:0, background:BG, zIndex:10003, overflowY:"auto" }}>
+    <div style={{ position:"fixed", inset:0, background:BG, zIndex:10002, overflowY:"auto" }}>
       <div style={{ maxWidth:500, margin:"0 auto", padding:"20px 20px 100px" }}>
         <button onClick={() => setGuideEx(null)} style={{ background:"transparent", border:"none",
           color:BL, cursor:"pointer", fontSize:13, fontWeight:700, display:"flex",
@@ -315,13 +315,15 @@ function BiblioSheet({ onClose, onAdd, addedNoms }) {
   );
 
   return (
-    <>
-      <div onClick={onClose} style={{ position:"fixed", inset:0,
-        background:"rgba(3,5,10,.82)", backdropFilter:"blur(4px)", zIndex:10001 }}/>
-      <div style={{ position:"fixed", bottom:0, left:"50%", transform:"translateX(-50%)",
-        width:"100%", maxWidth:480, background:"#0A1020",
+    <div style={{ position:"fixed", inset:0, zIndex:10001 }}>
+      {/* Backdrop */}
+      <div onClick={onClose} style={{ position:"absolute", inset:0,
+        background:"rgba(3,5,10,.82)", backdropFilter:"blur(4px)" }}/>
+      {/* Sheet */}
+      <div style={{ position:"absolute", bottom:0, left:0, right:0,
+        background:"#0A1020",
         borderRadius:"28px 28px 0 0", borderTop:`1px solid ${BLBR}`,
-        zIndex:10002, height:"82%", display:"flex", flexDirection:"column",
+        height:"82%", display:"flex", flexDirection:"column",
         boxShadow:"0 -30px 60px -20px rgba(0,0,0,.8)" }}>
         <div style={{ width:40, height:5, borderRadius:3,
           background:"rgba(255,255,255,.2)", margin:"14px auto 6px" }}/>
@@ -389,8 +391,7 @@ function BiblioSheet({ onClose, onAdd, addedNoms }) {
           })}
         </div>
       </div>
-    </>,
-    document.body
+    </div>
   );
 }
 
@@ -519,6 +520,29 @@ export default function Creer(props) {
             flexShrink:0 }}>{step}/3</div>
         </div>
 
+        {/* ── Onglets jours — flex child, jamais dans le scroll ── */}
+        {step===2 && sortedDays.length>0 && (
+          <div style={{ flexShrink:0, background:BG,
+            padding:"10px 20px 10px", borderBottom:`1px solid ${BD}` }}>
+            <div style={{ display:"flex", gap:9, overflowX:"auto" }} className="mc-scroll">
+              {sortedDays.map(d => {
+                const empty = sess(d).ex.length===0;
+                return (
+                  <button key={d}
+                    className={`mc-dtab${ad===d?" on":""}${empty?" miss":""}`}
+                    onClick={() => setActiveDay(d)}>
+                    {d}
+                    <span style={{ position:"absolute", top:7, right:8, width:7, height:7,
+                      borderRadius:"50%",
+                      background:empty?"#f87171":GRN,
+                      boxShadow:empty?"0 0 0 3px rgba(248,113,113,.2)":"0 0 0 3px rgba(52,211,153,.2)" }}/>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
         {/* ── Contenu scrollable ── */}
         <div style={{ flex:1, overflowY:"auto", padding:"16px 20px 20px" }} className="mc-scroll">
 
@@ -607,33 +631,7 @@ export default function Creer(props) {
 
           {/* ══ STEP 2 — Séance par séance ══ */}
           {step===2 && ad && s && (
-            <>
-              {/* Onglets jours — STICKY : doit être direct child du scroll container,
-                  PAS dans mc-page (transform brise position:sticky) */}
-              <div style={{ position:"sticky", top:0, zIndex:9,
-                background:BG,
-                paddingBottom:12, marginBottom:8,
-                borderBottom:`1px solid ${BD}` }}>
-                <div style={{ display:"flex", gap:9, overflowX:"auto", paddingBottom:2 }}
-                  className="mc-scroll">
-                  {sortedDays.map(d => {
-                    const empty = sess(d).ex.length===0;
-                    return (
-                      <button key={d}
-                        className={`mc-dtab${ad===d?" on":""}${empty?" miss":""}`}
-                        onClick={() => setActiveDay(d)}>
-                        {d}
-                        <span style={{ position:"absolute", top:7, right:8, width:7, height:7,
-                          borderRadius:"50%",
-                          background:empty?"#f87171":GRN,
-                          boxShadow:empty?"0 0 0 3px rgba(248,113,113,.2)":"0 0 0 3px rgba(52,211,153,.2)" }}/>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              <div className="mc-page" key={"s2-"+ad}>
+            <div className="mc-page" key={"s2-"+ad}>
               <div style={{ fontSize:11, fontWeight:800, letterSpacing:"2.5px",
                 textTransform:"uppercase", color:BL, marginBottom:8 }}>Construis tes séances</div>
               <h1 style={{ fontFamily:SF, fontSize:36, fontWeight:700, letterSpacing:"-.8px",
@@ -709,7 +707,6 @@ export default function Creer(props) {
                 </div>
               )}
             </div>
-            </>
           )}
 
           {/* ══ STEP 3 — Récap ══ */}
