@@ -607,34 +607,50 @@ export default function Creer(props) {
           )}
 
           {/* ══ STEP 2 — Séance par séance ══ */}
-          {step===2 && sortedDays.length>0 && (
-            <div style={{ padding:"10px 20px 6px" }}>
-              <div style={{ display:"flex", gap:9, overflowX:"auto" }} className="mc-scroll">
-                {sortedDays.map(d => {
-                  const empty = sess(d).ex.length===0;
-                  return (
-                    <button key={d}
-                      className={`mc-dtab${ad===d?" on":""}${empty?" miss":""}`}
-                      onClick={() => setActiveDay(d)}>
-                      {d}
-                      <span style={{ position:"absolute", top:7, right:8, width:7, height:7,
-                        borderRadius:"50%",
-                        background:empty?"#f87171":GRN,
-                        boxShadow:empty?"0 0 0 3px rgba(248,113,113,.2)":"0 0 0 3px rgba(52,211,153,.2)" }}/>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          )}
           {step===2 && ad && s && (
             <div className="mc-page" key={"s2-"+ad}>
               <div style={{ fontSize:11, fontWeight:800, letterSpacing:"2.5px",
                 textTransform:"uppercase", color:BL, marginBottom:8 }}>Construis tes séances</div>
               <h1 style={{ fontFamily:SF, fontSize:36, fontWeight:700, letterSpacing:"-.8px",
-                lineHeight:1.05, color:TEXT, margin:"0 0 22px" }}>
+                lineHeight:1.05, color:TEXT, margin:"0 0 20px" }}>
                 Séance par <em style={{ fontStyle:"italic", color:BL }}>séance.</em>
               </h1>
+
+              {/* ── Onglets jours sous le titre ── */}
+              {sortedDays.length>0 && (
+                <div style={{ display:"flex", gap:9, overflowX:"auto", marginBottom:22 }}
+                  className="mc-scroll">
+                  {sortedDays.map(d => {
+                    const ds = sess(d);
+                    const itDay = INTENSITIES.find(x=>x.id===(ds.intensity||"leger"))||INTENSITIES[0];
+                    const on = d===ad;
+                    const empty = ds.ex.length===0;
+                    return (
+                      <button key={d}
+                        onClick={() => setActiveDay(d)}
+                        style={{
+                          flexShrink:0,
+                          display:"inline-flex", alignItems:"center", gap:7,
+                          padding:"10px 16px", borderRadius:13,
+                          border:`1.5px solid ${on?itDay.color:BD}`,
+                          background:on?`${itDay.color}18`:S1,
+                          color:on?itDay.color:MID,
+                          fontSize:14, fontWeight:700, cursor:"pointer",
+                          fontFamily:F, whiteSpace:"nowrap",
+                          boxShadow:on?`0 0 0 1px ${itDay.color}50,0 8px 18px -12px ${itDay.color}`:"none",
+                          transition:"all .2s cubic-bezier(.22,1,.36,1)"
+                        }}>
+                        {d}
+                        <span style={{
+                          width:7, height:7, borderRadius:"50%", flexShrink:0,
+                          background:empty?"#f87171":itDay.color,
+                          boxShadow:empty?"0 0 6px #f87171":`0 0 7px ${itDay.color}`
+                        }}/>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
 
               {/* Nom séance */}
               <input className="mc-field" style={{ marginBottom:22 }}
