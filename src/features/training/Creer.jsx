@@ -544,7 +544,7 @@ export default function Creer(props) {
         )}
 
         {/* ── Contenu scrollable ── */}
-        <div style={{ flex:1, overflowY:"auto", padding:"16px 20px 20px" }} className="mc-scroll">
+        <div style={{ flex:1, minHeight:0, overflowY:"auto", padding:"16px 20px 20px" }} className="mc-scroll">
 
           {/* ══ STEP 1 — Pose le cadre ══ */}
           {step===1 && (
