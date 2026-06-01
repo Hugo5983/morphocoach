@@ -18,6 +18,9 @@ import { PageContainer }   from "./components/layout/PageContainer.jsx";
 // Context
 import AppContext           from "./context/AppContext.jsx";
 
+// Sheet création programme
+import Creer from "./features/training/Creer.jsx";
+
 // Home — chargé immédiatement (première page visible)
 import Home from "./features/home/HomePage.jsx";
 
@@ -48,6 +51,7 @@ export default function App() {
   // ── Navigation & UI ────────────────────────────────────────────────────────
   const [tab,              setTab]              = useState("home");
   const [paywall,          setPaywall]          = useState(false);
+  const [showCreer,        setShowCreer]        = useState(false);
   const [paywallNutrition, setPaywallNutrition] = useState(false);
   const [showChrono,       setChrono]           = useState(false);
   const [chronoSec,        setChronoSec]        = useState(90);
@@ -178,6 +182,7 @@ export default function App() {
   };
 
   const programProps = {
+    onOpenCreer: () => { setShowCreer(true); setNewP({ nom:"", split:null, jours:[], seances:{} }); },
     prog, setProg, progs, setProgs, premium, setPaywall, checkedEx, setCheckedEx,
     seance, setSeance: openSeance, setChrono, setChronoSec,
     exDetails, setExDetails, exEdit, setExEdit,
@@ -276,6 +281,53 @@ export default function App() {
             }}
             onClose={() => setPaywallNutrition(false)}
           />
+        )}
+
+        {/* ── Sheet Créer un programme ── */}
+        {showCreer && (
+          <>
+            <div
+              onClick={() => setShowCreer(false)}
+              style={{
+                position:"fixed", inset:0,
+                background:"rgba(3,5,10,0.80)",
+                backdropFilter:"blur(8px)",
+                WebkitBackdropFilter:"blur(8px)",
+                zIndex:400,
+              }}
+            />
+            <div style={{
+              position:"fixed", bottom:0, left:"50%",
+              transform:"translateX(-50%)",
+              width:"100%", maxWidth:500,
+              height:"93vh",
+              background:"#07080f",
+              borderRadius:"24px 24px 0 0",
+              border:"1px solid rgba(255,255,255,0.08)",
+              borderBottom:"none",
+              zIndex:401,
+              display:"flex", flexDirection:"column",
+              boxShadow:"0 -40px 80px -20px rgba(0,0,0,0.90)",
+              overflowY:"auto",
+            }}>
+              <div style={{padding:"12px 0 4px", display:"flex", justifyContent:"center", flexShrink:0}}>
+                <div style={{width:36, height:4, borderRadius:99, background:"rgba(255,255,255,0.18)"}}/>
+              </div>
+              <Creer
+                {...programProps}
+                onCancel={() => setShowCreer(false)}
+                setProgView={(v) => {
+                  setShowCreer(false);
+                  if (v === "calendar") setTab("program");
+                }}
+                progs={progs}
+                setProgsAll={(next) => {
+                  setProgs(next);
+                  if (next.length > 0) setProg(next[next.length - 1]);
+                }}
+              />
+            </div>
+          </>
         )}
       </Screen>
     </AppContext.Provider>
