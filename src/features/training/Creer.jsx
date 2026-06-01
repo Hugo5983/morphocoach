@@ -608,9 +608,7 @@ export default function Creer(props) {
 
           {/* ══ STEP 2 — Séance par séance ══ */}
           {step===2 && sortedDays.length>0 && (
-            <div style={{ position:"sticky", top:0, zIndex:9,
-              background:BG, padding:"10px 20px",
-              borderBottom:`1px solid ${BD}`, marginBottom:4 }}>
+            <div style={{ padding:"10px 20px 6px" }}>
               <div style={{ display:"flex", gap:9, overflowX:"auto" }} className="mc-scroll">
                 {sortedDays.map(d => {
                   const empty = sess(d).ex.length===0;
