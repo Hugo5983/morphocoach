@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { createPortal } from "react-dom";
 import { C, FONT, SERIF } from "../../data/constants.js";
 import { EX } from "../../data/exercises.js";
 import { Tabs } from "../../components/ui/Tabs.jsx";
@@ -388,7 +389,8 @@ function BiblioSheet({ onClose, onAdd, addedNoms }) {
           })}
         </div>
       </div>
-    </>
+    </>,
+    document.body
   );
 }
 
@@ -487,19 +489,21 @@ export default function Creer(props) {
   const s  = ad ? sess(ad) : null;
   const activeSplit = SPLITS.find(x=>x.id===split);
 
-  return (
+  return createPortal(
     <>
       <style>{CSS}</style>
 
-      {/* ── PLEIN ÉCRAN — couvre tout y compris la bottom nav ── */}
-      <div style={{ position:"fixed", inset:0, zIndex:200,
-        background:BG, overflowY:"auto", fontFamily:F, color:TEXT }}
-        className="mc-scroll">
+      {/* ── PLEIN ÉCRAN · portal sur document.body · bypasse page-enter transform ── */}
+      <div style={{ position:"fixed", inset:0, zIndex:9999,
+        background:BG, display:"flex", flexDirection:"column",
+        fontFamily:F, color:TEXT }}>
 
-        {/* ── Top bar : retour + stepper ── */}
-        <div style={{ position:"sticky", top:0, zIndex:10,
-          background:`${BG}f0`, backdropFilter:"blur(16px)",
-          padding:"52px 20px 14px", display:"flex", alignItems:"center", gap:14 }}>
+        {/* ── Top bar ── */}
+        <div style={{ flexShrink:0,
+          background:BG, backdropFilter:"blur(16px)",
+          padding:"calc(env(safe-area-inset-top,20px) + 14px) 20px 14px",
+          display:"flex", alignItems:"center", gap:14,
+          borderBottom:`1px solid ${BD}` }}>
           <button onClick={() => step>1 ? goStep(step-1) : onCancel?.()}
             style={{ width:42, height:42, borderRadius:14, border:`1px solid ${BD}`,
               background:S1, display:"grid", placeItems:"center", color:TEXT,
@@ -515,8 +519,8 @@ export default function Creer(props) {
             flexShrink:0 }}>{step}/3</div>
         </div>
 
-        {/* ── Contenu ── */}
-        <div style={{ padding:"8px 20px 140px" }}>
+        {/* ── Contenu scrollable ── */}
+        <div style={{ flex:1, overflowY:"auto", padding:"16px 20px 20px" }} className="mc-scroll">
 
           {/* ══ STEP 1 — Pose le cadre ══ */}
           {step===1 && (
@@ -779,11 +783,10 @@ export default function Creer(props) {
           )}
         </div>
 
-        {/* ── Footer fixe ── */}
-        <div style={{ position:"fixed", bottom:0, left:"50%", transform:"translateX(-50%)",
-          width:"100%", maxWidth:480, padding:"16px 20px 36px",
-          background:`linear-gradient(to top,${BG} 55%,transparent)`,
-          display:"flex", gap:11, zIndex:210 }}>
+        {/* ── Footer ── */}
+        <div style={{ flexShrink:0, padding:"12px 20px calc(env(safe-area-inset-bottom,16px) + 16px)",
+          background:BG, borderTop:`1px solid ${BD}`,
+          display:"flex", gap:11 }}>
           {step===1 && (
             <>
               {onCancel && (
@@ -848,6 +851,7 @@ export default function Creer(props) {
             addedNoms={(s?.ex||[]).map(e=>e.nom)}/>
         )}
       </div>
-    </>
+    </>,
+    document.body
   );
 }
