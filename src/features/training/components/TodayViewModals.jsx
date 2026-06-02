@@ -377,101 +377,176 @@ export function CreateSeanceModal({ prog, setProg, setCalSess, push, onClose, C 
 
 // ─── MODAL MODIFIER RECORD ───────────────────────────────────────────────────
 export function EditRecordModal({ exData, prog, setProg, push, onClose }) {
-  const [entries, setEntries] = useState(
-    (exData.historique || []).map((h,i) => ({...h, idx:i}))
-  );
-  const [adding, setAdding] = useState(false);
-  const [newKg,  setNewKg]  = useState("");
-  const [newReps,setNewReps]= useState("");
+  const [entries,  setEntries]  = useState((exData.historique||[]).map((h,i)=>({...h,idx:i})));
+  const [editIdx,  setEditIdx]  = useState(null);  // null | "new" | number
+  const [editKg,   setEditKg]   = useState("");
+  const [editReps, setEditReps] = useState("");
+  const [focusField, setFocusField] = useState(null);
 
-  const calc1RMLocal = (kg, reps) => (!kg||!reps) ? 0 : Math.round(kg*(1+reps/30));
+  const rm1Edit = editKg && editReps ? calc1RM(parseFloat(editKg), parseInt(editReps)) : 0;
 
-  const saveAll = (updatedEntries) => {
+  const persistEntries = (next) => {
+    setEntries(next);
     const u = JSON.parse(JSON.stringify(prog));
-    // Chercher dans prog.jours
     let found = false;
     u.jours.forEach(jour => {
       (jour.exercices||[]).forEach(ex => {
-        if (ex.nom === exData.nom) {
-          ex.historique = updatedEntries.map(({idx,...h})=>h);
-          found = true;
-        }
+        if (ex.nom === exData.nom) { ex.historique = next.map(({idx,...h})=>h); found = true; }
       });
     });
-    // Sinon dans prog.records
-    if (!found && u.records?.[exData.nom]) {
-      u.records[exData.nom] = updatedEntries.map(({idx,...h})=>h);
-    }
+    if (!found && u.records?.[exData.nom]) u.records[exData.nom] = next.map(({idx,...h})=>h);
     setProg(u);
   };
 
-  const deleteEntry = (i) => {
-    const next = entries.filter((_,j)=>j!==i);
-    setEntries(next);
-    saveAll(next);
-    push("🗑️","Record supprimé","Entrée retirée de l'historique.");
+  const openEdit = (i) => {
+    const h = entries[i];
+    setEditKg(String(h.poids)); setEditReps(String(h.reps)); setEditIdx(i); setFocusField(null);
+  };
+  const openNew  = () => { setEditKg(""); setEditReps(""); setEditIdx("new"); setFocusField(null); };
+  const cancelEdit = () => { setEditIdx(null); setEditKg(""); setEditReps(""); setFocusField(null); };
+
+  const saveEdit = () => {
+    if (!editKg || !editReps) return;
+    const entry = { poids:parseFloat(editKg), reps:parseInt(editReps), date:new Date().toLocaleDateString("fr-FR") };
+    let next;
+    if (editIdx === "new") {
+      next = [...entries, {...entry, idx:entries.length}];
+      push("✅","Record ajouté",`${exData.nom} · ${editKg}kg × ${editReps} reps · 1RM≈${rm1Edit}kg`);
+    } else {
+      next = entries.map((h,i) => i===editIdx ? {...entry, idx:i} : h);
+      push("✏️","Record modifié",`${exData.nom} · ${editKg}kg × ${editReps} reps`);
+    }
+    persistEntries(next); cancelEdit();
   };
 
-  const addEntry = () => {
-    if (!newKg) return;
-    const entry = { poids:parseFloat(newKg), reps:parseInt(newReps)||1, date:new Date().toLocaleDateString("fr-FR") };
-    const next = [...entries, {...entry, idx:entries.length}];
-    setEntries(next);
-    saveAll(next);
-    setAdding(false); setNewKg(""); setNewReps("");
-    push("✅","Record mis à jour",`${exData.nom} · ${newKg}kg × ${newReps||1} reps`);
+  const deleteEntry = (i) => {
+    const next = entries.filter((_,j)=>j!==i).map((h,j)=>({...h,idx:j}));
+    persistEntries(next);
+    push("🗑️","Entrée supprimée","Retirée de l'historique.");
+    if (editIdx===i) cancelEdit();
   };
+
+  const tileStyle = (field) => ({
+    background: C.s1,
+    border: `1px solid ${focusField===field ? "rgba(59,130,246,0.5)" : C.bd}`,
+    borderRadius: 18, padding: "14px 14px 13px",
+    boxShadow: focusField===field ? "0 0 0 3px rgba(59,130,246,0.12)" : "none",
+  });
+  const btnStepper = (bg, color) => ({
+    flex:1, height:38, borderRadius:11, border:"none", cursor:"pointer",
+    fontSize:20, fontWeight:600, fontFamily:DISP_F, background:bg, color,
+  });
 
   return (
-    <div style={{minHeight:"100vh",background:C.bg}}>
-      <div style={{padding:"20px 16px",paddingBottom:80}}>
-        <button onClick={onClose} style={{background:"transparent",border:"none",color:"#4D8BFF",cursor:"pointer",fontSize:13,fontWeight:600,display:"flex",alignItems:"center",gap:4,marginBottom:16}}>← Retour</button>
-        <div style={{fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",fontSize:18,fontWeight:300,color:"#F5F1E8",marginBottom:4}}>{exData.nom}</div>
-        <div style={{fontSize:11,color:"rgba(245,241,232,0.50)",marginBottom:16}}>1RM actuel : <span style={{color:"#4D8BFF",fontWeight:700}}>{exData.rm1} kg</span></div>
+    <div style={{position:"fixed",inset:0,zIndex:300,background:"rgba(4,7,15,0.72)",backdropFilter:"blur(3px)",WebkitBackdropFilter:"blur(3px)",display:"flex",alignItems:"flex-end",justifyContent:"center"}}
+         onClick={e=>e.target===e.currentTarget&&onClose()}>
+      <div style={{width:"100%",maxWidth:480,background:"#0d1424",border:`1px solid ${C.bd}`,borderBottom:"none",borderRadius:"24px 24px 0 0",maxHeight:"88vh",overflowY:"auto",WebkitOverflowScrolling:"touch",boxShadow:"0 -22px 60px rgba(0,0,0,0.5)"}}>
+        <div style={{width:38,height:4,borderRadius:2,background:"rgba(255,255,255,0.14)",margin:"10px auto 0"}}/>
 
-        {/* Liste historique */}
-        {entries.length === 0 && <div style={{textAlign:"center",padding:"20px",color:"rgba(245,241,232,0.50)",fontSize:12}}>Aucune entrée enregistrée.</div>}
-        {entries.map((h,i) => {
-          const rm = calc1RMLocal(parseFloat(h.poids), parseInt(h.reps));
-          return (
-            <div key={i} style={{background:C.s1,border:"0.5px solid rgba(190,180,255,0.07)",borderRadius:10,padding:"11px 14px",marginBottom:6,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-              <div>
-                <div style={{fontSize:13,fontWeight:500,color:"#F5F1E8"}}>{h.poids}kg × {h.reps} reps</div>
-                <div style={{fontSize:10,color:"rgba(245,241,232,0.50)",marginTop:2}}>{h.date} · 1RM≈{rm}kg</div>
-              </div>
-              <button onClick={()=>deleteEntry(i)} style={{background:"rgba(248,113,113,0.08)",border:"0.5px solid rgba(248,113,113,0.25)",borderRadius:8,padding:"5px 10px",color:"#FF7A6B",cursor:"pointer",fontSize:11,fontFamily:"'Inter',sans-serif"}}>Supprimer</button>
-            </div>
-          );
-        })}
-
-        {/* Ajouter nouvelle entrée */}
-        {adding ? (
-          <div style={{background:C.s1,border:"0.5px solid #4D8BFF",borderRadius:12,padding:"14px",marginTop:8}}>
-            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:10}}>
-              <div>
-                <div style={{fontSize:9,color:"rgba(245,241,232,0.50)",fontWeight:600,marginBottom:5}}>CHARGE (kg)</div>
-                <input type="number" value={newKg} onChange={e=>setNewKg(e.target.value)} placeholder="ex: 100" autoFocus
-                  style={{width:"100%",padding:"8px",background:C.s2,border:"0.5px solid rgba(190,180,255,0.07)",borderRadius:8,fontSize:14,textAlign:"center",fontFamily:"'Inter',sans-serif",boxSizing:"border-box"}}/>
-              </div>
-              <div>
-                <div style={{fontSize:9,color:"rgba(245,241,232,0.50)",fontWeight:600,marginBottom:5}}>REPS</div>
-                <input type="number" value={newReps} onChange={e=>setNewReps(e.target.value)} placeholder="ex: 3"
-                  style={{width:"100%",padding:"8px",background:C.s2,border:"0.5px solid rgba(190,180,255,0.07)",borderRadius:8,fontSize:14,textAlign:"center",fontFamily:"'Inter',sans-serif",boxSizing:"border-box"}}/>
-              </div>
-            </div>
-            {newKg && newReps && (
-              <div style={{textAlign:"center",fontSize:11,color:"#4D8BFF",marginBottom:8,fontWeight:600}}>1RM estimé : {calc1RMLocal(parseFloat(newKg),parseInt(newReps))} kg</div>
-            )}
-            <div style={{display:"flex",gap:8}}>
-              <button onClick={()=>{setAdding(false);setNewKg("");setNewReps("");}} style={{flex:1,padding:"10px",background:C.s2,border:"none",borderRadius:9,cursor:"pointer",fontSize:12,color:"rgba(245,241,232,0.50)",fontFamily:"'Inter',sans-serif"}}>Annuler</button>
-              <button onClick={addEntry} disabled={!newKg} style={{flex:2,padding:"10px",background:newKg?"#4D8BFF":"rgba(190,180,255,0.07)",border:"none",borderRadius:9,cursor:newKg?"pointer":"default",color:"#141A2E",fontSize:12,fontWeight:600,fontFamily:"'Outfit','DM Sans',system-ui,sans-serif"}}>+ Ajouter</button>
-            </div>
+        {/* Header */}
+        <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",padding:"12px 18px 10px"}}>
+          <div>
+            <div style={{fontSize:9,fontWeight:700,letterSpacing:"1.4px",textTransform:"uppercase",color:"rgba(242,244,247,0.35)",marginBottom:4,fontFamily:DISP_F}}>Modifier le record</div>
+            <div style={{fontFamily:SERIF_F,fontSize:22,letterSpacing:-0.5,lineHeight:1}}>{exData.nom}</div>
+            <div style={{fontSize:11,color:"rgba(242,244,247,0.45)",marginTop:4,fontFamily:DISP_F}}>1RM actuel : <span style={{color:"#60A5FA",fontWeight:700}}>{exData.rm1} kg</span></div>
           </div>
-        ) : (
-          <button onClick={()=>setAdding(true)} style={{width:"100%",marginTop:8,padding:"11px",background:"transparent",border:"1px dashed #4D8BFF",borderRadius:10,color:"#4D8BFF",cursor:"pointer",fontSize:12,fontWeight:600,fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",display:"flex",alignItems:"center",justifyContent:"center",gap:6}}>
-            + Ajouter un set
-          </button>
-        )}
+          <button onClick={onClose} style={{width:34,height:34,borderRadius:10,background:C.s2,border:`1px solid ${C.bd}`,color:"rgba(242,244,247,0.60)",cursor:"pointer",fontSize:18,flexShrink:0}}>×</button>
+        </div>
+
+        <div style={{padding:"4px 18px 26px"}}>
+
+          {/* Formulaire édition / ajout */}
+          {editIdx !== null ? (
+            <div>
+              <div style={{fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:"rgba(242,244,247,0.35)",margin:"4px 0 12px",fontFamily:DISP_F}}>
+                {editIdx==="new" ? "Nouvelle entrée" : `Modifier l'entrée ${editIdx+1}`}
+              </div>
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:11,marginBottom:14}}>
+                <div style={tileStyle("kg")}>
+                  <div style={{fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:"rgba(242,244,247,0.35)",marginBottom:9,fontFamily:DISP_F}}>Charge</div>
+                  <div style={{display:"flex",alignItems:"baseline",justifyContent:"center",gap:4,height:46}}>
+                    <input type="number" inputMode="decimal" value={editKg} onChange={e=>setEditKg(e.target.value)}
+                      onFocus={()=>setFocusField("kg")} onBlur={()=>setFocusField(null)} placeholder="80"
+                      style={{width:"100%",background:"none",border:"none",color:"#F2F4F7",fontFamily:DISP_F,fontSize:42,fontWeight:800,letterSpacing:-2,textAlign:"center",outline:"none",padding:0,minWidth:0}}/>
+                    <span style={{fontSize:14,color:"rgba(242,244,247,0.35)",fontWeight:600}}>kg</span>
+                  </div>
+                  <div style={{display:"flex",gap:8,marginTop:11}}>
+                    <button onClick={()=>setEditKg(k=>String(Math.max(0,(parseFloat(k)||0)-2.5)))} style={btnStepper(C.s2,"rgba(242,244,247,0.60)")}>−</button>
+                    <button onClick={()=>setEditKg(k=>String((parseFloat(k)||0)+2.5))} style={btnStepper("rgba(59,130,246,0.16)","#60A5FA")}>+</button>
+                  </div>
+                </div>
+                <div style={tileStyle("reps")}>
+                  <div style={{fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:"rgba(242,244,247,0.35)",marginBottom:9,fontFamily:DISP_F}}>Répétitions</div>
+                  <div style={{display:"flex",alignItems:"baseline",justifyContent:"center",gap:4,height:46}}>
+                    <input type="number" inputMode="numeric" value={editReps} onChange={e=>setEditReps(e.target.value)}
+                      onFocus={()=>setFocusField("reps")} onBlur={()=>setFocusField(null)} placeholder="5"
+                      style={{width:"100%",background:"none",border:"none",color:"#F2F4F7",fontFamily:DISP_F,fontSize:42,fontWeight:800,letterSpacing:-2,textAlign:"center",outline:"none",padding:0,minWidth:0}}/>
+                  </div>
+                  <div style={{display:"flex",gap:8,marginTop:11}}>
+                    <button onClick={()=>setEditReps(r=>String(Math.max(1,(parseInt(r)||0)-1)))} style={btnStepper(C.s2,"rgba(242,244,247,0.60)")}>−</button>
+                    <button onClick={()=>setEditReps(r=>String((parseInt(r)||0)+1))} style={btnStepper("rgba(59,130,246,0.16)","#60A5FA")}>+</button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Reps rapides */}
+              <div style={{display:"flex",gap:6,marginBottom:14}}>
+                {[1,3,5,8,10,12].map(r=>{const on=editReps===String(r);return(
+                  <button key={r} onClick={()=>setEditReps(String(r))} style={{flex:1,padding:"8px 0",borderRadius:10,background:on?"rgba(59,130,246,0.14)":C.s1,border:`1px solid ${on?"#3B82F6":C.bd}`,color:on?"#60A5FA":"rgba(242,244,247,0.60)",fontFamily:DISP_F,fontSize:13,fontWeight:600,cursor:"pointer"}}>{r}</button>
+                );})}
+              </div>
+
+              {/* 1RM estimé */}
+              <div style={{borderRadius:16,padding:"14px 16px",marginBottom:14,background:"linear-gradient(135deg,rgba(59,130,246,0.14),rgba(37,99,235,0.05))",border:"1px solid rgba(59,130,246,0.22)",display:"flex",alignItems:"center",justifyContent:"space-between",opacity:rm1Edit>0?1:0.45,transition:"opacity .25s"}}>
+                <div>
+                  <div style={{fontSize:9,fontWeight:700,letterSpacing:"1.2px",textTransform:"uppercase",color:"#60A5FA",marginBottom:4,fontFamily:DISP_F}}>1RM estimé</div>
+                  <div style={{fontSize:11,color:"rgba(242,244,247,0.55)",fontFamily:DISP_F}}>{rm1Edit>0?(parseInt(editReps)===1?"Ta charge max sur 1 rep":"Estimation Epley"):"Saisis charge et reps"}</div>
+                </div>
+                <div style={{fontFamily:SERIF_F,fontSize:36,color:"#fff",lineHeight:1}}>
+                  {rm1Edit>0?rm1Edit:"—"}{rm1Edit>0&&<span style={{fontSize:13,color:"#60A5FA",fontFamily:DISP_F,fontWeight:700,marginLeft:3}}>kg</span>}
+                </div>
+              </div>
+
+              <div style={{display:"flex",gap:9}}>
+                <button onClick={cancelEdit} style={{flex:1,padding:"13px",borderRadius:14,border:`1px solid ${C.bd}`,background:"transparent",color:"rgba(242,244,247,0.45)",fontFamily:DISP_F,fontSize:13,fontWeight:600,cursor:"pointer"}}>Annuler</button>
+                <button onClick={saveEdit} disabled={!editKg||!editReps} style={{flex:2,padding:"13px",borderRadius:14,border:"none",fontFamily:DISP_F,fontSize:14,fontWeight:700,cursor:(!editKg||!editReps)?"default":"pointer",background:(!editKg||!editReps)?C.s2:"linear-gradient(180deg,#3B82F6,#2563EB)",color:(!editKg||!editReps)?"rgba(242,244,247,0.30)":"#fff",boxShadow:(!editKg||!editReps)?"none":"0 8px 20px rgba(59,130,246,0.32)"}}>
+                  {editIdx==="new" ? "Ajouter l'entrée" : "Sauvegarder"}
+                </button>
+              </div>
+            </div>
+
+          ) : (
+            /* Liste des entrées */
+            <div>
+              <div style={{fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:"rgba(242,244,247,0.35)",margin:"4px 0 10px",fontFamily:DISP_F}}>Historique ({entries.length})</div>
+
+              {entries.length===0 && (
+                <div style={{textAlign:"center",padding:"18px 0",color:"rgba(242,244,247,0.35)",fontSize:12,fontFamily:DISP_F}}>Aucune entrée — ajoute ton premier record.</div>
+              )}
+
+              {entries.map((h,i)=>{
+                const rm = calc1RM(parseFloat(h.poids), parseInt(h.reps));
+                const isRecord = rm===exData.rm1;
+                return (
+                  <div key={i} style={{background:C.s1,border:`1px solid ${isRecord?"rgba(96,165,250,0.3)":C.bd}`,borderRadius:14,padding:"13px 14px",marginBottom:8,display:"flex",alignItems:"center",gap:10}}>
+                    <div style={{flex:1,cursor:"pointer",minWidth:0}} onClick={()=>openEdit(i)}>
+                      <div style={{display:"flex",alignItems:"center",gap:7,marginBottom:3}}>
+                        {isRecord&&<div style={{fontSize:9,fontWeight:700,color:"#FFAB5D",background:"rgba(255,171,93,0.12)",border:"1px solid rgba(255,171,93,0.3)",borderRadius:6,padding:"2px 6px",fontFamily:DISP_F}}>RECORD</div>}
+                        <div style={{fontSize:14,fontWeight:700,color:"#F2F4F7",fontFamily:DISP_F}}>{h.poids} kg × {h.reps} rep{h.reps>1?"s":""}</div>
+                      </div>
+                      <div style={{fontSize:10,color:"rgba(242,244,247,0.40)",fontFamily:DISP_F}}>{h.date} · 1RM : <span style={{color:"#60A5FA",fontWeight:600}}>{rm} kg</span> · <span style={{color:"#60A5FA"}}>Appuie pour modifier</span></div>
+                    </div>
+                    <button onClick={()=>deleteEntry(i)} style={{background:"rgba(248,113,113,0.08)",border:"1px solid rgba(248,113,113,0.2)",borderRadius:10,padding:"7px 11px",color:"#F87171",cursor:"pointer",fontSize:11,fontFamily:DISP_F,fontWeight:600,flexShrink:0}}>Sup.</button>
+                  </div>
+                );
+              })}
+
+              <button onClick={openNew} style={{width:"100%",marginTop:4,padding:"15px",borderRadius:16,border:"none",fontFamily:DISP_F,fontSize:14,fontWeight:700,cursor:"pointer",background:"linear-gradient(180deg,#3B82F6,#2563EB)",color:"#fff",boxShadow:"0 8px 24px rgba(59,130,246,0.30)"}}>
+                + Nouvelle entrée
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
