@@ -30,8 +30,12 @@ export function findExInDB(nom) {
  * @param {number} reps
  * @returns {number}
  */
-export const calc1RM = (kg, reps) =>
-  (!kg || !reps || reps < 1) ? 0 : Math.round(kg * (1 + reps / 30));
+export const calc1RM = (kg, reps) => {
+  const w = parseFloat(kg), r = parseInt(reps);
+  if (!w || w <= 0 || !r || r < 1) return 0;
+  if (r === 1) return Math.round(w);          // 1 rep = c'est déjà le max, pas d'estimation
+  return Math.round(w * (1 + r / 30));        // Epley (fiable pour 2+ reps)
+};
 
 /**
  * Charge cible pour un nombre de reps donné, basé sur le 1RM.
@@ -39,8 +43,12 @@ export const calc1RM = (kg, reps) =>
  * @param {number} reps
  * @returns {number}
  */
-export const calcKgFor = (rm1, reps) =>
-  Math.max(0, Math.round(rm1 * (1 - reps / 30) * 2) / 2);
+export const calcKgFor = (rm1, reps) => {
+  const r = parseInt(reps);
+  if (!rm1 || rm1 <= 0 || !r || r < 1) return 0;
+  if (r === 1) return Math.round(rm1 * 2) / 2;                       // 1 rep = le 1RM lui-même
+  return Math.max(0, Math.round((rm1 / (1 + r / 30)) * 2) / 2);      // inverse d'Epley
+};
 
 /**
  * Couleur par catégorie d'exercice.
