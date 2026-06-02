@@ -116,7 +116,7 @@ export default function TodayView(props) {
         exDetails={exDetails} setExDetails={setExDetails}
         exEdit={exEdit} setExEdit={setExEdit}
         EX={EX} C={C} INT={INT}
-        setChrono={setChrono} push={push}
+        push={push}
       />
     );
   }
@@ -147,34 +147,34 @@ export default function TodayView(props) {
           <>
             {/* Hero card */}
             <div style={{
-              background: `linear-gradient(145deg, ${intData.c}, ${intData.c}cc)`,
-              borderRadius: 20, padding: "18px 16px", marginBottom: 10,
+              background: "linear-gradient(150deg, #3B82F6 0%, #2563EB 60%, #1D4FD7 100%)",
+              borderRadius: 22, padding: "20px 18px", marginBottom: 12,
               position: "relative", overflow: "hidden",
-              boxShadow: `0 16px 40px ${intData.c}40`,
+              boxShadow: "0 18px 40px rgba(37,99,235,0.40)",
             }}>
-              <div style={{ position: "absolute", top: -40, right: -40, width: 130, height: 130, borderRadius: "50%", background: "rgba(255,255,255,0.10)", pointerEvents: "none" }}/>
-              <div style={{ position: "absolute", inset: 0, background: "radial-gradient(140% 60% at 20% 10%, rgba(255,255,255,0.30), transparent 55%)", pointerEvents: "none" }}/>
+              <div style={{ position: "absolute", top: -50, right: -40, width: 170, height: 170, borderRadius: "50%", background: "radial-gradient(circle, rgba(255,255,255,0.22), transparent 65%)", pointerEvents: "none" }}/>
 
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12, position: "relative" }}>
-                <div style={{ fontSize: 8.5, fontWeight: 700, letterSpacing: "1.5px", color: "rgba(0,0,0,0.55)", background: "rgba(0,0,0,0.15)", padding: "4px 10px", borderRadius: 99, fontFamily: DISP }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 34, position: "relative" }}>
+                <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: "1.4px", color: "rgba(255,255,255,0.92)", background: "rgba(0,0,0,0.18)", padding: "6px 12px", borderRadius: 99, fontFamily: DISP }}>
                   SÉANCE DU JOUR
                 </div>
                 <div style={{ textAlign: "right" }}>
-                  <div style={{ fontFamily: SERIF_F, fontSize: 26, color: "rgba(0,0,0,0.75)", lineHeight: 1 }}>{pct}%</div>
-                  <div style={{ fontSize: 9, color: "rgba(0,0,0,0.50)", fontFamily: DISP }}>{done}/{total}</div>
+                  <div style={{ fontFamily: SERIF_F, fontSize: 30, color: "#fff", lineHeight: 1 }}>{pct}%</div>
+                  <div style={{ fontSize: 11, color: "rgba(255,255,255,0.70)", fontFamily: DISP, marginTop: 2 }}>{done}/{total}</div>
                 </div>
               </div>
 
               <div style={{ position: "relative" }}>
-                <div style={{ fontFamily: SERIF_F, fontSize: 32, color: "rgba(0,0,0,0.80)", lineHeight: 1, marginBottom: 5, letterSpacing: -1 }}>
+                <div style={{ fontFamily: SERIF_F, fontSize: 31, color: "#fff", lineHeight: 1, marginBottom: 6, letterSpacing: -1 }}>
                   {todaySeance.nom}
                 </div>
-                <div style={{ fontSize: 12, color: "rgba(0,0,0,0.60)", fontFamily: DISP, marginBottom: 14 }}>
+                <div style={{ fontSize: 12.5, color: "rgba(255,255,255,0.80)", fontFamily: DISP, marginBottom: 15, display: "flex", alignItems: "center", gap: 7 }}>
+                  <span style={{ width: 7, height: 7, borderRadius: "50%", background: intData.c, flexShrink: 0 }}/>
                   {intData.l} · {todaySeance.duree || "60 min"} · {total} exercice{total !== 1 ? "s" : ""}
                 </div>
                 {/* Barre progression */}
-                <div style={{ height: 3, background: "rgba(0,0,0,0.15)", borderRadius: 99, overflow: "hidden" }}>
-                  <div style={{ height: "100%", width: `${pct}%`, background: "rgba(0,0,0,0.55)", borderRadius: 99, transition: "width .5s ease" }}/>
+                <div style={{ height: 4, background: "rgba(255,255,255,0.25)", borderRadius: 99, overflow: "hidden" }}>
+                  <div style={{ height: "100%", width: `${pct}%`, background: "#fff", borderRadius: 99, transition: "width .5s ease" }}/>
                 </div>
               </div>
             </div>
@@ -237,61 +237,54 @@ export default function TodayView(props) {
           </>
         );
       })() : (
-        /* Jour de repos — design motivant */
+        /* Jour de repos — design récupération */
         <div style={{
-          background: "linear-gradient(145deg,#0f1e38,#111827)",
-          border: "1px solid rgba(99,102,241,0.20)",
+          background: "linear-gradient(155deg,#0f1e38,#0d1424)",
+          border: "1px solid rgba(59,130,246,0.18)",
           borderRadius: 22, padding: "22px 20px 18px",
           marginBottom: 14, position: "relative", overflow: "hidden",
         }}>
-          {/* Halos */}
-          <div style={{ position:"absolute",top:-50,right:-50,width:160,height:160,borderRadius:"50%",background:"radial-gradient(circle,rgba(99,102,241,0.15),transparent 70%)",pointerEvents:"none" }}/>
-          <div style={{ position:"absolute",bottom:-40,left:-40,width:120,height:120,borderRadius:"50%",background:"radial-gradient(circle,rgba(52,211,153,0.08),transparent 70%)",pointerEvents:"none" }}/>
+          <div style={{ position:"absolute",top:-50,right:-50,width:170,height:170,borderRadius:"50%",background:"radial-gradient(circle,rgba(52,211,153,0.14),transparent 68%)",pointerEvents:"none" }}/>
 
-          {/* Badge */}
-          <div style={{ display:"inline-flex",alignItems:"center",gap:7,padding:"5px 12px",borderRadius:99,background:"rgba(99,102,241,0.12)",border:"1px solid rgba(99,102,241,0.25)",marginBottom:16 }}>
-            <span style={{ fontSize:14 }}>🌙</span>
-            <span style={{ fontSize:11,fontWeight:700,color:"#a5b4fc",letterSpacing:"0.5px",fontFamily:DISP }}>JOUR DE REPOS</span>
+          {/* Badge + date */}
+          <div style={{ display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:16 }}>
+            <div style={{ display:"inline-flex",alignItems:"center",gap:7,padding:"6px 13px",borderRadius:99,background:"rgba(52,211,153,0.10)",border:"1px solid rgba(52,211,153,0.30)" }}>
+              <span style={{ fontSize:13 }}>🌿</span>
+              <span style={{ fontSize:10,fontWeight:700,color:"#34D399",letterSpacing:"0.8px",fontFamily:DISP }}>JOUR DE RÉCUPÉRATION</span>
+            </div>
+            <div style={{ fontSize:11,color:"rgba(242,244,247,0.35)",fontWeight:600,fontFamily:DISP }}>
+              {today.toLocaleDateString("fr-FR",{weekday:"short",day:"numeric",month:"short"})}
+            </div>
           </div>
 
           {/* Titre */}
-          <div style={{ fontFamily:SERIF_F,fontSize:22,color:"#F2F4F7",lineHeight:1.2,marginBottom:6 }}>
-            Le repos, c'est<br/><span style={{ color:"#a5b4fc",fontStyle:"italic" }}>aussi du training.</span>
+          <div style={{ fontFamily:SERIF_F,fontSize:30,color:"#F2F4F7",lineHeight:1.08,letterSpacing:-1,marginBottom:10 }}>
+            Aujourd'hui, on<br/><span style={{ color:"#60A5FA",fontStyle:"italic" }}>récupère.</span>
           </div>
-          <div style={{ fontSize:12,color:"rgba(242,244,247,0.42)",lineHeight:1.6,fontFamily:DISP,marginBottom:18 }}>
-            Ton corps reconstruit le muscle pendant la récupération. Profites-en.
-          </div>
-
-          {/* Tip carousel */}
-          <div style={{ background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:14,padding:"14px 14px 12px",marginBottom:14 }}>
-            <div style={{ fontSize:9,fontWeight:700,letterSpacing:"1.5px",color:"rgba(242,244,247,0.28)",textTransform:"uppercase",fontFamily:DISP,marginBottom:10 }}>CONSEIL DU JOUR</div>
-            <div style={{ display:"flex",alignItems:"flex-start",gap:12 }}>
-              <div style={{ width:38,height:38,borderRadius:11,background:"rgba(255,255,255,0.05)",border:"1px solid rgba(255,255,255,0.08)",display:"grid",placeItems:"center",flexShrink:0,fontSize:18 }}>
-                {REST_TIPS[tipIdx].icon}
-              </div>
-              <div style={{ flex:1 }}>
-                <div style={{ fontSize:13,fontWeight:700,color:"#F2F4F7",fontFamily:DISP,marginBottom:3 }}>{REST_TIPS[tipIdx].title}</div>
-                <div style={{ fontSize:11,color:"rgba(242,244,247,0.45)",lineHeight:1.55,fontFamily:DISP }}>{REST_TIPS[tipIdx].desc}</div>
-              </div>
-            </div>
-            {/* Dots */}
-            <div style={{ display:"flex",justifyContent:"center",gap:5,marginTop:12 }}>
-              {REST_TIPS.map((_,i) => (
-                <div key={i} onClick={() => setTipIdx(i)} style={{
-                  width:i===tipIdx?18:5,height:5,borderRadius:99,cursor:"pointer",
-                  background:i===tipIdx?"#818cf8":"rgba(255,255,255,0.15)",
-                  transition:"width .2s ease",
-                }}/>
-              ))}
-            </div>
+          <div style={{ fontSize:12.5,color:"rgba(242,244,247,0.55)",lineHeight:1.6,fontFamily:DISP,marginBottom:18 }}>
+            La récup fait partie du programme. Voici 3 gestes qui comptent vraiment.
           </div>
 
-          {/* CTA */}
+          {/* Gestes récup */}
+          {[
+            { ic:"💧", bg:"rgba(52,211,153,0.12)",  bd:"rgba(52,211,153,0.25)",  t:"Hydratation · 2,5 L", s:"Clé de la récupération musculaire" },
+            { ic:"😴", bg:"rgba(129,140,248,0.14)", bd:"rgba(129,140,248,0.28)", t:"Sommeil · cible 8 h",   s:"80% des gains se font la nuit" },
+            { ic:"🧘", bg:"rgba(59,130,246,0.14)",  bd:"rgba(59,130,246,0.28)",  t:"Mobilité · 10 min",     s:"Hanches & thoracique" },
+          ].map((g,i) => (
+            <div key={i} style={{ display:"flex",alignItems:"center",gap:13,padding:"11px 0",borderTop:"1px solid rgba(255,255,255,0.06)" }}>
+              <div style={{ width:42,height:42,borderRadius:13,background:g.bg,border:`1px solid ${g.bd}`,display:"grid",placeItems:"center",flexShrink:0,fontSize:20 }}>{g.ic}</div>
+              <div style={{ flex:1,minWidth:0 }}>
+                <div style={{ fontSize:14.5,fontWeight:700,color:"#F2F4F7",fontFamily:DISP,letterSpacing:-0.2 }}>{g.t}</div>
+                <div style={{ fontSize:11.5,color:"rgba(242,244,247,0.40)",fontFamily:DISP,marginTop:1 }}>{g.s}</div>
+              </div>
+            </div>
+          ))}
+
+          {/* CTA — créer une séance malgré tout */}
           <button onClick={() => setShowCreateSeance(true)} style={{
-            width:"100%",padding:"13px",borderRadius:14,
-            background:"rgba(99,102,241,0.10)",border:"1px dashed rgba(99,102,241,0.35)",
-            color:"#a5b4fc",cursor:"pointer",fontSize:13,fontWeight:700,fontFamily:DISP,
-            display:"flex",alignItems:"center",justifyContent:"center",gap:8,
+            width:"100%",marginTop:16,padding:"13px",borderRadius:14,
+            background:"rgba(59,130,246,0.10)",border:"1px solid rgba(59,130,246,0.25)",
+            color:"#60A5FA",cursor:"pointer",fontSize:13,fontWeight:700,fontFamily:DISP,
           }}>
             + Créer une séance aujourd'hui
           </button>
@@ -299,75 +292,70 @@ export default function TodayView(props) {
       )}
 
       {/* ── Records ─────────────────────────────────────────────── */}
-      {prog && (
+      {prog && (() => {
+        const REC_PALETTE = ["#60A5FA","#34D399","#FBBF24","#F87171","#B69DFF","#3B82F6"];
+        const trendOf = (hist) => {
+          if (!hist || hist.length < 2) return null;
+          const rms = hist.map(h => calc1RM(parseFloat(h.poids), parseInt(h.reps)));
+          const last = rms[rms.length - 1];
+          const prevBest = Math.max(...rms.slice(0, -1));
+          const d = Math.round(last - prevBest);
+          return d > 0 ? d : null;
+        };
+        const recBtn = {
+          width:"100%", padding:"15px", borderRadius:16,
+          background:"linear-gradient(180deg,#3B82F6,#2563EB)", border:"none",
+          color:"#fff", fontFamily:DISP, fontSize:14, fontWeight:700, letterSpacing:-0.2,
+          cursor:"pointer", boxShadow:"0 8px 24px rgba(59,130,246,0.32)",
+        };
+        return (
         <div style={{ marginBottom: 20 }}>
           {/* Header */}
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-            <div style={{ fontFamily: DISP, fontSize: 17, fontWeight: 700, color: "#F2F4F7", letterSpacing: -0.4 }}>Records & Objectifs</div>
-            <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
-              <div style={{ width: 6, height: 6, borderRadius: "50%", background: currentTarget.color }}/>
-              <div style={{ fontSize: 10, color: currentTarget.color, fontWeight: 700, fontFamily: DISP }}>{currentTarget.l} · {currentTarget.reps} reps</div>
-            </div>
+          <div style={{ marginBottom: 13 }}>
+            <div style={{ fontFamily: SERIF_F, fontSize: 21, fontWeight: 400, color: "#F2F4F7", letterSpacing: -0.4 }}>Records & Objectifs</div>
           </div>
 
           {rmData.length === 0 ? (
             <div style={{ background: C.s1, border: `1px solid ${C.bd}`, borderRadius: 18, overflow:"hidden" }}>
               {/* Empty state avec CTA visible */}
-              <div style={{ padding:"20px 18px 16px", textAlign:"center" }}>
-                <div style={{ fontSize:28,marginBottom:8 }}>📊</div>
-                <div style={{ fontFamily:DISP,fontSize:14,fontWeight:700,color:"#F2F4F7",marginBottom:6 }}>Pas encore de données</div>
-                <div style={{ fontSize:11,color:"rgba(242,244,247,0.45)",lineHeight:1.6,marginBottom:16,fontFamily:DISP }}>
-                  Enregistre tes charges pendant les séances pour voir tes records et les charges cibles pour ton objectif{" "}
-                  <span style={{ color:currentTarget.color,fontWeight:700 }}>{currentTarget.l}</span>.
+              <div style={{ padding:"22px 18px 18px", textAlign:"center" }}>
+                <div style={{ fontSize:28,marginBottom:9 }}>📊</div>
+                <div style={{ fontFamily:DISP,fontSize:15,fontWeight:700,color:"#F2F4F7",marginBottom:6 }}>Pas encore de données</div>
+                <div style={{ fontSize:11.5,color:"rgba(242,244,247,0.45)",lineHeight:1.6,marginBottom:16,fontFamily:DISP }}>
+                  Enregistre tes charges pendant les séances pour voir tes records et tes 1RM estimés.
                 </div>
-                <button onClick={() => setShowManualRM(true)} style={{
-                  width:"100%",padding:"12px 16px",
-                  background:"rgba(59,130,246,0.07)",border:"1px dashed rgba(59,130,246,0.30)",
-                  borderRadius:12,color:"#4D8BFF",cursor:"pointer",
-                  fontSize:13,fontWeight:700,fontFamily:DISP,
-                  display:"flex",alignItems:"center",justifyContent:"center",gap:8,
-                }}>
-                  🏆 Saisir un record manuellement
+                <button onClick={() => setShowManualRM(true)} style={recBtn}>
+                  Saisir un record
                 </button>
               </div>
             </div>
           ) : (
             <div>
-              <div style={{ background:C.s1,border:`1px solid ${C.bd}`,borderRadius:18,overflow:"hidden",marginBottom:8 }}>
-                {rmData.map((ex, i) => (
-                  <div key={i} style={{ padding:"14px 16px",borderBottom:i<rmData.length-1?`1px solid ${C.bd}`:"none" }}>
-                    <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:8 }}>
-                      <div style={{ flex:1,minWidth:0 }}>
-                        <div style={{ fontSize:13,fontWeight:700,color:"#F2F4F7",fontFamily:DISP,marginBottom:2 }}>{ex.nom}</div>
-                        <div style={{ fontSize:10,color:"rgba(242,244,247,0.35)",fontFamily:DISP }}>
-                          Cible : <span style={{ color:ex.target?.color||currentTarget.color,fontWeight:700 }}>{ex.cible}kg</span> · {ex.target?.reps||currentTarget.reps} reps
-                        </div>
-                      </div>
-                      <div style={{ textAlign:"right",flexShrink:0,cursor:"pointer" }} onClick={() => setEditRecord(ex)}>
-                        <div style={{ fontSize:20,fontWeight:800,color:ex.target?.color||currentTarget.color,fontFamily:DISP,lineHeight:1 }}>{ex.rm1}</div>
-                        <div style={{ fontSize:9,color:"rgba(242,244,247,0.28)",fontFamily:DISP }}>kg 1RM</div>
-                      </div>
+              <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:9, marginBottom:10 }}>
+                {rmData.map((ex, i) => {
+                  const col = REC_PALETTE[i % REC_PALETTE.length];
+                  const tr  = trendOf(ex.historique);
+                  return (
+                    <div key={i} onClick={() => setEditRecord(ex)} style={{
+                      background:C.s1, border:`1px solid ${C.bd}`, borderRadius:16,
+                      padding:"16px 8px 13px", textAlign:"center", cursor:"pointer", overflow:"hidden",
+                    }}>
+                      <div style={{ fontFamily:DISP, fontSize:26, fontWeight:800, color:col, letterSpacing:-1, lineHeight:1, ...NUM }}>{ex.rm1}</div>
+                      <div style={{ fontSize:9.5, color:"rgba(242,244,247,0.35)", fontWeight:600, marginTop:2, fontFamily:DISP }}>kg · 1RM</div>
+                      <div style={{ fontSize:11, color:"rgba(242,244,247,0.60)", fontWeight:600, marginTop:9, fontFamily:DISP, lineHeight:1.2, overflow:"hidden", textOverflow:"ellipsis", display:"-webkit-box", WebkitLineClamp:2, WebkitBoxOrient:"vertical" }}>{ex.nom}</div>
+                      {tr && <div style={{ fontSize:9.5, color:"#34D399", fontWeight:700, marginTop:3, fontFamily:DISP }}>▲ +{tr}</div>}
                     </div>
-                    {/* Barre progression */}
-                    <div style={{ height:4,background:"rgba(255,255,255,0.06)",borderRadius:99,overflow:"hidden" }}>
-                      <div style={{ height:"100%",width:`${Math.min(100,Math.round(ex.rm1/300*100))}%`,background:`linear-gradient(90deg,${(ex.target?.color||currentTarget.color)}99,${ex.target?.color||currentTarget.color})`,borderRadius:99,transition:"width .8s ease" }}/>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
-              <button onClick={() => setShowManualRM(true)} style={{
-                width:"100%",padding:"11px",
-                background:"transparent",border:`0.5px dashed ${C.bd}`,
-                borderRadius:12,color:"rgba(242,244,247,0.35)",cursor:"pointer",
-                fontSize:12,fontFamily:DISP,
-                display:"flex",alignItems:"center",justifyContent:"center",gap:6,
-              }}>
-                🏆 Ajouter un record
+              <button onClick={() => setShowManualRM(true)} style={recBtn}>
+                Saisir un record
               </button>
             </div>
           )}
         </div>
-      )}
+        );
+      })()}
 
       {/* Pas de programme */}
       {!prog && (
