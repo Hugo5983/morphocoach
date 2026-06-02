@@ -55,12 +55,16 @@ export function ManualRMModal({ prog, setProg, onClose, push, C }) {
     onClose();
   };
 
+  const overlayStyle = {position:"fixed",inset:0,zIndex:300,background:"rgba(4,7,15,0.72)",backdropFilter:"blur(3px)",WebkitBackdropFilter:"blur(3px)",display:"flex",alignItems:"flex-end",justifyContent:"center"};
+  const sheetStyle   = {width:"100%",maxWidth:480,background:"#0d1424",border:`1px solid ${C.bd}`,borderBottom:"none",borderRadius:"24px 24px 0 0",maxHeight:"88vh",overflowY:"auto",WebkitOverflowScrolling:"touch",boxShadow:"0 -20px 60px rgba(0,0,0,0.5)"};
+
   return (
-    <div style={{minHeight:"100vh",background:C.bg}}>
-      <div style={{paddingBottom:80}}>
+    <div style={overlayStyle} onClick={e=>e.target===e.currentTarget&&onClose()}>
+      <div style={sheetStyle}>
+        <div style={{width:38,height:4,borderRadius:2,background:"rgba(255,255,255,0.14)",margin:"10px auto 0"}}/>
 
         {/* Header */}
-        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"20px 16px 14px"}}>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"12px 16px 14px"}}>
           <div>
             <div style={{fontSize:9,color:"rgba(245,241,232,0.50)",fontWeight:700,letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:3}}>Nouveau record</div>
             <div style={{fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",fontSize:20,fontWeight:300,color:"#F5F1E8"}}>
