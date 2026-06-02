@@ -136,7 +136,7 @@ function BonusForm({ type, onSave, onBack }) {
 }
 
 // ─── DAY MODAL (bottom sheet) ─────────────────────────────────────────────────
-export function DayModal({ date, sessions, onSave, onDelete, onClose }) {
+export function DayModal({ date, sessions, onSave, onDelete, onToggleDone, onClose }) {
   const allSess = Array.isArray(sessions) ? sessions : (sessions ? [sessions] : []);
   const [step,          setStep]          = useState('main');
   const [selectedBonus, setSelectedBonus] = useState(null);
@@ -190,17 +190,35 @@ export function DayModal({ date, sessions, onSave, onDelete, onClose }) {
         {allSess.length>0&&(
           <div style={{marginBottom:16}}>
             <div style={{...ey,marginBottom:8}}>Séances planifiées</div>
-            {allSess.map((sess,i)=>(
-              <div key={i} style={{display:'flex',alignItems:'center',gap:10,padding:'10px 12px',background:C.s2,borderRadius:12,marginBottom:6,borderLeft:`3px solid ${sess.color||'#3B82F6'}`}}>
-                <div style={{flex:1,minWidth:0}}>
-                  <div style={{fontSize:13,fontWeight:600,color:C.text,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{sess.nom}</div>
-                  <div style={{fontSize:10.5,color:'rgba(242,244,247,0.45)',marginTop:1}}>{INT[sess.intensite||'modere']?.l}{sess.bonus?` · ${sess.bonus.duree}min`:''}</div>
+            {allSess.map((sess,i)=>{
+              const col = sess.color||'#3B82F6';
+              return (
+              <div key={i} style={{padding:'10px 12px',background:sess.done?`${col}14`:C.s2,borderRadius:12,marginBottom:6,borderLeft:`3px solid ${col}`,border:sess.done?`1px solid ${col}40`:'1px solid transparent'}}>
+                <div style={{display:'flex',alignItems:'center',gap:10}}>
+                  <div style={{flex:1,minWidth:0}}>
+                    <div style={{display:'flex',alignItems:'center',gap:6}}>
+                      {sess.done&&<div style={{width:15,height:15,borderRadius:5,background:col,display:'grid',placeItems:'center',flexShrink:0}}><I name="check" size={9} stroke={3.2} color="#fff"/></div>}
+                      <div style={{fontSize:13,fontWeight:600,color:C.text,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{sess.nom}</div>
+                    </div>
+                    <div style={{fontSize:10.5,color:'rgba(242,244,247,0.45)',marginTop:2}}>{INT[sess.intensite||'modere']?.l}{sess.bonus?` · ${sess.bonus.duree}min`:''}{sess.done?' · Validée ✓':''}</div>
+                  </div>
+                  <button onClick={()=>onDelete(i)} style={{background:'transparent',border:'none',color:'rgba(248,113,113,0.7)',cursor:'pointer',padding:'4px',flexShrink:0,display:'grid',placeItems:'center'}}>
+                    <I name="trash" size={14} stroke={1.8}/>
+                  </button>
                 </div>
-                <button onClick={()=>onDelete(i)} style={{background:'transparent',border:'none',color:'rgba(248,113,113,0.7)',cursor:'pointer',padding:'4px',flexShrink:0,display:'grid',placeItems:'center'}}>
-                  <I name="trash" size={14} stroke={1.8}/>
-                </button>
+                {onToggleDone&&(
+                  <button onClick={()=>onToggleDone(i)} style={{
+                    width:'100%',marginTop:9,padding:'9px',borderRadius:9,cursor:'pointer',fontFamily:DISPLAY,fontSize:12,fontWeight:700,
+                    display:'flex',alignItems:'center',justifyContent:'center',gap:6,
+                    background:sess.done?'transparent':col,
+                    border:sess.done?`1px solid ${C.bd}`:`1px solid ${col}`,
+                    color:sess.done?'rgba(242,244,247,0.55)':'#fff',
+                  }}>
+                    {sess.done ? '↺ Reprendre la séance' : <><I name="check" size={14} stroke={2.4} color="#fff"/> Terminer la séance</>}
+                  </button>
+                )}
               </div>
-            ))}
+            );})}
           </div>
         )}
 
@@ -237,74 +255,118 @@ export function DayModal({ date, sessions, onSave, onDelete, onClose }) {
 }
 
 // ─── BILAN DU MOIS ────────────────────────────────────────────────────────────
+const CHARGE_FEM = { leger:'Légère', modere:'Modérée', lourd:'Lourde', intense:'Intense', mobilite:'Mobilité' };
+const CHARGE_SUB = { leger:'Récup bien gérée', modere:'Bon équilibre fatigue', lourd:'Charge soutenue', intense:'Surveille la récup', mobilite:'Récupération active' };
+
 function BilanMois({ sessions, year, month }) {
   const stats = useMemo(() => {
-    const prefix = `${year}-${String(month+1).padStart(2,'0')}`;
-    const monthEntries = Object.entries(sessions).filter(([k]) => k.startsWith(prefix));
-    const allSess = monthEntries.flatMap(([,v]) => Array.isArray(v) ? v : (v ? [v] : []));
-    const count = allSess.length;
+    const toArr = v => Array.isArray(v) ? v : (v ? [v] : []);
+    const tonnageOf = s => (s.musculation?.exercices||[]).reduce((a,ex)=>
+      a + (parseInt(ex.series)||4)*(parseInt(ex.reps)||10)*(parseFloat(ex.charge)||0)/1000, 0);
 
-    // Tonnage estimé
-    let tonnage = 0;
-    allSess.forEach(s => {
-      (s.musculation?.exercices||[]).forEach(ex => {
-        tonnage += (parseInt(ex.series)||4) * (parseInt(ex.reps)||10) * (parseFloat(ex.charge)||0) / 1000;
+    // ── Mois courant ──
+    const prefix = `${year}-${String(month+1).padStart(2,'0')}`;
+    const weeks = [0,0,0,0,0,0];            // tonnage par semaine du mois
+    const intCounts = {};                   // intensités des séances validées
+    let planned = 0, validated = 0, tonnage = 0;
+
+    Object.entries(sessions).filter(([k]) => k.startsWith(prefix)).forEach(([k,v]) => {
+      const day = parseInt(k.slice(8),10);
+      const wIdx = Math.min(5, Math.floor((day-1)/7));
+      toArr(v).forEach(s => {
+        planned++;
+        if (s.done) {
+          validated++;
+          const ik = s.intensite||'modere'; intCounts[ik] = (intCounts[ik]||0)+1;
+          const t = tonnageOf(s); tonnage += t; weeks[wIdx] += t;
+        }
       });
     });
 
-    // Intensités
-    const intCounts = {};
-    allSess.forEach(s => { const k=s.intensite||'modere'; intCounts[k]=(intCounts[k]||0)+1; });
+    // ── Mois précédent (pour les deltas) ──
+    const pd = new Date(year, month-1, 1);
+    const prevPrefix = `${pd.getFullYear()}-${String(pd.getMonth()+1).padStart(2,'0')}`;
+    let prevValidated = 0, prevTonnage = 0;
+    Object.entries(sessions).filter(([k]) => k.startsWith(prevPrefix)).forEach(([,v]) => {
+      toArr(v).forEach(s => { if (s.done) { prevValidated++; prevTonnage += tonnageOf(s); } });
+    });
 
-    // Jours avec séance vs jours dans le mois
-    const uniqueDays = new Set(monthEntries.filter(([,v])=>(Array.isArray(v)?v:v?[v]:[]).length>0).map(([k])=>k)).size;
-    const today = new Date();
-    const isCurrent = today.getFullYear()===year && today.getMonth()===month;
-    const totalDays = isCurrent ? today.getDate() : new Date(year,month+1,0).getDate();
-    const assiduité = totalDays > 0 ? Math.round((uniqueDays/totalDays)*100) : 0;
+    const assiduite = planned > 0 ? Math.min(100, Math.round((validated/planned)*100)) : 0;
+    const topInt    = Object.entries(intCounts).sort((a,b)=>b[1]-a[1])[0];
+    const tonPct    = prevTonnage > 0 ? Math.round((tonnage-prevTonnage)/prevTonnage*100) : null;
 
-    // Charge dominante
-    const topInt = Object.entries(intCounts).sort((a,b)=>b[1]-a[1])[0];
+    // tronque les semaines vides en fin de tableau (mois < 6 semaines)
+    let lastWeek = 0; for (let i=0;i<weeks.length;i++) if (i*7 < new Date(year,month+1,0).getDate()) lastWeek = i;
+    const weeksTrim = weeks.slice(0, lastWeek+1);
 
-    return { count, tonnage: tonnage.toFixed(1), intCounts, uniqueDays, totalDays, assiduité, topInt };
+    return { planned, validated, tonnage, weeks: weeksTrim, assiduite, topInt, prevValidated, tonPct };
   }, [sessions, year, month]);
 
-  // Carte bilan — design exact maquette
+  const MONTHS_SHORT = ['janv.','févr.','mars','avr.','mai','juin','juil.','août','sept.','oct.','nov.','déc.'];
+  const prevMonthName = MONTHS_SHORT[(month+11)%12];
+
+  // Carte bilan
   const Card = ({ label, main, sub, delta, deltaOk, accent }) => (
-    <div style={{flex:1,background:'#111827',border:`1px solid rgba(255,255,255,0.07)`,borderRadius:14,padding:'14px 12px',minWidth:0}}>
-      <div style={{...ey,marginBottom:8}}>{label}</div>
-      <div style={{fontFamily:DISPLAY,fontSize:28,fontWeight:700,color:C.text,letterSpacing:-0.8,lineHeight:1,...NUM}}>
-        {main}
-        {sub&&<span style={{fontSize:13,fontWeight:400,color:'rgba(242,244,247,0.35)',marginLeft:3}}>{sub}</span>}
-      </div>
+    <div style={{flex:1,background:'#111827',border:`1px solid rgba(255,255,255,0.07)`,borderRadius:16,padding:'15px 13px',minWidth:0}}>
+      <div style={{...ey,marginBottom:9}}>{label}</div>
+      {(main!==undefined&&main!=='')&&(
+        <div style={{fontFamily:DISPLAY,fontSize:30,fontWeight:700,color:C.text,letterSpacing:-1,lineHeight:1,...NUM}}>
+          {main}
+          {sub&&<span style={{fontSize:13,fontWeight:400,color:'rgba(242,244,247,0.35)',marginLeft:3}}>{sub}</span>}
+        </div>
+      )}
       {delta&&(
-        <div style={{fontSize:11,fontWeight:700,color:deltaOk?'#34D399':'#F87171',marginTop:6,fontFamily:DISPLAY,...NUM}}>{delta}</div>
+        <div style={{fontSize:11,fontWeight:700,color:deltaOk?'#34D399':'#F87171',marginTop:8,fontFamily:DISPLAY,...NUM}}>{delta}</div>
       )}
       {accent&&<div style={{marginTop:8}}>{accent}</div>}
     </div>
   );
 
   const topIntData = stats.topInt ? INT[stats.topInt[0]] : null;
+  const topIntKey  = stats.topInt ? stats.topInt[0] : null;
+
+  // Mini-graphique tonnage par semaine
+  const maxWeek = Math.max(...stats.weeks, 1);
+  const spark = stats.tonnage > 0 ? (
+    <div style={{display:'flex',alignItems:'flex-end',gap:5,height:36,marginTop:2}}>
+      {stats.weeks.map((w,i)=>(
+        <div key={i} style={{flex:1,height:`${w>0?14+(w/maxWeek)*22:6}px`,borderRadius:'5px 5px 3px 3px',
+          background:'linear-gradient(180deg,#60A5FA,#2563EB)',opacity:w>0?1:0.25,transition:'height .6s cubic-bezier(.4,0,.2,1)'}}/>
+      ))}
+    </div>
+  ) : null;
 
   const assBarre = (
     <div>
-      <div style={{height:3,background:'rgba(255,255,255,0.06)',borderRadius:3,overflow:'hidden',marginBottom:3}}>
-        <div style={{height:'100%',width:`${stats.assiduité}%`,background:'#34D399',borderRadius:3,transition:'width .8s ease'}}/>
+      <div style={{height:7,background:'rgba(255,255,255,0.07)',borderRadius:5,overflow:'hidden',marginBottom:6}}>
+        <div style={{height:'100%',width:`${stats.assiduite}%`,background:'linear-gradient(90deg,#34D399,#10B981)',borderRadius:5,transition:'width .7s cubic-bezier(.4,0,.2,1)'}}/>
       </div>
-      <div style={{fontSize:9,color:'rgba(242,244,247,0.35)',fontFamily:DISPLAY,...NUM}}>
-        {stats.uniqueDays} j / {stats.totalDays} j
+      <div style={{fontSize:9.5,color:'rgba(242,244,247,0.35)',fontFamily:DISPLAY,...NUM}}>
+        {stats.validated} / {stats.planned} validée{stats.planned>1?'s':''}
       </div>
     </div>
   );
 
   const chargeBarre = topIntData ? (
-    <div style={{display:'flex',alignItems:'center',gap:6,marginTop:2}}>
-      <div style={{width:8,height:8,borderRadius:'50%',background:topIntData.c,flexShrink:0,boxShadow:`0 0 5px ${topIntData.c}`}}/>
-      <div style={{fontSize:13,fontWeight:700,color:topIntData.c,fontFamily:DISPLAY}}>{topIntData.l}</div>
+    <div>
+      <div style={{display:'flex',alignItems:'center',gap:9,marginTop:2}}>
+        <div style={{width:14,height:14,borderRadius:'50%',background:topIntData.c,flexShrink:0,boxShadow:`0 0 8px ${topIntData.c}`}}/>
+        <div style={{fontSize:22,fontWeight:700,color:topIntData.c,fontFamily:DISPLAY,letterSpacing:-0.5}}>{CHARGE_FEM[topIntKey]||topIntData.l}</div>
+      </div>
+      <div style={{fontSize:11,color:'rgba(242,244,247,0.40)',fontFamily:DISPLAY,marginTop:6}}>{CHARGE_SUB[topIntKey]||''}</div>
     </div>
   ) : (
-    <div style={{fontSize:12,color:'rgba(242,244,247,0.30)',fontFamily:DISPLAY,marginTop:2}}>Aucune donnée</div>
+    <div style={{fontSize:12,color:'rgba(242,244,247,0.30)',fontFamily:DISPLAY,marginTop:2}}>Aucune séance validée</div>
   );
+
+  // Deltas séances / tonnage
+  const seancesDelta = stats.validated > 0
+    ? `▲ ${stats.validated} validée${stats.validated>1?'s':''}`
+    : 'Aucune validée';
+  const diff = stats.validated - stats.prevValidated;
+  const seancesVs = stats.prevValidated > 0
+    ? (diff>=0 ? `▲ +${diff} vs ${prevMonthName}` : `▼ ${diff} vs ${prevMonthName}`)
+    : seancesDelta;
 
   return (
     <div style={{marginTop:28}}>
@@ -315,36 +377,37 @@ function BilanMois({ sessions, year, month }) {
         <div style={{flex:1,height:1,background:'rgba(255,255,255,0.07)'}}/>
       </div>
 
-      <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:14}}>
-        <div style={{fontFamily:DISPLAY,fontSize:18,fontWeight:700,color:C.text,letterSpacing:-0.5}}>
+      <div style={{display:'flex',alignItems:'flex-end',justifyContent:'space-between',marginBottom:14}}>
+        <div style={{fontFamily:SERIF,fontSize:30,fontWeight:400,color:C.text,letterSpacing:-0.5,lineHeight:1}}>
           {['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'][month]}
         </div>
-        <div style={{...ey}}>VS. MOIS PRÉC.</div>
+        <div style={{...ey,paddingBottom:4}}>VS. MOIS PRÉC.</div>
       </div>
 
       {/* Row 1 */}
       <div style={{display:'flex',gap:8,marginBottom:8}}>
         <Card
           label="Séances"
-          main={stats.count}
-          sub={`/${stats.totalDays}j`}
-          delta={stats.count > 0 ? `${stats.uniqueDays} jour${stats.uniqueDays>1?'s':''} actif${stats.uniqueDays>1?'s':''}` : 'Aucune séance'}
-          deltaOk={stats.count > 0}
+          main={stats.validated}
+          sub={`/${stats.planned}`}
+          delta={seancesVs}
+          deltaOk={diff>=0 && stats.validated>0}
         />
         <Card
           label="Tonnage"
-          main={parseFloat(stats.tonnage) > 0 ? stats.tonnage : '0'}
+          main={stats.tonnage > 0 ? stats.tonnage.toFixed(1) : '0'}
           sub="t"
-          delta={parseFloat(stats.tonnage) > 0 ? '↑ connecté aux charges' : 'Loguer des charges'}
-          deltaOk={parseFloat(stats.tonnage) > 0}
+          delta={stats.tonnage>0 ? (stats.tonPct!==null ? `▲ ${stats.tonPct>=0?'+':''}${stats.tonPct}%` : null) : 'Loguer des charges'}
+          deltaOk={stats.tonnage>0 && (stats.tonPct===null||stats.tonPct>=0)}
+          accent={spark}
         />
       </div>
       {/* Row 2 */}
       <div style={{display:'flex',gap:8}}>
-        <Card label="Charge" main={topIntData ? '' : '—'} accent={chargeBarre}/>
+        <Card label="Charge" accent={chargeBarre}/>
         <Card
           label="Assiduité"
-          main={`${stats.assiduité}`}
+          main={`${stats.assiduite}`}
           sub="%"
           accent={assBarre}
         />
@@ -418,21 +481,36 @@ export const MonthCal = memo(function MonthCal({ sessions, onUpdate }) {
             const isToday = key===todayStr;
             const isPast  = key < todayStr;
             const color   = getDayColor(key);
-            const dotColors = daySess.map(s=>s.color||'#3B82F6').slice(0,3);
+            const hasSess = daySess.length>0;
+            const isDone  = daySess.some(s=>s.done);          // au moins une séance validée
+            const dotColors = daySess.filter(s=>!s.done).map(s=>s.color||'#3B82F6').slice(0,3);
+
+            // ── Styles selon l'état : validée = plein, planifiée = teintée ──
+            let bg, bd, numColor;
+            if (isDone)       { bg = color;            bd = `1px solid ${color}`;      numColor = '#fff'; }
+            else if (hasSess) { bg = `${color}22`;     bd = `1px solid ${color}66`;    numColor = color; }
+            else              { bg = isPast?'rgba(255,255,255,0.025)':C.s2; bd = `1px solid ${C.bd}`; numColor = isPast?'rgba(242,244,247,0.30)':C.text; }
+
+            const boxShadow = isToday
+              ? `0 0 0 2px #60A5FA, 0 4px 12px rgba(59,130,246,0.35)`
+              : isDone ? `0 4px 12px ${color}45` : 'none';
+
             return (
               <button key={d} onClick={()=>setModal({date:key,sessions:daySess})} className="tap" style={{
-                aspectRatio:'1/1', borderRadius:10, padding:0, cursor:'pointer',
-                background: isToday ? '#3B82F6' : daySess.length>0 ? `${color}18` : isPast ? 'rgba(255,255,255,0.025)' : C.s2,
-                border: isToday ? '1.5px solid #60A5FA' : daySess.length>0 ? `1px solid ${color}35` : `1px solid ${C.bd}`,
+                position:'relative', aspectRatio:'1/1', borderRadius:10, padding:0, cursor:'pointer',
+                background:bg, border:bd,
                 display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:3,
-                boxShadow: isToday ? '0 4px 12px rgba(59,130,246,0.35)' : 'none',
-                opacity: isPast && daySess.length===0 ? 0.4 : 1,
+                boxShadow,
+                opacity: isPast && !hasSess ? 0.4 : 1,
               }}>
-                <span style={{fontFamily:DISPLAY,fontSize:11,fontWeight:isToday?700:500,color:isToday?'#fff':isPast&&!daySess.length?'rgba(242,244,247,0.30)':C.text,...NUM}}>{d}</span>
+                {isDone&&(
+                  <svg viewBox="0 0 24 24" width="9" height="9" fill="none" stroke="#fff" strokeWidth="3.4" strokeLinecap="round" strokeLinejoin="round" style={{position:'absolute',top:4,right:4,opacity:0.95}}><path d="M20 6 9 17l-5-5"/></svg>
+                )}
+                <span style={{fontFamily:DISPLAY,fontSize:11.5,fontWeight:isDone||isToday?700:hasSess?600:500,color:numColor,...NUM}}>{d}</span>
                 {dotColors.length>0&&(
                   <div style={{display:'flex',gap:2,alignItems:'center'}}>
                     {dotColors.map((dc,di)=>(
-                      <span key={di} style={{width:4,height:4,borderRadius:'50%',background:isToday?'rgba(255,255,255,0.8)':dc}}/>
+                      <span key={di} style={{width:4,height:4,borderRadius:'50%',background:dc}}/>
                     ))}
                   </div>
                 )}
@@ -448,6 +526,18 @@ export const MonthCal = memo(function MonthCal({ sessions, onUpdate }) {
               <span style={{fontSize:9.5,color:'rgba(242,244,247,0.40)',fontFamily:DISPLAY}}>{v.l}</span>
             </div>
           ))}
+        </div>
+        <div style={{marginTop:9,display:'flex',flexWrap:'wrap',gap:12,alignItems:'center'}}>
+          <div style={{display:'flex',alignItems:'center',gap:5}}>
+            <div style={{width:13,height:13,borderRadius:4,background:'rgba(59,130,246,0.22)',border:'1px solid rgba(59,130,246,0.55)',flexShrink:0}}/>
+            <span style={{fontSize:9.5,color:'rgba(242,244,247,0.40)',fontFamily:DISPLAY}}>Planifiée</span>
+          </div>
+          <div style={{display:'flex',alignItems:'center',gap:5}}>
+            <div style={{width:13,height:13,borderRadius:4,background:'#3B82F6',flexShrink:0,display:'grid',placeItems:'center'}}>
+              <svg viewBox="0 0 24 24" width="8" height="8" fill="none" stroke="#fff" strokeWidth="3.4" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+            </div>
+            <span style={{fontSize:9.5,color:'rgba(242,244,247,0.40)',fontFamily:DISPLAY}}>Validée (faite)</span>
+          </div>
         </div>
       </div>
 
@@ -469,6 +559,14 @@ export const MonthCal = memo(function MonthCal({ sessions, onUpdate }) {
             const updated  = existing.filter((_,i)=>i!==idx);
             onUpdate(modal.date, updated.length===0 ? null : updated.length===1 ? updated[0] : updated);
             setModal(null);
+          }}
+          onToggleDone={idx=>{
+            const existing = getSess(modal.date);
+            const updated  = existing.map((s,i)=> i===idx
+              ? {...s, done:!s.done, doneDate: !s.done ? new Date().toISOString() : undefined}
+              : s);
+            onUpdate(modal.date, updated.length===1 ? updated[0] : updated);
+            setModal(m=>({...m, sessions:updated}));   // garde la feuille ouverte
           }}
           onClose={()=>setModal(null)}
         />
