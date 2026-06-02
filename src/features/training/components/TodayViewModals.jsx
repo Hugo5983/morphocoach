@@ -1,9 +1,12 @@
 import { useState, useMemo } from "react";
 import { calc1RM, calcKgFor } from "../../../utils/training.js";
-import { C, INT, FONT } from "../../../data/constants.js";
+import { C, INT, FONT, SERIF } from "../../../data/constants.js";
 import { EX } from "../../../data/exercises.js";
 import { Card, Eyebrow, Btn } from "../../../components/ui/index.jsx";
 import SeanceDetail from "../SeanceDetail.jsx";
+
+const DISP_F  = FONT;
+const SERIF_F = SERIF;
 
 // ─── FORMULE EPLEY ────────────────────────────────────────────────────────────
 
@@ -25,6 +28,7 @@ export function ManualRMModal({ prog, setProg, onClose, push, C }) {
   const [selected, setSelected] = useState(null);
   const [kg,       setKg]       = useState("");
   const [reps,     setReps]     = useState("");
+  const [focusField, setFocusField] = useState(null);
 
   const groupes = Object.keys(EX);
   const cc = (cat) => ({principal:"#4D8BFF",correctif:"#FF7A6B",gainage:"#5FE0A5",isolation:"#B69DFF"}[cat||"principal"]||"#4D8BFF");
@@ -129,62 +133,73 @@ export function ManualRMModal({ prog, setProg, onClose, push, C }) {
             </div>
           ) : (
             <div>
-              <button onClick={()=>{setSelected(null);setKg("");setReps("");}} style={{background:"transparent",border:"none",color:"#4D8BFF",cursor:"pointer",fontSize:12,fontWeight:600,padding:"0 0 14px",display:"flex",alignItems:"center",gap:4}}>← Changer d'exercice</button>
+              <button onClick={()=>{setSelected(null);setKg("");setReps("");setFocusField(null);}} style={{background:"transparent",border:"none",color:"#60A5FA",cursor:"pointer",fontSize:12.5,fontWeight:600,padding:"0 0 14px",display:"flex",alignItems:"center",gap:5}}>← Changer d'exercice</button>
 
               {/* Badge exercice */}
-              <div style={{display:"flex",alignItems:"center",gap:10,padding:"12px 14px",background:`${cc(selected.cat)}0d`,border:`0.5px solid ${cc(selected.cat)}30`,borderRadius:12,marginBottom:16}}>
-                <div style={{width:4,height:40,borderRadius:2,background:cc(selected.cat),flexShrink:0}}/>
+              <div style={{display:"flex",alignItems:"center",gap:12,padding:"13px 15px",background:"rgba(59,130,246,0.06)",border:"1px solid rgba(59,130,246,0.18)",borderRadius:14,marginBottom:16}}>
+                <div style={{width:4,height:38,borderRadius:2,background:cc(selected.cat),flexShrink:0}}/>
                 <div>
-                  <div style={{fontSize:14,fontWeight:500,color:"#F5F1E8"}}>{selected.nom}</div>
-                  <div style={{fontSize:10,color:"rgba(245,241,232,0.50)",marginTop:2}}>{selected.group}</div>
+                  <div style={{fontSize:15,fontWeight:700,color:"#F2F4F7",letterSpacing:-0.2,fontFamily:DISP_F}}>{selected.nom}</div>
+                  <div style={{fontSize:11,color:"rgba(242,244,247,0.35)",marginTop:2,fontFamily:DISP_F}}>{selected.group}</div>
                 </div>
               </div>
 
-              {/* Saisie */}
-              <div style={{background:C.s1,border:"0.5px solid rgba(190,180,255,0.07)",borderRadius:12,padding:"12px 14px",marginBottom:10}}>
-                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:8}}>
-                  <div>
-                    <div style={{fontSize:9,color:"rgba(245,241,232,0.50)",fontWeight:600,marginBottom:5,letterSpacing:"0.5px"}}>CHARGE (kg)</div>
-                    <div style={{display:"flex",alignItems:"center",gap:5}}>
-                      <button onClick={()=>setKg(k=>String(Math.max(0,parseFloat(k)||0)-2.5))} style={{width:26,height:26,borderRadius:7,background:C.s2,border:"none",cursor:"pointer",fontSize:14,color:"rgba(245,241,232,0.50)",flexShrink:0}}>−</button>
-                      <input type="number" value={kg} onChange={e=>setKg(e.target.value)} placeholder="80" autoFocus
-                        style={{flex:1,padding:"6px 4px",background:C.s2,border:`1px solid ${kg?"#4D8BFF":"rgba(190,180,255,0.07)"}`,borderRadius:7,fontSize:14,fontWeight:500,color:"#F5F1E8",fontFamily:"'Inter',sans-serif",textAlign:"center",minWidth:0}}/>
-                      <button onClick={()=>setKg(k=>String((parseFloat(k)||0)+2.5))} style={{width:26,height:26,borderRadius:7,background:C.accent,border:"none",cursor:"pointer",fontSize:14,color:"#141A2E",flexShrink:0}}>+</button>
-                    </div>
+              {/* Tuiles Charge / Reps */}
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:11,marginBottom:14}}>
+                {/* Charge */}
+                <div style={{background:C.s1,border:`1px solid ${focusField==="kg"?"rgba(59,130,246,0.5)":C.bd}`,borderRadius:18,padding:"14px 14px 13px",boxShadow:focusField==="kg"?"0 0 0 3px rgba(59,130,246,0.12)":"none"}}>
+                  <div style={{fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:"rgba(242,244,247,0.35)",marginBottom:9,fontFamily:DISP_F}}>Charge</div>
+                  <div style={{display:"flex",alignItems:"baseline",justifyContent:"center",gap:4,height:46}}>
+                    <input type="number" inputMode="decimal" value={kg} onChange={e=>setKg(e.target.value)} onFocus={()=>setFocusField("kg")} onBlur={()=>setFocusField(null)} placeholder="80"
+                      style={{width:"100%",background:"none",border:"none",color:"#F2F4F7",fontFamily:DISP_F,fontSize:42,fontWeight:800,letterSpacing:-2,textAlign:"center",outline:"none",padding:0,minWidth:0}}/>
+                    <span style={{fontSize:14,color:"rgba(242,244,247,0.35)",fontWeight:600}}>kg</span>
                   </div>
-                  <div>
-                    <div style={{fontSize:9,color:"rgba(245,241,232,0.50)",fontWeight:600,marginBottom:5,letterSpacing:"0.5px"}}>REPS</div>
-                    <div style={{display:"flex",alignItems:"center",gap:5}}>
-                      <button onClick={()=>setReps(r=>String(Math.max(1,parseInt(r)||0)-1))} style={{width:26,height:26,borderRadius:7,background:C.s2,border:"none",cursor:"pointer",fontSize:14,color:"rgba(245,241,232,0.50)",flexShrink:0}}>−</button>
-                      <input type="number" value={reps} onChange={e=>setReps(e.target.value)} placeholder="5"
-                        style={{flex:1,padding:"6px 4px",background:C.s2,border:`1px solid ${reps?"#4D8BFF":"rgba(190,180,255,0.07)"}`,borderRadius:7,fontSize:14,fontWeight:500,color:"#F5F1E8",fontFamily:"'Inter',sans-serif",textAlign:"center",minWidth:0}}/>
-                      <button onClick={()=>setReps(r=>String((parseInt(r)||0)+1))} style={{width:26,height:26,borderRadius:7,background:C.accent,border:"none",cursor:"pointer",fontSize:14,color:"#141A2E",flexShrink:0}}>+</button>
-                    </div>
+                  <div style={{display:"flex",gap:8,marginTop:11}}>
+                    <button onClick={()=>setKg(k=>String(Math.max(0,(parseFloat(k)||0)-2.5)))} style={{flex:1,height:38,borderRadius:11,border:"none",cursor:"pointer",fontSize:20,fontWeight:600,fontFamily:DISP_F,background:C.s2,color:"rgba(242,244,247,0.60)"}}>−</button>
+                    <button onClick={()=>setKg(k=>String((parseFloat(k)||0)+2.5))} style={{flex:1,height:38,borderRadius:11,border:"none",cursor:"pointer",fontSize:20,fontWeight:600,fontFamily:DISP_F,background:"rgba(59,130,246,0.16)",color:"#60A5FA"}}>+</button>
                   </div>
                 </div>
-                <div style={{display:"flex",gap:4}}>
-                  {[1,3,5,8,10,12].map(r=>(
-                    <button key={r} onClick={()=>setReps(String(r))} style={{flex:1,padding:"4px 2px",background:reps===String(r)?"rgba(59,130,246,0.1)":"transparent",border:`0.5px solid ${reps===String(r)?"#4D8BFF":"rgba(190,180,255,0.07)"}`,borderRadius:6,color:reps===String(r)?"#4D8BFF":"rgba(245,241,232,0.50)",cursor:"pointer",fontSize:10,fontWeight:reps===String(r)?600:400}}>{r}</button>
-                  ))}
+                {/* Reps */}
+                <div style={{background:C.s1,border:`1px solid ${focusField==="reps"?"rgba(59,130,246,0.5)":C.bd}`,borderRadius:18,padding:"14px 14px 13px",boxShadow:focusField==="reps"?"0 0 0 3px rgba(59,130,246,0.12)":"none"}}>
+                  <div style={{fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:"rgba(242,244,247,0.35)",marginBottom:9,fontFamily:DISP_F}}>Répétitions</div>
+                  <div style={{display:"flex",alignItems:"baseline",justifyContent:"center",gap:4,height:46}}>
+                    <input type="number" inputMode="numeric" value={reps} onChange={e=>setReps(e.target.value)} onFocus={()=>setFocusField("reps")} onBlur={()=>setFocusField(null)} placeholder="5"
+                      style={{width:"100%",background:"none",border:"none",color:"#F2F4F7",fontFamily:DISP_F,fontSize:42,fontWeight:800,letterSpacing:-2,textAlign:"center",outline:"none",padding:0,minWidth:0}}/>
+                  </div>
+                  <div style={{display:"flex",gap:8,marginTop:11}}>
+                    <button onClick={()=>setReps(r=>String(Math.max(1,(parseInt(r)||0)-1)))} style={{flex:1,height:38,borderRadius:11,border:"none",cursor:"pointer",fontSize:20,fontWeight:600,fontFamily:DISP_F,background:C.s2,color:"rgba(242,244,247,0.60)"}}>−</button>
+                    <button onClick={()=>setReps(r=>String((parseInt(r)||0)+1))} style={{flex:1,height:38,borderRadius:11,border:"none",cursor:"pointer",fontSize:20,fontWeight:600,fontFamily:DISP_F,background:"rgba(59,130,246,0.16)",color:"#60A5FA"}}>+</button>
+                  </div>
                 </div>
               </div>
 
-              {rm1Calc > 0 && (
-                <div style={{background:"rgba(59,130,246,0.06)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:12,padding:"12px 16px",marginBottom:16}}>
-                  <div style={{fontSize:9,color:"rgba(245,241,232,0.50)",fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",marginBottom:4}}>1RM estimé (Epley)</div>
-                  <div style={{display:"flex",alignItems:"baseline",gap:6}}>
-                    <div style={{fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",fontSize:36,fontWeight:300,color:"#4D8BFF",lineHeight:1}}>{rm1Calc}</div>
-                    <div style={{fontSize:14,color:"rgba(245,241,232,0.50)"}}>kg</div>
-                  </div>
-                  <div style={{fontSize:10,color:"rgba(245,241,232,0.50)",marginTop:3}}>= {kg}kg × (1 + {reps}/30)</div>
+              {/* Reps rapides */}
+              <div style={{fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:"rgba(242,244,247,0.35)",margin:"2px 0 8px",fontFamily:DISP_F}}>Reps rapides</div>
+              <div style={{display:"flex",gap:6,marginBottom:16}}>
+                {[1,3,5,8,10,12].map(r=>{
+                  const on = reps===String(r);
+                  return (
+                    <button key={r} onClick={()=>setReps(String(r))} style={{flex:1,padding:"9px 0",borderRadius:10,background:on?"rgba(59,130,246,0.14)":C.s1,border:`1px solid ${on?"#3B82F6":C.bd}`,color:on?"#60A5FA":"rgba(242,244,247,0.60)",fontFamily:DISP_F,fontSize:13,fontWeight:600,cursor:"pointer"}}>{r}</button>
+                  );
+                })}
+              </div>
+
+              {/* Carte 1RM (sans formule visible) */}
+              <div style={{position:"relative",overflow:"hidden",borderRadius:18,padding:"16px 18px",marginBottom:18,background:"linear-gradient(135deg,rgba(59,130,246,0.16),rgba(37,99,235,0.06))",border:"1px solid rgba(59,130,246,0.25)",display:"flex",alignItems:"center",justifyContent:"space-between",opacity:rm1Calc>0?1:0.45,filter:rm1Calc>0?"none":"grayscale(0.4)",transition:"opacity .25s"}}>
+                <div style={{position:"absolute",top:-40,right:-30,width:120,height:120,borderRadius:"50%",background:"radial-gradient(circle,rgba(96,165,250,0.18),transparent 65%)",pointerEvents:"none"}}/>
+                <div>
+                  <div style={{fontSize:9,fontWeight:700,letterSpacing:"1.2px",textTransform:"uppercase",color:"#60A5FA",marginBottom:5,fontFamily:DISP_F}}>1RM estimé</div>
+                  <div style={{fontSize:11,color:"rgba(242,244,247,0.60)",fontFamily:DISP_F}}>{rm1Calc>0 ? (parseInt(reps)===1 ? "Ta charge max sur 1 rep" : "Estimation à partir de ta série") : "Saisis charge et reps"}</div>
                 </div>
-              )}
+                <div style={{fontFamily:SERIF_F,fontSize:40,color:"#fff",lineHeight:1}}>
+                  {rm1Calc>0 ? rm1Calc : "—"}{rm1Calc>0 && <span style={{fontSize:15,color:"#60A5FA",fontFamily:DISP_F,fontWeight:700,marginLeft:3}}>kg</span>}
+                </div>
+              </div>
 
               <button onClick={handleSave} disabled={!kg||!reps}
-                style={{width:"100%",padding:"14px",background:(!kg||!reps)?"rgba(190,180,255,0.07)":"#4D8BFF",border:"none",borderRadius:12,color:"#141A2E",fontSize:14,fontWeight:600,cursor:(!kg||!reps)?"default":"pointer",fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",marginBottom:8}}>
-                🏆 Enregistrer ce record
+                style={{width:"100%",padding:"16px",borderRadius:16,border:"none",fontFamily:DISP_F,fontSize:15,fontWeight:700,letterSpacing:-0.2,cursor:(!kg||!reps)?"default":"pointer",background:(!kg||!reps)?C.s2:"linear-gradient(180deg,#3B82F6,#2563EB)",color:(!kg||!reps)?"rgba(242,244,247,0.35)":"#fff",boxShadow:(!kg||!reps)?"none":"0 10px 26px rgba(59,130,246,0.36)"}}>
+                Enregistrer le record
               </button>
-              <button onClick={onClose} style={{width:"100%",padding:"10px",background:"transparent",border:"0.5px solid rgba(190,180,255,0.07)",borderRadius:10,color:"rgba(245,241,232,0.50)",cursor:"pointer",fontSize:12,fontFamily:"'Inter',sans-serif"}}>Annuler</button>
             </div>
           )}
         </div>
