@@ -215,35 +215,41 @@ export function CreateSeanceModal({ prog, setProg, setCalSess, push, onClose, C 
   const [intensite,  setInt]      = useState("modere");
   const [duree,      setDuree]    = useState("60 min");
   const [exos,       setExos]     = useState([]);
-  const [expandedEx, setExpanded] = useState(null);   // index de l'exo ouvert en config
+  const [editEx,     setEditEx]   = useState({});      // {idx: true} → accordéon ouvert
+  const [newExForm,  setNewExForm]= useState(null);    // exercice en cours de config
   const [search,     setSearch]   = useState("");
   const [groupe,     setGroupe]   = useState(null);
 
-  const DURS = ["30 min","45 min","60 min","75 min","90 min+"];
-  const cc   = (cat) => ({principal:"#4D8BFF",correctif:"#FF7A6B",gainage:"#5FE0A5",isolation:"#B69DFF"}[cat||"principal"]||"#4D8BFF");
+  const DURS    = ["30 min","45 min","60 min","75 min","90 min+"];
+  const METHODS = ["Classique","Pyramidal","Super-set","Drop-set","Rest-pause","5×5","Dégressif","Pré-fatigue"];
+  const cc      = (cat) => ({principal:"#4D8BFF",correctif:"#FF7A6B",gainage:"#5FE0A5",isolation:"#B69DFF"}[cat||"principal"]||"#4D8BFF");
 
   const searchList = search
     ? Object.entries(EX).flatMap(([g,arr]) => arr.map(ex => ({nom:ex.n,cat:ex.cat,group:g})))
         .filter(e => e.nom.toLowerCase().includes(search.toLowerCase()))
     : groupe ? (EX[groupe]||[]).map(ex => ({nom:ex.n,cat:ex.cat,group:groupe})) : [];
 
-  const addEx        = (ex) => { if (exos.find(e=>e.nom===ex.nom)) return; setExos(p=>[...p,{nom:ex.nom,cat:ex.cat,series:"4",reps:"10",repos:"90s"}]); };
-  const removeEx     = (nom) => { setExos(p=>p.filter(e=>e.nom!==nom)); setExpanded(null); };
-  const updateField  = (i,f,v) => setExos(p=>p.map((e,j)=>j===i?{...e,[f]:v}:e));
+  const removeEx    = (i)       => { setExos(p=>p.filter((_,j)=>j!==i)); setEditEx(m=>{const n={...m};delete n[i];return n;}); };
+  const updateField = (i,f,v)   => setExos(p=>p.map((e,j)=>j===i?{...e,[f]:v}:e));
+  const openPicker  = (ex)      => setNewExForm({...ex, series:"4",reps:"10",repos:"90s",charge:"",methode:"Classique"});
+  const confirmAdd  = ()        => {
+    if (!newExForm?.nom) return;
+    if (!exos.find(e=>e.nom===newExForm.nom)) setExos(p=>[...p,{...newExForm}]);
+    setNewExForm(null); setSearch(""); setGroupe(null);
+  };
 
   const handleSave = () => {
     const today    = new Date();
     const dayNames = ["Dim","Lun","Mar","Mer","Jeu","Ven","Sam"];
-    const dayName  = dayNames[today.getDay()];
     const todayKey = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,"0")}-${String(today.getDate()).padStart(2,"0")}`;
-    const nomFinal = seNom.trim() || `Séance ${dayName}`;
+    const nomFinal = seNom.trim() || `Séance ${dayNames[today.getDay()]}`;
     const intColor = INT[intensite]?.c || "#3B82F6";
     if (setCalSess) {
       setCalSess(prev => ({
         ...prev,
         [todayKey]: {
-          nom: nomFinal, intensite, color: intColor,
-          duree, seanceId: `today_${todayKey}`,
+          nom: nomFinal, intensite, color: intColor, duree,
+          seanceId: `today_${todayKey}`,
           musculation: exos.length > 0 ? { exercices: exos } : undefined,
         },
       }));
@@ -252,14 +258,12 @@ export function CreateSeanceModal({ prog, setProg, setCalSess, push, onClose, C 
     onClose();
   };
 
-  /* ── Styles réutilisables ── */
-  const S = {
-    label:  { fontSize:9, fontWeight:700, letterSpacing:"1px", textTransform:"uppercase", color:"rgba(242,244,247,0.35)", marginBottom:8, fontFamily:DISP_F },
-    input:  { width:"100%", padding:"14px", background:C.s1, border:`1px solid ${C.bd}`, borderRadius:14, color:"#F2F4F7", fontFamily:DISP_F, fontSize:16, fontWeight:600, outline:"none", marginBottom:18 },
-    chip:   (on,col) => ({ padding:"9px 14px", borderRadius:12, border:`1px solid ${on?col:C.bd}`, background:on?`${col}18`:C.s1, color:on?col:"rgba(242,244,247,0.55)", fontFamily:DISP_F, fontSize:12, fontWeight:600, cursor:"pointer", display:"flex", alignItems:"center", gap:7 }),
-    durBtn: (on)    => ({ flex:1, padding:"11px 0", borderRadius:12, border:`1px solid ${on?"#3B82F6":C.bd}`, background:on?"rgba(59,130,246,0.12)":C.s1, color:on?"#60A5FA":"rgba(242,244,247,0.55)", fontFamily:DISP_F, fontSize:12, fontWeight:600, cursor:"pointer", textAlign:"center" }),
-    nextBtn:(ok)    => ({ flex:2, padding:"15px", borderRadius:14, border:"none", fontFamily:DISP_F, fontSize:14, fontWeight:700, cursor:ok?"pointer":"default", background:ok?"linear-gradient(180deg,#3B82F6,#2563EB)":C.s2, color:ok?"#fff":"rgba(242,244,247,0.30)", boxShadow:ok?"0 8px 24px rgba(59,130,246,0.30)":"none" }),
-  };
+  /* ── Styles ── */
+  const lbl     = { fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:"rgba(242,244,247,0.35)",marginBottom:8,fontFamily:DISP_F };
+  const nextOk  = step===1 ? !!seNom.trim() : true;
+  const nextBtn = { flex:2,padding:"15px",borderRadius:14,border:"none",fontFamily:DISP_F,fontSize:14,fontWeight:700,
+    cursor:nextOk?"pointer":"default",background:nextOk?"linear-gradient(180deg,#3B82F6,#2563EB)":C.s2,
+    color:nextOk?"#fff":"rgba(242,244,247,0.30)",boxShadow:nextOk?"0 8px 24px rgba(59,130,246,0.30)":"none" };
 
   return (
     <div style={{position:"fixed",inset:0,zIndex:300,background:"rgba(4,7,15,0.72)",backdropFilter:"blur(3px)",WebkitBackdropFilter:"blur(3px)",display:"flex",alignItems:"flex-end",justifyContent:"center"}}
@@ -272,102 +276,158 @@ export function CreateSeanceModal({ prog, setProg, setCalSess, push, onClose, C 
         {/* Header */}
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",padding:"12px 18px 0",flexShrink:0}}>
           <div>
-            <div style={S.label}>Étape {step} / 2 · {step===1?"Informations":"Exercices"}</div>
+            <div style={lbl}>{newExForm ? "Configurer l'exercice" : `Étape ${step} / 2 · ${step===1?"Informations":"Exercices"}`}</div>
             <div style={{fontFamily:SERIF_F,fontSize:22,letterSpacing:-0.5,lineHeight:1}}>
-              {step===1 ? "Nouvelle séance" : seNom.trim()||"Ajouter des exercices"}
+              {newExForm ? newExForm.nom : step===1 ? "Nouvelle séance" : seNom.trim()||"Exercices"}
             </div>
           </div>
           <button onClick={onClose} style={{width:34,height:34,borderRadius:10,background:C.s2,border:`1px solid ${C.bd}`,color:"rgba(242,244,247,0.60)",fontSize:18,cursor:"pointer",flexShrink:0}}>×</button>
         </div>
 
-        {/* Indicateur d'étape */}
-        <div style={{display:"flex",gap:6,padding:"10px 18px 0",flexShrink:0}}>
-          {[1,2].map(i=><div key={i} style={{flex:1,height:4,borderRadius:2,background:step>=i?"#3B82F6":"rgba(255,255,255,0.08)",transition:"background .3s"}}/>)}
-        </div>
+        {/* Dots */}
+        {!newExForm && (
+          <div style={{display:"flex",gap:6,padding:"10px 18px 0",flexShrink:0}}>
+            {[1,2].map(i=><div key={i} style={{flex:1,height:4,borderRadius:2,background:step>=i?"#3B82F6":"rgba(255,255,255,0.08)",transition:"background .3s"}}/>)}
+          </div>
+        )}
 
-        {/* ── Corps scrollable ── */}
-        <div style={{flex:1,overflowY:"auto",padding:"16px 18px 0",WebkitOverflowScrolling:"touch",scrollbarWidth:"none"}}>
+        {/* ── Corps ── */}
+        <div style={{flex:1,overflowY:"auto",padding:"14px 18px 0",WebkitOverflowScrolling:"touch",scrollbarWidth:"none"}}>
 
-          {step===1 && (<>
-            {/* Nom */}
-            <div style={S.label}>Nom de la séance</div>
-            <input value={seNom} onChange={e=>setSeNom(e.target.value)} placeholder="Ex : Push, Dos & Biceps…" style={S.input}/>
-
-            {/* Intensité */}
-            <div style={S.label}>Intensité</div>
+          {/* ── ÉTAPE 1 : Infos ── */}
+          {!newExForm && step===1 && (<>
+            <div style={lbl}>Nom de la séance</div>
+            <input
+              value={seNom} onChange={e=>setSeNom(e.target.value)}
+              placeholder="Ex : Push, Dos & Biceps…"
+              autoComplete="off" autoCorrect="off" autoCapitalize="words"
+              data-form-type="other" spellCheck={false}
+              style={{width:"100%",padding:"14px",background:C.s1,border:`1px solid ${C.bd}`,borderRadius:14,color:"#F2F4F7",fontFamily:DISP_F,fontSize:16,fontWeight:600,outline:"none",marginBottom:18}}
+            />
+            <div style={lbl}>Intensité</div>
             <div style={{display:"flex",gap:7,flexWrap:"wrap",marginBottom:20}}>
-              {Object.entries(INT).map(([k,v])=>(
-                <button key={k} onClick={()=>setInt(k)} style={S.chip(intensite===k, v.c)}>
-                  <span style={{width:8,height:8,borderRadius:"50%",background:v.c,flexShrink:0,boxShadow:intensite===k?`0 0 6px ${v.c}80`:"none"}}/>
+              {Object.entries(INT).map(([k,v])=>{const on=intensite===k;return(
+                <button key={k} onClick={()=>setInt(k)} style={{padding:"9px 14px",borderRadius:12,border:`1px solid ${on?v.c:C.bd}`,background:on?`${v.c}18`:C.s1,color:on?v.c:"rgba(242,244,247,0.55)",fontFamily:DISP_F,fontSize:12,fontWeight:600,cursor:"pointer",display:"flex",alignItems:"center",gap:7}}>
+                  <span style={{width:8,height:8,borderRadius:"50%",background:v.c,flexShrink:0,boxShadow:on?`0 0 6px ${v.c}80`:"none"}}/>
                   {v.l}
                 </button>
-              ))}
+              );})}
             </div>
-
-            {/* Durée */}
-            <div style={S.label}>Durée estimée</div>
+            <div style={lbl}>Durée estimée</div>
             <div style={{display:"flex",gap:7,marginBottom:20}}>
-              {DURS.map(d=><button key={d} onClick={()=>setDuree(d)} style={S.durBtn(duree===d)}>{d}</button>)}
+              {DURS.map(d=>{const on=duree===d;return(
+                <button key={d} onClick={()=>setDuree(d)} style={{flex:1,padding:"11px 0",borderRadius:12,border:`1px solid ${on?"#3B82F6":C.bd}`,background:on?"rgba(59,130,246,0.12)":C.s1,color:on?"#60A5FA":"rgba(242,244,247,0.55)",fontFamily:DISP_F,fontSize:11,fontWeight:600,cursor:"pointer",textAlign:"center"}}>{d}</button>
+              );})}
             </div>
           </>)}
 
-          {step===2 && (<>
-            {/* Exercices ajoutés */}
-            <div style={{...S.label,marginBottom:exos.length?10:0}}>Exercices <span style={{color:"#60A5FA"}}>({exos.length})</span></div>
-            {exos.length===0&&(
-              <div style={{textAlign:"center",padding:"14px 0 16px",fontSize:12,color:"rgba(242,244,247,0.30)",fontFamily:DISP_F}}>Aucun exercice ajouté — cherche ci-dessous.</div>
-            )}
-            {exos.map((ex,i)=>(
-              <div key={i} style={{background:C.s1,border:`1px solid ${expandedEx===i?"rgba(59,130,246,0.4)":C.bd}`,borderRadius:14,marginBottom:8,overflow:"hidden",transition:"border-color .2s"}}>
-                {/* Ligne principale */}
-                <div style={{display:"flex",alignItems:"center",gap:11,padding:"12px 14px"}}>
-                  <div style={{width:4,height:36,borderRadius:2,background:cc(ex.cat),flexShrink:0}}/>
-                  <div style={{flex:1,minWidth:0,cursor:"pointer"}} onClick={()=>setExpanded(expandedEx===i?null:i)}>
-                    <div style={{fontSize:13.5,fontWeight:700,color:"#F2F4F7",fontFamily:DISP_F}}>{ex.nom}</div>
-                    <div style={{fontSize:10.5,color:"rgba(242,244,247,0.45)",marginTop:2,fontFamily:DISP_F}}>{ex.series}×{ex.reps} · {ex.repos} <span style={{color:"#60A5FA"}}>{expandedEx===i?"▲ Réduire":"▼ Modifier"}</span></div>
-                  </div>
-                  <button onClick={()=>removeEx(ex.nom)} style={{background:"rgba(248,113,113,0.08)",border:"1px solid rgba(248,113,113,0.20)",borderRadius:9,padding:"6px 10px",color:"#F87171",cursor:"pointer",fontSize:11,fontFamily:DISP_F,fontWeight:600}}>Retirer</button>
-                </div>
-
-                {/* Config inline */}
-                {expandedEx===i&&(
-                  <div style={{borderTop:`1px solid ${C.bd}`,padding:"12px 14px",background:"rgba(59,130,246,0.04)"}}>
-                    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8}}>
-                      {[{l:"Séries",k:"series"},{l:"Reps",k:"reps"},{l:"Repos",k:"repos"}].map(pp=>(
-                        <div key={pp.k}>
-                          <div style={{fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:"rgba(242,244,247,0.35)",marginBottom:6,fontFamily:DISP_F}}>{pp.l}</div>
-                          <input value={ex[pp.k]||""} onChange={e=>updateField(i,pp.k,e.target.value)}
-                            style={{width:"100%",padding:"10px 6px",background:C.s2,border:`1px solid ${C.bd}`,borderRadius:10,color:"#F2F4F7",fontFamily:DISP_F,fontSize:15,fontWeight:700,textAlign:"center",outline:"none"}}/>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
+          {/* ── CONFIG EXERCICE (formulaire inline) ── */}
+          {newExForm && (<>
+            {/* Badge exo */}
+            <div style={{display:"flex",alignItems:"center",gap:12,padding:"13px 15px",background:`${cc(newExForm.cat)}0d`,border:`1px solid ${cc(newExForm.cat)}30`,borderRadius:14,marginBottom:16,marginTop:4}}>
+              <div style={{width:4,height:38,borderRadius:2,background:cc(newExForm.cat),flexShrink:0}}/>
+              <div>
+                <div style={{fontSize:14,fontWeight:700,color:"#F2F4F7",fontFamily:DISP_F}}>{newExForm.nom}</div>
+                <div style={{fontSize:10.5,color:"rgba(242,244,247,0.40)",marginTop:2,fontFamily:DISP_F}}>{newExForm.group}</div>
               </div>
-            ))}
-
-            {/* Picker */}
-            <div style={{...S.label,marginTop:exos.length?6:0}}>Ajouter des exercices</div>
-            <input value={search} onChange={e=>{setSearch(e.target.value);setGroupe(null);}} placeholder="🔍  Rechercher…"
-              style={{width:"100%",padding:"12px 14px",background:C.s1,border:`1px solid ${C.bd}`,borderRadius:12,color:"#F2F4F7",fontFamily:DISP_F,fontSize:13,outline:"none",marginBottom:10}}/>
-
-            {!search&&(
-              <div style={{display:"flex",flexWrap:"wrap",gap:6,marginBottom:10}}>
-                {Object.keys(EX).map(g=>(
-                  <button key={g} onClick={()=>setGroupe(g===groupe?null:g)}
-                    style={{padding:"6px 12px",borderRadius:99,background:groupe===g?"rgba(59,130,246,0.12)":C.s1,border:`1px solid ${groupe===g?"#3B82F6":C.bd}`,color:groupe===g?"#60A5FA":"rgba(242,244,247,0.45)",cursor:"pointer",fontSize:11,fontWeight:groupe===g?700:500,fontFamily:DISP_F}}>
-                    {g} <span style={{fontSize:9,opacity:.6}}>({(EX[g]||[]).length})</span>
-                  </button>
+            </div>
+            {/* Séries / Reps / Repos / Charge */}
+            <div style={{background:C.s1,border:`1px solid ${C.bd}`,borderRadius:16,padding:"14px",marginBottom:12}}>
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:12}}>
+                {[{l:"Séries",k:"series",def:"4"},{l:"Reps",k:"reps",def:"10"},{l:"Repos",k:"repos",def:"90s"},{l:"Charge",k:"charge",def:""}].map(pp=>(
+                  <div key={pp.k}>
+                    <div style={{...lbl,marginBottom:5}}>{pp.l}</div>
+                    <input value={newExForm[pp.k]||""} onChange={e=>setNewExForm(f=>({...f,[pp.k]:e.target.value}))}
+                      placeholder={pp.def} autoComplete="off"
+                      style={{width:"100%",padding:"11px 10px",background:C.s2,border:`1px solid ${C.bd}`,borderRadius:10,fontSize:15,fontWeight:700,color:"#F2F4F7",fontFamily:DISP_F,textAlign:"center",outline:"none"}}/>
+                  </div>
                 ))}
               </div>
-            )}
+              {/* Méthode */}
+              <div style={lbl}>Méthode</div>
+              <div style={{display:"flex",flexWrap:"wrap",gap:5}}>
+                {METHODS.map(mm=>{const on=newExForm.methode===mm;return(
+                  <button key={mm} onClick={()=>setNewExForm(f=>({...f,methode:mm}))} style={{padding:"5px 11px",borderRadius:99,border:`1px solid ${on?"#3B82F6":C.bd}`,background:on?"rgba(59,130,246,0.12)":C.s1,color:on?"#60A5FA":"rgba(242,244,247,0.45)",cursor:"pointer",fontSize:10.5,fontWeight:on?700:500,fontFamily:DISP_F}}>{mm}</button>
+                );})}
+              </div>
+            </div>
+          </>)}
 
-            {searchList.length>0&&(
+          {/* ── ÉTAPE 2 : Exercices ── */}
+          {!newExForm && step===2 && (<>
+            {/* Liste exos ajoutés */}
+            <div style={{...lbl,marginBottom:exos.length?10:0}}>
+              Exercices <span style={{color:"#60A5FA"}}>({exos.length})</span>
+            </div>
+            {exos.length===0 && (
+              <div style={{textAlign:"center",padding:"14px 0 16px",fontSize:12,color:"rgba(242,244,247,0.30)",fontFamily:DISP_F}}>Aucun exercice — ajoute depuis la bibliothèque ci-dessous.</div>
+            )}
+            {exos.map((ex,i)=>{
+              const colour = cc(ex.cat);
+              const isOpen = !!editEx[i];
+              return (
+                <div key={i} style={{background:C.s1,border:`1px solid ${isOpen?colour+"40":C.bd}`,borderRadius:16,marginBottom:8,overflow:"hidden"}}>
+                  <div style={{padding:"12px 14px",display:"flex",alignItems:"center",gap:12}}>
+                    {/* Numéro carré coloré */}
+                    <div style={{width:38,height:38,borderRadius:11,flexShrink:0,background:`linear-gradient(145deg,${colour}30,${colour}08)`,border:`1px solid ${colour}40`,color:colour,display:"grid",placeItems:"center",fontFamily:DISP_F,fontSize:13,fontWeight:800}}>{i+1}</div>
+                    <div style={{flex:1,minWidth:0,cursor:"pointer"}} onClick={()=>setEditEx(m=>({...m,[i]:!m[i]}))}>
+                      <div style={{fontSize:14,fontWeight:700,color:"#F2F4F7",fontFamily:DISP_F,letterSpacing:-0.1}}>{ex.nom}</div>
+                      <div style={{fontSize:11,color:"rgba(242,244,247,0.35)",marginTop:2,fontFamily:DISP_F}}>
+                        {ex.series}×{ex.reps} · {ex.repos}{ex.charge?` · `+ex.charge:""}{ex.methode&&ex.methode!=="Classique"?` · ${ex.methode}`:""}
+                        <span style={{color:"#60A5FA",marginLeft:6}}>{isOpen?"▲":"✏️"}</span>
+                      </div>
+                    </div>
+                    <button onClick={()=>removeEx(i)} style={{background:"rgba(248,113,113,0.08)",border:"1px solid rgba(248,113,113,0.20)",borderRadius:9,padding:"6px 10px",color:"#F87171",cursor:"pointer",fontSize:11,fontFamily:DISP_F,fontWeight:600}}>×</button>
+                  </div>
+                  {/* Accordéon édition */}
+                  {isOpen && (
+                    <div style={{borderTop:`1px solid ${C.bd}`,padding:"12px 14px",background:"rgba(59,130,246,0.03)"}}>
+                      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:10}}>
+                        {[{l:"Séries",k:"series"},{l:"Reps",k:"reps"},{l:"Repos",k:"repos"},{l:"Charge",k:"charge"}].map(pp=>(
+                          <div key={pp.k}>
+                            <div style={{...lbl,marginBottom:5}}>{pp.l}</div>
+                            <div style={{display:"flex",gap:4,alignItems:"center"}}>
+                              <button onClick={()=>{const cur=parseFloat(ex[pp.k])||0;updateField(i,pp.k,String(Math.max(0,cur-1)));}} style={{width:28,height:28,borderRadius:7,background:C.s2,border:"none",cursor:"pointer",fontSize:14,color:"rgba(242,244,247,0.60)"}}>−</button>
+                              <input value={ex[pp.k]||""} onChange={e=>updateField(i,pp.k,e.target.value)} autoComplete="off"
+                                style={{flex:1,padding:"6px 4px",background:C.s2,border:`1px solid ${C.bd}`,borderRadius:8,fontSize:12,fontWeight:600,textAlign:"center",fontFamily:DISP_F,color:"#F2F4F7",outline:"none"}}/>
+                              <button onClick={()=>{const cur=parseFloat(ex[pp.k])||0;updateField(i,pp.k,String(cur+1));}} style={{width:28,height:28,borderRadius:7,background:"rgba(59,130,246,0.16)",border:"none",cursor:"pointer",fontSize:14,color:"#60A5FA"}}>+</button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      <div style={lbl}>Méthode</div>
+                      <div style={{display:"flex",flexWrap:"wrap",gap:5}}>
+                        {METHODS.map(mm=>{const on=ex.methode===mm;return(
+                          <button key={mm} onClick={()=>updateField(i,"methode",mm)} style={{padding:"4px 10px",borderRadius:99,border:`1px solid ${on?"#3B82F6":C.bd}`,background:on?"rgba(59,130,246,0.12)":C.s1,color:on?"#60A5FA":"rgba(242,244,247,0.45)",cursor:"pointer",fontSize:10,fontWeight:on?700:500,fontFamily:DISP_F}}>{mm}</button>
+                        );})}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+
+            {/* Bibliothèque */}
+            <div style={{...lbl,marginTop:exos.length?6:0}}>Bibliothèque</div>
+            <input value={search} onChange={e=>{setSearch(e.target.value);setGroupe(null);}} placeholder="🔍  Rechercher un exercice…"
+              autoComplete="off" autoCorrect="off" data-form-type="other"
+              style={{width:"100%",padding:"12px 14px",background:C.s1,border:`1px solid ${C.bd}`,borderRadius:12,color:"#F2F4F7",fontFamily:DISP_F,fontSize:13,outline:"none",marginBottom:10}}/>
+            {!search && (
+              <div style={{display:"flex",flexWrap:"wrap",gap:6,marginBottom:10}}>
+                {Object.keys(EX).map(g=>{const on=groupe===g;return(
+                  <button key={g} onClick={()=>setGroupe(g===groupe?null:g)} style={{padding:"6px 12px",borderRadius:99,background:on?"rgba(59,130,246,0.12)":C.s1,border:`1px solid ${on?"#3B82F6":C.bd}`,color:on?"#60A5FA":"rgba(242,244,247,0.45)",cursor:"pointer",fontSize:11,fontWeight:on?700:500,fontFamily:DISP_F}}>
+                    {g} <span style={{fontSize:9,opacity:.6}}>({(EX[g]||[]).length})</span>
+                  </button>
+                );})}
+              </div>
+            )}
+            {searchList.length>0 && (
               <div style={{background:C.s1,border:`1px solid ${C.bd}`,borderRadius:14,overflow:"hidden",marginBottom:12}}>
                 {searchList.map((ex,i)=>{
-                  const done = !!exos.find(e=>e.nom===ex.nom);
+                  const done=!!exos.find(e=>e.nom===ex.nom);
                   return (
-                    <div key={i} onClick={()=>!done&&addEx(ex)} style={{display:"flex",alignItems:"center",gap:10,padding:"11px 14px",borderBottom:i<searchList.length-1?`1px solid ${C.bd}`:"none",cursor:done?"default":"pointer",opacity:done?.55:1}}>
+                    <div key={i} onClick={()=>!done&&openPicker(ex)}
+                      style={{display:"flex",alignItems:"center",gap:10,padding:"11px 14px",borderBottom:i<searchList.length-1?`1px solid ${C.bd}`:"none",cursor:done?"default":"pointer",opacity:done?.5:1}}>
                       <div style={{width:4,height:28,borderRadius:2,background:cc(ex.cat),flexShrink:0}}/>
                       <div style={{flex:1,fontSize:13,fontWeight:600,color:"#F2F4F7",fontFamily:DISP_F}}>{ex.nom}{search&&<span style={{fontSize:9.5,color:"rgba(242,244,247,0.40)",marginLeft:6}}>{ex.group}</span>}</div>
                       <div style={{fontSize:11,fontWeight:700,color:done?"#34D399":"#60A5FA",fontFamily:DISP_F}}>{done?"✓ Ajouté":"+ Ajouter"}</div>
@@ -376,25 +436,27 @@ export function CreateSeanceModal({ prog, setProg, setCalSess, push, onClose, C 
                 })}
               </div>
             )}
-
-            {!search&&!groupe&&(
-              <div style={{textAlign:"center",padding:"14px 0",fontSize:11,color:"rgba(242,244,247,0.30)",fontFamily:DISP_F}}>Sélectionne un groupe ou recherche un exercice</div>
-            )}
+            {!search&&!groupe&&<div style={{textAlign:"center",padding:"12px 0",fontSize:11,color:"rgba(242,244,247,0.30)",fontFamily:DISP_F}}>Sélectionne un groupe ou recherche</div>}
           </>)}
 
           <div style={{height:16}}/>
         </div>
 
-        {/* ── Footer navigation ── */}
+        {/* ── Footer ── */}
         <div style={{padding:"10px 18px 26px",flexShrink:0,borderTop:`1px solid ${C.bd}`}}>
           <div style={{display:"flex",gap:9}}>
-            {step===2&&(
-              <button onClick={()=>setStep(1)} style={{flex:1,padding:"15px",borderRadius:14,border:`1px solid ${C.bd}`,background:"transparent",color:"rgba(242,244,247,0.45)",fontFamily:DISP_F,fontSize:14,fontWeight:600,cursor:"pointer"}}>← Retour</button>
+            {(step===2||newExForm) && (
+              <button onClick={newExForm?()=>setNewExForm(null):()=>setStep(1)}
+                style={{flex:1,padding:"15px",borderRadius:14,border:`1px solid ${C.bd}`,background:"transparent",color:"rgba(242,244,247,0.45)",fontFamily:DISP_F,fontSize:14,fontWeight:600,cursor:"pointer"}}>
+                ← Retour
+              </button>
             )}
-            <button onClick={step===1?()=>setStep(2):handleSave}
-              disabled={step===1?!seNom.trim():false}
-              style={S.nextBtn(step===1?!!seNom.trim():true)}>
-              {step===1 ? "Continuer →" : `Créer la séance${exos.length>0?` · ${exos.length} exo${exos.length>1?"s":""}`:" (sans exo)"}`}
+            <button onClick={newExForm?confirmAdd:step===1?()=>setStep(2):handleSave}
+              disabled={newExForm?!newExForm.nom:(!nextOk)}
+              style={nextBtn}>
+              {newExForm ? "Ajouter à la séance"
+                : step===1 ? "Continuer →"
+                : `Créer la séance${exos.length>0?` · ${exos.length} exo${exos.length>1?"s":""}`:" (sans exercice)"}`}
             </button>
           </div>
         </div>
