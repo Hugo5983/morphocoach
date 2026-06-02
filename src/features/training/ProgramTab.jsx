@@ -9,6 +9,84 @@ import AnalyseIA from "../ai/AnalyseIA.jsx";
 import { findExInDB } from "../../utils/training.js";
 import { GuideExModal, SeanceDetailModal } from "./components/ProgramTabModals.jsx";
 
+// ─── MÉSOCYCLE CHART ─────────────────────────────────────────────────────────
+function MesocycleChart({ prog, semC }) {
+  const DISP_F = "'Outfit','DM Sans',system-ui,sans-serif";
+  const currentWeek = Math.min((semC||0), 5);
+  const baseVol = (prog?.jours||[]).reduce((a,j) =>
+    a + (j.exercices||[]).reduce((b,ex) => b + (parseInt(ex.series)||4), 0), 0);
+  const WEEKS = [
+    {lbl:"S1", type:"Base",   m:1.00, color:"#3B82F6"},
+    {lbl:"S2", type:"Vol+",   m:1.10, color:"#3B82F6"},
+    {lbl:"S3", type:"Vol+",   m:1.20, color:"#3B82F6"},
+    {lbl:"S4", type:"Vol+",   m:1.30, color:"#3B82F6"},
+    {lbl:"S5", type:"Déload", m:0.70, color:"#F87171"},
+    {lbl:"S6", type:"Pic",    m:1.40, color:"#F59E0B"},
+  ];
+  const maxH = 72;
+  const maxM = 1.4;
+  return (
+    <div style={{background:C.s1,border:`1px solid ${C.bd}`,borderRadius:20,padding:"18px 16px",marginBottom:16}}>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:18}}>
+        <div>
+          <div style={{fontSize:9,fontWeight:700,letterSpacing:"1.3px",textTransform:"uppercase",color:C.blue,fontFamily:DISP_F,marginBottom:4}}>Mésocycle</div>
+          <div style={{fontSize:16,fontWeight:700,color:"#F2F4F7",fontFamily:DISP_F,letterSpacing:-0.3}}>Volume 6 semaines</div>
+          <div style={{fontSize:11,color:"rgba(242,244,247,0.35)",fontFamily:DISP_F,marginTop:3}}>Progression planifiée · {baseVol} séries/sem</div>
+        </div>
+        <div style={{textAlign:"right"}}>
+          <div style={{fontSize:9,color:"rgba(242,244,247,0.35)",fontFamily:DISP_F}}>Sem. actuelle</div>
+          <div style={{fontSize:20,fontWeight:800,color:C.blue,fontFamily:DISP_F,lineHeight:1}}>{currentWeek+1}<span style={{fontSize:11,color:"rgba(242,244,247,0.35)",fontWeight:400}}>/6</span></div>
+        </div>
+      </div>
+      {/* Barres */}
+      <div style={{display:"flex",gap:8,alignItems:"flex-end",height:maxH,marginBottom:10}}>
+        {WEEKS.map((w,i) => {
+          const isCur = i===currentWeek;
+          const h = Math.round((w.m/maxM)*maxH);
+          const bg = w.type==="Déload" ? "rgba(248,113,113,0.4)"
+            : w.type==="Pic" ? "rgba(245,158,11,0.55)"
+            : isCur ? "linear-gradient(180deg,#60A5FA,#2563EB)"
+            : "rgba(59,130,246,0.22)";
+          return (
+            <div key={i} style={{flex:1,display:"flex",flexDirection:"column",justifyContent:"flex-end"}}>
+              <div style={{
+                height:h, borderRadius:"5px 5px 3px 3px",
+                background:bg,
+                border: isCur ? "1px solid #3B82F6" : "1px solid transparent",
+                boxShadow: isCur ? "0 4px 14px rgba(59,130,246,0.3)" : "none",
+              }}/>
+            </div>
+          );
+        })}
+      </div>
+      {/* Labels */}
+      <div style={{display:"flex",gap:8}}>
+        {WEEKS.map((w,i) => {
+          const isCur = i===currentWeek;
+          const col = w.type==="Déload" ? "rgba(248,113,113,0.7)"
+            : w.type==="Pic" ? "rgba(245,158,11,0.7)"
+            : isCur ? "#60A5FA" : "rgba(242,244,247,0.35)";
+          return (
+            <div key={i} style={{flex:1,textAlign:"center"}}>
+              <div style={{fontSize:isCur?12:11,fontWeight:isCur?800:600,color:col,fontFamily:DISP_F}}>{w.lbl}</div>
+              <div style={{fontSize:8,color:"rgba(242,244,247,0.22)",fontFamily:DISP_F,marginTop:1}}>{w.type}</div>
+            </div>
+          );
+        })}
+      </div>
+      {/* Légende */}
+      <div style={{display:"flex",gap:16,marginTop:14,paddingTop:12,borderTop:`1px solid ${C.bd}`}}>
+        {[{c:"rgba(59,130,246,0.35)",l:"Progression"},{c:"rgba(248,113,113,0.4)",l:"Déload"},{c:"rgba(245,158,11,0.55)",l:"Pic"}].map((it,i)=>(
+          <div key={i} style={{display:"flex",alignItems:"center",gap:5}}>
+            <div style={{width:8,height:8,borderRadius:2,background:it.c,flexShrink:0}}/>
+            <span style={{fontSize:10,color:"rgba(242,244,247,0.35)",fontFamily:DISP_F}}>{it.l}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function ProgrammeView(props) {
   const { prog, setProg, progs, setProgs, premium, setPaywall, push, calSess, setCalSess, checkedEx, createStep, setCS, newP, setNewP, jourActif, setJourActif, groupe, setGroupe, editExIdx, setEditExIdx, exModal, setExModal, exModalTab, setExModalTab, INT, EX, setProgView, cycleStart, setCycleStart, semC, jR, profil } = props;
 
@@ -16,6 +94,7 @@ function ProgrammeView(props) {
   const [innerView, setInnerView] = useState("list");
   const [confirmDel, setConfirmDel] = useState(null); // {type:"prog"|"jour", progIdx, jourIdx}
   const [isCreating, setIsCreating] = useState(false);
+  const [openJour,   setOpenJour]   = useState(null);
 
   const allProgs = progs && progs.length > 0 ? progs : (prog ? [prog] : []);
 
@@ -100,102 +179,181 @@ function ProgrammeView(props) {
     );
   }
 
-  // ── Messages de phase adaptés à l'objectif ──────────────────────────────
-  const week   = (semC||0)+1;
+  // ── Helpers ────────────────────────────────────────────────────────────────
   const SERIF_F  = "'DM Serif Display','Georgia',serif";
   const DISP_F   = "'Outfit','DM Sans',system-ui,sans-serif";
+  const semN     = (semC||0)+1;
+  const DAYS_ORDER = ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
+  const todayDowFr = ['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'][new Date().getDay()];
+  const todayIdx   = DAYS_ORDER.indexOf(todayDowFr);
+  const cc = (cat) => ({principal:"#4D8BFF",correctif:"#FF7A6B",gainage:"#5FE0A5",isolation:"#B69DFF"}[cat||"principal"]||"#4D8BFF");
+  const durOf = (j) => {
+    const exs = j.exercices||[];
+    if (!exs.length) return null;
+    const secs = exs.reduce((sum,ex) => {
+      const s = parseInt(ex.series)||4, r = parseInt(String(ex.repos||"90").replace(/\D/g,""))||90;
+      return sum + s*(r+60);
+    },0);
+    return Math.round(secs/60);
+  };
+  let nextJour = null, nextDayLabel = "";
+  if (prog?.jours?.length > 0) {
+    const withIdx = prog.jours.map(j => ({j, di: DAYS_ORDER.indexOf(j.focus || j.nom?.slice(0,3) || 'Lun')}));
+    const sorted  = [...withIdx].sort((a,b) => ((a.di-todayIdx+7)%7) - ((b.di-todayIdx+7)%7));
+    nextJour = sorted[0]?.j;
+    nextDayLabel = DAYS_ORDER[sorted[0]?.di] || '';
+  }
 
   return (
     <div style={{padding:"0 15px"}}>
 
-      {/* ── Hero header ── */}
-      <div style={{paddingTop:6,marginBottom:16}}>
-        <div style={{fontSize:10,fontWeight:700,letterSpacing:"2px",textTransform:"uppercase",color:C.blue,fontFamily:DISP_F,marginBottom:5}}>Programme</div>
-        <div style={{fontFamily:SERIF_F,fontSize:28,color:C.text,lineHeight:1.1,letterSpacing:-1}}>
-          Ton <span style={{fontStyle:"italic",color:C.blue}}>programme</span>
-        </div>
-        <div style={{fontSize:11,color:"rgba(242,244,247,0.38)",marginTop:5,fontFamily:DISP_F}}>
-          {prog ? `${prog.titre} · ${prog.jours?.length||0} séances/sem` : "Crée ton premier programme pour commencer."}
-        </div>
-      </div>
-
-
-
-
-
-      {/* ── Modal confirmation suppression ── */}      {/* ── Modal confirmation suppression ── */}
+      {/* ── Confirm delete modal ── */}
       {confirmDel && (
-        <div style={{position:"fixed",inset:0,background:"rgba(15,26,46,0.45)",zIndex:500,display:"flex",alignItems:"center",justifyContent:"center",padding:20}}>
-          <div style={{background:C.s1,borderRadius:16,padding:"22px 20px",width:"100%",maxWidth:340,boxShadow:"0 8px 32px rgba(0,0,0,0.12)"}}>
-            <div style={{fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",fontSize:16,fontWeight:500,marginBottom:8,color:"#F2F4F7"}}>
+        <div style={{position:"fixed",inset:0,background:"rgba(15,26,46,0.55)",zIndex:500,display:"flex",alignItems:"center",justifyContent:"center",padding:20}}>
+          <div style={{background:C.s1,borderRadius:16,padding:"22px 20px",width:"100%",maxWidth:340}}>
+            <div style={{fontFamily:DISP_F,fontSize:16,fontWeight:500,marginBottom:8,color:"#F2F4F7"}}>
               {confirmDel.type==="prog" ? "Supprimer ce programme ?" : "Supprimer cette séance ?"}
             </div>
             <div style={{fontSize:12,color:"rgba(242,244,247,0.50)",marginBottom:20,lineHeight:1.5}}>
               {confirmDel.type==="prog"
-                ? "Toutes les séances de ce programme seront perdues. Cette action est irréversible."
+                ? "Toutes les séances seront perdues. Cette action est irréversible."
                 : "La séance et tous ses exercices seront supprimés définitivement."}
             </div>
             <div style={{display:"flex",gap:10}}>
-              <button onClick={() => setConfirmDel(null)} style={{flex:1,padding:"10px",background:C.s2,border:"none",borderRadius:9,cursor:"pointer",fontSize:13,fontWeight:500,color:"rgba(242,244,247,0.50)",fontFamily:"'Inter',sans-serif"}}>Annuler</button>
-              <button onClick={() => confirmDel.type==="prog" ? deleteProgAtIdx(confirmDel.pIdx) : deleteJourAtIdx(confirmDel.pIdx, confirmDel.jIdx)} style={{flex:1,padding:"10px",background:"#FF7A6B",border:"none",borderRadius:9,cursor:"pointer",fontSize:13,fontWeight:600,color:"#141A2E",fontFamily:"'Inter',sans-serif"}}>Supprimer</button>
+              <button onClick={()=>setConfirmDel(null)} style={{flex:1,padding:"10px",background:C.s2,border:"none",borderRadius:9,cursor:"pointer",fontSize:13,fontWeight:500,color:"rgba(242,244,247,0.50)",fontFamily:DISP_F}}>Annuler</button>
+              <button onClick={()=>confirmDel.type==="prog" ? deleteProgAtIdx(confirmDel.pIdx) : deleteJourAtIdx(confirmDel.pIdx, confirmDel.jIdx)} style={{flex:1,padding:"10px",background:"#FF7A6B",border:"none",borderRadius:9,cursor:"pointer",fontSize:13,fontWeight:600,color:"#141A2E",fontFamily:DISP_F}}>Supprimer</button>
             </div>
           </div>
         </div>
       )}
 
-      {/* ── Séances de la semaine ── */}
-      {prog && prog.jours && prog.jours.length > 0 && (
-        <div style={{marginBottom:14}}>
-          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:10}}>
-            <div style={{fontSize:17,fontWeight:700,color:C.text,fontFamily:DISP_F,letterSpacing:-0.4}}>Semaine {week} · Split</div>
-            <div style={{fontSize:9,fontWeight:700,color:C.blue,letterSpacing:"1.2px",textTransform:"uppercase",fontFamily:DISP_F}}>
-              {prog.jours.length} séances
+      {/* ── Header ── */}
+      <div style={{paddingTop:6,marginBottom:18}}>
+        <div style={{fontSize:9,fontWeight:700,letterSpacing:"2px",textTransform:"uppercase",color:C.blue,fontFamily:DISP_F,marginBottom:5}}>Programme</div>
+        <div style={{fontFamily:SERIF_F,fontSize:28,color:"#F2F4F7",lineHeight:1.1,letterSpacing:-1}}>
+          Ton <span style={{fontStyle:"italic",color:C.blue}}>programme</span>
+        </div>
+        <div style={{fontSize:11,color:"rgba(242,244,247,0.38)",marginTop:5,fontFamily:DISP_F}}>
+          {prog ? `${prog.titre} · ${prog.jours?.length||0} séances/sem · Sem. ${semN}` : "Crée ton premier programme pour commencer."}
+        </div>
+      </div>
+
+      {/* ── Programme actif ── */}
+      {prog && prog.jours?.length > 0 && (<>
+
+        {/* Hero : prochaine séance */}
+        {nextJour && (() => {
+          const int = INT[nextJour.intensite||"modere"];
+          const dur = durOf(nextJour);
+          return (
+            <div style={{position:"relative",overflow:"hidden",borderRadius:22,padding:"18px 20px 20px",marginBottom:20,
+              background:"linear-gradient(155deg,#0f1f3a,#0b162c)",border:"1px solid rgba(59,130,246,0.22)",
+              boxShadow:"0 16px 40px rgba(0,0,0,0.35)"}}>
+              <div style={{position:"absolute",top:-50,right:-50,width:180,height:180,borderRadius:"50%",background:"radial-gradient(circle,rgba(59,130,246,0.18),transparent 65%)",pointerEvents:"none"}}/>
+              <div style={{fontSize:9,fontWeight:700,letterSpacing:"1.3px",color:"rgba(96,165,250,0.9)",background:"rgba(59,130,246,0.12)",border:"1px solid rgba(59,130,246,0.28)",padding:"5px 12px",borderRadius:99,display:"inline-block",marginBottom:10,fontFamily:DISP_F}}>
+                PROCHAINE SÉANCE · {nextDayLabel}
+              </div>
+              <div style={{fontFamily:SERIF_F,fontSize:28,color:"#F2F4F7",letterSpacing:-1,lineHeight:1.05,marginBottom:10}}>{nextJour.nom}</div>
+              <div style={{display:"flex",alignItems:"center",gap:14,flexWrap:"wrap",marginBottom:16}}>
+                <span style={{display:"flex",alignItems:"center",gap:5,fontSize:12,fontWeight:700,color:int.c}}>
+                  <span style={{width:7,height:7,borderRadius:"50%",background:int.c,boxShadow:`0 0 6px ${int.c}80`}}/>
+                  {int.l}
+                </span>
+                {dur && <span style={{fontSize:12,color:"rgba(242,244,247,0.55)",display:"flex",alignItems:"center",gap:4,fontFamily:DISP_F}}>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                  ~{dur} min
+                </span>}
+                <span style={{fontSize:12,color:"rgba(242,244,247,0.55)",fontFamily:DISP_F}}>{nextJour.exercices?.length||0} exercice{(nextJour.exercices?.length||0)!==1?"s":""}</span>
+              </div>
+              <button onClick={()=>setInnerView(`seance:0:${prog.jours.indexOf(nextJour)}`)} style={{
+                width:"100%",padding:"14px",borderRadius:14,background:"linear-gradient(180deg,#3B82F6,#2563EB)",
+                border:"none",color:"#fff",fontFamily:DISP_F,fontSize:14,fontWeight:700,cursor:"pointer",
+                boxShadow:"0 8px 24px rgba(59,130,246,0.35)",display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg>
+                Démarrer la séance
+              </button>
             </div>
-          </div>
-          <div style={{background:C.s1,border:`1px solid ${C.bd}`,borderRadius:18,overflow:"hidden"}}>
-            {prog.jours.map((j, jIdx) => {
-              const int   = INT[j.intensite || "modere"];
-              const total = j.exercices?.length || 0;
-              const done  = j.exercices?.filter((_,idx) => checkedEx[`${j.id}-${idx}`]).length || 0;
-              const isFirst = jIdx===0;
-              return (
-                <div key={jIdx} style={{
-                  display:"flex",alignItems:"center",gap:12,padding:"14px 16px",
-                  borderBottom: jIdx<prog.jours.length-1 ? `1px solid ${C.bd}` : "none",
-                }}>
-                  {/* Icône */}
-                  <div style={{
-                    width:36,height:36,borderRadius:11,flexShrink:0,display:"grid",placeItems:"center",
-                    background: j.complete ? `${int.c}18` : isFirst ? `${int.c}15` : "rgba(255,255,255,0.04)",
-                    border: j.complete ? `1px solid ${int.c}35` : isFirst ? `1px solid ${int.c}30` : `1px solid ${C.bd}`,
-                  }}>
-                    {j.complete
-                      ? <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={int.c} strokeWidth="2.5" strokeLinecap="round"><path d="M20 6 9 17l-5-5"/></svg>
-                      : <div style={{width:8,height:8,borderRadius:"50%",background:isFirst?int.c:"rgba(255,255,255,0.15)"}}/>}
-                  </div>
-                  {/* Info */}
-                  <div onClick={() => setInnerView(`seance:0:${jIdx}`)} style={{flex:1,minWidth:0,cursor:"pointer"}}>
-                    <div style={{display:"flex",alignItems:"center",gap:7,marginBottom:3}}>
-                      <span style={{fontSize:14,fontWeight:700,color:j.complete?"rgba(242,244,247,0.40)":C.text,fontFamily:DISP_F,letterSpacing:-0.2}}>{j.nom}</span>
-                      {j.complete && <span style={{fontSize:8,fontWeight:700,color:"rgba(242,244,247,0.30)",letterSpacing:"0.8px",fontFamily:DISP_F}}>FAIT</span>}
-                    </div>
-                    <div style={{fontSize:9.5,fontWeight:700,color:int.c,letterSpacing:"0.8px",textTransform:"uppercase",fontFamily:DISP_F}}>
-                      {int.l}{j.focus?` · ${j.focus}`:""} · {total} ex.
-                    </div>
-                  </div>
-                  {/* Droite */}
-                  <div style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:5,flexShrink:0}}>
-                    {done>0 && <div style={{fontSize:11,fontWeight:700,color:int.c,fontVariantNumeric:"tabular-nums"}}>{done}/{total}</div>}
-                    <button onClick={() => setConfirmDel({type:"jour",pIdx:0,jIdx})} style={{padding:"5px 8px",background:"rgba(248,113,113,0.07)",border:"1px solid rgba(248,113,113,0.18)",borderRadius:8,color:"#FF7A6B",cursor:"pointer",fontSize:11,lineHeight:1}}>✕</button>
+          );
+        })()}
+
+        {/* Semaine type */}
+        <div style={{fontSize:9.5,fontWeight:700,letterSpacing:"2px",textTransform:"uppercase",color:"rgba(242,244,247,0.32)",fontFamily:DISP_F,marginBottom:12}}>Semaine type</div>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",gap:6,marginBottom:22}}>
+          {DAYS_ORDER.map((d,i) => {
+            const sess = prog.jours.find(j => (j.focus||j.nom?.slice(0,3)||"")===d);
+            const int  = sess ? INT[sess.intensite||"modere"] : null;
+            const isToday = i===todayIdx;
+            return (
+              <div key={d} style={{
+                borderRadius:12,padding:"8px 0 7px",textAlign:"center",
+                background: isToday?"rgba(59,130,246,0.12)":sess?C.s2:C.s1,
+                border: isToday?"1px solid #3B82F6":sess?`1px solid rgba(255,255,255,0.10)`:`1px solid ${C.bd}`,
+              }}>
+                <div style={{fontSize:11,fontWeight:700,color:isToday?"#60A5FA":sess?"#F2F4F7":"rgba(242,244,247,0.30)",fontFamily:DISP_F,marginBottom:5}}>{d}</div>
+                {int
+                  ? <div style={{width:6,height:6,borderRadius:"50%",background:int.c,boxShadow:`0 0 5px ${int.c}60`,margin:"0 auto"}}/>
+                  : <div style={{fontSize:9,color:"rgba(255,255,255,0.15)",lineHeight:1}}>—</div>}
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Séances accordion */}
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:12}}>
+          <div style={{fontSize:9.5,fontWeight:700,letterSpacing:"2px",textTransform:"uppercase",color:"rgba(242,244,247,0.32)",fontFamily:DISP_F}}>Séances</div>
+          <div style={{fontSize:20,fontWeight:800,color:"#F2F4F7",fontFamily:DISP_F}}>{prog.jours.length}</div>
+        </div>
+        {prog.jours.map((j, jIdx) => {
+          const int  = INT[j.intensite||"modere"];
+          const dur  = durOf(j);
+          const isOpen = openJour===jIdx;
+          const exos = j.exercices||[];
+          return (
+            <div key={jIdx} style={{background:C.s1,border:`1px solid ${isOpen?int.c+"40":C.bd}`,borderRadius:18,marginBottom:10,overflow:"hidden",transition:"border-color .2s"}}>
+              <div style={{display:"flex",alignItems:"center",gap:12,padding:"13px 14px",cursor:"pointer"}} onClick={()=>setOpenJour(isOpen?null:jIdx)}>
+                <div style={{width:46,height:46,borderRadius:13,background:`${int.c}18`,border:`1px solid ${int.c}35`,color:int.c,display:"grid",placeItems:"center",flexShrink:0,fontFamily:DISP_F,fontSize:12,fontWeight:800}}>
+                  {j.focus||j.nom?.slice(0,3)||"—"}
+                </div>
+                <div style={{flex:1,minWidth:0}}>
+                  <div style={{fontSize:15,fontWeight:700,color:"#F2F4F7",letterSpacing:-0.2,fontFamily:DISP_F}}>{j.nom}</div>
+                  <div style={{display:"flex",alignItems:"center",gap:6,marginTop:3,fontSize:11.5,color:"rgba(242,244,247,0.55)",fontFamily:DISP_F}}>
+                    <span style={{width:6,height:6,borderRadius:"50%",background:int.c,boxShadow:`0 0 5px ${int.c}60`,flexShrink:0}}/>
+                    {int.l} · {exos.length} exercice{exos.length!==1?"s":""}{dur?` · ~${dur} min`:""}
                   </div>
                 </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
+                <button onClick={e=>{e.stopPropagation();setInnerView(`seance:0:${jIdx}`);}}
+                  style={{width:34,height:34,borderRadius:10,background:"rgba(59,130,246,0.08)",border:"1px solid rgba(59,130,246,0.22)",color:"#60A5FA",cursor:"pointer",display:"grid",placeItems:"center",flexShrink:0,fontSize:14}}>✏️</button>
+                <div style={{color:"rgba(242,244,247,0.40)",fontSize:18,transition:"transform .2s",transform:isOpen?"rotate(180deg)":"rotate(0)",flexShrink:0}}>⌄</div>
+              </div>
+              {isOpen && (
+                <div style={{borderTop:`1px solid ${C.bd}`,padding:"8px 14px 14px"}}>
+                  {exos.length===0
+                    ? <div style={{textAlign:"center",padding:"12px 0",fontSize:11,color:"rgba(242,244,247,0.30)",fontFamily:DISP_F}}>Aucun exercice — tape ✏️ pour en ajouter</div>
+                    : exos.map((ex,k) => (
+                      <div key={k} style={{display:"flex",alignItems:"flex-start",gap:11,padding:"9px 0",borderBottom:k<exos.length-1?"1px solid rgba(255,255,255,0.04)":"none"}}>
+                        <div style={{width:30,height:30,borderRadius:9,background:`${cc(ex.cat)}20`,border:`1px solid ${cc(ex.cat)}35`,color:cc(ex.cat),display:"grid",placeItems:"center",fontFamily:DISP_F,fontSize:11,fontWeight:800,flexShrink:0}}>{k+1}</div>
+                        <div style={{flex:1,minWidth:0}}>
+                          <div style={{fontSize:13.5,fontWeight:700,color:"#F2F4F7",fontFamily:DISP_F,letterSpacing:-0.1}}>{ex.nom}</div>
+                          <div style={{fontSize:9,fontWeight:800,letterSpacing:"1px",color:"rgba(242,244,247,0.30)",textTransform:"uppercase",fontFamily:DISP_F,marginTop:2}}>{ex.cat||"Principal"}</div>
+                        </div>
+                        <div style={{fontSize:12,fontWeight:600,color:"rgba(242,244,247,0.45)",fontFamily:DISP_F,flexShrink:0,marginTop:2,textAlign:"right",whiteSpace:"nowrap"}}>
+                          {ex.series}×{ex.reps} · {ex.repos}s
+                        </div>
+                      </div>
+                    ))
+                  }
+                </div>
+              )}
+            </div>
+          );
+        })}
 
-      {/* ── Liste des autres programmes ── */}
+        {/* Mésocycle */}
+        <MesocycleChart prog={prog} semC={semC}/>
+
+      </>)}
+
+      {/* ── Autres programmes ── */}
       {allProgs.length > 1 && (
         <div style={{marginBottom:14}}>
           <div style={{fontSize:9,fontWeight:700,letterSpacing:"1.3px",textTransform:"uppercase",color:C.blue,fontFamily:DISP_F,marginBottom:10}}>Autres programmes</div>
@@ -205,11 +363,11 @@ function ProgrammeView(props) {
             return (
               <div key={pIdx} style={{display:"flex",alignItems:"center",gap:10,padding:"10px 12px",background:C.s1,border:`1px solid ${C.bd}`,borderRadius:12,marginBottom:6}}>
                 <div style={{flex:1,minWidth:0}}>
-                  <div style={{fontSize:13,fontWeight:600,color:C.text,fontFamily:DISP_F}}>{p.titre}</div>
+                  <div style={{fontSize:13,fontWeight:600,color:"#F2F4F7",fontFamily:DISP_F}}>{p.titre}</div>
                   <div style={{fontSize:10.5,color:"rgba(242,244,247,0.40)",marginTop:1}}>{p.jours?.length||0} séances</div>
                 </div>
-                <button onClick={() => { setProg(p); push("✅","Programme activé",p.titre); }} style={{padding:"6px 10px",background:"rgba(52,211,153,0.10)",border:"1px solid rgba(52,211,153,0.25)",borderRadius:8,color:"#34D399",cursor:"pointer",fontSize:10,fontWeight:700,fontFamily:DISP_F}}>Activer</button>
-                <button onClick={() => setConfirmDel({type:"prog",pIdx})} style={{padding:"6px 8px",background:"rgba(248,113,113,0.07)",border:"1px solid rgba(248,113,113,0.18)",borderRadius:8,color:"#FF7A6B",cursor:"pointer",fontSize:11}}>🗑</button>
+                <button onClick={()=>{setProg(p);push("✅","Programme activé",p.titre);}} style={{padding:"6px 10px",background:"rgba(52,211,153,0.10)",border:"1px solid rgba(52,211,153,0.25)",borderRadius:8,color:"#34D399",cursor:"pointer",fontSize:10,fontWeight:700,fontFamily:DISP_F}}>Activer</button>
+                <button onClick={()=>setConfirmDel({type:"prog",pIdx})} style={{padding:"6px 8px",background:"rgba(248,113,113,0.07)",border:"1px solid rgba(248,113,113,0.18)",borderRadius:8,color:"#FF7A6B",cursor:"pointer",fontSize:11}}>🗑</button>
               </div>
             );
           })}
@@ -219,8 +377,7 @@ function ProgrammeView(props) {
       {/* ── Empty state ── */}
       {allProgs.length === 0 && !showCreerForm && (
         <div style={{textAlign:"center",padding:"32px 0 16px"}}>
-          <div style={{fontSize:40,marginBottom:14}}>🏋️</div>
-          <div style={{fontFamily:SERIF_F,fontSize:22,fontWeight:400,color:C.text,marginBottom:8}}>Aucun programme</div>
+          <div style={{fontFamily:SERIF_F,fontSize:22,fontWeight:400,color:"#F2F4F7",marginBottom:8}}>Aucun programme</div>
           <div style={{fontSize:12,color:"rgba(242,244,247,0.45)",lineHeight:1.6,maxWidth:240,margin:"0 auto 24px",fontFamily:DISP_F}}>Génère un programme IA adapté à ta morphologie ou crée-le manuellement.</div>
         </div>
       )}
@@ -228,13 +385,13 @@ function ProgrammeView(props) {
       {/* ── CTAs ── */}
       {!showCreerForm && (
         <div style={{marginBottom:12}}>
-          <Btn onClick={() => { if(!premium) setPaywall(true); else setProgView("analyse"); }}>✨ Nouveau programme IA</Btn>
-          <Btn v="out" onClick={() => { setIsCreating(true); setCS(0); setNewP({nom:"",jours:[],seances:{}}); }}>+ Créer manuellement</Btn>
+          <Btn onClick={()=>{ if(!premium) setPaywall(true); else setProgView("analyse"); }}>✨ Nouveau programme IA</Btn>
+          <Btn v="out" onClick={()=>{ setIsCreating(true); setCS(0); setNewP({nom:"",jours:[],seances:{}}); }}>+ Créer manuellement</Btn>
         </div>
       )}
 
       {showCreerForm && (
-        <Creer {...creerProps} progs={allProgs} setProgsAll={(next) => { setProgs(next); if(next.length>0) setProg(next[next.length-1]); }} />
+        <Creer {...creerProps} progs={allProgs} setProgsAll={(next)=>{ setProgs(next); if(next.length>0) setProg(next[next.length-1]); }}/>
       )}
     </div>
   );
