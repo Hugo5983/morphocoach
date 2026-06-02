@@ -445,6 +445,23 @@ export default function Creer(props) {
   const canNext1    = name.trim() && split && days.length>0;
   const totalEx     = sortedDays.reduce((a,d)=>a+sess(d).ex.length,0);
 
+  // Durée moyenne réelle : séries × (repos + ~60s actifs) par exercice, moyenne sur toutes les séances
+  const avgDur = useMemo(() => {
+    if (totalEx === 0 || sortedDays.length === 0) return null;
+    const durs = sortedDays.map(d => {
+      const exs = sess(d).ex;
+      if (!exs.length) return 0;
+      const secs = exs.reduce((sum, ex) => {
+        const sets  = parseInt(ex.series) || 4;
+        const repos = parseInt(String(ex.repos || "90").replace(/\D/g,"")) || 90;
+        return sum + sets * (repos + 60);   // repos entre séries + ~60s de travail par série
+      }, 0);
+      return Math.round(secs / 60);
+    }).filter(d => d > 0);
+    if (!durs.length) return null;
+    return Math.round(durs.reduce((a,b)=>a+b,0) / durs.length);
+  }, [sortedDays, sessions, totalEx]);
+
   const goStep = s => {
     setStep(s);
     if (s===2 && !activeDay) setActiveDay(sortedDays[0]||days[0]);
@@ -683,10 +700,25 @@ export default function Creer(props) {
               </div>
 
               {s.ex.length===0
-                ? <div className="mc-empty">
-                    <span style={{ fontSize:30, marginBottom:12 }}>🏋️</span>
-                    <div style={{ fontWeight:600 }}>Aucun exercice pour l'instant.</div>
-                    <div style={{ fontSize:13, marginTop:4, color:DIM }}>Ajoute-en depuis la bibliothèque.</div>
+                ? <div style={{borderRadius:18,padding:"20px 16px",background:"rgba(255,255,255,0.02)",border:`1px dashed ${BD}`}}>
+                    {/* Ghost rows — exercices à venir */}
+                    {[{w:"65%",col:"#4D8BFF"},{w:"50%",col:"#5FE0A5"},{w:"72%",col:"#B69DFF"}].map((g,i)=>(
+                      <div key={i} style={{display:"flex",alignItems:"center",gap:12,padding:"10px 0",
+                        borderBottom:i<2?`1px solid rgba(255,255,255,0.04)`:"none",opacity:1-i*0.2}}>
+                        {/* Numéro */}
+                        <div style={{width:34,height:34,borderRadius:10,background:g.col+"15",
+                          border:`1px solid ${g.col}25`,flexShrink:0}}/>
+                        {/* Texte fantôme */}
+                        <div style={{flex:1}}>
+                          <div style={{height:11,borderRadius:4,background:"rgba(255,255,255,0.06)",
+                            width:g.w,marginBottom:6}}/>
+                          <div style={{height:9,borderRadius:3,background:"rgba(255,255,255,0.04)",width:"40%"}}/>
+                        </div>
+                      </div>
+                    ))}
+                    <div style={{textAlign:"center",paddingTop:14,fontSize:12,color:DIM}}>
+                      Ajoute ton premier exercice ci-dessous
+                    </div>
                   </div>
                 : s.ex.map(ex => (
                     <ExCard key={ex.id||ex.nom} ex={ex}
@@ -844,9 +876,9 @@ export default function Creer(props) {
               <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr",
                 gap:10, marginBottom:14 }}>
                 {[
-                  { label:"Séances",   val:String(sortedDays.length), sub:"/ semaine" },
-                  { label:"Exercices", val:String(totalEx),            sub:"au total"  },
-                  { label:"Durée moy", val:"~65",                      sub:"minutes"   },
+                  { label:"Séances",   val:String(sortedDays.length),          sub:"/ semaine" },
+                  { label:"Exercices", val:String(totalEx),                      sub:"au total"  },
+                  { label:"Durée moy", val:avgDur ? `~${avgDur}` : "—",         sub:"minutes"   },
                 ].map((st,i) => (
                   <div key={i} style={{ background:S1, border:`1px solid ${BD}`,
                     borderRadius:16, padding:"14px 12px", textAlign:"center" }}>
