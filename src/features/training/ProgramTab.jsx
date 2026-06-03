@@ -10,23 +10,33 @@ import { findExInDB } from "../../utils/training.js";
 import { GuideExModal, SeanceDetailModal } from "./components/ProgramTabModals.jsx";
 
 // ─── MÉSOCYCLE CHART ─────────────────────────────────────────────────────────
-function MesocycleChart({ prog, semC }) {
+function MesocycleChart({ prog, semC, checkedEx }) {
   const DISP_F = "'Outfit','DM Sans',system-ui,sans-serif";
+  const SERIF_F = "'DM Serif Display','Georgia',serif";
+  const [open, setOpen] = useState(false);
   const currentWeek = Math.min((semC||0), 5);
   const baseVol = (prog?.jours||[]).reduce((a,j) =>
     a + (j.exercices||[]).reduce((b,ex) => b + (parseInt(ex.series)||4), 0), 0);
   const WEEKS = [
-    {lbl:"S1", type:"Base",   m:1.00, color:"#3B82F6"},
-    {lbl:"S2", type:"Vol+",   m:1.10, color:"#3B82F6"},
-    {lbl:"S3", type:"Vol+",   m:1.20, color:"#3B82F6"},
-    {lbl:"S4", type:"Vol+",   m:1.30, color:"#3B82F6"},
-    {lbl:"S5", type:"Déload", m:0.70, color:"#F87171"},
-    {lbl:"S6", type:"Pic",    m:1.40, color:"#F59E0B"},
+    {lbl:"S1", type:"Base",   m:1.00},
+    {lbl:"S2", type:"Vol+",   m:1.10},
+    {lbl:"S3", type:"Vol+",   m:1.20},
+    {lbl:"S4", type:"Vol+",   m:1.30},
+    {lbl:"S5", type:"Déload", m:0.70},
+    {lbl:"S6", type:"Pic",    m:1.40},
   ];
-  const maxH = 72;
-  const maxM = 1.4;
+  const maxH = 72, maxM = 1.4;
+  // Volume landmarks (réels, dérivés du programme)
+  const MEV = Math.round(baseVol*0.65);
+  const MAV = baseVol;
+  const MRV = Math.round(baseVol*1.35);
+  const curVol = Math.round(baseVol * WEEKS[currentWeek].m);
+  const nearMRV = curVol >= MRV*0.9;
+
   return (
-    <div style={{background:C.s1,border:`1px solid ${C.bd}`,borderRadius:20,padding:"18px 16px",marginBottom:16}}>
+    <>
+    {/* Carte cliquable */}
+    <div onClick={()=>setOpen(true)} style={{background:C.s1,border:`1px solid ${C.bd}`,borderRadius:20,padding:"18px 16px",marginBottom:16,cursor:"pointer"}}>
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:18}}>
         <div>
           <div style={{fontSize:9,fontWeight:700,letterSpacing:"1.3px",textTransform:"uppercase",color:C.blue,fontFamily:DISP_F,marginBottom:4}}>Mésocycle</div>
@@ -38,34 +48,24 @@ function MesocycleChart({ prog, semC }) {
           <div style={{fontSize:20,fontWeight:800,color:C.blue,fontFamily:DISP_F,lineHeight:1}}>{currentWeek+1}<span style={{fontSize:11,color:"rgba(242,244,247,0.35)",fontWeight:400}}>/6</span></div>
         </div>
       </div>
-      {/* Barres */}
       <div style={{display:"flex",gap:8,alignItems:"flex-end",height:maxH,marginBottom:10}}>
         {WEEKS.map((w,i) => {
           const isCur = i===currentWeek;
           const h = Math.round((w.m/maxM)*maxH);
           const bg = w.type==="Déload" ? "rgba(248,113,113,0.4)"
             : w.type==="Pic" ? "rgba(245,158,11,0.55)"
-            : isCur ? "linear-gradient(180deg,#60A5FA,#2563EB)"
-            : "rgba(59,130,246,0.22)";
+            : isCur ? "linear-gradient(180deg,#60A5FA,#2563EB)" : "rgba(59,130,246,0.22)";
           return (
             <div key={i} style={{flex:1,display:"flex",flexDirection:"column",justifyContent:"flex-end"}}>
-              <div style={{
-                height:h, borderRadius:"5px 5px 3px 3px",
-                background:bg,
-                border: isCur ? "1px solid #3B82F6" : "1px solid transparent",
-                boxShadow: isCur ? "0 4px 14px rgba(59,130,246,0.3)" : "none",
-              }}/>
+              <div style={{height:h,borderRadius:"5px 5px 3px 3px",background:bg,border:isCur?"1px solid #3B82F6":"1px solid transparent",boxShadow:isCur?"0 4px 14px rgba(59,130,246,0.3)":"none"}}/>
             </div>
           );
         })}
       </div>
-      {/* Labels */}
       <div style={{display:"flex",gap:8}}>
         {WEEKS.map((w,i) => {
           const isCur = i===currentWeek;
-          const col = w.type==="Déload" ? "rgba(248,113,113,0.7)"
-            : w.type==="Pic" ? "rgba(245,158,11,0.7)"
-            : isCur ? "#60A5FA" : "rgba(242,244,247,0.35)";
+          const col = w.type==="Déload" ? "rgba(248,113,113,0.7)" : w.type==="Pic" ? "rgba(245,158,11,0.7)" : isCur ? "#60A5FA" : "rgba(242,244,247,0.35)";
           return (
             <div key={i} style={{flex:1,textAlign:"center"}}>
               <div style={{fontSize:isCur?12:11,fontWeight:isCur?800:600,color:col,fontFamily:DISP_F}}>{w.lbl}</div>
@@ -74,14 +74,223 @@ function MesocycleChart({ prog, semC }) {
           );
         })}
       </div>
-      {/* Légende */}
-      <div style={{display:"flex",gap:16,marginTop:14,paddingTop:12,borderTop:`1px solid ${C.bd}`}}>
-        {[{c:"rgba(59,130,246,0.35)",l:"Progression"},{c:"rgba(248,113,113,0.4)",l:"Déload"},{c:"rgba(245,158,11,0.55)",l:"Pic"}].map((it,i)=>(
-          <div key={i} style={{display:"flex",alignItems:"center",gap:5}}>
-            <div style={{width:8,height:8,borderRadius:2,background:it.c,flexShrink:0}}/>
-            <span style={{fontSize:10,color:"rgba(242,244,247,0.35)",fontFamily:DISP_F}}>{it.l}</span>
+      <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:6,marginTop:14,paddingTop:12,borderTop:`1px solid ${C.bd}`,color:"#60A5FA",fontSize:12,fontWeight:700,fontFamily:DISP_F}}>
+        Voir l'analyse complète
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+      </div>
+    </div>
+
+    {/* Overlay analyse complète */}
+    {open && <MesocycleDetail prog={prog} semC={semC} baseVol={baseVol} MEV={MEV} MAV={MAV} MRV={MRV} curVol={curVol} currentWeek={currentWeek} WEEKS={WEEKS} onClose={()=>setOpen(false)}/>}
+    </>
+  );
+}
+
+// ─── MÉSOCYCLE DETAIL (analyse complète, overlay) ────────────────────────────
+function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, curVol, currentWeek, WEEKS, onClose }) {
+  const DISP_F = "'Outfit','DM Sans',system-ui,sans-serif";
+  const SERIF_F = "'DM Serif Display','Georgia',serif";
+  const [exp, setExp] = useState(null); // carte dépliée
+
+  const card = (key, children) => (
+    <div onClick={()=>setExp(exp===key?null:key)} style={{background:C.s1,border:`1px solid ${exp===key?"rgba(59,130,246,0.3)":C.bd}`,borderRadius:18,padding:16,marginBottom:12,cursor:"pointer"}}>
+      {children}
+    </div>
+  );
+  const expandRow = (key, label) => (
+    <div style={{fontSize:10,color:"#60A5FA",marginTop:10,display:"flex",alignItems:"center",gap:4,fontFamily:DISP_F}}>
+      {exp===key?"▴":"▾"} {label}
+    </div>
+  );
+  const detailBox = (key, children) => exp===key ? (
+    <div style={{marginTop:12,paddingTop:12,borderTop:`1px solid ${C.bd}`,fontSize:12,color:"rgba(242,244,247,0.6)",lineHeight:1.6,fontFamily:DISP_F}}>{children}</div>
+  ) : null;
+  const reco = (icon, txt) => (
+    <div style={{marginTop:10,padding:"10px 12px",background:"rgba(59,130,246,0.07)",border:"1px solid rgba(59,130,246,0.18)",borderRadius:10,display:"flex",gap:9,alignItems:"flex-start"}}>
+      <span style={{fontSize:14,flexShrink:0}}>{icon}</span><div style={{fontSize:11.5,color:"rgba(242,244,247,0.6)",lineHeight:1.5}}>{txt}</div>
+    </div>
+  );
+  const lbl = {fontSize:9,fontWeight:700,letterSpacing:"1.2px",textTransform:"uppercase",color:"rgba(242,244,247,0.30)",marginBottom:6,fontFamily:DISP_F};
+  const badge = (bg,col,txt) => <span style={{fontSize:9,fontWeight:700,padding:"4px 9px",borderRadius:99,background:bg,color:col,whiteSpace:"nowrap",fontFamily:DISP_F}}>{txt}</span>;
+  const demoBadge = badge("rgba(245,158,11,0.12)","#F59E0B","Démo · active le suivi");
+
+  const VMAX = MRV*1.12;
+  const nearMRV = curVol >= MRV*0.9;
+
+  return (
+    <div style={{position:"fixed",inset:0,zIndex:500,background:C.bg,overflowY:"auto",WebkitOverflowScrolling:"touch"}}>
+      <div style={{padding:"0 16px 40px",maxWidth:480,margin:"0 auto"}}>
+        {/* Header */}
+        <div style={{position:"sticky",top:0,background:C.bg,paddingTop:18,paddingBottom:12,zIndex:2}}>
+          <button onClick={onClose} style={{background:"transparent",border:"none",color:"#60A5FA",cursor:"pointer",fontSize:14,fontWeight:600,fontFamily:DISP_F,display:"flex",alignItems:"center",gap:5,marginBottom:14}}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+            Retour
+          </button>
+          <div style={{fontSize:9,fontWeight:700,letterSpacing:"1.8px",textTransform:"uppercase",color:C.blue,fontFamily:DISP_F,marginBottom:5}}>Mésocycle · Semaine {currentWeek+1} / 6</div>
+          <div style={{fontFamily:SERIF_F,fontSize:25,letterSpacing:-0.8,lineHeight:1.1}}>Analyse <span style={{fontStyle:"italic",color:"#60A5FA"}}>de charge</span></div>
+          <div style={{fontSize:11,color:"rgba(242,244,247,0.30)",marginTop:4,fontFamily:DISP_F}}>{WEEKS[currentWeek].type==="Déload"?"Phase de récupération":WEEKS[currentWeek].type==="Pic"?"Phase de pic":"Phase d'accumulation"} · Hypertrophie</div>
+        </div>
+
+        {/* 1. VOLUME vs MEV/MAV/MRV (RÉEL) */}
+        {card("vol", <>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
+            <div>
+              <div style={lbl}>Volume vs capacité de récupération</div>
+              <div><span style={{fontSize:30,fontWeight:800,color:nearMRV?"#F59E0B":"#34D399",letterSpacing:-1}}>{curVol}</span> <span style={{fontSize:13,fontWeight:600,color:"rgba(242,244,247,0.35)"}}>séries cette sem.</span></div>
+            </div>
+            {nearMRV ? badge("rgba(245,158,11,0.15)","#F59E0B","Limite proche") : badge("rgba(52,211,153,0.15)","#34D399","Zone optimale")}
           </div>
-        ))}
+          {/* Barres avec lignes MEV/MAV/MRV */}
+          <div style={{position:"relative",display:"flex",gap:7,alignItems:"flex-end",height:120,margin:"16px 0 8px"}}>
+            {[["MRV",MRV,"#F87171"],["MAV",MAV,"#34D399"],["MEV",MEV,"#60A5FA"]].map(([t,v,col],k)=>{
+              const y = 120-(v/VMAX*120);
+              return <div key={k} style={{position:"absolute",left:0,right:0,top:y,height:1,borderTop:`1px dashed ${col}40`}}>
+                <span style={{position:"absolute",right:0,top:-7,fontSize:8,fontWeight:700,padding:"1px 5px",borderRadius:4,background:`${col}20`,color:col,fontFamily:DISP_F}}>{t} {v}</span>
+              </div>;
+            })}
+            {WEEKS.map((w,i)=>{
+              const v = Math.round(baseVol*w.m);
+              const h = v/VMAX*120;
+              const isCur = i===currentWeek;
+              const col = w.type==="Déload"?"#F87171":w.type==="Pic"?"#F59E0B":"#3B82F6";
+              return <div key={i} style={{flex:1,display:"flex",flexDirection:"column",justifyContent:"flex-end",alignItems:"center",gap:4,zIndex:2}}>
+                <div style={{width:"100%",height:h,borderRadius:"4px 4px 2px 2px",background:isCur?`linear-gradient(180deg,${col},${col}AA)`:col+"55",boxShadow:isCur?`0 4px 12px ${col}50`:"none"}}/>
+                <div style={{fontSize:10,fontWeight:700,color:isCur?col:"rgba(242,244,247,0.3)",fontFamily:DISP_F}}>{w.lbl}</div>
+              </div>;
+            })}
+          </div>
+          {expandRow("vol","Lire les seuils MEV / MAV / MRV")}
+          {detailBox("vol", <>
+            Chaque muscle a des seuils de volume hebdo (en séries) :<br/>
+            • <b style={{color:"#F2F4F7"}}>MEV</b> ({MEV}) minimum efficace — sous ce seuil, pas de gain<br/>
+            • <b style={{color:"#F2F4F7"}}>MAV</b> ({MAV}) volume adaptatif optimal — la zone de progression<br/>
+            • <b style={{color:"#F2F4F7"}}>MRV</b> ({MRV}) max récupérable — plafond, au-delà = surentraînement
+            {reco("⚠️", <>Tu es à <b style={{color:"#F2F4F7"}}>{curVol} séries</b>{nearMRV?<>, proche de ton MRV ({MRV}). Le <b style={{color:"#F2F4F7"}}>déload S5 est essentiel</b> pour dissiper la fatigue.</>:<>, dans ta zone optimale. Continue la progression.</>}</>)}
+          </>)}
+        </>)}
+
+        {/* 2. SCORE PRÉPARATION (DÉMO) */}
+        {card("ready", <>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
+            <div style={lbl}>Score de préparation</div>{demoBadge}
+          </div>
+          <div style={{display:"flex",alignItems:"center",gap:18,marginTop:4}}>
+            <div style={{position:"relative",width:90,height:90,flexShrink:0}}>
+              <svg width="90" height="90" viewBox="0 0 96 96">
+                <circle cx="48" cy="48" r="42" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="7"/>
+                <circle cx="48" cy="48" r="42" fill="none" stroke="#F59E0B" strokeWidth="7" strokeLinecap="round" strokeDasharray="264" strokeDashoffset="76" transform="rotate(-90 48 48)"/>
+              </svg>
+              <div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center"}}>
+                <div style={{fontSize:26,fontWeight:800,color:"#F59E0B",lineHeight:1}}>71</div>
+                <div style={{fontSize:8,color:"rgba(242,244,247,0.3)",letterSpacing:1,textTransform:"uppercase",marginTop:2}}>/ 100</div>
+              </div>
+            </div>
+            <div style={{flex:1,display:"flex",flexDirection:"column",gap:8}}>
+              {[["Sommeil","60%","#F59E0B","6h"],["Courbatures","70%","#F87171","Éle."],["Motivation","85%","#34D399","8"],["RPE moyen","80%","#F59E0B","8"]].map(([n,w,c,v],k)=>(
+                <div key={k} style={{display:"flex",alignItems:"center",gap:9}}>
+                  <span style={{fontSize:11,color:"rgba(242,244,247,0.55)",width:74,flexShrink:0,fontFamily:DISP_F}}>{n}</span>
+                  <div style={{flex:1,height:6,borderRadius:3,background:"rgba(255,255,255,0.06)",overflow:"hidden"}}><div style={{height:"100%",width:w,borderRadius:3,background:c}}/></div>
+                  <span style={{fontSize:10,fontWeight:700,color:c,width:24,textAlign:"right",flexShrink:0}}>{v}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+          {expandRow("ready","Que faire avec ce score ?")}
+          {detailBox("ready", <>
+            Le <b style={{color:"#F2F4F7"}}>score de préparation</b> combine sommeil, courbatures, motivation et RPE. À <b style={{color:"#F2F4F7"}}>71/100</b> = fatigue modérée, typique d'une fin d'accumulation.
+            {reco("🎯","Maintiens la charge mais priorise le sommeil (cible 8h). Sous 60, avance le déload.")}
+            <div style={{marginTop:10,fontSize:11,color:"rgba(242,244,247,0.4)",fontStyle:"italic"}}>Ces valeurs deviennent réelles avec le check-in hebdo (20 s).</div>
+          </>)}
+        </>)}
+
+        {/* 3. ACWR (DÉMO) */}
+        {card("acwr", <>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
+            <div>
+              <div style={lbl}>Ratio charge aiguë / chronique</div>
+              <div><span style={{fontSize:30,fontWeight:800,color:"#34D399",letterSpacing:-1}}>1.18</span> <span style={{fontSize:13,fontWeight:600,color:"rgba(242,244,247,0.35)"}}>optimal</span></div>
+            </div>
+            {demoBadge}
+          </div>
+          <div style={{position:"relative",height:30,margin:"16px 0 16px"}}>
+            <div style={{position:"absolute",bottom:8,left:0,right:0,height:8,borderRadius:4,background:"linear-gradient(90deg,#F87171 0%,#F59E0B 16%,#34D399 32%,#34D399 64%,#F59E0B 80%,#F87171 100%)"}}/>
+            <div style={{position:"absolute",bottom:2,left:"59%",width:3,height:20,background:"#fff",borderRadius:2,boxShadow:"0 0 6px rgba(255,255,255,0.5)",transform:"translateX(-50%)"}}/>
+            <div style={{position:"absolute",bottom:-12,left:0,right:0,display:"flex",justifyContent:"space-between",fontSize:8,color:"rgba(242,244,247,0.3)"}}><span>0.5</span><span>0.8</span><span style={{color:"#34D399"}}>1.0</span><span>1.3</span><span>1.5+</span></div>
+          </div>
+          {expandRow("acwr","Pourquoi c'est crucial")}
+          {detailBox("acwr", <>
+            L'<b style={{color:"#F2F4F7"}}>ACWR</b> compare ta charge des 7 derniers jours à ta moyenne 28 jours. Indicateur n°1 du <b style={{color:"#F2F4F7"}}>risque de blessure</b>.<br/><br/>
+            • <b style={{color:"#F2F4F7"}}>0,8–1,3</b> : adaptation optimale<br/>• <b style={{color:"#F2F4F7"}}>&gt;1,5</b> : pic dangereux (risque ×2 à ×4)<br/>• <b style={{color:"#F2F4F7"}}>&lt;0,8</b> : désentraînement
+            {reco("✅","À 1,18 tu progresses sans danger. Évite une hausse brutale de volume (reste sous 1,3).")}
+            <div style={{marginTop:10,fontSize:11,color:"rgba(242,244,247,0.4)",fontStyle:"italic"}}>Calculé automatiquement dès que tu loggues tes charges en séance.</div>
+          </>)}
+        </>)}
+
+        {/* 4. SURENTRAÎNEMENT (DÉMO partiel) */}
+        {card("over", <>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
+            <div>
+              <div style={lbl}>Détection surentraînement</div>
+              <div style={{fontSize:22,fontWeight:800,color:"#F59E0B"}}>Surveillance</div>
+            </div>
+            {badge("rgba(245,158,11,0.15)","#F59E0B","2 / 4 signaux")}
+          </div>
+          <div style={{marginTop:14}}>
+            {[["📉","Performance","Reps en baisse · dév. couché","Alerte","#F87171"],
+              ["😴","Sommeil","6h moyenne (cible 8h)","À surveiller","#F59E0B"],
+              ["💓","FC repos","58 bpm · stable","OK","#34D399"],
+              ["🔥","Motivation","Élevée","OK","#34D399"]].map(([ic,t,s,st,col],k)=>(
+              <div key={k} style={{display:"flex",alignItems:"center",gap:11,padding:"9px 0",borderBottom:k<3?"1px solid rgba(255,255,255,0.04)":"none"}}>
+                <div style={{width:34,height:34,borderRadius:10,background:`${col}18`,display:"grid",placeItems:"center",flexShrink:0,fontSize:15}}>{ic}</div>
+                <div style={{flex:1}}>
+                  <div style={{fontSize:13,fontWeight:600,color:"#F2F4F7",fontFamily:DISP_F}}>{t}</div>
+                  <div style={{fontSize:10.5,color:"rgba(242,244,247,0.35)",marginTop:1,fontFamily:DISP_F}}>{s}</div>
+                </div>
+                {badge(`${col}15`,col,st)}
+              </div>
+            ))}
+          </div>
+          {expandRow("over","Interprétation coach")}
+          {detailBox("over", <>
+            <b style={{color:"#F2F4F7"}}>2 signaux sur 4</b> au orange/rouge. Ce n'est pas du surentraînement, mais du <b style={{color:"#F2F4F7"}}>surmenage fonctionnel</b> — attendu en fin d'accumulation et bénéfique s'il est suivi d'un déload.
+            {reco("🩺","Baisse de perf + sommeil court = fatigue centrale. Tiens 1 semaine puis déload. Si un 3ᵉ signal vire au rouge, déload immédiat.")}
+          </>)}
+        </>)}
+
+        {/* 5. PROGRESSION 1RM (projection) */}
+        {card("rm", <>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
+            <div>
+              <div style={lbl}>Progression force · Squat</div>
+              <div><span style={{fontSize:30,fontWeight:800,color:"#60A5FA",letterSpacing:-1}}>+6.2</span> <span style={{fontSize:13,fontWeight:600,color:"rgba(242,244,247,0.35)"}}>% en 3 sem.</span></div>
+            </div>
+            {badge("rgba(52,211,153,0.15)","#34D399","↗ En hausse")}
+          </div>
+          <div style={{marginTop:12,height:56}}>
+            <svg width="100%" height="56" viewBox="0 0 326 56" preserveAspectRatio="none">
+              <path d="M8 38 L71.6 33 L135.2 23 M135.2 23 L198.8 18 L262.4 28 L326 8" fill="none" stroke="rgba(59,130,246,0.25)" strokeWidth="1.5" strokeDasharray="4 3"/>
+              <path d="M8 38 L71.6 33 L135.2 23" fill="none" stroke="#3B82F6" strokeWidth="2.5" strokeLinecap="round"/>
+              <circle cx="8" cy="38" r="3" fill="#3B82F6"/><circle cx="71.6" cy="33" r="3" fill="#3B82F6"/><circle cx="135.2" cy="23" r="5" fill="#3B82F6" stroke="#fff" strokeWidth="1.5"/>
+              <circle cx="198.8" cy="18" r="3" fill="rgba(59,130,246,0.3)"/><circle cx="262.4" cy="28" r="3" fill="rgba(59,130,246,0.3)"/><circle cx="326" cy="8" r="3" fill="rgba(59,130,246,0.3)"/>
+            </svg>
+          </div>
+          <div style={{display:"flex",gap:6,marginTop:8}}>
+            {[["100","S1",0],["102","S2",0],["106","S3",1],["108","S4",0],["104","S5",0],["112","S6",0]].map(([v,l,cur],k)=>(
+              <div key={k} style={{flex:1,textAlign:"center"}}>
+                <div style={{fontSize:12,fontWeight:cur?800:700,color:cur?"#60A5FA":k>2?"rgba(242,244,247,0.3)":"#60A5FA"}}>{v}<span style={{fontSize:8,opacity:.6}}>kg</span></div>
+                <div style={{fontSize:8,color:"rgba(242,244,247,0.3)",marginTop:1}}>{l}</div>
+              </div>
+            ))}
+          </div>
+          {expandRow("rm","Détail de la progression")}
+          {detailBox("rm", <>
+            Ton <b style={{color:"#F2F4F7"}}>1RM estimé</b> au squat passe de 100 à 106 kg en 3 semaines (formule d'Epley sur tes meilleures séries).
+            {reco("📈","Progression saine (+2%/sem). Projection post-déload (pointillé) : pic à 112 kg en S6 si tu respectes la périodisation.")}
+            <div style={{marginTop:10,fontSize:11,color:"rgba(242,244,247,0.4)",fontStyle:"italic"}}>Se base sur tes records réels dès que tu en saisis.</div>
+          </>)}
+        </>)}
+
+        <div style={{height:20}}/>
       </div>
     </div>
   );
@@ -256,7 +465,7 @@ function ProgrammeView(props) {
         })}
 
         {/* Mésocycle */}
-        <MesocycleChart prog={prog} semC={semC}/>
+        <MesocycleChart prog={prog} semC={semC} checkedEx={checkedEx}/>
 
       </>)}
 
