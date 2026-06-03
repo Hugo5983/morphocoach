@@ -210,10 +210,6 @@ function ProgrammeView(props) {
       {prog && prog.jours?.length > 0 && (<>
 
         {/* Séances accordion */}
-        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:12}}>
-          <div style={{fontSize:9.5,fontWeight:700,letterSpacing:"2px",textTransform:"uppercase",color:"rgba(242,244,247,0.32)",fontFamily:DISP_F}}>Séances</div>
-          <div style={{fontSize:20,fontWeight:800,color:"#F2F4F7",fontFamily:DISP_F}}>{prog.jours.length}</div>
-        </div>
         {prog.jours.map((j, jIdx) => {
           const int  = INT[j.intensite||"modere"];
           const dur  = durOf(j);
@@ -222,7 +218,7 @@ function ProgrammeView(props) {
           return (
             <div key={jIdx} style={{background:C.s1,border:`1px solid ${isOpen?int.c+"40":C.bd}`,borderRadius:18,marginBottom:10,overflow:"hidden",transition:"border-color .2s"}}>
               <div style={{display:"flex",alignItems:"center",gap:12,padding:"13px 14px",cursor:"pointer"}} onClick={()=>setOpenJour(isOpen?null:jIdx)}>
-                <div style={{width:46,height:46,borderRadius:13,background:`${int.c}18`,border:`1px solid ${int.c}35`,color:int.c,display:"grid",placeItems:"center",flexShrink:0,fontFamily:DISP_F,fontSize:12,fontWeight:800}}>
+                <div style={{width:46,height:46,borderRadius:13,background:int.c,border:"none",color:"#fff",display:"grid",placeItems:"center",flexShrink:0,fontFamily:DISP_F,fontSize:12,fontWeight:800,boxShadow:`0 4px 12px ${int.c}55`}}>
                   {j.focus||j.nom?.slice(0,3)||"—"}
                 </div>
                 <div style={{flex:1,minWidth:0}}>
