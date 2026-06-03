@@ -31,8 +31,8 @@ export const NUM   = { fontVariantNumeric: "tabular-nums", fontFeatureSettings: 
 // ─── INTENSITÉS DE SÉANCE ─────────────────────────────────────────────────────
 export const INT = {
   leger:    { l:"Léger",    c:"#34D399" },
-  modere:   { l:"Modéré",   c:"#3B82F6" },
-  lourd:    { l:"Lourd",    c:"#60A5FA" },
+  modere:   { l:"Modéré",   c:"#F97316" },
+  lourd:    { l:"Lourd",    c:"#EF4444" },
   intense:  { l:"Intense",  c:"#F87171" },
   mobilite: { l:"Mobilité", c:"#34D399" },
 };
