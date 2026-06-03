@@ -413,6 +413,13 @@ function ProgrammeView(props) {
         <div style={{fontSize:11,color:"rgba(242,244,247,0.38)",marginTop:5,fontFamily:DISP_F}}>
           {prog ? `${prog.titre} · ${prog.jours?.length||0} séances/sem · Sem. ${semN}` : "Crée ton premier programme pour commencer."}
         </div>
+        {prog && (
+          <button onClick={()=>setConfirmDel({type:"prog",pIdx:progIdx})}
+            style={{marginTop:10,background:"transparent",border:"none",color:"rgba(248,113,113,0.55)",cursor:"pointer",fontSize:12,fontFamily:DISP_F,fontWeight:600,padding:0,display:"flex",alignItems:"center",gap:5}}>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+            Supprimer ce programme
+          </button>
+        )}
       </div>
 
       {/* ── Programme actif ── */}
