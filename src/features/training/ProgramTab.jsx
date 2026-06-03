@@ -90,8 +90,9 @@ function MesocycleChart({ prog, semC }) {
 function ProgrammeView(props) {
   const { prog, setProg, progs, setProgs, premium, setPaywall, push, calSess, setCalSess, checkedEx, createStep, setCS, newP, setNewP, jourActif, setJourActif, groupe, setGroupe, editExIdx, setEditExIdx, exModal, setExModal, exModalTab, setExModalTab, INT, EX, setProgView, cycleStart, setCycleStart, semC, jR, profil } = props;
 
-  // vue interne : "list" | "seance:{progIdx}:{jourIdx}" | "creer"
-  const [innerView, setInnerView] = useState("list");
+  // vue interne : "creer" uniquement (seance detail → overlay fixe via selectedJour)
+  const [innerView,    setInnerView]    = useState("list");  // gardé pour compatibilité Creer
+  const [selectedJour, setSelectedJour] = useState(null);    // {jIdx} → ouvre SeanceDetailModal en overlay
   const [confirmDel, setConfirmDel] = useState(null); // {type:"prog"|"jour", progIdx, jourIdx}
   const [isCreating, setIsCreating] = useState(false);
   const [openJour,   setOpenJour]   = useState(null);
@@ -147,16 +148,6 @@ function ProgrammeView(props) {
     push("🗑️","Séance supprimée","La séance a été retirée du programme et du calendrier.");
   };
 
-  // Parser innerView pour séance
-  let seanceView = null;
-  if (innerView.startsWith("seance:")) {
-    const [,pi,ji] = innerView.split(":");
-    const pIdx = parseInt(pi), jIdx = parseInt(ji);
-    if (allProgs[pIdx] && allProgs[pIdx].jours[jIdx]) {
-      seanceView = { pIdx, jIdx, prog: allProgs[pIdx] };
-    }
-  }
-
   const showCreerForm = isCreating || createStep > 0 || (newP.nom !== "" || newP.jours.length > 0);
   const resetCreating = () => { setIsCreating(false); setCS(0); setNewP({nom:"",jours:[],seances:{}}); };
   const creerProps = {
@@ -164,20 +155,6 @@ function ProgrammeView(props) {
     onCancel: resetCreating,
     setProgView: (v) => { resetCreating(); if(v === "calendar") setProgView("calendar"); else setInnerView("list"); },
   };
-
-  // ── Vue séance detail ──
-  if (seanceView) {
-    return (
-      <SeanceDetailModal
-        jour={seanceView.prog.jours[seanceView.jIdx]}
-        jourIdx={seanceView.jIdx}
-        prog={seanceView.prog}
-        setProg={(u) => updateProgAtIdx(seanceView.pIdx, u)}
-        onClose={() => setInnerView("list")}
-        C={C} INT={INT}
-      />
-    );
-  }
 
   // ── Helpers ────────────────────────────────────────────────────────────────
   const SERIF_F  = "'DM Serif Display','Georgia',serif";
@@ -255,7 +232,7 @@ function ProgrammeView(props) {
                     {int.l} · {exos.length} exercice{exos.length!==1?"s":""}{dur?` · ~${dur} min`:""}
                   </div>
                 </div>
-                <button onClick={e=>{e.stopPropagation();setInnerView(`seance:${progIdx}:${jIdx}`);}}
+                <button onClick={e=>{e.stopPropagation();setSelectedJour({jIdx});}}
                   style={{width:34,height:34,borderRadius:10,background:"rgba(59,130,246,0.08)",border:"1px solid rgba(59,130,246,0.22)",color:"#60A5FA",cursor:"pointer",display:"grid",placeItems:"center",flexShrink:0,fontSize:14}}>✏️</button>
                 <div style={{color:"rgba(242,244,247,0.40)",fontSize:18,transition:"transform .2s",transform:isOpen?"rotate(180deg)":"rotate(0)",flexShrink:0}}>⌄</div>
               </div>
@@ -326,6 +303,20 @@ function ProgrammeView(props) {
 
       {showCreerForm && (
         <Creer {...creerProps} progs={allProgs} setProgsAll={(next)=>{ setProgs(next); if(next.length>0) setProg(next[next.length-1]); }}/>
+      )}
+
+      {/* ── SeanceDetailModal en overlay fixe ── */}
+      {selectedJour !== null && prog?.jours?.[selectedJour.jIdx] && (
+        <div style={{position:"fixed",inset:0,zIndex:400,background:C.bg,overflowY:"auto",WebkitOverflowScrolling:"touch"}}>
+          <SeanceDetailModal
+            jour={prog.jours[selectedJour.jIdx]}
+            jourIdx={selectedJour.jIdx}
+            prog={prog}
+            setProg={(u) => updateProgAtIdx(progIdx, u)}
+            onClose={() => setSelectedJour(null)}
+            C={C} INT={INT}
+          />
+        </div>
       )}
     </div>
   );
