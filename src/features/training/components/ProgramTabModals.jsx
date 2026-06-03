@@ -64,12 +64,15 @@ export function GuideExModal({ exData, exSerie, onClose, C }) {
 
 // ─── SÉANCE DETAIL (vue exercices d'une séance depuis Programme) ─────────────
 export function SeanceDetailModal({ jour, jourIdx, prog, setProg, onClose, C, INT }) {
-  const [editEx,    setEditEx]    = useState({});
-  const [guideEx,   setGuideEx]   = useState(null);
-  const [showBiblio,setShowBiblio]= useState(false);
-  const [search,    setSearch]    = useState("");
-  const [groupe,    setGroupe]    = useState(null);
-  const [newExForm, setNewExForm] = useState(null); // exercice en cours d'ajout
+  const DISP_F = "'Outfit','DM Sans',system-ui,sans-serif";
+  const SERIF_F = "'DM Serif Display','Georgia',serif";
+  const [editEx,     setEditEx]    = useState({});
+  const [guideEx,    setGuideEx]   = useState(null);
+  const [showBiblio, setShowBiblio]= useState(false);
+  const [search,     setSearch]    = useState("");
+  const [groupe,     setGroupe]    = useState(null);
+  const [newExForm,  setNewExForm] = useState(null);
+  const [localName,  setLocalName] = useState(jour.nom || "");
 
   const METHODS = ["Classique","Pyramidal","Super-set","Drop-set","Rest-pause","5×5","Séries de 100","Dégressif","Pré-fatigue","Wave loading"];
   const cc = (cat) => ({principal:"#4D8BFF",correctif:"#FF7A6B",gainage:"#5FE0A5",isolation:"#B69DFF"}[cat||"principal"]||"#4D8BFF");
@@ -84,13 +87,19 @@ export function SeanceDetailModal({ jour, jourIdx, prog, setProg, onClose, C, IN
     u.jours[jourIdx].exercices.splice(exIdx, 1);
     setProg(u);
   };
+  const updateName = (val) => {
+    setLocalName(val);
+    const u = JSON.parse(JSON.stringify(prog));
+    u.jours[jourIdx].nom = val;
+    setProg(u);
+  };
   const addEx = () => {
     if (!newExForm?.nom) return;
     const u = JSON.parse(JSON.stringify(prog));
     u.jours[jourIdx].exercices = u.jours[jourIdx].exercices || [];
     u.jours[jourIdx].exercices.push({
-      nom: newExForm.nom,
-      cat: newExForm.cat || "principal",
+      nom:    newExForm.nom,
+      cat:    newExForm.cat  || "principal",
       series: newExForm.series || "4",
       reps:   newExForm.reps   || "10",
       repos:  newExForm.repos  || "90s",
@@ -101,146 +110,209 @@ export function SeanceDetailModal({ jour, jourIdx, prog, setProg, onClose, C, IN
     setProg(u);
     setNewExForm(null);
     setShowBiblio(false);
-    setSearch("");
-    setGroupe(null);
+    setSearch(""); setGroupe(null);
   };
 
-  // Exercices à afficher dans la biblio
   const exosList = search
     ? Object.entries(EX).flatMap(([g,arr]) => arr.map(ex => ({nom:ex.n,cat:ex.cat,group:g,raw:ex})))
         .filter(e => e.nom.toLowerCase().includes(search.toLowerCase()))
     : groupe ? (EX[groupe]||[]).map(ex => ({nom:ex.n,cat:ex.cat,group:groupe,raw:ex})) : [];
 
-  if (guideEx) {
-    return <GuideExModal exData={guideEx.dbEx} exSerie={guideEx.serieEx} onClose={() => setGuideEx(null)} C={C} />;
-  }
+  if (guideEx) return <GuideExModal exData={guideEx.dbEx} exSerie={guideEx.serieEx} onClose={()=>setGuideEx(null)} C={C}/>;
 
   const int = INT[jour.intensite || "modere"];
   const exercices = prog.jours[jourIdx]?.exercices || [];
+  const lbl = {fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:"rgba(242,244,247,0.35)",marginBottom:6,fontFamily:DISP_F};
 
-  // ── Vue formulaire ajout exercice ──
+  // ── Formulaire configuration exercice ─────────────────────────────────────
   if (newExForm) {
     return (
       <div style={{minHeight:"100vh",background:C.bg}}>
-        <div style={{padding:"20px 16px",paddingBottom:80}}>
-          <button onClick={()=>setNewExForm(null)} style={{background:"transparent",border:"none",color:"#4D8BFF",cursor:"pointer",fontSize:13,fontWeight:600,display:"flex",alignItems:"center",gap:4,marginBottom:16}}>← Retour à la bibliothèque</button>
-          <div style={{display:"flex",alignItems:"center",gap:10,padding:"12px 14px",background:`${cc(newExForm.cat)}0d`,border:`0.5px solid ${cc(newExForm.cat)}30`,borderRadius:12,marginBottom:16}}>
-            <div style={{width:4,height:40,borderRadius:2,background:cc(newExForm.cat),flexShrink:0}}/>
+        <div style={{padding:"20px 16px 80px"}}>
+          <button onClick={()=>setNewExForm(null)} style={{background:"transparent",border:"none",color:"#60A5FA",cursor:"pointer",fontSize:14,fontWeight:600,fontFamily:DISP_F,display:"flex",alignItems:"center",gap:5,marginBottom:16}}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+            Retour à la bibliothèque
+          </button>
+
+          {/* Badge exo */}
+          <div style={{display:"flex",alignItems:"center",gap:12,padding:"13px 15px",background:`${cc(newExForm.cat)}0d`,border:`1px solid ${cc(newExForm.cat)}30`,borderRadius:14,marginBottom:18}}>
+            <div style={{width:4,height:38,borderRadius:2,background:cc(newExForm.cat),flexShrink:0}}/>
             <div>
-              <div style={{fontSize:14,fontWeight:500,color:"#F2F4F7"}}>{newExForm.nom}</div>
-              <div style={{fontSize:10,color:"rgba(242,244,247,0.50)",marginTop:2}}>{newExForm.group}</div>
+              <div style={{fontSize:14,fontWeight:700,color:"#F2F4F7",fontFamily:DISP_F}}>{newExForm.nom}</div>
+              <div style={{fontSize:10,color:"rgba(242,244,247,0.40)",marginTop:2,fontFamily:DISP_F}}>{newExForm.group}</div>
             </div>
           </div>
-          <div style={{background:C.s1,border:"0.5px solid rgba(255,255,255,0.07)",borderRadius:12,padding:"16px",marginBottom:12}}>
-            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:10}}>
+
+          {/* Séries / Reps / Repos / Charge */}
+          <div style={{background:C.s1,border:`1px solid ${C.bd}`,borderRadius:16,padding:"14px",marginBottom:12}}>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:12}}>
               {[{l:"Séries",k:"series",def:"4"},{l:"Reps",k:"reps",def:"10"},{l:"Repos",k:"repos",def:"90s"},{l:"Charge",k:"charge",def:""}].map(pp=>(
                 <div key={pp.k}>
-                  <div style={{fontSize:10,color:"rgba(242,244,247,0.50)",fontWeight:600,marginBottom:6}}>{pp.l}</div>
-                  <input value={newExForm[pp.k]||""} onChange={e=>setNewExForm(f=>({...f,[pp.k]:e.target.value}))} placeholder={pp.def}
-                    style={{width:"100%",padding:"9px 10px",background:C.s2,border:"0.5px solid rgba(255,255,255,0.07)",borderRadius:8,fontSize:13,color:"#F2F4F7",fontFamily:"'Inter',sans-serif",boxSizing:"border-box"}}/>
+                  <div style={lbl}>{pp.l}</div>
+                  <input value={newExForm[pp.k]||""} onChange={e=>setNewExForm(f=>({...f,[pp.k]:e.target.value}))}
+                    placeholder={pp.def} autoComplete="off"
+                    style={{width:"100%",padding:"11px 10px",background:C.s2,border:`1px solid ${C.bd}`,borderRadius:10,fontSize:15,fontWeight:700,color:"#F2F4F7",fontFamily:DISP_F,textAlign:"center",outline:"none"}}/>
                 </div>
               ))}
             </div>
-            <div>
-              <div style={{fontSize:10,color:"rgba(242,244,247,0.50)",fontWeight:600,marginBottom:6}}>MÉTHODE</div>
-              <div style={{display:"flex",flexWrap:"wrap",gap:4}}>
-                {METHODS.slice(0,6).map(mm=>(
-                  <button key={mm} onClick={()=>setNewExForm(f=>({...f,methode:mm}))} style={{padding:"4px 10px",borderRadius:12,border:`1px solid ${newExForm.methode===mm?"#4D8BFF":"rgba(190,180,255,0.07)"}`,background:newExForm.methode===mm?"rgba(59,130,246,0.1)":"transparent",color:newExForm.methode===mm?"#4D8BFF":"rgba(245,241,232,0.50)",cursor:"pointer",fontSize:10,fontFamily:"'Inter',sans-serif"}}>{mm}</button>
-                ))}
-              </div>
+            <div style={lbl}>Méthode</div>
+            <div style={{display:"flex",flexWrap:"wrap",gap:5}}>
+              {METHODS.slice(0,8).map(mm=>{const on=newExForm.methode===mm;return(
+                <button key={mm} onClick={()=>setNewExForm(f=>({...f,methode:mm}))} style={{padding:"5px 11px",borderRadius:99,border:`1px solid ${on?"#3B82F6":C.bd}`,background:on?"rgba(59,130,246,0.12)":"transparent",color:on?"#60A5FA":"rgba(242,244,247,0.45)",cursor:"pointer",fontSize:10.5,fontWeight:on?700:500,fontFamily:DISP_F}}>{mm}</button>
+              );})}
             </div>
           </div>
-          <button onClick={addEx} style={{width:"100%",padding:"13px",background:C.accent,border:"none",borderRadius:12,color:"#141A2E",fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",marginBottom:8}}>
+
+          <button onClick={addEx} style={{width:"100%",padding:"15px",background:"linear-gradient(180deg,#3B82F6,#2563EB)",border:"none",borderRadius:14,color:"#fff",fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:DISP_F,boxShadow:"0 8px 24px rgba(59,130,246,0.32)"}}>
             + Ajouter à la séance
           </button>
-          <button onClick={()=>setNewExForm(null)} style={{width:"100%",padding:"10px",background:"transparent",border:"0.5px solid rgba(255,255,255,0.07)",borderRadius:10,color:"rgba(242,244,247,0.50)",cursor:"pointer",fontSize:12,fontFamily:"'Inter',sans-serif"}}>Annuler</button>
         </div>
       </div>
     );
   }
 
-  // ── Vue bibliothèque ──
+  // ── Vue bibliothèque ───────────────────────────────────────────────────────
   if (showBiblio) {
     return (
       <div style={{minHeight:"100vh",background:C.bg}}>
-        <div style={{padding:"20px 16px",paddingBottom:80}}>
-          <button onClick={()=>{setShowBiblio(false);setSearch("");setGroupe(null);}} style={{background:"transparent",border:"none",color:"#4D8BFF",cursor:"pointer",fontSize:13,fontWeight:600,display:"flex",alignItems:"center",gap:4,marginBottom:16}}>← Retour à la séance</button>
-          <div style={{fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",fontSize:18,fontWeight:300,color:"#F2F4F7",marginBottom:14}}>Ajouter un exercice</div>
+        <div style={{padding:"20px 16px 80px"}}>
+          {/* Back */}
+          <button onClick={()=>{setShowBiblio(false);setSearch("");setGroupe(null);}} style={{background:"transparent",border:"none",color:"#60A5FA",cursor:"pointer",fontSize:14,fontWeight:600,fontFamily:DISP_F,display:"flex",alignItems:"center",gap:5,marginBottom:16}}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+            Retour à la séance
+          </button>
+
+          <div style={{fontFamily:SERIF_F,fontSize:22,letterSpacing:-0.5,marginBottom:16}}>Ajouter un <span style={{fontStyle:"italic",color:"#60A5FA"}}>exercice</span></div>
 
           {/* Recherche */}
-          <div style={{position:"relative",marginBottom:12}}>
-            <input value={search} onChange={e=>{setSearch(e.target.value);setGroupe(null);}} placeholder="Rechercher…"
-              style={{width:"100%",padding:"10px 14px 10px 36px",background:C.s1,border:"0.5px solid rgba(255,255,255,0.07)",borderRadius:10,fontSize:13,color:"#F2F4F7",fontFamily:"'Inter',sans-serif",boxSizing:"border-box"}}/>
-            <div style={{position:"absolute",left:12,top:"50%",transform:"translateY(-50%)",fontSize:14,color:"rgba(242,244,247,0.50)"}}>🔍</div>
-          </div>
+          <input value={search} onChange={e=>{setSearch(e.target.value);setGroupe(null);}} placeholder="🔍  Rechercher un exercice…"
+            autoComplete="off" autoCorrect="off"
+            style={{width:"100%",padding:"12px 14px",background:C.s1,border:`1px solid ${C.bd}`,borderRadius:12,color:"#F2F4F7",fontFamily:DISP_F,fontSize:13,outline:"none",marginBottom:12}}/>
 
-          {/* Groupes musculaires */}
+          {/* Groupes — scroll horizontal */}
           {!search && (
-            <div style={{display:"flex",flexWrap:"wrap",gap:6,marginBottom:14}}>
-              {Object.keys(EX).map(g => (
-                <button key={g} onClick={()=>setGroupe(g===groupe?null:g)}
-                  style={{padding:"6px 12px",background:groupe===g?"rgba(59,130,246,0.1)":"#141A2E",border:`1px solid ${groupe===g?"#4D8BFF":"rgba(190,180,255,0.07)"}`,borderRadius:16,color:groupe===g?"#4D8BFF":"rgba(245,241,232,0.50)",cursor:"pointer",fontSize:11,fontWeight:groupe===g?600:400,fontFamily:"'Inter',sans-serif"}}>
-                  {g} <span style={{fontSize:9,color:"rgba(242,244,247,0.50)"}}>({(EX[g]||[]).length})</span>
+            <div style={{display:"flex",gap:8,overflowX:"auto",paddingBottom:14,scrollbarWidth:"none",WebkitOverflowScrolling:"touch"}}>
+              {Object.keys(EX).map(g=>{const on=groupe===g;return(
+                <button key={g} onClick={()=>setGroupe(g===groupe?null:g)} style={{flexShrink:0,padding:"9px 16px",borderRadius:12,border:`1.5px solid ${on?"#3B82F6":C.bd}`,background:on?"rgba(59,130,246,0.12)":C.s1,color:on?"#3B82F6":"rgba(242,244,247,0.55)",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:DISP_F,whiteSpace:"nowrap"}}>
+                  {g} <span style={{fontSize:10,fontWeight:500,opacity:.6}}>({(EX[g]||[]).length})</span>
                 </button>
-              ))}
+              );})}
             </div>
           )}
 
-          {/* Liste */}
-          {exosList.map((ex, i) => (
-            <div key={i} onClick={()=>setNewExForm({nom:ex.nom,cat:ex.cat,group:ex.group,series:"4",reps:"10",repos:"90s",charge:"",methode:"Classique"})}
-              style={{display:"flex",alignItems:"center",gap:10,padding:"10px 13px",background:C.s1,border:"0.5px solid rgba(255,255,255,0.07)",borderRadius:10,marginBottom:6,cursor:"pointer"}}
-              onMouseEnter={ev=>ev.currentTarget.style.borderColor=cc(ex.cat)}
-              onMouseLeave={ev=>ev.currentTarget.style.borderColor="rgba(190,180,255,0.07)"}>
-              <div style={{width:4,height:32,borderRadius:2,background:cc(ex.cat),flexShrink:0}}/>
-              <div style={{flex:1}}>
-                <div style={{fontSize:12,fontWeight:500,color:"#F2F4F7"}}>{ex.nom}</div>
-                {search && <div style={{fontSize:9,color:"rgba(242,244,247,0.50)",marginTop:1}}>{ex.group}</div>}
+          {/* Cartes riches exercices */}
+          {exosList.length > 0 && exosList.map((ex, i) => {
+            const col = cc(ex.cat);
+            const already = !!exercices.find(e=>e.nom===ex.nom);
+            const dbEx = ex.raw;
+            return (
+              <div key={i} style={{background:C.s1,border:`1px solid ${already?"rgba(52,211,153,0.25)":C.bd}`,borderRadius:16,padding:16,marginBottom:10,borderLeft:`3px solid ${col}`,boxShadow:`0 8px 24px -16px ${col}`}}>
+                {/* Badge catégorie */}
+                <span style={{fontSize:10.5,fontWeight:800,letterSpacing:"1.2px",padding:"4px 9px",borderRadius:7,display:"inline-block",marginBottom:8,color:col,background:`${col}18`,border:`1px solid ${col}35`,fontFamily:DISP_F}}>
+                  {ex.cat?.toUpperCase()}
+                </span>
+                {/* Nom */}
+                <div style={{fontSize:16,fontWeight:700,color:"#F2F4F7",fontFamily:DISP_F,letterSpacing:-0.2,marginBottom:2}}>{ex.nom}</div>
+                {/* Sets info */}
+                <div style={{fontSize:13,color:"rgba(242,244,247,0.50)",marginBottom:4,fontFamily:DISP_F}}>
+                  {dbEx?.s||"4"}×{dbEx?.r||"10"} · {dbEx?.rest||"90"}s
+                  {search && <span style={{color:"rgba(242,244,247,0.30)",marginLeft:8}}>{ex.group}</span>}
+                </div>
+                {/* Conseil morpho */}
+                {dbEx?.morpho && (
+                  <div style={{fontSize:12,color:"rgba(242,244,247,0.30)",fontStyle:"italic",lineHeight:1.5,marginBottom:12,fontFamily:DISP_F}}>
+                    {(dbEx.morpho||"").substring(0,90)}…
+                  </div>
+                )}
+                {/* Boutons */}
+                <div style={{display:"flex",gap:8}}>
+                  <button onClick={()=>!already&&setNewExForm({nom:ex.nom,cat:ex.cat,group:ex.group,series:dbEx?.s||"4",reps:dbEx?.r||"10",repos:`${dbEx?.rest||90}s`,charge:"",methode:"Classique"})}
+                    style={{flex:1,padding:"13px",borderRadius:13,border:"none",fontFamily:DISP_F,fontSize:13,fontWeight:700,cursor:already?"default":"pointer",
+                      background:already?"rgba(52,211,153,0.12)":"linear-gradient(180deg,#3B82F6,#2563EB)",
+                      color:already?"#34D399":"#fff",boxShadow:already?"none":"0 6px 18px rgba(59,130,246,0.28)"}}>
+                    {already ? "✓ Ajouté" : "+ Ajouter"}
+                  </button>
+                  {dbEx && (
+                    <button onClick={()=>{const d=findExInDB(ex.nom);if(d)setGuideEx({dbEx:d,serieEx:ex});}}
+                      style={{padding:"13px 16px",background:"rgba(59,130,246,0.10)",border:"1px solid rgba(59,130,246,0.25)",borderRadius:13,color:"#60A5FA",cursor:"pointer",fontSize:13,fontWeight:700,fontFamily:DISP_F}}>
+                      Guide →
+                    </button>
+                  )}
+                </div>
               </div>
-              <div style={{fontSize:10,color:"#4D8BFF",fontWeight:600}}>+ Ajouter</div>
-            </div>
-          ))}
-          {!search && !groupe && <div style={{textAlign:"center",padding:"20px 0",fontSize:11,color:"rgba(242,244,247,0.50)"}}>Sélectionne un groupe ou recherche</div>}
-          {search && exosList.length===0 && <div style={{textAlign:"center",padding:"20px 0",fontSize:11,color:"rgba(242,244,247,0.50)"}}>Aucun résultat pour "{search}"</div>}
+            );
+          })}
+
+          {!search && !groupe && (
+            <div style={{textAlign:"center",padding:"20px 0",fontSize:12,color:"rgba(242,244,247,0.30)",fontFamily:DISP_F}}>Sélectionne un groupe ou recherche un exercice</div>
+          )}
+          {search && exosList.length===0 && (
+            <div style={{textAlign:"center",padding:"20px 0",fontSize:12,color:"rgba(242,244,247,0.30)",fontFamily:DISP_F}}>Aucun résultat pour « {search} »</div>
+          )}
         </div>
       </div>
     );
   }
 
+  // ── Vue principale séance ───────────────────────────────────────────────────
   return (
     <div style={{minHeight:"100vh",background:C.bg}}>
       <div style={{paddingBottom:80}}>
-        {/* Header */}
-        <div style={{padding:"20px 15px 0",display:"flex",alignItems:"center",gap:12,marginBottom:14}}>
-          <button onClick={onClose} style={{background:"transparent",border:"none",color:C.gold,cursor:"pointer",fontSize:13,fontWeight:600,padding:0,display:"flex",alignItems:"center",gap:4}}>← Retour</button>
+
+        {/* Back button — bien visible */}
+        <div style={{padding:"18px 16px 0",display:"flex",alignItems:"center"}}>
+          <button onClick={onClose} style={{display:"flex",alignItems:"center",gap:6,background:"rgba(96,165,250,0.10)",border:"1px solid rgba(96,165,250,0.25)",borderRadius:11,padding:"8px 14px",color:"#60A5FA",cursor:"pointer",fontSize:13,fontWeight:700,fontFamily:DISP_F}}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+            Retour
+          </button>
         </div>
-        <div style={{padding:"0 15px"}}>
-          {/* ── Session hero (mockup style) ── */}
-          <div style={{position:"relative",borderRadius:24,overflow:"hidden",marginBottom:16,padding:"20px 20px 18px",background:`linear-gradient(155deg, ${int.c} 0%, ${int.c}cc 55%, ${int.c}66 100%)`,border:"1px solid rgba(255,255,255,0.22)",boxShadow:`0 20px 40px ${int.c}40, inset 0 1px 0 rgba(255,255,255,0.3)`}}>
-            <div style={{position:"absolute",inset:0,pointerEvents:"none",background:"radial-gradient(160% 60% at 20% 10%, rgba(255,255,255,0.42), transparent 55%)"}}/>
-            <div style={{position:"absolute",right:-50,bottom:-50,width:200,height:200,borderRadius:"50%",background:"radial-gradient(closest-side, rgba(255,255,255,0.18), transparent 70%)",filter:"blur(20px)",pointerEvents:"none"}}/>
+
+        <div style={{padding:"16px 16px 0"}}>
+          {/* Hero séance */}
+          <div style={{position:"relative",borderRadius:24,overflow:"hidden",marginBottom:16,padding:"20px 20px 18px",background:`linear-gradient(155deg,${int.c} 0%,${int.c}cc 55%,${int.c}66 100%)`,border:"1px solid rgba(255,255,255,0.22)",boxShadow:`0 20px 40px ${int.c}40`}}>
+            <div style={{position:"absolute",inset:0,pointerEvents:"none",background:"radial-gradient(160% 60% at 20% 10%,rgba(255,255,255,0.42),transparent 55%)"}}/>
             <div style={{position:"relative"}}>
-              <div style={{display:"inline-flex",alignItems:"center",gap:5,padding:"5px 9px",borderRadius:999,background:"rgba(11,15,31,0.28)",border:"1px solid rgba(11,15,31,0.3)",color:"#0B0F1F",fontSize:9.5,fontWeight:800,fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",letterSpacing:1.4}}>
-                <span style={{width:6,height:6,borderRadius:"50%",background:C.bg}}/>
+              <div style={{display:"inline-flex",alignItems:"center",gap:5,padding:"5px 9px",borderRadius:999,background:"rgba(11,15,31,0.28)",color:"#0B0F1F",fontSize:9.5,fontWeight:800,fontFamily:DISP_F,letterSpacing:1.4,marginBottom:14}}>
+                <span style={{width:6,height:6,borderRadius:"50%",background:"#0B0F1F"}}/>
                 {int.l.toUpperCase()}
               </div>
-              <div style={{fontFamily:"'Instrument Serif',serif",fontSize:40,fontWeight:400,letterSpacing:-1.6,color:"#0B0F1F",lineHeight:0.98,marginTop:18}}>{jour.nom}</div>
-              <div style={{fontSize:13,color:"rgba(11,15,31,0.78)",fontWeight:600,marginTop:6,fontFamily:"'Outfit','DM Sans',system-ui,sans-serif"}}>{jour.focus}</div>
-              <div style={{marginTop:18,display:"flex",gap:24}}>
+              <div style={{fontFamily:SERIF_F,fontSize:38,fontWeight:400,letterSpacing:-1.6,color:"#0B0F1F",lineHeight:0.98,marginBottom:6}}>{localName}</div>
+              <div style={{fontSize:13,color:"rgba(11,15,31,0.78)",fontWeight:600,fontFamily:DISP_F,marginBottom:16}}>{jour.focus}</div>
+              <div style={{display:"flex",gap:24}}>
                 {[{v:jour.duree||"45-60",u:"min"},{v:exercices.length,u:"exercices"}].map(s=>(
                   <div key={s.u}>
-                    <div style={{fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",fontSize:19,fontWeight:800,color:"#0B0F1F",letterSpacing:-0.4}}>{s.v}</div>
-                    <div style={{fontSize:9,color:"rgba(11,15,31,0.68)",fontWeight:700,fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",letterSpacing:0.4,marginTop:2}}>{s.u.toUpperCase()}</div>
+                    <div style={{fontFamily:DISP_F,fontSize:19,fontWeight:800,color:"#0B0F1F",letterSpacing:-0.4}}>{s.v}</div>
+                    <div style={{fontSize:9,color:"rgba(11,15,31,0.68)",fontWeight:700,fontFamily:DISP_F,letterSpacing:0.4,marginTop:2}}>{s.u.toUpperCase()}</div>
                   </div>
                 ))}
               </div>
             </div>
           </div>
 
+          {/* Renommer la séance */}
+          <div style={{background:C.s1,border:`1px solid ${C.bd}`,borderRadius:14,padding:"12px 14px",marginBottom:16,display:"flex",alignItems:"center",gap:10}}>
+            <span style={{fontSize:14,flexShrink:0}}>✏️</span>
+            <div style={{flex:1}}>
+              <div style={{fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:"rgba(242,244,247,0.35)",marginBottom:5,fontFamily:DISP_F}}>Nom de la séance</div>
+              <input value={localName} onChange={e=>updateName(e.target.value)}
+                autoComplete="off" autoCorrect="off" data-form-type="other"
+                style={{width:"100%",background:"none",border:"none",color:"#F2F4F7",fontFamily:DISP_F,fontSize:16,fontWeight:600,outline:"none",padding:0}}/>
+            </div>
+          </div>
+
+          {/* Exercices */}
           {exercices.length === 0 && (
-            <div style={{textAlign:"center",padding:"28px 0 16px"}}>
-              <div style={{fontSize:28,marginBottom:8}}>🏋️</div>
-              <div style={{fontSize:13,color:"rgba(242,244,247,0.50)",marginBottom:16}}>Aucun exercice dans cette séance.</div>
+            <div style={{borderRadius:18,padding:"20px 16px",background:"rgba(255,255,255,0.02)",border:`1px dashed ${C.bd}`,marginBottom:16}}>
+              {[{w:"65%",col:"#4D8BFF"},{w:"50%",col:"#5FE0A5"},{w:"72%",col:"#B69DFF"}].map((g,i)=>(
+                <div key={i} style={{display:"flex",alignItems:"center",gap:12,padding:"10px 0",borderBottom:i<2?`1px solid rgba(255,255,255,0.04)`:"none",opacity:1-i*0.2}}>
+                  <div style={{width:34,height:34,borderRadius:10,background:`${g.col}15`,border:`1px solid ${g.col}25`,flexShrink:0}}/>
+                  <div style={{flex:1}}>
+                    <div style={{height:11,borderRadius:4,background:"rgba(255,255,255,0.06)",width:g.w,marginBottom:6}}/>
+                    <div style={{height:9,borderRadius:3,background:"rgba(255,255,255,0.04)",width:"40%"}}/>
+                  </div>
+                </div>
+              ))}
+              <div style={{textAlign:"center",paddingTop:14,fontSize:12,color:"rgba(242,244,247,0.30)",fontFamily:DISP_F}}>Ajoute ton premier exercice ci-dessous</div>
             </div>
           )}
 
@@ -248,47 +320,46 @@ export function SeanceDetailModal({ jour, jourIdx, prog, setProg, onClose, C, IN
             const colour = cc(ex.cat);
             const isEditing = !!editEx[k];
             return (
-              <div key={k} style={{background:C.s1,border:`1px solid ${isEditing?colour+"40":"rgba(190,180,255,0.07)"}`,borderRadius:16,marginBottom:8,overflow:"hidden",boxShadow:"inset 0 1px 0 rgba(255,255,255,0.03)"}}>
+              <div key={k} style={{background:C.s1,border:`1px solid ${isEditing?colour+"40":C.bd}`,borderRadius:16,marginBottom:8,overflow:"hidden"}}>
                 <div style={{padding:"12px 14px"}}>
                   <div style={{display:"flex",alignItems:"center",gap:12}}>
-                    <div style={{width:38,height:38,borderRadius:11,flexShrink:0,background:`linear-gradient(145deg, ${colour}30, ${colour}08)`,border:`1px solid ${colour}40`,color:colour,display:"grid",placeItems:"center",fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",fontSize:13,fontWeight:800}}>{k+1}</div>
+                    <div style={{width:38,height:38,borderRadius:11,flexShrink:0,background:`linear-gradient(145deg,${colour}30,${colour}08)`,border:`1px solid ${colour}40`,color:colour,display:"grid",placeItems:"center",fontFamily:DISP_F,fontSize:13,fontWeight:800}}>{k+1}</div>
                     <div style={{flex:1,minWidth:0}}>
-                      <div style={{fontSize:14,fontWeight:700,color:"#F2F4F7",fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",letterSpacing:-0.1}}>{ex.nom}</div>
-                      <div style={{fontSize:11,color:"rgba(242,244,247,0.35)",fontWeight:500,marginTop:2}}>{ex.series}×{ex.reps} · {ex.repos}{ex.charge?` · `:""}{ex.charge&&<span style={{color:colour,fontWeight:700}}>{ex.charge}</span>}{ex.tempo?` · ${ex.tempo}`:""}{ex.methode&&ex.methode!=="Classique"?` · ${ex.methode}`:""}</div>
+                      <div style={{fontSize:14,fontWeight:700,color:"#F2F4F7",fontFamily:DISP_F,letterSpacing:-0.1}}>{ex.nom}</div>
+                      <div style={{fontSize:11,color:"rgba(242,244,247,0.35)",marginTop:2,fontFamily:DISP_F}}>
+                        {ex.series}×{ex.reps} · {ex.repos}
+                        {ex.charge?<><span style={{opacity:.5}}> · </span><span style={{color:colour,fontWeight:700}}>{ex.charge}</span></>:""}
+                        {ex.methode&&ex.methode!=="Classique"?<span style={{opacity:.5}}> · {ex.methode}</span>:""}
+                      </div>
                     </div>
                     <div style={{display:"flex",gap:5,marginLeft:8}}>
                       {findExInDB(ex.nom) && (
-                        <button onClick={()=>{const d=findExInDB(ex.nom);if(d)setGuideEx({dbEx:d,serieEx:ex});}} style={{padding:"4px 8px",background:"rgba(59,130,246,0.06)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:6,color:"#4D8BFF",cursor:"pointer",fontSize:10,fontWeight:600,fontFamily:"'Inter',sans-serif"}}>Guide ›</button>
+                        <button onClick={()=>{const d=findExInDB(ex.nom);if(d)setGuideEx({dbEx:d,serieEx:ex});}} style={{padding:"5px 9px",background:"rgba(59,130,246,0.06)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:8,color:"#60A5FA",cursor:"pointer",fontSize:10,fontWeight:700,fontFamily:DISP_F}}>Guide›</button>
                       )}
-                      <button onClick={()=>setEditEx(m=>({...m,[k]:!m[k]}))} style={{padding:"4px 8px",background:"rgba(59,130,246,0.08)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:6,color:"#4D8BFF",cursor:"pointer",fontSize:10,fontWeight:600}}>✏️</button>
-                      <button onClick={()=>deleteEx(k)} style={{padding:"4px 8px",background:"rgba(248,113,113,0.08)",border:"0.5px solid rgba(248,113,113,0.25)",borderRadius:6,color:"#FF7A6B",cursor:"pointer",fontSize:10}}>×</button>
+                      <button onClick={()=>setEditEx(m=>({...m,[k]:!m[k]}))} style={{width:30,height:30,borderRadius:9,background:"rgba(59,130,246,0.08)",border:"0.5px solid rgba(59,130,246,0.2)",color:"#60A5FA",cursor:"pointer",fontSize:13,display:"grid",placeItems:"center"}}>✏️</button>
+                      <button onClick={()=>deleteEx(k)} style={{width:30,height:30,borderRadius:9,background:"rgba(248,113,113,0.08)",border:"0.5px solid rgba(248,113,113,0.25)",color:"#F87171",cursor:"pointer",fontSize:13,display:"grid",placeItems:"center"}}>×</button>
                     </div>
                   </div>
                   {isEditing && (
-                    <div style={{marginTop:10,paddingTop:10,borderTop:"0.5px solid rgba(190,180,255,0.07)"}}>
-                      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6,marginBottom:8}}>
+                    <div style={{marginTop:10,paddingTop:10,borderTop:`1px solid ${C.bd}`}}>
+                      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:10}}>
                         {[{l:"Séries",k:"series"},{l:"Reps",k:"reps"},{l:"Repos",k:"repos"},{l:"Charge",k:"charge"}].map(pp=>(
                           <div key={pp.k}>
-                            <div style={{fontSize:9,color:"rgba(242,244,247,0.50)",marginBottom:3,fontWeight:600}}>{pp.l}</div>
-                            <div style={{display:"flex",gap:3,alignItems:"center"}}>
-                              <button onClick={()=>{const cur=parseFloat(ex[pp.k])||0;updateEx(k,pp.k,String(pp.k==="repos"?Math.max(0,cur-15):Math.max(1,cur-1)));}} style={{width:24,height:24,borderRadius:6,background:C.s2,border:"none",cursor:"pointer",fontSize:13}}>−</button>
-                              <input value={ex[pp.k]||""} onChange={e=>updateEx(k,pp.k,e.target.value)} style={{flex:1,padding:"5px 4px",background:C.s1,border:"0.5px solid rgba(255,255,255,0.07)",borderRadius:6,fontSize:11,textAlign:"center",fontFamily:"'Inter',sans-serif"}}/>
-                              <button onClick={()=>{const cur=parseFloat(ex[pp.k])||0;updateEx(k,pp.k,String(pp.k==="repos"?cur+15:cur+1));}} style={{width:24,height:24,borderRadius:6,background:C.accent,border:"none",color:"#141A2E",cursor:"pointer",fontSize:13}}>+</button>
+                            <div style={{fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:"rgba(242,244,247,0.35)",marginBottom:5,fontFamily:DISP_F}}>{pp.l}</div>
+                            <div style={{display:"flex",gap:4,alignItems:"center"}}>
+                              <button onClick={()=>{const cur=parseFloat(ex[pp.k])||0;updateEx(k,pp.k,String(Math.max(0,cur-(pp.k==="repos"?15:1))));}} style={{width:28,height:28,borderRadius:7,background:C.s2,border:"none",cursor:"pointer",fontSize:14,color:"rgba(242,244,247,0.60)"}}>−</button>
+                              <input value={ex[pp.k]||""} onChange={e=>updateEx(k,pp.k,e.target.value)} autoComplete="off"
+                                style={{flex:1,padding:"6px 4px",background:C.s2,border:`1px solid ${C.bd}`,borderRadius:8,fontSize:12,fontWeight:600,textAlign:"center",fontFamily:DISP_F,color:"#F2F4F7",outline:"none"}}/>
+                              <button onClick={()=>{const cur=parseFloat(ex[pp.k])||0;updateEx(k,pp.k,String(cur+(pp.k==="repos"?15:1)));}} style={{width:28,height:28,borderRadius:7,background:"rgba(59,130,246,0.16)",border:"none",cursor:"pointer",fontSize:14,color:"#60A5FA"}}>+</button>
                             </div>
                           </div>
                         ))}
                       </div>
-                      <div style={{marginBottom:7}}>
-                        <div style={{fontSize:9,color:"rgba(242,244,247,0.50)",marginBottom:3,fontWeight:600}}>TEMPO</div>
-                        <input value={ex.tempo||""} onChange={e=>updateEx(k,"tempo",e.target.value)} placeholder="Ex: 2-1-3" style={{width:"100%",padding:"7px 10px",background:C.s1,border:"0.5px solid rgba(255,255,255,0.07)",borderRadius:8,fontSize:11,fontFamily:"'Inter',sans-serif",boxSizing:"border-box"}}/>
-                      </div>
-                      <div>
-                        <div style={{fontSize:9,color:"rgba(242,244,247,0.50)",marginBottom:4,fontWeight:600}}>MÉTHODE</div>
-                        <div style={{display:"flex",flexWrap:"wrap",gap:4}}>
-                          {METHODS.map(mm=>(
-                            <button key={mm} onClick={()=>updateEx(k,"methode",mm)} style={{padding:"3px 9px",borderRadius:12,border:`1px solid ${ex.methode===mm?"#4D8BFF":"rgba(190,180,255,0.07)"}`,background:ex.methode===mm?"rgba(59,130,246,0.1)":"transparent",color:ex.methode===mm?"#4D8BFF":"rgba(245,241,232,0.50)",cursor:"pointer",fontSize:9,fontFamily:"'Inter',sans-serif"}}>{mm}</button>
-                          ))}
-                        </div>
+                      <div style={{fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:"rgba(242,244,247,0.35)",marginBottom:6,fontFamily:DISP_F}}>Méthode</div>
+                      <div style={{display:"flex",flexWrap:"wrap",gap:5}}>
+                        {METHODS.map(mm=>{const on=ex.methode===mm;return(
+                          <button key={mm} onClick={()=>updateEx(k,"methode",mm)} style={{padding:"4px 10px",borderRadius:99,border:`1px solid ${on?"#3B82F6":C.bd}`,background:on?"rgba(59,130,246,0.12)":"transparent",color:on?"#60A5FA":"rgba(242,244,247,0.40)",cursor:"pointer",fontSize:10,fontFamily:DISP_F}}>{mm}</button>
+                        );})}
                       </div>
                     </div>
                   )}
@@ -297,8 +368,7 @@ export function SeanceDetailModal({ jour, jourIdx, prog, setProg, onClose, C, IN
             );
           })}
 
-          {/* Bouton ajouter exercice */}
-          <button onClick={()=>setShowBiblio(true)} style={{width:"100%",padding:"14px",background:"rgba(77,139,255,0.06)",border:"1px dashed rgba(77,139,255,0.5)",borderRadius:16,color:"#4D8BFF",cursor:"pointer",fontSize:13,fontWeight:700,fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",display:"flex",alignItems:"center",justifyContent:"center",gap:8,marginTop:4,letterSpacing:0.2}}>
+          <button onClick={()=>setShowBiblio(true)} style={{width:"100%",padding:"14px",background:"rgba(59,130,246,0.06)",border:"1px dashed rgba(59,130,246,0.5)",borderRadius:16,color:"#60A5FA",cursor:"pointer",fontSize:13,fontWeight:700,fontFamily:DISP_F,display:"flex",alignItems:"center",justifyContent:"center",gap:8,marginTop:4}}>
             <span style={{fontSize:18,lineHeight:1}}>+</span> Ajouter un exercice
           </button>
         </div>
