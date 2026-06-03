@@ -191,7 +191,7 @@ export function DayModal({ date, sessions, onSave, onDelete, onToggleDone, onClo
           <div style={{marginBottom:16}}>
             <div style={{...ey,marginBottom:8}}>Séances planifiées</div>
             {allSess.map((sess,i)=>{
-              const col = sess.color||'#3B82F6';
+              const col = INT[sess.intensite||'modere']?.c || sess.color || '#3B82F6';
               return (
               <div key={i} style={{padding:'10px 12px',background:sess.done?`${col}14`:C.s2,borderRadius:12,marginBottom:6,borderLeft:`3px solid ${col}`,border:sess.done?`1px solid ${col}40`:'1px solid transparent'}}>
                 <div style={{display:'flex',alignItems:'center',gap:10}}>
@@ -443,7 +443,7 @@ export const MonthCal = memo(function MonthCal({ sessions, onUpdate }) {
   const getDayColor = (key) => {
     const s = getSess(key);
     if (!s.length) return null;
-    return s[0].color || '#3B82F6';
+    return INT[s[0].intensite||'modere']?.c || s[0].color || '#3B82F6';
   };
 
   return (
@@ -483,7 +483,7 @@ export const MonthCal = memo(function MonthCal({ sessions, onUpdate }) {
             const color   = getDayColor(key);
             const hasSess = daySess.length>0;
             const isDone  = daySess.some(s=>s.done);          // au moins une séance validée
-            const dotColors = daySess.filter(s=>!s.done).map(s=>s.color||'#3B82F6').slice(0,3);
+            const dotColors = daySess.filter(s=>!s.done).map(s=>INT[s.intensite||'modere']?.c||s.color||'#3B82F6').slice(0,3);
 
             // ── Styles selon l'état : validée = plein, planifiée = teintée ──
             let bg, bd, numColor;
