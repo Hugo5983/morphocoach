@@ -122,21 +122,30 @@ export default function SeanceDetail({
                 ))}
               </div>
             ) : (
-              <div style={{background:C.s2,borderRadius:8,padding:10,marginBottom:10}}>
-                <div style={{fontSize:10,color:C.gold,fontWeight:700,marginBottom:8}}>✏️ Modifier</div>
-                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6}}>
-                  {[{l:"Séries",k:"series"},{l:"Reps",k:"reps"},{l:"Repos",k:"repos"},{l:"Charge",k:"charge"}].map(p=>(
-                    <div key={p.k}>
-                      <div style={{fontSize:9,color:"rgba(245,241,232,0.50)",marginBottom:3}}>{p.l}</div>
-                      <input defaultValue={ex[p.k]||""} onBlur={e=>{
-                        const u=JSON.parse(JSON.stringify(prog.jours));
-                        const sIdx=u.findIndex(s=>s.id===seance.id);
-                        if(sIdx>=0){u[sIdx].exercices[j][p.k]=e.target.value;setProg({...prog,jours:u});}
-                      }} style={{width:"100%",padding:"7px 9px",background:C.s3,border:"0.5px solid rgba(190,180,255,0.07)",borderRadius:6,color:C.text,fontSize:12,fontFamily:"'Inter',sans-serif"}}/>
-                    </div>
-                  ))}
+              <div style={{background:C.s2,borderRadius:12,padding:12,marginBottom:10}}>
+                <div style={{fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:"rgba(242,244,247,0.35)",marginBottom:10,fontFamily:"'Outfit','DM Sans',system-ui,sans-serif"}}>Modifier l'exercice</div>
+                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:10}}>
+                  {[{l:"SÉRIES",k:"series"},{l:"REPS",k:"reps"},{l:"REPOS",k:"repos"},{l:"CHARGE",k:"charge"}].map(p=>{
+                    const updateField = (val) => {
+                      const u=JSON.parse(JSON.stringify(prog.jours));
+                      const sIdx=u.findIndex(s=>s.id===seance.id);
+                      if(sIdx>=0){u[sIdx].exercices[j][p.k]=val;setProg({...prog,jours:u});}
+                    };
+                    const step = p.k==="repos" ? 15 : 1;
+                    return (
+                      <div key={p.k} style={{minWidth:0}}>
+                        <div style={{fontSize:8,fontWeight:700,letterSpacing:"1px",color:"rgba(242,244,247,0.30)",marginBottom:5,fontFamily:"'Outfit','DM Sans',system-ui,sans-serif"}}>{p.l}</div>
+                        <div style={{display:"flex",gap:3,alignItems:"center"}}>
+                          <button onClick={()=>updateField(String(Math.max(0,(parseFloat(ex[p.k])||0)-step)))} style={{width:26,height:26,borderRadius:7,background:"rgba(255,255,255,0.06)",border:"none",cursor:"pointer",fontSize:14,color:"rgba(242,244,247,0.55)",flexShrink:0,display:"grid",placeItems:"center"}}>−</button>
+                          <input value={ex[p.k]||""} onChange={e=>updateField(e.target.value)} autoComplete="off"
+                            style={{flex:1,minWidth:0,padding:"5px 4px",background:"rgba(255,255,255,0.05)",border:"1px solid rgba(255,255,255,0.08)",borderRadius:7,fontSize:12,fontWeight:600,textAlign:"center",fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",color:"#F2F4F7",outline:"none"}}/>
+                          <button onClick={()=>updateField(String((parseFloat(ex[p.k])||0)+step))} style={{width:26,height:26,borderRadius:7,background:"rgba(59,130,246,0.15)",border:"none",cursor:"pointer",fontSize:14,color:"#60A5FA",flexShrink:0,display:"grid",placeItems:"center"}}>+</button>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
-                <button onClick={()=>setExEdit(e=>({...e,[`${seance.id}-${j}`]:false}))} style={{marginTop:8,width:"100%",padding:"7px",background:"rgba(62,199,122,0.1)",border:"1px solid rgba(62,199,122,0.3)",borderRadius:7,color:C.green,cursor:"pointer",fontSize:11,fontWeight:600}}>✓ OK</button>
+                <button onClick={()=>setExEdit(e=>({...e,[`${seance.id}-${j}`]:false}))} style={{width:"100%",padding:"8px",background:"rgba(52,211,153,0.10)",border:"1px solid rgba(52,211,153,0.30)",borderRadius:9,color:"#34D399",cursor:"pointer",fontSize:12,fontWeight:700,fontFamily:"'Outfit','DM Sans',system-ui,sans-serif"}}>✓ OK</button>
               </div>
             )}
             {ex.morpho_tip && <div style={{padding:"7px 9px",background:C.goldD,borderRadius:7,fontSize:11,color:"rgba(245,241,232,0.50)",lineHeight:1.5,marginBottom:6}}><span style={{color:C.gold,fontWeight:700}}>Morpho · </span>{ex.morpho_tip}</div>}
