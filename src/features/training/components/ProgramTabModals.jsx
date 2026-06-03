@@ -344,13 +344,13 @@ export function SeanceDetailModal({ jour, jourIdx, prog, setProg, onClose, C, IN
                     <div style={{marginTop:10,paddingTop:10,borderTop:`1px solid ${C.bd}`}}>
                       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:10}}>
                         {[{l:"Séries",k:"series"},{l:"Reps",k:"reps"},{l:"Repos",k:"repos"},{l:"Charge",k:"charge"}].map(pp=>(
-                          <div key={pp.k}>
-                            <div style={{fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:"rgba(242,244,247,0.35)",marginBottom:5,fontFamily:DISP_F}}>{pp.l}</div>
-                            <div style={{display:"flex",gap:4,alignItems:"center"}}>
-                              <button onClick={()=>{const cur=parseFloat(ex[pp.k])||0;updateEx(k,pp.k,String(Math.max(0,cur-(pp.k==="repos"?15:1))));}} style={{width:28,height:28,borderRadius:7,background:C.s2,border:"none",cursor:"pointer",fontSize:14,color:"rgba(242,244,247,0.60)"}}>−</button>
+                          <div key={pp.k} style={{minWidth:0}}>
+                            <div style={{fontSize:8,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:"rgba(242,244,247,0.35)",marginBottom:5,fontFamily:DISP_F}}>{pp.l}</div>
+                            <div style={{display:"flex",gap:3,alignItems:"center"}}>
+                              <button onClick={()=>{const cur=parseFloat(ex[pp.k])||0;updateEx(k,pp.k,String(Math.max(0,cur-(pp.k==="repos"?15:1))));}} style={{width:24,height:24,borderRadius:7,background:C.s2,border:"none",cursor:"pointer",fontSize:14,color:"rgba(242,244,247,0.60)",flexShrink:0,display:"grid",placeItems:"center"}}>−</button>
                               <input value={ex[pp.k]||""} onChange={e=>updateEx(k,pp.k,e.target.value)} autoComplete="off"
-                                style={{flex:1,padding:"6px 4px",background:C.s2,border:`1px solid ${C.bd}`,borderRadius:8,fontSize:12,fontWeight:600,textAlign:"center",fontFamily:DISP_F,color:"#F2F4F7",outline:"none"}}/>
-                              <button onClick={()=>{const cur=parseFloat(ex[pp.k])||0;updateEx(k,pp.k,String(cur+(pp.k==="repos"?15:1)));}} style={{width:28,height:28,borderRadius:7,background:"rgba(59,130,246,0.16)",border:"none",cursor:"pointer",fontSize:14,color:"#60A5FA"}}>+</button>
+                                style={{flex:1,minWidth:0,padding:"5px 2px",background:C.s2,border:`1px solid ${C.bd}`,borderRadius:8,fontSize:12,fontWeight:600,textAlign:"center",fontFamily:DISP_F,color:"#F2F4F7",outline:"none"}}/>
+                              <button onClick={()=>{const cur=parseFloat(ex[pp.k])||0;updateEx(k,pp.k,String(cur+(pp.k==="repos"?15:1)));}} style={{width:24,height:24,borderRadius:7,background:"rgba(59,130,246,0.16)",border:"none",cursor:"pointer",fontSize:14,color:"#60A5FA",flexShrink:0,display:"grid",placeItems:"center"}}>+</button>
                             </div>
                           </div>
                         ))}
