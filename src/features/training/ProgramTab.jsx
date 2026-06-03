@@ -183,10 +183,8 @@ function ProgrammeView(props) {
   const SERIF_F  = "'DM Serif Display','Georgia',serif";
   const DISP_F   = "'Outfit','DM Sans',system-ui,sans-serif";
   const semN     = (semC||0)+1;
-  const DAYS_ORDER = ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
-  const todayDowFr = ['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'][new Date().getDay()];
-  const todayIdx   = DAYS_ORDER.indexOf(todayDowFr);
   const cc = (cat) => ({principal:"#4D8BFF",correctif:"#FF7A6B",gainage:"#5FE0A5",isolation:"#B69DFF"}[cat||"principal"]||"#4D8BFF");
+  const progIdx = Math.max(0, allProgs.findIndex(p => prog && (p.id===prog.id || p.titre===prog.titre)));
   const durOf = (j) => {
     const exs = j.exercices||[];
     if (!exs.length) return null;
@@ -196,13 +194,6 @@ function ProgrammeView(props) {
     },0);
     return Math.round(secs/60);
   };
-  let nextJour = null, nextDayLabel = "";
-  if (prog?.jours?.length > 0) {
-    const withIdx = prog.jours.map(j => ({j, di: DAYS_ORDER.indexOf(j.focus || j.nom?.slice(0,3) || 'Lun')}));
-    const sorted  = [...withIdx].sort((a,b) => ((a.di-todayIdx+7)%7) - ((b.di-todayIdx+7)%7));
-    nextJour = sorted[0]?.j;
-    nextDayLabel = DAYS_ORDER[sorted[0]?.di] || '';
-  }
 
   return (
     <div style={{padding:"0 15px"}}>
@@ -241,63 +232,6 @@ function ProgrammeView(props) {
       {/* ── Programme actif ── */}
       {prog && prog.jours?.length > 0 && (<>
 
-        {/* Hero : prochaine séance */}
-        {nextJour && (() => {
-          const int = INT[nextJour.intensite||"modere"];
-          const dur = durOf(nextJour);
-          return (
-            <div style={{position:"relative",overflow:"hidden",borderRadius:22,padding:"18px 20px 20px",marginBottom:20,
-              background:"linear-gradient(155deg,#0f1f3a,#0b162c)",border:"1px solid rgba(59,130,246,0.22)",
-              boxShadow:"0 16px 40px rgba(0,0,0,0.35)"}}>
-              <div style={{position:"absolute",top:-50,right:-50,width:180,height:180,borderRadius:"50%",background:"radial-gradient(circle,rgba(59,130,246,0.18),transparent 65%)",pointerEvents:"none"}}/>
-              <div style={{fontSize:9,fontWeight:700,letterSpacing:"1.3px",color:"rgba(96,165,250,0.9)",background:"rgba(59,130,246,0.12)",border:"1px solid rgba(59,130,246,0.28)",padding:"5px 12px",borderRadius:99,display:"inline-block",marginBottom:10,fontFamily:DISP_F}}>
-                PROCHAINE SÉANCE · {nextDayLabel}
-              </div>
-              <div style={{fontFamily:SERIF_F,fontSize:28,color:"#F2F4F7",letterSpacing:-1,lineHeight:1.05,marginBottom:10}}>{nextJour.nom}</div>
-              <div style={{display:"flex",alignItems:"center",gap:14,flexWrap:"wrap",marginBottom:16}}>
-                <span style={{display:"flex",alignItems:"center",gap:5,fontSize:12,fontWeight:700,color:int.c}}>
-                  <span style={{width:7,height:7,borderRadius:"50%",background:int.c,boxShadow:`0 0 6px ${int.c}80`}}/>
-                  {int.l}
-                </span>
-                {dur && <span style={{fontSize:12,color:"rgba(242,244,247,0.55)",display:"flex",alignItems:"center",gap:4,fontFamily:DISP_F}}>
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-                  ~{dur} min
-                </span>}
-                <span style={{fontSize:12,color:"rgba(242,244,247,0.55)",fontFamily:DISP_F}}>{nextJour.exercices?.length||0} exercice{(nextJour.exercices?.length||0)!==1?"s":""}</span>
-              </div>
-              <button onClick={()=>setInnerView(`seance:0:${prog.jours.indexOf(nextJour)}`)} style={{
-                width:"100%",padding:"14px",borderRadius:14,background:"linear-gradient(180deg,#3B82F6,#2563EB)",
-                border:"none",color:"#fff",fontFamily:DISP_F,fontSize:14,fontWeight:700,cursor:"pointer",
-                boxShadow:"0 8px 24px rgba(59,130,246,0.35)",display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg>
-                Démarrer la séance
-              </button>
-            </div>
-          );
-        })()}
-
-        {/* Semaine type */}
-        <div style={{fontSize:9.5,fontWeight:700,letterSpacing:"2px",textTransform:"uppercase",color:"rgba(242,244,247,0.32)",fontFamily:DISP_F,marginBottom:12}}>Semaine type</div>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",gap:6,marginBottom:22}}>
-          {DAYS_ORDER.map((d,i) => {
-            const sess = prog.jours.find(j => (j.focus||j.nom?.slice(0,3)||"")===d);
-            const int  = sess ? INT[sess.intensite||"modere"] : null;
-            const isToday = i===todayIdx;
-            return (
-              <div key={d} style={{
-                borderRadius:12,padding:"8px 0 7px",textAlign:"center",
-                background: isToday?"rgba(59,130,246,0.12)":sess?C.s2:C.s1,
-                border: isToday?"1px solid #3B82F6":sess?`1px solid rgba(255,255,255,0.10)`:`1px solid ${C.bd}`,
-              }}>
-                <div style={{fontSize:11,fontWeight:700,color:isToday?"#60A5FA":sess?"#F2F4F7":"rgba(242,244,247,0.30)",fontFamily:DISP_F,marginBottom:5}}>{d}</div>
-                {int
-                  ? <div style={{width:6,height:6,borderRadius:"50%",background:int.c,boxShadow:`0 0 5px ${int.c}60`,margin:"0 auto"}}/>
-                  : <div style={{fontSize:9,color:"rgba(255,255,255,0.15)",lineHeight:1}}>—</div>}
-              </div>
-            );
-          })}
-        </div>
-
         {/* Séances accordion */}
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:12}}>
           <div style={{fontSize:9.5,fontWeight:700,letterSpacing:"2px",textTransform:"uppercase",color:"rgba(242,244,247,0.32)",fontFamily:DISP_F}}>Séances</div>
@@ -321,7 +255,7 @@ function ProgrammeView(props) {
                     {int.l} · {exos.length} exercice{exos.length!==1?"s":""}{dur?` · ~${dur} min`:""}
                   </div>
                 </div>
-                <button onClick={e=>{e.stopPropagation();setInnerView(`seance:0:${jIdx}`);}}
+                <button onClick={e=>{e.stopPropagation();setInnerView(`seance:${progIdx}:${jIdx}`);}}
                   style={{width:34,height:34,borderRadius:10,background:"rgba(59,130,246,0.08)",border:"1px solid rgba(59,130,246,0.22)",color:"#60A5FA",cursor:"pointer",display:"grid",placeItems:"center",flexShrink:0,fontSize:14}}>✏️</button>
                 <div style={{color:"rgba(242,244,247,0.40)",fontSize:18,transition:"transform .2s",transform:isOpen?"rotate(180deg)":"rotate(0)",flexShrink:0}}>⌄</div>
               </div>
