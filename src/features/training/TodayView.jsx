@@ -4,6 +4,7 @@ import { Card, Eyebrow, Btn } from "../../components/ui/index.jsx";
 import SeanceDetail from "./SeanceDetail.jsx";
 import { calc1RM, calcKgFor, catColor as cc, toDateKey } from "../../utils/training.js";
 import { ManualRMModal, CreateSeanceModal, EditRecordModal, RMCard, OBJ_TARGET, DEFAULT_TARGET } from "./components/TodayViewModals.jsx";
+import FocusMode from "./FocusMode.jsx";
 
 const DISP = FONT;
 const SERIF_F = SERIF;
@@ -19,6 +20,7 @@ export default function TodayView(props) {
   const [showCreateSeance, setShowCreateSeance]  = useState(false);
   const [tipIdx,             setTipIdx]             = useState(0);
   const [editRecord,       setEditRecord]        = useState(null);
+  const [focusActive,      setFocusActive]       = useState(false);
 
   // ── Séance du jour ──────────────────────────────────────────────────────
   const dayNames = ["Dim","Lun","Mar","Mer","Jeu","Ven","Sam"];
@@ -123,6 +125,25 @@ export default function TodayView(props) {
 
   const todaySeance = getTodaySeance();
 
+  // ── Focus Mode (overlay inline, remplace viewSeance) ──────────────────────
+  if (focusActive && todaySeance) {
+    return (
+      <FocusMode
+        seance      = {todaySeance}
+        checkedEx   = {checkedEx}
+        toggleCheck = {toggleCheck}
+        prog        = {prog}
+        setProg     = {setProg}
+        push        = {push}
+        C           = {C}
+        INT         = {INT}
+        EX          = {EX}
+        todayKey    = {todayKey}
+        onClose     = {() => setFocusActive(false)}
+      />
+    );
+  }
+
   return (
     <div style={{ padding: "0 16px" }}>
 
@@ -147,10 +168,10 @@ export default function TodayView(props) {
           <>
             {/* Hero card */}
             <div style={{
-              background: "linear-gradient(150deg, #3B82F6 0%, #2563EB 60%, #1D4FD7 100%)",
+              background: `linear-gradient(150deg, ${intData.c} 0%, ${intData.c}CC 60%, ${intData.c}88 100%)`,
               borderRadius: 22, padding: "20px 18px", marginBottom: 12,
               position: "relative", overflow: "hidden",
-              boxShadow: "0 18px 40px rgba(37,99,235,0.40)",
+              boxShadow: `0 18px 40px ${intData.c}40`,
             }}>
               <div style={{ position: "absolute", top: -50, right: -40, width: 170, height: 170, borderRadius: "50%", background: "radial-gradient(circle, rgba(255,255,255,0.22), transparent 65%)", pointerEvents: "none" }}/>
 
@@ -168,8 +189,8 @@ export default function TodayView(props) {
                 <div style={{ fontFamily: SERIF_F, fontSize: 31, color: "#fff", lineHeight: 1, marginBottom: 6, letterSpacing: -1 }}>
                   {todaySeance.nom}
                 </div>
-                <div style={{ fontSize: 12.5, color: "rgba(255,255,255,0.80)", fontFamily: DISP, marginBottom: 15, display: "flex", alignItems: "center", gap: 7 }}>
-                  <span style={{ width: 7, height: 7, borderRadius: "50%", background: intData.c, flexShrink: 0 }}/>
+                <div style={{ fontSize: 12.5, color: "rgba(255,255,255,0.85)", fontFamily: DISP, marginBottom: 15, display: "flex", alignItems: "center", gap: 7 }}>
+                  <span style={{ width: 7, height: 7, borderRadius: "50%", background: "rgba(255,255,255,0.75)", flexShrink: 0 }}/>
                   {intData.l} · {todaySeance.duree || "60 min"} · {total} exercice{total !== 1 ? "s" : ""}
                 </div>
                 {/* Barre progression */}
@@ -217,7 +238,7 @@ export default function TodayView(props) {
 
             {/* CTA démarrer */}
             {!todaySeance.complete && (
-              <button onClick={() => setViewSeance(todaySeance)} style={{
+              <button onClick={() => setFocusActive(true)} style={{
                 width: "100%", padding: "15px", borderRadius: 16,
                 background: "#F5F1E8", border: "none",
                 color: "#0B0F1F", fontSize: 14, fontWeight: 700,
