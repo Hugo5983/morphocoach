@@ -22,6 +22,30 @@ export default function TodayView(props) {
   const [editRecord,       setEditRecord]        = useState(null);
   const [focusActive,      setFocusActive]       = useState(false);
 
+  // ── Sommeil — target + log quotidien ────────────────────────────────────
+  const [sleepTarget, setSleepTarget] = useState(() =>
+    parseFloat(localStorage.getItem('morpho_sleep_target') || '8')
+  );
+  const [sleepLog, setSleepLog] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('morpho_sleep_log') || '{}'); }
+    catch { return {}; }
+  });
+  const [showSleepModal, setShowSleepModal] = useState(false);
+  const [sleepInput, setSleepInput]   = useState(null); // valeur en cours d'édition dans la modal
+
+  const saveSleepTarget = (v) => {
+    const val = Math.round(v * 2) / 2; // arrondi 0.5
+    setSleepTarget(val);
+    localStorage.setItem('morpho_sleep_target', String(val));
+  };
+  const logSleepToday = (h) => {
+    const key = new Date().toISOString().split('T')[0];
+    const updated = { ...sleepLog, [key]: h };
+    setSleepLog(updated);
+    localStorage.setItem('morpho_sleep_log', JSON.stringify(updated));
+  };
+  const todaySleepLogged = sleepLog[new Date().toISOString().split('T')[0]] ?? null;
+
   // ── Séance du jour ──────────────────────────────────────────────────────
   const dayNames = ["Dim","Lun","Mar","Mer","Jeu","Ven","Sam"];
   const today     = new Date();
@@ -288,16 +312,40 @@ export default function TodayView(props) {
 
           {/* Gestes récup */}
           {[
-            { ic:"💧", bg:"rgba(52,211,153,0.12)",  bd:"rgba(52,211,153,0.25)",  t:"Hydratation · 2,5 L", s:"Clé de la récupération musculaire" },
-            { ic:"😴", bg:"rgba(129,140,248,0.14)", bd:"rgba(129,140,248,0.28)", t:"Sommeil · cible 8 h",   s:"80% des gains se font la nuit" },
-            { ic:"🧘", bg:"rgba(59,130,246,0.14)",  bd:"rgba(59,130,246,0.28)",  t:"Mobilité · 10 min",     s:"Hanches & thoracique" },
+            { ic:"💧", bg:"rgba(52,211,153,0.12)",  bd:"rgba(52,211,153,0.25)",  t:"Hydratation · 2,5 L",  s:"Clé de la récupération musculaire", tap:null },
+            {
+              ic: todaySleepLogged !== null
+                ? todaySleepLogged >= sleepTarget ? "✅" : todaySleepLogged >= sleepTarget - 1.5 ? "🟡" : "🔴"
+                : "😴",
+              bg: todaySleepLogged !== null
+                ? todaySleepLogged >= sleepTarget ? "rgba(52,211,153,0.12)" : todaySleepLogged >= sleepTarget-1.5 ? "rgba(251,146,60,0.14)" : "rgba(248,113,113,0.12)"
+                : "rgba(129,140,248,0.14)",
+              bd: todaySleepLogged !== null
+                ? todaySleepLogged >= sleepTarget ? "rgba(52,211,153,0.30)" : todaySleepLogged >= sleepTarget-1.5 ? "rgba(251,146,60,0.30)" : "rgba(248,113,113,0.30)"
+                : "rgba(129,140,248,0.28)",
+              t: todaySleepLogged !== null
+                ? `Sommeil · ${todaySleepLogged}h dormies`
+                : `Sommeil · cible ${sleepTarget}h`,
+              s: todaySleepLogged !== null
+                ? todaySleepLogged >= sleepTarget
+                  ? "✓ Objectif atteint — super récup"
+                  : `${(sleepTarget - todaySleepLogged).toFixed(1)}h sous la cible`
+                : "Tap pour logger · 80% des gains la nuit",
+              tap: () => { setSleepInput(todaySleepLogged ?? sleepTarget); setShowSleepModal(true); },
+            },
+            { ic:"🧘", bg:"rgba(59,130,246,0.14)",  bd:"rgba(59,130,246,0.28)",  t:"Mobilité · 10 min",    s:"Hanches & thoracique", tap:null },
           ].map((g,i) => (
-            <div key={i} style={{ display:"flex",alignItems:"center",gap:13,padding:"11px 0",borderTop:"1px solid rgba(255,255,255,0.06)" }}>
+            <div key={i} onClick={g.tap||undefined} style={{
+              display:"flex",alignItems:"center",gap:13,padding:"11px 0",
+              borderTop:"1px solid rgba(255,255,255,0.06)",
+              cursor:g.tap?"pointer":"default",
+            }}>
               <div style={{ width:42,height:42,borderRadius:13,background:g.bg,border:`1px solid ${g.bd}`,display:"grid",placeItems:"center",flexShrink:0,fontSize:20 }}>{g.ic}</div>
               <div style={{ flex:1,minWidth:0 }}>
                 <div style={{ fontSize:14.5,fontWeight:700,color:"#F2F4F7",fontFamily:DISP,letterSpacing:-0.2 }}>{g.t}</div>
                 <div style={{ fontSize:11.5,color:"rgba(242,244,247,0.40)",fontFamily:DISP,marginTop:1 }}>{g.s}</div>
               </div>
+              {g.tap && <div style={{ fontSize:12,color:"rgba(242,244,247,0.25)",flexShrink:0 }}>›</div>}
             </div>
           ))}
 
@@ -391,6 +439,135 @@ export default function TodayView(props) {
       {showManualRM && <ManualRMModal onClose={() => setShowManualRM(false)} prog={prog} setProg={setProg} push={push} C={C} EX={EX}/>}
       {showCreateSeance && <CreateSeanceModal onClose={() => setShowCreateSeance(false)} prog={prog} setProg={setProg} calSess={calSess} setCalSess={setCalSess} push={push} C={C} INT={INT} EX={EX} todayKey={todayKey}/>}
       {editRecord && <EditRecordModal exData={editRecord} onClose={() => setEditRecord(null)} prog={prog} setProg={setProg} push={push} C={C}/>}
+
+      {/* ── Modal Sommeil ─────────────────────────────────────────── */}
+      {showSleepModal && (() => {
+        const F = DISP;
+        const inputVal = sleepInput ?? sleepTarget;
+        const step  = v => Math.min(12, Math.round((v + 0.5) * 2) / 2);
+        const stepD = v => Math.max(4, Math.round((v - 0.5) * 2) / 2);
+        const qualColor = (h) => h >= sleepTarget ? "#34D399" : h >= sleepTarget-1.5 ? "#FB923C" : "#F87171";
+        const qualLabel = (h) => h >= sleepTarget ? "Optimal 🌟" : h >= sleepTarget-1.5 ? "Acceptable" : "Insuffisant";
+        return (
+          <div onClick={()=>setShowSleepModal(false)} style={{
+            position:"fixed",inset:0,zIndex:700,
+            background:"rgba(4,7,15,0.75)",backdropFilter:"blur(4px)",
+            display:"flex",alignItems:"flex-end",justifyContent:"center",
+          }}>
+            <div onClick={e=>e.stopPropagation()} style={{
+              width:"100%",maxWidth:480,
+              background:"#0d1424",border:"1px solid rgba(255,255,255,0.07)",
+              borderRadius:"22px 22px 0 0",padding:"0 0 40px",
+              boxShadow:"0 -20px 60px rgba(0,0,0,0.55)",
+            }}>
+              {/* Handle */}
+              <div style={{ width:38,height:4,borderRadius:2,background:"rgba(255,255,255,0.12)",margin:"14px auto 0" }}/>
+
+              {/* Header */}
+              <div style={{ padding:"18px 22px 0",display:"flex",alignItems:"center",justifyContent:"space-between" }}>
+                <div>
+                  <div style={{ fontFamily:F,fontSize:18,fontWeight:700,color:"#F2F4F7",letterSpacing:-0.4 }}>😴 Sommeil</div>
+                  <div style={{ fontSize:11,color:"rgba(242,244,247,0.35)",marginTop:3,fontFamily:F }}>Cible & log quotidien</div>
+                </div>
+                <button onClick={()=>setShowSleepModal(false)} style={{
+                  width:36,height:36,borderRadius:10,background:"rgba(255,255,255,0.06)",
+                  border:"1px solid rgba(255,255,255,0.08)",color:"rgba(242,244,247,0.55)",
+                  fontSize:16,cursor:"pointer",display:"grid",placeItems:"center",
+                }}>×</button>
+              </div>
+
+              {/* Séparateur */}
+              <div style={{ height:1,background:"rgba(255,255,255,0.06)",margin:"16px 0" }}/>
+
+              <div style={{ padding:"0 22px" }}>
+
+                {/* ── Section 1 : Cible ─────────────────────────── */}
+                <div style={{ fontSize:10,fontWeight:700,letterSpacing:"1.6px",textTransform:"uppercase",
+                              color:"rgba(242,244,247,0.35)",marginBottom:14,fontFamily:F }}>
+                  OBJECTIF NUIT
+                </div>
+                <div style={{ display:"flex",alignItems:"center",justifyContent:"space-between",
+                              background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.07)",
+                              borderRadius:16,padding:"14px 16px",marginBottom:20 }}>
+                  <button onClick={()=>saveSleepTarget(stepD(sleepTarget))} style={{
+                    width:44,height:44,borderRadius:13,background:"rgba(255,255,255,0.06)",
+                    border:"none",color:"rgba(242,244,247,0.55)",fontSize:18,cursor:"pointer",
+                    display:"grid",placeItems:"center",
+                  }}>−</button>
+                  <div style={{ textAlign:"center" }}>
+                    <div style={{ fontSize:36,fontWeight:700,color:"#F2F4F7",letterSpacing:-1,fontFamily:F }}>
+                      {sleepTarget}<span style={{ fontSize:16,color:"rgba(242,244,247,0.45)",marginLeft:3 }}>h</span>
+                    </div>
+                    <div style={{ fontSize:10,color:"rgba(242,244,247,0.35)",fontFamily:F,marginTop:2 }}>cible par nuit</div>
+                  </div>
+                  <button onClick={()=>saveSleepTarget(step(sleepTarget))} style={{
+                    width:44,height:44,borderRadius:13,
+                    background:"rgba(91,141,239,0.14)",border:"1px solid rgba(91,141,239,0.32)",
+                    color:"#9CB9F5",fontSize:18,cursor:"pointer",display:"grid",placeItems:"center",
+                  }}>+</button>
+                </div>
+
+                {/* ── Section 2 : Log aujourd'hui ───────────────── */}
+                <div style={{ fontSize:10,fontWeight:700,letterSpacing:"1.6px",textTransform:"uppercase",
+                              color:"rgba(242,244,247,0.35)",marginBottom:14,fontFamily:F }}>
+                  CETTE NUIT
+                </div>
+                <div style={{ display:"flex",alignItems:"center",justifyContent:"space-between",
+                              background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.07)",
+                              borderRadius:16,padding:"14px 16px",marginBottom:16 }}>
+                  <button onClick={()=>setSleepInput(stepD(inputVal))} style={{
+                    width:44,height:44,borderRadius:13,background:"rgba(255,255,255,0.06)",
+                    border:"none",color:"rgba(242,244,247,0.55)",fontSize:18,cursor:"pointer",
+                    display:"grid",placeItems:"center",
+                  }}>−</button>
+                  <div style={{ textAlign:"center" }}>
+                    <div style={{ fontSize:36,fontWeight:700,color:"#F2F4F7",letterSpacing:-1,fontFamily:F }}>
+                      {inputVal}<span style={{ fontSize:16,color:"rgba(242,244,247,0.45)",marginLeft:3 }}>h</span>
+                    </div>
+                    <div style={{ fontSize:11,fontWeight:600,color:qualColor(inputVal),fontFamily:F,marginTop:2 }}>
+                      {qualLabel(inputVal)}
+                    </div>
+                  </div>
+                  <button onClick={()=>setSleepInput(step(inputVal))} style={{
+                    width:44,height:44,borderRadius:13,
+                    background:"rgba(91,141,239,0.14)",border:"1px solid rgba(91,141,239,0.32)",
+                    color:"#9CB9F5",fontSize:18,cursor:"pointer",display:"grid",placeItems:"center",
+                  }}>+</button>
+                </div>
+
+                {/* Barre de comparaison */}
+                <div style={{ marginBottom:22 }}>
+                  <div style={{ display:"flex",justifyContent:"space-between",marginBottom:6 }}>
+                    <span style={{ fontSize:11,color:"rgba(242,244,247,0.35)",fontFamily:F }}>0h</span>
+                    <span style={{ fontSize:11,color:"rgba(91,141,239,0.7)",fontFamily:F }}>cible {sleepTarget}h</span>
+                    <span style={{ fontSize:11,color:"rgba(242,244,247,0.35)",fontFamily:F }}>12h</span>
+                  </div>
+                  <div style={{ height:6,borderRadius:3,background:"rgba(255,255,255,0.06)",position:"relative" }}>
+                    {/* Cible */}
+                    <div style={{ position:"absolute",top:-2,bottom:-2,width:2,borderRadius:1,
+                      background:"rgba(91,141,239,0.5)",left:`${(sleepTarget/12)*100}%` }}/>
+                    {/* Valeur saisie */}
+                    <div style={{ height:"100%",borderRadius:3,
+                      background:`linear-gradient(90deg,${qualColor(inputVal)}99,${qualColor(inputVal)})`,
+                      width:`${Math.min(100,(inputVal/12)*100)}%`,transition:"width .2s" }}/>
+                  </div>
+                </div>
+
+                {/* Bouton valider */}
+                <button onClick={()=>{ logSleepToday(inputVal); setShowSleepModal(false); }} style={{
+                  width:"100%",padding:"15px",borderRadius:14,
+                  background:"linear-gradient(180deg,#9CB9F5 0%,#5B8DEF 50%,#2D5DC9 100%)",
+                  color:"#fff",border:"1px solid rgba(156,185,245,0.4)",
+                  fontFamily:F,fontSize:14,fontWeight:700,cursor:"pointer",
+                  boxShadow:"inset 0 1px 0 rgba(255,255,255,0.28), 0 8px 22px rgba(45,93,201,0.42)",
+                }}>
+                  ✓ Enregistrer {inputVal}h de sommeil
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
     </div>
   );
 }
