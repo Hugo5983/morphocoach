@@ -225,7 +225,7 @@ export default function FocusMode({
 
   return (
     <div style={{
-      position: 'fixed', inset: 0, zIndex: 600,
+      position: 'fixed', inset: 0, zIndex: 9999,
       background: T.bg,
       display: 'flex', flexDirection: 'column',
     }}>
@@ -258,7 +258,8 @@ export default function FocusMode({
       </div>
 
       {/* ── Corps central — switche selon la phase ─── */}
-      <div style={{ flex:1, position:'relative', zIndex:5, overflow:'hidden' }}>
+      <div style={{ flex:1, position:'relative', zIndex:5, overflow:'hidden',
+        display:'flex', flexDirection:'column' }}>
 
         {/* PHASE : DONE ───────────────────────────────────────── */}
         {phase === 'done' && (
@@ -287,7 +288,7 @@ export default function FocusMode({
 
         {/* PHASE : SET ou FLASH ───────────────────────────────── */}
         {(phase === 'set' || phase === 'flash') && (
-          <div style={{ flex:1, display:'flex', flexDirection:'column', padding:'0 18px', height:'100%' }}>
+          <div style={{ flex:1, display:'flex', flexDirection:'column', padding:'0 18px' }}>
 
             {/* Flash overlay post-validation */}
             {phase === 'flash' && (
