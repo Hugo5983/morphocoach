@@ -169,39 +169,98 @@ function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, curVol, currentWe
           </>)}
         </>)}
 
-        {/* 2. SCORE PRÉPARATION (DÉMO) */}
-        {card("ready", <>
-          <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
-            <div style={lbl}>Score de préparation</div>{demoBadge}
-          </div>
-          <div style={{display:"flex",alignItems:"center",gap:18,marginTop:4}}>
-            <div style={{position:"relative",width:90,height:90,flexShrink:0}}>
-              <svg width="90" height="90" viewBox="0 0 96 96">
-                <circle cx="48" cy="48" r="42" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="7"/>
-                <circle cx="48" cy="48" r="42" fill="none" stroke="#F59E0B" strokeWidth="7" strokeLinecap="round" strokeDasharray="264" strokeDashoffset="76" transform="rotate(-90 48 48)"/>
-              </svg>
-              <div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center"}}>
-                <div style={{fontSize:26,fontWeight:800,color:"#F59E0B",lineHeight:1}}>71</div>
-                <div style={{fontSize:8,color:"rgba(242,244,247,0.3)",letterSpacing:1,textTransform:"uppercase",marginTop:2}}>/ 100</div>
+        {/* 2. SCORE PRÉPARATION — données réelles sommeil + mobilité */}
+        {card("ready", (() => {
+          // Lecture localStorage
+          const sLog = (() => { try { return JSON.parse(localStorage.getItem('morpho_sleep_log')||'{}'); } catch{return{};} })();
+          const sTgt = parseFloat(localStorage.getItem('morpho_sleep_target')||'8');
+          const mLog = (() => { try { return JSON.parse(localStorage.getItem('morpho_mobilite_log')||'{}'); } catch{return{};} })();
+          const last7 = Array.from({length:7},(_,i)=>{ const d=new Date(); d.setDate(d.getDate()-i); return d.toISOString().split('T')[0]; });
+
+          const sleepVals = last7.map(d=>sLog[d]||0).filter(v=>v>0);
+          const avgSleep  = sleepVals.length>0 ? sleepVals.reduce((a,b)=>a+b,0)/sleepVals.length : 0;
+          const mobDays   = last7.filter(d=>mLog[d]).length;
+          const hasData   = sleepVals.length>0 || mobDays>0;
+
+          const sleepPct  = avgSleep>0 ? Math.min(100, Math.round((avgSleep/sTgt)*100)) : null;
+          const mobPct    = Math.round((mobDays/7)*100);
+          const score     = sleepPct!==null ? Math.round(sleepPct*0.55 + mobPct*0.45)
+                          : mobDays>0 ? mobPct : null;
+
+          const col = score===null?"#888":score>=75?"#34D399":score>=55?"#F59E0B":"#F87171";
+          const CIRC=264;
+          const offset = score!==null ? Math.round(CIRC*(1-score/100)) : CIRC;
+
+          const liveBadge = hasData
+            ? badge("rgba(52,211,153,0.12)","#34D399","Données réelles · 7j")
+            : demoBadge;
+
+          return <>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
+              <div style={lbl}>Score de préparation</div>{liveBadge}
+            </div>
+            <div style={{display:"flex",alignItems:"center",gap:18,marginTop:4}}>
+              {/* Anneau */}
+              <div style={{position:"relative",width:90,height:90,flexShrink:0}}>
+                <svg width="90" height="90" viewBox="0 0 96 96">
+                  <circle cx="48" cy="48" r="42" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="7"/>
+                  <circle cx="48" cy="48" r="42" fill="none" stroke={col} strokeWidth="7"
+                    strokeLinecap="round" strokeDasharray={CIRC} strokeDashoffset={offset}
+                    transform="rotate(-90 48 48)" style={{transition:"stroke-dashoffset .6s,stroke .4s"}}/>
+                </svg>
+                <div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center"}}>
+                  <div style={{fontSize:26,fontWeight:800,color:col,lineHeight:1}}>{score??"-"}</div>
+                  <div style={{fontSize:8,color:"rgba(242,244,247,0.3)",letterSpacing:1,textTransform:"uppercase",marginTop:2}}>/ 100</div>
+                </div>
+              </div>
+              {/* Barres */}
+              <div style={{flex:1,display:"flex",flexDirection:"column",gap:10}}>
+                {/* Sommeil */}
+                <div style={{display:"flex",alignItems:"center",gap:9}}>
+                  <span style={{fontSize:11,color:"rgba(242,244,247,0.55)",width:76,flexShrink:0,fontFamily:DISP_F}}>Sommeil 7j</span>
+                  <div style={{flex:1,height:6,borderRadius:3,background:"rgba(255,255,255,0.06)",overflow:"hidden"}}>
+                    <div style={{height:"100%",borderRadius:3,
+                      width:sleepPct?`${sleepPct}%`:"0%",
+                      background:sleepPct?sleepPct>=75?"#34D399":sleepPct>=55?"#F59E0B":"#F87171":"#333",
+                      transition:"width .6s"}}/>
+                  </div>
+                  <span style={{fontSize:10,fontWeight:700,color:sleepPct?col:"#555",width:28,textAlign:"right",flexShrink:0,fontFamily:DISP_F}}>
+                    {sleepPct?`${avgSleep.toFixed(1)}h`:"–"}
+                  </span>
+                </div>
+                {/* Mobilité */}
+                <div style={{display:"flex",alignItems:"center",gap:9}}>
+                  <span style={{fontSize:11,color:"rgba(242,244,247,0.55)",width:76,flexShrink:0,fontFamily:DISP_F}}>Mobilité 7j</span>
+                  <div style={{flex:1,height:6,borderRadius:3,background:"rgba(255,255,255,0.06)",overflow:"hidden"}}>
+                    <div style={{height:"100%",borderRadius:3,
+                      width:`${mobPct}%`,
+                      background:mobPct>=70?"#34D399":mobPct>=40?"#F59E0B":"#F87171",
+                      transition:"width .6s"}}/>
+                  </div>
+                  <span style={{fontSize:10,fontWeight:700,color:mobPct>=70?"#34D399":mobPct>=40?"#F59E0B":"#F87171",width:28,textAlign:"right",flexShrink:0,fontFamily:DISP_F}}>
+                    {mobDays}/7j
+                  </span>
+                </div>
+                {!hasData && (
+                  <div style={{fontSize:10,color:"rgba(242,244,247,0.30)",fontFamily:DISP_F,fontStyle:"italic"}}>
+                    Log sommeil + mobilité pour activer
+                  </div>
+                )}
               </div>
             </div>
-            <div style={{flex:1,display:"flex",flexDirection:"column",gap:8}}>
-              {[["Sommeil","60%","#F59E0B","6h"],["Courbatures","70%","#F87171","Éle."],["Motivation","85%","#34D399","8"],["RPE moyen","80%","#F59E0B","8"]].map(([n,w,c,v],k)=>(
-                <div key={k} style={{display:"flex",alignItems:"center",gap:9}}>
-                  <span style={{fontSize:11,color:"rgba(242,244,247,0.55)",width:74,flexShrink:0,fontFamily:DISP_F}}>{n}</span>
-                  <div style={{flex:1,height:6,borderRadius:3,background:"rgba(255,255,255,0.06)",overflow:"hidden"}}><div style={{height:"100%",width:w,borderRadius:3,background:c}}/></div>
-                  <span style={{fontSize:10,fontWeight:700,color:c,width:24,textAlign:"right",flexShrink:0}}>{v}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-          {expandRow("ready","Que faire avec ce score ?")}
-          {detailBox("ready", <>
-            Le <b style={{color:"#F2F4F7"}}>score de préparation</b> combine sommeil, courbatures, motivation et RPE. À <b style={{color:"#F2F4F7"}}>71/100</b> = fatigue modérée, typique d'une fin d'accumulation.
-            {reco("🎯","Maintiens la charge mais priorise le sommeil (cible 8h). Sous 60, avance le déload.")}
-            <div style={{marginTop:10,fontSize:11,color:"rgba(242,244,247,0.4)",fontStyle:"italic"}}>Ces valeurs deviennent réelles avec le check-in hebdo (20 s).</div>
-          </>)}
-        </>)}
+            {expandRow("ready","Que faire avec ce score ?")}
+            {detailBox("ready", <>
+              Le <b style={{color:"#F2F4F7"}}>score de préparation</b> combine la moyenne de sommeil des 7 derniers jours (55%) et le taux de mobilité complétée (45%).
+              {score!==null && score<60 && reco("⚠️","Score bas — réduis le volume cette semaine et priorise le sommeil. Sous 50, avance le déload.")}
+              {score!==null && score>=60 && score<75 && reco("🎯","Fatigue modérée. Maintiens la charge mais dors plus. Cible : "+sTgt+"h/nuit.")}
+              {score!==null && score>=75 && reco("✅","Bonne récupération. Tu peux progresser en charge cette semaine.")}
+              {!hasData && reco("💡","Log ton sommeil et ta mobilité depuis le jour de récup pour voir ton score réel.")}
+              <div style={{marginTop:10,fontSize:11,color:"rgba(242,244,247,0.4)",fontStyle:"italic"}}>
+                Courbatures et RPE seront ajoutés avec le check-in hebdo.
+              </div>
+            </>)}
+          </>;
+        })())}
 
         {/* 3. ACWR (DÉMO) */}
         {card("acwr", <>
