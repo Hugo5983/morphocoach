@@ -483,6 +483,8 @@ export default function FocusMode({
 
   function validate() {
     const next = setIdx + 1;
+    // ── Log la série réelle ──────────────────────────────────────────
+    workoutSetsRef.current.push({ exNom: ex.nom, kg, reps });
     setLoggedSets(s => [...s, { kg, reps }]);
     setPhase('flash');
     if (next >= totalSets) {
@@ -501,11 +503,41 @@ export default function FocusMode({
   function nextExercise() {
     const n = exIdx + 1;
     if (n < exercices.length) { setExIdx(n); }
-    else { push?.("✅","Séance terminée !",`${exercices.length} exercice${exercices.length!==1?'s':''} complétés.`); onClose(); }
+    else {
+      saveWorkoutLog();  // ← persiste tout avant de fermer
+      push?.("✅","Séance terminée !",`${exercices.length} exercice${exercices.length!==1?'s':''} complétés.`);
+      onClose();
+    }
   }
+
+  // ── Workout log — sauvegarde charges réelles ────────────────────────────
+  const workoutSetsRef = useRef([]);   // accumule tous les sets de la session
+  const workoutDateRef = useRef(new Date().toISOString().split('T')[0]);
+
+  const saveWorkoutLog = useCallback(() => {
+    if (workoutSetsRef.current.length === 0) return;
+    const dateKey = workoutDateRef.current;
+    const existing = (() => { try { return JSON.parse(localStorage.getItem('morpho_workout_log')||'{}'); } catch{return{};} })();
+    const totalVolume = workoutSetsRef.current.reduce((s,set) => s + set.kg * set.reps, 0);
+    existing[dateKey] = {
+      seanceNom:   seance?.nom || 'Séance',
+      seanceId:    seance?.id  || '',
+      sets:        workoutSetsRef.current,
+      totalVolume,
+      completedAt: new Date().toISOString(),
+    };
+    localStorage.setItem('morpho_workout_log', JSON.stringify(existing));
+  }, [seance]);
 
   const mm2 = String(Math.floor(elapsed/60)).padStart(2,'0');
   const ss2 = String(elapsed%60).padStart(2,'0');
+
+  // Sauvegarde aussi si l'utilisateur ferme manuellement en cours de séance
+  const handleClose = useCallback(() => {
+    saveWorkoutLog();
+    onClose();
+  }, [saveWorkoutLog, onClose]);
+
   const lastEntry    = ex?.historique?.[ex.historique.length - 1];
   const lastSetLabel = lastEntry ? `Dernière ${lastEntry.poids}×${lastEntry.reps}` : null;
   const restSecs     = parseInt(String(ex?.repos || REST_DEFAULT).replace(/\D/g,'')) || REST_DEFAULT;
@@ -531,7 +563,7 @@ export default function FocusMode({
                     paddingTop:'max(52px, env(safe-area-inset-top, 52px))',
                     flexShrink:0, position:'relative', zIndex:20 }}>
         <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between' }}>
-          <button className="fm-tap" onClick={onClose}
+          <button className="fm-tap" onClick={handleClose}
             style={{ width:40, height:40, borderRadius:13, ...GL,
                      color:T.t2, display:'grid', placeItems:'center',
                      padding:0, border:'none' }}>
