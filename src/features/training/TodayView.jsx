@@ -13,7 +13,7 @@ export default function TodayView(props) {
   const { prog, setProg, calSess, setCalSess, checkedEx, setCheckedEx,
     seance, setSeance, setChrono, setChronoSec,
     exDetails, setExDetails, exEdit, setExEdit,
-    profil, EX, C: _C, INT, push, setProgView } = props;
+    profil, EX, C: _C, INT, push, setProgView, setTab } = props;
 
   const [viewSeance,       setViewSeance]       = useState(null);
   const [showManualRM,     setShowManualRM]      = useState(false);
@@ -45,6 +45,23 @@ export default function TodayView(props) {
     localStorage.setItem('morpho_sleep_log', JSON.stringify(updated));
   };
   const todaySleepLogged = sleepLog[new Date().toISOString().split('T')[0]] ?? null;
+
+  // ── Mobilité — done/not-done par jour ───────────────────────────────────
+  const [mobiliteLog, setMobiliteLog] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('morpho_mobilite_log') || '{}'); }
+    catch { return {}; }
+  });
+  const [mobiliteFlash, setMobiliteFlash] = useState(false);
+  const todayStr = new Date().toISOString().split('T')[0];
+  const todayMobilite = mobiliteLog[todayStr] ?? false;
+
+  const toggleMobilite = () => {
+    const newVal = !todayMobilite;
+    const updated = { ...mobiliteLog, [todayStr]: newVal };
+    setMobiliteLog(updated);
+    localStorage.setItem('morpho_mobilite_log', JSON.stringify(updated));
+    if (newVal) { setMobiliteFlash(true); setTimeout(() => setMobiliteFlash(false), 600); }
+  };
 
   // ── Séance du jour ──────────────────────────────────────────────────────
   const dayNames = ["Dim","Lun","Mar","Mer","Jeu","Ven","Sam"];
@@ -312,7 +329,14 @@ export default function TodayView(props) {
 
           {/* Gestes récup */}
           {[
-            { ic:"💧", bg:"rgba(52,211,153,0.12)",  bd:"rgba(52,211,153,0.25)",  t:"Hydratation · 2,5 L",  s:"Clé de la récupération musculaire", tap:null },
+            {
+              ic: "💧",
+              bg: "rgba(52,211,153,0.12)", bd: "rgba(52,211,153,0.25)",
+              t:  "Hydratation · 2,5 L",
+              s:  "Tap pour tracker ton eau →",
+              tap: () => setTab?.("nutrition"),
+              arrow: true,
+            },
             {
               ic: todaySleepLogged !== null
                 ? todaySleepLogged >= sleepTarget ? "✅" : todaySleepLogged >= sleepTarget - 1.5 ? "🟡" : "🔴"
@@ -327,25 +351,56 @@ export default function TodayView(props) {
                 ? `Sommeil · ${todaySleepLogged}h dormies`
                 : `Sommeil · cible ${sleepTarget}h`,
               s: todaySleepLogged !== null
-                ? todaySleepLogged >= sleepTarget
-                  ? "✓ Objectif atteint — super récup"
-                  : `${(sleepTarget - todaySleepLogged).toFixed(1)}h sous la cible`
+                ? todaySleepLogged >= sleepTarget ? "✓ Objectif atteint — super récup" : `${(sleepTarget - todaySleepLogged).toFixed(1)}h sous la cible`
                 : "Tap pour logger · 80% des gains la nuit",
               tap: () => { setSleepInput(todaySleepLogged ?? sleepTarget); setShowSleepModal(true); },
+              arrow: true,
             },
-            { ic:"🧘", bg:"rgba(59,130,246,0.14)",  bd:"rgba(59,130,246,0.28)",  t:"Mobilité · 10 min",    s:"Hanches & thoracique", tap:null },
+            {
+              ic: todayMobilite ? "✅" : "🧘",
+              bg: todayMobilite ? "rgba(52,211,153,0.14)" : "rgba(59,130,246,0.14)",
+              bd: todayMobilite ? "rgba(52,211,153,0.32)" : "rgba(59,130,246,0.28)",
+              t:  todayMobilite ? "Mobilité · Fait ✓" : "Mobilité · 10 min",
+              s:  todayMobilite ? "Hanches & thoracique — bien joué !" : "Tap pour marquer comme fait",
+              tap: toggleMobilite,
+              flash: mobiliteFlash,
+              arrow: false,
+              badge: true,
+            },
           ].map((g,i) => (
             <div key={i} onClick={g.tap||undefined} style={{
-              display:"flex",alignItems:"center",gap:13,padding:"11px 0",
+              display:"flex", alignItems:"center", gap:13, padding:"11px 0",
               borderTop:"1px solid rgba(255,255,255,0.06)",
-              cursor:g.tap?"pointer":"default",
+              cursor: g.tap ? "pointer" : "default",
+              transition: "opacity .15s",
             }}>
-              <div style={{ width:42,height:42,borderRadius:13,background:g.bg,border:`1px solid ${g.bd}`,display:"grid",placeItems:"center",flexShrink:0,fontSize:20 }}>{g.ic}</div>
-              <div style={{ flex:1,minWidth:0 }}>
-                <div style={{ fontSize:14.5,fontWeight:700,color:"#F2F4F7",fontFamily:DISP,letterSpacing:-0.2 }}>{g.t}</div>
-                <div style={{ fontSize:11.5,color:"rgba(242,244,247,0.40)",fontFamily:DISP,marginTop:1 }}>{g.s}</div>
+              <div style={{
+                width:42, height:42, borderRadius:13,
+                background: g.flash ? "rgba(52,211,153,0.30)" : g.bg,
+                border:`1px solid ${g.flash ? "rgba(52,211,153,0.60)" : g.bd}`,
+                display:"grid", placeItems:"center", flexShrink:0, fontSize:20,
+                transition:"background .3s, border .3s",
+                boxShadow: g.flash ? "0 0 16px rgba(52,211,153,0.40)" : "none",
+              }}>{g.ic}</div>
+              <div style={{ flex:1, minWidth:0 }}>
+                <div style={{ fontSize:14.5, fontWeight:700, color:"#F2F4F7", fontFamily:DISP, letterSpacing:-0.2 }}>{g.t}</div>
+                <div style={{ fontSize:11.5, color:"rgba(242,244,247,0.40)", fontFamily:DISP, marginTop:1 }}>{g.s}</div>
               </div>
-              {g.tap && <div style={{ fontSize:12,color:"rgba(242,244,247,0.25)",flexShrink:0 }}>›</div>}
+              {/* Indicateur interactif */}
+              {g.badge && (
+                <div style={{
+                  width:28, height:28, borderRadius:9, flexShrink:0,
+                  background: todayMobilite ? "rgba(52,211,153,0.18)" : "rgba(255,255,255,0.05)",
+                  border: `1.5px solid ${todayMobilite ? "rgba(52,211,153,0.50)" : "rgba(255,255,255,0.12)"}`,
+                  display:"grid", placeItems:"center",
+                  transition:"all .2s",
+                }}>
+                  {todayMobilite
+                    ? <span style={{ color:"#34D399", fontSize:13 }}>✓</span>
+                    : <span style={{ color:"rgba(255,255,255,0.20)", fontSize:11 }}>○</span>}
+                </div>
+              )}
+              {g.arrow && <div style={{ fontSize:14, color:"rgba(242,244,247,0.22)", flexShrink:0 }}>›</div>}
             </div>
           ))}
 
