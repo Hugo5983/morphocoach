@@ -258,44 +258,60 @@ export function DayModal({ date, sessions, onSave, onDelete, onToggleDone, onClo
 const CHARGE_FEM = { leger:'Légère', modere:'Modérée', lourd:'Lourde', intense:'Intense', mobilite:'Mobilité' };
 const CHARGE_SUB = { leger:'Récup bien gérée', modere:'Bon équilibre fatigue', lourd:'Charge soutenue', intense:'Surveille la récup', mobilite:'Récupération active' };
 
-function BilanMois({ sessions, year, month }) {
+function BilanMois({ sessions, year, month, cycleStart, currentWeek }) {
   const stats = useMemo(() => {
     const toArr = v => Array.isArray(v) ? v : (v ? [v] : []);
-    const tonnageOf = s => (s.musculation?.exercices||[]).reduce((a,ex)=>
-      a + (parseInt(ex.series)||4)*(parseInt(ex.reps)||10)*(parseFloat(ex.charge)||0)/1000, 0);
+
+    // ── Tonnage réel depuis workoutLog ──
+    const wLog = (() => { try { return JSON.parse(localStorage.getItem('morpho_workout_log')||'{}'); } catch{return{};} })();
+    const realTonnageOf = (dateKey) => {
+      const entry = wLog[dateKey];
+      return entry ? entry.totalVolume / 1000 : 0; // totalVolume en kg → tonnes
+    };
 
     // ── Mois courant ──
     const prefix = `${year}-${String(month+1).padStart(2,'0')}`;
-    const weeks = [0,0,0,0,0,0];            // tonnage par semaine du mois
-    const intCounts = {};                   // intensités des séances validées
+    const weeks = [0,0,0,0,0,0];
+    const intCounts = {};
     let planned = 0, validated = 0, tonnage = 0;
 
     Object.entries(sessions).filter(([k]) => k.startsWith(prefix)).forEach(([k,v]) => {
-      const day = parseInt(k.slice(8),10);
+      const day  = parseInt(k.slice(8),10);
       const wIdx = Math.min(5, Math.floor((day-1)/7));
       toArr(v).forEach(s => {
         planned++;
         if (s.done) {
           validated++;
           const ik = s.intensite||'modere'; intCounts[ik] = (intCounts[ik]||0)+1;
-          const t = tonnageOf(s); tonnage += t; weeks[wIdx] += t;
+          // Préférer tonnage réel (workoutLog) > tonnage programmé (charge × séries × reps)
+          const real = realTonnageOf(k);
+          const prog = (s.musculation?.exercices||[]).reduce((a,ex) =>
+            a + (parseInt(ex.series)||4)*(parseInt(ex.reps)||10)*(parseFloat(ex.charge)||0)/1000, 0);
+          const t = real > 0 ? real : prog;
+          tonnage += t; weeks[wIdx] += t;
         }
       });
     });
 
-    // ── Mois précédent (pour les deltas) ──
+    // ── Mois précédent ──
     const pd = new Date(year, month-1, 1);
     const prevPrefix = `${pd.getFullYear()}-${String(pd.getMonth()+1).padStart(2,'0')}`;
     let prevValidated = 0, prevTonnage = 0;
-    Object.entries(sessions).filter(([k]) => k.startsWith(prevPrefix)).forEach(([,v]) => {
-      toArr(v).forEach(s => { if (s.done) { prevValidated++; prevTonnage += tonnageOf(s); } });
+    Object.entries(sessions).filter(([k]) => k.startsWith(prevPrefix)).forEach(([k,v]) => {
+      toArr(v).forEach(s => {
+        if (s.done) {
+          prevValidated++;
+          const real = realTonnageOf(k);
+          const prog = (s.musculation?.exercices||[]).reduce((a,ex) =>
+            a + (parseInt(ex.series)||4)*(parseInt(ex.reps)||10)*(parseFloat(ex.charge)||0)/1000, 0);
+          prevTonnage += real > 0 ? real : prog;
+        }
+      });
     });
 
     const assiduite = planned > 0 ? Math.min(100, Math.round((validated/planned)*100)) : 0;
     const topInt    = Object.entries(intCounts).sort((a,b)=>b[1]-a[1])[0];
     const tonPct    = prevTonnage > 0 ? Math.round((tonnage-prevTonnage)/prevTonnage*100) : null;
-
-    // tronque les semaines vides en fin de tableau (mois < 6 semaines)
     let lastWeek = 0; for (let i=0;i<weeks.length;i++) if (i*7 < new Date(year,month+1,0).getDate()) lastWeek = i;
     const weeksTrim = weeks.slice(0, lastWeek+1);
 
@@ -381,7 +397,14 @@ function BilanMois({ sessions, year, month }) {
         <div style={{fontFamily:SERIF,fontSize:30,fontWeight:400,color:C.text,letterSpacing:-0.5,lineHeight:1}}>
           {['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'][month]}
         </div>
-        <div style={{...ey,paddingBottom:4}}>VS. MOIS PRÉC.</div>
+        <div style={{display:'flex',flexDirection:'column',alignItems:'flex-end',gap:3}}>
+          <div style={{...ey,paddingBottom:0}}>VS. MOIS PRÉC.</div>
+          {currentWeek !== undefined && (
+            <div style={{fontSize:9,fontWeight:700,color:'#60A5FA',fontFamily:DISPLAY,letterSpacing:'1px',textTransform:'uppercase'}}>
+              MÉSOCYCLE SEM. {(currentWeek||0)+1}/6
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Row 1 */}
@@ -417,7 +440,7 @@ function BilanMois({ sessions, year, month }) {
 }
 
 // ─── MONTH CALENDAR ───────────────────────────────────────────────────────────
-export const MonthCal = memo(function MonthCal({ sessions, onUpdate }) {
+export const MonthCal = memo(function MonthCal({ sessions, onUpdate, semC, currentWeek }) {
   const [date,  setDate]  = useState(new Date());
   const [modal, setModal] = useState(null);
 
@@ -542,7 +565,7 @@ export const MonthCal = memo(function MonthCal({ sessions, onUpdate }) {
       </div>
 
       {/* ── Bilan hors card ── */}
-      <BilanMois sessions={sessions} year={y} month={m}/>
+      <BilanMois sessions={sessions} year={y} month={m} currentWeek={currentWeek}/>
 
       {modal&&(
         <DayModal
