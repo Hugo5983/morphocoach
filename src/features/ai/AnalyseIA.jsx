@@ -275,40 +275,58 @@ function SelRow({ label, meta, selected, onClick }) {
   );
 }
 
-// ── GoalCard ──────────────────────────────────────────────────────────────────
+// ── GoalCard ─────────────────────────────────────────────────────────────────
 const GOAL_ICONS = {
   hypertrophie:'muscle', force:'barbell', poids:'flame',
   prep_physique:'zap', reathletisation:'pulse', sante:'heart',
 };
+// Chaque objectif a sa couleur sémantique — comme les intensités du programme
+const GOAL_COLORS = {
+  hypertrophie:   '#FB923C',  // orange doux = modéré planning
+  force:          '#F87171',  // rouge doux  = lourd planning
+  poids:          '#5B8DEF',  // bleu        = accent app
+  prep_physique:  '#FBBF24',  // jaune doux  — énergie, vitesse
+  reathletisation:'#A78BFA',  // violet doux — récup, soin
+  sante:          '#34D399',  // vert        = léger planning
+};
 function GoalCrd({ id, label, selected, onClick }) {
-  const ic = GOAL_ICONS[id] || 'zap';
+  const ic  = GOAL_ICONS[id]  || 'zap';
+  const col = GOAL_COLORS[id] || T.ac;
   return (
     <button className="ob-tap" onClick={onClick} style={{
       padding:'18px 14px 15px', borderRadius:16, textAlign:'center',
       position:'relative', overflow:'hidden',
-      background: selected ? `linear-gradient(180deg,${T.surfHi},${T.surf})` : T.surf,
-      border: `1px solid ${selected?T.bdAc:T.bd}`,
+      background: selected
+        ? `linear-gradient(155deg, ${col} 0%, ${col}CC 55%, ${col}66 100%)`
+        : T.surf,
+      border: `1px solid ${selected ? col+'60' : T.bd}`,
       display:'flex', flexDirection:'column', alignItems:'center', gap:10,
-      boxShadow: selected ? '0 8px 22px rgba(45,93,201,0.25)' : 'none',
+      boxShadow: selected ? `0 16px 32px ${col}35` : 'none',
     }}>
+      {selected && <div style={{ position:'absolute', top:0, left:0, right:0, height:1,
+        background:'linear-gradient(90deg,transparent,rgba(255,255,255,0.40),transparent)' }}/>}
+      {selected && <div style={{ position:'absolute', inset:0, pointerEvents:'none',
+        background:'radial-gradient(160% 60% at 20% 10%, rgba(255,255,255,0.18), transparent 55%)' }}/>}
       {selected && (
-        <div style={{ position:'absolute', top:0, left:0, right:0, height:1,
-          background:`linear-gradient(90deg,transparent,${T.ac},transparent)` }}/>
-      )}
-      {selected && (
-        <div style={{ position:'absolute', top:8, right:8, width:18, height:18,
-          borderRadius:'50%', background:T.ac, display:'grid', placeItems:'center' }}>
-          <OI n="check" sz={11} s={2.8} c="#03060D"/>
+        <div style={{ position:'absolute', top:8, right:8, width:20, height:20,
+          borderRadius:'50%', background:'rgba(0,0,0,0.22)',
+          border:'1px solid rgba(255,255,255,0.25)',
+          display:'grid', placeItems:'center' }}>
+          <OI n="check" sz={11} s={2.8} c={T.t1}/>
         </div>
       )}
       <div style={{ width:42, height:42, borderRadius:13,
-        background:selected?T.acSoft:'rgba(178,190,210,0.05)',
-        border:`1px solid ${selected?T.bdAc:T.bd}`,
-        display:'grid', placeItems:'center', color:selected?T.acLt:T.t3 }}>
-        <OI n={ic} sz={21} s={1.6}/>
+        background: selected ? 'rgba(0,0,0,0.18)' : `${col}18`,
+        border: `1px solid ${selected ? 'rgba(255,255,255,0.18)' : col+'35'}`,
+        display:'grid', placeItems:'center',
+        color: selected ? T.t1 : col }}>
+        <OI n={ic} sz={21} s={1.7}/>
       </div>
-      <span style={{ fontFamily:F, fontSize:12.5, fontWeight:600,
-                     color:selected?T.t1:T.t2, letterSpacing:-0.1 }}>{label}</span>
+      <span style={{ fontFamily:F, fontSize:12.5, fontWeight:700,
+        color: selected ? T.t1 : T.t2, letterSpacing:-0.1,
+        textShadow: selected ? '0 1px 3px rgba(0,0,0,0.3)' : 'none' }}>
+        {label}
+      </span>
     </button>
   );
 }
