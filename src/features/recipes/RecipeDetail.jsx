@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { REPAS } from "../../data/recipes.js";
-import { FONT, SERIF } from "../../data/constants.js";
+import { C, FONT, SERIF } from "../../data/constants.js";
 
 
 const TAG_LABELS = {
