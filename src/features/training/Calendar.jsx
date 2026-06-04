@@ -130,7 +130,7 @@ export default function Calendar(props) {
         </div>
       </div>
 
-      <MonthCal sessions={calSess} onUpdate={(date,sess) => {
+      <MonthCal sessions={calSess} semC={semC} currentWeek={currentWeek} onUpdate={(date,sess) => {
         if (sess) setCalSess(s => ({...s,[date]:sess}));
         else setCalSess(s => { const ns={...s}; delete ns[date]; return ns; });
       }}/>
