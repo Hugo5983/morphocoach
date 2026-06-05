@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { C, INT, FONT } from "../../data/constants.js";
 import { EX } from "../../data/exercises.js";
 import { Card, Eyebrow, Lbl, Btn, Row } from "../../components/ui/index.jsx";
