@@ -4,7 +4,7 @@
  * Espacement généreux, safe-area iPhone, structure exacte de la maquette.
  */
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { createPortal }                 from "react-dom";
 
 // ── Tokens ───────────────────────────────────────────────────────────────────
