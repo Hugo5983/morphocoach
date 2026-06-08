@@ -1,550 +1,559 @@
-import { useState, useEffect, useMemo } from "react";
+// ─── BilanNutrition.jsx — v3 ─────────────────────────────────────────────────
+// Bilan PRO Nutrition : objectif, factuel, sans IA interprétative.
+// 2 onglets : Tableau de bord (chiffres bruts) + Analyse détaillée (qualité/micros)
+// Bandeau "données insuffisantes" si < 7 jours loggés sur 14.
+
+import { useState, useMemo } from "react";
 import { C, FONT, SERIF, NUM } from "../../data/constants.js";
-import { Card, Eyebrow } from "../../components/ui/index.jsx";
 import {
-  avg, statusBadge, microStatus,
-  computeBilan, buildBilanPrompt,
-  Badge, SectionHeader, MacroRow,
+  computeBilan, computeCriteria, computeMicronutrients, computeCategories,
+  computeHealthScore, microStatus,
+  Badge, SectionHeader, MacroRow, CritRow,
+  MIN_DAYS_FULL_BILAN, PERIOD_DAYS,
 } from "./components/BilanUtils.jsx";
 
-export default function BilanNutrition({
-  onBack, repasHistory, calObj, pObj, gObj, lObj, profil, obj, premium,
-}) {
-  const [activeTab, setActiveTab] = useState(0);
-  const [analyse, setAnalyse] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+const BG    = "#080E1A";
+const S1    = C.s1 || "#111827";
+const S2    = C.s2 || "#1A2336";
+const BD    = C.bd || "rgba(255,255,255,0.07)";
+const TEXT  = C.text || "#F2F4F7";
+const MID   = C.mid || "rgba(242,244,247,0.60)";
+const DIM   = C.dim || "rgba(242,244,247,0.35)";
+const BL    = C.accent || "#3B82F6";
+const BLD   = C.accentDk || "#2563EB";
+const GRN   = "#34D399";
+const AMB   = "#F59E0B";
+const RED   = "#F87171";
 
-  // Calcul statistiques
-  const bilan = useMemo(() =>
-    computeBilan(repasHistory, calObj, pObj, gObj, lObj, profil),
-    [repasHistory, calObj, pObj, gObj, lObj]
-  );
-
-  // Score ring
-  const score = parseFloat(bilan.score);
-  const r = 44, circum = 2 * Math.PI * r;
-  const pctRing = score / 10;
-  const nextBilanDate = new Date(Date.now() + 14 * 86400000)
-    .toLocaleDateString("fr-FR", { day:"numeric", month:"long", year:"numeric" });
-
-  // Générer le bilan détaillé via API
-  const generateAnalyse = async () => {
-    if (analyse) { setActiveTab(1); return; }
-    setLoading(true); setError(null); setActiveTab(1);
-    try {
-      const prompt = buildBilanPrompt(bilan, profil, obj, calObj, pObj, gObj, lObj);
-      const res = await fetch("/api/generate", {
-        method:"POST",
-        headers:{ "Content-Type":"application/json" },
-        body: JSON.stringify({
-          model:"claude-haiku-4-5-20251001",
-          max_tokens:2000,
-          messages:[{ role:"user", content:prompt }],
-        }),
-      });
-      if (!res.ok) throw new Error(`Erreur ${res.status}`);
-      const data = await res.json();
-      const text = data.content?.[0]?.text || "";
-      const clean = text.replace(/```json\n?|\n?```/g,"").trim();
-      setAnalyse(JSON.parse(clean));
-    } catch(e) {
-      setError("L'analyse n'a pas pu être générée. Réessaie dans quelques instants.");
-    } finally {
-      setLoading(false);
-    }
+// ─── Icônes inline (SVG) ──────────────────────────────────────────────────
+function I({ name, size=16, color="currentColor", stroke=2 }) {
+  const p = { width:size, height:size, viewBox:"0 0 24 24", fill:"none",
+    stroke:color, strokeWidth:stroke, strokeLinecap:"round", strokeLinejoin:"round" };
+  const paths = {
+    chart:    <><path d="M3 3v18h18"/><path d="M7 14l4-4 4 2 5-7"/></>,
+    brain:    <><path d="M9 3a4 4 0 0 0-4 4v2.5A4.5 4.5 0 0 0 5 18a4 4 0 0 0 4 4 4 4 0 0 0 4-4V7a4 4 0 0 0-4-4z"/><path d="M15 3a4 4 0 0 1 4 4v2.5A4.5 4.5 0 0 1 19 18a4 4 0 0 1-4 4 4 4 0 0 1-4-4V7a4 4 0 0 1 4-4z"/></>,
+    alert:    <><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></>,
+    calendar: <><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></>,
+    chevR:    <path d="m9 18 6-6-6-6"/>,
+    chevL:    <path d="m15 18-6-6 6-6"/>,
+    drop:     <path d="M12 3s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11Z"/>,
+    arch:     <><path d="M21 8v13H3V8M1 3h22v5H1zM10 12h4"/></>,
   };
+  return <svg {...p}>{paths[name]}</svg>;
+}
 
-  const MICRO_LABELS = {
-    fer:"Fer", vitamine_b12:"Vitamine B12", calcium:"Calcium",
-    magnesium:"Magnésium", zinc:"Zinc", vitamine_d:"Vitamine D",
-    omega3:"Oméga-3", vitamine_c:"Vitamine C",
+// ─── Score Ring ───────────────────────────────────────────────────────────
+function ScoreRing({ score }) {
+  const r = 42, circum = 2 * Math.PI * r;
+  const pct = parseFloat(score) / 10;
+  const color = parseFloat(score) >= 7 ? GRN : parseFloat(score) >= 4 ? AMB : RED;
+  return (
+    <div style={{ position:"relative", width:100, height:100, flexShrink:0 }}>
+      <svg width="100" height="100" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r={r} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="6"/>
+        <circle cx="50" cy="50" r={r} fill="none" stroke={color} strokeWidth="6"
+          strokeLinecap="round" strokeDasharray={circum}
+          strokeDashoffset={circum * (1 - pct)} transform="rotate(-90 50 50)"
+          style={{ transition: "stroke-dashoffset 0.8s ease" }}/>
+      </svg>
+      <div style={{ position:"absolute", inset:0, display:"flex",
+        flexDirection:"column", alignItems:"center", justifyContent:"center" }}>
+        <div style={{ fontFamily:SERIF, fontSize:38, fontWeight:400,
+          letterSpacing:-2, lineHeight:1, color, ...NUM }}>{score}</div>
+        <div style={{ fontSize:10, color:DIM, marginTop:2, fontFamily:FONT }}>sur 10</div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Régularité (grille 2×7) ──────────────────────────────────────────────
+function StreakGrid({ loggedDays, totalDays, calObj }) {
+  const labels = ["L","M","M","J","V","S","D"];
+  // Reconstruit les 14 derniers jours à partir de loggedDays (qui a un .date)
+  // Si pas de date, on simule avec les indices
+  const slots = [];
+  for (let i = 0; i < PERIOD_DAYS; i++) {
+    const day = loggedDays[i];
+    if (!day || !day.kcal) {
+      slots.push({ status: "empty" });
+    } else {
+      const diff = Math.abs(day.kcal - calObj);
+      const okThr = calObj * 0.15, warnThr = calObj * 0.30;
+      if (diff < okThr)        slots.push({ status: "ok" });
+      else if (diff < warnThr) slots.push({ status: "warn" });
+      else                     slots.push({ status: "bad" });
+    }
+  }
+  // Pad si moins de 14
+  while (slots.length < PERIOD_DAYS) slots.push({ status: "empty" });
+
+  const styleFor = (st) => {
+    if (st === "ok")   return { bg:"linear-gradient(145deg, rgba(52,211,153,0.20), rgba(52,211,153,0.08))", bd:"1px solid rgba(52,211,153,0.35)",  color:GRN };
+    if (st === "warn") return { bg:"rgba(245,158,11,0.12)", bd:"1px solid rgba(245,158,11,0.25)",   color:AMB };
+    if (st === "bad")  return { bg:"rgba(248,113,113,0.08)", bd:"1px solid rgba(248,113,113,0.18)", color:"rgba(248,113,113,0.55)" };
+    return                  { bg:"transparent",              bd:"1px dashed rgba(255,255,255,0.10)", color:DIM };
   };
 
   return (
-    <div style={{ background:C.bg, minHeight:"100vh", paddingBottom:90 }}>
+    <>
+      {[0,1].map(w => (
+        <div key={w} style={{ display:"flex", gap:4, marginBottom: w===0?6:12 }}>
+          {Array.from({length:7}).map((_,d) => {
+            const idx = w*7 + d;
+            const s = styleFor(slots[idx].status);
+            return (
+              <div key={d} style={{
+                flex:1, aspectRatio:"1", borderRadius:7,
+                display:"grid", placeItems:"center",
+                fontSize:10, fontWeight:700, fontFamily:FONT,
+                background:s.bg, border:s.bd, color:s.color }}>
+                {labels[d]}
+              </div>
+            );
+          })}
+        </div>
+      ))}
+    </>
+  );
+}
 
-      {/* ── Header sticky ── */}
-      <div style={{
-        position:"sticky", top:0, zIndex:50,
-        background:"rgba(11,18,32,0.95)", backdropFilter:"blur(20px)",
-        WebkitBackdropFilter:"blur(20px)",
-        borderBottom:"1px solid rgba(255,255,255,0.07)", paddingBottom:0,
-      }}>
-        <div style={{ display:"flex", justifyContent:"space-between",
-          alignItems:"center", padding:"14px 16px 12px" }}>
-          <button onClick={onBack} className="tap-icon" style={{
-            width:34, height:34, borderRadius:10,
-            background:C.s1, border:"1px solid rgba(255,255,255,0.07)",
-            display:"grid", placeItems:"center", cursor:"pointer",
-          }}>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
-                 stroke="rgba(242,244,247,0.55)" strokeWidth="2.2" strokeLinecap="round">
-              <path d="m15 18-6-6 6-6"/>
-            </svg>
+// ─── Bandeau "données insuffisantes" ──────────────────────────────────────
+function PartialBanner({ nbLogged, totalDays, customMsg }) {
+  return (
+    <div style={{ margin:"0 16px 14px", background:"rgba(245,158,11,0.08)",
+      border:"1px solid rgba(245,158,11,0.30)", borderRadius:14,
+      padding:"12px 14px", display:"flex", gap:11, alignItems:"flex-start" }}>
+      <div style={{ width:30, height:30, borderRadius:9,
+        background:"rgba(245,158,11,0.15)", border:"1px solid rgba(245,158,11,0.35)",
+        display:"grid", placeItems:"center", flexShrink:0 }}>
+        <I name="alert" size={14} color={AMB}/>
+      </div>
+      <div>
+        <div style={{ fontSize:12.5, fontWeight:700, color:AMB, marginBottom:3, fontFamily:FONT }}>
+          Données insuffisantes · {nbLogged} jour{nbLogged>1?"s":""} loggé{nbLogged>1?"s":""} sur {totalDays}
+        </div>
+        <div style={{ fontSize:11, color:"rgba(245,158,11,0.85)", lineHeight:1.5, fontFamily:FONT }}>
+          {customMsg || `Le bilan affiche ce qu'on a, mais reste partiel. Logge au moins ${MIN_DAYS_FULL_BILAN} jours pour des indicateurs fiables.`}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Carte "Prochain bilan archivé" ───────────────────────────────────────
+function NextBilanCard({ nextDate, daysUntil, onOpen }) {
+  return (
+    <div onClick={onOpen} style={{ margin:"0 16px 14px",
+      background:"linear-gradient(135deg, rgba(59,130,246,0.10), rgba(59,130,246,0.02))",
+      border:"1px solid rgba(59,130,246,0.25)", borderRadius:18,
+      padding:"14px 16px", display:"flex", gap:12, alignItems:"center", cursor:"pointer" }}>
+      <div style={{ width:44, height:44, borderRadius:13,
+        background:`linear-gradient(135deg, ${BL}, ${BLD})`,
+        display:"grid", placeItems:"center",
+        boxShadow:"0 4px 14px rgba(59,130,246,0.30)", flexShrink:0 }}>
+        <I name="calendar" size={20} color="#fff"/>
+      </div>
+      <div style={{ flex:1, minWidth:0 }}>
+        <div style={{ fontSize:9, fontWeight:800, letterSpacing:"1.4px",
+          textTransform:"uppercase", color:"#93C5FD", marginBottom:4, fontFamily:FONT }}>
+          Prochain bilan complet
+        </div>
+        <div style={{ fontSize:13.5, fontWeight:700, color:TEXT, marginBottom:2, fontFamily:FONT }}>
+          {nextDate}{daysUntil != null ? ` · dans ${daysUntil} jour${daysUntil>1?"s":""}` : ""}
+        </div>
+        <div style={{ fontSize:11, color:MID, fontFamily:FONT }}>
+          Rapport bi-hebdomadaire automatique
+        </div>
+      </div>
+      <I name="chevR" size={16} color={MID}/>
+    </div>
+  );
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  COMPOSANT PRINCIPAL
+// ════════════════════════════════════════════════════════════════════════════
+export default function BilanNutrition({
+  onBack, repasHistory, calObj, pObj, gObj, lObj, profil, obj, premium,
+  onOpenArchive,
+}) {
+  const [activeTab, setActiveTab] = useState(0);   // 0 = Tableau de bord, 1 = Analyse détaillée
+
+  // Calculs objectifs (zéro IA)
+  const bilan = useMemo(() =>
+    computeBilan(repasHistory, calObj, pObj, gObj, lObj),
+    [repasHistory, calObj, pObj, gObj, lObj]
+  );
+
+  const criteria   = useMemo(() => computeCriteria(bilan.loggedDays), [bilan.loggedDays]);
+  const micros     = useMemo(() => computeMicronutrients(bilan.loggedDays), [bilan.loggedDays]);
+  const categories = useMemo(() => computeCategories(bilan.loggedDays), [bilan.loggedDays]);
+  const health     = useMemo(() => computeHealthScore(criteria), [criteria]);
+
+  // Date du prochain bilan (dimanche prochain)
+  const today = new Date();
+  const daysToSunday = (7 - today.getDay()) % 7 || 7;
+  const nextSunday = new Date(today.getTime() + daysToSunday * 86400000);
+  const nextBilanLabel = nextSunday.toLocaleDateString("fr-FR",
+    { weekday:"long", day:"numeric", month:"long" });
+
+  // ─── HEADER (commun aux 2 onglets) ─────────────────────────────────────
+  const renderHeader = () => (
+    <>
+      {/* Sous-onglets Tableau de bord / Analyse détaillée */}
+      <div style={{ margin:"0 16px 14px", display:"flex", gap:4 }}>
+        {[
+          { label:"Tableau de bord",   ico:"chart" },
+          { label:"Analyse détaillée", ico:"brain" },
+        ].map((tab, i) => (
+          <button key={i} onClick={() => setActiveTab(i)}
+            style={{ flex:1, padding:"10px 0", borderRadius:11,
+              fontSize:12.5, fontWeight:700, fontFamily:FONT,
+              border:`1px solid ${activeTab===i ? "rgba(59,130,246,0.35)" : BD}`,
+              background: activeTab===i ? "rgba(59,130,246,0.10)" : S1,
+              color: activeTab===i ? "#93C5FD" : MID,
+              cursor:"pointer",
+              display:"flex", alignItems:"center", justifyContent:"center", gap:6,
+              transition:"all .18s" }}>
+            <I name={tab.ico} size={14} stroke={activeTab===i ? 2.2 : 1.8}/>
+            {tab.label}
           </button>
-          <div style={{ textAlign:"center" }}>
-            <div style={{ fontSize:14, fontWeight:700, color:"#F2F4F7",
-              fontFamily:FONT }}>Bilan nutritionnel</div>
-            <div style={{ fontSize:11, color:"rgba(242,244,247,0.38)",
-              fontFamily:FONT }}>14 derniers jours</div>
+        ))}
+      </div>
+
+      {/* Bandeau partiel */}
+      {bilan.isPartial && (
+        <PartialBanner nbLogged={bilan.nbLogged} totalDays={bilan.totalDays}/>
+      )}
+    </>
+  );
+
+  // ─── ONGLET 1 · Tableau de bord ────────────────────────────────────────
+  const renderDashboard = () => (
+    <>
+      {/* Hero score */}
+      <div style={{ margin:"0 16px 14px" }}>
+        <SectionHeader
+          title="Cohérence nutrition"
+          hint={bilan.isPartial ? "⚠ partiel" : `${bilan.totalDays} derniers jours`}
+        />
+        <div style={{
+          background:S1, border:`1px solid ${BD}`, borderRadius:22,
+          padding:"22px 20px", position:"relative", overflow:"hidden",
+          opacity: bilan.isPartial ? 0.65 : 1 }}>
+          <div style={{ position:"absolute", top:-50, right:-50, width:180, height:180,
+            borderRadius:"50%",
+            background: `radial-gradient(circle, ${parseFloat(bilan.score)>=7 ? "rgba(52,211,153,0.18)" : parseFloat(bilan.score)>=4 ? "rgba(245,158,11,0.20)" : "rgba(248,113,113,0.18)"}, transparent 70%)`,
+            pointerEvents:"none" }}/>
+          <div style={{ fontSize:9.5, fontWeight:800, letterSpacing:"1.6px",
+            textTransform:"uppercase", color:DIM, marginBottom:14, fontFamily:FONT }}>
+            Objectif · {obj?.l || "Non défini"}
           </div>
-          <div style={{ width:34, height:34, borderRadius:10,
-            background:"rgba(59,130,246,0.10)",
-            border:"1px solid rgba(59,130,246,0.20)",
-            display:"grid", placeItems:"center" }}>
-            <span style={{ fontSize:10, fontWeight:700, color:"#3B82F6",
-              fontFamily:FONT }}>PRO</span>
+          <div style={{ display:"flex", alignItems:"center", gap:18 }}>
+            <ScoreRing score={bilan.score}/>
+            <div style={{ flex:1, minWidth:0 }}>
+              <div style={{ fontSize:17, fontWeight:700, letterSpacing:-0.4,
+                lineHeight:1.2, marginBottom:4, color:TEXT, fontFamily:FONT }}>
+                {Math.round(bilan.avgKcal)} kcal/j en moyenne
+              </div>
+              <div style={{ fontSize:12, color:MID, lineHeight:1.5, fontFamily:FONT }}>
+                Cible : {calObj} kcal/j · {bilan.pctKcal}% atteint
+              </div>
+              {bilan.isPartial && (
+                <div style={{ display:"inline-block", marginTop:8,
+                  padding:"3px 10px", background:"rgba(245,158,11,0.12)",
+                  border:"1px solid rgba(245,158,11,0.30)", borderRadius:99,
+                  fontSize:10, fontWeight:700, color:AMB, fontFamily:FONT }}>
+                  Score basé sur {bilan.nbLogged} jour{bilan.nbLogged>1?"s":""}
+                </div>
+              )}
+            </div>
           </div>
         </div>
+      </div>
 
-        {/* Onglets */}
-        <div style={{ display:"flex", padding:"0 16px", gap:4 }}>
-          {["📊 Tableau de bord", "🧠 Analyse détaillée"].map((t, i) => (
-            <button key={i} onClick={() => i === 1 ? generateAnalyse() : setActiveTab(0)} style={{
-              flex:1, padding:"10px 8px", background:"transparent", border:"none",
-              borderBottom:`2px solid ${activeTab === i ? "#3B82F6" : "transparent"}`,
-              color: activeTab === i ? "#F2F4F7" : "rgba(242,244,247,0.45)",
-              fontSize:13, fontWeight: activeTab === i ? 600 : 500,
-              fontFamily:FONT, cursor:"pointer", transition:"all .2s", textAlign:"center",
-            }}>{t}</button>
+      {/* Régularité */}
+      <div style={{ margin:"0 16px 14px" }}>
+        <SectionHeader title="Régularité du logging" hint={`${bilan.totalDays} derniers jours`}/>
+        <div style={{ background:S1, border:`1px solid ${BD}`, borderRadius:18, padding:"16px 18px" }}>
+          <div style={{ display:"flex", justifyContent:"space-between", alignItems:"baseline", marginBottom:14 }}>
+            <div style={{ display:"flex", alignItems:"baseline", gap:8 }}>
+              <div style={{ fontFamily:SERIF, fontSize:36, fontWeight:400,
+                letterSpacing:-1.5, lineHeight:1, color:TEXT, ...NUM }}>
+                {bilan.nbLogged}<span style={{ fontSize:14, color:MID, marginLeft:4 }}>/{bilan.totalDays}</span>
+              </div>
+              <div style={{ fontSize:12, color:MID, fontWeight:600, fontFamily:FONT }}>
+                jours loggés
+              </div>
+            </div>
+          </div>
+          <StreakGrid loggedDays={bilan.loggedDays} totalDays={bilan.totalDays} calObj={calObj}/>
+          <div style={{ display:"flex", gap:14, paddingTop:11,
+            borderTop:"1px solid rgba(255,255,255,0.05)", flexWrap:"wrap" }}>
+            <div style={{ display:"flex", alignItems:"center", gap:6, fontSize:11, color:MID, fontFamily:FONT }}>
+              <span style={{ width:8, height:8, borderRadius:2, background:GRN }}/>Cible
+            </div>
+            <div style={{ display:"flex", alignItems:"center", gap:6, fontSize:11, color:MID, fontFamily:FONT }}>
+              <span style={{ width:8, height:8, borderRadius:2, background:AMB }}/>Proche
+            </div>
+            <div style={{ display:"flex", alignItems:"center", gap:6, fontSize:11, color:MID, fontFamily:FONT }}>
+              <span style={{ width:8, height:8, borderRadius:2, background:RED }}/>Hors
+            </div>
+            <div style={{ display:"flex", alignItems:"center", gap:6, fontSize:11, color:MID, fontFamily:FONT }}>
+              <span style={{ width:8, height:8, borderRadius:2, background:"rgba(255,255,255,0.08)", border:"1px dashed rgba(255,255,255,0.25)" }}/>Vide
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Macronutriments */}
+      <div style={{ margin:"0 16px 14px" }}>
+        <SectionHeader
+          title="Macronutriments"
+          hint={bilan.isPartial ? `Moyenne sur ${bilan.nbLogged}j` : `Moyenne ${bilan.totalDays}j`}
+        />
+        <div style={{ background:S1, border:`1px solid ${BD}`, borderRadius:18, padding:"6px 18px" }}>
+          <MacroRow label="Protéines" value={bilan.avgProt} goal={pObj} pct={bilan.pctProt}/>
+          <MacroRow label="Glucides"  value={bilan.avgGluc} goal={gObj} pct={bilan.pctGluc}/>
+          <div style={{ borderBottom: "none" }}>
+            <MacroRow label="Lipides" value={bilan.avgLip}  goal={lObj} pct={bilan.pctLip}/>
+          </div>
+        </div>
+      </div>
+
+      {/* Hydratation */}
+      <div style={{ margin:"0 16px 14px" }}>
+        <div style={{ background:S1, border:`1px solid ${BD}`, borderRadius:18,
+          padding:"16px 18px", display:"flex", alignItems:"center", gap:14 }}>
+          <div style={{ width:44, height:44, borderRadius:13,
+            background:"linear-gradient(145deg, #34D399, #2DA67D)",
+            display:"grid", placeItems:"center",
+            boxShadow:"0 4px 12px rgba(52,211,153,0.30), inset 0 1px 0 rgba(255,255,255,0.3)",
+            position:"relative", overflow:"hidden", flexShrink:0 }}>
+            <div style={{ position:"absolute", inset:0,
+              background:"radial-gradient(110% 60% at 30% 10%, rgba(255,255,255,0.35), transparent 60%)" }}/>
+            <I name="drop" size={20} color="#0B1F18" stroke={2}/>
+          </div>
+          <div style={{ flex:1 }}>
+            <div style={{ fontSize:13, fontWeight:700, marginBottom:4, color:TEXT, fontFamily:FONT }}>
+              Hydratation
+            </div>
+            <div style={{ display:"flex", alignItems:"baseline", gap:5, marginBottom:4 }}>
+              <span style={{ fontFamily:SERIF, fontSize:22, fontWeight:400, letterSpacing:-1,
+                lineHeight:1, color:TEXT, ...NUM }}>
+                {(bilan.avgEau * 0.25).toFixed(1)}L
+              </span>
+              <span style={{ fontSize:11, color:DIM, fontFamily:FONT }}>/ 2L</span>
+            </div>
+            <div style={{ height:4, background:"rgba(255,255,255,0.05)", borderRadius:99, overflow:"hidden" }}>
+              <div style={{ height:"100%",
+                width:`${Math.min(100, (bilan.avgEau * 0.25 / 2) * 100)}%`,
+                background:"linear-gradient(90deg, #34D399, #2DA67D)", borderRadius:99 }}/>
+            </div>
+          </div>
+          {bilan.avgEau >= 7 && (
+            <div style={{ padding:"5px 10px",
+              background:"rgba(52,211,153,0.10)", border:"1px solid rgba(52,211,153,0.28)",
+              borderRadius:8, fontSize:11, fontWeight:700, color:GRN,
+              flexShrink:0, fontFamily:FONT }}>
+              Bon
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Carte prochain bilan */}
+      <NextBilanCard
+        nextDate={nextBilanLabel}
+        daysUntil={daysToSunday}
+        onOpen={onOpenArchive}
+      />
+    </>
+  );
+
+  // ─── ONGLET 2 · Analyse détaillée ──────────────────────────────────────
+  const renderDetailed = () => (
+    <>
+      {/* Score santé alimentaire */}
+      <div style={{ margin:"0 16px 14px", background:S1, border:`1px solid ${BD}`,
+        borderRadius:22, padding:"22px 20px", position:"relative", overflow:"hidden",
+        opacity: bilan.isPartial ? 0.75 : 1 }}>
+        <div style={{ position:"absolute", top:-50, right:-50, width:180, height:180,
+          borderRadius:"50%",
+          background:`radial-gradient(circle, ${health.color}25, transparent 70%)`,
+          pointerEvents:"none" }}/>
+        <div style={{ fontSize:9.5, fontWeight:800, letterSpacing:"1.6px",
+          textTransform:"uppercase", color:DIM, marginBottom:14, fontFamily:FONT }}>
+          Score santé · qualité des aliments rentrés
+        </div>
+        <div style={{ display:"flex", alignItems:"flex-end", justifyContent:"space-between", marginBottom:16 }}>
+          <div style={{ fontFamily:SERIF, fontSize:78, fontWeight:400,
+            lineHeight:0.9, color:health.color, letterSpacing:-3 }}>
+            {health.letter}
+          </div>
+          <div style={{ textAlign:"right" }}>
+            <div style={{ fontSize:32, fontWeight:800, letterSpacing:-1, lineHeight:1,
+              color:TEXT, fontFamily:FONT, ...NUM }}>
+              {health.score}<span style={{ color:DIM, fontSize:14, fontWeight:500 }}>/100</span>
+            </div>
+            <div style={{ fontSize:11, color:DIM, marginTop:2, fontFamily:FONT }}>
+              basé sur {criteria.length} critères
+            </div>
+            <div style={{ display:"inline-block", marginTop:8, padding:"4px 12px",
+              background:`${health.color}1F`, border:`1px solid ${health.color}4D`,
+              borderRadius:99, fontSize:11, fontWeight:700,
+              color:health.color, fontFamily:FONT }}>
+              {health.pill}
+            </div>
+          </div>
+        </div>
+        {/* Échelle */}
+        <div style={{ height:8, background:"linear-gradient(90deg, #F87171 0%, #F59E0B 50%, #34D399 100%)",
+          borderRadius:99, position:"relative", opacity:0.4 }}>
+          <div style={{ position:"absolute", top:-3, width:14, height:14,
+            borderRadius:"50%", background:"white",
+            border:`2px solid ${health.color}`,
+            boxShadow:`0 0 0 4px ${health.color}33`,
+            left:`calc(${health.score}% - 7px)` }}/>
+        </div>
+        <div style={{ display:"flex", justifyContent:"space-between", marginTop:5 }}>
+          {["E","D","C","B","A"].map(l => (
+            <span key={l} style={{ fontSize:9.5,
+              color: l===health.letter ? health.color : DIM,
+              fontWeight:700, fontFamily:FONT }}>{l}</span>
           ))}
         </div>
       </div>
 
-      {/* ════════════════════════════════════════ */}
-      {/* ONGLET 1 — Tableau de bord              */}
-      {/* ════════════════════════════════════════ */}
-      {activeTab === 0 && (
-        <div className="anim" style={{ padding:"14px 16px 20px" }}>
+      {/* 8 critères */}
+      <div style={{ margin:"0 16px 14px" }}>
+        <SectionHeader title="Critères évalués"/>
+        <div style={{ background:S1, border:`1px solid ${BD}`, borderRadius:18, padding:"4px 16px" }}>
+          {criteria.map((c, i) => (
+            <div key={c.key} style={{ borderBottom: i === criteria.length-1 ? "none" : undefined }}>
+              <CritRow crit={c}/>
+            </div>
+          ))}
+        </div>
+      </div>
 
-          {/* Score global */}
-          <Card style={{ textAlign:"center", padding:"20px 16px" }}>
-            <Eyebrow style={{ marginBottom:14 }}>Score cohérence nutrition / objectif</Eyebrow>
-            <div style={{ position:"relative", width:110, height:110, margin:"0 auto 8px" }}>
-              <svg width="110" height="110" viewBox="0 0 110 110">
-                <defs>
-                  <linearGradient id="bilanRing" x1="0" y1="1" x2="1" y2="0">
-                    <stop offset="0%" stopColor="#2563EB"/>
-                    <stop offset="100%" stopColor="#34D399"/>
-                  </linearGradient>
-                </defs>
-                <g transform="rotate(-90 55 55)">
-                  <circle cx="55" cy="55" r={r} fill="none"
-                    stroke="rgba(255,255,255,0.06)" strokeWidth="7"/>
-                  <circle cx="55" cy="55" r={r} fill="none"
-                    stroke="url(#bilanRing)" strokeWidth="7" strokeLinecap="round"
-                    strokeDasharray={circum}
-                    strokeDashoffset={circum * (1 - pctRing)}
-                    style={{ transition:"stroke-dashoffset 1s ease" }}/>
-                </g>
-              </svg>
-              <div style={{ position:"absolute", inset:0, display:"flex",
-                flexDirection:"column", alignItems:"center", justifyContent:"center" }}>
-                <div style={{ fontFamily:SERIF, fontSize:34, color:"#F2F4F7",
-                  lineHeight:1, letterSpacing:-1, ...NUM }}>{bilan.score}</div>
-                <div style={{ fontSize:10, color:"rgba(242,244,247,0.38)",
-                  fontFamily:FONT, marginTop:1 }}>/10</div>
-              </div>
-            </div>
-            <div style={{ fontSize:14, fontWeight:700, color:"#F2F4F7",
-              fontFamily:FONT, marginBottom:5 }}>
-              {score >= 8 ? "Excellent travail 🔥" : score >= 6 ? "Bonne progression 👍" : "Des progrès à faire 💪"}
-            </div>
-            <div style={{ fontSize:12, color:"rgba(242,244,247,0.50)",
-              lineHeight:1.55, fontFamily:FONT }}>
-              {bilan.daysOk} jours dans la cible sur {bilan.totalDays}
-            </div>
-          </Card>
-
-          {/* Profil */}
-          <Card style={{ padding:"12px 16px" }}>
-            <Eyebrow>Profil analysé</Eyebrow>
-            <div style={{ display:"flex", gap:6, marginTop:6, flexWrap:"wrap" }}>
-              {obj && (
-                <span style={{ padding:"3px 9px", borderRadius:6,
-                  background:"rgba(59,130,246,0.10)",
-                  border:"1px solid rgba(59,130,246,0.20)",
-                  fontSize:11, color:"#93C5FD", fontWeight:500, fontFamily:FONT }}>
-                  🏋️ {obj.l}
-                </span>
-              )}
-              {(profil.regime === "vegetarien" || profil.regime === "vegan") && (
-                <span style={{ padding:"3px 9px", borderRadius:6,
-                  background:"rgba(52,211,153,0.08)",
-                  border:"1px solid rgba(52,211,153,0.18)",
-                  fontSize:11, color:"#34D399", fontWeight:500, fontFamily:FONT }}>
-                  🌱 {profil.regime === "vegan" ? "Vegan" : "Végétarien"}
-                </span>
-              )}
-              {calObj > 0 && (
-                <span style={{ padding:"3px 9px", borderRadius:6,
-                  background:"rgba(255,255,255,0.05)",
-                  border:"1px solid rgba(255,255,255,0.08)",
-                  fontSize:11, color:"rgba(242,244,247,0.55)", fontWeight:500, fontFamily:FONT }}>
-                  ⚡ TDEE {calObj} kcal
-                </span>
-              )}
-            </div>
-          </Card>
-
-          {/* Calories */}
-          <Card>
-            <Eyebrow>Calories · Moyenne journalière</Eyebrow>
-            <div style={{ display:"flex", alignItems:"baseline", gap:8, margin:"8px 0 4px" }}>
-              <span style={{ fontFamily:SERIF, fontSize:30, color:"#F2F4F7",
-                letterSpacing:-1, ...NUM }}>
-                {Math.round(bilan.avgKcal).toLocaleString("fr-FR")}
-              </span>
-              <span style={{ fontSize:12, color:"rgba(242,244,247,0.38)", fontFamily:FONT }}>kcal/j</span>
-              <span style={{ marginLeft:"auto", padding:"3px 9px", borderRadius:6, fontSize:11,
-                fontWeight:600, fontFamily:FONT, ...NUM,
-                ...statusBadge(bilan.pctKcal) }}>
-                {bilan.pctKcal >= 100 ? "+" : ""}{Math.round(bilan.avgKcal - calObj)} kcal
-              </span>
-            </div>
-            <div style={{ fontSize:12, color:"rgba(242,244,247,0.45)",
-              marginBottom:12, fontFamily:FONT }}>
-              Cible : {calObj} kcal · {bilan.pctKcal}% atteint
-            </div>
-            {/* Mini sparkline statique placeholder */}
-            <div style={{ height:3, background:"rgba(255,255,255,0.06)",
-              borderRadius:2, overflow:"hidden" }}>
-              <div style={{ height:"100%", width:`${Math.min(100, bilan.pctKcal)}%`,
-                background:"#3B82F6", borderRadius:2 }}/>
-            </div>
-          </Card>
-
-          {/* Macros */}
-          <Card>
-            <Eyebrow style={{ marginBottom:14 }}>Macronutriments · Moyenne 14 jours</Eyebrow>
-            <MacroRow label="Protéines" color="#60A5FA"
-              value={bilan.avgProt} goal={pObj} pct={bilan.pctProt}/>
-            <MacroRow label="Glucides" color="#22D3EE"
-              value={bilan.avgGluc} goal={gObj} pct={bilan.pctGluc}/>
-            <div style={{ marginBottom:0 }}>
-              <MacroRow label="Lipides" color="#34D399"
-                value={bilan.avgLip} goal={lObj} pct={bilan.pctLip}/>
-            </div>
-          </Card>
-
-          {/* Jours de cohérence */}
-          <Card>
-            <Eyebrow style={{ marginBottom:10 }}>Régularité · {bilan.totalDays} jours</Eyebrow>
-            <div style={{ display:"flex", flexWrap:"wrap", gap:2, marginBottom:10 }}>
-              {Array.from({ length: bilan.totalDays }).map((_, i) => {
-                const isOk   = i < bilan.daysOk;
-                const isWarn = !isOk && i < bilan.daysOk + bilan.daysWarn;
-                const bg  = isOk ? "rgba(52,211,153,0.14)" : isWarn ? "rgba(251,191,36,0.12)" : "rgba(248,113,113,0.12)";
-                const col = isOk ? "#34D399" : isWarn ? "#FBBF24" : "#F87171";
-                return (
-                  <div key={i} style={{ width:28, height:28, borderRadius:8,
-                    background:bg, color:col, display:"grid", placeItems:"center",
-                    fontSize:11, fontWeight:600, fontFamily:FONT, margin:2 }}>
-                    {i + 1}
+      {/* Micronutriments */}
+      <div style={{ margin:"0 16px 14px" }}>
+        <SectionHeader title="Micronutriments · somme des aliments rentrés"/>
+        <div style={{ background:S1, border:`1px solid ${BD}`, borderRadius:18, padding:18 }}>
+          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8 }}>
+            {micros.map(m => (
+              <div key={m.key} style={{ padding:"11px 12px", background:S2,
+                border:`1px solid ${BD}`, borderRadius:12 }}>
+                <div style={{ display:"flex", justifyContent:"space-between",
+                  alignItems:"baseline", marginBottom:6 }}>
+                  <div style={{ fontSize:11.5, fontWeight:700, color:TEXT, fontFamily:FONT }}>
+                    {m.label}
                   </div>
-                );
-              })}
-            </div>
-            <div style={{ display:"flex", gap:14 }}>
-              {[
-                { c:"#34D399", l:`${bilan.daysOk} jours ✅` },
-                { c:"#FBBF24", l:`${bilan.daysWarn} moyen` },
-                { c:"#F87171", l:`${bilan.daysBad} hors cible` },
-              ].map(x => (
-                <div key={x.l} style={{ display:"flex", alignItems:"center",
-                  gap:5, fontSize:11, color:"rgba(242,244,247,0.50)", fontFamily:FONT }}>
-                  <span style={{ width:8, height:8, borderRadius:2,
-                    background:x.c, display:"inline-block" }}/>
-                  {x.l}
+                  <div style={{ fontSize:16 }}>{m.icon}</div>
                 </div>
-              ))}
-            </div>
-          </Card>
-
-          {/* Hydratation */}
-          <Card>
-            <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center" }}>
-              <div>
-                <Eyebrow>Hydratation moyenne</Eyebrow>
-                <div style={{ display:"flex", alignItems:"baseline", gap:6, marginTop:4 }}>
-                  <span style={{ fontFamily:SERIF, fontSize:26, color:"#F2F4F7", ...NUM }}>
-                    {(bilan.avgEau * 0.25).toFixed(1)}L
-                  </span>
-                  <span style={{ fontSize:12, color:"rgba(242,244,247,0.38)", fontFamily:FONT }}>
-                    / 2L recommandés
-                  </span>
+                <div style={{ fontSize:11, color:MID, marginBottom:6, fontFamily:FONT }}>
+                  <b style={{ color:TEXT, fontWeight:700 }}>
+                    {m.val < 10 ? m.val.toFixed(1) : Math.round(m.val)}{m.unit}
+                  </b> / {m.goal}{m.unit}
+                </div>
+                <div style={{ height:3, background:"rgba(255,255,255,0.06)",
+                  borderRadius:99, overflow:"hidden" }}>
+                  <div style={{ height:"100%", width:`${Math.min(100,m.pct)}%`,
+                    background:m.color, borderRadius:99, transition:"width .8s" }}/>
                 </div>
               </div>
-              <div style={{ textAlign:"right" }}>
-                <Badge {...(bilan.avgEau >= 7 ?
-                  { label:"Bon", color:"#34D399", bg:"rgba(52,211,153,0.10)", bd:"rgba(52,211,153,0.22)" } :
-                  bilan.avgEau >= 5 ?
-                  { label:"À améliorer", color:"#FBBF24", bg:"rgba(251,191,36,0.10)", bd:"rgba(251,191,36,0.22)" } :
-                  { label:"Insuffisant", color:"#F87171", bg:"rgba(248,113,113,0.10)", bd:"rgba(248,113,113,0.22)" }
-                )}/>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Répartition par catégorie */}
+      <div style={{ margin:"0 16px 14px" }}>
+        <SectionHeader title="Répartition par catégorie"/>
+        <div style={{ background:S1, border:`1px solid ${BD}`, borderRadius:18, padding:18 }}>
+          {categories.map((c, i) => (
+            <div key={c.key} style={{
+              display:"flex", alignItems:"center", gap:12,
+              padding:"10px 0",
+              borderBottom: i === categories.length-1 ? "none" : "1px solid rgba(255,255,255,0.05)",
+              paddingTop: i === 0 ? 0 : 10 }}>
+              <div style={{ width:36, height:36, borderRadius:10, display:"grid",
+                placeItems:"center", fontSize:18, flexShrink:0,
+                background:`${c.color}1F`, border:`1px solid ${c.color}4D` }}>
+                {c.icon}
+              </div>
+              <div style={{ flex:1, minWidth:0 }}>
+                <div style={{ display:"flex", justifyContent:"space-between",
+                  alignItems:"baseline", marginBottom:4 }}>
+                  <div style={{ fontSize:12.5, fontWeight:700, color:TEXT, fontFamily:FONT }}>
+                    {c.label}
+                  </div>
+                  <div style={{ fontSize:11, color:TEXT, fontWeight:700, fontFamily:FONT, ...NUM }}>
+                    {c.pct}%
+                  </div>
+                </div>
+                <div style={{ height:4, background:"rgba(255,255,255,0.05)",
+                  borderRadius:99, overflow:"hidden" }}>
+                  <div style={{ height:"100%", width:`${c.pct}%`,
+                    background:c.color, borderRadius:99, transition:"width .8s" }}/>
+                </div>
               </div>
             </div>
-          </Card>
+          ))}
+        </div>
+      </div>
 
-          {/* CTA Analyse détaillée */}
-          <button className="tap" onClick={generateAnalyse} style={{
-            width:"100%", padding:"13px 16px",
-            background:"linear-gradient(135deg,#1E40AF,#3B82F6)",
-            border:"1px solid rgba(255,255,255,0.15)", borderRadius:14,
-            color:"#fff", fontFamily:FONT, fontSize:14, fontWeight:600,
-            display:"flex", alignItems:"center", justifyContent:"center", gap:8,
-            cursor:"pointer", boxShadow:"0 4px 14px rgba(59,130,246,0.30)",
-            marginTop:4,
-          }}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-                 stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M21 12a8 8 0 0 1-12 7l-5 1 1-5A8 8 0 1 1 21 12z"/>
-              <path d="M8 12h.01M12 12h.01M16 12h.01"/>
-            </svg>
-            Voir l'analyse détaillée
-          </button>
-
-          {/* Prochain bilan */}
-          <div style={{ background:"rgba(59,130,246,0.06)",
-            border:"1px solid rgba(59,130,246,0.18)", borderRadius:14,
-            padding:"14px 16px", marginTop:10,
-            display:"flex", justifyContent:"space-between", alignItems:"center" }}>
-            <div>
-              <Eyebrow style={{ color:"rgba(59,130,246,0.70)", marginBottom:3 }}>
-                Prochain bilan
-              </Eyebrow>
-              <div style={{ fontSize:14, fontWeight:600, color:"#F2F4F7", fontFamily:FONT }}>
-                {nextBilanDate}
-              </div>
-              <div style={{ fontSize:11.5, color:"rgba(242,244,247,0.38)",
-                fontFamily:FONT, marginTop:1 }}>dans 14 jours</div>
-            </div>
-            <div style={{ width:42, height:42, borderRadius:12,
-              background:"#3B82F6", display:"grid", placeItems:"center",
-              boxShadow:"0 4px 12px rgba(59,130,246,0.30)" }}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-                   stroke="#fff" strokeWidth="2" strokeLinecap="round">
-                <rect x="3" y="4" width="18" height="18" rx="2"/>
-                <path d="M16 2v4M8 2v4M3 10h18"/>
-              </svg>
+      {/* Lien archive */}
+      <div style={{ margin:"0 16px 14px" }}>
+        <button onClick={onOpenArchive} style={{ width:"100%",
+          padding:"14px 16px", background:S1, border:`1px solid ${BD}`,
+          borderRadius:14, cursor:"pointer",
+          display:"flex", alignItems:"center", gap:12,
+          fontFamily:FONT, textAlign:"left" }}>
+          <div style={{ width:34, height:34, borderRadius:10,
+            background:"rgba(59,130,246,0.10)", border:"1px solid rgba(59,130,246,0.28)",
+            display:"grid", placeItems:"center", flexShrink:0 }}>
+            <I name="arch" size={15} color="#93C5FD"/>
+          </div>
+          <div style={{ flex:1 }}>
+            <div style={{ fontSize:13, fontWeight:700, color:TEXT }}>Historique des bilans</div>
+            <div style={{ fontSize:11, color:MID, marginTop:2 }}>
+              Voir tous les rapports bi-hebdomadaires
             </div>
           </div>
+          <I name="chevR" size={16} color={MID}/>
+        </button>
+      </div>
+    </>
+  );
 
+  // ─── RENDER ────────────────────────────────────────────────────────────
+  return (
+    <div style={{ minHeight:"100vh", background:BG, fontFamily:FONT,
+      paddingBottom:30 }}>
+      {/* Header retour */}
+      <div style={{ padding:"16px 16px 8px", display:"flex", alignItems:"center", gap:10 }}>
+        <button onClick={onBack} style={{ background:"transparent", border:"none",
+          color:BL, cursor:"pointer", fontSize:13, fontWeight:700,
+          display:"flex", alignItems:"center", gap:4, fontFamily:FONT }}>
+          <I name="chevL" size={15} stroke={2.5}/> Retour
+        </button>
+      </div>
+
+      {/* Eyebrow titre */}
+      <div style={{ padding:"0 20px 14px" }}>
+        <div style={{ fontFamily:SERIF, fontSize:22, fontWeight:700,
+          color:TEXT, letterSpacing:-0.5, lineHeight:1.1 }}>
+          Bilan PRO Nutrition
         </div>
-      )}
-
-      {/* ════════════════════════════════════════ */}
-      {/* ONGLET 2 — Analyse détaillée            */}
-      {/* ════════════════════════════════════════ */}
-      {activeTab === 1 && (
-        <div className="anim" style={{ padding:"14px 16px 20px" }}>
-
-          {/* Loading */}
-          {loading && (
-            <div style={{ textAlign:"center", padding:"50px 20px" }}>
-              <div style={{ width:44, height:44, border:"3px solid rgba(59,130,246,0.15)",
-                borderTop:"3px solid #3B82F6", borderRadius:"50%",
-                animation:"spin 0.8s linear infinite", margin:"0 auto 20px" }}/>
-              <div style={{ fontSize:16, fontWeight:600, color:"#F2F4F7",
-                fontFamily:FONT, marginBottom:6 }}>Analyse en cours…</div>
-              <div style={{ fontSize:12, color:"rgba(242,244,247,0.45)",
-                fontFamily:FONT, lineHeight:1.6 }}>
-                Ton coach nutritionnel analyse<br/>14 jours de données
-              </div>
-            </div>
-          )}
-
-          {/* Erreur */}
-          {error && !loading && (
-            <div style={{ background:"rgba(248,113,113,0.08)",
-              border:"1px solid rgba(248,113,113,0.20)", borderRadius:14,
-              padding:16, textAlign:"center" }}>
-              <div style={{ fontSize:13, color:"#F87171", fontFamily:FONT, marginBottom:10 }}>
-                {error}
-              </div>
-              <button className="tap" onClick={generateAnalyse} style={{
-                padding:"9px 16px", background:"#3B82F6", border:"none",
-                borderRadius:10, color:"#fff", fontSize:13, fontWeight:600,
-                fontFamily:FONT, cursor:"pointer" }}>
-                Réessayer
-              </button>
-            </div>
-          )}
-
-          {/* Analyse rendue */}
-          {analyse && !loading && (
-            <>
-              {/* Badge coach */}
-              <div style={{ display:"flex", alignItems:"center", gap:10,
-                padding:"4px 0 14px" }}>
-                <div style={{ width:36, height:36, borderRadius:10,
-                  background:"rgba(59,130,246,0.12)",
-                  border:"1px solid rgba(59,130,246,0.22)",
-                  display:"grid", placeItems:"center" }}>
-                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none"
-                       stroke="#3B82F6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M21 12a8 8 0 0 1-12 7l-5 1 1-5A8 8 0 1 1 21 12z"/>
-                    <path d="M8 12h.01M12 12h.01M16 12h.01"/>
-                  </svg>
-                </div>
-                <div>
-                  <div style={{ fontSize:13, fontWeight:600, color:"#F2F4F7", fontFamily:FONT }}>
-                    Analyse rédigée par ton coach nutritionnel
-                  </div>
-                  <div style={{ fontSize:11, color:"rgba(242,244,247,0.40)", fontFamily:FONT }}>
-                    14 jours de données analysées
-                  </div>
-                </div>
-              </div>
-
-              {/* 1 — Résumé */}
-              <SectionHeader num="1" title="Résumé global"/>
-              <Card><p style={{ fontSize:13, color:"rgba(242,244,247,0.70)",
-                lineHeight:1.65, fontFamily:FONT }}>{analyse.resume}</p></Card>
-
-              {/* 2 — Points positifs */}
-              <SectionHeader num="2" title="Points positifs 🌟" color="#34D399"/>
-              <Card>
-                <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
-                  {analyse.points_positifs?.map((p, i) => (
-                    <div key={i} style={{ display:"flex", gap:8, alignItems:"flex-start" }}>
-                      <span style={{ color:"#34D399", fontSize:14, flexShrink:0 }}>✓</span>
-                      <p style={{ fontSize:13, color:"rgba(242,244,247,0.70)",
-                        lineHeight:1.55, fontFamily:FONT }}>{p}</p>
-                    </div>
-                  ))}
-                </div>
-              </Card>
-
-              {/* 3 — Points à améliorer */}
-              <SectionHeader num="3" title="Points à améliorer ⚠️" color="#F87171"/>
-              <Card>
-                <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
-                  {analyse.points_ameliorer?.map((p, i) => (
-                    <div key={i} style={{ display:"flex", gap:8, alignItems:"flex-start" }}>
-                      <span style={{ color:"#F87171", fontSize:14, flexShrink:0 }}>→</span>
-                      <p style={{ fontSize:13, color:"rgba(242,244,247,0.70)",
-                        lineHeight:1.55, fontFamily:FONT }}>{p}</p>
-                    </div>
-                  ))}
-                </div>
-              </Card>
-
-              {/* 4 — Macros */}
-              <SectionHeader num="4" title="Analyse des macronutriments"/>
-              <Card>
-                <p style={{ fontSize:13, color:"rgba(242,244,247,0.70)",
-                  lineHeight:1.65, fontFamily:FONT }}>{analyse.analyse_macros}</p>
-              </Card>
-
-              {/* 5 — Micronutriments */}
-              <SectionHeader num="5" title="Micronutriments détectés"/>
-              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8, marginBottom:8 }}>
-                {Object.entries(analyse.micronutriments || {}).map(([key, val]) => {
-                  const st = microStatus(val.statut);
-                  return (
-                    <div key={key} style={{ background:"rgba(255,255,255,0.03)",
-                      border:"1px solid rgba(255,255,255,0.06)", borderRadius:10,
-                      padding:"10px 12px" }}>
-                      <div style={{ fontSize:10, color:"rgba(242,244,247,0.38)",
-                        marginBottom:4, fontFamily:FONT }}>
-                        {MICRO_LABELS[key] || key}
-                      </div>
-                      <div style={{ fontSize:12, fontWeight:600, color:"#F2F4F7",
-                        marginBottom:5, fontFamily:FONT, lineHeight:1.3 }}>
-                        {val.note}
-                      </div>
-                      <Badge label={st.label} color={st.color} bg={st.bg} bd={st.bd}/>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* 6 — Sucres */}
-              <SectionHeader num="6" title="Sucres & produits transformés"/>
-              <Card>
-                <p style={{ fontSize:13, color:"rgba(242,244,247,0.70)",
-                  lineHeight:1.65, fontFamily:FONT }}>{analyse.analyse_sucres}</p>
-              </Card>
-
-              {/* 7 — Hydratation */}
-              <SectionHeader num="7" title="Hydratation"/>
-              <Card>
-                <p style={{ fontSize:13, color:"rgba(242,244,247,0.70)",
-                  lineHeight:1.65, fontFamily:FONT }}>{analyse.hydratation}</p>
-              </Card>
-
-              {/* 8 — Habitudes */}
-              <SectionHeader num="8" title="Habitudes alimentaires"/>
-              <Card>
-                <p style={{ fontSize:13, color:"rgba(242,244,247,0.70)",
-                  lineHeight:1.65, fontFamily:FONT }}>{analyse.habitudes}</p>
-              </Card>
-
-              {/* 9 — Risques */}
-              {analyse.risques?.length > 0 && (
-                <>
-                  <SectionHeader num="9" title="Risques & déséquilibres" color="#F87171"/>
-                  <div style={{ display:"flex", flexDirection:"column", gap:8, marginBottom:10 }}>
-                    {analyse.risques.map((r, i) => (
-                      <div key={i} style={{ padding:12,
-                        background:"rgba(248,113,113,0.06)",
-                        border:"1px solid rgba(248,113,113,0.15)", borderRadius:10 }}>
-                        <p style={{ fontSize:12.5, color:"rgba(242,244,247,0.70)",
-                          lineHeight:1.55, fontFamily:FONT }}>⚠️ {r}</p>
-                      </div>
-                    ))}
-                  </div>
-                </>
-              )}
-
-              {/* 10 — Objectifs */}
-              <SectionHeader num="10" title="Tes objectifs — 14 prochains jours" color="#3B82F6"/>
-              <Card>
-                <div>
-                  {analyse.objectifs?.map((o, i) => (
-                    <div key={i} style={{ display:"flex", gap:10, alignItems:"flex-start",
-                      padding:"10px 0",
-                      borderBottom: i < analyse.objectifs.length - 1
-                        ? "1px solid rgba(255,255,255,0.05)" : "none" }}>
-                      <div style={{ width:22, height:22, borderRadius:6,
-                        background:"#3B82F6", display:"grid", placeItems:"center",
-                        fontSize:11, fontWeight:700, color:"#fff", fontFamily:FONT,
-                        flexShrink:0, marginTop:1 }}>{i + 1}</div>
-                      <div>
-                        <div style={{ fontSize:13, fontWeight:600, color:"#F2F4F7",
-                          marginBottom:2, fontFamily:FONT }}>{o.titre}</div>
-                        <div style={{ fontSize:12, color:"rgba(242,244,247,0.50)",
-                          lineHeight:1.5, fontFamily:FONT }}>{o.detail}</div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </Card>
-
-              {/* 11 — Conclusion */}
-              <SectionHeader num="11" title="Conclusion" color="#34D399"/>
-              <div style={{ background:"linear-gradient(135deg,#1E3A8A,#2563EB)",
-                border:"1px solid rgba(255,255,255,0.15)", borderRadius:16,
-                padding:18, marginBottom:8, position:"relative", overflow:"hidden" }}>
-                <div style={{ position:"absolute", top:-30, right:-30, width:100,
-                  height:100, borderRadius:"50%", background:"rgba(255,255,255,0.05)",
-                  pointerEvents:"none" }}/>
-                <p style={{ fontSize:14, fontStyle:"italic",
-                  color:"rgba(255,255,255,0.90)", lineHeight:1.65, fontFamily:FONT,
-                  position:"relative" }}>
-                  "{analyse.conclusion}"
-                </p>
-                <div style={{ marginTop:12, fontSize:12,
-                  color:"rgba(255,255,255,0.55)", fontWeight:500, fontFamily:FONT }}>
-                  — Coach Nutritionnel · MorphoCoach PRO
-                </div>
-              </div>
-            </>
-          )}
+        <div style={{ fontSize:12, color:MID, marginTop:3, fontFamily:FONT }}>
+          {bilan.totalDays} derniers jours
         </div>
-      )}
+      </div>
+
+      {renderHeader()}
+      {activeTab === 0 ? renderDashboard() : renderDetailed()}
     </div>
   );
 }
