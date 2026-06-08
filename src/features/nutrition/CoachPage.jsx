@@ -222,9 +222,16 @@ export default function CoachPage({
 
   // ─── RENDER ────────────────────────────────────────────────────────────────
   return (
-    <div style={{ position: "fixed", inset: 0, zIndex: 200,
-      background: BG, display: "flex", flexDirection: "column",
-      fontFamily: FONT }}>
+    <div style={{
+      position: "fixed", inset: 0, zIndex: 200,
+      background: BG,
+      display: "flex", flexDirection: "column",
+      fontFamily: FONT,
+      paddingTop: "env(safe-area-inset-top, 0px)",
+      paddingBottom: "env(safe-area-inset-bottom, 0px)",
+      height: "100dvh",
+      boxSizing: "border-box",
+    }}>
 
       {/* ── Header ─────────────────────────────────────────────────────── */}
       <div style={{ padding: "14px 16px 12px", borderBottom: `1px solid ${BD}`,
@@ -286,7 +293,7 @@ export default function CoachPage({
       )}
 
       {/* ── Messages ───────────────────────────────────────────────────── */}
-      <div style={{ flex: 1, overflowY: "auto", padding: "14px 16px",
+      <div style={{ flex: 1, minHeight: 0, overflowY: "auto", padding: "14px 16px",
         display: "flex", flexDirection: "column", gap: 10 }}>
 
         {messages.map((m, i) => (
@@ -411,7 +418,7 @@ export default function CoachPage({
       )}
 
       {/* ── Input ──────────────────────────────────────────────────────── */}
-      <div style={{ padding: "10px 16px calc(10px + env(safe-area-inset-bottom, 0px))",
+      <div style={{ padding: "10px 16px 12px",
         borderTop: `1px solid ${BD}`, display: "flex", gap: 8,
         alignItems: "flex-end", flexShrink: 0, background: BG }}>
         <textarea
