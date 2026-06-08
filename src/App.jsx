@@ -15,7 +15,9 @@ import { Screen }          from "./components/layout/Screen.jsx";
 import { PageContainer }   from "./components/layout/PageContainer.jsx";
 import AppContext           from "./context/AppContext.jsx";
 import Home from "./features/home/HomePage.jsx";
+import { CoachFAB } from "./features/nutrition/CoachFAB.jsx";
 
+const CoachPage  = lazy(() => import("./features/nutrition/CoachPage.jsx"));
 const Onboarding = lazy(() => import("./features/onboarding/OnboardingPage.jsx"));
 const Nutrition  = lazy(() => import("./features/nutrition/NutritionPage.jsx"));
 const Profile    = lazy(() => import("./features/profile/ProfilePage.jsx"));
@@ -212,12 +214,24 @@ export default function App() {
                 {tab === "nutrition" && <Nutrition  {...nutritionProps} />}
                 {tab === "profile"   && <Profile    {...profileProps} />}
                 {tab === "recipes"   && <Recipes    premium={premiumNutrition} setPaywall={setPaywallNutrition} push={push} />}
+                {tab === "coach"     && (
+                  <CoachPage
+                    onBack={() => setTab("home")}
+                    profil={profil} obj={obj}
+                    calObj={calObj} pObj={pObj} gObj={gObj} lObj={lObj}
+                    bilan={null}
+                    premium={premiumNutrition}
+                    setPaywall={setPaywallNutrition}
+                    push={push}
+                  />
+                )}
               </Suspense>
             )}
           </div>
         </PageContainer>
 
-        <BottomNav tab={tab} setTab={setTab} />
+        {tab !== "coach" && <BottomNav tab={tab} setTab={setTab} />}
+        <CoachFAB tab={tab} setTab={setTab} premium={premiumNutrition}/>
 
         {showChrono && <Chrono onClose={() => setChrono(false)} initSec={chronoSec} />}
 
