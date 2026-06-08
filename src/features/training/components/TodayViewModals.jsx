@@ -8,6 +8,20 @@ import SeanceDetail from "../SeanceDetail.jsx";
 const DISP_F  = FONT;
 const SERIF_F = SERIF;
 
+
+// ─── Shared sheet styles (aligned with BiblioSheet in Creer.jsx) ─────────────
+const SHEET_OVERLAY = {
+  position:"fixed", inset:0, zIndex:300,
+  background:"rgba(3,5,10,0.82)", backdropFilter:"blur(4px)", WebkitBackdropFilter:"blur(4px)",
+  display:"flex", alignItems:"flex-end", justifyContent:"center"
+};
+const SHEET_BASE = {
+  width:"100%", maxWidth:480,
+  background:"#0A1020", border:"1px solid rgba(59,130,246,0.35)",
+  borderBottom:"none", borderRadius:"28px 28px 0 0",
+  boxShadow:"0 -30px 60px -20px rgba(0,0,0,0.8)"
+};
+
 // ─── FORMULE EPLEY ────────────────────────────────────────────────────────────
 
 // ─── CIBLE PAR OBJECTIF ───────────────────────────────────────────────────────
@@ -59,33 +73,33 @@ export function ManualRMModal({ prog, setProg, onClose, push, C }) {
     onClose();
   };
 
-  const overlayStyle = {position:"fixed",inset:0,zIndex:300,background:"rgba(4,7,15,0.72)",backdropFilter:"blur(3px)",WebkitBackdropFilter:"blur(3px)",display:"flex",alignItems:"flex-end",justifyContent:"center"};
-  const sheetStyle   = {width:"100%",maxWidth:480,background:"#0d1424",border:`1px solid ${C.bd}`,borderBottom:"none",borderRadius:"24px 24px 0 0",maxHeight:"88vh",overflowY:"auto",WebkitOverflowScrolling:"touch",boxShadow:"0 -20px 60px rgba(0,0,0,0.5)"};
+  const overlayStyle = {...SHEET_OVERLAY};
+  const sheetStyle   = {...SHEET_BASE, maxHeight:"88vh", overflowY:"auto", WebkitOverflowScrolling:"touch"};
 
   return (
     <div style={overlayStyle} onClick={e=>e.target===e.currentTarget&&onClose()}>
       <div style={sheetStyle}>
-        <div style={{width:38,height:4,borderRadius:2,background:"rgba(255,255,255,0.14)",margin:"10px auto 0"}}/>
+        <div style={{width:40,height:5,borderRadius:3,background:"rgba(255,255,255,0.20)",margin:"14px auto 6px"}}/>
 
         {/* Header */}
-        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"12px 16px 14px"}}>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"6px 20px 16px"}}>
           <div>
-            <div style={{fontSize:9,color:"rgba(245,241,232,0.50)",fontWeight:700,letterSpacing:"1.5px",textTransform:"uppercase",marginBottom:3}}>Nouveau record</div>
-            <div style={{fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",fontSize:20,fontWeight:300,color:"#F5F1E8"}}>
+            <div style={{fontSize:9,color:"rgba(242,244,247,0.40)",fontWeight:700,letterSpacing:"1.4px",textTransform:"uppercase",marginBottom:5,fontFamily:DISP_F}}>Nouveau record</div>
+            <div style={{fontFamily:SERIF_F,fontSize:22,fontWeight:700,color:"#F2F4F7",letterSpacing:-0.5}}>
               {selected ? selected.nom : "Saisie manuelle"}
             </div>
           </div>
-          <button onClick={onClose} style={{background:C.s2,border:"0.5px solid rgba(190,180,255,0.07)",borderRadius:10,width:36,height:36,color:"rgba(245,241,232,0.50)",cursor:"pointer",fontSize:18}}>×</button>
+          <button onClick={onClose} style={{background:C.s1,border:"1px solid rgba(255,255,255,0.07)",borderRadius:12,width:38,height:38,color:"rgba(242,244,247,0.60)",cursor:"pointer",fontSize:20,display:"grid",placeItems:"center"}}>×</button>
         </div>
 
-        <div style={{padding:"0 16px"}}>
+        <div style={{padding:"0 20px"}}>
           {!selected ? (
             <div>
               {/* Recherche */}
               <div style={{position:"relative",marginBottom:12}}>
                 <input value={search} onChange={e=>{setSearch(e.target.value);setGroupe(null);}}
                   placeholder="Rechercher un exercice…"
-                  style={{width:"100%",padding:"10px 14px 10px 36px",background:C.s1,border:"0.5px solid rgba(190,180,255,0.07)",borderRadius:10,fontSize:13,color:"#F5F1E8",fontFamily:"'Inter',sans-serif",boxSizing:"border-box"}}
+                  style={{width:"100%",padding:"12px 16px",background:C.s1,border:"1px solid rgba(255,255,255,0.07)",borderRadius:14,fontSize:14,color:"#F2F4F7",fontFamily:DISP_F,boxSizing:"border-box",outline:"none"}}
                 />
                 <div style={{position:"absolute",left:12,top:"50%",transform:"translateY(-50%)",fontSize:14,color:"rgba(245,241,232,0.50)"}}>🔍</div>
               </div>
@@ -97,7 +111,7 @@ export function ManualRMModal({ prog, setProg, onClose, push, C }) {
                   <div style={{display:"flex",flexWrap:"wrap",gap:6,marginBottom:12}}>
                     {groupes.map(g => (
                       <button key={g} onClick={() => setGroupe(g===groupe?null:g)}
-                        style={{padding:"6px 12px",background:groupe===g?"rgba(59,130,246,0.1)":C.s2||"#0B0F1F",border:`1px solid ${groupe===g?"#4D8BFF":"rgba(190,180,255,0.07)"}`,borderRadius:16,color:groupe===g?"#4D8BFF":"rgba(245,241,232,0.50)",cursor:"pointer",fontSize:11,fontWeight:groupe===g?600:400,fontFamily:"'Inter',sans-serif"}}>
+                        style={{padding:"9px 16px",background:groupe===g?"rgba(59,130,246,0.12)":C.s1,border:`1.5px solid ${groupe===g?"#3B82F6":"rgba(255,255,255,0.07)"}`,borderRadius:12,color:groupe===g?"#60A5FA":"rgba(242,244,247,0.55)",cursor:"pointer",fontSize:13,fontWeight:700,fontFamily:DISP_F,whiteSpace:"nowrap",transition:"all .18s",flexShrink:0}}>
                         {g} <span style={{fontSize:9,color:"rgba(245,241,232,0.50)"}}>({(EX[g]||[]).length})</span>
                       </button>
                     ))}
@@ -111,7 +125,7 @@ export function ManualRMModal({ prog, setProg, onClose, push, C }) {
                   {groupe && !search && <div style={{fontSize:10,color:"#4D8BFF",fontWeight:600,marginBottom:8}}>{groupe} · {exosList.length} exercices</div>}
                   {exosList.map((ex, i) => (
                     <div key={i} onClick={() => setSelected(ex)}
-                      style={{display:"flex",alignItems:"center",gap:10,padding:"10px 13px",background:C.s1,border:"0.5px solid rgba(190,180,255,0.07)",borderRadius:10,marginBottom:6,cursor:"pointer"}}
+                      style={{display:"flex",alignItems:"center",gap:10,padding:"12px 14px",background:C.s1,border:"1px solid rgba(255,255,255,0.07)",borderRadius:14,marginBottom:8,cursor:"pointer",transition:"border-color .18s"}}
                       onMouseEnter={ev=>ev.currentTarget.style.borderColor=cc(ex.cat)}
                       onMouseLeave={ev=>ev.currentTarget.style.borderColor="rgba(190,180,255,0.07)"}>
                       <div style={{width:4,height:32,borderRadius:2,background:cc(ex.cat),flexShrink:0}}/>
@@ -273,9 +287,8 @@ export function CreateSeanceModal({ prog, setProg, setCalSess, push, onClose, C 
     color:nextOk?"#fff":"rgba(242,244,247,0.30)",boxShadow:nextOk?"0 8px 24px rgba(59,130,246,0.30)":"none" };
 
   return (
-    <div style={{position:"fixed",inset:0,zIndex:300,background:"rgba(4,7,15,0.72)",backdropFilter:"blur(3px)",WebkitBackdropFilter:"blur(3px)",display:"flex",alignItems:"flex-end",justifyContent:"center"}}
-         onClick={e=>e.target===e.currentTarget&&onClose()}>
-      <div style={{width:"100%",maxWidth:480,background:"#0d1424",border:`1px solid ${C.bd}`,borderBottom:"none",borderRadius:"24px 24px 0 0",maxHeight:"90vh",display:"flex",flexDirection:"column",boxShadow:"0 -22px 60px rgba(0,0,0,0.5)"}}>
+    <div style={SHEET_OVERLAY} onClick={e=>e.target===e.currentTarget&&onClose()}>
+      <div style={{...SHEET_BASE, maxHeight:"90vh", display:"flex", flexDirection:"column"}}>
 
         {/* Poignée */}
         <div style={{width:38,height:4,borderRadius:2,background:"rgba(255,255,255,0.14)",margin:"10px auto 0",flexShrink:0}}/>
@@ -288,7 +301,7 @@ export function CreateSeanceModal({ prog, setProg, setCalSess, push, onClose, C 
               {newExForm ? newExForm.nom : step===1 ? "Nouvelle séance" : seNom.trim()||"Exercices"}
             </div>
           </div>
-          <button onClick={onClose} style={{width:34,height:34,borderRadius:10,background:C.s2,border:`1px solid ${C.bd}`,color:"rgba(242,244,247,0.60)",fontSize:18,cursor:"pointer",flexShrink:0}}>×</button>
+          <button onClick={onClose} style={{width:38,height:38,borderRadius:12,background:C.s1,border:"1px solid rgba(255,255,255,0.07)",color:"rgba(242,244,247,0.60)",fontSize:20,cursor:"pointer",flexShrink:0,display:"grid",placeItems:"center"}}>×</button>
         </div>
 
         {/* Dots */}
@@ -559,19 +572,18 @@ export function EditRecordModal({ exData, prog, setProg, push, onClose }) {
   });
 
   return (
-    <div style={{position:"fixed",inset:0,zIndex:300,background:"rgba(4,7,15,0.72)",backdropFilter:"blur(3px)",WebkitBackdropFilter:"blur(3px)",display:"flex",alignItems:"flex-end",justifyContent:"center"}}
-         onClick={e=>e.target===e.currentTarget&&onClose()}>
-      <div style={{width:"100%",maxWidth:480,background:"#0d1424",border:`1px solid ${C.bd}`,borderBottom:"none",borderRadius:"24px 24px 0 0",maxHeight:"88vh",overflowY:"auto",WebkitOverflowScrolling:"touch",boxShadow:"0 -22px 60px rgba(0,0,0,0.5)"}}>
-        <div style={{width:38,height:4,borderRadius:2,background:"rgba(255,255,255,0.14)",margin:"10px auto 0"}}/>
+    <div style={SHEET_OVERLAY} onClick={e=>e.target===e.currentTarget&&onClose()}>
+      <div style={{...SHEET_BASE, maxHeight:"88vh", overflowY:"auto", WebkitOverflowScrolling:"touch"}}>
+        <div style={{width:40,height:5,borderRadius:3,background:"rgba(255,255,255,0.20)",margin:"14px auto 6px"}}/>
 
         {/* Header */}
-        <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",padding:"12px 18px 10px"}}>
+        <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",padding:"6px 20px 14px"}}>
           <div>
             <div style={{fontSize:9,fontWeight:700,letterSpacing:"1.4px",textTransform:"uppercase",color:"rgba(242,244,247,0.35)",marginBottom:4,fontFamily:DISP_F}}>Modifier le record</div>
             <div style={{fontFamily:SERIF_F,fontSize:22,letterSpacing:-0.5,lineHeight:1}}>{exData.nom}</div>
             <div style={{fontSize:11,color:"rgba(242,244,247,0.45)",marginTop:4,fontFamily:DISP_F}}>1RM actuel : <span style={{color:"#60A5FA",fontWeight:700}}>{exData.rm1} kg</span></div>
           </div>
-          <button onClick={onClose} style={{width:34,height:34,borderRadius:10,background:C.s2,border:`1px solid ${C.bd}`,color:"rgba(242,244,247,0.60)",cursor:"pointer",fontSize:18,flexShrink:0}}>×</button>
+          <button onClick={onClose} style={{width:38,height:38,borderRadius:12,background:C.s1,border:"1px solid rgba(255,255,255,0.07)",color:"rgba(242,244,247,0.60)",cursor:"pointer",fontSize:20,flexShrink:0,display:"grid",placeItems:"center"}}>×</button>
         </div>
 
         <div style={{padding:"4px 18px 26px"}}>
@@ -681,7 +693,7 @@ export function RMCard({ exData, objectif, C, onEdit }) {
   const kgCible = calcKgFor(exData.rm1, target.reps);
 
   return (
-    <div style={{background:C.s1,border:"0.5px solid rgba(190,180,255,0.07)",borderRadius:12,marginBottom:8,overflow:"hidden"}}>
+    <div style={{background:C.s1,border:"1px solid rgba(255,255,255,0.08)",borderRadius:12,marginBottom:8,overflow:"hidden"}}>
       {/* Ligne principale */}
       <div onClick={() => setExpanded(e => !e)} style={{padding:"12px 14px",cursor:"pointer",borderLeft:`3px solid ${cc}`,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
         <div style={{flex:1}}>
@@ -694,28 +706,28 @@ export function RMCard({ exData, objectif, C, onEdit }) {
         </div>
 
         {/* Recommandation objectif */}
-        <div style={{textAlign:"center",padding:"6px 10px",background:`${target.color}0d`,border:`0.5px solid ${target.color}30`,borderRadius:9,flexShrink:0,marginLeft:10}}>
+        <div style={{textAlign:"center",padding:"6px 10px",background:`${target.color}0d`,border:`1px solid ${target.color}35`,borderRadius:9,flexShrink:0,marginLeft:10}}>
           <div style={{fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",fontSize:18,fontWeight:300,color:target.color,lineHeight:1}}>{kgCible > 0 ? kgCible : "—"}<span style={{fontSize:9,color:"rgba(245,241,232,0.50)",fontFamily:"'Inter',sans-serif",fontWeight:400}}>{kgCible>0?" kg":""}</span></div>
           <div style={{fontSize:8,color:target.color,fontWeight:600,marginTop:1}}>{target.l}</div>
           <div style={{fontSize:7,color:"rgba(245,241,232,0.50)"}}>{target.reps} reps</div>
         </div>
 
         <div style={{display:"flex",alignItems:"center",gap:6,marginLeft:8,flexShrink:0}}>
-          {onEdit && <button onClick={e=>{e.stopPropagation();onEdit(exData);}} style={{padding:"3px 8px",background:"rgba(59,130,246,0.06)",border:"0.5px solid rgba(59,130,246,0.2)",borderRadius:6,color:"#4D8BFF",cursor:"pointer",fontSize:10,fontWeight:600}}>✏️</button>}
+          {onEdit && <button onClick={e=>{e.stopPropagation();onEdit(exData);}} style={{padding:"3px 8px",background:"rgba(59,130,246,0.10)",border:"1px solid rgba(59,130,246,0.25)",borderRadius:6,color:"#4D8BFF",cursor:"pointer",fontSize:10,fontWeight:600}}>✏️</button>}
           <div style={{color:"rgba(245,241,232,0.50)",fontSize:14,transition:"transform .15s",transform:expanded?"rotate(90deg)":"rotate(0)"}}>›</div>
         </div>
       </div>
 
       {/* Détail déplié */}
       {expanded && (
-        <div style={{borderTop:"0.5px solid rgba(190,180,255,0.07)",padding:"12px 14px",background:"rgba(59,130,246,0.02)"}}>
+        <div style={{borderTop:"1px solid rgba(255,255,255,0.07)",padding:"12px 14px",background:"rgba(59,130,246,0.02)"}}>
           <div style={{fontSize:9,color:"rgba(245,241,232,0.50)",fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",marginBottom:8}}>Tableau de charges complet</div>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:5,marginBottom:10}}>
             {Object.entries(OBJ_TARGET).map(([id, obj]) => {
               const kg = calcKgFor(exData.rm1, obj.reps);
               const isCurrentObj = id === objectif;
               return (
-                <div key={id} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"7px 10px",background:isCurrentObj?`${obj.color}10`:"#1C2440",border:`0.5px solid ${isCurrentObj?obj.color:"rgba(190,180,255,0.10)"}`,borderRadius:8}}>
+                <div key={id} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"7px 10px",background:isCurrentObj?`${obj.color}10`:"#1C2440",border:`1px solid ${isCurrentObj?obj.color:"rgba(255,255,255,0.08)"}`,borderRadius:8}}>
                   <div>
                     <div style={{fontSize:10,fontWeight:isCurrentObj?700:500,color:isCurrentObj?obj.color:"rgba(245,241,232,0.50)"}}>{obj.l}{isCurrentObj?" ★":""}</div>
                     <div style={{fontSize:8,color:"rgba(245,241,232,0.50)"}}>{obj.reps} reps · {obj.pct}%</div>
@@ -728,7 +740,7 @@ export function RMCard({ exData, objectif, C, onEdit }) {
 
           {/* Historique 3 derniers sets */}
           {exData.historique && exData.historique.length > 0 && (
-            <div style={{paddingTop:10,borderTop:"0.5px solid rgba(190,180,255,0.07)"}}>
+            <div style={{paddingTop:10,borderTop:"1px solid rgba(255,255,255,0.07)"}}>
               <div style={{fontSize:9,color:"rgba(245,241,232,0.50)",fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",marginBottom:6}}>Historique récent</div>
               {exData.historique.slice(-3).reverse().map((h, i) => {
                 const rm = calc1RM(parseFloat(h.poids), parseInt(h.reps));
