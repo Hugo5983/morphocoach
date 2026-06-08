@@ -3,9 +3,10 @@ import { C, FONT, SERIF, NUM } from "../../data/constants.js";
 import { Card, Eyebrow, Btn, Inp, G2 } from "../../components/ui/index.jsx";
 import { computeHealthScore } from "./utils/healthScore.js";
 import BilanNutrition from "./BilanNutrition.jsx";
+import BilanArchive from "./BilanArchive.jsx";
+import { useBiWeeklyBilan } from "./components/useBiWeeklyBilan.js";
 import BarcodeScanner from "./BarcodeScanner.jsx";
 import PhotoAnalyse from "./PhotoAnalyse.jsx";
-import RepasSheet from "./RepasSheet.jsx";
 
 
 // Alias locaux → tokens centraux
@@ -116,16 +117,23 @@ export default function Nutrition(props){
   const { profil, prog, push, repas, setRepas, myFoods, setMyFoods, eau, setEau, scanRes, setScanRes, obj, calObj, pObj, lObj, gObj, totR, handleScan, FOODS, premium, setPaywall } = props;
 
   const [nView,   setNView]   = useState("journal");
-  const [repasSheet, setRepasSheet] = useState(null);   // id du repas ouvert en plein écran
+  const [repasA,  setRepasA]  = useState(null);
   const [showPhoto, setShowPhoto] = useState(false);
+  const [search,  setSearch]  = useState("");
   const [newFood, setNewFood] = useState({nom:"",cal:"",p:"",g:"",l:""});
   const [scanCode,setScan]    = useState("");
   const [dayOff,  setDayOff]  = useState(0); // 0=today, -1=hier…
   const [showCamera, setShowCamera] = useState(false);
   const [fruitsV, setFruitsV] = useState({ fruits:0, legumes:0 }); // portions F&V du jour
+  const [showArchive, setShowArchive] = useState(false);
+
+  // Bilan bi-hebdomadaire automatique (dimanche 9h)
+  const repasHistory = []; // TODO: brancher le vrai historique multi-jours
+  const { bilans } = useBiWeeklyBilan({ repasHistory, calObj, pObj, gObj, lObj });
 
   const tot     = totR;
   const all     = [...FOODS,...myFoods];
+  const filtered= search ? all.filter(f=>f.n.toLowerCase().includes(search.toLowerCase())) : [];
   const { score, lettre:scoreLettre, color:scoreColor, details:scoreDetails } = computeHealthScore(repas,eau,tot,pObj,gObj,lObj,profil);
 
   // Callback quand un code-barres est détecté par la caméra
@@ -164,31 +172,6 @@ export default function Nutrition(props){
         push={push}
       />
     )}
-    {repasSheet && (()=>{
-      const m = MEALS.find(x=>x.id===repasSheet);
-      if (!m) return null;
-      return (
-        <RepasSheet
-          meal={m}
-          items={repas[m.id]||[]}
-          allFoods={all}
-          quickFoods={FOODS.slice(0,8)}
-          onAdd={item => setRepas(rp=>({...rp,[m.id]:[...(rp[m.id]||[]),item]}))}
-          onRemove={idx => setRepas(rp=>({...rp,[m.id]:rp[m.id].filter((_,j)=>j!==idx)}))}
-          onClose={()=>setRepasSheet(null)}
-          onScan={()=>setShowCamera(true)}
-          onPhoto={()=>{
-            if(!premium && setPaywall){ /* photo gated inside PhotoAnalyse */ }
-            setShowPhoto(true);
-          }}
-          premium={premium}
-          scanRes={scanRes}
-          setScanRes={setScanRes}
-          handleScan={handleScan}
-          push={push}
-        />
-      );
-    })()}
     <div className="anim" style={{position:'relative',paddingBottom:20}}>
       <div style={{position:'absolute',top:130,left:'50%',transform:'translateX(-50%)',width:340,height:280,borderRadius:'50%',background:'radial-gradient(closest-side,rgba(59,130,246,0.12),transparent 70%)',filter:'blur(40px)',pointerEvents:'none'}}/>
 
@@ -257,12 +240,22 @@ export default function Nutrition(props){
         </div>
 
         {/* ════ BILAN PRO ════ */}
-        {nView==="bilan"&&premium&&(
+        {nView==="bilan"&&premium&&!showArchive&&(
           <BilanNutrition
             onBack={()=>setNView("journal")}
             repasHistory={repasHistory}
             calObj={calObj} pObj={pObj} gObj={gObj} lObj={lObj}
             profil={profil} obj={obj} premium={premium}
+            onOpenArchive={()=>setShowArchive(true)}
+          />
+        )}
+
+        {/* ════ ARCHIVE BILANS ════ */}
+        {nView==="bilan"&&premium&&showArchive&&(
+          <BilanArchive
+            onBack={()=>setShowArchive(false)}
+            bilans={bilans}
+            onOpenBilan={(b)=>console.log("bilan archivé:",b)}
           />
         )}
 
@@ -325,16 +318,18 @@ export default function Nutrition(props){
                 )}
               </div>
 
-              {/* Grille 2×2 — tape pour ouvrir RepasSheet */}
+              {/* Grille 2×2 toujours colorée */}
               <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8,marginBottom:10}}>
                 {MEALS.map(m=>{
                   const items=repas[m.id]||[];
                   const rTot=items.reduce((a,f)=>({cal:a.cal+f.c,p:a.p+f.p,g:a.g+f.g,l:a.l+f.l}),{cal:0,p:0,g:0,l:0});
+                  const isActive=repasA===m.id;
                   return(
-                    <button key={m.id} className="tap" onClick={()=>setRepasSheet(m.id)}
+                    <button key={m.id} className="tap" onClick={()=>setRepasA(isActive?null:m.id)}
                       style={{background:`linear-gradient(145deg,${m.accent}22,${m.accentDk}10)`,
                         border:`1px solid ${m.accent}35`,borderRadius:16,
                         padding:'14px 14px 12px',textAlign:'left',cursor:'pointer',
+                        boxShadow:isActive?`0 0 0 2px ${m.accent}60`:'none',
                         transition:'box-shadow .2s'}}>
                       {/* Icône toujours colorée */}
                       <div style={{width:40,height:40,borderRadius:12,
@@ -360,6 +355,76 @@ export default function Nutrition(props){
                   );
                 })}
               </div>
+
+              {/* Éditeur repas actif */}
+              {repasA&&(()=>{
+                const m=MEALS.find(x=>x.id===repasA);
+                const items=repas[m.id]||[];
+                return(
+                  <div style={{background:C.s1, border:`1px solid ${C.bd}`, borderRadius:16, boxShadow:'0 1px 3px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.04)', padding:14, marginBottom:8}}>
+                    <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:12}}>
+                      <div style={{width:28,height:28,borderRadius:8,
+                        background:`linear-gradient(145deg,${m.accent},${m.accentDk})`,
+                        display:'grid',placeItems:'center'}}>
+                        <I name={m.icon} size={14} stroke={2} color={m.dark}/>
+                      </div>
+                      <span style={{fontSize:13,fontWeight:700,color:C.text,fontFamily:DISPLAY}}>{m.l}</span>
+                      <button onClick={()=>setRepasA(null)} style={{marginLeft:'auto',background:'transparent',
+                        border:'none',cursor:'pointer',color:C.dim,display:'grid',placeItems:'center'}}>
+                        <I name="x" size={16} stroke={2}/>
+                      </button>
+                    </div>
+                    {items.map((item,i)=>(
+                      <div key={i} style={{display:'flex',justifyContent:'space-between',alignItems:'center',
+                        padding:'8px 10px',background:C.s2,borderRadius:10,marginBottom:5}}>
+                        <div style={{flex:1,minWidth:0}}>
+                          <div style={{fontSize:12,fontWeight:600,color:C.text}}>{item.n}</div>
+                          <div style={{display:'flex',gap:8,marginTop:2}}>
+                            <span style={{fontSize:9,color:"#60A5FA"}}>P {item.p}g</span>
+                            <span style={{fontSize:9,color:"#22D3EE"}}>G {item.g}g</span>
+                            <span style={{fontSize:9,color:"#34D399"}}>L {item.l}g</span>
+                          </div>
+                        </div>
+                        <span style={{fontSize:12,fontWeight:700,color:C.text,fontFamily:DISPLAY,...NUM,marginRight:8}}>{item.c}</span>
+                        <button onClick={()=>setRepas(rp=>({...rp,[m.id]:rp[m.id].filter((_,j)=>j!==i)}))}
+                          style={{background:'transparent',border:'none',color:"#F87171",cursor:'pointer',display:'grid',placeItems:'center'}}>
+                          <I name="x" size={14} stroke={2.2}/>
+                        </button>
+                      </div>
+                    ))}
+                    <Inp style={{marginTop:items.length?6:0,marginBottom:6}}
+                      placeholder="🔍 Rechercher un aliment…"
+                      value={search} onChange={e=>setSearch(e.target.value)}/>
+                    {search&&filtered.length>0&&(
+                      <div style={{maxHeight:200,overflowY:'auto',borderRadius:12,border:`1px solid ${C.bd}`}}>
+                        {filtered.slice(0,12).map((item,i)=>(
+                          <div key={i} onClick={()=>{setRepas(rp=>({...rp,[m.id]:[...rp[m.id],item]}));setSearch("");}}
+                            style={{display:'flex',justifyContent:'space-between',alignItems:'center',
+                              padding:'10px 12px',background:C.s2,borderBottom:`1px solid ${C.bd}`,cursor:'pointer'}}>
+                            <div>
+                              <div style={{fontSize:12,color:C.text}}>{item.n}</div>
+                              <div style={{fontSize:10,color:C.dim}}>{item.c} kcal</div>
+                            </div>
+                            <span style={{color:m.accent,fontSize:18}}>+</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    {!search&&(
+                      <div style={{display:'flex',flexWrap:'wrap',gap:5,marginTop:4}}>
+                        {FOODS.slice(0,8).map((f,i)=>(
+                          <button key={i} onClick={()=>setRepas(rp=>({...rp,[m.id]:[...rp[m.id],f]}))}
+                            style={{padding:'5px 10px',background:C.s2,border:`1px solid ${C.bd}`,
+                              borderRadius:999,cursor:'pointer',fontSize:10.5,color:C.mid,
+                              fontFamily:DISPLAY,fontWeight:600}}>
+                            {f.n.split('(')[0].trim()} <span style={{color:m.accent}}>{f.c}</span>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
             </div>
 
             {/* Hydratation */}
