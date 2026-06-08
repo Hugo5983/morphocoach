@@ -1,6 +1,6 @@
 // @ts-check
 // ─── PHOTO ANALYSE — Analyse macros par photo d'assiette ──────────────────────
-// Feature Premium : 3 analyses/mois gratuites, 120/mois pour les abonnés PRO.
+// Feature Premium : 5 analyses/mois gratuites, 180/mois pour les abonnés PRO.
 // Flow : Upload photo → Claude Vision → Résultat macros → Choix repas → Ajout journal
 
 import { useState, useRef, useCallback } from "react";
@@ -8,8 +8,8 @@ import { C, FONT, SERIF } from "../../data/constants.js";
 
 // ─── Constantes ───────────────────────────────────────────────────────────────
 const STORAGE_KEY_PREFIX = "mc_photoAnalyses_";
-const FREE_LIMIT = 3;
-const PRO_LIMIT   = 120;
+const FREE_LIMIT = 5;
+const PRO_LIMIT   = 180;
 
 const MEALS = [
   { id: "matin", l: "Petit-déj." },
@@ -146,7 +146,7 @@ export default function PhotoAnalyse({ onClose, onAdd, premium, setPaywall, push
   const remaining  = Math.max(0, FREE_LIMIT - usedCount);
   const proUsed    = getUsedCount();
   const canAnalyse = premium
-    ? proUsed < PRO_LIMIT          // PRO : limité à 120/mois
+    ? proUsed < PRO_LIMIT          // PRO : limité à 180/mois
     : remaining > 0;               // Gratuit : limité à 3/mois
 
   // ── Sélection photo ──────────────────────────────────────────────────────
