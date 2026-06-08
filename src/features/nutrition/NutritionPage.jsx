@@ -4,7 +4,6 @@ import { Card, Eyebrow, Btn, Inp, G2 } from "../../components/ui/index.jsx";
 import { computeHealthScore } from "./utils/healthScore.js";
 import BilanNutrition from "./BilanNutrition.jsx";
 import BilanArchive from "./BilanArchive.jsx";
-import { useBiWeeklyBilan } from "./components/useBiWeeklyBilan.js";
 import BarcodeScanner from "./BarcodeScanner.jsx";
 import PhotoAnalyse from "./PhotoAnalyse.jsx";
 
@@ -126,10 +125,6 @@ export default function Nutrition(props){
   const [showCamera, setShowCamera] = useState(false);
   const [fruitsV, setFruitsV] = useState({ fruits:0, legumes:0 }); // portions F&V du jour
   const [showArchive, setShowArchive] = useState(false);
-
-  // Bilan bi-hebdomadaire automatique (dimanche 9h)
-  const repasHistory = []; // TODO: brancher le vrai historique multi-jours
-  const { bilans } = useBiWeeklyBilan({ repasHistory, calObj, pObj, gObj, lObj });
 
   const tot     = totR;
   const all     = [...FOODS,...myFoods];
@@ -254,7 +249,7 @@ export default function Nutrition(props){
         {nView==="bilan"&&premium&&showArchive&&(
           <BilanArchive
             onBack={()=>setShowArchive(false)}
-            bilans={bilans}
+            bilans={[]}
             onOpenBilan={(b)=>console.log("bilan archivé:",b)}
           />
         )}
