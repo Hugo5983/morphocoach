@@ -28,8 +28,8 @@ export function BottomNav({ tab, setTab }) {
       backdropFilter:"blur(24px)", WebkitBackdropFilter:"blur(24px)",
       borderTop:`1px solid ${C.bd}`,
       display:"flex", alignItems:"center", zIndex:100,
-      padding:"8px 4px",
-      paddingBottom:"calc(10px + env(safe-area-inset-bottom, 0px))",
+      padding:"6px 4px 0",
+      paddingBottom:"calc(8px + env(safe-area-inset-bottom, 0px))",
     }}>
       {ITEMS.map((t) => {
         const on = tab === t.id;
