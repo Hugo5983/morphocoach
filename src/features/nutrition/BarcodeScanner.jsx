@@ -7,21 +7,13 @@ import { FONT } from "../../data/constants.js";
 export default function BarcodeScanner({ onDetected, onClose }) {
   const videoRef    = useRef(null);
   const readerRef   = useRef(null);
-  const manualRef   = useRef(null);                 // ref directe sur l'input manuel
-  const lastCodeRef = useRef("");                   // ✅ ref au lieu de state (closure-safe)
-  const detectedRef = useRef(false);                // évite plusieurs callbacks après détection
-  const onDetectedRef = useRef(onDetected);         // toujours pointer vers le dernier callback
-
   const [status,  setStatus]  = useState("init"); // init | scanning | error | found
   const [errMsg,  setErrMsg]  = useState("");
+  const [lastCode,setLastCode]= useState("");
   const [flash,   setFlash]   = useState(false);
-
-  // Garde onDetectedRef à jour sans recréer l'effet caméra
-  useEffect(() => { onDetectedRef.current = onDetected; }, [onDetected]);
 
   useEffect(() => {
     let controls = null;
-    let cancelled = false;
     const reader  = new BrowserMultiFormatReader();
     readerRef.current = reader;
 
@@ -32,26 +24,21 @@ export default function BarcodeScanner({ onDetected, onClose }) {
           undefined, // utilise la caméra arrière par défaut
           videoRef.current,
           (result, err) => {
-            if (cancelled || detectedRef.current) return;
             if (result) {
               const code = result.getText();
-              // ✅ lastCodeRef.current est toujours à jour (pas de stale closure)
-              if (code === lastCodeRef.current) return;
-              lastCodeRef.current = code;
-              detectedRef.current = true;          // stop further callbacks
+              if (code === lastCode) return; // éviter les doublons rapides
+              setLastCode(code);
               setFlash(true);
               setTimeout(() => setFlash(false), 300);
               setStatus("found");
-              onDetectedRef.current?.(code);
+              onDetected(code);
             }
             if (err && !(err instanceof NotFoundException)) {
-              // NotFoundException = "pas de code détecté sur cette frame" — normal
               console.warn("Scan err:", err);
             }
           }
         );
       } catch (e) {
-        if (cancelled) return;
         console.error("Caméra:", e);
         if (e.name === "NotAllowedError") {
           setErrMsg("Accès caméra refusé. Autorisez l'accès dans les paramètres du navigateur.");
@@ -67,26 +54,10 @@ export default function BarcodeScanner({ onDetected, onClose }) {
     start();
 
     return () => {
-      cancelled = true;
       try { controls?.stop(); } catch {}
-      // Stop tous les MediaStreamTracks restants (cleanup défensif)
-      try {
-        const stream = videoRef.current?.srcObject;
-        if (stream && typeof stream.getTracks === "function") {
-          stream.getTracks().forEach(t => { try { t.stop(); } catch {} });
-        }
-      } catch {}
-      try { BrowserMultiFormatReader.releaseAllStreams?.(); } catch {}
+      try { BrowserMultiFormatReader.releaseAllStreams(); } catch {}
     };
   }, []);
-
-  // Saisie manuelle — handler unifié, plus de DOM walk fragile
-  const submitManualCode = () => {
-    const val = manualRef.current?.value?.trim() || "";
-    if (val.length >= 8) {
-      onDetectedRef.current?.(val);
-    }
-  };
 
   return (
     <div style={{
@@ -99,17 +70,17 @@ export default function BarcodeScanner({ onDetected, onClose }) {
         display:"flex", alignItems:"center", justifyContent:"space-between",
         padding:"16px 20px",
         background:"rgba(11,18,32,0.90)",
-        borderBottom:"1px solid rgba(255,255,255,0.08)",
+        borderBottom:"1px solid rgba(0,0,0,0.06)",
       }}>
-        <div style={{ fontSize:15, fontWeight:700, color:"#F2F4F7", fontFamily:FONT }}>
+        <div style={{ fontSize:15, fontWeight:700, color:"${C.text}", fontFamily:FONT }}>
           Scanner un produit
         </div>
-        <button onClick={onClose} aria-label="Fermer" style={{
+        <button onClick={onClose} style={{
           width:34, height:34, borderRadius:10,
-          background:"rgba(255,255,255,0.08)",
-          border:"1px solid rgba(255,255,255,0.12)",
+          background:"rgba(0,0,0,0.06)",
+          border:"1px solid rgba(0,0,0,0.08)",
           display:"grid", placeItems:"center", cursor:"pointer",
-          color:"#F2F4F7", fontSize:18,
+          color:"${C.text}", fontSize:18,
         }}>×</button>
       </div>
 
@@ -117,8 +88,6 @@ export default function BarcodeScanner({ onDetected, onClose }) {
       <div style={{ position:"relative", flex:1, overflow:"hidden" }}>
         <video
           ref={videoRef}
-          playsInline
-          muted
           style={{
             width:"100%", height:"100%",
             objectFit:"cover",
@@ -143,12 +112,15 @@ export default function BarcodeScanner({ onDetected, onClose }) {
             display:"flex", alignItems:"center", justifyContent:"center",
             pointerEvents:"none",
           }}>
+            {/* Fond semi-transparent autour du viseur */}
             <div style={{ position:"absolute", inset:0, background:"rgba(0,0,0,0.35)" }}/>
+            {/* Rectangle viseur */}
             <div style={{
               position:"relative",
               width:260, height:140,
               borderRadius:12,
             }}>
+              {/* Découpe transparente */}
               <div style={{
                 position:"absolute", inset:0,
                 background:"transparent",
@@ -156,6 +128,7 @@ export default function BarcodeScanner({ onDetected, onClose }) {
                 borderRadius:12,
                 border:"2px solid rgba(59,130,246,0.80)",
               }}/>
+              {/* Coins */}
               {[
                 { top:0,left:0,borderTop:"3px solid #3B82F6",borderLeft:"3px solid #3B82F6",borderRadius:"10px 0 0 0" },
                 { top:0,right:0,borderTop:"3px solid #3B82F6",borderRight:"3px solid #3B82F6",borderRadius:"0 10px 0 0" },
@@ -164,6 +137,7 @@ export default function BarcodeScanner({ onDetected, onClose }) {
               ].map((s,i) => (
                 <div key={i} style={{ position:"absolute", width:24, height:24, ...s }}/>
               ))}
+              {/* Ligne de scan animée */}
               <div style={{
                 position:"absolute", left:8, right:8, height:2,
                 background:"linear-gradient(90deg,transparent,#3B82F6,transparent)",
@@ -247,7 +221,7 @@ export default function BarcodeScanner({ onDetected, onClose }) {
         <div style={{
           padding:"16px 20px 32px",
           background:"rgba(11,18,32,0.95)",
-          borderTop:"1px solid rgba(255,255,255,0.08)",
+          borderTop:"1px solid rgba(0,0,0,0.06)",
         }}>
           <div style={{ fontSize:11, color:"rgba(255,255,255,0.40)", fontFamily:FONT,
             textAlign:"center", marginBottom:10 }}>
@@ -255,20 +229,22 @@ export default function BarcodeScanner({ onDetected, onClose }) {
           </div>
           <div style={{ display:"flex", gap:8 }}>
             <input
-              ref={manualRef}
               type="text" inputMode="numeric"
               placeholder="Ex: 3017620422003"
-              onKeyDown={e => { if (e.key === "Enter") submitManualCode(); }}
+              onKeyDown={e => { if (e.key === "Enter" && e.target.value.length >= 8) onDetected(e.target.value); }}
               style={{
                 flex:1, padding:"11px 14px",
-                background:"rgba(255,255,255,0.08)",
-                border:"1px solid rgba(255,255,255,0.12)",
-                borderRadius:12, color:"#F2F4F7",
+                background:"rgba(0,0,0,0.06)",
+                border:"1px solid rgba(0,0,0,0.08)",
+                borderRadius:12, color:"${C.text}",
                 fontSize:14, fontFamily:FONT, outline:"none",
               }}
             />
             <button
-              onClick={submitManualCode}
+              onClick={e => {
+                const inp = e.target.closest("div").querySelector("input");
+                if (inp.value.length >= 8) onDetected(inp.value);
+              }}
               style={{
                 padding:"11px 16px", background:"#3B82F6",
                 border:"none", borderRadius:12, color:"#fff",
