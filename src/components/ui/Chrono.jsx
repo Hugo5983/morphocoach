@@ -70,7 +70,7 @@ export function Chrono({onClose,initSec=90}){
         {/* Mode switch */}
         <div style={{display:"flex",background:"rgba(59,130,246,0.08)",borderRadius:10,padding:3,gap:3}}>
           {["countdown","stopwatch"].map(m=>(
-            <button key={m} onClick={()=>{setMode(m);setLeft(total);setElapsed(0);setRun(false);setVibrated(false);}} style={{padding:"5px 8px",borderRadius:7,border:"none",background:mode===m?"#111827":"transparent",color:mode===m?"#4D8BFF":"rgba(242,244,247,0.50)",cursor:"pointer",fontSize:10,fontWeight:600,transition:"all .15s"}}>
+            <button key={m} onClick={()=>{setMode(m);setLeft(total);setElapsed(0);setRun(false);setVibrated(false);}} style={{padding:"5px 8px",borderRadius:7,border:"none",background:mode===m?"#FFFFFF":"transparent",color:mode===m?"#4D8BFF":"#374151",cursor:"pointer",fontSize:10,fontWeight:600,transition:"all .15s"}}>
               {m==="countdown"?"⏱":"⏲"}
             </button>
           ))}
@@ -116,7 +116,7 @@ export function Chrono({onClose,initSec=90}){
                 <div style={{fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",fontSize:46,fontWeight:200,color:timeColor,letterSpacing:-2,lineHeight:1,transition:"color .3s"}}>
                   {mode==="countdown"?fmt(left):fmt(elapsed)}
                 </div>
-                <div style={{fontSize:10,color:"rgba(242,244,247,0.50)",fontWeight:500,letterSpacing:"1px",marginTop:2}}>
+                <div style={{fontSize:10,color:"#374151",fontWeight:500,letterSpacing:"1px",marginTop:2}}>
                   {mode==="countdown"
                     ?left===total?"PRÊT":run?"REPOS...":"PAUSE"
                     :run?"EN COURS...":"PAUSE"}
@@ -132,10 +132,10 @@ export function Chrono({onClose,initSec=90}){
             {PRESETS.map(p=>(
               <button key={p.s} onClick={()=>handlePreset(p.s)} style={{
                 padding:"8px 14px",
-                background:total===p.s&&!done?"#4D8BFF":"#111827",
+                background:total===p.s&&!done?"#4D8BFF":"#FFFFFF",
                 border:`1px solid ${total===p.s&&!done?"#4D8BFF":"rgba(0,0,0,0.06)"}`,
                 borderRadius:16,
-                color:total===p.s&&!done?"#111827":"rgba(242,244,247,0.50)",
+                color:total===p.s&&!done?"#FFFFFF":"#374151",
                 cursor:"pointer",fontSize:12,fontWeight:600,
                 fontFamily:"'Inter',sans-serif",
                 transition:"all .15s",
@@ -149,7 +149,7 @@ export function Chrono({onClose,initSec=90}){
         <div style={{display:"flex",gap:16,alignItems:"center",marginBottom:24}}>
           {/* Reset */}
           <button onClick={()=>{setLeft(total);setElapsed(0);setRun(false);setVibrated(false);}} style={{width:52,height:52,borderRadius:"50%",background:C.s1,border:"0.5px solid rgba(0,0,0,0.06)",display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",boxShadow:"0 2px 8px rgba(0,0,0,0.06)"}}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(242,244,247,0.50)" strokeWidth="2" strokeLinecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2" strokeLinecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.8"/></svg>
           </button>
 
           {/* Play/Pause - big */}
@@ -175,7 +175,7 @@ export function Chrono({onClose,initSec=90}){
           {/* +30s */}
           <button onClick={()=>{if(mode==="countdown"){setLeft(l=>l+30);setTotal(t=>t+30);}}} style={{width:52,height:52,borderRadius:"50%",background:C.s1,border:"0.5px solid rgba(0,0,0,0.06)",display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",boxShadow:"0 2px 8px rgba(0,0,0,0.06)",flexDirection:"column",gap:1}}>
             <span style={{fontSize:10,fontWeight:700,color:C.accent,lineHeight:1}}>+30</span>
-            <span style={{fontSize:8,color:"rgba(242,244,247,0.50)"}}>sec</span>
+            <span style={{fontSize:8,color:"#374151"}}>sec</span>
           </button>
         </div>
 
@@ -186,8 +186,8 @@ export function Chrono({onClose,initSec=90}){
               <div style={{height:"100%",width:`${100-pct}%`,background:arcColor,borderRadius:2,transition:"width .9s cubic-bezier(.4,0,.2,1)"}}/>
             </div>
             <div style={{display:"flex",justifyContent:"space-between",marginTop:4}}>
-              <span style={{fontSize:9,color:"rgba(242,244,247,0.50)"}}>0s</span>
-              <span style={{fontSize:9,color:"rgba(242,244,247,0.50)"}}>{fmt(total)}</span>
+              <span style={{fontSize:9,color:"#374151"}}>0s</span>
+              <span style={{fontSize:9,color:"#374151"}}>{fmt(total)}</span>
             </div>
           </div>
         )}

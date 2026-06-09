@@ -5,8 +5,8 @@
 import { useMemo } from "react";
 import { C, FONT, SERIF, NUM } from "../../data/constants.js";
 
-const BG   = "#080E1A";
-const S1   = C.s1 || "#111827";
+const BG   = "#F6F8FB";
+const S1   = C.s1 || "#FFFFFF";
 const BD   = C.bd || "rgba(0,0,0,0.06)";
 const TEXT = C.text || "${C.text}";
 const MID  = C.mid || "${C.mid}";

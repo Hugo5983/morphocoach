@@ -305,7 +305,7 @@ export default function PhotoAnalyse({ onClose, onAdd, premium, setPaywall, push
         <div style={{ fontFamily: SERIF, fontSize: 22, color: C.text, letterSpacing: -0.5, lineHeight: 1.2, marginBottom: 6 }}>
           Analyse <span style={{ fontStyle: "italic" }}>photo</span>
         </div>
-        <div style={{ fontSize: 12, color: "rgba(242,244,247,0.45)", fontFamily: FONT }}>
+        <div style={{ fontSize: 12, color: "#374151", fontFamily: FONT }}>
           Prends en photo ton repas pour estimer les macros
         </div>
       </div>
@@ -362,7 +362,7 @@ export default function PhotoAnalyse({ onClose, onAdd, premium, setPaywall, push
                   <div style={{ fontSize: 14, fontWeight: 700, color: C.text, fontFamily: FONT, marginBottom: 4 }}>
                     Prendre une photo
                   </div>
-                  <div style={{ fontSize: 11, color: "rgba(242,244,247,0.40)", fontFamily: FONT }}>
+                  <div style={{ fontSize: 11, color: "#374151", fontFamily: FONT }}>
                     Ou choisir depuis la galerie
                   </div>
                 </div>
@@ -405,7 +405,7 @@ export default function PhotoAnalyse({ onClose, onAdd, premium, setPaywall, push
                   cursor: preview && step !== "loading" ? "pointer" : "not-allowed",
                   display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
                   fontFamily: FONT, fontSize: 14, fontWeight: 700,
-                  color: preview && step !== "loading" ? "#fff" : "rgba(242,244,247,0.25)",
+                  color: preview && step !== "loading" ? "#fff" : "#6B7280",
                   boxShadow: preview && step !== "loading" ? "0 4px 16px rgba(59,130,246,0.35)" : "none",
                   transition: "all 0.2s",
                 }}
@@ -475,7 +475,7 @@ export default function PhotoAnalyse({ onClose, onAdd, premium, setPaywall, push
               {/* Description */}
               {res.description && (
                 <div style={{
-                  fontSize: 12, color: "rgba(242,244,247,0.45)", fontFamily: FONT,
+                  fontSize: 12, color: "#374151", fontFamily: FONT,
                   lineHeight: 1.5, marginBottom: 14,
                 }}>{res.description}</div>
               )}
@@ -497,7 +497,7 @@ export default function PhotoAnalyse({ onClose, onAdd, premium, setPaywall, push
                       fontFamily: FONT, letterSpacing: -0.5, lineHeight: 1,
                     }}>{Math.round(m.v)}</div>
                     <div style={{ fontSize: 9, color: "${C.dim}", marginTop: 3, fontFamily: FONT }}>{m.u}</div>
-                    <div style={{ fontSize: 9, color: "rgba(242,244,247,0.25)", fontFamily: FONT }}>{m.l}</div>
+                    <div style={{ fontSize: 9, color: "#6B7280", fontFamily: FONT }}>{m.l}</div>
                   </div>
                 ))}
               </div>
@@ -533,7 +533,7 @@ export default function PhotoAnalyse({ onClose, onAdd, premium, setPaywall, push
                     border: `1px solid ${repasChoix === m.id ? "rgba(59,130,246,0.40)" : "rgba(0,0,0,0.06)"}`,
                     borderRadius: 10, cursor: "pointer",
                     fontSize: 10.5, fontWeight: 700,
-                    color: repasChoix === m.id ? "#93C5FD" : "rgba(242,244,247,0.45)",
+                    color: repasChoix === m.id ? "#93C5FD" : "#374151",
                     fontFamily: FONT,
                   }}>{m.l}</button>
                 ))}
@@ -557,7 +557,7 @@ export default function PhotoAnalyse({ onClose, onAdd, premium, setPaywall, push
             <button onClick={() => { setStep("upload"); setResult(null); setPreview(null); setBase64(null); }} style={{
               width: "100%", padding: "12px",
               background: "transparent", border: `1px solid ${C.bd}`,
-              borderRadius: 14, color: "rgba(242,244,247,0.40)",
+              borderRadius: 14, color: "#374151",
               fontSize: 13, fontWeight: 500, fontFamily: FONT, cursor: "pointer",
             }}>
               Analyser une autre photo

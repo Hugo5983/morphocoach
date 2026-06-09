@@ -9,9 +9,9 @@ const BL   = C.accent || "#3B82F6";
 const BLD  = C.accentDk || "#2563EB";
 const BLS  = "rgba(59,130,246,0.12)";
 const BLBR = "rgba(59,130,246,0.35)";
-const BG   = "#080E1A";
-const S1   = C.s1 || "#111827";
-const S2   = C.s2 || "#1A2336";
+const BG   = "#F6F8FB";
+const S1   = C.s1 || "#FFFFFF";
+const S2   = C.s2 || "#F0F2F7";
 const BD   = C.bd  || "rgba(0,0,0,0.06)";
 const BDHI = C.bdHi || "rgba(0,0,0,0.08)";
 const TEXT = C.text || "${C.text}";
@@ -700,7 +700,7 @@ export default function Creer(props) {
               </div>
 
               {s.ex.length===0
-                ? <div style={{borderRadius:18,padding:"20px 16px",background:"rgba(255,255,255,0.02)",border:`1px dashed ${BD}`}}>
+                ? <div style={{borderRadius:18,padding:"20px 16px",background:"rgba(0,0,0,0.01)",border:`1px dashed ${BD}`}}>
                     {/* Ghost rows — exercices à venir */}
                     {[{w:"65%",col:"#4D8BFF"},{w:"50%",col:"#5FE0A5"},{w:"72%",col:"#B69DFF"}].map((g,i)=>(
                       <div key={i} style={{display:"flex",alignItems:"center",gap:12,padding:"10px 0",

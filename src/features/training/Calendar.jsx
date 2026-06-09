@@ -125,7 +125,7 @@ export default function Calendar(props) {
         <div style={{fontFamily:"'DM Serif Display','Georgia',serif",fontSize:34,fontWeight:400,letterSpacing:-1.2,color:'#3B82F6',lineHeight:1.05,fontStyle:'italic',marginBottom:12}}>
           en clair.
         </div>
-        <div style={{fontSize:12.5,color:'rgba(242,244,247,0.45)',lineHeight:1.6,fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",fontWeight:400}}>
+        <div style={{fontSize:12.5,color:'#374151',lineHeight:1.6,fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",fontWeight:400}}>
           Densité d'effort, séances planifiées, jours de récupération.
         </div>
       </div>

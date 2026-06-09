@@ -39,7 +39,7 @@ export function Paywall({ onSubscribe, onClose }) {
           width:30, height:30, borderRadius:8,
           background:"rgba(0,0,0,0.05)",
           border:`1px solid ${C.bd}`,
-          color:"rgba(242,244,247,0.45)", fontSize:18,
+          color:"#374151", fontSize:18,
           display:"grid", placeItems:"center", cursor:"pointer",
         }}>×</button>
 
@@ -59,7 +59,7 @@ export function Paywall({ onSubscribe, onClose }) {
             Entraîne-toi smarter,<br/>
             <span style={{ fontStyle:"italic" }}>progresse faster</span>
           </div>
-          <div style={{ fontSize:12, color:"rgba(242,244,247,0.50)", fontFamily:FONT, lineHeight:1.55 }}>
+          <div style={{ fontSize:12, color:"#374151", fontFamily:FONT, lineHeight:1.55 }}>
             Un programme conçu pour ton corps,<br/>pas pour tout le monde.
           </div>
         </div>
@@ -75,7 +75,7 @@ export function Paywall({ onSubscribe, onClose }) {
               <span style={{ fontSize:18, flexShrink:0 }}>{f.icon}</span>
               <div style={{ flex:1 }}>
                 <div style={{ fontSize:13, fontWeight:600, color:C.text, fontFamily:FONT }}>{f.label}</div>
-                <div style={{ fontSize:11, color:"rgba(242,244,247,0.45)", marginTop:1, fontFamily:FONT }}>{f.sub}</div>
+                <div style={{ fontSize:11, color:"#374151", marginTop:1, fontFamily:FONT }}>{f.sub}</div>
               </div>
               <div style={{
                 width:20, height:20, borderRadius:6, flexShrink:0,
@@ -92,7 +92,7 @@ export function Paywall({ onSubscribe, onClose }) {
         <div style={{ textAlign:"center", marginBottom:16 }}>
           <div style={{ display:"flex", alignItems:"baseline", justifyContent:"center", gap:6 }}>
             <span style={{ fontFamily:SERIF, fontSize:44, color:C.text, letterSpacing:-1.5, lineHeight:1 }}>19.99€</span>
-            <span style={{ fontSize:13, color:"rgba(242,244,247,0.45)", fontFamily:FONT }}>/cycle</span>
+            <span style={{ fontSize:13, color:"#374151", fontFamily:FONT }}>/cycle</span>
           </div>
           <div style={{ fontSize:11, color:"${C.dim}", fontFamily:FONT, marginTop:4 }}>
             Sans engagement · Résiliable à tout moment
@@ -120,7 +120,7 @@ export function Paywall({ onSubscribe, onClose }) {
         <button onClick={onClose} style={{
           width:"100%", padding:"12px 16px",
           background:"transparent", border:`1px solid ${C.bd}`,
-          borderRadius:14, color:"rgba(242,244,247,0.40)",
+          borderRadius:14, color:"#374151",
           fontSize:13, fontWeight:500, fontFamily:FONT, cursor:"pointer",
         }}>
           Continuer en gratuit

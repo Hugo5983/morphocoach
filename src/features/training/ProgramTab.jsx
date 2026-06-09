@@ -69,7 +69,7 @@ function MesocycleChart({ prog, semC, checkedEx, cycleStart }) {
           return (
             <div key={i} style={{flex:1,textAlign:"center"}}>
               <div style={{fontSize:isCur?12:11,fontWeight:isCur?800:600,color:col,fontFamily:DISP_F}}>{w.lbl}</div>
-              <div style={{fontSize:8,color:"rgba(242,244,247,0.22)",fontFamily:DISP_F,marginTop:1}}>{w.type}</div>
+              <div style={{fontSize:8,color:"#6B7280",fontFamily:DISP_F,marginTop:1}}>{w.type}</div>
             </div>
           );
         })}
@@ -229,7 +229,7 @@ function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, curVol, currentWe
               const col = w.type==="Déload"?"#F87171":w.type==="Pic"?"#F59E0B":"#3B82F6";
               return <div key={i} style={{flex:1,display:"flex",flexDirection:"column",justifyContent:"flex-end",alignItems:"center",gap:4,zIndex:2}}>
                 <div style={{width:"100%",height:h,borderRadius:"4px 4px 2px 2px",background:isCur?`linear-gradient(180deg,${col},${col}AA)`:col+"55",boxShadow:isCur?`0 4px 12px ${col}50`:"none"}}/>
-                <div style={{fontSize:10,fontWeight:700,color:isCur?col:"rgba(242,244,247,0.3)",fontFamily:DISP_F}}>{w.lbl}</div>
+                <div style={{fontSize:10,fontWeight:700,color:isCur?col:"#9CA3AF",fontFamily:DISP_F}}>{w.lbl}</div>
               </div>;
             })}
           </div>
@@ -284,14 +284,14 @@ function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, curVol, currentWe
                 </svg>
                 <div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center"}}>
                   <div style={{fontSize:26,fontWeight:800,color:col,lineHeight:1}}>{score??"-"}</div>
-                  <div style={{fontSize:8,color:"rgba(242,244,247,0.3)",letterSpacing:1,textTransform:"uppercase",marginTop:2}}>/ 100</div>
+                  <div style={{fontSize:8,color:"#9CA3AF",letterSpacing:1,textTransform:"uppercase",marginTop:2}}>/ 100</div>
                 </div>
               </div>
               {/* Barres */}
               <div style={{flex:1,display:"flex",flexDirection:"column",gap:10}}>
                 {/* Sommeil */}
                 <div style={{display:"flex",alignItems:"center",gap:9}}>
-                  <span style={{fontSize:11,color:"rgba(242,244,247,0.55)",width:76,flexShrink:0,fontFamily:DISP_F}}>Sommeil 7j</span>
+                  <span style={{fontSize:11,color:"#374151",width:76,flexShrink:0,fontFamily:DISP_F}}>Sommeil 7j</span>
                   <div style={{flex:1,height:6,borderRadius:3,background:"rgba(0,0,0,0.05)",overflow:"hidden"}}>
                     <div style={{height:"100%",borderRadius:3,
                       width:sleepPct?`${sleepPct}%`:"0%",
@@ -304,7 +304,7 @@ function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, curVol, currentWe
                 </div>
                 {/* Mobilité */}
                 <div style={{display:"flex",alignItems:"center",gap:9}}>
-                  <span style={{fontSize:11,color:"rgba(242,244,247,0.55)",width:76,flexShrink:0,fontFamily:DISP_F}}>Mobilité 7j</span>
+                  <span style={{fontSize:11,color:"#374151",width:76,flexShrink:0,fontFamily:DISP_F}}>Mobilité 7j</span>
                   <div style={{flex:1,height:6,borderRadius:3,background:"rgba(0,0,0,0.05)",overflow:"hidden"}}>
                     <div style={{height:"100%",borderRadius:3,
                       width:`${mobPct}%`,
@@ -329,7 +329,7 @@ function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, curVol, currentWe
               {score!==null && score>=60 && score<75 && reco("🎯","Fatigue modérée. Maintiens la charge mais dors plus. Cible : "+sTgt+"h/nuit.")}
               {score!==null && score>=75 && reco("✅","Bonne récupération. Tu peux progresser en charge cette semaine.")}
               {!hasData && reco("💡","Log ton sommeil et ta mobilité depuis le jour de récup pour voir ton score réel.")}
-              <div style={{marginTop:10,fontSize:11,color:"rgba(242,244,247,0.4)",fontStyle:"italic"}}>
+              <div style={{marginTop:10,fontSize:11,color:"#6B7280",fontStyle:"italic"}}>
                 Courbatures et RPE seront ajoutés avec le check-in hebdo.
               </div>
             </>)}
@@ -363,8 +363,8 @@ function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, curVol, currentWe
             </div>
             <div style={{position:"relative",height:30,margin:"16px 0 16px"}}>
               <div style={{position:"absolute",bottom:8,left:0,right:0,height:8,borderRadius:4,background:"linear-gradient(90deg,#F87171 0%,#F59E0B 16%,#34D399 32%,#34D399 64%,#F59E0B 80%,#F87171 100%)"}}/>
-              {jaugePos!==null && <div style={{position:"absolute",bottom:2,left:`${jaugePos}%`,width:3,height:20,background:"#fff",borderRadius:2,boxShadow:"0 0 6px rgba(255,255,255,0.5)",transform:"translateX(-50%)"}}/>}
-              <div style={{position:"absolute",bottom:-12,left:0,right:0,display:"flex",justifyContent:"space-between",fontSize:8,color:"rgba(242,244,247,0.3)"}}><span>0.5</span><span>0.8</span><span style={{color:"#34D399"}}>1.0</span><span>1.3</span><span>1.5+</span></div>
+              {jaugePos!==null && <div style={{position:"absolute",bottom:2,left:`${jaugePos}%`,width:3,height:20,background:"#fff",borderRadius:2,boxShadow:"0 0 6px rgba(0,0,0,0.25)",transform:"translateX(-50%)"}}/>}
+              <div style={{position:"absolute",bottom:-12,left:0,right:0,display:"flex",justifyContent:"space-between",fontSize:8,color:"#9CA3AF"}}><span>0.5</span><span>0.8</span><span style={{color:"#34D399"}}>1.0</span><span>1.3</span><span>1.5+</span></div>
             </div>
             {hasRatio && (
               <div style={{display:"flex",gap:12,marginTop:16}}>
@@ -499,17 +499,17 @@ function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, curVol, currentWe
                     const isCur  = isReal && k === realWeeks.reduceRight((acc,w,i)=>acc===-1&&w!==null?i:acc,-1);
                     return (
                       <div key={k} style={{flex:1,textAlign:"center"}}>
-                        <div style={{fontSize:12,fontWeight:isCur?800:700,color:isReal?(isCur?"#60A5FA":"#60A5FA"):"rgba(242,244,247,0.20)"}}>
+                        <div style={{fontSize:12,fontWeight:isCur?800:700,color:isReal?(isCur?"#60A5FA":"#60A5FA"):"#6B7280"}}>
                           {v?<>{v}<span style={{fontSize:8,opacity:.6}}>kg</span></>:"—"}
                         </div>
-                        <div style={{fontSize:8,color:"rgba(242,244,247,0.3)",marginTop:1}}>{WEEKS[k]?.lbl}</div>
+                        <div style={{fontSize:8,color:"#9CA3AF",marginTop:1}}>{WEEKS[k]?.lbl}</div>
                       </div>
                     );
                   })}
                 </div>
               </>
             ) : (
-              <div style={{marginTop:14,padding:"14px",background:"rgba(59,130,246,0.05)",border:"1px dashed rgba(59,130,246,0.2)",borderRadius:12,fontSize:12,color:"rgba(242,244,247,0.40)",textAlign:"center",fontFamily:DISP_F}}>
+              <div style={{marginTop:14,padding:"14px",background:"rgba(59,130,246,0.05)",border:"1px dashed rgba(59,130,246,0.2)",borderRadius:12,fontSize:12,color:"#374151",textAlign:"center",fontFamily:DISP_F}}>
                 Démarre une séance Focus Mode et logge tes charges pour activer la progression
               </div>
             )}
@@ -624,13 +624,13 @@ function ProgrammeView(props) {
             <div style={{fontFamily:DISP_F,fontSize:16,fontWeight:500,marginBottom:8,color:"${C.text}"}}>
               {confirmDel.type==="prog" ? "Supprimer ce programme ?" : "Supprimer cette séance ?"}
             </div>
-            <div style={{fontSize:12,color:"rgba(242,244,247,0.50)",marginBottom:20,lineHeight:1.5}}>
+            <div style={{fontSize:12,color:"#374151",marginBottom:20,lineHeight:1.5}}>
               {confirmDel.type==="prog"
                 ? "Toutes les séances seront perdues. Cette action est irréversible."
                 : "La séance et tous ses exercices seront supprimés définitivement."}
             </div>
             <div style={{display:"flex",gap:10}}>
-              <button onClick={()=>setConfirmDel(null)} style={{flex:1,padding:"10px",background:C.s2,border:"none",borderRadius:9,cursor:"pointer",fontSize:13,fontWeight:500,color:"rgba(242,244,247,0.50)",fontFamily:DISP_F}}>Annuler</button>
+              <button onClick={()=>setConfirmDel(null)} style={{flex:1,padding:"10px",background:C.s2,border:"none",borderRadius:9,cursor:"pointer",fontSize:13,fontWeight:500,color:"#374151",fontFamily:DISP_F}}>Annuler</button>
               <button onClick={()=>confirmDel.type==="prog" ? deleteProgAtIdx(confirmDel.pIdx) : deleteJourAtIdx(confirmDel.pIdx, confirmDel.jIdx)} style={{flex:1,padding:"10px",background:"#FF7A6B",border:"none",borderRadius:9,cursor:"pointer",fontSize:13,fontWeight:600,color:"#141A2E",fontFamily:DISP_F}}>Supprimer</button>
             </div>
           </div>
@@ -672,14 +672,14 @@ function ProgrammeView(props) {
                 </div>
                 <div style={{flex:1,minWidth:0}}>
                   <div style={{fontSize:15,fontWeight:700,color:"${C.text}",letterSpacing:-0.2,fontFamily:DISP_F}}>{j.nom}</div>
-                  <div style={{display:"flex",alignItems:"center",gap:6,marginTop:3,fontSize:11.5,color:"rgba(242,244,247,0.55)",fontFamily:DISP_F}}>
+                  <div style={{display:"flex",alignItems:"center",gap:6,marginTop:3,fontSize:11.5,color:"#374151",fontFamily:DISP_F}}>
                     <span style={{width:6,height:6,borderRadius:"50%",background:int.c,boxShadow:`0 0 5px ${int.c}60`,flexShrink:0}}/>
                     {int.l} · {exos.length} exercice{exos.length!==1?"s":""}{dur?` · ~${dur} min`:""}
                   </div>
                 </div>
                 <button onClick={e=>{e.stopPropagation();setSelectedJour({jIdx});}}
                   style={{width:34,height:34,borderRadius:10,background:"rgba(59,130,246,0.08)",border:"1px solid rgba(59,130,246,0.22)",color:"#60A5FA",cursor:"pointer",display:"grid",placeItems:"center",flexShrink:0,fontSize:14}}>✏️</button>
-                <div style={{color:"rgba(242,244,247,0.40)",fontSize:18,transition:"transform .2s",transform:isOpen?"rotate(180deg)":"rotate(0)",flexShrink:0}}>⌄</div>
+                <div style={{color:"#374151",fontSize:18,transition:"transform .2s",transform:isOpen?"rotate(180deg)":"rotate(0)",flexShrink:0}}>⌄</div>
               </div>
               {isOpen && (
                 <div style={{borderTop:`1px solid ${C.bd}`,padding:"8px 14px 14px"}}>
@@ -692,7 +692,7 @@ function ProgrammeView(props) {
                           <div style={{fontSize:13.5,fontWeight:700,color:"${C.text}",fontFamily:DISP_F,letterSpacing:-0.1}}>{ex.nom}</div>
                           <div style={{fontSize:9,fontWeight:800,letterSpacing:"1px",color:"${C.dim}",textTransform:"uppercase",fontFamily:DISP_F,marginTop:2}}>{ex.cat||"Principal"}</div>
                         </div>
-                        <div style={{fontSize:12,fontWeight:600,color:"rgba(242,244,247,0.45)",fontFamily:DISP_F,flexShrink:0,marginTop:2,textAlign:"right",whiteSpace:"nowrap"}}>
+                        <div style={{fontSize:12,fontWeight:600,color:"#374151",fontFamily:DISP_F,flexShrink:0,marginTop:2,textAlign:"right",whiteSpace:"nowrap"}}>
                           {ex.series}×{ex.reps} · {ex.repos}s
                         </div>
                       </div>
@@ -720,7 +720,7 @@ function ProgrammeView(props) {
               <div key={pIdx} style={{display:"flex",alignItems:"center",gap:10,padding:"10px 12px",background:C.s1,border:`1px solid ${C.bd}`,borderRadius:12,marginBottom:6}}>
                 <div style={{flex:1,minWidth:0}}>
                   <div style={{fontSize:13,fontWeight:600,color:"${C.text}",fontFamily:DISP_F}}>{p.titre}</div>
-                  <div style={{fontSize:10.5,color:"rgba(242,244,247,0.40)",marginTop:1}}>{p.jours?.length||0} séances</div>
+                  <div style={{fontSize:10.5,color:"#374151",marginTop:1}}>{p.jours?.length||0} séances</div>
                 </div>
                 <button onClick={()=>{setProg(p);push("✅","Programme activé",p.titre);}} style={{padding:"6px 10px",background:"rgba(52,211,153,0.10)",border:"1px solid rgba(52,211,153,0.25)",borderRadius:8,color:"#34D399",cursor:"pointer",fontSize:10,fontWeight:700,fontFamily:DISP_F}}>Activer</button>
                 <button onClick={()=>setConfirmDel({type:"prog",pIdx})} style={{padding:"6px 8px",background:"rgba(248,113,113,0.07)",border:"1px solid rgba(248,113,113,0.18)",borderRadius:8,color:"#FF7A6B",cursor:"pointer",fontSize:11}}>🗑</button>
@@ -734,7 +734,7 @@ function ProgrammeView(props) {
       {allProgs.length === 0 && !showCreerForm && (
         <div style={{textAlign:"center",padding:"32px 0 16px"}}>
           <div style={{fontFamily:SERIF_F,fontSize:22,fontWeight:400,color:"${C.text}",marginBottom:8}}>Aucun programme</div>
-          <div style={{fontSize:12,color:"rgba(242,244,247,0.45)",lineHeight:1.6,maxWidth:240,margin:"0 auto 24px",fontFamily:DISP_F}}>Génère un programme IA adapté à ta morphologie ou crée-le manuellement.</div>
+          <div style={{fontSize:12,color:"#374151",lineHeight:1.6,maxWidth:240,margin:"0 auto 24px",fontFamily:DISP_F}}>Génère un programme IA adapté à ta morphologie ou crée-le manuellement.</div>
         </div>
       )}
 
@@ -920,7 +920,7 @@ export default function ProgramTab(props){
               </div>
               <div style={{padding:"5px 10px",borderRadius:999,background:`${C.mint}18`,border:`1px solid ${C.mint}40`,color:C.mint,fontSize:10,fontWeight:800,fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",letterSpacing:0.5}}>ÉCONOMIE 40%</div>
             </div>
-            <button className="tap" onClick={()=>setPaywall(true)} style={{marginTop:16,width:"100%",padding:"16px",borderRadius:16,background:`linear-gradient(135deg, ${C.gold}, ${C.amberDk})`,border:"1px solid rgba(255,255,255,0.22)",color:"#1A1308",fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",fontSize:15,fontWeight:700,letterSpacing:0.2,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:8,boxShadow:`0 10px 24px ${C.amberDk}55, inset 0 1px 0 rgba(255,255,255,0.45)`}}>⚡ Commencer maintenant</button>
+            <button className="tap" onClick={()=>setPaywall(true)} style={{marginTop:16,width:"100%",padding:"16px",borderRadius:16,background:`linear-gradient(135deg, ${C.gold}, ${C.amberDk})`,border:"1px solid rgba(0,0,0,0.11)",color:"#1A1308",fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",fontSize:15,fontWeight:700,letterSpacing:0.2,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:8,boxShadow:`0 10px 24px ${C.amberDk}55, inset 0 1px 0 rgba(0,0,0,0.23)`}}>⚡ Commencer maintenant</button>
             <button onClick={()=>setProgView("today")} style={{marginTop:10,width:"100%",padding:"6px",background:"transparent",border:"none",color:C.mid,fontSize:12,fontWeight:600,fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",cursor:"pointer"}}>Continuer en gratuit</button>
           </div>
         </div>

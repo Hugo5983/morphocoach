@@ -30,7 +30,7 @@ function RecipeCard({ r, liked, onLike, onOpen }) {
             display:"grid", placeItems:"center", cursor:"pointer" }}>
           <svg width="13" height="13" viewBox="0 0 24 24"
                fill={liked ? "#F87171" : "none"}
-               stroke={liked ? "#F87171" : "rgba(242,244,247,0.70)"}
+               stroke={liked ? "#F87171" : "#374151"}
                strokeWidth="2" strokeLinecap="round">
             <path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/>
           </svg>
@@ -40,7 +40,7 @@ function RecipeCard({ r, liked, onLike, onOpen }) {
         <div style={{ fontSize:12.5, fontWeight:700, color:"${C.text}",
           lineHeight:1.3, marginBottom:5, fontFamily:FONT }}>{r.nom}</div>
         <div style={{ display:"flex", alignItems:"center", gap:6 }}>
-          <span style={{ fontSize:11, color:"rgba(242,244,247,0.40)",
+          <span style={{ fontSize:11, color:"#374151",
             fontFamily:FONT }}>{r.kcal} kcal</span>
           <span style={{ padding:"1px 6px", borderRadius:4, fontSize:9.5,
             fontWeight:600, fontFamily:FONT, letterSpacing:"0.3px",
@@ -123,7 +123,7 @@ export default function Recipes(props) {
           background:C.s1, border:"1px solid rgba(0,0,0,0.06)",
           display:"grid", placeItems:"center", cursor:"pointer" }}>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-               stroke="rgba(242,244,247,0.55)" strokeWidth="1.8" strokeLinecap="round">
+               stroke="#374151" strokeWidth="1.8" strokeLinecap="round">
             <path d="M19 21l-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
           </svg>
         </button>
@@ -149,7 +149,7 @@ export default function Recipes(props) {
               fontFamily:"'Outfit',sans-serif" }}>
               Nutrition PRO — 6.99€/mois
             </div>
-            <div style={{ fontSize:11.5, color:"rgba(242,244,247,0.50)",
+            <div style={{ fontSize:11.5, color:"#374151",
               marginTop:2, fontFamily:"'Outfit',sans-serif" }}>
               Accès complet à toutes les recettes
             </div>
@@ -181,7 +181,7 @@ export default function Recipes(props) {
           />
           {search && (
             <button onClick={() => setSearch("")} style={{ background:"none",
-              border:"none", cursor:"pointer", color:"rgba(242,244,247,0.40)",
+              border:"none", cursor:"pointer", color:"#374151",
               fontSize:16, lineHeight:1, padding:0 }}>×</button>
           )}
         </div>
@@ -189,7 +189,7 @@ export default function Recipes(props) {
           border:"1px solid rgba(0,0,0,0.06)", borderRadius:12,
           display:"grid", placeItems:"center", cursor:"pointer", flexShrink:0 }}>
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
-               stroke="rgba(242,244,247,0.55)" strokeWidth="2" strokeLinecap="round">
+               stroke="#374151" strokeWidth="2" strokeLinecap="round">
             <path d="M4 6h16M7 12h10M10 18h4"/>
           </svg>
         </button>
@@ -205,7 +205,7 @@ export default function Recipes(props) {
               padding:"6px 14px", borderRadius:20, whiteSpace:"nowrap",
               background: on ? "#3B82F6" : "rgba(0,0,0,0.04)",
               border:`1px solid ${on ? "#3B82F6" : "rgba(0,0,0,0.06)"}`,
-              color: on ? "#fff" : "rgba(242,244,247,0.55)",
+              color: on ? "#fff" : "#374151",
               fontSize:12, fontWeight:600, fontFamily:FONT, cursor:"pointer",
             }}>{f.l}</button>
           );
@@ -233,7 +233,7 @@ export default function Recipes(props) {
                 background:"linear-gradient(to top,rgba(11,18,32,0.88) 0%,transparent 50%)" }}/>
               <div style={{ position:"absolute", bottom:12, left:12, right:44 }}>
                 <div style={{ fontSize:9.5, fontWeight:600, letterSpacing:"1px",
-                  textTransform:"uppercase", color:"rgba(255,255,255,0.65)",
+                  textTransform:"uppercase", color:"rgba(0,0,0,0.33)",
                   fontFamily:FONT, marginBottom:4 }}>Coup de cœur</div>
                 <div style={{ fontSize:16, fontWeight:700, color:"#fff",
                   lineHeight:1.2, fontFamily:FONT }}>{featured.nom}</div>
@@ -245,8 +245,8 @@ export default function Recipes(props) {
                   ].map((t, i) => (
                     <span key={i} style={{ display:"flex", alignItems:"center", gap:8 }}>
                       {i > 0 && <span style={{ width:3, height:3, borderRadius:"50%",
-                        background:"rgba(255,255,255,0.35)", display:"inline-block" }}/>}
-                      <span style={{ fontSize:12, color:"rgba(255,255,255,0.65)",
+                        background:"rgba(0,0,0,0.14)", display:"inline-block" }}/>}
+                      <span style={{ fontSize:12, color:"rgba(0,0,0,0.33)",
                         fontFamily:FONT }}>{t}</span>
                     </span>
                   ))}
@@ -261,7 +261,7 @@ export default function Recipes(props) {
                   display:"grid", placeItems:"center", cursor:"pointer" }}>
                 <svg width="14" height="14" viewBox="0 0 24 24"
                      fill={liked[featured.id] ? "#F87171" : "none"}
-                     stroke={liked[featured.id] ? "#F87171" : "rgba(242,244,247,0.70)"}
+                     stroke={liked[featured.id] ? "#F87171" : "#374151"}
                      strokeWidth="2" strokeLinecap="round">
                   <path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/>
                 </svg>

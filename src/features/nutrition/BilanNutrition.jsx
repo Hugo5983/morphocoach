@@ -12,9 +12,9 @@ import {
   MIN_DAYS_FULL_BILAN, PERIOD_DAYS,
 } from "./components/BilanUtils.jsx";
 
-const BG    = "#080E1A";
-const S1    = C.s1 || "#111827";
-const S2    = C.s2 || "#1A2336";
+const BG    = "#F6F8FB";
+const S1    = C.s1 || "#FFFFFF";
+const S2    = C.s2 || "#F0F2F7";
 const BD    = C.bd || "rgba(0,0,0,0.06)";
 const TEXT  = C.text || "${C.text}";
 const MID   = C.mid || "${C.mid}";
@@ -328,10 +328,10 @@ export default function BilanNutrition({
           <div style={{ width:44, height:44, borderRadius:13,
             background:"linear-gradient(145deg, #34D399, #2DA67D)",
             display:"grid", placeItems:"center",
-            boxShadow:"0 4px 12px rgba(52,211,153,0.30), inset 0 1px 0 rgba(255,255,255,0.3)",
+            boxShadow:"0 4px 12px rgba(52,211,153,0.30), inset 0 1px 0 rgba(0,0,0,0.15)",
             position:"relative", overflow:"hidden", flexShrink:0 }}>
             <div style={{ position:"absolute", inset:0,
-              background:"radial-gradient(110% 60% at 30% 10%, rgba(255,255,255,0.35), transparent 60%)" }}/>
+              background:"radial-gradient(110% 60% at 30% 10%, rgba(0,0,0,0.14), transparent 60%)" }}/>
             <I name="drop" size={20} color="#0B1F18" stroke={2}/>
           </div>
           <div style={{ flex:1 }}>

@@ -147,7 +147,7 @@ export default function BarcodeScanner({ onDetected, onClose }) {
             </div>
             <div style={{
               position:"absolute", bottom:80, left:0, right:0,
-              textAlign:"center", fontSize:13, color:"rgba(255,255,255,0.75)",
+              textAlign:"center", fontSize:13, color:"rgba(0,0,0,0.38)",
               fontFamily:FONT, fontWeight:500,
             }}>
               Placez le code-barres dans le cadre
@@ -168,7 +168,7 @@ export default function BarcodeScanner({ onDetected, onClose }) {
               borderTop:"3px solid #3B82F6",
               borderRadius:"50%", animation:"spin .8s linear infinite",
             }}/>
-            <div style={{ fontSize:13, color:"rgba(255,255,255,0.60)", fontFamily:FONT }}>
+            <div style={{ fontSize:13, color:"rgba(0,0,0,0.3)", fontFamily:FONT }}>
               Activation de la caméra…
             </div>
           </div>
@@ -203,7 +203,7 @@ export default function BarcodeScanner({ onDetected, onClose }) {
             <div style={{ fontSize:14, fontWeight:600, color:"#F87171", fontFamily:FONT }}>
               Caméra indisponible
             </div>
-            <div style={{ fontSize:13, color:"rgba(255,255,255,0.55)", lineHeight:1.6, fontFamily:FONT }}>
+            <div style={{ fontSize:13, color:"rgba(0,0,0,0.28)", lineHeight:1.6, fontFamily:FONT }}>
               {errMsg}
             </div>
             <button onClick={onClose} style={{
@@ -223,7 +223,7 @@ export default function BarcodeScanner({ onDetected, onClose }) {
           background:"rgba(11,18,32,0.95)",
           borderTop:"1px solid rgba(0,0,0,0.06)",
         }}>
-          <div style={{ fontSize:11, color:"rgba(255,255,255,0.40)", fontFamily:FONT,
+          <div style={{ fontSize:11, color:"rgba(0,0,0,0.16)", fontFamily:FONT,
             textAlign:"center", marginBottom:10 }}>
             Ou saisissez le code manuellement
           </div>

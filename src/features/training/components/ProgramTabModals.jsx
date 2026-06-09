@@ -22,13 +22,13 @@ export function GuideExModal({ exData, exSerie, onClose, C }) {
             <div style={{display:"inline-block",padding:"3px 10px",background:`${cc}14`,border:`0.5px solid ${cc}40`,borderRadius:8,fontSize:10,color:cc,letterSpacing:"1px",textTransform:"uppercase",fontWeight:600,marginBottom:10}}>{exData.cat}</div>
             <div style={{fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",fontSize:20,fontWeight:400,lineHeight:1.2,color:"${C.text}",marginBottom:4}}>{exData.n}</div>
           </div>
-          <button onClick={onClose} style={{background:C.s2,border:"0.5px solid rgba(0,0,0,0.06)",borderRadius:10,width:36,height:36,color:"rgba(242,244,247,0.50)",cursor:"pointer",fontSize:18,flexShrink:0,marginLeft:12}}>×</button>
+          <button onClick={onClose} style={{background:C.s2,border:"0.5px solid rgba(0,0,0,0.06)",borderRadius:10,width:36,height:36,color:"#374151",cursor:"pointer",fontSize:18,flexShrink:0,marginLeft:12}}>×</button>
         </div>
         <div style={{padding:"12px 16px",display:"flex",gap:7,flexWrap:"wrap"}}>
           {[{l:"Séries",v:exSerie?.series||exData.s},{l:"Reps",v:exSerie?.reps||exData.r},{l:"Repos",v:exSerie?.repos||exData.rest},{l:"Charge",v:exSerie?.charge||exData.ch}].map(s=>(
             <div key={s.l} style={{padding:"8px 10px",background:C.s1,border:"0.5px solid rgba(0,0,0,0.06)",borderRadius:10,textAlign:"center",flex:1,minWidth:60}}>
               <div style={{fontSize:14,fontWeight:400,color:"#4D8BFF",fontFamily:"'Outfit','DM Sans',system-ui,sans-serif"}}>{s.v||"—"}</div>
-              <div style={{fontSize:9,color:"rgba(242,244,247,0.50)",marginTop:2}}>{s.l}</div>
+              <div style={{fontSize:9,color:"#374151",marginTop:2}}>{s.l}</div>
             </div>
           ))}
         </div>
@@ -39,23 +39,23 @@ export function GuideExModal({ exData, exSerie, onClose, C }) {
         </div>
         <div style={{padding:"0 16px"}}>
           {tab==="tips"&&(<div style={{background:C.s1,border:"0.5px solid rgba(0,0,0,0.06)",borderRadius:12,padding:"14px 16px"}}>
-            <div style={{fontSize:9,color:"rgba(242,244,247,0.50)",fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",marginBottom:12}}>Conseils techniques</div>
+            <div style={{fontSize:9,color:"#374151",fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",marginBottom:12}}>Conseils techniques</div>
             {(exData.tips||[]).map((tip,i)=>(<div key={i} style={{display:"flex",gap:12,marginBottom:14,paddingBottom:14,borderBottom:i<(exData.tips||[]).length-1?"0.5px solid rgba(190,180,255,0.07)":"none"}}><div style={{width:22,height:22,borderRadius:"50%",background:"rgba(59,130,246,0.1)",border:"0.5px solid rgba(59,130,246,0.2)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:10,fontWeight:500,color:"#4D8BFF"}}>{i+1}</div><div style={{fontSize:12,color:"${C.text}",lineHeight:1.6}}>{tip}</div></div>))}
-            {exData.prog&&<div style={{marginTop:4,padding:"10px 12px",background:"rgba(34,197,94,0.08)",border:"0.5px solid rgba(34,197,94,0.2)",borderRadius:9}}><div style={{fontSize:10,color:"#5FE0A5",fontWeight:500,letterSpacing:"1px",textTransform:"uppercase",marginBottom:3}}>Progression</div><div style={{fontSize:12,color:"rgba(242,244,247,0.50)",lineHeight:1.5}}>{exData.prog}</div></div>}
+            {exData.prog&&<div style={{marginTop:4,padding:"10px 12px",background:"rgba(34,197,94,0.08)",border:"0.5px solid rgba(34,197,94,0.2)",borderRadius:9}}><div style={{fontSize:10,color:"#5FE0A5",fontWeight:500,letterSpacing:"1px",textTransform:"uppercase",marginBottom:3}}>Progression</div><div style={{fontSize:12,color:"#374151",lineHeight:1.5}}>{exData.prog}</div></div>}
           </div>)}
-          {tab==="variantes"&&(<div>{(exData.variantes||[]).map((v,i)=>(<div key={i} style={{background:C.s1,border:"0.5px solid rgba(0,0,0,0.06)",borderRadius:12,padding:"14px 16px",marginBottom:8}}><div style={{fontSize:13,fontWeight:500,color:"${C.text}",marginBottom:5}}>{v.nom||v}</div>{v.note&&<div style={{fontSize:11,color:"rgba(242,244,247,0.50)",lineHeight:1.5}}>{v.note}</div>}</div>))}</div>)}
+          {tab==="variantes"&&(<div>{(exData.variantes||[]).map((v,i)=>(<div key={i} style={{background:C.s1,border:"0.5px solid rgba(0,0,0,0.06)",borderRadius:12,padding:"14px 16px",marginBottom:8}}><div style={{fontSize:13,fontWeight:500,color:"${C.text}",marginBottom:5}}>{v.nom||v}</div>{v.note&&<div style={{fontSize:11,color:"#374151",lineHeight:1.5}}>{v.note}</div>}</div>))}</div>)}
           {tab==="erreurs"&&(<div style={{background:C.s1,border:"0.5px solid rgba(0,0,0,0.06)",borderRadius:12,padding:"14px 16px"}}>
-            <div style={{fontSize:9,color:"rgba(242,244,247,0.50)",fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",marginBottom:12}}>Erreurs à éviter</div>
+            <div style={{fontSize:9,color:"#374151",fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",marginBottom:12}}>Erreurs à éviter</div>
             {(exData.erreurs||[]).map((e,i)=>(<div key={i} style={{display:"flex",gap:10,marginBottom:12,alignItems:"flex-start"}}><div style={{width:20,height:20,borderRadius:"50%",background:"rgba(248,113,113,0.1)",border:"0.5px solid rgba(248,113,113,0.3)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:10,color:"#FF7A6B"}}>✕</div><div style={{fontSize:12,color:"${C.text}",lineHeight:1.5}}>{e}</div></div>))}
           </div>)}
           {tab==="morpho"&&(<div style={{background:C.s1,border:"0.5px solid rgba(0,0,0,0.06)",borderRadius:12,padding:"14px 16px"}}>
-            <div style={{fontSize:9,color:"rgba(242,244,247,0.50)",fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",marginBottom:12}}>Adaptation morphologique</div>
+            <div style={{fontSize:9,color:"#374151",fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",marginBottom:12}}>Adaptation morphologique</div>
             {(exData.morpho||"").split("\n").filter(Boolean).map((line,i,arr)=>(<div key={i} style={{display:"flex",gap:8,marginBottom:10,paddingBottom:10,borderBottom:i<arr.length-1?"0.5px solid rgba(190,180,255,0.07)":"none",alignItems:"flex-start"}}><div style={{fontSize:13,flexShrink:0,marginTop:1}}>{line.split(":")[0].trim()}</div><div style={{fontSize:11.5,color:"${C.text}",lineHeight:1.6,flex:1}}>{line.split(":").slice(1).join(":").trim()}</div></div>))}
             {!(exData.morpho||"").includes("\n")&&exData.morpho&&<div style={{fontSize:12,color:"${C.text}",lineHeight:1.7}}>{exData.morpho}</div>}
           </div>)}
         </div>
         <div style={{padding:"14px 16px 0"}}>
-          <button onClick={onClose} style={{width:"100%",padding:"11px",background:"transparent",border:"0.5px solid rgba(0,0,0,0.06)",borderRadius:10,color:"rgba(242,244,247,0.50)",cursor:"pointer",fontSize:13,fontFamily:"'Inter',sans-serif"}}>← Retour à la séance</button>
+          <button onClick={onClose} style={{width:"100%",padding:"11px",background:"transparent",border:"0.5px solid rgba(0,0,0,0.06)",borderRadius:10,color:"#374151",cursor:"pointer",fontSize:13,fontFamily:"'Inter',sans-serif"}}>← Retour à la séance</button>
         </div>
       </div>
     </div>
@@ -139,7 +139,7 @@ export function SeanceDetailModal({ jour, jourIdx, prog, setProg, onClose, C, IN
             <div style={{width:4,height:38,borderRadius:2,background:cc(newExForm.cat),flexShrink:0}}/>
             <div>
               <div style={{fontSize:14,fontWeight:700,color:"${C.text}",fontFamily:DISP_F}}>{newExForm.nom}</div>
-              <div style={{fontSize:10,color:"rgba(242,244,247,0.40)",marginTop:2,fontFamily:DISP_F}}>{newExForm.group}</div>
+              <div style={{fontSize:10,color:"#374151",marginTop:2,fontFamily:DISP_F}}>{newExForm.group}</div>
             </div>
           </div>
 
@@ -158,7 +158,7 @@ export function SeanceDetailModal({ jour, jourIdx, prog, setProg, onClose, C, IN
             <div style={lbl}>Méthode</div>
             <div style={{display:"flex",flexWrap:"wrap",gap:5}}>
               {METHODS.slice(0,8).map(mm=>{const on=newExForm.methode===mm;return(
-                <button key={mm} onClick={()=>setNewExForm(f=>({...f,methode:mm}))} style={{padding:"5px 11px",borderRadius:99,border:`1px solid ${on?"#3B82F6":C.bd}`,background:on?"rgba(59,130,246,0.12)":"transparent",color:on?"#60A5FA":"rgba(242,244,247,0.45)",cursor:"pointer",fontSize:10.5,fontWeight:on?700:500,fontFamily:DISP_F}}>{mm}</button>
+                <button key={mm} onClick={()=>setNewExForm(f=>({...f,methode:mm}))} style={{padding:"5px 11px",borderRadius:99,border:`1px solid ${on?"#3B82F6":C.bd}`,background:on?"rgba(59,130,246,0.12)":"transparent",color:on?"#60A5FA":"#374151",cursor:"pointer",fontSize:10.5,fontWeight:on?700:500,fontFamily:DISP_F}}>{mm}</button>
               );})}
             </div>
           </div>
@@ -193,7 +193,7 @@ export function SeanceDetailModal({ jour, jourIdx, prog, setProg, onClose, C, IN
           {!search && (
             <div style={{display:"flex",gap:8,overflowX:"auto",paddingBottom:14,scrollbarWidth:"none",WebkitOverflowScrolling:"touch"}}>
               {Object.keys(EX).map(g=>{const on=groupe===g;return(
-                <button key={g} onClick={()=>setGroupe(g===groupe?null:g)} style={{flexShrink:0,padding:"9px 16px",borderRadius:12,border:`1.5px solid ${on?"#3B82F6":C.bd}`,background:on?"rgba(59,130,246,0.12)":C.s1,color:on?"#3B82F6":"rgba(242,244,247,0.55)",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:DISP_F,whiteSpace:"nowrap"}}>
+                <button key={g} onClick={()=>setGroupe(g===groupe?null:g)} style={{flexShrink:0,padding:"9px 16px",borderRadius:12,border:`1.5px solid ${on?"#3B82F6":C.bd}`,background:on?"rgba(59,130,246,0.12)":C.s1,color:on?"#3B82F6":"#374151",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:DISP_F,whiteSpace:"nowrap"}}>
                   {g} <span style={{fontSize:10,fontWeight:500,opacity:.6}}>({(EX[g]||[]).length})</span>
                 </button>
               );})}
@@ -214,7 +214,7 @@ export function SeanceDetailModal({ jour, jourIdx, prog, setProg, onClose, C, IN
                 {/* Nom */}
                 <div style={{fontSize:16,fontWeight:700,color:"${C.text}",fontFamily:DISP_F,letterSpacing:-0.2,marginBottom:2}}>{ex.nom}</div>
                 {/* Sets info */}
-                <div style={{fontSize:13,color:"rgba(242,244,247,0.50)",marginBottom:4,fontFamily:DISP_F}}>
+                <div style={{fontSize:13,color:"#374151",marginBottom:4,fontFamily:DISP_F}}>
                   {dbEx?.s||"4"}×{dbEx?.r||"10"} · {dbEx?.rest||"90"}s
                   {search && <span style={{color:"${C.dim}",marginLeft:8}}>{ex.group}</span>}
                 </div>
@@ -269,8 +269,8 @@ export function SeanceDetailModal({ jour, jourIdx, prog, setProg, onClose, C, IN
 
         <div style={{padding:"16px 16px 0"}}>
           {/* Hero séance */}
-          <div style={{position:"relative",borderRadius:24,overflow:"hidden",marginBottom:16,padding:"20px 20px 18px",background:`linear-gradient(155deg,${int.c} 0%,${int.c}cc 55%,${int.c}66 100%)`,border:"1px solid rgba(255,255,255,0.22)",boxShadow:`0 20px 40px ${int.c}40`}}>
-            <div style={{position:"absolute",inset:0,pointerEvents:"none",background:"radial-gradient(160% 60% at 20% 10%,rgba(255,255,255,0.42),transparent 55%)"}}/>
+          <div style={{position:"relative",borderRadius:24,overflow:"hidden",marginBottom:16,padding:"20px 20px 18px",background:`linear-gradient(155deg,${int.c} 0%,${int.c}cc 55%,${int.c}66 100%)`,border:"1px solid rgba(0,0,0,0.11)",boxShadow:`0 20px 40px ${int.c}40`}}>
+            <div style={{position:"absolute",inset:0,pointerEvents:"none",background:"radial-gradient(160% 60% at 20% 10%,rgba(0,0,0,0.21),transparent 55%)"}}/>
             <div style={{position:"relative"}}>
               <div style={{display:"inline-flex",alignItems:"center",gap:5,padding:"5px 9px",borderRadius:999,background:"rgba(11,15,31,0.28)",color:"#0B0F1F",fontSize:9.5,fontWeight:800,fontFamily:DISP_F,letterSpacing:1.4,marginBottom:14}}>
                 <span style={{width:6,height:6,borderRadius:"50%",background:"#0B0F1F"}}/>
@@ -302,7 +302,7 @@ export function SeanceDetailModal({ jour, jourIdx, prog, setProg, onClose, C, IN
 
           {/* Exercices */}
           {exercices.length === 0 && (
-            <div style={{borderRadius:18,padding:"20px 16px",background:"rgba(255,255,255,0.02)",border:`1px dashed ${C.bd}`,marginBottom:16}}>
+            <div style={{borderRadius:18,padding:"20px 16px",background:"rgba(0,0,0,0.01)",border:`1px dashed ${C.bd}`,marginBottom:16}}>
               {[{w:"65%",col:"#4D8BFF"},{w:"50%",col:"#5FE0A5"},{w:"72%",col:"#B69DFF"}].map((g,i)=>(
                 <div key={i} style={{display:"flex",alignItems:"center",gap:12,padding:"10px 0",borderBottom:i<2?`1px solid rgba(0,0,0,0.03)`:"none",opacity:1-i*0.2}}>
                   <div style={{width:34,height:34,borderRadius:10,background:`${g.col}15`,border:`1px solid ${g.col}25`,flexShrink:0}}/>
@@ -358,7 +358,7 @@ export function SeanceDetailModal({ jour, jourIdx, prog, setProg, onClose, C, IN
                       <div style={{fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:"${C.dim}",marginBottom:6,fontFamily:DISP_F}}>Méthode</div>
                       <div style={{display:"flex",flexWrap:"wrap",gap:5}}>
                         {METHODS.map(mm=>{const on=ex.methode===mm;return(
-                          <button key={mm} onClick={()=>updateEx(k,"methode",mm)} style={{padding:"4px 10px",borderRadius:99,border:`1px solid ${on?"#3B82F6":C.bd}`,background:on?"rgba(59,130,246,0.12)":"transparent",color:on?"#60A5FA":"rgba(242,244,247,0.40)",cursor:"pointer",fontSize:10,fontFamily:DISP_F}}>{mm}</button>
+                          <button key={mm} onClick={()=>updateEx(k,"methode",mm)} style={{padding:"4px 10px",borderRadius:99,border:`1px solid ${on?"#3B82F6":C.bd}`,background:on?"rgba(59,130,246,0.12)":"transparent",color:on?"#60A5FA":"#374151",cursor:"pointer",fontSize:10,fontFamily:DISP_F}}>{mm}</button>
                         );})}
                       </div>
                     </div>

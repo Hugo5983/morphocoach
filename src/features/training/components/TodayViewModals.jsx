@@ -19,7 +19,7 @@ const SHEET_BASE = {
   width:"100%", maxWidth:480,
   background:C.s1, border:"1px solid rgba(59,130,246,0.35)",
   borderBottom:"none", borderRadius:"28px 28px 0 0",
-  boxShadow:"0 -30px 60px -20px rgba(0,0,0,0.8)"
+  boxShadow:"0 -4px 24px rgba(0,0,0,0.10)"
 };
 
 // ─── FORMULE EPLEY ────────────────────────────────────────────────────────────
@@ -84,7 +84,7 @@ export function ManualRMModal({ prog, setProg, onClose, push, C }) {
         {/* Header */}
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"6px 20px 16px"}}>
           <div>
-            <div style={{fontSize:9,color:"rgba(242,244,247,0.40)",fontWeight:700,letterSpacing:"1.4px",textTransform:"uppercase",marginBottom:5,fontFamily:DISP_F}}>Nouveau record</div>
+            <div style={{fontSize:9,color:"#374151",fontWeight:700,letterSpacing:"1.4px",textTransform:"uppercase",marginBottom:5,fontFamily:DISP_F}}>Nouveau record</div>
             <div style={{fontFamily:SERIF_F,fontSize:22,fontWeight:700,color:"${C.text}",letterSpacing:-0.5}}>
               {selected ? selected.nom : "Saisie manuelle"}
             </div>
@@ -111,7 +111,7 @@ export function ManualRMModal({ prog, setProg, onClose, push, C }) {
                   <div style={{display:"flex",flexWrap:"wrap",gap:6,marginBottom:12}}>
                     {groupes.map(g => (
                       <button key={g} onClick={() => setGroupe(g===groupe?null:g)}
-                        style={{padding:"9px 16px",background:groupe===g?"rgba(59,130,246,0.12)":C.s1,border:`1.5px solid ${groupe===g?"#3B82F6":"rgba(0,0,0,0.06)"}`,borderRadius:12,color:groupe===g?"#60A5FA":"rgba(242,244,247,0.55)",cursor:"pointer",fontSize:13,fontWeight:700,fontFamily:DISP_F,whiteSpace:"nowrap",transition:"all .18s",flexShrink:0}}>
+                        style={{padding:"9px 16px",background:groupe===g?"rgba(59,130,246,0.12)":C.s1,border:`1.5px solid ${groupe===g?"#3B82F6":"rgba(0,0,0,0.06)"}`,borderRadius:12,color:groupe===g?"#60A5FA":"#374151",cursor:"pointer",fontSize:13,fontWeight:700,fontFamily:DISP_F,whiteSpace:"nowrap",transition:"all .18s",flexShrink:0}}>
                         {g} <span style={{fontSize:9,color:"rgba(245,241,232,0.50)"}}>({(EX[g]||[]).length})</span>
                       </button>
                     ))}
@@ -327,7 +327,7 @@ export function CreateSeanceModal({ prog, setProg, setCalSess, push, onClose, C 
             <div style={lbl}>Intensité</div>
             <div style={{display:"flex",gap:7,flexWrap:"wrap",marginBottom:20}}>
               {Object.entries(INT).map(([k,v])=>{const on=intensite===k;return(
-                <button key={k} onClick={()=>setInt(k)} style={{padding:"9px 14px",borderRadius:12,border:`1px solid ${on?v.c:C.bd}`,background:on?`${v.c}18`:C.s1,color:on?v.c:"rgba(242,244,247,0.55)",fontFamily:DISP_F,fontSize:12,fontWeight:600,cursor:"pointer",display:"flex",alignItems:"center",gap:7}}>
+                <button key={k} onClick={()=>setInt(k)} style={{padding:"9px 14px",borderRadius:12,border:`1px solid ${on?v.c:C.bd}`,background:on?`${v.c}18`:C.s1,color:on?v.c:"#374151",fontFamily:DISP_F,fontSize:12,fontWeight:600,cursor:"pointer",display:"flex",alignItems:"center",gap:7}}>
                   <span style={{width:8,height:8,borderRadius:"50%",background:v.c,flexShrink:0,boxShadow:on?`0 0 6px ${v.c}80`:"none"}}/>
                   {v.l}
                 </button>
@@ -336,7 +336,7 @@ export function CreateSeanceModal({ prog, setProg, setCalSess, push, onClose, C 
             <div style={lbl}>Durée estimée</div>
             <div style={{display:"flex",gap:7,marginBottom:20}}>
               {DURS.map(d=>{const on=duree===d;return(
-                <button key={d} onClick={()=>setDuree(d)} style={{flex:1,padding:"11px 0",borderRadius:12,border:`1px solid ${on?"#3B82F6":C.bd}`,background:on?"rgba(59,130,246,0.12)":C.s1,color:on?"#60A5FA":"rgba(242,244,247,0.55)",fontFamily:DISP_F,fontSize:11,fontWeight:600,cursor:"pointer",textAlign:"center"}}>{d}</button>
+                <button key={d} onClick={()=>setDuree(d)} style={{flex:1,padding:"11px 0",borderRadius:12,border:`1px solid ${on?"#3B82F6":C.bd}`,background:on?"rgba(59,130,246,0.12)":C.s1,color:on?"#60A5FA":"#374151",fontFamily:DISP_F,fontSize:11,fontWeight:600,cursor:"pointer",textAlign:"center"}}>{d}</button>
               );})}
             </div>
           </>)}
@@ -348,7 +348,7 @@ export function CreateSeanceModal({ prog, setProg, setCalSess, push, onClose, C 
               <div style={{width:4,height:38,borderRadius:2,background:cc(newExForm.cat),flexShrink:0}}/>
               <div>
                 <div style={{fontSize:14,fontWeight:700,color:"${C.text}",fontFamily:DISP_F}}>{newExForm.nom}</div>
-                <div style={{fontSize:10.5,color:"rgba(242,244,247,0.40)",marginTop:2,fontFamily:DISP_F}}>{newExForm.group}</div>
+                <div style={{fontSize:10.5,color:"#374151",marginTop:2,fontFamily:DISP_F}}>{newExForm.group}</div>
               </div>
             </div>
             {/* Séries / Reps / Repos / Charge */}
@@ -367,7 +367,7 @@ export function CreateSeanceModal({ prog, setProg, setCalSess, push, onClose, C 
               <div style={lbl}>Méthode</div>
               <div style={{display:"flex",flexWrap:"wrap",gap:5}}>
                 {METHODS.map(mm=>{const on=newExForm.methode===mm;return(
-                  <button key={mm} onClick={()=>setNewExForm(f=>({...f,methode:mm}))} style={{padding:"5px 11px",borderRadius:99,border:`1px solid ${on?"#3B82F6":C.bd}`,background:on?"rgba(59,130,246,0.12)":C.s1,color:on?"#60A5FA":"rgba(242,244,247,0.45)",cursor:"pointer",fontSize:10.5,fontWeight:on?700:500,fontFamily:DISP_F}}>{mm}</button>
+                  <button key={mm} onClick={()=>setNewExForm(f=>({...f,methode:mm}))} style={{padding:"5px 11px",borderRadius:99,border:`1px solid ${on?"#3B82F6":C.bd}`,background:on?"rgba(59,130,246,0.12)":C.s1,color:on?"#60A5FA":"#374151",cursor:"pointer",fontSize:10.5,fontWeight:on?700:500,fontFamily:DISP_F}}>{mm}</button>
                 );})}
               </div>
             </div>
@@ -418,7 +418,7 @@ export function CreateSeanceModal({ prog, setProg, setCalSess, push, onClose, C 
                       <div style={lbl}>Méthode</div>
                       <div style={{display:"flex",flexWrap:"wrap",gap:5}}>
                         {METHODS.map(mm=>{const on=ex.methode===mm;return(
-                          <button key={mm} onClick={()=>updateField(i,"methode",mm)} style={{padding:"4px 10px",borderRadius:99,border:`1px solid ${on?"#3B82F6":C.bd}`,background:on?"rgba(59,130,246,0.12)":C.s1,color:on?"#60A5FA":"rgba(242,244,247,0.45)",cursor:"pointer",fontSize:10,fontWeight:on?700:500,fontFamily:DISP_F}}>{mm}</button>
+                          <button key={mm} onClick={()=>updateField(i,"methode",mm)} style={{padding:"4px 10px",borderRadius:99,border:`1px solid ${on?"#3B82F6":C.bd}`,background:on?"rgba(59,130,246,0.12)":C.s1,color:on?"#60A5FA":"#374151",cursor:"pointer",fontSize:10,fontWeight:on?700:500,fontFamily:DISP_F}}>{mm}</button>
                         );})}
                       </div>
                     </div>
@@ -437,7 +437,7 @@ export function CreateSeanceModal({ prog, setProg, setCalSess, push, onClose, C 
             {!search && (
               <div style={{display:"flex",gap:8,overflowX:"auto",padding:"0 0 12px",flexShrink:0,scrollbarWidth:"none",WebkitOverflowScrolling:"touch"}}>
                 {Object.keys(EX).map(g=>{const on=groupe===g;return(
-                  <button key={g} onClick={()=>setGroupe(g===groupe?null:g)} style={{flexShrink:0,padding:"9px 16px",borderRadius:12,border:`1.5px solid ${on?"#3B82F6":C.bd}`,background:on?"rgba(59,130,246,0.12)":C.s1,color:on?"#3B82F6":"rgba(242,244,247,0.55)",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:DISP_F,whiteSpace:"nowrap"}}>{g}</button>
+                  <button key={g} onClick={()=>setGroupe(g===groupe?null:g)} style={{flexShrink:0,padding:"9px 16px",borderRadius:12,border:`1.5px solid ${on?"#3B82F6":C.bd}`,background:on?"rgba(59,130,246,0.12)":C.s1,color:on?"#3B82F6":"#374151",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:DISP_F,whiteSpace:"nowrap"}}>{g}</button>
                 );})}
               </div>
             )}
@@ -454,7 +454,7 @@ export function CreateSeanceModal({ prog, setProg, setCalSess, push, onClose, C 
                   </span>
                   {/* Nom + info */}
                   <div style={{fontSize:16,fontWeight:700,color:"${C.text}",fontFamily:DISP_F,letterSpacing:-0.2,marginBottom:3}}>{ex.nom}</div>
-                  <div style={{fontSize:13,color:"rgba(242,244,247,0.55)",marginBottom:4,fontFamily:DISP_F}}>
+                  <div style={{fontSize:13,color:"#374151",marginBottom:4,fontFamily:DISP_F}}>
                     {ex.s}×{ex.r} · {ex.rest}s{search&&<span style={{color:"${C.dim}",marginLeft:8}}>{ex.group}</span>}
                   </div>
                   {/* Conseil morpho tronqué */}
@@ -490,7 +490,7 @@ export function CreateSeanceModal({ prog, setProg, setCalSess, push, onClose, C 
           <div style={{display:"flex",gap:9}}>
             {(step===2||newExForm) && (
               <button onClick={newExForm?()=>setNewExForm(null):()=>setStep(1)}
-                style={{flex:1,padding:"15px",borderRadius:14,border:`1px solid ${C.bd}`,background:"transparent",color:"rgba(242,244,247,0.45)",fontFamily:DISP_F,fontSize:14,fontWeight:600,cursor:"pointer"}}>
+                style={{flex:1,padding:"15px",borderRadius:14,border:`1px solid ${C.bd}`,background:"transparent",color:"#374151",fontFamily:DISP_F,fontSize:14,fontWeight:600,cursor:"pointer"}}>
                 ← Retour
               </button>
             )}
@@ -581,7 +581,7 @@ export function EditRecordModal({ exData, prog, setProg, push, onClose }) {
           <div>
             <div style={{fontSize:9,fontWeight:700,letterSpacing:"1.4px",textTransform:"uppercase",color:"${C.dim}",marginBottom:4,fontFamily:DISP_F}}>Modifier le record</div>
             <div style={{fontFamily:SERIF_F,fontSize:22,letterSpacing:-0.5,lineHeight:1}}>{exData.nom}</div>
-            <div style={{fontSize:11,color:"rgba(242,244,247,0.45)",marginTop:4,fontFamily:DISP_F}}>1RM actuel : <span style={{color:"#60A5FA",fontWeight:700}}>{exData.rm1} kg</span></div>
+            <div style={{fontSize:11,color:"#374151",marginTop:4,fontFamily:DISP_F}}>1RM actuel : <span style={{color:"#60A5FA",fontWeight:700}}>{exData.rm1} kg</span></div>
           </div>
           <button onClick={onClose} style={{width:38,height:38,borderRadius:12,background:C.s1,border:"1px solid rgba(0,0,0,0.06)",color:"${C.mid}",cursor:"pointer",fontSize:20,flexShrink:0,display:"grid",placeItems:"center"}}>×</button>
         </div>
@@ -633,7 +633,7 @@ export function EditRecordModal({ exData, prog, setProg, push, onClose }) {
               <div style={{borderRadius:16,padding:"14px 16px",marginBottom:14,background:"linear-gradient(135deg,rgba(59,130,246,0.14),rgba(37,99,235,0.05))",border:"1px solid rgba(59,130,246,0.22)",display:"flex",alignItems:"center",justifyContent:"space-between",opacity:rm1Edit>0?1:0.45,transition:"opacity .25s"}}>
                 <div>
                   <div style={{fontSize:9,fontWeight:700,letterSpacing:"1.2px",textTransform:"uppercase",color:"#60A5FA",marginBottom:4,fontFamily:DISP_F}}>1RM estimé</div>
-                  <div style={{fontSize:11,color:"rgba(242,244,247,0.55)",fontFamily:DISP_F}}>{rm1Edit>0?(parseInt(editReps)===1?"Ta charge max sur 1 rep":"Estimation Epley"):"Saisis charge et reps"}</div>
+                  <div style={{fontSize:11,color:"#374151",fontFamily:DISP_F}}>{rm1Edit>0?(parseInt(editReps)===1?"Ta charge max sur 1 rep":"Estimation Epley"):"Saisis charge et reps"}</div>
                 </div>
                 <div style={{fontFamily:SERIF_F,fontSize:36,color:"#fff",lineHeight:1}}>
                   {rm1Edit>0?rm1Edit:"—"}{rm1Edit>0&&<span style={{fontSize:13,color:"#60A5FA",fontFamily:DISP_F,fontWeight:700,marginLeft:3}}>kg</span>}
@@ -641,7 +641,7 @@ export function EditRecordModal({ exData, prog, setProg, push, onClose }) {
               </div>
 
               <div style={{display:"flex",gap:9}}>
-                <button onClick={cancelEdit} style={{flex:1,padding:"13px",borderRadius:14,border:`1px solid ${C.bd}`,background:"transparent",color:"rgba(242,244,247,0.45)",fontFamily:DISP_F,fontSize:13,fontWeight:600,cursor:"pointer"}}>Annuler</button>
+                <button onClick={cancelEdit} style={{flex:1,padding:"13px",borderRadius:14,border:`1px solid ${C.bd}`,background:"transparent",color:"#374151",fontFamily:DISP_F,fontSize:13,fontWeight:600,cursor:"pointer"}}>Annuler</button>
                 <button onClick={saveEdit} disabled={!editKg||!editReps} style={{flex:2,padding:"13px",borderRadius:14,border:"none",fontFamily:DISP_F,fontSize:14,fontWeight:700,cursor:(!editKg||!editReps)?"default":"pointer",background:(!editKg||!editReps)?C.s2:"linear-gradient(180deg,#3B82F6,#2563EB)",color:(!editKg||!editReps)?"${C.dim}":"#fff",boxShadow:(!editKg||!editReps)?"none":"0 8px 20px rgba(59,130,246,0.32)"}}>
                   {editIdx==="new" ? "Ajouter l'entrée" : "Sauvegarder"}
                 </button>
@@ -667,7 +667,7 @@ export function EditRecordModal({ exData, prog, setProg, push, onClose }) {
                         {isRecord&&<div style={{fontSize:9,fontWeight:700,color:"#FFAB5D",background:"rgba(255,171,93,0.12)",border:"1px solid rgba(255,171,93,0.3)",borderRadius:6,padding:"2px 6px",fontFamily:DISP_F}}>RECORD</div>}
                         <div style={{fontSize:14,fontWeight:700,color:"${C.text}",fontFamily:DISP_F}}>{h.poids} kg × {h.reps} rep{h.reps>1?"s":""}</div>
                       </div>
-                      <div style={{fontSize:10,color:"rgba(242,244,247,0.40)",fontFamily:DISP_F}}>{h.date} · 1RM : <span style={{color:"#60A5FA",fontWeight:600}}>{rm} kg</span> · <span style={{color:"#60A5FA"}}>Appuie pour modifier</span></div>
+                      <div style={{fontSize:10,color:"#374151",fontFamily:DISP_F}}>{h.date} · 1RM : <span style={{color:"#60A5FA",fontWeight:600}}>{rm} kg</span> · <span style={{color:"#60A5FA"}}>Appuie pour modifier</span></div>
                     </div>
                     <button onClick={()=>deleteEntry(i)} style={{background:"rgba(248,113,113,0.08)",border:"1px solid rgba(248,113,113,0.2)",borderRadius:10,padding:"7px 11px",color:"#F87171",cursor:"pointer",fontSize:11,fontFamily:DISP_F,fontWeight:600,flexShrink:0}}>Sup.</button>
                   </div>

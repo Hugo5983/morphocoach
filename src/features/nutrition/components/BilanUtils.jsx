@@ -201,7 +201,7 @@ export function SectionHeader({ title, hint }) {
         {title}
       </div>
       {hint && (
-        <div style={{ fontSize:10, color:"rgba(242,244,247,0.55)", fontWeight:700,
+        <div style={{ fontSize:10, color:"#374151", fontWeight:700,
           letterSpacing:"0.3px", fontFamily:FONT }}>
           {hint}
         </div>

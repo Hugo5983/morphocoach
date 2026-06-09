@@ -152,7 +152,7 @@ export default function RecipeDetail({ recipe, onBack, liked, onLike, push }) {
                 fontFamily:FONT, marginBottom:4 }}>{s.l}</div>
               <div style={{ fontFamily:SERIF, fontSize:20, color:"${C.text}",
                 transition:"all .2s" }}>
-                {s.v}<span style={{ fontSize:11, color:"rgba(242,244,247,0.40)" }}>{s.u}</span>
+                {s.v}<span style={{ fontSize:11, color:"#374151" }}>{s.u}</span>
               </div>
             </div>
           ))}
@@ -171,7 +171,7 @@ export default function RecipeDetail({ recipe, onBack, liked, onLike, push }) {
               <div style={{ display:"flex", alignItems:"baseline", gap:6 }}>
                 <span style={{ fontFamily:SERIF, fontSize:32, color:"${C.text}",
                   letterSpacing:-1, lineHeight:1 }}>{target}</span>
-                <span style={{ fontSize:12, color:"rgba(242,244,247,0.40)",
+                <span style={{ fontSize:12, color:"#374151",
                   fontFamily:FONT }}>kcal</span>
               </div>
             </div>
@@ -199,7 +199,7 @@ export default function RecipeDetail({ recipe, onBack, liked, onLike, push }) {
             fontSize:10, color:"${C.dim}", fontFamily:FONT,
             marginBottom:14 }}>
             <span>{Math.round(base * 0.4)} kcal</span>
-            <span style={{ color:"rgba(242,244,247,0.50)" }}>Base : {base} kcal</span>
+            <span style={{ color:"#374151" }}>Base : {base} kcal</span>
             <span>{Math.round(base * 2.2)} kcal</span>
           </div>
 
@@ -217,7 +217,7 @@ export default function RecipeDetail({ recipe, onBack, liked, onLike, push }) {
                   gap:4, marginBottom:5 }}>
                   <span style={{ width:5, height:5, borderRadius:1.5,
                     background:m.c, display:"inline-block", flexShrink:0 }}/>
-                  <span style={{ fontSize:10, color:"rgba(242,244,247,0.50)",
+                  <span style={{ fontSize:10, color:"#374151",
                     fontFamily:FONT }}>{m.l}</span>
                 </div>
                 <div style={{ fontSize:16, fontWeight:700, color:"${C.text}",
@@ -243,7 +243,7 @@ export default function RecipeDetail({ recipe, onBack, liked, onLike, push }) {
               marginTop:12, width:"100%", padding:"8px",
               background:"rgba(0,0,0,0.03)",
               border:"1px solid rgba(0,0,0,0.06)", borderRadius:10,
-              color:"rgba(242,244,247,0.40)", fontSize:12, fontWeight:500,
+              color:"#374151", fontSize:12, fontWeight:500,
               fontFamily:FONT, cursor:"pointer",
             }}>
               Revenir à la recette de base ({base} kcal)
@@ -281,7 +281,7 @@ export default function RecipeDetail({ recipe, onBack, liked, onLike, push }) {
               <span style={{ fontSize:13, color:"${C.text}",
                 fontFamily:FONT }}>{ing.nom}</span>
               <span style={{ fontSize:13, fontWeight:600,
-                color: targetKcal && targetKcal !== base ? "#93C5FD" : "rgba(242,244,247,0.50)",
+                color: targetKcal && targetKcal !== base ? "#93C5FD" : "#374151",
                 fontFamily:FONT, transition:"color .2s" }}>
                 {scaleQte(ing.qte, ratio)}
               </span>
@@ -300,7 +300,7 @@ export default function RecipeDetail({ recipe, onBack, liked, onLike, push }) {
                 background:"#3B82F6", display:"grid", placeItems:"center",
                 flexShrink:0, fontSize:12, fontWeight:700, color:"#fff",
                 fontFamily:FONT }}>{i + 1}</div>
-              <div style={{ fontSize:13, color:"rgba(242,244,247,0.70)",
+              <div style={{ fontSize:13, color:"#374151",
                 lineHeight:1.55, paddingTop:2, fontFamily:FONT }}>{etape}</div>
             </div>
           ))}

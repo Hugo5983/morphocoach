@@ -9,13 +9,13 @@ const F   = FONT;
 const SF  = SERIF;
 const BL  = C.accent  || "#3B82F6";
 const BLD = C.accentDk|| "#2563EB";
-const BG  = "#080E1A";
-const S1  = C.s1 || "#111827";
-const S2  = C.s2 || "#1A2336";
+const BG  = C.bg;
+const S1  = C.s1;
+const S2  = C.s2;
 const BD  = C.bd || "rgba(0,0,0,0.06)";
-const TEXT= C.text|| "${C.text}";
-const MID = C.mid || "${C.mid}";
-const DIM = C.dim || "${C.dim}";
+const TEXT= C.text;
+const MID = C.mid;
+const DIM = C.dim;
 const GRN = "#34D399";
 const RED = "#F87171";
 
@@ -107,7 +107,7 @@ export default function RepasSheet({
             boxShadow: `0 6px 16px ${meal.accent}50, inset 0 1px 0 rgba(0,0,0,0.14)`,
             position: "relative", overflow: "hidden" }}>
             <div style={{ position: "absolute", inset: 0,
-              background: "radial-gradient(110% 60% at 30% 10%,rgba(255,255,255,0.35),transparent 60%)",
+              background: "radial-gradient(110% 60% at 30% 10%,rgba(0,0,0,0.14),transparent 60%)",
               pointerEvents: "none" }}/>
             <Ico name={meal.icon} size={22} stroke={2} color={meal.dark}/>
           </div>

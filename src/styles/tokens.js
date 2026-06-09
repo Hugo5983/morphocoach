@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════
-// DESIGN TOKENS — Dark premium theme "From night to dawn"
+// DESIGN TOKENS — Light premium theme
 // Signature : Electric blue (data) → Solar amber (energy)
 // ═══════════════════════════════════════════════════════════
 import { C } from "../data/constants.js";
@@ -20,9 +20,9 @@ export const space = { xs: 4, sm: 8, md: 10, lg: 14, xl: 16, xxl: 22 };
 export const radius = { input: 14, chip: 12, modal: 14, card: 20, pill: 999, round: "50%" };
 export const shadow = {
   none: "none",
-  card: "inset 0 1px 0 rgba(255,255,255,0.03), 0 1px 0 rgba(0,0,0,0.2)",
-  sheet: "0 -8px 32px rgba(0,0,0,0.5)",
-  accent: `0 8px 20px rgba(214,122,46,0.3)`,
+  card: "0 1px 2px rgba(0,0,0,0.05), 0 4px 12px rgba(0,0,0,0.06)",
+  sheet: "0 -4px 20px rgba(0,0,0,0.08)",
+  accent: `0 4px 14px rgba(59,130,246,0.20)`,
 };
 export const font = {
   display: '"Space Grotesk", "Inter", system-ui, sans-serif',

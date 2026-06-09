@@ -190,7 +190,7 @@ export default function TodayView(props) {
 
       {/* ── Greeting ─────────────────────────────────────────────── */}
       <div style={{ paddingTop: 6, marginBottom: 14 }}>
-        <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "2px", color: "rgba(242,244,247,0.25)", textTransform: "uppercase", fontFamily: DISP, marginBottom: 5 }}>
+        <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "2px", color: "#6B7280", textTransform: "uppercase", fontFamily: DISP, marginBottom: 5 }}>
           {today.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" })}
         </div>
         <div style={{ fontFamily: SERIF_F, fontSize: 28, color: "${C.text}", lineHeight: 1.1, letterSpacing: -1 }}>
@@ -214,15 +214,15 @@ export default function TodayView(props) {
               position: "relative", overflow: "hidden",
               boxShadow: `0 18px 40px ${intData.c}40`,
             }}>
-              <div style={{ position: "absolute", top: -50, right: -40, width: 170, height: 170, borderRadius: "50%", background: "radial-gradient(circle, rgba(255,255,255,0.22), transparent 65%)", pointerEvents: "none" }}/>
+              <div style={{ position: "absolute", top: -50, right: -40, width: 170, height: 170, borderRadius: "50%", background: "radial-gradient(circle, rgba(0,0,0,0.11), transparent 65%)", pointerEvents: "none" }}/>
 
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 34, position: "relative" }}>
-                <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: "1.4px", color: "rgba(255,255,255,0.92)", background: "rgba(0,0,0,0.18)", padding: "6px 12px", borderRadius: 99, fontFamily: DISP }}>
+                <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: "1.4px", color: "rgba(0,0,0,0.46)", background: "rgba(0,0,0,0.18)", padding: "6px 12px", borderRadius: 99, fontFamily: DISP }}>
                   SÉANCE DU JOUR
                 </div>
                 <div style={{ textAlign: "right" }}>
                   <div style={{ fontFamily: SERIF_F, fontSize: 30, color: "#fff", lineHeight: 1 }}>{pct}%</div>
-                  <div style={{ fontSize: 11, color: "rgba(255,255,255,0.70)", fontFamily: DISP, marginTop: 2 }}>{done}/{total}</div>
+                  <div style={{ fontSize: 11, color: "rgba(0,0,0,0.35)", fontFamily: DISP, marginTop: 2 }}>{done}/{total}</div>
                 </div>
               </div>
 
@@ -230,8 +230,8 @@ export default function TodayView(props) {
                 <div style={{ fontFamily: SERIF_F, fontSize: 31, color: "#fff", lineHeight: 1, marginBottom: 6, letterSpacing: -1 }}>
                   {todaySeance.nom}
                 </div>
-                <div style={{ fontSize: 12.5, color: "rgba(255,255,255,0.85)", fontFamily: DISP, marginBottom: 15, display: "flex", alignItems: "center", gap: 7 }}>
-                  <span style={{ width: 7, height: 7, borderRadius: "50%", background: "rgba(255,255,255,0.75)", flexShrink: 0 }}/>
+                <div style={{ fontSize: 12.5, color: "rgba(0,0,0,0.42)", fontFamily: DISP, marginBottom: 15, display: "flex", alignItems: "center", gap: 7 }}>
+                  <span style={{ width: 7, height: 7, borderRadius: "50%", background: "rgba(0,0,0,0.38)", flexShrink: 0 }}/>
                   {intData.l} · {todaySeance.duree || "60 min"} · {total} exercice{total !== 1 ? "s" : ""}
                 </div>
                 {/* Barre progression */}
@@ -323,7 +323,7 @@ export default function TodayView(props) {
           <div style={{ fontFamily:SERIF_F,fontSize:30,color:"${C.text}",lineHeight:1.08,letterSpacing:-1,marginBottom:10 }}>
             Aujourd'hui, on<br/><span style={{ color:"#60A5FA",fontStyle:"italic" }}>récupère.</span>
           </div>
-          <div style={{ fontSize:12.5,color:"rgba(242,244,247,0.55)",lineHeight:1.6,fontFamily:DISP,marginBottom:18 }}>
+          <div style={{ fontSize:12.5,color:"#374151",lineHeight:1.6,fontFamily:DISP,marginBottom:18 }}>
             La récup fait partie du programme. Voici 3 gestes qui comptent vraiment.
           </div>
 
@@ -384,7 +384,7 @@ export default function TodayView(props) {
               }}>{g.ic}</div>
               <div style={{ flex:1, minWidth:0 }}>
                 <div style={{ fontSize:14.5, fontWeight:700, color:"${C.text}", fontFamily:DISP, letterSpacing:-0.2 }}>{g.t}</div>
-                <div style={{ fontSize:11.5, color:"rgba(242,244,247,0.40)", fontFamily:DISP, marginTop:1 }}>{g.s}</div>
+                <div style={{ fontSize:11.5, color:"#374151", fontFamily:DISP, marginTop:1 }}>{g.s}</div>
               </div>
               {/* Indicateur interactif */}
               {g.badge && (
@@ -400,7 +400,7 @@ export default function TodayView(props) {
                     : <span style={{ color:"rgba(0,0,0,0.10)", fontSize:11 }}>○</span>}
                 </div>
               )}
-              {g.arrow && <div style={{ fontSize:14, color:"rgba(242,244,247,0.22)", flexShrink:0 }}>›</div>}
+              {g.arrow && <div style={{ fontSize:14, color:"#6B7280", flexShrink:0 }}>›</div>}
             </div>
           ))}
 
@@ -445,7 +445,7 @@ export default function TodayView(props) {
               <div style={{ padding:"22px 18px 18px", textAlign:"center" }}>
                 <div style={{ fontSize:28,marginBottom:9 }}>📊</div>
                 <div style={{ fontFamily:DISP,fontSize:15,fontWeight:700,color:"${C.text}",marginBottom:6 }}>Pas encore de données</div>
-                <div style={{ fontSize:11.5,color:"rgba(242,244,247,0.45)",lineHeight:1.6,marginBottom:16,fontFamily:DISP }}>
+                <div style={{ fontSize:11.5,color:"#374151",lineHeight:1.6,marginBottom:16,fontFamily:DISP }}>
                   Enregistre tes charges pendant les séances pour voir tes records et tes 1RM estimés.
                 </div>
                 <button onClick={() => setShowManualRM(true)} style={recBtn}>
@@ -484,7 +484,7 @@ export default function TodayView(props) {
       {/* Pas de programme */}
       {!prog && (
         <Card style={{ textAlign: "center", padding: "20px 16px", marginTop: 8 }}>
-          <div style={{ fontSize: 12, color: "rgba(242,244,247,0.50)", marginBottom: 12 }}>Aucun programme actif</div>
+          <div style={{ fontSize: 12, color: "#374151", marginBottom: 12 }}>Aucun programme actif</div>
           <Btn onClick={() => setProgView("analyse")}>✨ Générer mon programme</Btn>
           <Btn v="out" onClick={() => setProgView("creer")}>Créer manuellement</Btn>
         </Card>
@@ -511,7 +511,7 @@ export default function TodayView(props) {
           }}>
             <div onClick={e=>e.stopPropagation()} style={{
               width:"100%",maxWidth:480,
-              background:"#0d1424",border:"1px solid rgba(0,0,0,0.06)",
+              background:"#FFFFFF",border:"1px solid rgba(0,0,0,0.06)",
               borderRadius:"22px 22px 0 0",padding:"0 0 40px",
               boxShadow:"0 -20px 60px rgba(0,0,0,0.55)",
             }}>
@@ -526,7 +526,7 @@ export default function TodayView(props) {
                 </div>
                 <button onClick={()=>setShowSleepModal(false)} style={{
                   width:36,height:36,borderRadius:10,background:"rgba(0,0,0,0.05)",
-                  border:"1px solid rgba(0,0,0,0.06)",color:"rgba(242,244,247,0.55)",
+                  border:"1px solid rgba(0,0,0,0.06)",color:"#374151",
                   fontSize:16,cursor:"pointer",display:"grid",placeItems:"center",
                 }}>×</button>
               </div>
@@ -546,12 +546,12 @@ export default function TodayView(props) {
                               borderRadius:16,padding:"14px 16px",marginBottom:20 }}>
                   <button onClick={()=>saveSleepTarget(stepD(sleepTarget))} style={{
                     width:44,height:44,borderRadius:13,background:"rgba(0,0,0,0.05)",
-                    border:"none",color:"rgba(242,244,247,0.55)",fontSize:18,cursor:"pointer",
+                    border:"none",color:"#374151",fontSize:18,cursor:"pointer",
                     display:"grid",placeItems:"center",
                   }}>−</button>
                   <div style={{ textAlign:"center" }}>
                     <div style={{ fontSize:36,fontWeight:700,color:"${C.text}",letterSpacing:-1,fontFamily:F }}>
-                      {sleepTarget}<span style={{ fontSize:16,color:"rgba(242,244,247,0.45)",marginLeft:3 }}>h</span>
+                      {sleepTarget}<span style={{ fontSize:16,color:"#374151",marginLeft:3 }}>h</span>
                     </div>
                     <div style={{ fontSize:10,color:"${C.dim}",fontFamily:F,marginTop:2 }}>cible par nuit</div>
                   </div>
@@ -572,12 +572,12 @@ export default function TodayView(props) {
                               borderRadius:16,padding:"14px 16px",marginBottom:16 }}>
                   <button onClick={()=>setSleepInput(stepD(inputVal))} style={{
                     width:44,height:44,borderRadius:13,background:"rgba(0,0,0,0.05)",
-                    border:"none",color:"rgba(242,244,247,0.55)",fontSize:18,cursor:"pointer",
+                    border:"none",color:"#374151",fontSize:18,cursor:"pointer",
                     display:"grid",placeItems:"center",
                   }}>−</button>
                   <div style={{ textAlign:"center" }}>
                     <div style={{ fontSize:36,fontWeight:700,color:"${C.text}",letterSpacing:-1,fontFamily:F }}>
-                      {inputVal}<span style={{ fontSize:16,color:"rgba(242,244,247,0.45)",marginLeft:3 }}>h</span>
+                      {inputVal}<span style={{ fontSize:16,color:"#374151",marginLeft:3 }}>h</span>
                     </div>
                     <div style={{ fontSize:11,fontWeight:600,color:qualColor(inputVal),fontFamily:F,marginTop:2 }}>
                       {qualLabel(inputVal)}
@@ -614,7 +614,7 @@ export default function TodayView(props) {
                   background:"linear-gradient(180deg,#9CB9F5 0%,#5B8DEF 50%,#2D5DC9 100%)",
                   color:"#fff",border:"1px solid rgba(156,185,245,0.4)",
                   fontFamily:F,fontSize:14,fontWeight:700,cursor:"pointer",
-                  boxShadow:"inset 0 1px 0 rgba(255,255,255,0.28), 0 8px 22px rgba(45,93,201,0.42)",
+                  boxShadow:"inset 0 1px 0 rgba(0,0,0,0.14), 0 8px 22px rgba(45,93,201,0.42)",
                 }}>
                   ✓ Enregistrer {inputVal}h de sommeil
                 </button>

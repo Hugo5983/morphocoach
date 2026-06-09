@@ -41,7 +41,7 @@ function MusculationPicker({ onSave, onClose }) {
       <Inp placeholder="Nom de la séance (ex: Push, Pull…)" value={seNom} onChange={e=>setSeNom(e.target.value)} style={{marginBottom:10}}/>
       <div style={{display:'flex',gap:5,flexWrap:'wrap',marginBottom:12}}>
         {Object.entries(INT).map(([k,v])=>(
-          <button key={k} onClick={()=>setInt(k)} style={{padding:'5px 10px',background:intensite===k?`${v.c}20`:C.s2,border:`1px solid ${intensite===k?v.c:'rgba(0,0,0,0.06)'}`,borderRadius:7,cursor:'pointer',fontSize:11,color:intensite===k?v.c:'rgba(242,244,247,0.50)',fontWeight:intensite===k?700:400,fontFamily:DISPLAY}}>{v.l}</button>
+          <button key={k} onClick={()=>setInt(k)} style={{padding:'5px 10px',background:intensite===k?`${v.c}20`:C.s2,border:`1px solid ${intensite===k?v.c:'rgba(0,0,0,0.06)'}`,borderRadius:7,cursor:'pointer',fontSize:11,color:intensite===k?v.c:'#374151',fontWeight:intensite===k?700:400,fontFamily:DISPLAY}}>{v.l}</button>
         ))}
       </div>
       {exos.length>0&&(
@@ -63,7 +63,7 @@ function MusculationPicker({ onSave, onClose }) {
         {!search&&(
           <div style={{padding:'8px',display:'flex',flexWrap:'wrap',gap:4,maxHeight:110,overflowY:'auto'}}>
             {Object.keys(EX).map(g=>(
-              <button key={g} onClick={()=>setGroupe(g===groupe?null:g)} style={{padding:'4px 9px',background:groupe===g?'rgba(59,130,246,0.10)':C.s2,border:`1px solid ${groupe===g?'#3B82F6':'rgba(0,0,0,0.06)'}`,borderRadius:12,color:groupe===g?'#3B82F6':'rgba(242,244,247,0.45)',cursor:'pointer',fontSize:10,fontFamily:DISPLAY}}>
+              <button key={g} onClick={()=>setGroupe(g===groupe?null:g)} style={{padding:'4px 9px',background:groupe===g?'rgba(59,130,246,0.10)':C.s2,border:`1px solid ${groupe===g?'#3B82F6':'rgba(0,0,0,0.06)'}`,borderRadius:12,color:groupe===g?'#3B82F6':'#374151',cursor:'pointer',fontSize:10,fontFamily:DISPLAY}}>
                 {g} <span style={{fontSize:8.5,opacity:0.6}}>({(EX[g]||[]).length})</span>
               </button>
             ))}
@@ -83,7 +83,7 @@ function MusculationPicker({ onSave, onClose }) {
             ))}
           </div>
         )}
-        {!search&&!groupe&&<div style={{padding:'12px',textAlign:'center',fontSize:11,color:'rgba(242,244,247,0.40)'}}>Sélectionne un groupe musculaire</div>}
+        {!search&&!groupe&&<div style={{padding:'12px',textAlign:'center',fontSize:11,color:'#374151'}}>Sélectionne un groupe musculaire</div>}
       </div>
       <Btn disabled={exos.length===0&&!seNom} onClick={()=>{const color=INT[intensite]?.c||'#3B82F6';onSave({nom:seNom||(exos.map(e=>e.nom.split(' ')[0]).join('+')||'Musculation'),intensite,color,musculation:{exercices:exos}});onClose();}}>✓ Enregistrer</Btn>
       <Btn v="ghost" onClick={onClose} style={{marginTop:6}}>Annuler</Btn>
@@ -109,28 +109,28 @@ function BonusForm({ type, onSave, onBack }) {
         </div>
         <div>
           <div style={{fontSize:14,fontWeight:700,color:C.text,fontFamily:DISPLAY}}>{type.label}</div>
-          <div style={{fontSize:10.5,color:'rgba(242,244,247,0.45)',marginTop:1}}>{type.desc}</div>
+          <div style={{fontSize:10.5,color:'#374151',marginTop:1}}>{type.desc}</div>
         </div>
       </div>
       <div style={{display:'flex',flexWrap:'wrap',gap:5,marginBottom:12}}>
         {type.suggestions.map(s=>(
-          <button key={s} onClick={()=>setNom(s)} style={{padding:'5px 10px',background:nom===s?`${type.color}18`:C.s2,border:`1px solid ${nom===s?type.color:'rgba(0,0,0,0.06)'}`,borderRadius:999,cursor:'pointer',fontSize:10.5,color:nom===s?type.color:'rgba(242,244,247,0.50)',fontFamily:DISPLAY,fontWeight:nom===s?700:400}}>{s}</button>
+          <button key={s} onClick={()=>setNom(s)} style={{padding:'5px 10px',background:nom===s?`${type.color}18`:C.s2,border:`1px solid ${nom===s?type.color:'rgba(0,0,0,0.06)'}`,borderRadius:999,cursor:'pointer',fontSize:10.5,color:nom===s?type.color:'#374151',fontFamily:DISPLAY,fontWeight:nom===s?700:400}}>{s}</button>
         ))}
       </div>
       <Inp placeholder="Ou saisir manuellement…" value={nom} onChange={e=>setNom(e.target.value)} style={{marginBottom:12}}/>
       <div style={{...ey,marginBottom:8}}>Durée</div>
       <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:10}}>
-        <button onClick={()=>setDuree(d=>Math.max(10,d-5))} style={{width:34,height:34,borderRadius:9,background:C.s2,border:`1px solid rgba(0,0,0,0.06)`,cursor:'pointer',fontSize:18,color:'rgba(242,244,247,0.50)',fontFamily:DISPLAY}}>−</button>
-        <div style={{flex:1,textAlign:'center',fontFamily:DISPLAY,fontSize:24,fontWeight:700,color:C.text,...NUM}}>{duree}<span style={{fontSize:12,fontWeight:400,color:'rgba(242,244,247,0.40)',marginLeft:4}}>min</span></div>
+        <button onClick={()=>setDuree(d=>Math.max(10,d-5))} style={{width:34,height:34,borderRadius:9,background:C.s2,border:`1px solid rgba(0,0,0,0.06)`,cursor:'pointer',fontSize:18,color:'#374151',fontFamily:DISPLAY}}>−</button>
+        <div style={{flex:1,textAlign:'center',fontFamily:DISPLAY,fontSize:24,fontWeight:700,color:C.text,...NUM}}>{duree}<span style={{fontSize:12,fontWeight:400,color:'#374151',marginLeft:4}}>min</span></div>
         <button onClick={()=>setDuree(d=>Math.min(180,d+5))} style={{width:34,height:34,borderRadius:9,background:`${type.color}18`,border:`1px solid ${type.color}40`,cursor:'pointer',fontSize:18,color:type.color,fontFamily:DISPLAY}}>+</button>
       </div>
       <div style={{display:'flex',gap:5,marginBottom:16}}>
         {[15,20,30,45,60,90].map(d=>(
-          <button key={d} onClick={()=>setDuree(d)} style={{flex:1,padding:'5px 2px',background:duree===d?`${type.color}14`:'transparent',border:`1px solid ${duree===d?type.color:'rgba(0,0,0,0.06)'}`,borderRadius:7,color:duree===d?type.color:'rgba(242,244,247,0.40)',cursor:'pointer',fontSize:10,fontFamily:DISPLAY,fontWeight:duree===d?700:400}}>{d}'</button>
+          <button key={d} onClick={()=>setDuree(d)} style={{flex:1,padding:'5px 2px',background:duree===d?`${type.color}14`:'transparent',border:`1px solid ${duree===d?type.color:'rgba(0,0,0,0.06)'}`,borderRadius:7,color:duree===d?type.color:'#374151',cursor:'pointer',fontSize:10,fontFamily:DISPLAY,fontWeight:duree===d?700:400}}>{d}'</button>
         ))}
       </div>
       <Btn disabled={!nom} onClick={()=>onSave({nom:`${nom} · ${duree}min`,intensite:type.id==='mobility'?'leger':'modere',color:type.color,bonus:{type:type.id,duree,label:nom}})}>✓ Ajouter à ce jour</Btn>
-      <button onClick={onBack} style={{width:'100%',marginTop:8,padding:'8px',background:'transparent',border:'none',color:'rgba(242,244,247,0.45)',cursor:'pointer',fontSize:12,fontFamily:DISPLAY}}>← Retour</button>
+      <button onClick={onBack} style={{width:'100%',marginTop:8,padding:'8px',background:'transparent',border:'none',color:'#374151',cursor:'pointer',fontSize:12,fontFamily:DISPLAY}}>← Retour</button>
     </div>
   );
 }
@@ -181,7 +181,7 @@ export function DayModal({ date, sessions, onSave, onDelete, onToggleDone, onClo
             <div style={{...ey,marginBottom:3}}>Planning</div>
             <div style={{fontFamily:DISPLAY,fontSize:15,fontWeight:700,color:C.text,textTransform:'capitalize'}}>{fmtDate(date)}</div>
           </div>
-          <button onClick={onClose} style={{width:32,height:32,borderRadius:9,background:C.s2,border:`1px solid ${C.bd}`,color:'rgba(242,244,247,0.50)',cursor:'pointer',display:'grid',placeItems:'center'}}>
+          <button onClick={onClose} style={{width:32,height:32,borderRadius:9,background:C.s2,border:`1px solid ${C.bd}`,color:'#374151',cursor:'pointer',display:'grid',placeItems:'center'}}>
             <I name="x" size={14} stroke={2}/>
           </button>
         </div>
@@ -200,7 +200,7 @@ export function DayModal({ date, sessions, onSave, onDelete, onToggleDone, onClo
                       {sess.done&&<div style={{width:15,height:15,borderRadius:5,background:col,display:'grid',placeItems:'center',flexShrink:0}}><I name="check" size={9} stroke={3.2} color="#fff"/></div>}
                       <div style={{fontSize:13,fontWeight:600,color:C.text,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{sess.nom}</div>
                     </div>
-                    <div style={{fontSize:10.5,color:'rgba(242,244,247,0.45)',marginTop:2}}>{INT[sess.intensite||'modere']?.l}{sess.bonus?` · ${sess.bonus.duree}min`:''}{sess.done?' · Validée ✓':''}</div>
+                    <div style={{fontSize:10.5,color:'#374151',marginTop:2}}>{INT[sess.intensite||'modere']?.l}{sess.bonus?` · ${sess.bonus.duree}min`:''}{sess.done?' · Validée ✓':''}</div>
                   </div>
                   <button onClick={()=>onDelete(i)} style={{background:'transparent',border:'none',color:'rgba(248,113,113,0.7)',cursor:'pointer',padding:'4px',flexShrink:0,display:'grid',placeItems:'center'}}>
                     <I name="trash" size={14} stroke={1.8}/>
@@ -212,7 +212,7 @@ export function DayModal({ date, sessions, onSave, onDelete, onToggleDone, onClo
                     display:'flex',alignItems:'center',justifyContent:'center',gap:6,
                     background:sess.done?'transparent':col,
                     border:sess.done?`1px solid ${C.bd}`:`1px solid ${col}`,
-                    color:sess.done?'rgba(242,244,247,0.55)':'#fff',
+                    color:sess.done?'#374151':'#fff',
                   }}>
                     {sess.done ? '↺ Reprendre la séance' : <><I name="check" size={14} stroke={2.4} color="#fff"/> Terminer la séance</>}
                   </button>
@@ -232,9 +232,9 @@ export function DayModal({ date, sessions, onSave, onDelete, onToggleDone, onClo
           </div>
           <div style={{flex:1}}>
             <div style={{fontSize:13,fontWeight:700,color:C.text,fontFamily:DISPLAY}}>Musculation</div>
-            <div style={{fontSize:10.5,color:'rgba(242,244,247,0.45)',marginTop:1}}>Exercices, séries, charges</div>
+            <div style={{fontSize:10.5,color:'#374151',marginTop:1}}>Exercices, séries, charges</div>
           </div>
-          <I name="chevR" size={14} color='rgba(242,244,247,0.25)' stroke={2}/>
+          <I name="chevR" size={14} color='#6B7280' stroke={2}/>
         </button>
 
         {/* Séances bonus */}
@@ -369,7 +369,7 @@ function BilanMois({ sessions, year, month, cycleStart, currentWeek }) {
         <div style={{width:14,height:14,borderRadius:'50%',background:topIntData.c,flexShrink:0,boxShadow:`0 0 8px ${topIntData.c}`}}/>
         <div style={{fontSize:22,fontWeight:700,color:topIntData.c,fontFamily:DISPLAY,letterSpacing:-0.5}}>{CHARGE_FEM[topIntKey]||topIntData.l}</div>
       </div>
-      <div style={{fontSize:11,color:'rgba(242,244,247,0.40)',fontFamily:DISPLAY,marginTop:6}}>{CHARGE_SUB[topIntKey]||''}</div>
+      <div style={{fontSize:11,color:'#374151',fontFamily:DISPLAY,marginTop:6}}>{CHARGE_SUB[topIntKey]||''}</div>
     </div>
   ) : (
     <div style={{fontSize:12,color:'${C.dim}',fontFamily:DISPLAY,marginTop:2}}>Aucune séance validée</div>
@@ -492,7 +492,7 @@ export const MonthCal = memo(function MonthCal({ sessions, onUpdate, semC, curre
         </div>
         <div style={{display:'grid',gridTemplateColumns:'repeat(7,1fr)',gap:3,marginBottom:5}}>
           {DAYS.map((d,i)=>(
-            <div key={i} style={{textAlign:'center',fontSize:9,color:'rgba(242,244,247,0.28)',fontWeight:700,letterSpacing:0.8,fontFamily:DISPLAY}}>{d}</div>
+            <div key={i} style={{textAlign:'center',fontSize:9,color:'#6B7280',fontWeight:700,letterSpacing:0.8,fontFamily:DISPLAY}}>{d}</div>
           ))}
         </div>
         <div style={{display:'grid',gridTemplateColumns:'repeat(7,1fr)',gap:3}}>
@@ -512,7 +512,7 @@ export const MonthCal = memo(function MonthCal({ sessions, onUpdate, semC, curre
             let bg, bd, numColor;
             if (isDone)       { bg = color;            bd = `1px solid ${color}`;      numColor = '#fff'; }
             else if (hasSess) { bg = `${color}22`;     bd = `1px solid ${color}66`;    numColor = color; }
-            else              { bg = isPast?'rgba(255,255,255,0.025)':C.s2; bd = `1px solid ${C.bd}`; numColor = isPast?'${C.dim}':C.text; }
+            else              { bg = isPast?'rgba(0,0,0,0.01)':C.s2; bd = `1px solid ${C.bd}`; numColor = isPast?'${C.dim}':C.text; }
 
             const boxShadow = isToday
               ? `0 0 0 2px #60A5FA, 0 4px 12px rgba(59,130,246,0.35)`
@@ -546,20 +546,20 @@ export const MonthCal = memo(function MonthCal({ sessions, onUpdate, semC, curre
           {Object.entries(INT).map(([k,v])=>(
             <div key={k} style={{display:'flex',alignItems:'center',gap:4}}>
               <div style={{width:6,height:6,borderRadius:2,background:v.c,flexShrink:0}}/>
-              <span style={{fontSize:9.5,color:'rgba(242,244,247,0.40)',fontFamily:DISPLAY}}>{v.l}</span>
+              <span style={{fontSize:9.5,color:'#374151',fontFamily:DISPLAY}}>{v.l}</span>
             </div>
           ))}
         </div>
         <div style={{marginTop:9,display:'flex',flexWrap:'wrap',gap:12,alignItems:'center'}}>
           <div style={{display:'flex',alignItems:'center',gap:5}}>
             <div style={{width:13,height:13,borderRadius:4,background:'rgba(59,130,246,0.22)',border:'1px solid rgba(59,130,246,0.55)',flexShrink:0}}/>
-            <span style={{fontSize:9.5,color:'rgba(242,244,247,0.40)',fontFamily:DISPLAY}}>Planifiée</span>
+            <span style={{fontSize:9.5,color:'#374151',fontFamily:DISPLAY}}>Planifiée</span>
           </div>
           <div style={{display:'flex',alignItems:'center',gap:5}}>
             <div style={{width:13,height:13,borderRadius:4,background:'#3B82F6',flexShrink:0,display:'grid',placeItems:'center'}}>
               <svg viewBox="0 0 24 24" width="8" height="8" fill="none" stroke="#fff" strokeWidth="3.4" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
             </div>
-            <span style={{fontSize:9.5,color:'rgba(242,244,247,0.40)',fontFamily:DISPLAY}}>Validée (faite)</span>
+            <span style={{fontSize:9.5,color:'#374151',fontFamily:DISPLAY}}>Validée (faite)</span>
           </div>
         </div>
       </div>

@@ -324,7 +324,7 @@ export default function Nutrition(props){
                       background: premium ? 'rgba(99,102,241,0.12)' : 'rgba(0,0,0,0.05)',
                       border: premium ? '1px solid rgba(99,102,241,0.35)' : '1px solid rgba(0,0,0,0.08)',
                       borderRadius:12,
-                      color: premium ? '#A5B4FC' : 'rgba(242,244,247,0.50)',
+                      color: premium ? '#A5B4FC' : '#374151',
                       fontSize:12.5,fontWeight:700,fontFamily:DISPLAY,cursor:'pointer',
                     }}>
                       {!premium
@@ -353,7 +353,7 @@ export default function Nutrition(props){
                         display:'grid',placeItems:'center',marginBottom:10,
                         boxShadow:`0 4px 10px ${m.accent}50, inset 0 1px 0 rgba(0,0,0,0.14)`,
                         position:'relative',overflow:'hidden'}}>
-                        <div style={{position:'absolute',inset:0,background:'radial-gradient(110% 60% at 30% 10%,rgba(255,255,255,0.35),transparent 60%)',pointerEvents:'none'}}/>
+                        <div style={{position:'absolute',inset:0,background:'radial-gradient(110% 60% at 30% 10%,rgba(0,0,0,0.14),transparent 60%)',pointerEvents:'none'}}/>
                         <I name={m.icon} size={20} stroke={2} color={m.dark}/>
                       </div>
                       <div style={{fontSize:12.5,fontWeight:700,color:C.text,fontFamily:DISPLAY,marginBottom:2}}>
@@ -381,9 +381,9 @@ export default function Nutrition(props){
                     <div style={{width:40,height:40,borderRadius:12,
                       background:'linear-gradient(145deg,#34D399,#2DA67D)',
                       color:'#0B1F18',display:'grid',placeItems:'center',
-                      boxShadow:'0 4px 10px rgba(52,211,153,0.40), inset 0 1px 0 rgba(255,255,255,0.3)',
+                      boxShadow:'0 4px 10px rgba(52,211,153,0.40), inset 0 1px 0 rgba(0,0,0,0.15)',
                       position:'relative',overflow:'hidden'}}>
-                      <div style={{position:'absolute',inset:0,background:'radial-gradient(110% 60% at 30% 10%,rgba(255,255,255,0.35),transparent 60%)',pointerEvents:'none'}}/>
+                      <div style={{position:'absolute',inset:0,background:'radial-gradient(110% 60% at 30% 10%,rgba(0,0,0,0.14),transparent 60%)',pointerEvents:'none'}}/>
                       <I name="drop" size={18} stroke={2} color="#0B1F18"/>
                     </div>
                     <div>
@@ -410,7 +410,7 @@ export default function Nutrition(props){
                         style={{flex:1,height:24,borderRadius:6,
                           background:on?'linear-gradient(180deg,#34D399,#2DA67D)':'rgba(0,0,0,0.03)',
                           border:`1px solid ${on?'rgba(52,211,153,0.60)':C.bd}`,
-                          boxShadow:on?'0 0 8px rgba(52,211,153,0.50), inset 0 1px 0 rgba(255,255,255,0.3)':'none',
+                          boxShadow:on?'0 0 8px rgba(52,211,153,0.50), inset 0 1px 0 rgba(0,0,0,0.15)':'none',
                           padding:0}}/>
                     );
                   })}
@@ -426,9 +426,9 @@ export default function Nutrition(props){
                     <div style={{width:40,height:40,borderRadius:12,
                       background:'linear-gradient(145deg,#34D399,#10B981)',
                       display:'grid',placeItems:'center',fontSize:20,
-                      boxShadow:'0 4px 10px rgba(52,211,153,0.40), inset 0 1px 0 rgba(255,255,255,0.3)',
+                      boxShadow:'0 4px 10px rgba(52,211,153,0.40), inset 0 1px 0 rgba(0,0,0,0.15)',
                       position:'relative',overflow:'hidden'}}>
-                      <div style={{position:'absolute',inset:0,background:'radial-gradient(110% 60% at 30% 10%,rgba(255,255,255,0.35),transparent 60%)',pointerEvents:'none'}}/>
+                      <div style={{position:'absolute',inset:0,background:'radial-gradient(110% 60% at 30% 10%,rgba(0,0,0,0.14),transparent 60%)',pointerEvents:'none'}}/>
                       🥦
                     </div>
                     <div>
@@ -456,7 +456,7 @@ export default function Nutrition(props){
                   <div style={{display:'flex',gap:4}}>
                     {Array.from({length:5}).map((_,i)=>{
                       const on=i<fruitsV.fruits;
-                      return <button key={i} onClick={()=>setFruitsV(f=>({...f,fruits:i+1===f.fruits?i:i+1}))} className="tap" style={{flex:1,height:22,borderRadius:6,background:on?'linear-gradient(180deg,#F59E0B,#D97706)':'rgba(0,0,0,0.03)',border:`1px solid ${on?'rgba(245,158,11,0.60)':C.bd}`,boxShadow:on?'0 0 8px rgba(245,158,11,0.40), inset 0 1px 0 rgba(255,255,255,0.3)':'none',padding:0,display:'grid',placeItems:'center',fontSize:10,color:on?'#1A1308':'transparent'}}>{on?'🍎':''}</button>;
+                      return <button key={i} onClick={()=>setFruitsV(f=>({...f,fruits:i+1===f.fruits?i:i+1}))} className="tap" style={{flex:1,height:22,borderRadius:6,background:on?'linear-gradient(180deg,#F59E0B,#D97706)':'rgba(0,0,0,0.03)',border:`1px solid ${on?'rgba(245,158,11,0.60)':C.bd}`,boxShadow:on?'0 0 8px rgba(245,158,11,0.40), inset 0 1px 0 rgba(0,0,0,0.15)':'none',padding:0,display:'grid',placeItems:'center',fontSize:10,color:on?'#1A1308':'transparent'}}>{on?'🍎':''}</button>;
                     })}
                   </div>
                 </div>
@@ -473,7 +473,7 @@ export default function Nutrition(props){
                   <div style={{display:'flex',gap:4}}>
                     {Array.from({length:5}).map((_,i)=>{
                       const on=i<fruitsV.legumes;
-                      return <button key={i} onClick={()=>setFruitsV(f=>({...f,legumes:i+1===f.legumes?i:i+1}))} className="tap" style={{flex:1,height:22,borderRadius:6,background:on?'linear-gradient(180deg,#34D399,#2DA67D)':'rgba(0,0,0,0.03)',border:`1px solid ${on?'rgba(52,211,153,0.60)':C.bd}`,boxShadow:on?'0 0 8px rgba(52,211,153,0.40), inset 0 1px 0 rgba(255,255,255,0.3)':'none',padding:0,display:'grid',placeItems:'center',fontSize:10,color:on?'#0B1F18':'transparent'}}>{on?'🥦':''}</button>;
+                      return <button key={i} onClick={()=>setFruitsV(f=>({...f,legumes:i+1===f.legumes?i:i+1}))} className="tap" style={{flex:1,height:22,borderRadius:6,background:on?'linear-gradient(180deg,#34D399,#2DA67D)':'rgba(0,0,0,0.03)',border:`1px solid ${on?'rgba(52,211,153,0.60)':C.bd}`,boxShadow:on?'0 0 8px rgba(52,211,153,0.40), inset 0 1px 0 rgba(0,0,0,0.15)':'none',padding:0,display:'grid',placeItems:'center',fontSize:10,color:on?'#0B1F18':'transparent'}}>{on?'🥦':''}</button>;
                     })}
                   </div>
                 </div>
@@ -495,9 +495,9 @@ export default function Nutrition(props){
                 <div style={{width:36,height:36,borderRadius:11,
                   background:'linear-gradient(145deg,#F59E0B,#D97706)',
                   color:'#1A1308',display:'grid',placeItems:'center',
-                  boxShadow:'0 4px 10px rgba(217,119,6,0.50), inset 0 1px 0 rgba(255,255,255,0.4)',
+                  boxShadow:'0 4px 10px rgba(217,119,6,0.50), inset 0 1px 0 rgba(0,0,0,0.2)',
                   position:'relative',overflow:'hidden'}}>
-                  <div style={{position:'absolute',inset:0,background:'radial-gradient(110% 60% at 30% 10%,rgba(255,255,255,0.35),transparent 60%)',pointerEvents:'none'}}/>
+                  <div style={{position:'absolute',inset:0,background:'radial-gradient(110% 60% at 30% 10%,rgba(0,0,0,0.14),transparent 60%)',pointerEvents:'none'}}/>
                   <I name="flame" size={18} stroke={2.2} color="#1A1308"/>
                 </div>
                 <div style={{flex:1}}>
@@ -529,7 +529,7 @@ export default function Nutrition(props){
               <div style={{display:'flex',alignItems:'flex-end',justifyContent:'space-between',marginBottom:18}}>
                 <div>
                   <div style={{fontFamily:SERIF,fontSize:64,fontWeight:400,color:scoreColor,lineHeight:1,letterSpacing:-2}}>{scoreLettre}</div>
-                  <div style={{fontSize:11,color:'rgba(242,244,247,0.45)',marginTop:4,maxWidth:180,lineHeight:1.4,fontFamily:DISPLAY}}>
+                  <div style={{fontSize:11,color:'#374151',marginTop:4,maxWidth:180,lineHeight:1.4,fontFamily:DISPLAY}}>
                     Qualité alimentaire et comportements nutritionnels
                   </div>
                 </div>
@@ -550,7 +550,7 @@ export default function Nutrition(props){
                 </div>
                 <div style={{display:'flex',justifyContent:'space-between'}}>
                   {['E','D','C','B','A'].map(l=>(
-                    <span key={l} style={{fontSize:9,color:l===scoreLettre?scoreColor:'rgba(242,244,247,0.20)',fontWeight:l===scoreLettre?700:400,fontFamily:DISPLAY}}>{l}</span>
+                    <span key={l} style={{fontSize:9,color:l===scoreLettre?scoreColor:'#6B7280',fontWeight:l===scoreLettre?700:400,fontFamily:DISPLAY}}>{l}</span>
                   ))}
                 </div>
               </div>
@@ -572,7 +572,7 @@ export default function Nutrition(props){
                           <span style={{fontSize:13,fontWeight:700,color:C.text,fontFamily:DISPLAY}}>{d.label}</span>
                           <span style={{fontSize:11,fontWeight:700,color:okColor,fontFamily:DISPLAY,flexShrink:0,marginLeft:8}}>{pts} pts</span>
                         </div>
-                        <div style={{fontSize:11,color:'rgba(242,244,247,0.45)',fontFamily:DISPLAY,marginBottom:4}}>{d.value}</div>
+                        <div style={{fontSize:11,color:'#374151',fontFamily:DISPLAY,marginBottom:4}}>{d.value}</div>
                         {/* Mini barre de pts */}
                         <div style={{height:3,background:'rgba(0,0,0,0.06)',borderRadius:99,overflow:'hidden'}}>
                           <div style={{height:'100%',width:`${Math.round(d.pts/d.max*100)}%`,background:okColor,borderRadius:99,transition:'width .6s ease'}}/>
@@ -589,7 +589,7 @@ export default function Nutrition(props){
                     </div>
                     {/* Conseil contextuel */}
                     {d.status!=='ok'&&(
-                      <div style={{marginTop:8,marginLeft:52,fontSize:11,color:'rgba(242,244,247,0.45)',fontStyle:'italic',fontFamily:DISPLAY,lineHeight:1.5}}>
+                      <div style={{marginTop:8,marginLeft:52,fontSize:11,color:'#374151',fontStyle:'italic',fontFamily:DISPLAY,lineHeight:1.5}}>
                         💡 {d.tip}
                       </div>
                     )}
@@ -605,7 +605,7 @@ export default function Nutrition(props){
                 <div style={{fontSize:13,fontWeight:600,color:C.text,fontFamily:DISPLAY,marginBottom:3}}>
                   {score>=85?'Excellente journée nutritionnelle !':score>=70?'Bonne journée, quelques ajustements possibles.':score>=55?'Journée correcte, on peut faire mieux.':score>=40?'Des efforts à faire sur la qualité alimentaire.':'Revenez aux bases demain, sans pression !'}
                 </div>
-                <div style={{fontSize:11,color:'rgba(242,244,247,0.45)',fontFamily:DISPLAY,lineHeight:1.5}}>
+                <div style={{fontSize:11,color:'#374151',fontFamily:DISPLAY,lineHeight:1.5}}>
                   Score calculé sur {scoreDetails.length} critères nutritionnels
                 </div>
               </div>
@@ -627,7 +627,7 @@ export default function Nutrition(props){
                 <div style={{width:40,height:40,borderRadius:12,
                   background:'linear-gradient(145deg,#3B82F6,#2563EB)',
                   color:'#141A2E',display:'grid',placeItems:'center',
-                  boxShadow:'0 4px 10px rgba(59,130,246,0.40), inset 0 1px 0 rgba(255,255,255,0.3)'}}>
+                  boxShadow:'0 4px 10px rgba(59,130,246,0.40), inset 0 1px 0 rgba(0,0,0,0.15)'}}>
                   <I name="scan" size={18} stroke={2} color="#141A2E"/>
                 </div>
                 <div style={{flex:1}}>

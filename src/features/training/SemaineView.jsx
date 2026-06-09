@@ -40,7 +40,7 @@ import SeanceDetail from "./SeanceDetail.jsx";
  {week.map(({day,seance,isToday},i)=>{
  if(!seance) return(
  <div key={i} style={{padding:"10px 12px",background:isToday?"rgba(212,168,83,0.05)":C.s2,border:`1px solid ${isToday?C.goldB:C.s3}`,borderRadius:9,marginBottom:6,display:"flex",alignItems:"center",gap:10}}>
- <div style={{width:36,height:36,borderRadius:"50%",background:isToday?C.goldD:C.s3,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:700,color:isToday?C.gold:"rgba(242,244,247,0.50)",flexShrink:0}}>{day}</div>
+ <div style={{width:36,height:36,borderRadius:"50%",background:isToday?C.goldD:C.s3,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:700,color:isToday?C.gold:"#374151",flexShrink:0}}>{day}</div>
  <div style={{fontSize:12,color:C.dim,fontStyle:"italic"}}>Repos</div>
  {isToday&&<div style={{marginLeft:"auto",fontSize:9,color:C.gold,fontWeight:700,border:`0.5px solid ${C.goldB}`,padding:"2px 7px",borderRadius:5}}>AUJOURD'HUI</div>}
  </div>
@@ -52,10 +52,10 @@ import SeanceDetail from "./SeanceDetail.jsx";
  <div key={i} onClick={()=>setViewSeance(seance)} style={{padding:"10px 12px",background:isToday?`${int.c}14`:C.s2,border:`1px solid ${isToday?int.c:C.s3}`,borderRadius:9,marginBottom:6,cursor:"pointer"}}>
  <Row style={{justifyContent:"space-between"}}>
  <Row style={{gap:10}}>
- <div style={{width:36,height:36,borderRadius:"50%",background:isToday?`${int.c}30`:C.s3,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:700,color:isToday?int.c:"rgba(242,244,247,0.50)",flexShrink:0}}>{day}</div>
+ <div style={{width:36,height:36,borderRadius:"50%",background:isToday?`${int.c}30`:C.s3,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:700,color:isToday?int.c:"#374151",flexShrink:0}}>{day}</div>
  <div>
  <div style={{fontSize:12,fontWeight:500}}>{seance.nom}</div>
- <div style={{fontSize:10,color:"rgba(242,244,247,0.50)"}}>{seance.focus} · {total} exercices</div>
+ <div style={{fontSize:10,color:"#374151"}}>{seance.focus} · {total} exercices</div>
  </div>
  </Row>
  <Row style={{gap:8,alignItems:"center"}}>
@@ -70,7 +70,7 @@ import SeanceDetail from "./SeanceDetail.jsx";
  })}
  {!prog&&(
  <Box style={{textAlign:"center",padding:"20px 16px"}}>
- <div style={{fontSize:12,color:"rgba(242,244,247,0.50)",marginBottom:12}}>Aucun programme actif</div>
+ <div style={{fontSize:12,color:"#374151",marginBottom:12}}>Aucun programme actif</div>
  <Btn onClick={()=>setProgView("creer")}>+ Créer un programme</Btn>
  </Box>
  )}

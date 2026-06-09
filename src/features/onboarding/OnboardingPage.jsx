@@ -44,7 +44,7 @@ function Progress({step,total}){
       {Array.from({length:total}).map((_,i)=>{
         const done=i<step, active=i===step-1;
         return(
-          <div key={i} style={{flex:1,height:3,borderRadius:3,overflow:'hidden',background:'rgba(190,180,255,0.08)'}}>
+          <div key={i} style={{flex:1,height:3,borderRadius:3,overflow:'hidden',background:'rgba(0,0,0,0.08)'}}>
             <div style={{height:'100%',width:done?'100%':'0%',background:active?`linear-gradient(90deg, ${C.blue}, ${C.gold})`:`linear-gradient(90deg, ${C.blue}, #A07AE8)`,boxShadow:active?`0 0 8px ${C.gold}80`:'none',transition:'width .6s cubic-bezier(.4,0,.2,1)'}}/>
           </div>
         );
@@ -59,17 +59,17 @@ function PrimaryCTA({label,icon='arrowR',onClick,disabled,variant='amber'}){
   return(
     <button className="tap" onClick={onClick} disabled={disabled} style={{
       width:'100%',padding:'17px 20px',borderRadius:18,
-      background:disabled?'rgba(255,255,255,0.06)':grad,
-      color:disabled?C.dim:'#1A1308',
-      border:disabled?`1px solid ${C.bd}`:'1px solid rgba(255,255,255,0.22)',
-      boxShadow:disabled?'none':`0 10px 24px ${C.amberDk}55, inset 0 1px 0 rgba(255,255,255,0.45)`,
+      background:disabled?C.s2:grad,
+      color:disabled?C.dim:'#fff',
+      border:disabled?`1px solid ${C.bd}`:'1px solid rgba(59,130,246,0.30)',
+      boxShadow:disabled?'none':`0 10px 24px ${C.amberDk}55, inset 0 1px 0 rgba(0,0,0,0.23)`,
       display:'flex',alignItems:'center',justifyContent:'center',gap:8,
       fontFamily:DISPLAY,fontSize:15,fontWeight:700,letterSpacing:0.2,
       position:'relative',overflow:'hidden',cursor:disabled?'default':'pointer',
     }}>
-      {!disabled&&<span style={{position:'absolute',inset:0,background:'linear-gradient(110deg, transparent 30%, rgba(255,255,255,0.35) 50%, transparent 70%)',backgroundSize:'200% 100%',animation:'shine 3.5s ease-in-out infinite',pointerEvents:'none'}}/>}
+      {!disabled&&<span style={{position:'absolute',inset:0,background:'linear-gradient(110deg, transparent 30%, rgba(0,0,0,0.14) 50%, transparent 70%)',backgroundSize:'200% 100%',animation:'shine 3.5s ease-in-out infinite',pointerEvents:'none'}}/>}
       <span style={{position:'relative',zIndex:1}}>{label}</span>
-      {icon&&<Icon name={icon} size={16} stroke={2.4} color={disabled?C.dim:'#1A1308'}/>}
+      {icon&&<Icon name={icon} size={16} stroke={2.4} color={disabled?C.dim:'#fff'}/>}
     </button>
   );
 }
@@ -116,16 +116,16 @@ function FieldLabel({label,required,hint}){
     </div>
   );
 }
-const inputStyle={width:'100%',padding:'14px 16px',background:C.s2,border:`1px solid ${C.bdHi}`,borderRadius:14,fontSize:14,color:C.text,fontFamily:"'Inter',sans-serif",boxSizing:'border-box',boxShadow:'inset 0 1px 0 rgba(255,255,255,0.03)'};
+const inputStyle={width:'100%',padding:'14px 16px',background:C.s2,border:`1px solid ${C.bdHi}`,borderRadius:14,fontSize:14,color:C.text,fontFamily:"'Inter',sans-serif",boxSizing:'border-box',boxShadow:'inset 0 1px 2px rgba(0,0,0,0.04)'};
 
 // ─── BIG STEPPER ────────────────────────────────────────────────────────
 function BigStepper({value,setValue,unit,min,max,accent,icon,label,sub}){
   const v=parseFloat(value)||min;
   return(
-    <div style={{background:`linear-gradient(160deg, ${accent}18 0%, ${accent}04 100%)`,border:`1px solid ${accent}30`,borderRadius:22,padding:20,position:'relative',overflow:'hidden',boxShadow:`inset 0 1px 0 ${accent}30, 0 1px 0 rgba(0,0,0,0.2)`}}>
+    <div style={{background:`linear-gradient(160deg, ${accent}18 0%, ${accent}04 100%)`,border:`1px solid ${accent}30`,borderRadius:22,padding:20,position:'relative',overflow:'hidden',boxShadow:`0 2px 8px ${accent}20`}}>
       <div style={{position:'absolute',top:-40,right:-40,width:160,height:160,borderRadius:'50%',background:`radial-gradient(closest-side, ${accent}25, transparent 70%)`,pointerEvents:'none'}}/>
       <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:18,position:'relative'}}>
-        <div style={{width:34,height:34,borderRadius:10,background:`linear-gradient(145deg, ${accent}, ${accent}99)`,color:'#0B1220',display:'grid',placeItems:'center',boxShadow:`0 4px 10px ${accent}40, inset 0 1px 0 rgba(255,255,255,0.4)`}}>
+        <div style={{width:34,height:34,borderRadius:10,background:`linear-gradient(145deg, ${accent}, ${accent}99)`,color:'#0B1220',display:'grid',placeItems:'center',boxShadow:`0 4px 10px ${accent}40, inset 0 1px 0 rgba(0,0,0,0.2)`}}>
           <Icon name={icon} size={16} stroke={2}/>
         </div>
         <div>
@@ -134,19 +134,19 @@ function BigStepper({value,setValue,unit,min,max,accent,icon,label,sub}){
         </div>
       </div>
       <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',position:'relative'}}>
-        <button className="tap" onClick={()=>setValue(String(Math.max(min,v-1)))} style={{width:42,height:42,borderRadius:13,background:'rgba(11,15,31,0.6)',border:`1px solid ${C.bdHi}`,color:C.text,display:'grid',placeItems:'center',padding:0,cursor:'pointer'}}>
+        <button className="tap" onClick={()=>setValue(String(Math.max(min,v-1)))} style={{width:42,height:42,borderRadius:13,background:C.s2,border:`1px solid ${C.bdHi}`,color:C.text,display:'grid',placeItems:'center',padding:0,cursor:'pointer'}}>
           <Icon name="minus" size={16} stroke={2.4}/>
         </button>
         <div style={{display:'flex',alignItems:'baseline',gap:6}}>
           <span style={{fontFamily:SERIF,fontSize:64,fontWeight:400,letterSpacing:-2.5,color:C.text,lineHeight:1,...NUM,textShadow:`0 0 30px ${accent}50`}}>{v}</span>
           <span style={{fontSize:13,color:C.mid,fontWeight:700,fontFamily:DISPLAY,letterSpacing:0.6}}>{unit}</span>
         </div>
-        <button className="tap" onClick={()=>setValue(String(Math.min(max,v+1)))} style={{width:42,height:42,borderRadius:13,background:'rgba(11,15,31,0.6)',border:`1px solid ${C.bdHi}`,color:C.text,display:'grid',placeItems:'center',padding:0,cursor:'pointer'}}>
+        <button className="tap" onClick={()=>setValue(String(Math.min(max,v+1)))} style={{width:42,height:42,borderRadius:13,background:C.s2,border:`1px solid ${C.bdHi}`,color:C.text,display:'grid',placeItems:'center',padding:0,cursor:'pointer'}}>
           <Icon name="plus" size={16} stroke={2.4}/>
         </button>
       </div>
       <div style={{marginTop:18,position:'relative'}}>
-        <div style={{height:4,borderRadius:4,background:'rgba(255,255,255,0.05)',position:'relative',overflow:'hidden'}}>
+        <div style={{height:4,borderRadius:4,background:'rgba(0,0,0,0.06)',position:'relative',overflow:'hidden'}}>
           <div style={{position:'absolute',left:0,top:0,bottom:0,width:((v-min)/(max-min)*100)+'%',background:`linear-gradient(90deg, ${accent}, ${accent}80)`,boxShadow:`0 0 8px ${accent}aa`,transition:'width .4s ease'}}/>
         </div>
         <div style={{display:'flex',justifyContent:'space-between',marginTop:6}}>
@@ -177,7 +177,7 @@ export default function Onboarding(props){
   const selectCard=(active,accent)=>({
     border:`1.5px solid ${active?accent:C.bd}`,
     background:active?`linear-gradient(160deg, ${accent}1e 0%, ${accent}06 100%)`:C.s1,
-    boxShadow:active?`inset 0 1px 0 ${accent}30`:'inset 0 1px 0 rgba(255,255,255,0.03)',
+    boxShadow:active?`inset 0 1px 0 ${accent}30`:'inset 0 1px 0 rgba(0,0,0,0.02)',
     cursor:'pointer',transition:'all .15s',
   });
 

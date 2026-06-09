@@ -34,7 +34,7 @@ function Glass({ children, style = {}, glow, pad = 18, onClick }) {
       position: "relative",
       borderRadius: 22,
       padding: pad,
-      background: "linear-gradient(160deg, rgba(0,0,0,0.04), rgba(255,255,255,0.01))",
+      background: "linear-gradient(160deg, rgba(0,0,0,0.04), rgba(0,0,0,0.01))",
       border: "1px solid rgba(0,0,0,0.06)",
       boxShadow: glow
         ? `0 18px 40px -22px ${glow}, inset 0 1px 0 rgba(0,0,0,0.06)`
@@ -60,9 +60,9 @@ function StatCard({ value, unit, label, color }) {
         }}/>
         <div style={{ position: "relative" }}>
           <span style={{ fontSize: 28, fontWeight: 800, color, letterSpacing: -1, fontFamily: FONT, ...NUM }}>{value ?? "—"}</span>
-          {unit && <span style={{ fontSize: 13, fontWeight: 600, color: "rgba(242,244,247,0.40)", marginLeft: 2, fontFamily: FONT }}>{unit}</span>}
+          {unit && <span style={{ fontSize: 13, fontWeight: 600, color: "#374151", marginLeft: 2, fontFamily: FONT }}>{unit}</span>}
         </div>
-        <div style={{ position: "relative", fontSize: 11.5, color: "rgba(242,244,247,0.40)", marginTop: 4, fontFamily: FONT }}>{label}</div>
+        <div style={{ position: "relative", fontSize: 11.5, color: "#374151", marginTop: 4, fontFamily: FONT }}>{label}</div>
       </div>
     </Glass>
   );
@@ -75,7 +75,7 @@ function Tabs({ active, setActive }) {
   return (
     <div style={{
       position: "relative", display: "flex", padding: 5, borderRadius: 18,
-      background: "rgba(255,255,255,0.035)", border: "1px solid rgba(0,0,0,0.05)",
+      background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.05)",
       boxShadow: "inset 0 1px 2px rgba(0,0,0,0.4)",
     }}>
       <div style={{
@@ -93,7 +93,7 @@ function Tabs({ active, setActive }) {
           flex: 1, position: "relative", zIndex: 1, background: "transparent",
           border: "none", padding: "12px 0", borderRadius: 14, cursor: "pointer",
           fontFamily: FONT, fontSize: 14, fontWeight: active === it ? 700 : 500,
-          color: active === it ? "#fff" : "rgba(242,244,247,0.40)", transition: "color .25s",
+          color: active === it ? "#fff" : "#374151", transition: "color .25s",
         }}>{it}</button>
       ))}
     </div>
@@ -118,7 +118,7 @@ function Row({ label, value, accent, last }) {
       padding: "16px 18px",
       borderBottom: last ? "none" : "1px solid rgba(0,0,0,0.04)",
     }}>
-      <span style={{ color: "rgba(242,244,247,0.40)", fontSize: 14, fontFamily: FONT }}>{label}</span>
+      <span style={{ color: "#374151", fontSize: 14, fontFamily: FONT }}>{label}</span>
       <span style={{ color: accent || C.text, fontSize: 15, fontWeight: 700, fontFamily: FONT }}>{value || "—"}</span>
     </div>
   );
@@ -134,7 +134,7 @@ function EditRow({ label, value, displayValue, type = "text", onChange, options,
       borderBottom: last ? "none" : "1px solid rgba(0,0,0,0.04)",
       cursor: editing ? "default" : "pointer",
     }}>
-      <span style={{ color: "rgba(242,244,247,0.40)", fontSize: 14, fontFamily: FONT }}>{label}</span>
+      <span style={{ color: "#374151", fontSize: 14, fontFamily: FONT }}>{label}</span>
       {editing ? (
         options
           ? <select autoFocus value={value || ""} onChange={e => { onChange(e.target.value); setEditing(false); }}
@@ -152,8 +152,8 @@ function EditRow({ label, value, displayValue, type = "text", onChange, options,
               {unit && <span style={{ fontSize: 11, color: "${C.dim}", fontFamily: FONT }}>{unit}</span>}
             </div>
       ) : (
-        <span style={{ fontSize: 15, fontWeight: 700, color: value ? C.text : "rgba(242,244,247,0.20)", fontFamily: FONT }}>
-          {displayValue || value || <span style={{ fontSize: 12, fontWeight: 400, color: "rgba(242,244,247,0.20)" }}>Ajouter</span>}
+        <span style={{ fontSize: 15, fontWeight: 700, color: value ? C.text : "#6B7280", fontFamily: FONT }}>
+          {displayValue || value || <span style={{ fontSize: 12, fontWeight: 400, color: "#6B7280" }}>Ajouter</span>}
           {unit && value && <span style={{ fontSize: 11, color: "${C.dim}", fontWeight: 400, marginLeft: 4 }}>{unit}</span>}
         </span>
       )}
@@ -220,7 +220,7 @@ function MacroRing({ value, max, label, color }) {
           </div>
         </div>
       </div>
-      <div style={{ fontSize: 12, color: "rgba(242,244,247,0.40)", marginTop: 8, fontFamily: FONT }}>{label}</div>
+      <div style={{ fontSize: 12, color: "#374151", marginTop: 8, fontFamily: FONT }}>{label}</div>
     </Glass>
   );
 }
@@ -336,11 +336,11 @@ export default function Profile(props) {
               : <span style={{
                   background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.06)",
                   borderRadius: 11, padding: "4px 10px", fontSize: 10, fontWeight: 600,
-                  color: "rgba(242,244,247,0.28)", letterSpacing: "0.5px", fontFamily: FONT,
+                  color: "#6B7280", letterSpacing: "0.5px", fontFamily: FONT,
                 }}>GRATUIT</span>
             }
             {profil.age && profil.sexe && (
-              <span style={{ fontSize: 13, color: "rgba(242,244,247,0.40)", fontFamily: FONT }}>
+              <span style={{ fontSize: 13, color: "#374151", fontFamily: FONT }}>
                 {profil.age} ans · {profil.sexe === "homme" ? "Homme" : "Femme"}
               </span>
             )}
@@ -425,7 +425,7 @@ export default function Profile(props) {
             <Glass style={{ flex: 1 }}>
               <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "1.5px", color: "${C.dim}", fontFamily: FONT, marginBottom: 8 }}>POIDS</div>
               <span style={{ fontSize: 30, fontWeight: 800, color: "#60a5fa", fontFamily: FONT }}>{profil.poids || "—"}</span>
-              <span style={{ fontSize: 14, color: "rgba(242,244,247,0.40)", fontWeight: 600 }}> kg</span>
+              <span style={{ fontSize: 14, color: "#374151", fontWeight: 600 }}> kg</span>
             </Glass>
             <Glass style={{ flex: 1 }} glow={`${imcColor}44`}>
               <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "1.5px", color: "${C.dim}", fontFamily: FONT, marginBottom: 8 }}>IMC</div>
@@ -463,7 +463,7 @@ export default function Profile(props) {
             </div>
             <div>
               <div style={{ fontSize: 16, fontWeight: 700, color: C.text, fontFamily: FONT }}>Mensurations corporelles</div>
-              <div style={{ fontSize: 13, color: "rgba(242,244,247,0.40)", marginTop: 3, fontFamily: FONT }}>Appuie sur une ligne pour la modifier</div>
+              <div style={{ fontSize: 13, color: "#374151", marginTop: 3, fontFamily: FONT }}>Appuie sur une ligne pour la modifier</div>
             </div>
           </Glass>
 

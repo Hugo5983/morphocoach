@@ -12,9 +12,9 @@ const MODEL          = "claude-sonnet-4-5";
 const MAX_TOKENS     = 1000;
 const STORAGE_KEY    = "morphocoach_coach_usage"; // { count, month }
 
-const BG   = "#080E1A";
-const S1   = C.s1 || "#111827";
-const S2   = C.s2 || "#1A2336";
+const BG   = C.bg;
+const S1   = C.s1;
+const S2   = C.s2;
 const BD   = C.bd || "rgba(0,0,0,0.06)";
 const TEXT = C.text || "${C.text}";
 const MID  = C.mid || "${C.mid}";

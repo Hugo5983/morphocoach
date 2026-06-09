@@ -16,7 +16,7 @@ import {
 const T = {
   bg:'#060912', surf:'#0D1322', surfHi:'#141B30', surfFlat:'#0A1020',
   bd:'rgba(178,190,210,0.07)', bdHi:'rgba(178,190,210,0.14)', bdAc:'rgba(91,141,239,0.32)',
-  t1:'${C.text}', t2:'rgba(242,244,247,0.74)', t3:'#8A94A6',
+  t1:'${C.text}', t2:'#374151', t3:'#8A94A6',
   t4:'rgba(138,148,166,0.62)', t5:'rgba(138,148,166,0.32)',
   ac:'#5B8DEF', acLt:'#9CB9F5', acDk:'#2D5DC9',
   acSoft:'rgba(91,141,239,0.14)', acGlow:'rgba(91,141,239,0.22)',
@@ -30,7 +30,7 @@ const CARD = {
   background:   T.surf,
   border:       `1px solid ${T.bd}`,
   borderRadius: 20,
-  boxShadow:    'inset 0 1px 0 rgba(255,255,255,0.025), 0 1px 0 rgba(0,0,0,0.25), 0 12px 28px rgba(3,6,13,0.50)',
+  boxShadow:    'inset 0 1px 0 rgba(0,0,0,0.01), 0 1px 0 rgba(0,0,0,0.25), 0 12px 28px rgba(3,6,13,0.50)',
   padding:      '18px 16px',
 };
 
@@ -188,7 +188,7 @@ function NavBtns({ nextLabel, enabled, gen, onNext, onBack, showBack=true }) {
         display:'flex', alignItems:'center', justifyContent:'center', gap:8,
         fontFamily:F, fontSize:14, fontWeight:600, letterSpacing:0.1,
         boxShadow: enabled
-          ? 'inset 0 1px 0 rgba(255,255,255,0.28), 0 8px 22px rgba(45,93,201,0.42)'
+          ? 'inset 0 1px 0 rgba(0,0,0,0.14), 0 8px 22px rgba(45,93,201,0.42)'
           : 'none',
         opacity: enabled ? 1 : 0.65,
       }}>
@@ -304,7 +304,7 @@ function GoalCrd({ id, label, selected, onClick }) {
       boxShadow: selected ? `0 16px 32px ${col}35` : 'none',
     }}>
       {selected && <div style={{ position:'absolute', top:0, left:0, right:0, height:1,
-        background:'linear-gradient(90deg,transparent,rgba(255,255,255,0.40),transparent)' }}/>}
+        background:'linear-gradient(90deg,transparent,rgba(0,0,0,0.16),transparent)' }}/>}
       {selected && <div style={{ position:'absolute', inset:0, pointerEvents:'none',
         background:'radial-gradient(160% 60% at 20% 10%, rgba(0,0,0,0.10), transparent 55%)' }}/>}
       {selected && (

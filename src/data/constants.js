@@ -7,8 +7,8 @@ export const C = {
   bd:"rgba(0,0,0,0.06)", bdHi:"rgba(0,0,0,0.10)",
   // Accent unique — bleu moderne (inchangé)
   accent:"#3B82F6", accentDk:"#2563EB", accentLt:"#DBEAFE",
-  // Text — dark on light
-  text:"#0F1923", mid:"#4B5563", dim:"#9CA3AF",
+  // Text — dark on light — hiérarchie Apple/Airbnb
+  text:"#0F1923", mid:"#374151", dim:"#6B7280",
   // Semantic
   green:"#10B981", red:"#EF4444",
   // Compatibilité
@@ -72,7 +72,7 @@ html{height:100%;height:-webkit-fill-available}
 body{background:#F6F8FB;color:#0F1923;font-family:'DM Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh;min-height:-webkit-fill-available}
 #root{min-height:100vh;min-height:100dvh;background:#F6F8FB}
 input,textarea,select{outline:none;font-family:'DM Sans',sans-serif;color:${C.text}}
-input::placeholder,textarea::placeholder{color:rgba(15,25,35,0.30)}
+input::placeholder,textarea::placeholder{color:#6B7280}
 select option{background:#111827;color:${C.text}}
 ::-webkit-scrollbar{width:2px;height:2px}
 ::-webkit-scrollbar-thumb{background:rgba(0,0,0,0.10);border-radius:2px}

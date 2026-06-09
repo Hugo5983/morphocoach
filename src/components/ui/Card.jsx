@@ -1,8 +1,8 @@
 import { C } from "../../data/constants.js";
 
 const VARIANTS = {
-  default: { background: C.s1, border: `1px solid ${C.bd}`, boxShadow: "inset 0 1px 0 rgba(255,255,255,0.03), 0 1px 0 rgba(0,0,0,0.2)" },
-  accent:  { background: C.s1, border: `1px solid ${C.gold}`, boxShadow: `0 8px 20px ${C.goldD}` },
+  default: { background: C.s1, border: `1px solid ${C.bd}`, boxShadow: "0 1px 2px rgba(0,0,0,0.05), 0 4px 12px rgba(0,0,0,0.06)" },
+  accent:  { background: C.s1, border: `1px solid ${C.gold}`, boxShadow: "0 4px 14px rgba(59,130,246,0.12)" },
   success: { background: "rgba(95,224,165,0.08)", border: "1px solid rgba(95,224,165,0.25)" },
   danger:  { background: "rgba(255,122,107,0.08)", border: "1px solid rgba(255,122,107,0.25)" },
   ghost:   { background: "transparent", border: `1px solid ${C.bd}` },

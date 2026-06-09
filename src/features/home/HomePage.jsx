@@ -33,13 +33,13 @@ function MacroBar({ label, value, goal, color, unit }) {
         <div style={{ display:"flex", alignItems:"center", gap:7 }}>
           <div style={{ width:7, height:7, borderRadius:"50%",
             background:color, flexShrink:0 }}/>
-          <span style={{ fontSize:12.5, color:"rgba(242,244,247,0.55)",
+          <span style={{ fontSize:12.5, color:"#374151",
             fontFamily:FONT, fontWeight:500 }}>{label}</span>
         </div>
         <div style={{ display:"flex", alignItems:"baseline", gap:3 }}>
           <span style={{ fontSize:13, fontWeight:700, color:"${C.text}",
             fontFamily:FONT, ...NUM }}>{value}</span>
-          <span style={{ fontSize:11, color:"rgba(242,244,247,0.28)",
+          <span style={{ fontSize:11, color:"#6B7280",
             fontFamily:FONT }}>/ {goal}{unit}</span>
         </div>
       </div>
@@ -134,7 +134,7 @@ function PackCard({ type, onUnlock }) {
             }}>
               <I d={ic.lock} size={9} color="${C.dim}" sw={2}/>
             </div>
-            <span style={{ fontSize:13, color:"rgba(242,244,247,0.55)",
+            <span style={{ fontSize:13, color:"#374151",
               fontFamily:FONT, fontWeight:500 }}>{f}</span>
           </div>
         ))}
@@ -205,7 +205,7 @@ export default function Home(props) {
                 display:"inline-flex", padding:"5px 11px", borderRadius:99,
                 background:"rgba(0,0,0,0.04)",
                 border:"1px solid rgba(0,0,0,0.07)",
-                fontSize:11.5, color:"rgba(242,244,247,0.55)",
+                fontSize:11.5, color:"#374151",
                 fontWeight:600, fontFamily:FONT,
               }}>
                 Cycle {(semC||0)+1} · J{jR}
@@ -231,7 +231,7 @@ export default function Home(props) {
             <div style={{ fontFamily:FONT, fontWeight:700, fontSize:14, color:"${C.text}" }}>
               {streak} jour{streak > 1 ? "s" : ""} de suite
             </div>
-            <div style={{ fontSize:12, color:"rgba(242,244,247,0.45)", marginTop:2, fontFamily:FONT }}>
+            <div style={{ fontSize:12, color:"#374151", marginTop:2, fontFamily:FONT }}>
               {streak >= 7 ? "Semaine parfaite !" : streak >= 3 ? "Continue comme ça !" : "Bonne lancée !"}
             </div>
           </div>
@@ -246,7 +246,7 @@ export default function Home(props) {
       }}>
         <Eyebrow color="#3B82F6" style={{ letterSpacing:"1.2px", marginBottom:5 }}>Citation du jour</Eyebrow>
         <div style={{ fontFamily:SERIF, fontStyle:"italic", fontSize:14,
-          color:"rgba(242,244,247,0.80)", lineHeight:1.6 }}>"{motiv}"</div>
+          color:"#0F1923", lineHeight:1.6 }}>"{motiv}"</div>
       </Card>
 
       {/* ── SÉANCE DU JOUR ───────────────────────────────────── */}
@@ -265,17 +265,17 @@ export default function Home(props) {
             <div style={{
               width:48, height:48, borderRadius:14,
               background:"rgba(0,0,0,0.09)",
-              border:"1px solid rgba(255,255,255,0.22)",
+              border:"1px solid rgba(0,0,0,0.11)",
               display:"grid", placeItems:"center", flexShrink:0,
             }}>
               <I d={ic.bolt} size={22} color="#fff" sw={2.2}/>
             </div>
             <div style={{ flex:1 }}>
-              <Eyebrow color="rgba(255,255,255,0.65)" style={{ letterSpacing:"1.2px", marginBottom:3 }}>Séance du jour</Eyebrow>
+              <Eyebrow color="rgba(0,0,0,0.33)" style={{ letterSpacing:"1.2px", marginBottom:3 }}>Séance du jour</Eyebrow>
               <div style={{ fontSize:18, fontWeight:700, color:"#fff",
                 fontFamily:FONT, letterSpacing:-0.4 }}>{todaySess.nom}</div>
               {todaySess.intensite && (
-                <div style={{ fontSize:12, color:"rgba(255,255,255,0.60)",
+                <div style={{ fontSize:12, color:"rgba(0,0,0,0.3)",
                   marginTop:2, fontFamily:FONT }}>
                   {INT[todaySess.intensite]?.l} · ~60 min
                 </div>
@@ -285,7 +285,7 @@ export default function Home(props) {
           <button className="tap" onClick={() => goProgram("today")} style={{
             marginTop:16, width:"100%", padding:"13px",
             borderRadius:12,
-            background:"rgba(255,255,255,0.16)",
+            background:"rgba(0,0,0,0.08)",
             border:"1px solid rgba(0,0,0,0.12)",
             color:"#fff", display:"flex", alignItems:"center",
             justifyContent:"center", gap:8,
@@ -307,7 +307,7 @@ export default function Home(props) {
           <div style={{ flex:1 }}>
             <div style={{ fontSize:13.5, fontWeight:700, color:"${C.text}",
               fontFamily:FONT }}>Créer mon premier programme</div>
-            <div style={{ fontSize:12, color:"rgba(242,244,247,0.45)",
+            <div style={{ fontSize:12, color:"#374151",
               marginTop:2, fontFamily:FONT }}>Démarre en quelques secondes</div>
           </div>
           <I d={ic.chev} size={16} color="${C.dim}"/>
@@ -326,7 +326,7 @@ export default function Home(props) {
             <button className="tap" onClick={() => setTab("nutrition")} style={{
               padding:"5px 10px", background:"rgba(0,0,0,0.03)",
               border:"1px solid rgba(0,0,0,0.06)", borderRadius:8,
-              color:"rgba(242,244,247,0.45)", fontSize:11, fontFamily:FONT,
+              color:"#374151", fontSize:11, fontFamily:FONT,
               cursor:"pointer", display:"flex", alignItems:"center", gap:3,
             }}>
               Voir <I d={ic.chev} size={11} sw={1.8}/>
@@ -364,7 +364,7 @@ export default function Home(props) {
                   lineHeight:1, ...NUM }}>
                   {over ? consumed - goal : remaining}
                 </div>
-                <div style={{ fontSize:10, color:"rgba(242,244,247,0.40)",
+                <div style={{ fontSize:10, color:"#374151",
                   fontFamily:FONT, marginTop:2 }}>kcal</div>
               </div>
             </div>
@@ -392,7 +392,7 @@ export default function Home(props) {
           <div style={{ flex:1 }}>
             <div style={{ fontSize:13.5, fontWeight:700, color:"${C.text}",
               fontFamily:FONT }}>Compléter mon profil</div>
-            <div style={{ fontSize:12, color:"rgba(242,244,247,0.45)",
+            <div style={{ fontSize:12, color:"#374151",
               marginTop:2, fontFamily:FONT }}>
               Pour voir tes calories et macros personnalisées
             </div>
