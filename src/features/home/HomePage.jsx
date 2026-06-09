@@ -37,13 +37,13 @@ function MacroBar({ label, value, goal, color, unit }) {
             fontFamily:FONT, fontWeight:500 }}>{label}</span>
         </div>
         <div style={{ display:"flex", alignItems:"baseline", gap:3 }}>
-          <span style={{ fontSize:13, fontWeight:700, color:"#F2F4F7",
+          <span style={{ fontSize:13, fontWeight:700, color:"${C.text}",
             fontFamily:FONT, ...NUM }}>{value}</span>
           <span style={{ fontSize:11, color:"rgba(242,244,247,0.28)",
             fontFamily:FONT }}>/ {goal}{unit}</span>
         </div>
       </div>
-      <div style={{ height:3, background:"rgba(255,255,255,0.07)", borderRadius:99 }}>
+      <div style={{ height:3, background:"rgba(0,0,0,0.06)", borderRadius:99 }}>
         <div style={{ height:"100%", width:`${pct}%`, background:color,
           borderRadius:99, transition:"width .6s ease" }}/>
       </div>
@@ -112,7 +112,7 @@ function PackCard({ type, onUnlock }) {
           </div>
           <div>
             <Eyebrow color={accentLt} style={{ letterSpacing:"0.08em", marginBottom:2 }}>Pack</Eyebrow>
-            <div style={{ fontSize:17, fontWeight:700, color:"#F2F4F7",
+            <div style={{ fontSize:17, fontWeight:700, color:"${C.text}",
               fontFamily:FONT, letterSpacing:-0.4, lineHeight:1 }}>{title}</div>
           </div>
         </div>
@@ -129,10 +129,10 @@ function PackCard({ type, onUnlock }) {
           <div key={f} style={{ display:"flex", alignItems:"center", gap:9 }}>
             <div style={{
               width:18, height:18, borderRadius:5, flexShrink:0,
-              background:"rgba(255,255,255,0.05)",
+              background:"rgba(0,0,0,0.04)",
               display:"grid", placeItems:"center",
             }}>
-              <I d={ic.lock} size={9} color="rgba(242,244,247,0.30)" sw={2}/>
+              <I d={ic.lock} size={9} color="${C.dim}" sw={2}/>
             </div>
             <span style={{ fontSize:13, color:"rgba(242,244,247,0.55)",
               fontFamily:FONT, fontWeight:500 }}>{f}</span>
@@ -185,11 +185,11 @@ export default function Home(props) {
 
       {/* ── GREETING ─────────────────────────────────────────── */}
       <div style={{ paddingTop:24, paddingBottom:20 }}>
-        <div style={{ fontSize:11.5, color:"rgba(242,244,247,0.38)",
+        <div style={{ fontSize:11.5, color:"${C.dim}",
           fontFamily:FONT, marginBottom:6 }}>
           {today.toLocaleDateString("fr-FR", { weekday:"long", day:"numeric", month:"long" })}
         </div>
-        <div style={{ fontFamily:SERIF, fontSize:34, color:"#F2F4F7",
+        <div style={{ fontFamily:SERIF, fontSize:34, color:"${C.text}",
           letterSpacing:-1.2, lineHeight:1.05 }}>
           {profil.prenom
             ? <>Bonjour, <span style={{ fontStyle:"italic" }}>{profil.prenom}</span></>
@@ -203,8 +203,8 @@ export default function Home(props) {
             {cycleStart && jR !== null && (
               <span style={{
                 display:"inline-flex", padding:"5px 11px", borderRadius:99,
-                background:"rgba(255,255,255,0.05)",
-                border:"1px solid rgba(255,255,255,0.10)",
+                background:"rgba(0,0,0,0.04)",
+                border:"1px solid rgba(0,0,0,0.07)",
                 fontSize:11.5, color:"rgba(242,244,247,0.55)",
                 fontWeight:600, fontFamily:FONT,
               }}>
@@ -228,7 +228,7 @@ export default function Home(props) {
             display:"grid", placeItems:"center", flexShrink:0,
           }}>🔥</div>
           <div>
-            <div style={{ fontFamily:FONT, fontWeight:700, fontSize:14, color:"#F2F4F7" }}>
+            <div style={{ fontFamily:FONT, fontWeight:700, fontSize:14, color:"${C.text}" }}>
               {streak} jour{streak > 1 ? "s" : ""} de suite
             </div>
             <div style={{ fontSize:12, color:"rgba(242,244,247,0.45)", marginTop:2, fontFamily:FONT }}>
@@ -253,18 +253,18 @@ export default function Home(props) {
       {todaySess ? (
         <Card padding="none" style={{
           background:"linear-gradient(135deg,#1E40AF 0%,#2563EB 50%,#3B82F6 100%)",
-          border:"1px solid rgba(255,255,255,0.15)",
+          border:"1px solid rgba(0,0,0,0.09)",
           borderRadius:20, padding:"20px 20px 18px", marginBottom:12,
           position:"relative", overflow:"hidden",
         }}>
           <div style={{ position:"absolute", top:0, left:0, right:0, height:1,
-            background:"linear-gradient(90deg,transparent,rgba(255,255,255,0.25),transparent)" }}/>
+            background:"linear-gradient(90deg,transparent,rgba(0,0,0,0.12),transparent)" }}/>
           <div style={{ position:"absolute", top:-40, right:-40, width:130, height:130,
-            borderRadius:"50%", background:"rgba(255,255,255,0.05)", pointerEvents:"none" }}/>
+            borderRadius:"50%", background:"rgba(0,0,0,0.04)", pointerEvents:"none" }}/>
           <div style={{ display:"flex", alignItems:"center", gap:13, position:"relative" }}>
             <div style={{
               width:48, height:48, borderRadius:14,
-              background:"rgba(255,255,255,0.15)",
+              background:"rgba(0,0,0,0.09)",
               border:"1px solid rgba(255,255,255,0.22)",
               display:"grid", placeItems:"center", flexShrink:0,
             }}>
@@ -286,7 +286,7 @@ export default function Home(props) {
             marginTop:16, width:"100%", padding:"13px",
             borderRadius:12,
             background:"rgba(255,255,255,0.16)",
-            border:"1px solid rgba(255,255,255,0.25)",
+            border:"1px solid rgba(0,0,0,0.12)",
             color:"#fff", display:"flex", alignItems:"center",
             justifyContent:"center", gap:8,
             fontFamily:FONT, fontSize:14, fontWeight:700, cursor:"pointer",
@@ -305,12 +305,12 @@ export default function Home(props) {
             border:"1px solid rgba(59,130,246,0.20)",
             display:"grid", placeItems:"center", fontSize:20, flexShrink:0 }}>🏋️</div>
           <div style={{ flex:1 }}>
-            <div style={{ fontSize:13.5, fontWeight:700, color:"#F2F4F7",
+            <div style={{ fontSize:13.5, fontWeight:700, color:"${C.text}",
               fontFamily:FONT }}>Créer mon premier programme</div>
             <div style={{ fontSize:12, color:"rgba(242,244,247,0.45)",
               marginTop:2, fontFamily:FONT }}>Démarre en quelques secondes</div>
           </div>
-          <I d={ic.chev} size={16} color="rgba(242,244,247,0.35)"/>
+          <I d={ic.chev} size={16} color="${C.dim}"/>
         </Card>
       )}
 
@@ -321,11 +321,11 @@ export default function Home(props) {
         }}>
           <div style={{ display:"flex", justifyContent:"space-between",
             alignItems:"center", marginBottom:18 }}>
-            <span style={{ fontSize:16, fontWeight:700, color:"#F2F4F7",
+            <span style={{ fontSize:16, fontWeight:700, color:"${C.text}",
               fontFamily:FONT, letterSpacing:-0.3 }}>Énergie du jour</span>
             <button className="tap" onClick={() => setTab("nutrition")} style={{
-              padding:"5px 10px", background:"rgba(255,255,255,0.04)",
-              border:"1px solid rgba(255,255,255,0.07)", borderRadius:8,
+              padding:"5px 10px", background:"rgba(0,0,0,0.03)",
+              border:"1px solid rgba(0,0,0,0.06)", borderRadius:8,
               color:"rgba(242,244,247,0.45)", fontSize:11, fontFamily:FONT,
               cursor:"pointer", display:"flex", alignItems:"center", gap:3,
             }}>
@@ -345,7 +345,7 @@ export default function Home(props) {
                 </defs>
                 <g transform="rotate(-90 66 66)">
                   <circle cx="66" cy="66" r={r} fill="none"
-                    stroke="rgba(255,255,255,0.06)" strokeWidth="7"/>
+                    stroke="rgba(0,0,0,0.05)" strokeWidth="7"/>
                   <circle cx="66" cy="66" r={r} fill="none"
                     stroke={over ? "#F87171" : "url(#ringHome)"}
                     strokeWidth="7" strokeLinecap="round"
@@ -356,11 +356,11 @@ export default function Home(props) {
               </svg>
               <div style={{ position:"absolute", inset:0, display:"flex",
                 flexDirection:"column", alignItems:"center", justifyContent:"center" }}>
-                <Eyebrow style={{ fontSize:9, letterSpacing:"1px", marginBottom:3, color:"rgba(242,244,247,0.35)" }}>
+                <Eyebrow style={{ fontSize:9, letterSpacing:"1px", marginBottom:3, color:"${C.dim}" }}>
                   {over ? "Dépassé" : "Restant"}
                 </Eyebrow>
                 <div style={{ fontFamily:SERIF, fontSize:30,
-                  color: over ? "#F87171" : "#F2F4F7",
+                  color: over ? "#F87171" : "${C.text}",
                   lineHeight:1, ...NUM }}>
                   {over ? consumed - goal : remaining}
                 </div>
@@ -390,14 +390,14 @@ export default function Home(props) {
             border:"1px solid rgba(59,130,246,0.20)",
             display:"grid", placeItems:"center", fontSize:20, flexShrink:0 }}>👤</div>
           <div style={{ flex:1 }}>
-            <div style={{ fontSize:13.5, fontWeight:700, color:"#F2F4F7",
+            <div style={{ fontSize:13.5, fontWeight:700, color:"${C.text}",
               fontFamily:FONT }}>Compléter mon profil</div>
             <div style={{ fontSize:12, color:"rgba(242,244,247,0.45)",
               marginTop:2, fontFamily:FONT }}>
               Pour voir tes calories et macros personnalisées
             </div>
           </div>
-          <I d={ic.chev} size={16} color="rgba(242,244,247,0.35)"/>
+          <I d={ic.chev} size={16} color="${C.dim}"/>
         </Card>
       )}
 
@@ -405,7 +405,7 @@ export default function Home(props) {
       <div style={{ marginBottom:8 }}>
         <div style={{ marginBottom:5 }}>
           <Eyebrow style={{ fontSize:11, letterSpacing:"0.09em", marginBottom:4 }}>Passer au niveau supérieur</Eyebrow>
-          <div style={{ fontSize:22, fontWeight:700, color:"#F2F4F7",
+          <div style={{ fontSize:22, fontWeight:700, color:"${C.text}",
             fontFamily:FONT, letterSpacing:-0.6, marginBottom:14 }}>Mes programmes</div>
         </div>
 
