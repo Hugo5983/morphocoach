@@ -54,12 +54,11 @@ function MacroBar({ label, value, goal, color, unit }) {
 // ─── Pack Premium Card ────────────────────────────────────────────────────
 function PackCard({ type, onUnlock }) {
   const isTraining = type === "training";
-  const accent     = isTraining ? "#3B82F6" : "#10B981";
-  const accentLt   = isTraining ? "#93C5FD" : "#6EE7B7";
-  const bg         = isTraining
-    ? "linear-gradient(145deg,#0D1A3E 0%,#0F1629 100%)"
-    : "linear-gradient(145deg,#071A14 0%,#0A2018 100%)";
-  const borderClr  = isTraining ? "rgba(59,130,246,0.25)" : "rgba(16,185,129,0.22)";
+  const accent     = isTraining ? "#2563EB" : "#059669";
+  const accentLt   = isTraining ? "#DBEAFE" : "#D1FAE5";
+  const accentTxt  = isTraining ? "#1D4ED8" : "#065F46";
+  const bg         = "#FFFFFF";
+  const borderClr  = isTraining ? "rgba(59,130,246,0.30)" : "rgba(16,185,129,0.30)";
   const iconPath   = isTraining
     ? <path d="M6.5 6.5 17.5 17.5M4 8l4-4M16 20l4-4M2 10l2-2M20 16l2-2M9 4l3 3M15 17l3 3"/>
     : <><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></>;
@@ -85,54 +84,65 @@ function PackCard({ type, onUnlock }) {
     <Card onClick={onUnlock} className="tap" padding="none" style={{
       background: bg,
       border: `1px solid ${borderClr}`,
+      boxShadow: `0 2px 8px rgba(0,0,0,0.06), 0 0 0 1px ${borderClr}`,
       padding: "20px 20px 18px",
       position: "relative",
       overflow: "hidden",
       marginBottom: 0,
     }}>
-      {/* Glow */}
+      {/* Bande colorée en haut */}
       <div style={{
-        position:"absolute", top:-50, right:-50,
-        width:160, height:160,
-        background:`radial-gradient(circle, ${accent}40 0%, transparent 70%)`,
-        pointerEvents:"none",
+        position:"absolute", top:0, left:0, right:0, height:4,
+        background: isTraining
+          ? "linear-gradient(90deg,#2563EB,#3B82F6)"
+          : "linear-gradient(90deg,#059669,#10B981)",
+        borderRadius:"18px 18px 0 0",
       }}/>
 
       {/* Header */}
       <div style={{ display:"flex", justifyContent:"space-between",
-        alignItems:"flex-start", marginBottom:16, position:"relative", zIndex:1 }}>
+        alignItems:"flex-start", marginBottom:14, marginTop:8 }}>
         <div style={{ display:"flex", alignItems:"center", gap:10 }}>
           <div style={{
-            width:38, height:38, borderRadius:11,
-            background:`${accent}20`,
-            border:`1px solid ${accent}40`,
+            width:40, height:40, borderRadius:12,
+            background: accentLt,
+            border:`1px solid ${borderClr}`,
             display:"grid", placeItems:"center", flexShrink:0,
           }}>
-            <I d={iconPath} size={17} color={accentLt} sw={2.2}/>
+            <I d={iconPath} size={18} color={accentTxt} sw={2.2}/>
           </div>
           <div>
-            <Eyebrow color={accentLt} style={{ letterSpacing:"0.08em", marginBottom:2 }}>Pack</Eyebrow>
-            <div style={{ fontSize:17, fontWeight:700, color:"${C.text}",
+            <div style={{ fontSize:10, fontWeight:700, color:accent,
+              letterSpacing:"1px", textTransform:"uppercase",
+              fontFamily:FONT, marginBottom:2 }}>Pack</div>
+            <div style={{ fontSize:17, fontWeight:700, color:"#0F1923",
               fontFamily:FONT, letterSpacing:-0.4, lineHeight:1 }}>{title}</div>
           </div>
         </div>
-        <Pill color={accent} style={{ padding:"4px 10px", fontSize:10.5, fontWeight:700, letterSpacing:"0.04em", color:accentLt, background:`${accent}18`, border:`1px solid ${accent}30` }}>
-          <I d={ic.star} size={10} color={accentLt} sw={0} fill={accentLt}/>
+        <div style={{
+          padding:"4px 10px", borderRadius:99,
+          background: accentLt,
+          border:`1px solid ${borderClr}`,
+          fontSize:10, fontWeight:700, color:accentTxt,
+          display:"flex", alignItems:"center", gap:4, flexShrink:0,
+        }}>
+          <I d={ic.star} size={10} color={accentTxt} sw={0} fill={accentTxt}/>
           Premium
-        </Pill>
+        </div>
       </div>
 
       {/* Features */}
       <div style={{ display:"flex", flexDirection:"column", gap:8,
-        marginBottom:16, position:"relative", zIndex:1 }}>
+        marginBottom:16 }}>
         {locked.map(f => (
           <div key={f} style={{ display:"flex", alignItems:"center", gap:9 }}>
             <div style={{
               width:18, height:18, borderRadius:5, flexShrink:0,
-              background:"rgba(0,0,0,0.04)",
+              background: accentLt,
+              border:`1px solid ${borderClr}`,
               display:"grid", placeItems:"center",
             }}>
-              <I d={ic.lock} size={9} color="${C.dim}" sw={2}/>
+              <I d={ic.lock} size={9} color={accentTxt} sw={2}/>
             </div>
             <span style={{ fontSize:13, color:"#374151",
               fontFamily:FONT, fontWeight:500 }}>{f}</span>
@@ -147,7 +157,10 @@ function PackCard({ type, onUnlock }) {
         color:"#fff", fontSize:13.5, fontWeight:700,
         cursor:"pointer", letterSpacing:-0.2,
         display:"flex", alignItems:"center", justifyContent:"center", gap:6,
-        fontFamily:FONT, position:"relative", zIndex:1,
+        fontFamily:FONT,
+        boxShadow: isTraining
+          ? "0 4px 14px rgba(37,99,235,0.35)"
+          : "0 4px 14px rgba(5,150,105,0.35)",
       }}>
         Débloquer le pack <I d={ic.chev} size={13} color="#fff" sw={2.4}/>
       </button>
