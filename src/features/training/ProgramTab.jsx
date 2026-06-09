@@ -849,20 +849,20 @@ export default function ProgramTab(props){
     <div style={{paddingBottom:16}}>
       {/* ── Segmented TopTabs (mockup) ── */}
       <div style={{padding:"16px 20px 0"}}>
-        <div style={{display:"flex",gap:6,padding:4,borderRadius:14,background:"rgba(7,10,20,0.7)",border:`1px solid ${C.bd}`}}>
+        <div style={{display:"flex",gap:6,padding:4,borderRadius:14,background:"#F0F2F7",border:`1px solid rgba(0,0,0,0.07)`}}>
           {subNav.map(s=>{
             const on=progView===s.id;
             return(
               <button key={s.id} onClick={()=>setProgView(s.id)} className="tap" style={{
                 flex:1,padding:"8px 6px",borderRadius:11,
-                background:on?C.s2:"transparent",
-                border:on?`1px solid ${C.bdHi}`:"1px solid transparent",
-                color:on?C.text:"rgba(245,241,232,0.50)",
+                background:on?"#FFFFFF":"transparent",
+                border:on?"1px solid rgba(59,130,246,0.30)":"1px solid transparent",
+                color:on?"#0F1923":"#6B7280",
                 fontSize:11.5,fontWeight:700,fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",letterSpacing:0.2,
-                boxShadow:on?"0 2px 6px rgba(0,0,0,0.25)":"none",cursor:"pointer",
+                boxShadow:on?"0 1px 4px rgba(0,0,0,0.08)":"none",cursor:"pointer",
                 display:"flex",alignItems:"center",justifyContent:"center",gap:4,
               }}>
-                {s.prem&&<span style={{color:on?C.gold:C.goldL,fontSize:11}}>♛</span>}
+                {s.prem&&<span style={{color:on?"#3B82F6":"#93C5FD",fontSize:11}}>♛</span>}
                 {s.l}
               </button>
             );
