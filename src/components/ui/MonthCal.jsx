@@ -41,7 +41,7 @@ function MusculationPicker({ onSave, onClose }) {
       <Inp placeholder="Nom de la séance (ex: Push, Pull…)" value={seNom} onChange={e=>setSeNom(e.target.value)} style={{marginBottom:10}}/>
       <div style={{display:'flex',gap:5,flexWrap:'wrap',marginBottom:12}}>
         {Object.entries(INT).map(([k,v])=>(
-          <button key={k} onClick={()=>setInt(k)} style={{padding:'5px 10px',background:intensite===k?`${v.c}20`:C.s2,border:`1px solid ${intensite===k?v.c:'rgba(255,255,255,0.07)'}`,borderRadius:7,cursor:'pointer',fontSize:11,color:intensite===k?v.c:'rgba(242,244,247,0.50)',fontWeight:intensite===k?700:400,fontFamily:DISPLAY}}>{v.l}</button>
+          <button key={k} onClick={()=>setInt(k)} style={{padding:'5px 10px',background:intensite===k?`${v.c}20`:C.s2,border:`1px solid ${intensite===k?v.c:'rgba(0,0,0,0.06)'}`,borderRadius:7,cursor:'pointer',fontSize:11,color:intensite===k?v.c:'rgba(242,244,247,0.50)',fontWeight:intensite===k?700:400,fontFamily:DISPLAY}}>{v.l}</button>
         ))}
       </div>
       {exos.length>0&&(
@@ -55,15 +55,15 @@ function MusculationPicker({ onSave, onClose }) {
           ))}
         </div>
       )}
-      <div style={{border:'1px solid rgba(255,255,255,0.07)',borderRadius:10,overflow:'hidden',marginBottom:12}}>
+      <div style={{border:'1px solid rgba(0,0,0,0.06)',borderRadius:10,overflow:'hidden',marginBottom:12}}>
         <div style={{padding:'8px',background:C.s2}}>
           <input value={search} onChange={e=>{setSearch(e.target.value);setGroupe(null);}} placeholder="Rechercher un exercice…"
-            style={{width:'100%',padding:'7px 10px',background:'rgba(255,255,255,0.04)',border:'1px solid rgba(255,255,255,0.07)',borderRadius:8,fontSize:12,color:C.text,fontFamily:DISPLAY,outline:'none',boxSizing:'border-box'}}/>
+            style={{width:'100%',padding:'7px 10px',background:'rgba(0,0,0,0.03)',border:'1px solid rgba(0,0,0,0.06)',borderRadius:8,fontSize:12,color:C.text,fontFamily:DISPLAY,outline:'none',boxSizing:'border-box'}}/>
         </div>
         {!search&&(
           <div style={{padding:'8px',display:'flex',flexWrap:'wrap',gap:4,maxHeight:110,overflowY:'auto'}}>
             {Object.keys(EX).map(g=>(
-              <button key={g} onClick={()=>setGroupe(g===groupe?null:g)} style={{padding:'4px 9px',background:groupe===g?'rgba(59,130,246,0.10)':C.s2,border:`1px solid ${groupe===g?'#3B82F6':'rgba(255,255,255,0.07)'}`,borderRadius:12,color:groupe===g?'#3B82F6':'rgba(242,244,247,0.45)',cursor:'pointer',fontSize:10,fontFamily:DISPLAY}}>
+              <button key={g} onClick={()=>setGroupe(g===groupe?null:g)} style={{padding:'4px 9px',background:groupe===g?'rgba(59,130,246,0.10)':C.s2,border:`1px solid ${groupe===g?'#3B82F6':'rgba(0,0,0,0.06)'}`,borderRadius:12,color:groupe===g?'#3B82F6':'rgba(242,244,247,0.45)',cursor:'pointer',fontSize:10,fontFamily:DISPLAY}}>
                 {g} <span style={{fontSize:8.5,opacity:0.6}}>({(EX[g]||[]).length})</span>
               </button>
             ))}
@@ -114,19 +114,19 @@ function BonusForm({ type, onSave, onBack }) {
       </div>
       <div style={{display:'flex',flexWrap:'wrap',gap:5,marginBottom:12}}>
         {type.suggestions.map(s=>(
-          <button key={s} onClick={()=>setNom(s)} style={{padding:'5px 10px',background:nom===s?`${type.color}18`:C.s2,border:`1px solid ${nom===s?type.color:'rgba(255,255,255,0.07)'}`,borderRadius:999,cursor:'pointer',fontSize:10.5,color:nom===s?type.color:'rgba(242,244,247,0.50)',fontFamily:DISPLAY,fontWeight:nom===s?700:400}}>{s}</button>
+          <button key={s} onClick={()=>setNom(s)} style={{padding:'5px 10px',background:nom===s?`${type.color}18`:C.s2,border:`1px solid ${nom===s?type.color:'rgba(0,0,0,0.06)'}`,borderRadius:999,cursor:'pointer',fontSize:10.5,color:nom===s?type.color:'rgba(242,244,247,0.50)',fontFamily:DISPLAY,fontWeight:nom===s?700:400}}>{s}</button>
         ))}
       </div>
       <Inp placeholder="Ou saisir manuellement…" value={nom} onChange={e=>setNom(e.target.value)} style={{marginBottom:12}}/>
       <div style={{...ey,marginBottom:8}}>Durée</div>
       <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:10}}>
-        <button onClick={()=>setDuree(d=>Math.max(10,d-5))} style={{width:34,height:34,borderRadius:9,background:C.s2,border:`1px solid rgba(255,255,255,0.07)`,cursor:'pointer',fontSize:18,color:'rgba(242,244,247,0.50)',fontFamily:DISPLAY}}>−</button>
+        <button onClick={()=>setDuree(d=>Math.max(10,d-5))} style={{width:34,height:34,borderRadius:9,background:C.s2,border:`1px solid rgba(0,0,0,0.06)`,cursor:'pointer',fontSize:18,color:'rgba(242,244,247,0.50)',fontFamily:DISPLAY}}>−</button>
         <div style={{flex:1,textAlign:'center',fontFamily:DISPLAY,fontSize:24,fontWeight:700,color:C.text,...NUM}}>{duree}<span style={{fontSize:12,fontWeight:400,color:'rgba(242,244,247,0.40)',marginLeft:4}}>min</span></div>
         <button onClick={()=>setDuree(d=>Math.min(180,d+5))} style={{width:34,height:34,borderRadius:9,background:`${type.color}18`,border:`1px solid ${type.color}40`,cursor:'pointer',fontSize:18,color:type.color,fontFamily:DISPLAY}}>+</button>
       </div>
       <div style={{display:'flex',gap:5,marginBottom:16}}>
         {[15,20,30,45,60,90].map(d=>(
-          <button key={d} onClick={()=>setDuree(d)} style={{flex:1,padding:'5px 2px',background:duree===d?`${type.color}14`:'transparent',border:`1px solid ${duree===d?type.color:'rgba(255,255,255,0.07)'}`,borderRadius:7,color:duree===d?type.color:'rgba(242,244,247,0.40)',cursor:'pointer',fontSize:10,fontFamily:DISPLAY,fontWeight:duree===d?700:400}}>{d}'</button>
+          <button key={d} onClick={()=>setDuree(d)} style={{flex:1,padding:'5px 2px',background:duree===d?`${type.color}14`:'transparent',border:`1px solid ${duree===d?type.color:'rgba(0,0,0,0.06)'}`,borderRadius:7,color:duree===d?type.color:'rgba(242,244,247,0.40)',cursor:'pointer',fontSize:10,fontFamily:DISPLAY,fontWeight:duree===d?700:400}}>{d}'</button>
         ))}
       </div>
       <Btn disabled={!nom} onClick={()=>onSave({nom:`${nom} · ${duree}min`,intensite:type.id==='mobility'?'leger':'modere',color:type.color,bonus:{type:type.id,duree,label:nom}})}>✓ Ajouter à ce jour</Btn>
@@ -148,7 +148,7 @@ export function DayModal({ date, sessions, onSave, onDelete, onToggleDone, onClo
 
   const overlay = { position:'fixed',inset:0,background:'rgba(6,9,20,0.92)',display:'flex',alignItems:'flex-end',justifyContent:'center',zIndex:300 };
   const sheet   = { background:C.s1,border:`1px solid ${C.bd}`,borderRadius:'20px 20px 0 0',padding:'12px 18px 32px',width:'100%',maxWidth:480,maxHeight:'90vh',overflowY:'auto' };
-  const handle  = <div style={{width:36,height:4,borderRadius:2,background:'rgba(255,255,255,0.10)',margin:'0 auto 16px'}}/>;
+  const handle  = <div style={{width:36,height:4,borderRadius:2,background:'rgba(0,0,0,0.07)',margin:'0 auto 16px'}}/>;
 
   // ── Musculation step ──
   if (step==='musculation') return (
@@ -323,12 +323,12 @@ function BilanMois({ sessions, year, month, cycleStart, currentWeek }) {
 
   // Carte bilan
   const Card = ({ label, main, sub, delta, deltaOk, accent }) => (
-    <div style={{flex:1,background:'#111827',border:`1px solid rgba(255,255,255,0.07)`,borderRadius:16,padding:'15px 13px',minWidth:0}}>
+    <div style={{flex:1,background:C.s1,border:`1px solid rgba(0,0,0,0.06)`,borderRadius:16,padding:'15px 13px',minWidth:0}}>
       <div style={{...ey,marginBottom:9}}>{label}</div>
       {(main!==undefined&&main!=='')&&(
         <div style={{fontFamily:DISPLAY,fontSize:30,fontWeight:700,color:C.text,letterSpacing:-1,lineHeight:1,...NUM}}>
           {main}
-          {sub&&<span style={{fontSize:13,fontWeight:400,color:'rgba(242,244,247,0.35)',marginLeft:3}}>{sub}</span>}
+          {sub&&<span style={{fontSize:13,fontWeight:400,color:'${C.dim}',marginLeft:3}}>{sub}</span>}
         </div>
       )}
       {delta&&(
@@ -354,10 +354,10 @@ function BilanMois({ sessions, year, month, cycleStart, currentWeek }) {
 
   const assBarre = (
     <div>
-      <div style={{height:7,background:'rgba(255,255,255,0.07)',borderRadius:5,overflow:'hidden',marginBottom:6}}>
+      <div style={{height:7,background:'rgba(0,0,0,0.06)',borderRadius:5,overflow:'hidden',marginBottom:6}}>
         <div style={{height:'100%',width:`${stats.assiduite}%`,background:'linear-gradient(90deg,#34D399,#10B981)',borderRadius:5,transition:'width .7s cubic-bezier(.4,0,.2,1)'}}/>
       </div>
-      <div style={{fontSize:9.5,color:'rgba(242,244,247,0.35)',fontFamily:DISPLAY,...NUM}}>
+      <div style={{fontSize:9.5,color:'${C.dim}',fontFamily:DISPLAY,...NUM}}>
         {stats.validated} / {stats.planned} validée{stats.planned>1?'s':''}
       </div>
     </div>
@@ -372,7 +372,7 @@ function BilanMois({ sessions, year, month, cycleStart, currentWeek }) {
       <div style={{fontSize:11,color:'rgba(242,244,247,0.40)',fontFamily:DISPLAY,marginTop:6}}>{CHARGE_SUB[topIntKey]||''}</div>
     </div>
   ) : (
-    <div style={{fontSize:12,color:'rgba(242,244,247,0.30)',fontFamily:DISPLAY,marginTop:2}}>Aucune séance validée</div>
+    <div style={{fontSize:12,color:'${C.dim}',fontFamily:DISPLAY,marginTop:2}}>Aucune séance validée</div>
   );
 
   // Deltas séances / tonnage
@@ -388,9 +388,9 @@ function BilanMois({ sessions, year, month, cycleStart, currentWeek }) {
     <div style={{marginTop:28}}>
       {/* ── Séparateur aéré ── */}
       <div style={{display:'flex',alignItems:'center',gap:12,marginBottom:22}}>
-        <div style={{flex:1,height:1,background:'rgba(255,255,255,0.07)'}}/>
+        <div style={{flex:1,height:1,background:'rgba(0,0,0,0.06)'}}/>
         <div style={{...ey,letterSpacing:'1.6px',flexShrink:0}}>Bilan du mois</div>
-        <div style={{flex:1,height:1,background:'rgba(255,255,255,0.07)'}}/>
+        <div style={{flex:1,height:1,background:'rgba(0,0,0,0.06)'}}/>
       </div>
 
       <div style={{display:'flex',alignItems:'flex-end',justifyContent:'space-between',marginBottom:14}}>
@@ -512,7 +512,7 @@ export const MonthCal = memo(function MonthCal({ sessions, onUpdate, semC, curre
             let bg, bd, numColor;
             if (isDone)       { bg = color;            bd = `1px solid ${color}`;      numColor = '#fff'; }
             else if (hasSess) { bg = `${color}22`;     bd = `1px solid ${color}66`;    numColor = color; }
-            else              { bg = isPast?'rgba(255,255,255,0.025)':C.s2; bd = `1px solid ${C.bd}`; numColor = isPast?'rgba(242,244,247,0.30)':C.text; }
+            else              { bg = isPast?'rgba(255,255,255,0.025)':C.s2; bd = `1px solid ${C.bd}`; numColor = isPast?'${C.dim}':C.text; }
 
             const boxShadow = isToday
               ? `0 0 0 2px #60A5FA, 0 4px 12px rgba(59,130,246,0.35)`
