@@ -4,7 +4,7 @@ import { C, FONT } from "../../data/constants.js";
 export function Header({ premium, cycleStart, jR, tab, setTab }) {
   return (
     <div className="np" style={{
-      background: "rgba(8,14,26,0.95)",
+      background: "rgba(246,248,251,0.97)",
       backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)",
       borderBottom: `1px solid ${C.bd}`,
       paddingTop: "calc(8px + env(safe-area-inset-top, 0px))",
