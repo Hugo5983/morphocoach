@@ -422,7 +422,8 @@ export async function callGenerateAPI({ photos, promptText }) {
     method:  "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      model:      "claude-sonnet-4-20250514",
+      // ⚠️ Doit correspondre à ALLOWED_MODELS dans /api/generate.js
+      model:      "claude-sonnet-4-5",
       max_tokens: 6000,
       system:     "Tu es un Master Coach Sportif expert en biomécanique, hypertrophie, et périodisation. Tu génères UNIQUEMENT du JSON valide, sans aucun texte avant ou après, sans markdown.",
       messages:   [{ role: "user", content }],
