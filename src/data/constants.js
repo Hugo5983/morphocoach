@@ -71,9 +71,9 @@ export const GLOBAL_CSS = `
 html{height:100%;height:-webkit-fill-available}
 body{background:#F6F8FB;color:#0F1923;font-family:'DM Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh;min-height:-webkit-fill-available}
 #root{min-height:100vh;min-height:100dvh;background:#F6F8FB}
-input,textarea,select{outline:none;font-family:'DM Sans',sans-serif;color:#F2F4F7}
+input,textarea,select{outline:none;font-family:'DM Sans',sans-serif;color:${C.text}}
 input::placeholder,textarea::placeholder{color:rgba(15,25,35,0.30)}
-select option{background:#111827;color:#F2F4F7}
+select option{background:#111827;color:${C.text}}
 ::-webkit-scrollbar{width:2px;height:2px}
 ::-webkit-scrollbar-thumb{background:rgba(0,0,0,0.10);border-radius:2px}
 
@@ -102,7 +102,7 @@ select option{background:#111827;color:#F2F4F7}
 .tap-sm:active{transform:scale(0.95)}
 .tap-icon:active{transform:scale(0.90)}
 
-.skeleton{background:linear-gradient(90deg,rgba(255,255,255,0.04) 25%,rgba(255,255,255,0.08) 50%,rgba(255,255,255,0.04) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:8px}
+.skeleton{background:linear-gradient(90deg,rgba(0,0,0,0.03) 25%,rgba(0,0,0,0.06) 50%,rgba(0,0,0,0.03) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:8px}
 
 .card-hover{transition:transform .18s ease,box-shadow .18s ease}
 .card-hover:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(0,0,0,0.25)}
