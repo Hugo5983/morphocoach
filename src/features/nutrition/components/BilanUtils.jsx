@@ -31,9 +31,9 @@ export function statusBadge(pct) {
 }
 
 export function microStatus(pct) {
-  if (pct >= 90) return { tag:"ok",   icon:"✅", color:"#34D399", label:"Atteint" };
-  if (pct >= 60) return { tag:"warn", icon:"⚠️", color:"#F59E0B", label:"Proche"  };
-  return                { tag:"bad",  icon:"❌", color:"#F87171", label:"Insuffisant" };
+  if (pct >= 90) return { tag:"ok",   icon:"✅", color:"#34D399", statusLabel:"Atteint" };
+  if (pct >= 60) return { tag:"warn", icon:"⚠️", color:"#F59E0B", statusLabel:"Proche"  };
+  return                { tag:"bad",  icon:"❌", color:"#F87171", statusLabel:"Insuffisant" };
 }
 
 // ─── Score santé alimentaire (lettre A→E + score /100) ─────────────────────
