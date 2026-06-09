@@ -14,7 +14,7 @@ export function Paywall({ onSubscribe, onClose }) {
   return (
     <div style={{
       position:"fixed", inset:0, zIndex:500,
-      background:"rgba(5,8,18,0.96)",
+      background:"rgba(15,25,35,0.65)",
       display:"flex", alignItems:"center", justifyContent:"center",
       padding:"0 16px",
     }}>
