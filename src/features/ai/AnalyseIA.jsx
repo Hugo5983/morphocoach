@@ -16,7 +16,7 @@ import {
 const T = {
   bg:'#060912', surf:'#0D1322', surfHi:'#141B30', surfFlat:'#0A1020',
   bd:'rgba(178,190,210,0.07)', bdHi:'rgba(178,190,210,0.14)', bdAc:'rgba(91,141,239,0.32)',
-  t1:'#F2F4F7', t2:'rgba(242,244,247,0.74)', t3:'#8A94A6',
+  t1:'${C.text}', t2:'rgba(242,244,247,0.74)', t3:'#8A94A6',
   t4:'rgba(138,148,166,0.62)', t5:'rgba(138,148,166,0.32)',
   ac:'#5B8DEF', acLt:'#9CB9F5', acDk:'#2D5DC9',
   acSoft:'rgba(91,141,239,0.14)', acGlow:'rgba(91,141,239,0.22)',
@@ -306,18 +306,18 @@ function GoalCrd({ id, label, selected, onClick }) {
       {selected && <div style={{ position:'absolute', top:0, left:0, right:0, height:1,
         background:'linear-gradient(90deg,transparent,rgba(255,255,255,0.40),transparent)' }}/>}
       {selected && <div style={{ position:'absolute', inset:0, pointerEvents:'none',
-        background:'radial-gradient(160% 60% at 20% 10%, rgba(255,255,255,0.18), transparent 55%)' }}/>}
+        background:'radial-gradient(160% 60% at 20% 10%, rgba(0,0,0,0.10), transparent 55%)' }}/>}
       {selected && (
         <div style={{ position:'absolute', top:8, right:8, width:20, height:20,
           borderRadius:'50%', background:'rgba(0,0,0,0.22)',
-          border:'1px solid rgba(255,255,255,0.25)',
+          border:'1px solid rgba(0,0,0,0.12)',
           display:'grid', placeItems:'center' }}>
           <OI n="check" sz={11} s={2.8} c={T.t1}/>
         </div>
       )}
       <div style={{ width:42, height:42, borderRadius:13,
         background: selected ? 'rgba(0,0,0,0.18)' : `${col}18`,
-        border: `1px solid ${selected ? 'rgba(255,255,255,0.18)' : col+'35'}`,
+        border: `1px solid ${selected ? 'rgba(0,0,0,0.10)' : col+'35'}`,
         display:'grid', placeItems:'center',
         color: selected ? T.t1 : col }}>
         <OI n={ic} sz={21} s={1.7}/>
