@@ -37,7 +37,7 @@ export function Paywall({ onSubscribe, onClose }) {
         <button onClick={onClose} style={{
           position:"absolute", top:14, right:14,
           width:30, height:30, borderRadius:8,
-          background:"rgba(255,255,255,0.06)",
+          background:"rgba(0,0,0,0.05)",
           border:`1px solid ${C.bd}`,
           color:"rgba(242,244,247,0.45)", fontSize:18,
           display:"grid", placeItems:"center", cursor:"pointer",
@@ -70,7 +70,7 @@ export function Paywall({ onSubscribe, onClose }) {
             <div key={i} style={{
               display:"flex", alignItems:"center", gap:12,
               padding:"10px 0",
-              borderBottom: i < FEATURES.length - 1 ? `1px solid rgba(255,255,255,0.05)` : "none",
+              borderBottom: i < FEATURES.length - 1 ? `1px solid rgba(0,0,0,0.04)` : "none",
             }}>
               <span style={{ fontSize:18, flexShrink:0 }}>{f.icon}</span>
               <div style={{ flex:1 }}>
@@ -94,7 +94,7 @@ export function Paywall({ onSubscribe, onClose }) {
             <span style={{ fontFamily:SERIF, fontSize:44, color:C.text, letterSpacing:-1.5, lineHeight:1 }}>19.99€</span>
             <span style={{ fontSize:13, color:"rgba(242,244,247,0.45)", fontFamily:FONT }}>/cycle</span>
           </div>
-          <div style={{ fontSize:11, color:"rgba(242,244,247,0.35)", fontFamily:FONT, marginTop:4 }}>
+          <div style={{ fontSize:11, color:"${C.dim}", fontFamily:FONT, marginTop:4 }}>
             Sans engagement · Résiliable à tout moment
           </div>
         </div>
@@ -103,7 +103,7 @@ export function Paywall({ onSubscribe, onClose }) {
         <button onClick={onSubscribe} style={{
           width:"100%", padding:"14px 16px",
           background:"linear-gradient(135deg,#1D4ED8,#3B82F6)",
-          border:"1px solid rgba(255,255,255,0.15)",
+          border:"1px solid rgba(0,0,0,0.09)",
           borderRadius:14, color:"#fff",
           fontSize:15, fontWeight:700, fontFamily:FONT,
           cursor:"pointer", marginBottom:10,
@@ -112,7 +112,7 @@ export function Paywall({ onSubscribe, onClose }) {
         }}>
           <div style={{
             position:"absolute", top:0, left:0, right:0, height:1,
-            background:"linear-gradient(90deg,transparent,rgba(255,255,255,0.25),transparent)",
+            background:"linear-gradient(90deg,transparent,rgba(0,0,0,0.12),transparent)",
           }}/>
           Activer Entraînement PRO
         </button>
