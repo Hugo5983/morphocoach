@@ -16,17 +16,17 @@ export const Box = ({ children, style, onClick, className }) => (
     padding: "16px",
     marginBottom: 10,
     cursor: onClick ? "pointer" : "default",
-    boxShadow: "0 1px 3px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.04)",
+    boxShadow: "0 1px 2px rgba(0,0,0,0.05), 0 4px 12px rgba(0,0,0,0.06)",
     ...style,
   }}>{children}</div>
 );
 
 // ─── CARD — carte avec variantes (default / accent / success / danger / ghost) ─
 const CARD_VARIANTS = {
-  default: { background: C.s1, border: `1px solid ${C.bd}`, boxShadow: "0 1px 3px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.04)" },
-  accent:  { background: C.s1, border: `1px solid rgba(59,130,246,0.30)`, boxShadow: "0 8px 20px rgba(59,130,246,0.12)" },
-  success: { background: "rgba(52,211,153,0.08)", border: "1px solid rgba(52,211,153,0.25)" },
-  danger:  { background: "rgba(248,113,113,0.08)", border: "1px solid rgba(248,113,113,0.25)" },
+  default: { background: C.s1, border: `1px solid ${C.bd}`, boxShadow: "0 1px 2px rgba(0,0,0,0.05), 0 4px 12px rgba(0,0,0,0.06)" },
+  accent:  { background: C.s1, border: `1px solid rgba(59,130,246,0.25)`, boxShadow: "0 4px 20px rgba(59,130,246,0.12)" },
+  success: { background: "rgba(16,185,129,0.06)", border: "1px solid rgba(16,185,129,0.20)" },
+  danger:  { background: "rgba(239,68,68,0.06)",  border: "1px solid rgba(239,68,68,0.18)" },
   ghost:   { background: "transparent", border: `1px solid ${C.bd}` },
 };
 const CARD_PADDINGS = { sm: "12px 14px", md: "16px", lg: "20px 18px", xl: "22px 20px", none: "0" };
@@ -80,7 +80,9 @@ export const Inp = ({ style, ...p }) => (
     width: "100%", padding: "13px 14px",
     background: C.s2, border: `1px solid ${C.bd}`,
     borderRadius: 12, color: C.text, fontSize: 14,
-    marginBottom: 8, fontFamily: "'DM Sans',sans-serif", ...style,
+    marginBottom: 8, fontFamily: "'DM Sans',sans-serif",
+    boxShadow: "inset 0 1px 3px rgba(0,0,0,0.04)",
+    ...style,
   }} {...p}/>
 );
 
@@ -89,7 +91,7 @@ export const Btn = ({ children, onClick, disabled, v = "fill", sm, style }) => {
   const variants = {
     fill:  { bg: C.accent, color: "#FFFFFF", border: "none", shadow: "0 2px 8px rgba(59,130,246,0.30)" },
     out:   { bg: "transparent", color: C.accent, border: `1px solid rgba(59,130,246,0.40)`, shadow: "none" },
-    ghost: { bg: "rgba(255,255,255,0.04)", color: C.mid, border: `1px solid ${C.bd}`, shadow: "none" },
+    ghost: { bg: C.s2, color: C.mid, border: `1px solid ${C.bd}`, shadow: "none" },
   };
   const s = variants[v] || variants.fill;
   return (
@@ -110,7 +112,7 @@ export const Btn = ({ children, onClick, disabled, v = "fill", sm, style }) => {
 
 // ─── BAR — barre de progression ─────────────────────────────────────────────
 export const Bar = ({ pct, color = C.accent, h = 4 }) => (
-  <div style={{ height: h, background: "rgba(255,255,255,0.06)", borderRadius: h / 2, overflow: "hidden", marginTop: 5 }}>
+  <div style={{ height: h, background: "#E8EBF2", borderRadius: h / 2, overflow: "hidden", marginTop: 5 }}>
     <div style={{
       height: "100%", width: `${Math.min(100, pct || 0)}%`,
       background: pct > 100 ? C.red : color,
@@ -135,8 +137,8 @@ export const G2 = ({ children, gap = 8, style }) => (
 export const Tag = ({ children, active, color, onClick }) => (
   <span onClick={onClick} style={{
     display: "inline-block", padding: "5px 12px", margin: "3px",
-    background: active ? "rgba(59,130,246,0.12)" : "rgba(255,255,255,0.04)",
-    border: `1px solid ${active ? "rgba(59,130,246,0.35)" : C.bd}`,
+    background: active ? "rgba(59,130,246,0.10)" : C.s2,
+    border: `1px solid ${active ? "rgba(59,130,246,0.30)" : C.bd}`,
     borderRadius: 20, fontSize: 11.5,
     color: active ? C.accent : C.mid,
     cursor: onClick ? "pointer" : "default",
