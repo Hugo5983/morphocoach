@@ -9,22 +9,22 @@ import { createPortal }                 from "react-dom";
 
 // ── Tokens ───────────────────────────────────────────────────────────────────
 const T = {
-  bg:'#060912', bgLo:'#03060D', surf:'#0D1322', surfFlat:'#0A1020',
-  bd:'rgba(178,190,210,0.07)', bdHi:'rgba(178,190,210,0.14)', bdAc:'rgba(91,141,239,0.32)',
-  t1:'${C.text}', t2:'rgba(242,244,247,0.74)', t3:'#8A94A6',
-  t4:'rgba(138,148,166,0.62)', t5:'rgba(138,148,166,0.32)',
-  ac:'#5B8DEF', acLt:'#9CB9F5', acDk:'#2D5DC9',
-  acSoft:'rgba(91,141,239,0.14)', acGlow:'rgba(91,141,239,0.22)',
+  bg:'#F6F8FB', bgLo:'#EEF1F7', surf:'#FFFFFF', surfFlat:'#F0F2F7',
+  bd:'rgba(0,0,0,0.07)', bdHi:'rgba(0,0,0,0.12)', bdAc:'rgba(59,130,246,0.30)',
+  t1:'#0F1923', t2:'#374151', t3:'#6B7280',
+  t4:'rgba(107,114,128,0.70)', t5:'rgba(107,114,128,0.40)',
+  ac:'#3B82F6', acLt:'#93C5FD', acDk:'#2563EB',
+  acSoft:'rgba(59,130,246,0.10)', acGlow:'rgba(59,130,246,0.16)',
 };
 const F   = '"Space Grotesk","Inter",system-ui,sans-serif';
 const SER = '"Instrument Serif","Times New Roman",serif';
 const MON = '"JetBrains Mono",ui-monospace,monospace';
 const NUM = { fontVariantNumeric:'tabular-nums', fontFeatureSettings:'"tnum","cv11"' };
 const GL  = {
-  background:'rgba(13,19,34,0.72)',
+  background:'rgba(246,248,251,0.85)',
   backdropFilter:'blur(22px) saturate(150%)',
   WebkitBackdropFilter:'blur(22px) saturate(150%)',
-  border:'1px solid rgba(178,190,210,0.10)',
+  border:'1px solid rgba(0,0,0,0.07)',
   borderRadius:20,
 };
 
