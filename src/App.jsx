@@ -94,9 +94,8 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    const t1 = setTimeout(() => push("🏋️", "Séance du jour", "Votre programme vous attend !"), 7000);
-    const t2 = setTimeout(() => push("💧", "Hydratation", "Pensez à boire de l'eau !"), 22000);
-    return () => { clearTimeout(t1); clearTimeout(t2); };
+    // Notifications automatiques supprimées — trop intrusives au démarrage
+    return () => {};
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -219,7 +218,16 @@ export default function App() {
                     onBack={() => setTab("home")}
                     profil={profil} obj={obj}
                     calObj={calObj} pObj={pObj} gObj={gObj} lObj={lObj}
-                    bilan={null}
+                    bilan={{
+                      avgKcal: totR.cal,
+                      avgProt: totR.p,
+                      avgGluc: totR.g,
+                      avgLip:  totR.l,
+                      pctKcal: calObj ? Math.round((totR.cal / calObj) * 100) : 0,
+                      nbLogged: Object.values(repas).some(arr => arr.length > 0) ? 1 : 0,
+                      totalDays: 14,
+                      score: cPct ? (cPct / 10).toFixed(1) : "—",
+                    }}
                     premium={premiumNutrition}
                     setPaywall={setPaywallNutrition}
                     push={push}
