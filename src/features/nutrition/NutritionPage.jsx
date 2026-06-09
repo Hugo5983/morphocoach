@@ -139,13 +139,33 @@ export default function Nutrition(props){
     if (code.length >= 8) handleScan(code);
   };
 
-  const repasHistory = useMemo(()=>Array.from({length:14},()=>({
-    kcal: tot.cal*(0.85+Math.random()*0.30),
-    prot: tot.p*(0.80+Math.random()*0.40),
-    gluc: tot.g*(0.85+Math.random()*0.30),
-    lip:  tot.l*(0.80+Math.random()*0.40),
-    eau:  eau*(0.70+Math.random()*0.60),
-  })),[]);
+  // ─── Historique réel sur 14 jours (lu depuis repasLog) ─────────────────────
+  // Auparavant: Math.random() — données factices contraires à la règle "no fake data".
+  // Désormais: lit `repasLog[YYYY-MM-DD]` quand dispo, sinon entrée vide.
+  // `computeBilan` détecte les jours vides (kcal=0) et affiche un bilan partiel honnête.
+  const repasLog = props.repasLog || {};
+  const repasHistory = useMemo(() => {
+    const out = [];
+    for (let i = 13; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+      const day = repasLog[key];
+      if (day && day.cal > 0) {
+        out.push({
+          kcal: day.cal || 0,
+          prot: day.p   || 0,
+          gluc: day.g   || 0,
+          lip:  day.l   || 0,
+          eau:  day.eau || 0,
+        });
+      } else {
+        // jour non loggé — kcal=0 sera détecté comme "empty" par computeBilan
+        out.push({ kcal: 0, prot: 0, gluc: 0, lip: 0, eau: 0 });
+      }
+    }
+    return out;
+  }, [repasLog]);
 
   const isToday = dayOff===0;
 
