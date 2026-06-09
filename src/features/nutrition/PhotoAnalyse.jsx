@@ -334,7 +334,7 @@ export default function PhotoAnalyse({ onClose, onAdd, premium, setPaywall, push
                 <button onClick={() => inputRef.current?.click()} style={{
                   position: "absolute", bottom: 12, right: 12,
                   background: "rgba(0,0,0,0.65)", backdropFilter: "blur(8px)",
-                  border: "1px solid rgba(255,255,255,0.15)", borderRadius: 10,
+                  border: "1px solid rgba(0,0,0,0.09)", borderRadius: 10,
                   color: "#fff", fontSize: 11, fontWeight: 600, fontFamily: FONT,
                   padding: "6px 12px", cursor: "pointer",
                   display: "flex", alignItems: "center", gap: 5,
@@ -383,12 +383,12 @@ export default function PhotoAnalyse({ onClose, onAdd, premium, setPaywall, push
               /* Paywall */
               <button onClick={() => setPaywall(true)} style={{
                 width: "100%", padding: "14px",
-                background: "rgba(255,255,255,0.04)",
-                border: "1px solid rgba(255,255,255,0.10)",
+                background: "rgba(0,0,0,0.03)",
+                border: "1px solid rgba(0,0,0,0.07)",
                 borderRadius: 14, cursor: "pointer",
                 display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
                 fontFamily: FONT, fontSize: 14, fontWeight: 700,
-                color: "rgba(242,244,247,0.35)",
+                color: "${C.dim}",
               }}>
                 <LockIcon size={16}/> Limite atteinte · Passer au PRO
               </button>
@@ -400,7 +400,7 @@ export default function PhotoAnalyse({ onClose, onAdd, premium, setPaywall, push
                   width: "100%", padding: "14px",
                   background: preview && step !== "loading"
                     ? "linear-gradient(135deg,#1D4ED8,#3B82F6)"
-                    : "rgba(255,255,255,0.06)",
+                    : "rgba(0,0,0,0.05)",
                   border: "none", borderRadius: 14,
                   cursor: preview && step !== "loading" ? "pointer" : "not-allowed",
                   display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
@@ -431,7 +431,7 @@ export default function PhotoAnalyse({ onClose, onAdd, premium, setPaywall, push
             {!premium && newRemain > 0 && (
               <div style={{
                 marginTop: 10, textAlign: "center",
-                fontSize: 10.5, color: "rgba(242,244,247,0.30)", fontFamily: FONT,
+                fontSize: 10.5, color: "${C.dim}", fontFamily: FONT,
               }}>
                 {newRemain} photo{newRemain > 1 ? "s" : ""} restante{newRemain > 1 ? "s" : ""} ce mois · {PRO_LIMIT} photos/mois avec Nutrition PRO
               </div>
@@ -448,7 +448,7 @@ export default function PhotoAnalyse({ onClose, onAdd, premium, setPaywall, push
             {preview && (
               <div style={{
                 borderRadius: 16, overflow: "hidden",
-                marginBottom: 16, border: `1px solid rgba(255,255,255,0.08)`,
+                marginBottom: 16, border: `1px solid rgba(0,0,0,0.06)`,
                 height: 140,
               }}>
                 <img src={preview} alt="Repas analysé"
@@ -496,7 +496,7 @@ export default function PhotoAnalyse({ onClose, onAdd, premium, setPaywall, push
                       fontSize: 17, fontWeight: 800, color: m.c,
                       fontFamily: FONT, letterSpacing: -0.5, lineHeight: 1,
                     }}>{Math.round(m.v)}</div>
-                    <div style={{ fontSize: 9, color: "rgba(242,244,247,0.35)", marginTop: 3, fontFamily: FONT }}>{m.u}</div>
+                    <div style={{ fontSize: 9, color: "${C.dim}", marginTop: 3, fontFamily: FONT }}>{m.u}</div>
                     <div style={{ fontSize: 9, color: "rgba(242,244,247,0.25)", fontFamily: FONT }}>{m.l}</div>
                   </div>
                 ))}
@@ -505,9 +505,9 @@ export default function PhotoAnalyse({ onClose, onAdd, premium, setPaywall, push
               {/* Note IA */}
               {res.note && (
                 <div style={{
-                  fontSize: 11, color: "rgba(242,244,247,0.35)", fontFamily: FONT,
+                  fontSize: 11, color: "${C.dim}", fontFamily: FONT,
                   fontStyle: "italic", lineHeight: 1.5,
-                  borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 10,
+                  borderTop: "1px solid rgba(0,0,0,0.05)", paddingTop: 10,
                 }}>💡 {res.note}</div>
               )}
             </div>
@@ -519,7 +519,7 @@ export default function PhotoAnalyse({ onClose, onAdd, premium, setPaywall, push
               marginBottom: 14,
             }}>
               <div style={{
-                fontSize: 10, fontWeight: 700, color: "rgba(242,244,247,0.35)",
+                fontSize: 10, fontWeight: 700, color: "${C.dim}",
                 letterSpacing: "0.09em", textTransform: "uppercase",
                 fontFamily: FONT, marginBottom: 10,
               }}>Ajouter à…</div>
@@ -529,8 +529,8 @@ export default function PhotoAnalyse({ onClose, onAdd, premium, setPaywall, push
                     padding: "9px 4px",
                     background: repasChoix === m.id
                       ? "rgba(59,130,246,0.15)"
-                      : "rgba(255,255,255,0.04)",
-                    border: `1px solid ${repasChoix === m.id ? "rgba(59,130,246,0.40)" : "rgba(255,255,255,0.08)"}`,
+                      : "rgba(0,0,0,0.03)",
+                    border: `1px solid ${repasChoix === m.id ? "rgba(59,130,246,0.40)" : "rgba(0,0,0,0.06)"}`,
                     borderRadius: 10, cursor: "pointer",
                     fontSize: 10.5, fontWeight: 700,
                     color: repasChoix === m.id ? "#93C5FD" : "rgba(242,244,247,0.45)",
