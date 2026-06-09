@@ -1,25 +1,28 @@
 // @ts-check
 // ─── THÈME PREMIUM MINIMAL ─────────────────────────────────────────────────
 export const C = {
-  // Surfaces
-  bg:"#0B1220", s1:"#111827", s2:"#1A2336", s3:"rgba(255,255,255,0.04)",
+  // Surfaces — light premium
+  bg:"#F6F8FB", s1:"#FFFFFF", s2:"#F0F2F7", s3:"#E8EBF2",
   // Borders
-  bd:"rgba(255,255,255,0.07)", bdHi:"rgba(255,255,255,0.12)",
-  // Accent unique — bleu moderne
-  accent:"#3B82F6", accentDk:"#2563EB", accentLt:"#93C5FD",
-  // Text
-  text:"#F2F4F7", mid:"rgba(242,244,247,0.60)", dim:"rgba(242,244,247,0.35)",
-  // Semantic (gardés très sobres)
-  green:"#34D399", red:"#F87171",
-  // Compatibilité avec le code existant (redirigés vers accent ou neutres)
+  bd:"rgba(0,0,0,0.06)", bdHi:"rgba(0,0,0,0.10)",
+  // Accent unique — bleu moderne (inchangé)
+  accent:"#3B82F6", accentDk:"#2563EB", accentLt:"#DBEAFE",
+  // Text — dark on light
+  text:"#0F1923", mid:"#4B5563", dim:"#9CA3AF",
+  // Semantic
+  green:"#10B981", red:"#EF4444",
+  // Compatibilité
   gold:"#3B82F6", goldL:"#93C5FD", goldD:"rgba(59,130,246,0.10)", goldB:"rgba(59,130,246,0.18)",
   blue:"#3B82F6", blueDk:"#2563EB", blueLt:"#93C5FD",
   amberDk:"#2563EB",
   orange:"#3B82F6", purple:"#3B82F6", lavender:"#3B82F6",
   cyan:"#3B82F6", ink:"#2563EB", sun:"#93C5FD",
-  mint:"#34D399", coral:"#F87171",
+  mint:"#10B981", coral:"#EF4444",
   // Surface variants
-  surfHi:"#1A2336",
+  surfHi:"#E8EBF2",
+  // Shadows iOS
+  shadow:"0 1px 2px rgba(0,0,0,0.05), 0 4px 12px rgba(0,0,0,0.06)",
+  shadowMd:"0 2px 4px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.08)",
 };
 
 // ─── POLICES CENTRALISÉES ─────────────────────────────────────────────────────
@@ -66,13 +69,13 @@ export const GLOBAL_CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Serif+Display:ital@0;1&display=swap');
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
 html{height:100%;height:-webkit-fill-available}
-body{background:#080E1A;color:#F2F4F7;font-family:'DM Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh;min-height:-webkit-fill-available}
-#root{min-height:100vh;min-height:100dvh}
+body{background:#F6F8FB;color:#0F1923;font-family:'DM Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh;min-height:-webkit-fill-available}
+#root{min-height:100vh;min-height:100dvh;background:#F6F8FB}
 input,textarea,select{outline:none;font-family:'DM Sans',sans-serif;color:#F2F4F7}
-input::placeholder,textarea::placeholder{color:rgba(242,244,247,0.30)}
+input::placeholder,textarea::placeholder{color:rgba(15,25,35,0.30)}
 select option{background:#111827;color:#F2F4F7}
 ::-webkit-scrollbar{width:2px;height:2px}
-::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.10);border-radius:2px}
+::-webkit-scrollbar-thumb{background:rgba(0,0,0,0.10);border-radius:2px}
 
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
