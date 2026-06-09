@@ -7,10 +7,10 @@ import { C, FONT, SERIF, NUM } from "../../data/constants.js";
 
 const BG   = "#080E1A";
 const S1   = C.s1 || "#111827";
-const BD   = C.bd || "rgba(255,255,255,0.07)";
-const TEXT = C.text || "#F2F4F7";
-const MID  = C.mid || "rgba(242,244,247,0.60)";
-const DIM  = C.dim || "rgba(242,244,247,0.35)";
+const BD   = C.bd || "rgba(0,0,0,0.06)";
+const TEXT = C.text || "${C.text}";
+const MID  = C.mid || "${C.mid}";
+const DIM  = C.dim || "${C.dim}";
 const BL   = C.accent || "#3B82F6";
 const GRN  = "#34D399";
 const AMB  = "#F59E0B";
@@ -151,7 +151,7 @@ export default function BilanArchive({ onBack, bilans = [], onOpenBilan, current
             background:S1, border:`1px solid ${BD}`, borderRadius:18 }}>
             <TrendChart bilans={last6}/>
             <div style={{ display:"flex", justifyContent:"space-between",
-              paddingTop:14, marginTop:8, borderTop:"1px solid rgba(255,255,255,0.05)" }}>
+              paddingTop:14, marginTop:8, borderTop:"1px solid rgba(0,0,0,0.04)" }}>
               <Stat icon={trend?.label || "→"} color={trend?.color || MID} label="Tendance"/>
               <Stat letter={letterFromScore(avgScore)} label="Moyenne"/>
               <Stat letter={letterFromScore(bestScore)} label="Meilleur" highlight/>
@@ -219,7 +219,7 @@ function TrendChart({ bilans }) {
     <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none"
       style={{ width:"100%", height:H, overflow:"visible" }}>
       {[22, 45, 68].map(y => (
-        <line key={y} x1="0" y1={y} x2={W} y2={y} stroke="rgba(255,255,255,0.04)"/>
+        <line key={y} x1="0" y1={y} x2={W} y2={y} stroke="rgba(0,0,0,0.03)"/>
       ))}
       <path d={path} fill="none" stroke="url(#trendG)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
       <defs>
