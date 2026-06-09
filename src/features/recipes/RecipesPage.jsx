@@ -37,7 +37,7 @@ function RecipeCard({ r, liked, onLike, onOpen }) {
         </button>
       </div>
       <div style={{ padding:"10px 10px 12px" }}>
-        <div style={{ fontSize:12.5, fontWeight:700, color:"${C.text}",
+        <div style={{ fontSize:12.5, fontWeight:700, color:C.text,
           lineHeight:1.3, marginBottom:5, fontFamily:FONT }}>{r.nom}</div>
         <div style={{ display:"flex", alignItems:"center", gap:6 }}>
           <span style={{ fontSize:11, color:"#374151",
@@ -114,9 +114,9 @@ export default function Recipes(props) {
         display:"flex", justifyContent:"space-between", alignItems:"flex-end" }}>
         <div>
           <div style={{ fontSize:10, fontWeight:600, letterSpacing:"1.2px",
-            textTransform:"uppercase", color:"${C.dim}",
+            textTransform:"uppercase", color:C.dim,
             fontFamily:FONT, marginBottom:4 }}>Explore</div>
-          <div style={{ fontFamily:SERIF, fontSize:26, color:"${C.text}",
+          <div style={{ fontFamily:SERIF, fontSize:26, color:C.text,
             letterSpacing:-0.6, lineHeight:1.1 }}>Recettes</div>
         </div>
         <button style={{ width:34, height:34, borderRadius:10,
@@ -145,7 +145,7 @@ export default function Recipes(props) {
             display:"grid", placeItems:"center", fontSize:18,
           }}>🍽️</div>
           <div style={{ flex:1 }}>
-            <div style={{ fontSize:13, fontWeight:700, color:"${C.text}",
+            <div style={{ fontSize:13, fontWeight:700, color:C.text,
               fontFamily:"'Outfit',sans-serif" }}>
               Nutrition PRO — 6.99€/mois
             </div>
@@ -169,7 +169,7 @@ export default function Recipes(props) {
           background:C.s1, border:"1px solid rgba(0,0,0,0.06)",
           borderRadius:12, padding:"10px 12px" }}>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-               stroke="${C.dim}" strokeWidth="2" strokeLinecap="round">
+               stroke={C.dim} strokeWidth="2" strokeLinecap="round">
             <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
           </svg>
           <input
@@ -177,7 +177,7 @@ export default function Recipes(props) {
             onChange={e => setSearch(e.target.value)}
             placeholder="Rechercher une recette…"
             style={{ background:"none", border:"none", outline:"none",
-              color:"${C.text}", fontSize:13, fontFamily:FONT, width:"100%" }}
+              color:C.text, fontSize:13, fontFamily:FONT, width:"100%" }}
           />
           {search && (
             <button onClick={() => setSearch("")} style={{ background:"none",
@@ -217,7 +217,7 @@ export default function Recipes(props) {
         <div style={{ marginBottom:22 }}>
           <div style={{ display:"flex", justifyContent:"space-between",
             alignItems:"center", marginBottom:12 }}>
-            <span style={{ fontSize:15, fontWeight:700, color:"${C.text}",
+            <span style={{ fontSize:15, fontWeight:700, color:C.text,
               fontFamily:FONT }}>À la une</span>
           </div>
           <div onClick={() => setSelected(featured)} className="tap" style={{
@@ -274,7 +274,7 @@ export default function Recipes(props) {
       {/* ── Sections ── */}
       {sections.length === 0 ? (
         <div style={{ textAlign:"center", padding:"40px 0",
-          color:"${C.dim}", fontSize:13, fontFamily:FONT }}>
+          color:C.dim, fontSize:13, fontFamily:FONT }}>
           Aucune recette trouvée
         </div>
       ) : (
@@ -283,9 +283,9 @@ export default function Recipes(props) {
             <div style={{ display:"flex", justifyContent:"space-between",
               alignItems:"center", marginBottom:12 }}>
               <div>
-                <span style={{ fontSize:15, fontWeight:700, color:"${C.text}",
+                <span style={{ fontSize:15, fontWeight:700, color:C.text,
                   fontFamily:FONT }}>{section.label}</span>
-                <span style={{ fontSize:11, color:"${C.dim}",
+                <span style={{ fontSize:11, color:C.dim,
                   marginLeft:8, fontFamily:FONT }}>
                   {section.recettes.length} recette{section.recettes.length > 1 ? "s" : ""}
                 </span>
