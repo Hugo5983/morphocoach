@@ -49,9 +49,9 @@ export function PaywallNutrition({ onSubscribe, onClose }) {
           <div style={{
             display:"inline-flex", alignItems:"center", gap:6,
             padding:"5px 14px", borderRadius:20,
-            background:"rgba(16,185,129,0.12)",
-            border:"1px solid rgba(16,185,129,0.30)",
-            fontSize:11, fontWeight:700, color:"#6EE7B7",
+            background:"rgba(5,150,105,0.10)",
+            border:"1px solid rgba(5,150,105,0.35)",
+            fontSize:11, fontWeight:700, color:"#065F46",
             fontFamily:FONT, letterSpacing:"0.8px", textTransform:"uppercase",
             marginBottom:14,
           }}>🥗 Nutrition PRO</div>
@@ -80,10 +80,10 @@ export function PaywallNutrition({ onSubscribe, onClose }) {
               </div>
               <div style={{
                 width:20, height:20, borderRadius:6, flexShrink:0,
-                background:"rgba(16,185,129,0.12)",
-                border:"1px solid rgba(16,185,129,0.25)",
+                background:"rgba(5,150,105,0.10)",
+                border:"1px solid rgba(5,150,105,0.30)",
                 display:"grid", placeItems:"center",
-                fontSize:10, color:"#6EE7B7", fontWeight:700,
+                fontSize:11, color:"#065F46", fontWeight:800,
               }}>✓</div>
             </div>
           ))}
