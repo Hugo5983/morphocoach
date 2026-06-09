@@ -197,7 +197,7 @@ export function SectionHeader({ title, hint }) {
     <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between",
       margin:"0 4px 10px", padding:"0 4px" }}>
       <div style={{ fontSize:9.5, fontWeight:800, letterSpacing:"1.5px",
-        textTransform:"uppercase", color:"rgba(242,244,247,0.35)", fontFamily:FONT }}>
+        textTransform:"uppercase", color:"${C.dim}", fontFamily:FONT }}>
         {title}
       </div>
       {hint && (
@@ -223,7 +223,7 @@ export function MacroRow({ label, color, value, goal, pct, partial }) {
 
   return (
     <div style={{ display:"flex", alignItems:"center", gap:12, padding:"12px 0",
-      borderBottom:"1px solid rgba(255,255,255,0.05)" }}>
+      borderBottom:"1px solid rgba(0,0,0,0.04)" }}>
       <div style={{ width:38, height:38, borderRadius:11, display:"grid",
         placeItems:"center", flexShrink:0, fontSize:16, fontWeight:800,
         background:c.bg, color:c.fg, border:`1px solid ${c.bd}` }}>
@@ -231,18 +231,18 @@ export function MacroRow({ label, color, value, goal, pct, partial }) {
       </div>
       <div style={{ flex:1, minWidth:0 }}>
         <div style={{ display:"flex", justifyContent:"space-between", alignItems:"baseline", marginBottom:6 }}>
-          <div style={{ fontSize:14, fontWeight:700, color:"#F2F4F7", fontFamily:FONT }}>{label}</div>
+          <div style={{ fontSize:14, fontWeight:700, color:"${C.text}", fontFamily:FONT }}>{label}</div>
           <div style={{ display:"flex", alignItems:"baseline", gap:4 }}>
-            <span style={{ fontSize:14, fontWeight:700, color:"#F2F4F7", fontFamily:FONT, ...NUM }}>{Math.round(value)}g</span>
-            <span style={{ fontSize:11, color:"rgba(242,244,247,0.35)", fontFamily:FONT }}>/ {goal}g</span>
+            <span style={{ fontSize:14, fontWeight:700, color:"${C.text}", fontFamily:FONT, ...NUM }}>{Math.round(value)}g</span>
+            <span style={{ fontSize:11, color:"${C.dim}", fontFamily:FONT }}>/ {goal}g</span>
           </div>
         </div>
-        <div style={{ height:5, background:"rgba(255,255,255,0.05)", borderRadius:99, overflow:"hidden", marginBottom:5 }}>
+        <div style={{ height:5, background:"rgba(0,0,0,0.04)", borderRadius:99, overflow:"hidden", marginBottom:5 }}>
           <div style={{ height:"100%", width:`${Math.min(100,pct)}%`,
             background:`linear-gradient(90deg, ${c.fillFrom}, ${c.fillTo})`, borderRadius:99,
             transition:"width .8s ease" }}/>
         </div>
-        <div style={{ fontSize:10.5, color:"rgba(242,244,247,0.60)", fontFamily:FONT }}>
+        <div style={{ fontSize:10.5, color:"${C.mid}", fontFamily:FONT }}>
           <span style={{ display:"inline-block", padding:"2px 7px", borderRadius:4,
             fontSize:9.5, fontWeight:800, letterSpacing:"0.5px", marginRight:5,
             background:st.bg, color:st.color }}>
@@ -264,7 +264,7 @@ export function CritRow({ crit }) {
   else                   palette = { bg:"rgba(248,113,113,0.10)", bd:"rgba(248,113,113,0.25)", color:"#F87171" };
 
   return (
-    <div style={{ padding:"14px 0", borderBottom:"1px solid rgba(255,255,255,0.05)",
+    <div style={{ padding:"14px 0", borderBottom:"1px solid rgba(0,0,0,0.04)",
       display:"flex", alignItems:"flex-start", gap:12 }}>
       <div style={{ width:38, height:38, borderRadius:11, display:"grid",
         placeItems:"center", flexShrink:0, fontSize:16,
@@ -273,15 +273,15 @@ export function CritRow({ crit }) {
       </div>
       <div style={{ flex:1, minWidth:0 }}>
         <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:3 }}>
-          <div style={{ fontSize:13, fontWeight:700, color:"#F2F4F7", fontFamily:FONT }}>{crit.name}</div>
+          <div style={{ fontSize:13, fontWeight:700, color:"${C.text}", fontFamily:FONT }}>{crit.name}</div>
           <div style={{ fontSize:11, fontWeight:700, color:palette.color, fontFamily:FONT }}>
             {crit.pts}/{crit.max}
           </div>
         </div>
-        <div style={{ fontSize:11, color:"rgba(242,244,247,0.60)", fontFamily:FONT, marginBottom:6 }}>
+        <div style={{ fontSize:11, color:"${C.mid}", fontFamily:FONT, marginBottom:6 }}>
           {crit.val}
         </div>
-        <div style={{ height:3, background:"rgba(255,255,255,0.06)", borderRadius:99, overflow:"hidden" }}>
+        <div style={{ height:3, background:"rgba(0,0,0,0.05)", borderRadius:99, overflow:"hidden" }}>
           <div style={{ height:"100%", width:`${ratio*100}%`,
             background:palette.color, borderRadius:99, transition:"width .8s" }}/>
         </div>
