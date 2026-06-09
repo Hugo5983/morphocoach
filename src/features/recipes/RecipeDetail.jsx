@@ -259,7 +259,9 @@ export default function RecipeDetail({ recipe, onBack, liked, onLike, push }) {
 
         {/* Ingrédients */}
         <div style={{ fontSize:15, fontWeight:700, color:"${C.text}",
-          marginBottom:12, fontFamily:FONT }}>
+          marginBottom:12, fontFamily:FONT,
+          position:"sticky", top:0, zIndex:10,
+          background:C.bg, paddingTop:4, paddingBottom:4 }}>
           Ingrédients
           <span style={{ fontSize:11, color:"${C.dim}",
             marginLeft:8, fontWeight:400 }}>
@@ -281,7 +283,7 @@ export default function RecipeDetail({ recipe, onBack, liked, onLike, push }) {
               <span style={{ fontSize:13, color:"${C.text}",
                 fontFamily:FONT }}>{ing.nom}</span>
               <span style={{ fontSize:13, fontWeight:600,
-                color: targetKcal && targetKcal !== base ? "#93C5FD" : "#374151",
+                color: targetKcal && targetKcal !== base ? "#2563EB" : "#374151",
                 fontFamily:FONT, transition:"color .2s" }}>
                 {scaleQte(ing.qte, ratio)}
               </span>
@@ -291,7 +293,9 @@ export default function RecipeDetail({ recipe, onBack, liked, onLike, push }) {
 
         {/* Préparation */}
         <div style={{ fontSize:15, fontWeight:700, color:"${C.text}",
-          marginBottom:12, fontFamily:FONT }}>Préparation</div>
+          marginBottom:12, fontFamily:FONT,
+          position:"sticky", top:0, zIndex:10,
+          background:C.bg, paddingTop:4, paddingBottom:4 }}>Préparation</div>
         <div style={{ display:"flex", flexDirection:"column",
           gap:12, marginBottom:24 }}>
           {r.etapes.map((etape, i) => (
