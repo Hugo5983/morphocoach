@@ -34,11 +34,11 @@ function Glass({ children, style = {}, glow, pad = 18, onClick }) {
       position: "relative",
       borderRadius: 22,
       padding: pad,
-      background: "linear-gradient(160deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01))",
-      border: "1px solid rgba(255,255,255,0.07)",
+      background: "linear-gradient(160deg, rgba(0,0,0,0.04), rgba(255,255,255,0.01))",
+      border: "1px solid rgba(0,0,0,0.06)",
       boxShadow: glow
-        ? `0 18px 40px -22px ${glow}, inset 0 1px 0 rgba(255,255,255,0.08)`
-        : "0 18px 40px -28px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.06)",
+        ? `0 18px 40px -22px ${glow}, inset 0 1px 0 rgba(0,0,0,0.06)`
+        : "0 18px 40px -28px rgba(0,0,0,0.9), inset 0 1px 0 rgba(0,0,0,0.05)",
       cursor: onClick ? "pointer" : "default",
       ...style,
     }}>
@@ -75,7 +75,7 @@ function Tabs({ active, setActive }) {
   return (
     <div style={{
       position: "relative", display: "flex", padding: 5, borderRadius: 18,
-      background: "rgba(255,255,255,0.035)", border: "1px solid rgba(255,255,255,0.06)",
+      background: "rgba(255,255,255,0.035)", border: "1px solid rgba(0,0,0,0.05)",
       boxShadow: "inset 0 1px 2px rgba(0,0,0,0.4)",
     }}>
       <div style={{
@@ -105,7 +105,7 @@ function SectionLabel({ children, icon }) {
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 8, margin: "26px 4px 12px" }}>
       {icon && <I d={icon} size={13} color="#60a5fa"/>}
-      <span style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: "2.5px", color: "rgba(242,244,247,0.35)", fontFamily: FONT, textTransform: "uppercase" }}>{children}</span>
+      <span style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: "2.5px", color: "${C.dim}", fontFamily: FONT, textTransform: "uppercase" }}>{children}</span>
     </div>
   );
 }
@@ -116,7 +116,7 @@ function Row({ label, value, accent, last }) {
     <div style={{
       display: "flex", justifyContent: "space-between", alignItems: "center",
       padding: "16px 18px",
-      borderBottom: last ? "none" : "1px solid rgba(255,255,255,0.05)",
+      borderBottom: last ? "none" : "1px solid rgba(0,0,0,0.04)",
     }}>
       <span style={{ color: "rgba(242,244,247,0.40)", fontSize: 14, fontFamily: FONT }}>{label}</span>
       <span style={{ color: accent || C.text, fontSize: 15, fontWeight: 700, fontFamily: FONT }}>{value || "—"}</span>
@@ -131,7 +131,7 @@ function EditRow({ label, value, displayValue, type = "text", onChange, options,
     <div onClick={() => !editing && setEditing(true)} style={{
       display: "flex", justifyContent: "space-between", alignItems: "center",
       padding: "16px 18px",
-      borderBottom: last ? "none" : "1px solid rgba(255,255,255,0.05)",
+      borderBottom: last ? "none" : "1px solid rgba(0,0,0,0.04)",
       cursor: editing ? "default" : "pointer",
     }}>
       <span style={{ color: "rgba(242,244,247,0.40)", fontSize: 14, fontFamily: FONT }}>{label}</span>
@@ -149,12 +149,12 @@ function EditRow({ label, value, displayValue, type = "text", onChange, options,
                 onKeyDown={e => e.key === "Enter" && setEditing(false)}
                 style={{ background: C.s2, border: "1px solid rgba(59,130,246,0.5)", borderRadius: 9, color: C.text, fontSize: 13, padding: "6px 10px", outline: "none", maxWidth: 90, textAlign: "right" }}
               />
-              {unit && <span style={{ fontSize: 11, color: "rgba(242,244,247,0.30)", fontFamily: FONT }}>{unit}</span>}
+              {unit && <span style={{ fontSize: 11, color: "${C.dim}", fontFamily: FONT }}>{unit}</span>}
             </div>
       ) : (
         <span style={{ fontSize: 15, fontWeight: 700, color: value ? C.text : "rgba(242,244,247,0.20)", fontFamily: FONT }}>
           {displayValue || value || <span style={{ fontSize: 12, fontWeight: 400, color: "rgba(242,244,247,0.20)" }}>Ajouter</span>}
-          {unit && value && <span style={{ fontSize: 11, color: "rgba(242,244,247,0.30)", fontWeight: 400, marginLeft: 4 }}>{unit}</span>}
+          {unit && value && <span style={{ fontSize: 11, color: "${C.dim}", fontWeight: 400, marginLeft: 4 }}>{unit}</span>}
         </span>
       )}
     </div>
@@ -168,7 +168,7 @@ function AddRow({ icon, color, label, value, unit, onChange, last }) {
     <div onClick={() => !editing && setEditing(true)} style={{
       display: "flex", alignItems: "center", gap: 14,
       padding: "15px 18px",
-      borderBottom: last ? "none" : "1px solid rgba(255,255,255,0.05)",
+      borderBottom: last ? "none" : "1px solid rgba(0,0,0,0.04)",
       cursor: editing ? "default" : "pointer",
     }}>
       <div style={{
@@ -187,7 +187,7 @@ function AddRow({ icon, color, label, value, unit, onChange, last }) {
               onKeyDown={e => e.key === "Enter" && setEditing(false)}
               style={{ background: C.s2, border: "1px solid rgba(59,130,246,0.5)", borderRadius: 9, color: C.text, fontSize: 13, padding: "6px 10px", outline: "none", width: 70, textAlign: "right" }}
             />
-            <span style={{ fontSize: 11, color: "rgba(242,244,247,0.30)" }}>cm</span>
+            <span style={{ fontSize: 11, color: "${C.dim}" }}>cm</span>
           </div>
         : value
           ? <span style={{ fontSize: 15, fontWeight: 700, color: color, fontFamily: FONT }}>{value} cm</span>
@@ -207,7 +207,7 @@ function MacroRing({ value, max, label, color }) {
     <Glass pad={14} style={{ flex: 1, textAlign: "center" }} glow={`${color}55`}>
       <div style={{ position: "relative", width: 76, height: 76, margin: "0 auto" }}>
         <svg width="76" height="76" style={{ transform: "rotate(-90deg)" }}>
-          <circle cx="38" cy="38" r={r} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="7"/>
+          <circle cx="38" cy="38" r={r} fill="none" stroke="rgba(0,0,0,0.06)" strokeWidth="7"/>
           <circle cx="38" cy="38" r={r} fill="none" stroke={color} strokeWidth="7" strokeLinecap="round"
             strokeDasharray={circ} strokeDashoffset={circ * (1 - pct)}
             style={{ transition: "stroke-dashoffset 1s cubic-bezier(.65,0,.35,1)" }}
@@ -216,7 +216,7 @@ function MacroRing({ value, max, label, color }) {
         <div style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center" }}>
           <div>
             <div style={{ fontSize: 18, fontWeight: 800, color, fontFamily: FONT, ...NUM }}>{value || 0}</div>
-            <div style={{ fontSize: 10, color: "rgba(242,244,247,0.35)", marginTop: -2 }}>g</div>
+            <div style={{ fontSize: 10, color: "${C.dim}", marginTop: -2 }}>g</div>
           </div>
         </div>
       </div>
@@ -230,7 +230,7 @@ function CompoBar({ icon, color, label, value, unit, onChange, pct, last }) {
   const [editing, setEditing] = useState(false);
   const pctVal = pct || 0;
   return (
-    <div style={{ padding: "16px 18px", borderBottom: last ? "none" : "1px solid rgba(255,255,255,0.05)" }}>
+    <div style={{ padding: "16px 18px", borderBottom: last ? "none" : "1px solid rgba(0,0,0,0.04)" }}>
       <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 10 }}>
         <div style={{
           width: 34, height: 34, borderRadius: 11, display: "grid", placeItems: "center", flexShrink: 0,
@@ -249,7 +249,7 @@ function CompoBar({ icon, color, label, value, unit, onChange, pct, last }) {
                 onKeyDown={e => e.key === "Enter" && setEditing(false)}
                 style={{ background: C.s2, border: "1px solid rgba(59,130,246,0.5)", borderRadius: 9, color: C.text, fontSize: 13, padding: "5px 9px", outline: "none", width: 70, textAlign: "right" }}
               />
-              <span style={{ fontSize: 11, color: "rgba(242,244,247,0.30)" }}>{unit}</span>
+              <span style={{ fontSize: 11, color: "${C.dim}" }}>{unit}</span>
             </div>
           : <span onClick={() => setEditing(true)}
               style={{ fontSize: 14, fontWeight: 700, color: value ? color : "#60a5fa", cursor: "pointer", fontFamily: FONT }}>
@@ -258,7 +258,7 @@ function CompoBar({ icon, color, label, value, unit, onChange, pct, last }) {
         }
       </div>
       {/* Barre de progression */}
-      <div style={{ height: 7, borderRadius: 99, background: "rgba(255,255,255,0.06)", overflow: "hidden" }}>
+      <div style={{ height: 7, borderRadius: 99, background: "rgba(0,0,0,0.05)", overflow: "hidden" }}>
         <div style={{
           height: "100%", width: `${pctVal}%`, borderRadius: 99,
           background: `linear-gradient(90deg, ${color}, ${color}99)`,
@@ -334,7 +334,7 @@ export default function Profile(props) {
                   <I d={ic.crown} size={13} color="#fbbf24" fill="none" sw={2}/> PREMIUM
                 </span>
               : <span style={{
-                  background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)",
+                  background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.06)",
                   borderRadius: 11, padding: "4px 10px", fontSize: 10, fontWeight: 600,
                   color: "rgba(242,244,247,0.28)", letterSpacing: "0.5px", fontFamily: FONT,
                 }}>GRATUIT</span>
@@ -366,8 +366,8 @@ export default function Profile(props) {
           <SectionLabel icon={ic.target}>Identité</SectionLabel>
           <Glass pad={0} style={{ animation: "rise .4s both" }}>
             <EditRow label="Prénom" value={profil.prenom} onChange={set("prenom")}/>
-            <div style={{ display: "flex", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
-              <div style={{ flex: 1, borderRight: "1px solid rgba(255,255,255,0.05)" }}>
+            <div style={{ display: "flex", borderBottom: "1px solid rgba(0,0,0,0.04)" }}>
+              <div style={{ flex: 1, borderRight: "1px solid rgba(0,0,0,0.04)" }}>
                 <EditRow label="Âge" value={profil.age} displayValue={profil.age ? `${profil.age} ans` : null} type="number" onChange={set("age")} last/>
               </div>
               <div style={{ flex: 1 }}>
@@ -379,7 +379,7 @@ export default function Profile(props) {
               </div>
             </div>
             <div style={{ display: "flex" }}>
-              <div style={{ flex: 1, borderRight: "1px solid rgba(255,255,255,0.05)" }}>
+              <div style={{ flex: 1, borderRight: "1px solid rgba(0,0,0,0.04)" }}>
                 <EditRow label="Poids" value={profil.poids} displayValue={profil.poids ? `${profil.poids} kg` : null} unit="kg" type="number" onChange={set("poids")} last/>
               </div>
               <div style={{ flex: 1 }}>
@@ -423,12 +423,12 @@ export default function Profile(props) {
         <div key="compo">
           <div style={{ display: "flex", gap: 10, marginTop: 22, animation: "rise .4s both" }}>
             <Glass style={{ flex: 1 }}>
-              <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "1.5px", color: "rgba(242,244,247,0.35)", fontFamily: FONT, marginBottom: 8 }}>POIDS</div>
+              <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "1.5px", color: "${C.dim}", fontFamily: FONT, marginBottom: 8 }}>POIDS</div>
               <span style={{ fontSize: 30, fontWeight: 800, color: "#60a5fa", fontFamily: FONT }}>{profil.poids || "—"}</span>
               <span style={{ fontSize: 14, color: "rgba(242,244,247,0.40)", fontWeight: 600 }}> kg</span>
             </Glass>
             <Glass style={{ flex: 1 }} glow={`${imcColor}44`}>
-              <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "1.5px", color: "rgba(242,244,247,0.35)", fontFamily: FONT, marginBottom: 8 }}>IMC</div>
+              <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "1.5px", color: "${C.dim}", fontFamily: FONT, marginBottom: 8 }}>IMC</div>
               <span style={{ fontSize: 30, fontWeight: 800, color: imcColor, fontFamily: FONT }}>{imc || "—"}</span>
               <div style={{ fontSize: 12, color: imcColor, marginTop: 3, fontFamily: FONT }}>{imc ? imcCat : ""}</div>
               {imc && (
