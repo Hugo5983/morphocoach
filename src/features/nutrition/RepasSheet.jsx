@@ -12,10 +12,10 @@ const BLD = C.accentDk|| "#2563EB";
 const BG  = "#080E1A";
 const S1  = C.s1 || "#111827";
 const S2  = C.s2 || "#1A2336";
-const BD  = C.bd || "rgba(255,255,255,0.07)";
-const TEXT= C.text|| "#F2F4F7";
-const MID = C.mid || "rgba(242,244,247,0.60)";
-const DIM = C.dim || "rgba(242,244,247,0.35)";
+const BD  = C.bd || "rgba(0,0,0,0.06)";
+const TEXT= C.text|| "${C.text}";
+const MID = C.mid || "${C.mid}";
+const DIM = C.dim || "${C.dim}";
 const GRN = "#34D399";
 const RED = "#F87171";
 
@@ -104,7 +104,7 @@ export default function RepasSheet({
           <div style={{ width: 48, height: 48, borderRadius: 14,
             background: `linear-gradient(145deg,${meal.accent},${meal.accentDk})`,
             display: "grid", placeItems: "center",
-            boxShadow: `0 6px 16px ${meal.accent}50, inset 0 1px 0 rgba(255,255,255,0.30)`,
+            boxShadow: `0 6px 16px ${meal.accent}50, inset 0 1px 0 rgba(0,0,0,0.14)`,
             position: "relative", overflow: "hidden" }}>
             <div style={{ position: "absolute", inset: 0,
               background: "radial-gradient(110% 60% at 30% 10%,rgba(255,255,255,0.35),transparent 60%)",
@@ -154,7 +154,7 @@ export default function RepasSheet({
           </button>
           <button onClick={onPhoto} style={{ flex: 1, display: "flex", alignItems: "center",
             justifyContent: "center", gap: 8, padding: "12px 0",
-            background: premium ? "rgba(99,102,241,0.08)" : "rgba(255,255,255,0.04)",
+            background: premium ? "rgba(99,102,241,0.08)" : "rgba(0,0,0,0.03)",
             border: premium ? "1px solid rgba(99,102,241,0.30)" : `1px solid ${BD}`,
             borderRadius: 13,
             color: premium ? "#A5B4FC" : DIM,
