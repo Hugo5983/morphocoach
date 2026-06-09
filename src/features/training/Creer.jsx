@@ -12,11 +12,11 @@ const BLBR = "rgba(59,130,246,0.35)";
 const BG   = "#080E1A";
 const S1   = C.s1 || "#111827";
 const S2   = C.s2 || "#1A2336";
-const BD   = C.bd  || "rgba(255,255,255,0.07)";
-const BDHI = C.bdHi || "rgba(255,255,255,0.12)";
-const TEXT = C.text || "#F2F4F7";
-const MID  = C.mid  || "rgba(242,244,247,0.60)";
-const DIM  = C.dim  || "rgba(242,244,247,0.35)";
+const BD   = C.bd  || "rgba(0,0,0,0.06)";
+const BDHI = C.bdHi || "rgba(0,0,0,0.08)";
+const TEXT = C.text || "${C.text}";
+const MID  = C.mid  || "${C.mid}";
+const DIM  = C.dim  || "${C.dim}";
 const GRN  = C.green || "#34D399";
 const RED  = "#F87171";
 const PRP  = "#9a8cff";
@@ -321,7 +321,7 @@ function BiblioSheet({ onClose, onAdd, addedNoms }) {
         background:"rgba(3,5,10,.82)", backdropFilter:"blur(4px)" }}/>
       {/* Sheet */}
       <div style={{ position:"absolute", bottom:0, left:0, right:0,
-        background:"#0A1020",
+        background:C.s1,
         borderRadius:"28px 28px 0 0", borderTop:`1px solid ${BLBR}`,
         height:"82%", display:"flex", flexDirection:"column",
         boxShadow:"0 -30px 60px -20px rgba(0,0,0,.8)" }}>
@@ -704,15 +704,15 @@ export default function Creer(props) {
                     {/* Ghost rows — exercices à venir */}
                     {[{w:"65%",col:"#4D8BFF"},{w:"50%",col:"#5FE0A5"},{w:"72%",col:"#B69DFF"}].map((g,i)=>(
                       <div key={i} style={{display:"flex",alignItems:"center",gap:12,padding:"10px 0",
-                        borderBottom:i<2?`1px solid rgba(255,255,255,0.04)`:"none",opacity:1-i*0.2}}>
+                        borderBottom:i<2?`1px solid rgba(0,0,0,0.03)`:"none",opacity:1-i*0.2}}>
                         {/* Numéro */}
                         <div style={{width:34,height:34,borderRadius:10,background:g.col+"15",
                           border:`1px solid ${g.col}25`,flexShrink:0}}/>
                         {/* Texte fantôme */}
                         <div style={{flex:1}}>
-                          <div style={{height:11,borderRadius:4,background:"rgba(255,255,255,0.06)",
+                          <div style={{height:11,borderRadius:4,background:"rgba(0,0,0,0.05)",
                             width:g.w,marginBottom:6}}/>
-                          <div style={{height:9,borderRadius:3,background:"rgba(255,255,255,0.04)",width:"40%"}}/>
+                          <div style={{height:9,borderRadius:3,background:"rgba(0,0,0,0.03)",width:"40%"}}/>
                         </div>
                       </div>
                     ))}
