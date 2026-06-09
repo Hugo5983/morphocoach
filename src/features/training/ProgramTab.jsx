@@ -40,12 +40,12 @@ function MesocycleChart({ prog, semC, checkedEx, cycleStart }) {
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:18}}>
         <div>
           <div style={{fontSize:9,fontWeight:700,letterSpacing:"1.3px",textTransform:"uppercase",color:C.blue,fontFamily:DISP_F,marginBottom:4}}>Mésocycle</div>
-          <div style={{fontSize:16,fontWeight:700,color:"#F2F4F7",fontFamily:DISP_F,letterSpacing:-0.3}}>Volume 6 semaines</div>
-          <div style={{fontSize:11,color:"rgba(242,244,247,0.35)",fontFamily:DISP_F,marginTop:3}}>Progression planifiée · {baseVol} séries/sem</div>
+          <div style={{fontSize:16,fontWeight:700,color:"${C.text}",fontFamily:DISP_F,letterSpacing:-0.3}}>Volume 6 semaines</div>
+          <div style={{fontSize:11,color:"${C.dim}",fontFamily:DISP_F,marginTop:3}}>Progression planifiée · {baseVol} séries/sem</div>
         </div>
         <div style={{textAlign:"right"}}>
-          <div style={{fontSize:9,color:"rgba(242,244,247,0.35)",fontFamily:DISP_F}}>Sem. actuelle</div>
-          <div style={{fontSize:20,fontWeight:800,color:C.blue,fontFamily:DISP_F,lineHeight:1}}>{currentWeek+1}<span style={{fontSize:11,color:"rgba(242,244,247,0.35)",fontWeight:400}}>/6</span></div>
+          <div style={{fontSize:9,color:"${C.dim}",fontFamily:DISP_F}}>Sem. actuelle</div>
+          <div style={{fontSize:20,fontWeight:800,color:C.blue,fontFamily:DISP_F,lineHeight:1}}>{currentWeek+1}<span style={{fontSize:11,color:"${C.dim}",fontWeight:400}}>/6</span></div>
         </div>
       </div>
       <div style={{display:"flex",gap:8,alignItems:"flex-end",height:maxH,marginBottom:10}}>
@@ -65,7 +65,7 @@ function MesocycleChart({ prog, semC, checkedEx, cycleStart }) {
       <div style={{display:"flex",gap:8}}>
         {WEEKS.map((w,i) => {
           const isCur = i===currentWeek;
-          const col = w.type==="Déload" ? "rgba(248,113,113,0.7)" : w.type==="Pic" ? "rgba(245,158,11,0.7)" : isCur ? "#60A5FA" : "rgba(242,244,247,0.35)";
+          const col = w.type==="Déload" ? "rgba(248,113,113,0.7)" : w.type==="Pic" ? "rgba(245,158,11,0.7)" : isCur ? "#60A5FA" : "${C.dim}";
           return (
             <div key={i} style={{flex:1,textAlign:"center"}}>
               <div style={{fontSize:isCur?12:11,fontWeight:isCur?800:600,color:col,fontFamily:DISP_F}}>{w.lbl}</div>
@@ -177,14 +177,14 @@ function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, curVol, currentWe
     </div>
   );
   const detailBox = (key, children) => exp===key ? (
-    <div style={{marginTop:12,paddingTop:12,borderTop:`1px solid ${C.bd}`,fontSize:12,color:"rgba(242,244,247,0.6)",lineHeight:1.6,fontFamily:DISP_F}}>{children}</div>
+    <div style={{marginTop:12,paddingTop:12,borderTop:`1px solid ${C.bd}`,fontSize:12,color:"${C.mid}",lineHeight:1.6,fontFamily:DISP_F}}>{children}</div>
   ) : null;
   const reco = (icon, txt) => (
     <div style={{marginTop:10,padding:"10px 12px",background:"rgba(59,130,246,0.07)",border:"1px solid rgba(59,130,246,0.18)",borderRadius:10,display:"flex",gap:9,alignItems:"flex-start"}}>
-      <span style={{fontSize:14,flexShrink:0}}>{icon}</span><div style={{fontSize:11.5,color:"rgba(242,244,247,0.6)",lineHeight:1.5}}>{txt}</div>
+      <span style={{fontSize:14,flexShrink:0}}>{icon}</span><div style={{fontSize:11.5,color:"${C.mid}",lineHeight:1.5}}>{txt}</div>
     </div>
   );
-  const lbl = {fontSize:9,fontWeight:700,letterSpacing:"1.2px",textTransform:"uppercase",color:"rgba(242,244,247,0.30)",marginBottom:6,fontFamily:DISP_F};
+  const lbl = {fontSize:9,fontWeight:700,letterSpacing:"1.2px",textTransform:"uppercase",color:"${C.dim}",marginBottom:6,fontFamily:DISP_F};
   const badge = (bg,col,txt) => <span style={{fontSize:9,fontWeight:700,padding:"4px 9px",borderRadius:99,background:bg,color:col,whiteSpace:"nowrap",fontFamily:DISP_F}}>{txt}</span>;
   const demoBadge = badge("rgba(245,158,11,0.12)","#F59E0B","Démo · active le suivi");
 
@@ -202,7 +202,7 @@ function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, curVol, currentWe
           </button>
           <div style={{fontSize:9,fontWeight:700,letterSpacing:"1.8px",textTransform:"uppercase",color:C.blue,fontFamily:DISP_F,marginBottom:5}}>Mésocycle · Semaine {currentWeek+1} / 6</div>
           <div style={{fontFamily:SERIF_F,fontSize:25,letterSpacing:-0.8,lineHeight:1.1}}>Analyse <span style={{fontStyle:"italic",color:"#60A5FA"}}>de charge</span></div>
-          <div style={{fontSize:11,color:"rgba(242,244,247,0.30)",marginTop:4,fontFamily:DISP_F}}>{WEEKS[currentWeek].type==="Déload"?"Phase de récupération":WEEKS[currentWeek].type==="Pic"?"Phase de pic":"Phase d'accumulation"} · Hypertrophie</div>
+          <div style={{fontSize:11,color:"${C.dim}",marginTop:4,fontFamily:DISP_F}}>{WEEKS[currentWeek].type==="Déload"?"Phase de récupération":WEEKS[currentWeek].type==="Pic"?"Phase de pic":"Phase d'accumulation"} · Hypertrophie</div>
         </div>
 
         {/* 1. VOLUME vs MEV/MAV/MRV (RÉEL) */}
@@ -210,7 +210,7 @@ function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, curVol, currentWe
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
             <div>
               <div style={lbl}>Volume vs capacité de récupération</div>
-              <div><span style={{fontSize:30,fontWeight:800,color:nearMRV?"#F59E0B":"#34D399",letterSpacing:-1}}>{curVol}</span> <span style={{fontSize:13,fontWeight:600,color:"rgba(242,244,247,0.35)"}}>séries cette sem.</span></div>
+              <div><span style={{fontSize:30,fontWeight:800,color:nearMRV?"#F59E0B":"#34D399",letterSpacing:-1}}>{curVol}</span> <span style={{fontSize:13,fontWeight:600,color:"${C.dim}"}}>séries cette sem.</span></div>
             </div>
             {nearMRV ? badge("rgba(245,158,11,0.15)","#F59E0B","Limite proche") : badge("rgba(52,211,153,0.15)","#34D399","Zone optimale")}
           </div>
@@ -236,10 +236,10 @@ function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, curVol, currentWe
           {expandRow("vol","Lire les seuils MEV / MAV / MRV")}
           {detailBox("vol", <>
             Chaque muscle a des seuils de volume hebdo (en séries) :<br/>
-            • <b style={{color:"#F2F4F7"}}>MEV</b> ({MEV}) minimum efficace — sous ce seuil, pas de gain<br/>
-            • <b style={{color:"#F2F4F7"}}>MAV</b> ({MAV}) volume adaptatif optimal — la zone de progression<br/>
-            • <b style={{color:"#F2F4F7"}}>MRV</b> ({MRV}) max récupérable — plafond, au-delà = surentraînement
-            {reco("⚠️", <>Tu es à <b style={{color:"#F2F4F7"}}>{curVol} séries</b>{nearMRV?<>, proche de ton MRV ({MRV}). Le <b style={{color:"#F2F4F7"}}>déload S5 est essentiel</b> pour dissiper la fatigue.</>:<>, dans ta zone optimale. Continue la progression.</>}</>)}
+            • <b style={{color:"${C.text}"}}>MEV</b> ({MEV}) minimum efficace — sous ce seuil, pas de gain<br/>
+            • <b style={{color:"${C.text}"}}>MAV</b> ({MAV}) volume adaptatif optimal — la zone de progression<br/>
+            • <b style={{color:"${C.text}"}}>MRV</b> ({MRV}) max récupérable — plafond, au-delà = surentraînement
+            {reco("⚠️", <>Tu es à <b style={{color:"${C.text}"}}>{curVol} séries</b>{nearMRV?<>, proche de ton MRV ({MRV}). Le <b style={{color:"${C.text}"}}>déload S5 est essentiel</b> pour dissiper la fatigue.</>:<>, dans ta zone optimale. Continue la progression.</>}</>)}
           </>)}
         </>)}
 
@@ -277,7 +277,7 @@ function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, curVol, currentWe
               {/* Anneau */}
               <div style={{position:"relative",width:90,height:90,flexShrink:0}}>
                 <svg width="90" height="90" viewBox="0 0 96 96">
-                  <circle cx="48" cy="48" r="42" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="7"/>
+                  <circle cx="48" cy="48" r="42" fill="none" stroke="rgba(0,0,0,0.05)" strokeWidth="7"/>
                   <circle cx="48" cy="48" r="42" fill="none" stroke={col} strokeWidth="7"
                     strokeLinecap="round" strokeDasharray={CIRC} strokeDashoffset={offset}
                     transform="rotate(-90 48 48)" style={{transition:"stroke-dashoffset .6s,stroke .4s"}}/>
@@ -292,7 +292,7 @@ function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, curVol, currentWe
                 {/* Sommeil */}
                 <div style={{display:"flex",alignItems:"center",gap:9}}>
                   <span style={{fontSize:11,color:"rgba(242,244,247,0.55)",width:76,flexShrink:0,fontFamily:DISP_F}}>Sommeil 7j</span>
-                  <div style={{flex:1,height:6,borderRadius:3,background:"rgba(255,255,255,0.06)",overflow:"hidden"}}>
+                  <div style={{flex:1,height:6,borderRadius:3,background:"rgba(0,0,0,0.05)",overflow:"hidden"}}>
                     <div style={{height:"100%",borderRadius:3,
                       width:sleepPct?`${sleepPct}%`:"0%",
                       background:sleepPct?sleepPct>=75?"#34D399":sleepPct>=55?"#F59E0B":"#F87171":"#333",
@@ -305,7 +305,7 @@ function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, curVol, currentWe
                 {/* Mobilité */}
                 <div style={{display:"flex",alignItems:"center",gap:9}}>
                   <span style={{fontSize:11,color:"rgba(242,244,247,0.55)",width:76,flexShrink:0,fontFamily:DISP_F}}>Mobilité 7j</span>
-                  <div style={{flex:1,height:6,borderRadius:3,background:"rgba(255,255,255,0.06)",overflow:"hidden"}}>
+                  <div style={{flex:1,height:6,borderRadius:3,background:"rgba(0,0,0,0.05)",overflow:"hidden"}}>
                     <div style={{height:"100%",borderRadius:3,
                       width:`${mobPct}%`,
                       background:mobPct>=70?"#34D399":mobPct>=40?"#F59E0B":"#F87171",
@@ -316,7 +316,7 @@ function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, curVol, currentWe
                   </span>
                 </div>
                 {!hasData && (
-                  <div style={{fontSize:10,color:"rgba(242,244,247,0.30)",fontFamily:DISP_F,fontStyle:"italic"}}>
+                  <div style={{fontSize:10,color:"${C.dim}",fontFamily:DISP_F,fontStyle:"italic"}}>
                     Log sommeil + mobilité pour activer
                   </div>
                 )}
@@ -324,7 +324,7 @@ function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, curVol, currentWe
             </div>
             {expandRow("ready","Que faire avec ce score ?")}
             {detailBox("ready", <>
-              Le <b style={{color:"#F2F4F7"}}>score de préparation</b> combine la moyenne de sommeil des 7 derniers jours (55%) et le taux de mobilité complétée (45%).
+              Le <b style={{color:"${C.text}"}}>score de préparation</b> combine la moyenne de sommeil des 7 derniers jours (55%) et le taux de mobilité complétée (45%).
               {score!==null && score<60 && reco("⚠️","Score bas — réduis le volume cette semaine et priorise le sommeil. Sous 50, avance le déload.")}
               {score!==null && score>=60 && score<75 && reco("🎯","Fatigue modérée. Maintiens la charge mais dors plus. Cible : "+sTgt+"h/nuit.")}
               {score!==null && score>=75 && reco("✅","Bonne récupération. Tu peux progresser en charge cette semaine.")}
@@ -356,7 +356,7 @@ function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, curVol, currentWe
                   <span style={{fontSize:30,fontWeight:800,color:acwrCol,letterSpacing:-1}}>
                     {hasRatio ? ratio.toFixed(2) : "—"}
                   </span>
-                  {' '}<span style={{fontSize:13,fontWeight:600,color:"rgba(242,244,247,0.35)"}}>{acwrLabel}</span>
+                  {' '}<span style={{fontSize:13,fontWeight:600,color:"${C.dim}"}}>{acwrLabel}</span>
                 </div>
               </div>
               {liveBadge}
@@ -369,17 +369,17 @@ function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, curVol, currentWe
             {hasRatio && (
               <div style={{display:"flex",gap:12,marginTop:16}}>
                 {[{l:"Charge 7j",v:acute+" kg"},{l:"Moyenne/sem 28j",v:chronic+" kg"}].map(({l,v})=>(
-                  <div key={l} style={{flex:1,background:"rgba(255,255,255,0.04)",borderRadius:10,padding:"8px 10px"}}>
-                    <div style={{fontSize:8,color:"rgba(242,244,247,0.35)",textTransform:"uppercase",letterSpacing:"1px",fontFamily:DISP_F}}>{l}</div>
-                    <div style={{fontSize:14,fontWeight:700,color:"#F2F4F7",marginTop:3,fontFamily:DISP_F}}>{v}</div>
+                  <div key={l} style={{flex:1,background:"rgba(0,0,0,0.03)",borderRadius:10,padding:"8px 10px"}}>
+                    <div style={{fontSize:8,color:"${C.dim}",textTransform:"uppercase",letterSpacing:"1px",fontFamily:DISP_F}}>{l}</div>
+                    <div style={{fontSize:14,fontWeight:700,color:"${C.text}",marginTop:3,fontFamily:DISP_F}}>{v}</div>
                   </div>
                 ))}
               </div>
             )}
             {expandRow("acwr","Pourquoi c'est crucial")}
             {detailBox("acwr", <>
-              L'<b style={{color:"#F2F4F7"}}>ACWR</b> compare ta charge des 7 derniers jours à ta moyenne 28 jours. Indicateur n°1 du <b style={{color:"#F2F4F7"}}>risque de blessure</b>.<br/><br/>
-              • <b style={{color:"#F2F4F7"}}>0,8–1,3</b> : adaptation optimale · <b style={{color:"#F2F4F7"}}>&gt;1,5</b> : pic dangereux · <b style={{color:"#F2F4F7"}}>&lt;0,8</b> : désentraînement
+              L'<b style={{color:"${C.text}"}}>ACWR</b> compare ta charge des 7 derniers jours à ta moyenne 28 jours. Indicateur n°1 du <b style={{color:"${C.text}"}}>risque de blessure</b>.<br/><br/>
+              • <b style={{color:"${C.text}"}}>0,8–1,3</b> : adaptation optimale · <b style={{color:"${C.text}"}}>&gt;1,5</b> : pic dangereux · <b style={{color:"${C.text}"}}>&lt;0,8</b> : désentraînement
               {!hasRatio && reco("💡","Lance une séance Focus Mode pour activer l'ACWR. Chaque série logguée alimente ce calcul.")}
               {hasRatio && ratio >= 1.3 && reco("⚠️",`À ${ratio}, tu approches la zone de risque. Évite d'augmenter le volume cette semaine.`)}
               {hasRatio && ratio >= 0.8 && ratio < 1.3 && reco("✅",`À ${ratio} tu progresses sans danger. Continue la progression planifiée.`)}
@@ -421,11 +421,11 @@ function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, curVol, currentWe
             </div>
             <div style={{marginTop:14}}>
               {signals.map(({ic,t,s,st,col,bg},k)=>(
-                <div key={k} style={{display:"flex",alignItems:"center",gap:11,padding:"9px 0",borderBottom:k<3?"1px solid rgba(255,255,255,0.04)":"none"}}>
+                <div key={k} style={{display:"flex",alignItems:"center",gap:11,padding:"9px 0",borderBottom:k<3?"1px solid rgba(0,0,0,0.03)":"none"}}>
                   <div style={{width:34,height:34,borderRadius:10,background:bg,display:"grid",placeItems:"center",flexShrink:0,fontSize:15}}>{ic}</div>
                   <div style={{flex:1}}>
-                    <div style={{fontSize:13,fontWeight:600,color:"#F2F4F7",fontFamily:DISP_F}}>{t}</div>
-                    <div style={{fontSize:10.5,color:"rgba(242,244,247,0.35)",marginTop:1,fontFamily:DISP_F}}>{s}</div>
+                    <div style={{fontSize:13,fontWeight:600,color:"${C.text}",fontFamily:DISP_F}}>{t}</div>
+                    <div style={{fontSize:10.5,color:"${C.dim}",marginTop:1,fontFamily:DISP_F}}>{s}</div>
                   </div>
                   {badge(`${col}15`,col,st)}
                 </div>
@@ -433,7 +433,7 @@ function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, curVol, currentWe
             </div>
             {expandRow("over","Interprétation coach")}
             {detailBox("over", <>
-              <b style={{color:"#F2F4F7"}}>Sommeil</b> et <b style={{color:"#F2F4F7"}}>performance</b> sont calculés en temps réel depuis tes logs.
+              <b style={{color:"${C.text}"}}>Sommeil</b> et <b style={{color:"${C.text}"}}>performance</b> sont calculés en temps réel depuis tes logs.
               FC repos et Motivation arriveront avec le check-in hebdo (20 s).
               {alertCount>=2 && reco("🩺","2+ signaux en rouge. Réduis le volume cette semaine et priorise le sommeil.")}
               {alertCount===1 && reco("⚠️","1 signal alerte. Surveille ta récup, un déload préventif peut être bénéfique.")}
@@ -475,7 +475,7 @@ function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, curVol, currentWe
                   <span style={{fontSize:30,fontWeight:800,color:pctCol,letterSpacing:-1}}>
                     {pct!==null ? `${pct>=0?'+':''}${pct}` : "–"}
                   </span>
-                  {' '}<span style={{fontSize:13,fontWeight:600,color:"rgba(242,244,247,0.35)"}}>
+                  {' '}<span style={{fontSize:13,fontWeight:600,color:"${C.dim}"}}>
                     {hasProg ? `% sur ${perfData.sessions.length} séances` : "Log des charges pour activer"}
                   </span>
                 </div>
@@ -515,7 +515,7 @@ function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, curVol, currentWe
             )}
             {expandRow("rm","Détail de la progression")}
             {detailBox("rm", <>
-              Le <b style={{color:"#F2F4F7"}}>1RM estimé</b> est calculé via la formule d'Epley sur tes meilleures séries : <code>poids × (1 + reps/30)</code>.
+              Le <b style={{color:"${C.text}"}}>1RM estimé</b> est calculé via la formule d'Epley sur tes meilleures séries : <code>poids × (1 + reps/30)</code>.
               {hasProg && pct!==null && pct>=2 && reco("📈",`Progression saine (+${pct}%). Continue la périodisation.`)}
               {hasProg && pct!==null && pct<0 && reco("⚠️",`Baisse de performance détectée. Vérifie ton sommeil et ton volume total.`)}
               {!hasProg && reco("💡","Logge des charges en séance Focus Mode pour voir ta courbe de progression réelle.")}
@@ -621,7 +621,7 @@ function ProgrammeView(props) {
       {confirmDel && (
         <div style={{position:"fixed",inset:0,background:"rgba(15,26,46,0.55)",zIndex:500,display:"flex",alignItems:"center",justifyContent:"center",padding:20}}>
           <div style={{background:C.s1,borderRadius:16,padding:"22px 20px",width:"100%",maxWidth:340}}>
-            <div style={{fontFamily:DISP_F,fontSize:16,fontWeight:500,marginBottom:8,color:"#F2F4F7"}}>
+            <div style={{fontFamily:DISP_F,fontSize:16,fontWeight:500,marginBottom:8,color:"${C.text}"}}>
               {confirmDel.type==="prog" ? "Supprimer ce programme ?" : "Supprimer cette séance ?"}
             </div>
             <div style={{fontSize:12,color:"rgba(242,244,247,0.50)",marginBottom:20,lineHeight:1.5}}>
@@ -640,10 +640,10 @@ function ProgrammeView(props) {
       {/* ── Header ── */}
       <div style={{paddingTop:6,marginBottom:18}}>
         <div style={{fontSize:9,fontWeight:700,letterSpacing:"2px",textTransform:"uppercase",color:C.blue,fontFamily:DISP_F,marginBottom:5}}>Programme</div>
-        <div style={{fontFamily:SERIF_F,fontSize:28,color:"#F2F4F7",lineHeight:1.1,letterSpacing:-1}}>
+        <div style={{fontFamily:SERIF_F,fontSize:28,color:"${C.text}",lineHeight:1.1,letterSpacing:-1}}>
           Ton <span style={{fontStyle:"italic",color:C.blue}}>programme</span>
         </div>
-        <div style={{fontSize:11,color:"rgba(242,244,247,0.38)",marginTop:5,fontFamily:DISP_F}}>
+        <div style={{fontSize:11,color:"${C.dim}",marginTop:5,fontFamily:DISP_F}}>
           {prog ? `${prog.titre} · ${prog.jours?.length||0} séances/sem · Sem. ${semN}` : "Crée ton premier programme pour commencer."}
         </div>
         {prog && (
@@ -671,7 +671,7 @@ function ProgrammeView(props) {
                   {j.focus||j.nom?.slice(0,3)||"—"}
                 </div>
                 <div style={{flex:1,minWidth:0}}>
-                  <div style={{fontSize:15,fontWeight:700,color:"#F2F4F7",letterSpacing:-0.2,fontFamily:DISP_F}}>{j.nom}</div>
+                  <div style={{fontSize:15,fontWeight:700,color:"${C.text}",letterSpacing:-0.2,fontFamily:DISP_F}}>{j.nom}</div>
                   <div style={{display:"flex",alignItems:"center",gap:6,marginTop:3,fontSize:11.5,color:"rgba(242,244,247,0.55)",fontFamily:DISP_F}}>
                     <span style={{width:6,height:6,borderRadius:"50%",background:int.c,boxShadow:`0 0 5px ${int.c}60`,flexShrink:0}}/>
                     {int.l} · {exos.length} exercice{exos.length!==1?"s":""}{dur?` · ~${dur} min`:""}
@@ -684,13 +684,13 @@ function ProgrammeView(props) {
               {isOpen && (
                 <div style={{borderTop:`1px solid ${C.bd}`,padding:"8px 14px 14px"}}>
                   {exos.length===0
-                    ? <div style={{textAlign:"center",padding:"12px 0",fontSize:11,color:"rgba(242,244,247,0.30)",fontFamily:DISP_F}}>Aucun exercice — tape ✏️ pour en ajouter</div>
+                    ? <div style={{textAlign:"center",padding:"12px 0",fontSize:11,color:"${C.dim}",fontFamily:DISP_F}}>Aucun exercice — tape ✏️ pour en ajouter</div>
                     : exos.map((ex,k) => (
-                      <div key={k} style={{display:"flex",alignItems:"flex-start",gap:11,padding:"9px 0",borderBottom:k<exos.length-1?"1px solid rgba(255,255,255,0.04)":"none"}}>
+                      <div key={k} style={{display:"flex",alignItems:"flex-start",gap:11,padding:"9px 0",borderBottom:k<exos.length-1?"1px solid rgba(0,0,0,0.03)":"none"}}>
                         <div style={{width:30,height:30,borderRadius:9,background:`${cc(ex.cat)}20`,border:`1px solid ${cc(ex.cat)}35`,color:cc(ex.cat),display:"grid",placeItems:"center",fontFamily:DISP_F,fontSize:11,fontWeight:800,flexShrink:0}}>{k+1}</div>
                         <div style={{flex:1,minWidth:0}}>
-                          <div style={{fontSize:13.5,fontWeight:700,color:"#F2F4F7",fontFamily:DISP_F,letterSpacing:-0.1}}>{ex.nom}</div>
-                          <div style={{fontSize:9,fontWeight:800,letterSpacing:"1px",color:"rgba(242,244,247,0.30)",textTransform:"uppercase",fontFamily:DISP_F,marginTop:2}}>{ex.cat||"Principal"}</div>
+                          <div style={{fontSize:13.5,fontWeight:700,color:"${C.text}",fontFamily:DISP_F,letterSpacing:-0.1}}>{ex.nom}</div>
+                          <div style={{fontSize:9,fontWeight:800,letterSpacing:"1px",color:"${C.dim}",textTransform:"uppercase",fontFamily:DISP_F,marginTop:2}}>{ex.cat||"Principal"}</div>
                         </div>
                         <div style={{fontSize:12,fontWeight:600,color:"rgba(242,244,247,0.45)",fontFamily:DISP_F,flexShrink:0,marginTop:2,textAlign:"right",whiteSpace:"nowrap"}}>
                           {ex.series}×{ex.reps} · {ex.repos}s
@@ -719,7 +719,7 @@ function ProgrammeView(props) {
             return (
               <div key={pIdx} style={{display:"flex",alignItems:"center",gap:10,padding:"10px 12px",background:C.s1,border:`1px solid ${C.bd}`,borderRadius:12,marginBottom:6}}>
                 <div style={{flex:1,minWidth:0}}>
-                  <div style={{fontSize:13,fontWeight:600,color:"#F2F4F7",fontFamily:DISP_F}}>{p.titre}</div>
+                  <div style={{fontSize:13,fontWeight:600,color:"${C.text}",fontFamily:DISP_F}}>{p.titre}</div>
                   <div style={{fontSize:10.5,color:"rgba(242,244,247,0.40)",marginTop:1}}>{p.jours?.length||0} séances</div>
                 </div>
                 <button onClick={()=>{setProg(p);push("✅","Programme activé",p.titre);}} style={{padding:"6px 10px",background:"rgba(52,211,153,0.10)",border:"1px solid rgba(52,211,153,0.25)",borderRadius:8,color:"#34D399",cursor:"pointer",fontSize:10,fontWeight:700,fontFamily:DISP_F}}>Activer</button>
@@ -733,7 +733,7 @@ function ProgrammeView(props) {
       {/* ── Empty state ── */}
       {allProgs.length === 0 && !showCreerForm && (
         <div style={{textAlign:"center",padding:"32px 0 16px"}}>
-          <div style={{fontFamily:SERIF_F,fontSize:22,fontWeight:400,color:"#F2F4F7",marginBottom:8}}>Aucun programme</div>
+          <div style={{fontFamily:SERIF_F,fontSize:22,fontWeight:400,color:"${C.text}",marginBottom:8}}>Aucun programme</div>
           <div style={{fontSize:12,color:"rgba(242,244,247,0.45)",lineHeight:1.6,maxWidth:240,margin:"0 auto 24px",fontFamily:DISP_F}}>Génère un programme IA adapté à ta morphologie ou crée-le manuellement.</div>
         </div>
       )}
@@ -890,7 +890,7 @@ export default function ProgramTab(props){
           <div style={{fontFamily:"'Instrument Serif',serif",fontSize:32,fontWeight:400,letterSpacing:-1.2,color:C.text,lineHeight:1.05,marginTop:6}}>Passe en <span style={{fontStyle:"italic",color:C.goldL}}>Pro</span></div>
           <div style={{fontSize:12.5,color:C.mid,marginTop:6,fontWeight:500,lineHeight:1.4}}>L'expérience complète. Programmes générés sur-mesure, suivi avancé, accès illimité.</div>
 
-          <div style={{position:"relative",borderRadius:26,overflow:"hidden",marginTop:20,padding:"26px 22px 24px",background:`radial-gradient(120% 60% at 70% 0%, rgba(255,171,93,0.22), transparent 60%), radial-gradient(80% 60% at 0% 100%, rgba(77,139,255,0.18), transparent 60%), linear-gradient(160deg, ${C.s2} 0%, ${C.s1} 100%)`,border:`1px solid ${C.bdHi}`,boxShadow:"0 24px 48px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06)"}}>
+          <div style={{position:"relative",borderRadius:26,overflow:"hidden",marginTop:20,padding:"26px 22px 24px",background:`radial-gradient(120% 60% at 70% 0%, rgba(255,171,93,0.22), transparent 60%), radial-gradient(80% 60% at 0% 100%, rgba(77,139,255,0.18), transparent 60%), linear-gradient(160deg, ${C.s2} 0%, ${C.s1} 100%)`,border:`1px solid ${C.bdHi}`,boxShadow:"0 24px 48px rgba(0,0,0,0.5), inset 0 1px 0 rgba(0,0,0,0.05)"}}>
             <div style={{position:"absolute",top:0,left:0,right:0,height:1,background:`linear-gradient(90deg, transparent, ${C.gold}, ${C.blue}, transparent)`}}/>
             <div style={{display:"inline-flex",alignItems:"center",gap:5,padding:"5px 10px",borderRadius:999,background:`${C.gold}20`,border:`1px solid ${C.gold}40`,color:C.goldL,fontSize:10,fontWeight:800,fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",letterSpacing:1}}>♛ PRO</div>
             <div style={{fontFamily:"'Instrument Serif',serif",fontSize:36,fontWeight:400,letterSpacing:-1.3,color:C.text,lineHeight:1,marginTop:16}}>L'expérience<br/><span style={{fontStyle:"italic",color:C.goldL}}>complète.</span></div>
