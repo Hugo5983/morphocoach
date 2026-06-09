@@ -17,7 +17,7 @@ const SHEET_OVERLAY = {
 };
 const SHEET_BASE = {
   width:"100%", maxWidth:480,
-  background:"#0A1020", border:"1px solid rgba(59,130,246,0.35)",
+  background:C.s1, border:"1px solid rgba(59,130,246,0.35)",
   borderBottom:"none", borderRadius:"28px 28px 0 0",
   boxShadow:"0 -30px 60px -20px rgba(0,0,0,0.8)"
 };
@@ -79,17 +79,17 @@ export function ManualRMModal({ prog, setProg, onClose, push, C }) {
   return (
     <div style={overlayStyle} onClick={e=>e.target===e.currentTarget&&onClose()}>
       <div style={sheetStyle}>
-        <div style={{width:40,height:5,borderRadius:3,background:"rgba(255,255,255,0.20)",margin:"14px auto 6px"}}/>
+        <div style={{width:40,height:5,borderRadius:3,background:"rgba(0,0,0,0.10)",margin:"14px auto 6px"}}/>
 
         {/* Header */}
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"6px 20px 16px"}}>
           <div>
             <div style={{fontSize:9,color:"rgba(242,244,247,0.40)",fontWeight:700,letterSpacing:"1.4px",textTransform:"uppercase",marginBottom:5,fontFamily:DISP_F}}>Nouveau record</div>
-            <div style={{fontFamily:SERIF_F,fontSize:22,fontWeight:700,color:"#F2F4F7",letterSpacing:-0.5}}>
+            <div style={{fontFamily:SERIF_F,fontSize:22,fontWeight:700,color:"${C.text}",letterSpacing:-0.5}}>
               {selected ? selected.nom : "Saisie manuelle"}
             </div>
           </div>
-          <button onClick={onClose} style={{background:C.s1,border:"1px solid rgba(255,255,255,0.07)",borderRadius:12,width:38,height:38,color:"rgba(242,244,247,0.60)",cursor:"pointer",fontSize:20,display:"grid",placeItems:"center"}}>×</button>
+          <button onClick={onClose} style={{background:C.s1,border:"1px solid rgba(0,0,0,0.06)",borderRadius:12,width:38,height:38,color:"${C.mid}",cursor:"pointer",fontSize:20,display:"grid",placeItems:"center"}}>×</button>
         </div>
 
         <div style={{padding:"0 20px"}}>
@@ -99,7 +99,7 @@ export function ManualRMModal({ prog, setProg, onClose, push, C }) {
               <div style={{position:"relative",marginBottom:12}}>
                 <input value={search} onChange={e=>{setSearch(e.target.value);setGroupe(null);}}
                   placeholder="Rechercher un exercice…"
-                  style={{width:"100%",padding:"12px 16px",background:C.s1,border:"1px solid rgba(255,255,255,0.07)",borderRadius:14,fontSize:14,color:"#F2F4F7",fontFamily:DISP_F,boxSizing:"border-box",outline:"none"}}
+                  style={{width:"100%",padding:"12px 16px",background:C.s1,border:"1px solid rgba(0,0,0,0.06)",borderRadius:14,fontSize:14,color:"${C.text}",fontFamily:DISP_F,boxSizing:"border-box",outline:"none"}}
                 />
                 <div style={{position:"absolute",left:12,top:"50%",transform:"translateY(-50%)",fontSize:14,color:"rgba(245,241,232,0.50)"}}>🔍</div>
               </div>
@@ -111,7 +111,7 @@ export function ManualRMModal({ prog, setProg, onClose, push, C }) {
                   <div style={{display:"flex",flexWrap:"wrap",gap:6,marginBottom:12}}>
                     {groupes.map(g => (
                       <button key={g} onClick={() => setGroupe(g===groupe?null:g)}
-                        style={{padding:"9px 16px",background:groupe===g?"rgba(59,130,246,0.12)":C.s1,border:`1.5px solid ${groupe===g?"#3B82F6":"rgba(255,255,255,0.07)"}`,borderRadius:12,color:groupe===g?"#60A5FA":"rgba(242,244,247,0.55)",cursor:"pointer",fontSize:13,fontWeight:700,fontFamily:DISP_F,whiteSpace:"nowrap",transition:"all .18s",flexShrink:0}}>
+                        style={{padding:"9px 16px",background:groupe===g?"rgba(59,130,246,0.12)":C.s1,border:`1.5px solid ${groupe===g?"#3B82F6":"rgba(0,0,0,0.06)"}`,borderRadius:12,color:groupe===g?"#60A5FA":"rgba(242,244,247,0.55)",cursor:"pointer",fontSize:13,fontWeight:700,fontFamily:DISP_F,whiteSpace:"nowrap",transition:"all .18s",flexShrink:0}}>
                         {g} <span style={{fontSize:9,color:"rgba(245,241,232,0.50)"}}>({(EX[g]||[]).length})</span>
                       </button>
                     ))}
@@ -125,7 +125,7 @@ export function ManualRMModal({ prog, setProg, onClose, push, C }) {
                   {groupe && !search && <div style={{fontSize:10,color:"#4D8BFF",fontWeight:600,marginBottom:8}}>{groupe} · {exosList.length} exercices</div>}
                   {exosList.map((ex, i) => (
                     <div key={i} onClick={() => setSelected(ex)}
-                      style={{display:"flex",alignItems:"center",gap:10,padding:"12px 14px",background:C.s1,border:"1px solid rgba(255,255,255,0.07)",borderRadius:14,marginBottom:8,cursor:"pointer",transition:"border-color .18s"}}
+                      style={{display:"flex",alignItems:"center",gap:10,padding:"12px 14px",background:C.s1,border:"1px solid rgba(0,0,0,0.06)",borderRadius:14,marginBottom:8,cursor:"pointer",transition:"border-color .18s"}}
                       onMouseEnter={ev=>ev.currentTarget.style.borderColor=cc(ex.cat)}
                       onMouseLeave={ev=>ev.currentTarget.style.borderColor="rgba(190,180,255,0.07)"}>
                       <div style={{width:4,height:32,borderRadius:2,background:cc(ex.cat),flexShrink:0}}/>
@@ -153,8 +153,8 @@ export function ManualRMModal({ prog, setProg, onClose, push, C }) {
               <div style={{display:"flex",alignItems:"center",gap:12,padding:"13px 15px",background:"rgba(59,130,246,0.06)",border:"1px solid rgba(59,130,246,0.18)",borderRadius:14,marginBottom:16}}>
                 <div style={{width:4,height:38,borderRadius:2,background:cc(selected.cat),flexShrink:0}}/>
                 <div>
-                  <div style={{fontSize:15,fontWeight:700,color:"#F2F4F7",letterSpacing:-0.2,fontFamily:DISP_F}}>{selected.nom}</div>
-                  <div style={{fontSize:11,color:"rgba(242,244,247,0.35)",marginTop:2,fontFamily:DISP_F}}>{selected.group}</div>
+                  <div style={{fontSize:15,fontWeight:700,color:"${C.text}",letterSpacing:-0.2,fontFamily:DISP_F}}>{selected.nom}</div>
+                  <div style={{fontSize:11,color:"${C.dim}",marginTop:2,fontFamily:DISP_F}}>{selected.group}</div>
                 </div>
               </div>
 
@@ -162,38 +162,38 @@ export function ManualRMModal({ prog, setProg, onClose, push, C }) {
               <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:11,marginBottom:14}}>
                 {/* Charge */}
                 <div style={{background:C.s1,border:`1px solid ${focusField==="kg"?"rgba(59,130,246,0.5)":C.bd}`,borderRadius:18,padding:"14px 14px 13px",boxShadow:focusField==="kg"?"0 0 0 3px rgba(59,130,246,0.12)":"none"}}>
-                  <div style={{fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:"rgba(242,244,247,0.35)",marginBottom:9,fontFamily:DISP_F}}>Charge</div>
+                  <div style={{fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:"${C.dim}",marginBottom:9,fontFamily:DISP_F}}>Charge</div>
                   <div style={{display:"flex",alignItems:"baseline",justifyContent:"center",gap:4,height:46}}>
                     <input type="number" inputMode="decimal" value={kg} onChange={e=>setKg(e.target.value)} onFocus={()=>setFocusField("kg")} onBlur={()=>setFocusField(null)} placeholder="80"
-                      style={{width:"100%",background:"none",border:"none",color:"#F2F4F7",fontFamily:DISP_F,fontSize:42,fontWeight:800,letterSpacing:-2,textAlign:"center",outline:"none",padding:0,minWidth:0}}/>
-                    <span style={{fontSize:14,color:"rgba(242,244,247,0.35)",fontWeight:600}}>kg</span>
+                      style={{width:"100%",background:"none",border:"none",color:"${C.text}",fontFamily:DISP_F,fontSize:42,fontWeight:800,letterSpacing:-2,textAlign:"center",outline:"none",padding:0,minWidth:0}}/>
+                    <span style={{fontSize:14,color:"${C.dim}",fontWeight:600}}>kg</span>
                   </div>
                   <div style={{display:"flex",gap:8,marginTop:11}}>
-                    <button onClick={()=>setKg(k=>String(Math.max(0,(parseFloat(k)||0)-2.5)))} style={{flex:1,height:38,borderRadius:11,border:"none",cursor:"pointer",fontSize:20,fontWeight:600,fontFamily:DISP_F,background:C.s2,color:"rgba(242,244,247,0.60)"}}>−</button>
+                    <button onClick={()=>setKg(k=>String(Math.max(0,(parseFloat(k)||0)-2.5)))} style={{flex:1,height:38,borderRadius:11,border:"none",cursor:"pointer",fontSize:20,fontWeight:600,fontFamily:DISP_F,background:C.s2,color:"${C.mid}"}}>−</button>
                     <button onClick={()=>setKg(k=>String((parseFloat(k)||0)+2.5))} style={{flex:1,height:38,borderRadius:11,border:"none",cursor:"pointer",fontSize:20,fontWeight:600,fontFamily:DISP_F,background:"rgba(59,130,246,0.16)",color:"#60A5FA"}}>+</button>
                   </div>
                 </div>
                 {/* Reps */}
                 <div style={{background:C.s1,border:`1px solid ${focusField==="reps"?"rgba(59,130,246,0.5)":C.bd}`,borderRadius:18,padding:"14px 14px 13px",boxShadow:focusField==="reps"?"0 0 0 3px rgba(59,130,246,0.12)":"none"}}>
-                  <div style={{fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:"rgba(242,244,247,0.35)",marginBottom:9,fontFamily:DISP_F}}>Répétitions</div>
+                  <div style={{fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:"${C.dim}",marginBottom:9,fontFamily:DISP_F}}>Répétitions</div>
                   <div style={{display:"flex",alignItems:"baseline",justifyContent:"center",gap:4,height:46}}>
                     <input type="number" inputMode="numeric" value={reps} onChange={e=>setReps(e.target.value)} onFocus={()=>setFocusField("reps")} onBlur={()=>setFocusField(null)} placeholder="5"
-                      style={{width:"100%",background:"none",border:"none",color:"#F2F4F7",fontFamily:DISP_F,fontSize:42,fontWeight:800,letterSpacing:-2,textAlign:"center",outline:"none",padding:0,minWidth:0}}/>
+                      style={{width:"100%",background:"none",border:"none",color:"${C.text}",fontFamily:DISP_F,fontSize:42,fontWeight:800,letterSpacing:-2,textAlign:"center",outline:"none",padding:0,minWidth:0}}/>
                   </div>
                   <div style={{display:"flex",gap:8,marginTop:11}}>
-                    <button onClick={()=>setReps(r=>String(Math.max(1,(parseInt(r)||0)-1)))} style={{flex:1,height:38,borderRadius:11,border:"none",cursor:"pointer",fontSize:20,fontWeight:600,fontFamily:DISP_F,background:C.s2,color:"rgba(242,244,247,0.60)"}}>−</button>
+                    <button onClick={()=>setReps(r=>String(Math.max(1,(parseInt(r)||0)-1)))} style={{flex:1,height:38,borderRadius:11,border:"none",cursor:"pointer",fontSize:20,fontWeight:600,fontFamily:DISP_F,background:C.s2,color:"${C.mid}"}}>−</button>
                     <button onClick={()=>setReps(r=>String((parseInt(r)||0)+1))} style={{flex:1,height:38,borderRadius:11,border:"none",cursor:"pointer",fontSize:20,fontWeight:600,fontFamily:DISP_F,background:"rgba(59,130,246,0.16)",color:"#60A5FA"}}>+</button>
                   </div>
                 </div>
               </div>
 
               {/* Reps rapides */}
-              <div style={{fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:"rgba(242,244,247,0.35)",margin:"2px 0 8px",fontFamily:DISP_F}}>Reps rapides</div>
+              <div style={{fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:"${C.dim}",margin:"2px 0 8px",fontFamily:DISP_F}}>Reps rapides</div>
               <div style={{display:"flex",gap:6,marginBottom:16}}>
                 {[1,3,5,8,10,12].map(r=>{
                   const on = reps===String(r);
                   return (
-                    <button key={r} onClick={()=>setReps(String(r))} style={{flex:1,padding:"9px 0",borderRadius:10,background:on?"rgba(59,130,246,0.14)":C.s1,border:`1px solid ${on?"#3B82F6":C.bd}`,color:on?"#60A5FA":"rgba(242,244,247,0.60)",fontFamily:DISP_F,fontSize:13,fontWeight:600,cursor:"pointer"}}>{r}</button>
+                    <button key={r} onClick={()=>setReps(String(r))} style={{flex:1,padding:"9px 0",borderRadius:10,background:on?"rgba(59,130,246,0.14)":C.s1,border:`1px solid ${on?"#3B82F6":C.bd}`,color:on?"#60A5FA":"${C.mid}",fontFamily:DISP_F,fontSize:13,fontWeight:600,cursor:"pointer"}}>{r}</button>
                   );
                 })}
               </div>
@@ -203,7 +203,7 @@ export function ManualRMModal({ prog, setProg, onClose, push, C }) {
                 <div style={{position:"absolute",top:-40,right:-30,width:120,height:120,borderRadius:"50%",background:"radial-gradient(circle,rgba(96,165,250,0.18),transparent 65%)",pointerEvents:"none"}}/>
                 <div>
                   <div style={{fontSize:9,fontWeight:700,letterSpacing:"1.2px",textTransform:"uppercase",color:"#60A5FA",marginBottom:5,fontFamily:DISP_F}}>1RM estimé</div>
-                  <div style={{fontSize:11,color:"rgba(242,244,247,0.60)",fontFamily:DISP_F}}>{rm1Calc>0 ? (parseInt(reps)===1 ? "Ta charge max sur 1 rep" : "Estimation à partir de ta série") : "Saisis charge et reps"}</div>
+                  <div style={{fontSize:11,color:"${C.mid}",fontFamily:DISP_F}}>{rm1Calc>0 ? (parseInt(reps)===1 ? "Ta charge max sur 1 rep" : "Estimation à partir de ta série") : "Saisis charge et reps"}</div>
                 </div>
                 <div style={{fontFamily:SERIF_F,fontSize:40,color:"#fff",lineHeight:1}}>
                   {rm1Calc>0 ? rm1Calc : "—"}{rm1Calc>0 && <span style={{fontSize:15,color:"#60A5FA",fontFamily:DISP_F,fontWeight:700,marginLeft:3}}>kg</span>}
@@ -211,7 +211,7 @@ export function ManualRMModal({ prog, setProg, onClose, push, C }) {
               </div>
 
               <button onClick={handleSave} disabled={!kg||!reps}
-                style={{width:"100%",padding:"16px",borderRadius:16,border:"none",fontFamily:DISP_F,fontSize:15,fontWeight:700,letterSpacing:-0.2,cursor:(!kg||!reps)?"default":"pointer",background:(!kg||!reps)?C.s2:"linear-gradient(180deg,#3B82F6,#2563EB)",color:(!kg||!reps)?"rgba(242,244,247,0.35)":"#fff",boxShadow:(!kg||!reps)?"none":"0 10px 26px rgba(59,130,246,0.36)"}}>
+                style={{width:"100%",padding:"16px",borderRadius:16,border:"none",fontFamily:DISP_F,fontSize:15,fontWeight:700,letterSpacing:-0.2,cursor:(!kg||!reps)?"default":"pointer",background:(!kg||!reps)?C.s2:"linear-gradient(180deg,#3B82F6,#2563EB)",color:(!kg||!reps)?"${C.dim}":"#fff",boxShadow:(!kg||!reps)?"none":"0 10px 26px rgba(59,130,246,0.36)"}}>
                 Enregistrer le record
               </button>
             </div>
@@ -280,18 +280,18 @@ export function CreateSeanceModal({ prog, setProg, setCalSess, push, onClose, C 
   }
 
   /* ── Styles ── */
-  const lbl     = { fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:"rgba(242,244,247,0.35)",marginBottom:8,fontFamily:DISP_F };
+  const lbl     = { fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:"${C.dim}",marginBottom:8,fontFamily:DISP_F };
   const nextOk  = step===1 ? !!seNom.trim() : true;
   const nextBtn = { flex:2,padding:"15px",borderRadius:14,border:"none",fontFamily:DISP_F,fontSize:14,fontWeight:700,
     cursor:nextOk?"pointer":"default",background:nextOk?"linear-gradient(180deg,#3B82F6,#2563EB)":C.s2,
-    color:nextOk?"#fff":"rgba(242,244,247,0.30)",boxShadow:nextOk?"0 8px 24px rgba(59,130,246,0.30)":"none" };
+    color:nextOk?"#fff":"${C.dim}",boxShadow:nextOk?"0 8px 24px rgba(59,130,246,0.30)":"none" };
 
   return (
     <div style={SHEET_OVERLAY} onClick={e=>e.target===e.currentTarget&&onClose()}>
       <div style={{...SHEET_BASE, maxHeight:"90vh", display:"flex", flexDirection:"column"}}>
 
         {/* Poignée */}
-        <div style={{width:38,height:4,borderRadius:2,background:"rgba(255,255,255,0.14)",margin:"10px auto 0",flexShrink:0}}/>
+        <div style={{width:38,height:4,borderRadius:2,background:"rgba(0,0,0,0.09)",margin:"10px auto 0",flexShrink:0}}/>
 
         {/* Header */}
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",padding:"12px 18px 0",flexShrink:0}}>
@@ -301,13 +301,13 @@ export function CreateSeanceModal({ prog, setProg, setCalSess, push, onClose, C 
               {newExForm ? newExForm.nom : step===1 ? "Nouvelle séance" : seNom.trim()||"Exercices"}
             </div>
           </div>
-          <button onClick={onClose} style={{width:38,height:38,borderRadius:12,background:C.s1,border:"1px solid rgba(255,255,255,0.07)",color:"rgba(242,244,247,0.60)",fontSize:20,cursor:"pointer",flexShrink:0,display:"grid",placeItems:"center"}}>×</button>
+          <button onClick={onClose} style={{width:38,height:38,borderRadius:12,background:C.s1,border:"1px solid rgba(0,0,0,0.06)",color:"${C.mid}",fontSize:20,cursor:"pointer",flexShrink:0,display:"grid",placeItems:"center"}}>×</button>
         </div>
 
         {/* Dots */}
         {!newExForm && (
           <div style={{display:"flex",gap:6,padding:"10px 18px 0",flexShrink:0}}>
-            {[1,2].map(i=><div key={i} style={{flex:1,height:4,borderRadius:2,background:step>=i?"#3B82F6":"rgba(255,255,255,0.08)",transition:"background .3s"}}/>)}
+            {[1,2].map(i=><div key={i} style={{flex:1,height:4,borderRadius:2,background:step>=i?"#3B82F6":"rgba(0,0,0,0.06)",transition:"background .3s"}}/>)}
           </div>
         )}
 
@@ -322,7 +322,7 @@ export function CreateSeanceModal({ prog, setProg, setCalSess, push, onClose, C 
               placeholder="Ex : Push, Dos & Biceps…"
               autoComplete="off" autoCorrect="off" autoCapitalize="words"
               data-form-type="other" spellCheck={false}
-              style={{width:"100%",padding:"14px",background:C.s1,border:`1px solid ${C.bd}`,borderRadius:14,color:"#F2F4F7",fontFamily:DISP_F,fontSize:16,fontWeight:600,outline:"none",marginBottom:18}}
+              style={{width:"100%",padding:"14px",background:C.s1,border:`1px solid ${C.bd}`,borderRadius:14,color:"${C.text}",fontFamily:DISP_F,fontSize:16,fontWeight:600,outline:"none",marginBottom:18}}
             />
             <div style={lbl}>Intensité</div>
             <div style={{display:"flex",gap:7,flexWrap:"wrap",marginBottom:20}}>
@@ -347,7 +347,7 @@ export function CreateSeanceModal({ prog, setProg, setCalSess, push, onClose, C 
             <div style={{display:"flex",alignItems:"center",gap:12,padding:"13px 15px",background:`${cc(newExForm.cat)}0d`,border:`1px solid ${cc(newExForm.cat)}30`,borderRadius:14,marginBottom:16,marginTop:4}}>
               <div style={{width:4,height:38,borderRadius:2,background:cc(newExForm.cat),flexShrink:0}}/>
               <div>
-                <div style={{fontSize:14,fontWeight:700,color:"#F2F4F7",fontFamily:DISP_F}}>{newExForm.nom}</div>
+                <div style={{fontSize:14,fontWeight:700,color:"${C.text}",fontFamily:DISP_F}}>{newExForm.nom}</div>
                 <div style={{fontSize:10.5,color:"rgba(242,244,247,0.40)",marginTop:2,fontFamily:DISP_F}}>{newExForm.group}</div>
               </div>
             </div>
@@ -359,7 +359,7 @@ export function CreateSeanceModal({ prog, setProg, setCalSess, push, onClose, C 
                     <div style={{...lbl,marginBottom:5}}>{pp.l}</div>
                     <input value={newExForm[pp.k]||""} onChange={e=>setNewExForm(f=>({...f,[pp.k]:e.target.value}))}
                       placeholder={pp.def} autoComplete="off"
-                      style={{width:"100%",padding:"11px 10px",background:C.s2,border:`1px solid ${C.bd}`,borderRadius:10,fontSize:15,fontWeight:700,color:"#F2F4F7",fontFamily:DISP_F,textAlign:"center",outline:"none"}}/>
+                      style={{width:"100%",padding:"11px 10px",background:C.s2,border:`1px solid ${C.bd}`,borderRadius:10,fontSize:15,fontWeight:700,color:"${C.text}",fontFamily:DISP_F,textAlign:"center",outline:"none"}}/>
                   </div>
                 ))}
               </div>
@@ -380,7 +380,7 @@ export function CreateSeanceModal({ prog, setProg, setCalSess, push, onClose, C 
               Exercices <span style={{color:"#60A5FA"}}>({exos.length})</span>
             </div>
             {exos.length===0 && (
-              <div style={{textAlign:"center",padding:"14px 0 16px",fontSize:12,color:"rgba(242,244,247,0.30)",fontFamily:DISP_F}}>Aucun exercice — ajoute depuis la bibliothèque ci-dessous.</div>
+              <div style={{textAlign:"center",padding:"14px 0 16px",fontSize:12,color:"${C.dim}",fontFamily:DISP_F}}>Aucun exercice — ajoute depuis la bibliothèque ci-dessous.</div>
             )}
             {exos.map((ex,i)=>{
               const colour = cc(ex.cat);
@@ -391,8 +391,8 @@ export function CreateSeanceModal({ prog, setProg, setCalSess, push, onClose, C 
                     {/* Numéro carré coloré */}
                     <div style={{width:38,height:38,borderRadius:11,flexShrink:0,background:`linear-gradient(145deg,${colour}30,${colour}08)`,border:`1px solid ${colour}40`,color:colour,display:"grid",placeItems:"center",fontFamily:DISP_F,fontSize:13,fontWeight:800}}>{i+1}</div>
                     <div style={{flex:1,minWidth:0,cursor:"pointer"}} onClick={()=>setEditEx(m=>({...m,[i]:!m[i]}))}>
-                      <div style={{fontSize:14,fontWeight:700,color:"#F2F4F7",fontFamily:DISP_F,letterSpacing:-0.1}}>{ex.nom}</div>
-                      <div style={{fontSize:11,color:"rgba(242,244,247,0.35)",marginTop:2,fontFamily:DISP_F}}>
+                      <div style={{fontSize:14,fontWeight:700,color:"${C.text}",fontFamily:DISP_F,letterSpacing:-0.1}}>{ex.nom}</div>
+                      <div style={{fontSize:11,color:"${C.dim}",marginTop:2,fontFamily:DISP_F}}>
                         {ex.series}×{ex.reps} · {ex.repos}{ex.charge?` · `+ex.charge:""}{ex.methode&&ex.methode!=="Classique"?` · ${ex.methode}`:""}
                         <span style={{color:"#60A5FA",marginLeft:6}}>{isOpen?"▲":"✏️"}</span>
                       </div>
@@ -407,9 +407,9 @@ export function CreateSeanceModal({ prog, setProg, setCalSess, push, onClose, C 
                           <div key={pp.k}>
                             <div style={{...lbl,marginBottom:5}}>{pp.l}</div>
                             <div style={{display:"flex",gap:4,alignItems:"center"}}>
-                              <button onClick={()=>{const cur=parseFloat(ex[pp.k])||0;updateField(i,pp.k,String(Math.max(0,cur-1)));}} style={{width:28,height:28,borderRadius:7,background:C.s2,border:"none",cursor:"pointer",fontSize:14,color:"rgba(242,244,247,0.60)"}}>−</button>
+                              <button onClick={()=>{const cur=parseFloat(ex[pp.k])||0;updateField(i,pp.k,String(Math.max(0,cur-1)));}} style={{width:28,height:28,borderRadius:7,background:C.s2,border:"none",cursor:"pointer",fontSize:14,color:"${C.mid}"}}>−</button>
                               <input value={ex[pp.k]||""} onChange={e=>updateField(i,pp.k,e.target.value)} autoComplete="off"
-                                style={{flex:1,padding:"6px 4px",background:C.s2,border:`1px solid ${C.bd}`,borderRadius:8,fontSize:12,fontWeight:600,textAlign:"center",fontFamily:DISP_F,color:"#F2F4F7",outline:"none"}}/>
+                                style={{flex:1,padding:"6px 4px",background:C.s2,border:`1px solid ${C.bd}`,borderRadius:8,fontSize:12,fontWeight:600,textAlign:"center",fontFamily:DISP_F,color:"${C.text}",outline:"none"}}/>
                               <button onClick={()=>{const cur=parseFloat(ex[pp.k])||0;updateField(i,pp.k,String(cur+1));}} style={{width:28,height:28,borderRadius:7,background:"rgba(59,130,246,0.16)",border:"none",cursor:"pointer",fontSize:14,color:"#60A5FA"}}>+</button>
                             </div>
                           </div>
@@ -431,7 +431,7 @@ export function CreateSeanceModal({ prog, setProg, setCalSess, push, onClose, C 
             <div style={{...lbl,marginTop:exos.length?6:0}}>Bibliothèque</div>
             <input value={search} onChange={e=>{setSearch(e.target.value);setGroupe(null);}} placeholder="🔍  Rechercher un exercice…"
               autoComplete="off" autoCorrect="off" data-form-type="other"
-              style={{width:"100%",padding:"12px 14px",background:C.s1,border:`1px solid ${C.bd}`,borderRadius:12,color:"#F2F4F7",fontFamily:DISP_F,fontSize:13,outline:"none",marginBottom:10}}/>
+              style={{width:"100%",padding:"12px 14px",background:C.s1,border:`1px solid ${C.bd}`,borderRadius:12,color:"${C.text}",fontFamily:DISP_F,fontSize:13,outline:"none",marginBottom:10}}/>
 
             {/* Chips groupes — scroll horizontal */}
             {!search && (
@@ -453,13 +453,13 @@ export function CreateSeanceModal({ prog, setProg, setCalSess, push, onClose, C 
                     {ex.cat?.toUpperCase()}
                   </span>
                   {/* Nom + info */}
-                  <div style={{fontSize:16,fontWeight:700,color:"#F2F4F7",fontFamily:DISP_F,letterSpacing:-0.2,marginBottom:3}}>{ex.nom}</div>
+                  <div style={{fontSize:16,fontWeight:700,color:"${C.text}",fontFamily:DISP_F,letterSpacing:-0.2,marginBottom:3}}>{ex.nom}</div>
                   <div style={{fontSize:13,color:"rgba(242,244,247,0.55)",marginBottom:4,fontFamily:DISP_F}}>
-                    {ex.s}×{ex.r} · {ex.rest}s{search&&<span style={{color:"rgba(242,244,247,0.35)",marginLeft:8}}>{ex.group}</span>}
+                    {ex.s}×{ex.r} · {ex.rest}s{search&&<span style={{color:"${C.dim}",marginLeft:8}}>{ex.group}</span>}
                   </div>
                   {/* Conseil morpho tronqué */}
                   {ex.morpho && (
-                    <div style={{fontSize:12,color:"rgba(242,244,247,0.35)",fontStyle:"italic",lineHeight:1.5,marginBottom:10,fontFamily:DISP_F}}>
+                    <div style={{fontSize:12,color:"${C.dim}",fontStyle:"italic",lineHeight:1.5,marginBottom:10,fontFamily:DISP_F}}>
                       {(ex.morpho||"").substring(0,80)}…
                     </div>
                   )}
@@ -478,8 +478,8 @@ export function CreateSeanceModal({ prog, setProg, setCalSess, push, onClose, C 
               );
             })}
 
-            {!search&&!groupe&&<div style={{textAlign:"center",padding:"12px 0",fontSize:11,color:"rgba(242,244,247,0.30)",fontFamily:DISP_F}}>Sélectionne un groupe ou recherche</div>}
-            {search&&searchList.length===0&&<div style={{textAlign:"center",padding:"12px 0",fontSize:11,color:"rgba(242,244,247,0.30)",fontFamily:DISP_F}}>Aucun résultat pour « {search} »</div>}
+            {!search&&!groupe&&<div style={{textAlign:"center",padding:"12px 0",fontSize:11,color:"${C.dim}",fontFamily:DISP_F}}>Sélectionne un groupe ou recherche</div>}
+            {search&&searchList.length===0&&<div style={{textAlign:"center",padding:"12px 0",fontSize:11,color:"${C.dim}",fontFamily:DISP_F}}>Aucun résultat pour « {search} »</div>}
           </>)}
 
           <div style={{height:16}}/>
@@ -574,16 +574,16 @@ export function EditRecordModal({ exData, prog, setProg, push, onClose }) {
   return (
     <div style={SHEET_OVERLAY} onClick={e=>e.target===e.currentTarget&&onClose()}>
       <div style={{...SHEET_BASE, maxHeight:"88vh", overflowY:"auto", WebkitOverflowScrolling:"touch"}}>
-        <div style={{width:40,height:5,borderRadius:3,background:"rgba(255,255,255,0.20)",margin:"14px auto 6px"}}/>
+        <div style={{width:40,height:5,borderRadius:3,background:"rgba(0,0,0,0.10)",margin:"14px auto 6px"}}/>
 
         {/* Header */}
         <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",padding:"6px 20px 14px"}}>
           <div>
-            <div style={{fontSize:9,fontWeight:700,letterSpacing:"1.4px",textTransform:"uppercase",color:"rgba(242,244,247,0.35)",marginBottom:4,fontFamily:DISP_F}}>Modifier le record</div>
+            <div style={{fontSize:9,fontWeight:700,letterSpacing:"1.4px",textTransform:"uppercase",color:"${C.dim}",marginBottom:4,fontFamily:DISP_F}}>Modifier le record</div>
             <div style={{fontFamily:SERIF_F,fontSize:22,letterSpacing:-0.5,lineHeight:1}}>{exData.nom}</div>
             <div style={{fontSize:11,color:"rgba(242,244,247,0.45)",marginTop:4,fontFamily:DISP_F}}>1RM actuel : <span style={{color:"#60A5FA",fontWeight:700}}>{exData.rm1} kg</span></div>
           </div>
-          <button onClick={onClose} style={{width:38,height:38,borderRadius:12,background:C.s1,border:"1px solid rgba(255,255,255,0.07)",color:"rgba(242,244,247,0.60)",cursor:"pointer",fontSize:20,flexShrink:0,display:"grid",placeItems:"center"}}>×</button>
+          <button onClick={onClose} style={{width:38,height:38,borderRadius:12,background:C.s1,border:"1px solid rgba(0,0,0,0.06)",color:"${C.mid}",cursor:"pointer",fontSize:20,flexShrink:0,display:"grid",placeItems:"center"}}>×</button>
         </div>
 
         <div style={{padding:"4px 18px 26px"}}>
@@ -591,32 +591,32 @@ export function EditRecordModal({ exData, prog, setProg, push, onClose }) {
           {/* Formulaire édition / ajout */}
           {editIdx !== null ? (
             <div>
-              <div style={{fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:"rgba(242,244,247,0.35)",margin:"4px 0 12px",fontFamily:DISP_F}}>
+              <div style={{fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:"${C.dim}",margin:"4px 0 12px",fontFamily:DISP_F}}>
                 {editIdx==="new" ? "Nouvelle entrée" : `Modifier l'entrée ${editIdx+1}`}
               </div>
               <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:11,marginBottom:14}}>
                 <div style={tileStyle("kg")}>
-                  <div style={{fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:"rgba(242,244,247,0.35)",marginBottom:9,fontFamily:DISP_F}}>Charge</div>
+                  <div style={{fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:"${C.dim}",marginBottom:9,fontFamily:DISP_F}}>Charge</div>
                   <div style={{display:"flex",alignItems:"baseline",justifyContent:"center",gap:4,height:46}}>
                     <input type="number" inputMode="decimal" value={editKg} onChange={e=>setEditKg(e.target.value)}
                       onFocus={()=>setFocusField("kg")} onBlur={()=>setFocusField(null)} placeholder="80"
-                      style={{width:"100%",background:"none",border:"none",color:"#F2F4F7",fontFamily:DISP_F,fontSize:42,fontWeight:800,letterSpacing:-2,textAlign:"center",outline:"none",padding:0,minWidth:0}}/>
-                    <span style={{fontSize:14,color:"rgba(242,244,247,0.35)",fontWeight:600}}>kg</span>
+                      style={{width:"100%",background:"none",border:"none",color:"${C.text}",fontFamily:DISP_F,fontSize:42,fontWeight:800,letterSpacing:-2,textAlign:"center",outline:"none",padding:0,minWidth:0}}/>
+                    <span style={{fontSize:14,color:"${C.dim}",fontWeight:600}}>kg</span>
                   </div>
                   <div style={{display:"flex",gap:8,marginTop:11}}>
-                    <button onClick={()=>setEditKg(k=>String(Math.max(0,(parseFloat(k)||0)-2.5)))} style={btnStepper(C.s2,"rgba(242,244,247,0.60)")}>−</button>
+                    <button onClick={()=>setEditKg(k=>String(Math.max(0,(parseFloat(k)||0)-2.5)))} style={btnStepper(C.s2,"${C.mid}")}>−</button>
                     <button onClick={()=>setEditKg(k=>String((parseFloat(k)||0)+2.5))} style={btnStepper("rgba(59,130,246,0.16)","#60A5FA")}>+</button>
                   </div>
                 </div>
                 <div style={tileStyle("reps")}>
-                  <div style={{fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:"rgba(242,244,247,0.35)",marginBottom:9,fontFamily:DISP_F}}>Répétitions</div>
+                  <div style={{fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:"${C.dim}",marginBottom:9,fontFamily:DISP_F}}>Répétitions</div>
                   <div style={{display:"flex",alignItems:"baseline",justifyContent:"center",gap:4,height:46}}>
                     <input type="number" inputMode="numeric" value={editReps} onChange={e=>setEditReps(e.target.value)}
                       onFocus={()=>setFocusField("reps")} onBlur={()=>setFocusField(null)} placeholder="5"
-                      style={{width:"100%",background:"none",border:"none",color:"#F2F4F7",fontFamily:DISP_F,fontSize:42,fontWeight:800,letterSpacing:-2,textAlign:"center",outline:"none",padding:0,minWidth:0}}/>
+                      style={{width:"100%",background:"none",border:"none",color:"${C.text}",fontFamily:DISP_F,fontSize:42,fontWeight:800,letterSpacing:-2,textAlign:"center",outline:"none",padding:0,minWidth:0}}/>
                   </div>
                   <div style={{display:"flex",gap:8,marginTop:11}}>
-                    <button onClick={()=>setEditReps(r=>String(Math.max(1,(parseInt(r)||0)-1)))} style={btnStepper(C.s2,"rgba(242,244,247,0.60)")}>−</button>
+                    <button onClick={()=>setEditReps(r=>String(Math.max(1,(parseInt(r)||0)-1)))} style={btnStepper(C.s2,"${C.mid}")}>−</button>
                     <button onClick={()=>setEditReps(r=>String((parseInt(r)||0)+1))} style={btnStepper("rgba(59,130,246,0.16)","#60A5FA")}>+</button>
                   </div>
                 </div>
@@ -625,7 +625,7 @@ export function EditRecordModal({ exData, prog, setProg, push, onClose }) {
               {/* Reps rapides */}
               <div style={{display:"flex",gap:6,marginBottom:14}}>
                 {[1,3,5,8,10,12].map(r=>{const on=editReps===String(r);return(
-                  <button key={r} onClick={()=>setEditReps(String(r))} style={{flex:1,padding:"8px 0",borderRadius:10,background:on?"rgba(59,130,246,0.14)":C.s1,border:`1px solid ${on?"#3B82F6":C.bd}`,color:on?"#60A5FA":"rgba(242,244,247,0.60)",fontFamily:DISP_F,fontSize:13,fontWeight:600,cursor:"pointer"}}>{r}</button>
+                  <button key={r} onClick={()=>setEditReps(String(r))} style={{flex:1,padding:"8px 0",borderRadius:10,background:on?"rgba(59,130,246,0.14)":C.s1,border:`1px solid ${on?"#3B82F6":C.bd}`,color:on?"#60A5FA":"${C.mid}",fontFamily:DISP_F,fontSize:13,fontWeight:600,cursor:"pointer"}}>{r}</button>
                 );})}
               </div>
 
@@ -642,7 +642,7 @@ export function EditRecordModal({ exData, prog, setProg, push, onClose }) {
 
               <div style={{display:"flex",gap:9}}>
                 <button onClick={cancelEdit} style={{flex:1,padding:"13px",borderRadius:14,border:`1px solid ${C.bd}`,background:"transparent",color:"rgba(242,244,247,0.45)",fontFamily:DISP_F,fontSize:13,fontWeight:600,cursor:"pointer"}}>Annuler</button>
-                <button onClick={saveEdit} disabled={!editKg||!editReps} style={{flex:2,padding:"13px",borderRadius:14,border:"none",fontFamily:DISP_F,fontSize:14,fontWeight:700,cursor:(!editKg||!editReps)?"default":"pointer",background:(!editKg||!editReps)?C.s2:"linear-gradient(180deg,#3B82F6,#2563EB)",color:(!editKg||!editReps)?"rgba(242,244,247,0.30)":"#fff",boxShadow:(!editKg||!editReps)?"none":"0 8px 20px rgba(59,130,246,0.32)"}}>
+                <button onClick={saveEdit} disabled={!editKg||!editReps} style={{flex:2,padding:"13px",borderRadius:14,border:"none",fontFamily:DISP_F,fontSize:14,fontWeight:700,cursor:(!editKg||!editReps)?"default":"pointer",background:(!editKg||!editReps)?C.s2:"linear-gradient(180deg,#3B82F6,#2563EB)",color:(!editKg||!editReps)?"${C.dim}":"#fff",boxShadow:(!editKg||!editReps)?"none":"0 8px 20px rgba(59,130,246,0.32)"}}>
                   {editIdx==="new" ? "Ajouter l'entrée" : "Sauvegarder"}
                 </button>
               </div>
@@ -651,10 +651,10 @@ export function EditRecordModal({ exData, prog, setProg, push, onClose }) {
           ) : (
             /* Liste des entrées */
             <div>
-              <div style={{fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:"rgba(242,244,247,0.35)",margin:"4px 0 10px",fontFamily:DISP_F}}>Historique ({entries.length})</div>
+              <div style={{fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:"${C.dim}",margin:"4px 0 10px",fontFamily:DISP_F}}>Historique ({entries.length})</div>
 
               {entries.length===0 && (
-                <div style={{textAlign:"center",padding:"18px 0",color:"rgba(242,244,247,0.35)",fontSize:12,fontFamily:DISP_F}}>Aucune entrée — ajoute ton premier record.</div>
+                <div style={{textAlign:"center",padding:"18px 0",color:"${C.dim}",fontSize:12,fontFamily:DISP_F}}>Aucune entrée — ajoute ton premier record.</div>
               )}
 
               {entries.map((h,i)=>{
@@ -665,7 +665,7 @@ export function EditRecordModal({ exData, prog, setProg, push, onClose }) {
                     <div style={{flex:1,cursor:"pointer",minWidth:0}} onClick={()=>openEdit(i)}>
                       <div style={{display:"flex",alignItems:"center",gap:7,marginBottom:3}}>
                         {isRecord&&<div style={{fontSize:9,fontWeight:700,color:"#FFAB5D",background:"rgba(255,171,93,0.12)",border:"1px solid rgba(255,171,93,0.3)",borderRadius:6,padding:"2px 6px",fontFamily:DISP_F}}>RECORD</div>}
-                        <div style={{fontSize:14,fontWeight:700,color:"#F2F4F7",fontFamily:DISP_F}}>{h.poids} kg × {h.reps} rep{h.reps>1?"s":""}</div>
+                        <div style={{fontSize:14,fontWeight:700,color:"${C.text}",fontFamily:DISP_F}}>{h.poids} kg × {h.reps} rep{h.reps>1?"s":""}</div>
                       </div>
                       <div style={{fontSize:10,color:"rgba(242,244,247,0.40)",fontFamily:DISP_F}}>{h.date} · 1RM : <span style={{color:"#60A5FA",fontWeight:600}}>{rm} kg</span> · <span style={{color:"#60A5FA"}}>Appuie pour modifier</span></div>
                     </div>
@@ -693,7 +693,7 @@ export function RMCard({ exData, objectif, C, onEdit }) {
   const kgCible = calcKgFor(exData.rm1, target.reps);
 
   return (
-    <div style={{background:C.s1,border:"1px solid rgba(255,255,255,0.08)",borderRadius:12,marginBottom:8,overflow:"hidden"}}>
+    <div style={{background:C.s1,border:"1px solid rgba(0,0,0,0.06)",borderRadius:12,marginBottom:8,overflow:"hidden"}}>
       {/* Ligne principale */}
       <div onClick={() => setExpanded(e => !e)} style={{padding:"12px 14px",cursor:"pointer",borderLeft:`3px solid ${cc}`,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
         <div style={{flex:1}}>
@@ -720,14 +720,14 @@ export function RMCard({ exData, objectif, C, onEdit }) {
 
       {/* Détail déplié */}
       {expanded && (
-        <div style={{borderTop:"1px solid rgba(255,255,255,0.07)",padding:"12px 14px",background:"rgba(59,130,246,0.02)"}}>
+        <div style={{borderTop:"1px solid rgba(0,0,0,0.06)",padding:"12px 14px",background:"rgba(59,130,246,0.02)"}}>
           <div style={{fontSize:9,color:"rgba(245,241,232,0.50)",fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",marginBottom:8}}>Tableau de charges complet</div>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:5,marginBottom:10}}>
             {Object.entries(OBJ_TARGET).map(([id, obj]) => {
               const kg = calcKgFor(exData.rm1, obj.reps);
               const isCurrentObj = id === objectif;
               return (
-                <div key={id} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"7px 10px",background:isCurrentObj?`${obj.color}10`:"#1C2440",border:`1px solid ${isCurrentObj?obj.color:"rgba(255,255,255,0.08)"}`,borderRadius:8}}>
+                <div key={id} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"7px 10px",background:isCurrentObj?`${obj.color}10`:"#1C2440",border:`1px solid ${isCurrentObj?obj.color:"rgba(0,0,0,0.06)"}`,borderRadius:8}}>
                   <div>
                     <div style={{fontSize:10,fontWeight:isCurrentObj?700:500,color:isCurrentObj?obj.color:"rgba(245,241,232,0.50)"}}>{obj.l}{isCurrentObj?" ★":""}</div>
                     <div style={{fontSize:8,color:"rgba(245,241,232,0.50)"}}>{obj.reps} reps · {obj.pct}%</div>
@@ -740,7 +740,7 @@ export function RMCard({ exData, objectif, C, onEdit }) {
 
           {/* Historique 3 derniers sets */}
           {exData.historique && exData.historique.length > 0 && (
-            <div style={{paddingTop:10,borderTop:"1px solid rgba(255,255,255,0.07)"}}>
+            <div style={{paddingTop:10,borderTop:"1px solid rgba(0,0,0,0.06)"}}>
               <div style={{fontSize:9,color:"rgba(245,241,232,0.50)",fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",marginBottom:6}}>Historique récent</div>
               {exData.historique.slice(-3).reverse().map((h, i) => {
                 const rm = calc1RM(parseFloat(h.poids), parseInt(h.reps));
