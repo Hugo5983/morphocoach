@@ -6,7 +6,7 @@
 import { useState, useMemo } from "react";
 import { C, FONT, SERIF, NUM } from "../../data/constants.js";
 import {
-  computeBilan, computeCriteria, computeMicronutrients, computeCategories,
+  computeBilan, computeCriteria, computeMicronutrients,
   computeHealthScore, microStatus,
   Badge, SectionHeader, MacroRow, CritRow,
   MIN_DAYS_FULL_BILAN, PERIOD_DAYS,
@@ -187,7 +187,6 @@ export default function BilanNutrition({
 
   const criteria   = useMemo(() => computeCriteria(bilan.loggedDays), [bilan.loggedDays]);
   const micros     = useMemo(() => computeMicronutrients(bilan.loggedDays), [bilan.loggedDays]);
-  const categories = useMemo(() => computeCategories(bilan.loggedDays), [bilan.loggedDays]);
   const health     = useMemo(() => computeHealthScore(criteria), [criteria]);
 
   // Date du prochain bilan (dimanche prochain)
@@ -450,13 +449,16 @@ export default function BilanNutrition({
                   <div style={{ fontSize:12.5, fontWeight:700, color:TEXT, fontFamily:FONT }}>
                     {m.label}
                   </div>
-                  <div style={{ fontSize:14, lineHeight:1 }}>{m.icon}</div>
+                  <div style={{ fontSize:13, lineHeight:1 }}>{m.icon}</div>
                 </div>
-                <div style={{ fontSize:11, color:MID, marginBottom:7, fontFamily:FONT }}>
+                <div style={{ fontSize:11, marginBottom:7, fontFamily:FONT }}>
                   <span style={{ fontSize:13, fontWeight:700, color:TEXT }}>
                     {m.val < 10 ? m.val.toFixed(1) : Math.round(m.val)}{m.unit}
                   </span>
                   <span style={{ color:MID }}> / {m.goal}{m.unit}</span>
+                </div>
+                <div style={{ fontSize:10, color:m.color, fontWeight:600, fontFamily:FONT, marginBottom:4 }}>
+                  {m.statusLabel}
                 </div>
                 <div style={{ height:4, background:"rgba(0,0,0,0.06)",
                   borderRadius:99, overflow:"hidden" }}>
@@ -466,42 +468,6 @@ export default function BilanNutrition({
               </div>
             ))}
           </div>
-        </div>
-      </div>
-
-      {/* Répartition par catégorie */}
-      <div style={{ margin:"0 16px 14px" }}>
-        <SectionHeader title="Répartition par catégorie"/>
-        <div style={{ background:S1, border:`1px solid ${BD}`, borderRadius:18, padding:18 }}>
-          {categories.map((c, i) => (
-            <div key={c.key} style={{
-              display:"flex", alignItems:"center", gap:12,
-              padding:"10px 0",
-              borderBottom: i === categories.length-1 ? "none" : "1px solid rgba(0,0,0,0.04)",
-              paddingTop: i === 0 ? 0 : 10 }}>
-              <div style={{ width:36, height:36, borderRadius:10, display:"grid",
-                placeItems:"center", fontSize:18, flexShrink:0,
-                background:`${c.color}1F`, border:`1px solid ${c.color}4D` }}>
-                {c.icon}
-              </div>
-              <div style={{ flex:1, minWidth:0 }}>
-                <div style={{ display:"flex", justifyContent:"space-between",
-                  alignItems:"baseline", marginBottom:4 }}>
-                  <div style={{ fontSize:12.5, fontWeight:700, color:TEXT, fontFamily:FONT }}>
-                    {c.label}
-                  </div>
-                  <div style={{ fontSize:11, color:TEXT, fontWeight:700, fontFamily:FONT, ...NUM }}>
-                    {c.pct}%
-                  </div>
-                </div>
-                <div style={{ height:4, background:"rgba(0,0,0,0.04)",
-                  borderRadius:99, overflow:"hidden" }}>
-                  <div style={{ height:"100%", width:`${c.pct}%`,
-                    background:c.color, borderRadius:99, transition:"width .8s" }}/>
-                </div>
-              </div>
-            </div>
-          ))}
         </div>
       </div>
 
