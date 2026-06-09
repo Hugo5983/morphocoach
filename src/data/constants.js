@@ -65,7 +65,9 @@ export const ACTIVITE_FACTOR = {
 export const GLOBAL_CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Serif+Display:ital@0;1&display=swap');
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
-body{background:#080E1A;color:#F2F4F7;font-family:'DM Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+html{height:100%;height:-webkit-fill-available}
+body{background:#080E1A;color:#F2F4F7;font-family:'DM Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh;min-height:-webkit-fill-available}
+#root{min-height:100vh;min-height:100dvh}
 input,textarea,select{outline:none;font-family:'DM Sans',sans-serif;color:#F2F4F7}
 input::placeholder,textarea::placeholder{color:rgba(242,244,247,0.30)}
 select option{background:#111827;color:#F2F4F7}
