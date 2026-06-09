@@ -24,12 +24,14 @@ export function BottomNav({ tab, setTab }) {
   return (
     <nav className="np" style={{
       position:"fixed", bottom:0, left:0, right:0,
-      background:"rgba(8,14,26,0.96)",
+      background:"rgba(8,14,26,0.97)",
       backdropFilter:"blur(24px)", WebkitBackdropFilter:"blur(24px)",
       borderTop:`1px solid ${C.bd}`,
       display:"flex", alignItems:"center", zIndex:100,
-      padding:"6px 4px 0",
-      paddingBottom:"calc(8px + env(safe-area-inset-bottom, 0px))",
+      paddingTop:"6px",
+      paddingLeft:"4px",
+      paddingRight:"4px",
+      paddingBottom:"calc(6px + env(safe-area-inset-bottom, 0px))",
     }}>
       {ITEMS.map((t) => {
         const on = tab === t.id;
