@@ -62,13 +62,13 @@ export default function RecipeDetail({ recipe, onBack, liked, onLike, push }) {
   const diff = target - base;
   const diffLabel = Math.abs(diff) < 3 ? "Base" : (diff > 0 ? `+${Math.round(diff)} kcal` : `${Math.round(diff)} kcal`);
   const diffColor = Math.abs(diff) < 3
-    ? "rgba(242,244,247,0.35)"
+    ? "${C.dim}"
     : diff > 0 ? "#F87171" : "#34D399";
   const diffBg = Math.abs(diff) < 3
-    ? "rgba(255,255,255,0.05)"
+    ? "rgba(0,0,0,0.04)"
     : diff > 0 ? "rgba(248,113,113,0.10)" : "rgba(52,211,153,0.10)";
   const diffBorder = Math.abs(diff) < 3
-    ? "rgba(255,255,255,0.08)"
+    ? "rgba(0,0,0,0.06)"
     : diff > 0 ? "rgba(248,113,113,0.25)" : "rgba(52,211,153,0.25)";
 
   return (
@@ -90,7 +90,7 @@ export default function RecipeDetail({ recipe, onBack, liked, onLike, push }) {
           <button onClick={onBack} className="tap-icon" style={{
             width:36, height:36, borderRadius:11,
             background:"rgba(11,18,32,0.60)",
-            border:"1px solid rgba(255,255,255,0.14)",
+            border:"1px solid rgba(0,0,0,0.09)",
             display:"grid", placeItems:"center", cursor:"pointer" }}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
                  stroke="#fff" strokeWidth="2.2" strokeLinecap="round">
@@ -100,7 +100,7 @@ export default function RecipeDetail({ recipe, onBack, liked, onLike, push }) {
           <button onClick={() => onLike(r.id)} className="tap-icon" style={{
             width:36, height:36, borderRadius:11,
             background:"rgba(11,18,32,0.60)",
-            border:"1px solid rgba(255,255,255,0.14)",
+            border:"1px solid rgba(0,0,0,0.09)",
             display:"grid", placeItems:"center", cursor:"pointer" }}>
             <svg width="15" height="15" viewBox="0 0 24 24"
                  fill={liked ? "#F87171" : "none"}
@@ -145,12 +145,12 @@ export default function RecipeDetail({ recipe, onBack, liked, onLike, push }) {
             { l:"Portions", v:r.portions, u:"" },
           ].map(s => (
             <div key={s.l} style={{ flex:1, background:C.s1,
-              border:"1px solid rgba(255,255,255,0.07)", borderRadius:12,
+              border:"1px solid rgba(0,0,0,0.06)", borderRadius:12,
               padding:"12px 8px", textAlign:"center" }}>
               <div style={{ fontSize:9, fontWeight:600, letterSpacing:"0.8px",
-                textTransform:"uppercase", color:"rgba(242,244,247,0.38)",
+                textTransform:"uppercase", color:"${C.dim}",
                 fontFamily:FONT, marginBottom:4 }}>{s.l}</div>
-              <div style={{ fontFamily:SERIF, fontSize:20, color:"#F2F4F7",
+              <div style={{ fontFamily:SERIF, fontSize:20, color:"${C.text}",
                 transition:"all .2s" }}>
                 {s.v}<span style={{ fontSize:11, color:"rgba(242,244,247,0.40)" }}>{s.u}</span>
               </div>
@@ -159,17 +159,17 @@ export default function RecipeDetail({ recipe, onBack, liked, onLike, push }) {
         </div>
 
         {/* ── Curseur calories ── */}
-        <div style={{ background:C.s1, border:"1px solid rgba(255,255,255,0.07)",
+        <div style={{ background:C.s1, border:"1px solid rgba(0,0,0,0.06)",
           borderRadius:16, padding:"16px", marginBottom:14 }}>
 
           <div style={{ display:"flex", justifyContent:"space-between",
             alignItems:"center", marginBottom:12 }}>
             <div>
               <div style={{ fontSize:10, fontWeight:600, letterSpacing:"1.2px",
-                textTransform:"uppercase", color:"rgba(242,244,247,0.38)",
+                textTransform:"uppercase", color:"${C.dim}",
                 fontFamily:FONT, marginBottom:3 }}>Ajuster les calories</div>
               <div style={{ display:"flex", alignItems:"baseline", gap:6 }}>
-                <span style={{ fontFamily:SERIF, fontSize:32, color:"#F2F4F7",
+                <span style={{ fontFamily:SERIF, fontSize:32, color:"${C.text}",
                   letterSpacing:-1, lineHeight:1 }}>{target}</span>
                 <span style={{ fontSize:12, color:"rgba(242,244,247,0.40)",
                   fontFamily:FONT }}>kcal</span>
@@ -191,12 +191,12 @@ export default function RecipeDetail({ recipe, onBack, liked, onLike, push }) {
             style={{
               width:"100%", appearance:"none", WebkitAppearance:"none",
               height:4, borderRadius:2, outline:"none",
-              background:`linear-gradient(to right, #3B82F6 0%, #3B82F6 ${((target - Math.round(base*0.4)) / (Math.round(base*2.2) - Math.round(base*0.4))) * 100}%, rgba(255,255,255,0.10) ${((target - Math.round(base*0.4)) / (Math.round(base*2.2) - Math.round(base*0.4))) * 100}%, rgba(255,255,255,0.10) 100%)`,
+              background:`linear-gradient(to right, #3B82F6 0%, #3B82F6 ${((target - Math.round(base*0.4)) / (Math.round(base*2.2) - Math.round(base*0.4))) * 100}%, rgba(0,0,0,0.07) ${((target - Math.round(base*0.4)) / (Math.round(base*2.2) - Math.round(base*0.4))) * 100}%, rgba(0,0,0,0.07) 100%)`,
               cursor:"pointer", marginBottom:6,
             }}
           />
           <div style={{ display:"flex", justifyContent:"space-between",
-            fontSize:10, color:"rgba(242,244,247,0.30)", fontFamily:FONT,
+            fontSize:10, color:"${C.dim}", fontFamily:FONT,
             marginBottom:14 }}>
             <span>{Math.round(base * 0.4)} kcal</span>
             <span style={{ color:"rgba(242,244,247,0.50)" }}>Base : {base} kcal</span>
@@ -220,12 +220,12 @@ export default function RecipeDetail({ recipe, onBack, liked, onLike, push }) {
                   <span style={{ fontSize:10, color:"rgba(242,244,247,0.50)",
                     fontFamily:FONT }}>{m.l}</span>
                 </div>
-                <div style={{ fontSize:16, fontWeight:700, color:"#F2F4F7",
+                <div style={{ fontSize:16, fontWeight:700, color:"${C.text}",
                   fontFamily:FONT, transition:"all .2s" }}>
-                  {m.v}<span style={{ fontSize:10, color:"rgba(242,244,247,0.35)" }}>g</span>
+                  {m.v}<span style={{ fontSize:10, color:"${C.dim}" }}>g</span>
                 </div>
                 {/* Mini barre */}
-                <div style={{ height:3, background:"rgba(255,255,255,0.07)",
+                <div style={{ height:3, background:"rgba(0,0,0,0.06)",
                   borderRadius:2, marginTop:6, overflow:"hidden" }}>
                   <div style={{
                     height:"100%",
@@ -241,8 +241,8 @@ export default function RecipeDetail({ recipe, onBack, liked, onLike, push }) {
           {targetKcal && targetKcal !== base && (
             <button className="tap" onClick={() => setTargetKcal(null)} style={{
               marginTop:12, width:"100%", padding:"8px",
-              background:"rgba(255,255,255,0.04)",
-              border:"1px solid rgba(255,255,255,0.08)", borderRadius:10,
+              background:"rgba(0,0,0,0.03)",
+              border:"1px solid rgba(0,0,0,0.06)", borderRadius:10,
               color:"rgba(242,244,247,0.40)", fontSize:12, fontWeight:500,
               fontFamily:FONT, cursor:"pointer",
             }}>
@@ -252,16 +252,16 @@ export default function RecipeDetail({ recipe, onBack, liked, onLike, push }) {
         </div>
 
         {/* Description */}
-        <div style={{ fontSize:13, color:"rgba(242,244,247,0.60)",
+        <div style={{ fontSize:13, color:"${C.mid}",
           lineHeight:1.6, marginBottom:20, fontFamily:FONT }}>
           {r.desc}
         </div>
 
         {/* Ingrédients */}
-        <div style={{ fontSize:15, fontWeight:700, color:"#F2F4F7",
+        <div style={{ fontSize:15, fontWeight:700, color:"${C.text}",
           marginBottom:12, fontFamily:FONT }}>
           Ingrédients
-          <span style={{ fontSize:11, color:"rgba(242,244,247,0.35)",
+          <span style={{ fontSize:11, color:"${C.dim}",
             marginLeft:8, fontWeight:400 }}>
             pour {r.portions} {r.portions > 1 ? "portions" : "portion"}
           </span>
@@ -271,14 +271,14 @@ export default function RecipeDetail({ recipe, onBack, liked, onLike, push }) {
           )}
         </div>
         <div style={{ background:C.s1,
-          border:"1px solid rgba(255,255,255,0.07)", borderRadius:14,
+          border:"1px solid rgba(0,0,0,0.06)", borderRadius:14,
           padding:"4px 14px", marginBottom:20 }}>
           {r.ingredients.map((ing, i) => (
             <div key={i} style={{ display:"flex", justifyContent:"space-between",
               padding:"10px 0",
               borderBottom: i < r.ingredients.length - 1
-                ? "1px solid rgba(255,255,255,0.05)" : "none" }}>
-              <span style={{ fontSize:13, color:"#F2F4F7",
+                ? "1px solid rgba(0,0,0,0.04)" : "none" }}>
+              <span style={{ fontSize:13, color:"${C.text}",
                 fontFamily:FONT }}>{ing.nom}</span>
               <span style={{ fontSize:13, fontWeight:600,
                 color: targetKcal && targetKcal !== base ? "#93C5FD" : "rgba(242,244,247,0.50)",
@@ -290,7 +290,7 @@ export default function RecipeDetail({ recipe, onBack, liked, onLike, push }) {
         </div>
 
         {/* Préparation */}
-        <div style={{ fontSize:15, fontWeight:700, color:"#F2F4F7",
+        <div style={{ fontSize:15, fontWeight:700, color:"${C.text}",
           marginBottom:12, fontFamily:FONT }}>Préparation</div>
         <div style={{ display:"flex", flexDirection:"column",
           gap:12, marginBottom:24 }}>
