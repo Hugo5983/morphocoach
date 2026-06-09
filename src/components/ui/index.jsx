@@ -98,7 +98,7 @@ export const Btn = ({ children, onClick, disabled, v = "fill", sm, style }) => {
     <button onClick={onClick} disabled={disabled} style={{
       display: "block", width: "100%",
       padding: sm ? "9px 14px" : "13px 16px",
-      background: disabled ? "rgba(255,255,255,0.04)" : s.bg,
+      background: disabled ? "rgba(0,0,0,0.03)" : s.bg,
       color: disabled ? C.dim : s.color,
       border: disabled ? `1px solid ${C.bd}` : s.border,
       borderRadius: 12, fontSize: sm ? 12.5 : 14, fontWeight: 600,
