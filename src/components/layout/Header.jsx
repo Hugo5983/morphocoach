@@ -21,7 +21,7 @@ export function Header({ premium, cycleStart, jR, tab, setTab }) {
           width: 32, height: 32, borderRadius: 10,
           background: `linear-gradient(145deg, ${C.accent}, #2563EB)`,
           display: "grid", placeItems: "center",
-          boxShadow: "0 3px 10px rgba(59,130,246,0.35), inset 0 1px 0 rgba(255,255,255,0.18)",
+          boxShadow: "0 3px 10px rgba(59,130,246,0.35), inset 0 1px 0 rgba(0,0,0,0.10)",
           flexShrink: 0,
         }}>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round">
