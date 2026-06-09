@@ -299,14 +299,15 @@ export default function TodayView(props) {
           </>
         );
       })() : (
-        /* Jour de repos — design récupération */
+        /* Jour de repos — design récupération LIGHT */
         <div style={{
-          background: "linear-gradient(155deg,#0f1e38,#0d1424)",
+          background: "#FFFFFF",
           border: "1px solid rgba(59,130,246,0.18)",
           borderRadius: 22, padding: "22px 20px 18px",
           marginBottom: 14, position: "relative", overflow: "hidden",
+          boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
         }}>
-          <div style={{ position:"absolute",top:-50,right:-50,width:170,height:170,borderRadius:"50%",background:"radial-gradient(circle,rgba(52,211,153,0.14),transparent 68%)",pointerEvents:"none" }}/>
+          <div style={{ position:"absolute",top:-30,right:-30,width:160,height:160,borderRadius:"50%",background:"radial-gradient(circle,rgba(52,211,153,0.08),transparent 68%)",pointerEvents:"none" }}/>
 
           {/* Badge + date */}
           <div style={{ display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:16 }}>
