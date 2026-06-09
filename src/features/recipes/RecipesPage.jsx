@@ -9,7 +9,7 @@ function RecipeCard({ r, liked, onLike, onOpen }) {
   const badge = recipeBadge(r);
   return (
     <div onClick={() => onOpen(r)} className="tap" style={{
-      background:C.s1, border:"1px solid rgba(255,255,255,0.07)",
+      background:C.s1, border:"1px solid rgba(0,0,0,0.06)",
       borderRadius:14, overflow:"hidden", cursor:"pointer",
       position:"relative",
     }}>
@@ -26,7 +26,7 @@ function RecipeCard({ r, liked, onLike, onOpen }) {
           style={{ position:"absolute", bottom:8, right:8,
             width:28, height:28, borderRadius:8,
             background:"rgba(11,18,32,0.65)",
-            border:"1px solid rgba(255,255,255,0.12)",
+            border:"1px solid rgba(0,0,0,0.08)",
             display:"grid", placeItems:"center", cursor:"pointer" }}>
           <svg width="13" height="13" viewBox="0 0 24 24"
                fill={liked ? "#F87171" : "none"}
@@ -37,7 +37,7 @@ function RecipeCard({ r, liked, onLike, onOpen }) {
         </button>
       </div>
       <div style={{ padding:"10px 10px 12px" }}>
-        <div style={{ fontSize:12.5, fontWeight:700, color:"#F2F4F7",
+        <div style={{ fontSize:12.5, fontWeight:700, color:"${C.text}",
           lineHeight:1.3, marginBottom:5, fontFamily:FONT }}>{r.nom}</div>
         <div style={{ display:"flex", alignItems:"center", gap:6 }}>
           <span style={{ fontSize:11, color:"rgba(242,244,247,0.40)",
@@ -114,13 +114,13 @@ export default function Recipes(props) {
         display:"flex", justifyContent:"space-between", alignItems:"flex-end" }}>
         <div>
           <div style={{ fontSize:10, fontWeight:600, letterSpacing:"1.2px",
-            textTransform:"uppercase", color:"rgba(242,244,247,0.38)",
+            textTransform:"uppercase", color:"${C.dim}",
             fontFamily:FONT, marginBottom:4 }}>Explore</div>
-          <div style={{ fontFamily:SERIF, fontSize:26, color:"#F2F4F7",
+          <div style={{ fontFamily:SERIF, fontSize:26, color:"${C.text}",
             letterSpacing:-0.6, lineHeight:1.1 }}>Recettes</div>
         </div>
         <button style={{ width:34, height:34, borderRadius:10,
-          background:C.s1, border:"1px solid rgba(255,255,255,0.07)",
+          background:C.s1, border:"1px solid rgba(0,0,0,0.06)",
           display:"grid", placeItems:"center", cursor:"pointer" }}>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
                stroke="rgba(242,244,247,0.55)" strokeWidth="1.8" strokeLinecap="round">
@@ -145,7 +145,7 @@ export default function Recipes(props) {
             display:"grid", placeItems:"center", fontSize:18,
           }}>🍽️</div>
           <div style={{ flex:1 }}>
-            <div style={{ fontSize:13, fontWeight:700, color:"#F2F4F7",
+            <div style={{ fontSize:13, fontWeight:700, color:"${C.text}",
               fontFamily:"'Outfit',sans-serif" }}>
               Nutrition PRO — 6.99€/mois
             </div>
@@ -166,10 +166,10 @@ export default function Recipes(props) {
       {/* ── Recherche ── */}
       <div style={{ display:"flex", gap:8, marginBottom:14 }}>
         <div style={{ flex:1, display:"flex", alignItems:"center", gap:8,
-          background:C.s1, border:"1px solid rgba(255,255,255,0.07)",
+          background:C.s1, border:"1px solid rgba(0,0,0,0.06)",
           borderRadius:12, padding:"10px 12px" }}>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-               stroke="rgba(242,244,247,0.30)" strokeWidth="2" strokeLinecap="round">
+               stroke="${C.dim}" strokeWidth="2" strokeLinecap="round">
             <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
           </svg>
           <input
@@ -177,7 +177,7 @@ export default function Recipes(props) {
             onChange={e => setSearch(e.target.value)}
             placeholder="Rechercher une recette…"
             style={{ background:"none", border:"none", outline:"none",
-              color:"#F2F4F7", fontSize:13, fontFamily:FONT, width:"100%" }}
+              color:"${C.text}", fontSize:13, fontFamily:FONT, width:"100%" }}
           />
           {search && (
             <button onClick={() => setSearch("")} style={{ background:"none",
@@ -186,7 +186,7 @@ export default function Recipes(props) {
           )}
         </div>
         <button style={{ width:40, height:40, background:C.s1,
-          border:"1px solid rgba(255,255,255,0.07)", borderRadius:12,
+          border:"1px solid rgba(0,0,0,0.06)", borderRadius:12,
           display:"grid", placeItems:"center", cursor:"pointer", flexShrink:0 }}>
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
                stroke="rgba(242,244,247,0.55)" strokeWidth="2" strokeLinecap="round">
@@ -203,8 +203,8 @@ export default function Recipes(props) {
           return (
             <button key={f.id} onClick={() => setFiltre(f.id)} className="tap" style={{
               padding:"6px 14px", borderRadius:20, whiteSpace:"nowrap",
-              background: on ? "#3B82F6" : "rgba(255,255,255,0.05)",
-              border:`1px solid ${on ? "#3B82F6" : "rgba(255,255,255,0.08)"}`,
+              background: on ? "#3B82F6" : "rgba(0,0,0,0.04)",
+              border:`1px solid ${on ? "#3B82F6" : "rgba(0,0,0,0.06)"}`,
               color: on ? "#fff" : "rgba(242,244,247,0.55)",
               fontSize:12, fontWeight:600, fontFamily:FONT, cursor:"pointer",
             }}>{f.l}</button>
@@ -217,11 +217,11 @@ export default function Recipes(props) {
         <div style={{ marginBottom:22 }}>
           <div style={{ display:"flex", justifyContent:"space-between",
             alignItems:"center", marginBottom:12 }}>
-            <span style={{ fontSize:15, fontWeight:700, color:"#F2F4F7",
+            <span style={{ fontSize:15, fontWeight:700, color:"${C.text}",
               fontFamily:FONT }}>À la une</span>
           </div>
           <div onClick={() => setSelected(featured)} className="tap" style={{
-            background:C.s1, border:"1px solid rgba(255,255,255,0.07)",
+            background:C.s1, border:"1px solid rgba(0,0,0,0.06)",
             borderRadius:16, overflow:"hidden", cursor:"pointer" }}>
             <div style={{ position:"relative", height:150, background:C.s2 }}>
               <img
@@ -257,7 +257,7 @@ export default function Recipes(props) {
                 style={{ position:"absolute", bottom:12, right:12,
                   width:32, height:32, borderRadius:9,
                   background:"rgba(11,18,32,0.65)",
-                  border:"1px solid rgba(255,255,255,0.12)",
+                  border:"1px solid rgba(0,0,0,0.08)",
                   display:"grid", placeItems:"center", cursor:"pointer" }}>
                 <svg width="14" height="14" viewBox="0 0 24 24"
                      fill={liked[featured.id] ? "#F87171" : "none"}
@@ -274,7 +274,7 @@ export default function Recipes(props) {
       {/* ── Sections ── */}
       {sections.length === 0 ? (
         <div style={{ textAlign:"center", padding:"40px 0",
-          color:"rgba(242,244,247,0.35)", fontSize:13, fontFamily:FONT }}>
+          color:"${C.dim}", fontSize:13, fontFamily:FONT }}>
           Aucune recette trouvée
         </div>
       ) : (
@@ -283,9 +283,9 @@ export default function Recipes(props) {
             <div style={{ display:"flex", justifyContent:"space-between",
               alignItems:"center", marginBottom:12 }}>
               <div>
-                <span style={{ fontSize:15, fontWeight:700, color:"#F2F4F7",
+                <span style={{ fontSize:15, fontWeight:700, color:"${C.text}",
                   fontFamily:FONT }}>{section.label}</span>
-                <span style={{ fontSize:11, color:"rgba(242,244,247,0.35)",
+                <span style={{ fontSize:11, color:"${C.dim}",
                   marginLeft:8, fontFamily:FONT }}>
                   {section.recettes.length} recette{section.recettes.length > 1 ? "s" : ""}
                 </span>
