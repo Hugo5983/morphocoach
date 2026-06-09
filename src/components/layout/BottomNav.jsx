@@ -27,12 +27,12 @@ export function BottomNav({ tab, setTab }) {
       background:"rgba(8,14,26,0.97)",
       backdropFilter:"blur(24px)", WebkitBackdropFilter:"blur(24px)",
       borderTop:`1px solid ${C.bd}`,
-      display:"flex", alignItems:"center", zIndex:100,
-      paddingTop:"6px",
-      paddingLeft:"4px",
-      paddingRight:"4px",
-      paddingBottom:"calc(6px + env(safe-area-inset-bottom, 0px))",
+      display:"flex", flexDirection:"column",
+      zIndex:100,
     }}>
+      {/* Boutons nav */}
+      <div style={{ display:"flex", alignItems:"center",
+        paddingTop:6, paddingLeft:4, paddingRight:4, paddingBottom:6 }}>
       {ITEMS.map((t) => {
         const on = tab === t.id;
         return (
@@ -56,6 +56,12 @@ export function BottomNav({ tab, setTab }) {
           </button>
         );
       })}
+      </div>
+      {/* Zone safe-area — même couleur que la nav, comble le vide */}
+      <div style={{
+        height:"env(safe-area-inset-bottom, 0px)",
+        background:"rgba(8,14,26,0.97)",
+      }}/>
     </nav>
   );
 }
