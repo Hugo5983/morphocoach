@@ -439,25 +439,26 @@ export default function BilanNutrition({
 
       {/* Micronutriments */}
       <div style={{ margin:"0 16px 14px" }}>
-        <SectionHeader title="Micronutriments · somme des aliments rentrés"/>
+        <SectionHeader title="Micronutriments · apports des aliments rentrés"/>
         <div style={{ background:S1, border:`1px solid ${BD}`, borderRadius:18, padding:18 }}>
-          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8 }}>
+          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10 }}>
             {micros.map(m => (
-              <div key={m.key} style={{ padding:"11px 12px", background:S2,
-                border:`1px solid ${BD}`, borderRadius:12 }}>
+              <div key={m.key} style={{ padding:"13px 13px", background:S2,
+                border:`1px solid ${BD}`, borderRadius:14 }}>
                 <div style={{ display:"flex", justifyContent:"space-between",
-                  alignItems:"baseline", marginBottom:6 }}>
-                  <div style={{ fontSize:11.5, fontWeight:700, color:TEXT, fontFamily:FONT }}>
+                  alignItems:"center", marginBottom:5 }}>
+                  <div style={{ fontSize:12.5, fontWeight:700, color:TEXT, fontFamily:FONT }}>
                     {m.label}
                   </div>
-                  <div style={{ fontSize:16 }}>{m.icon}</div>
+                  <div style={{ fontSize:14, lineHeight:1 }}>{m.icon}</div>
                 </div>
-                <div style={{ fontSize:11, color:MID, marginBottom:6, fontFamily:FONT }}>
-                  <b style={{ color:TEXT, fontWeight:700 }}>
+                <div style={{ fontSize:11, color:MID, marginBottom:7, fontFamily:FONT }}>
+                  <span style={{ fontSize:13, fontWeight:700, color:TEXT }}>
                     {m.val < 10 ? m.val.toFixed(1) : Math.round(m.val)}{m.unit}
-                  </b> / {m.goal}{m.unit}
+                  </span>
+                  <span style={{ color:MID }}> / {m.goal}{m.unit}</span>
                 </div>
-                <div style={{ height:3, background:"rgba(0,0,0,0.05)",
+                <div style={{ height:4, background:"rgba(0,0,0,0.06)",
                   borderRadius:99, overflow:"hidden" }}>
                   <div style={{ height:"100%", width:`${Math.min(100,m.pct)}%`,
                     background:m.color, borderRadius:99, transition:"width .8s" }}/>
