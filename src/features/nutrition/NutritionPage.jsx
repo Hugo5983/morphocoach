@@ -231,7 +231,7 @@ export default function Nutrition(props){
 
           {/* Onglets Journal / Bilan PRO */}
           <div style={{position:'relative',display:'flex',padding:3,borderRadius:12,
-            background:'rgba(7,10,20,0.7)',border:`1px solid ${C.bd}`,marginBottom:2}}>
+            background:'#F0F2F7',border:'1px solid rgba(0,0,0,0.07)',marginBottom:2}}>
             {[{id:"journal",l:"Journal"},{id:"bilan",l:"Bilan PRO"}].map(s=>{
               const on=nView===s.id||(nView==="score"&&s.id==="journal");
               const isBilan=s.id==="bilan";
@@ -240,12 +240,12 @@ export default function Nutrition(props){
                   if(isBilan){ if(!premium){ if(setPaywall)setPaywall(true); return; } }
                   setNView(s.id);
                 }} style={{position:'relative',zIndex:1,flex:1,padding:'8px 0',borderRadius:9,
-                  background:on?(isBilan?'rgba(59,130,246,0.15)':C.s2):'transparent',
-                  border:on?`1px solid ${isBilan?'rgba(59,130,246,0.35)':C.bdHi}`:'1px solid transparent',
-                  color:on?(isBilan?'#93C5FD':C.text):C.dim,
+                  background:on?'#FFFFFF':'transparent',
+                  border:on?(isBilan?'1px solid rgba(59,130,246,0.35)':'1px solid rgba(0,0,0,0.10)'):'1px solid transparent',
+                  color:on?(isBilan?'#2563EB':'#0F1923'):'#6B7280',
                   fontSize:12,fontWeight:700,letterSpacing:0.2,fontFamily:DISPLAY,
                   cursor:'pointer',transition:'all .25s ease',
-                  boxShadow:on?'0 2px 6px rgba(0,0,0,0.25)':'none'}}>
+                  boxShadow:on?'0 1px 4px rgba(0,0,0,0.08)':'none'}}>
                   {s.l}
                   {isBilan&&!premium&&(
                     <span style={{fontSize:8,marginLeft:4,padding:'1px 4px',borderRadius:3,
