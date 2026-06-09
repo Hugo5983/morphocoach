@@ -15,10 +15,10 @@ import {
 const BG    = "#080E1A";
 const S1    = C.s1 || "#111827";
 const S2    = C.s2 || "#1A2336";
-const BD    = C.bd || "rgba(255,255,255,0.07)";
-const TEXT  = C.text || "#F2F4F7";
-const MID   = C.mid || "rgba(242,244,247,0.60)";
-const DIM   = C.dim || "rgba(242,244,247,0.35)";
+const BD    = C.bd || "rgba(0,0,0,0.06)";
+const TEXT  = C.text || "${C.text}";
+const MID   = C.mid || "${C.mid}";
+const DIM   = C.dim || "${C.dim}";
 const BL    = C.accent || "#3B82F6";
 const BLD   = C.accentDk || "#2563EB";
 const GRN   = "#34D399";
@@ -50,7 +50,7 @@ function ScoreRing({ score }) {
   return (
     <div style={{ position:"relative", width:100, height:100, flexShrink:0 }}>
       <svg width="100" height="100" viewBox="0 0 100 100">
-        <circle cx="50" cy="50" r={r} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="6"/>
+        <circle cx="50" cy="50" r={r} fill="none" stroke="rgba(0,0,0,0.05)" strokeWidth="6"/>
         <circle cx="50" cy="50" r={r} fill="none" stroke={color} strokeWidth="6"
           strokeLinecap="round" strokeDasharray={circum}
           strokeDashoffset={circum * (1 - pct)} transform="rotate(-90 50 50)"
@@ -91,7 +91,7 @@ function StreakGrid({ loggedDays, totalDays, calObj }) {
     if (st === "ok")   return { bg:"linear-gradient(145deg, rgba(52,211,153,0.20), rgba(52,211,153,0.08))", bd:"1px solid rgba(52,211,153,0.35)",  color:GRN };
     if (st === "warn") return { bg:"rgba(245,158,11,0.12)", bd:"1px solid rgba(245,158,11,0.25)",   color:AMB };
     if (st === "bad")  return { bg:"rgba(248,113,113,0.08)", bd:"1px solid rgba(248,113,113,0.18)", color:"rgba(248,113,113,0.55)" };
-    return                  { bg:"transparent",              bd:"1px dashed rgba(255,255,255,0.10)", color:DIM };
+    return                  { bg:"transparent",              bd:"1px dashed rgba(0,0,0,0.07)", color:DIM };
   };
 
   return (
@@ -289,7 +289,7 @@ export default function BilanNutrition({
           </div>
           <StreakGrid loggedDays={bilan.loggedDays} totalDays={bilan.totalDays} calObj={calObj}/>
           <div style={{ display:"flex", gap:14, paddingTop:11,
-            borderTop:"1px solid rgba(255,255,255,0.05)", flexWrap:"wrap" }}>
+            borderTop:"1px solid rgba(0,0,0,0.04)", flexWrap:"wrap" }}>
             <div style={{ display:"flex", alignItems:"center", gap:6, fontSize:11, color:MID, fontFamily:FONT }}>
               <span style={{ width:8, height:8, borderRadius:2, background:GRN }}/>Cible
             </div>
@@ -300,7 +300,7 @@ export default function BilanNutrition({
               <span style={{ width:8, height:8, borderRadius:2, background:RED }}/>Hors
             </div>
             <div style={{ display:"flex", alignItems:"center", gap:6, fontSize:11, color:MID, fontFamily:FONT }}>
-              <span style={{ width:8, height:8, borderRadius:2, background:"rgba(255,255,255,0.08)", border:"1px dashed rgba(255,255,255,0.25)" }}/>Vide
+              <span style={{ width:8, height:8, borderRadius:2, background:"rgba(0,0,0,0.06)", border:"1px dashed rgba(0,0,0,0.12)" }}/>Vide
             </div>
           </div>
         </div>
@@ -345,7 +345,7 @@ export default function BilanNutrition({
               </span>
               <span style={{ fontSize:11, color:DIM, fontFamily:FONT }}>/ 2L</span>
             </div>
-            <div style={{ height:4, background:"rgba(255,255,255,0.05)", borderRadius:99, overflow:"hidden" }}>
+            <div style={{ height:4, background:"rgba(0,0,0,0.04)", borderRadius:99, overflow:"hidden" }}>
               <div style={{ height:"100%",
                 width:`${Math.min(100, (bilan.avgEau * 0.25 / 2) * 100)}%`,
                 background:"linear-gradient(90deg, #34D399, #2DA67D)", borderRadius:99 }}/>
@@ -457,7 +457,7 @@ export default function BilanNutrition({
                     {m.val < 10 ? m.val.toFixed(1) : Math.round(m.val)}{m.unit}
                   </b> / {m.goal}{m.unit}
                 </div>
-                <div style={{ height:3, background:"rgba(255,255,255,0.06)",
+                <div style={{ height:3, background:"rgba(0,0,0,0.05)",
                   borderRadius:99, overflow:"hidden" }}>
                   <div style={{ height:"100%", width:`${Math.min(100,m.pct)}%`,
                     background:m.color, borderRadius:99, transition:"width .8s" }}/>
@@ -476,7 +476,7 @@ export default function BilanNutrition({
             <div key={c.key} style={{
               display:"flex", alignItems:"center", gap:12,
               padding:"10px 0",
-              borderBottom: i === categories.length-1 ? "none" : "1px solid rgba(255,255,255,0.05)",
+              borderBottom: i === categories.length-1 ? "none" : "1px solid rgba(0,0,0,0.04)",
               paddingTop: i === 0 ? 0 : 10 }}>
               <div style={{ width:36, height:36, borderRadius:10, display:"grid",
                 placeItems:"center", fontSize:18, flexShrink:0,
@@ -493,7 +493,7 @@ export default function BilanNutrition({
                     {c.pct}%
                   </div>
                 </div>
-                <div style={{ height:4, background:"rgba(255,255,255,0.05)",
+                <div style={{ height:4, background:"rgba(0,0,0,0.04)",
                   borderRadius:99, overflow:"hidden" }}>
                   <div style={{ height:"100%", width:`${c.pct}%`,
                     background:c.color, borderRadius:99, transition:"width .8s" }}/>
