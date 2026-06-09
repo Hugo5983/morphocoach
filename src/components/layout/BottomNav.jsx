@@ -24,9 +24,10 @@ export function BottomNav({ tab, setTab }) {
   return (
     <nav className="np" style={{
       position:"fixed", bottom:0, left:0, right:0,
-      background:"rgba(8,14,26,0.97)",
+      background:"rgba(246,248,251,0.97)",
       backdropFilter:"blur(24px)", WebkitBackdropFilter:"blur(24px)",
-      borderTop:`1px solid ${C.bd}`,
+      borderTop:`1px solid rgba(0,0,0,0.07)`,
+      boxShadow:"0 -4px 16px rgba(0,0,0,0.06)",
       display:"flex", flexDirection:"column",
       zIndex:100,
     }}>
@@ -60,7 +61,7 @@ export function BottomNav({ tab, setTab }) {
       {/* Zone safe-area — même couleur que la nav, comble le vide */}
       <div style={{
         height:"env(safe-area-inset-bottom, 0px)",
-        background:"rgba(8,14,26,0.97)",
+        background:"rgba(246,248,251,0.97)",
       }}/>
     </nav>
   );
