@@ -9,9 +9,9 @@ import AnalyseIA from "../ai/AnalyseIA.jsx";
 import { findExInDB } from "../../utils/training.js";
 import { GuideExModal, SeanceDetailModal } from "./components/ProgramTabModals.jsx";
 
-// ─── MÉSOCYCLE CHART ─────────────────────────────────────────────────────────
+// ─── PROGRESSION DE LA SEMAINE CHART ─────────────────────────────────────────
 function MesocycleChart({ prog, semC, checkedEx, cycleStart }) {
-  const DISP_F = "'Outfit','DM Sans',system-ui,sans-serif";
+  const DISP_F  = "'Outfit','DM Sans',system-ui,sans-serif";
   const SERIF_F = "'DM Serif Display','Georgia',serif";
   const [open, setOpen] = useState(false);
   const currentWeek = Math.min((semC||0), 5);
@@ -25,62 +25,134 @@ function MesocycleChart({ prog, semC, checkedEx, cycleStart }) {
     {lbl:"S5", type:"Déload", m:0.70},
     {lbl:"S6", type:"Pic",    m:1.40},
   ];
-  const maxH = 72, maxM = 1.4;
-  // Volume landmarks (réels, dérivés du programme)
-  const MEV = Math.round(baseVol*0.65);
-  const MAV = baseVol;
-  const MRV = Math.round(baseVol*1.35);
+  const MEV    = Math.round(baseVol*0.65);
+  const MAV    = baseVol;
+  const MRV    = Math.round(baseVol*1.35);
   const curVol = Math.round(baseVol * WEEKS[currentWeek].m);
   const nearMRV = curVol >= MRV*0.9;
 
+  // ── Line chart geometry ────────────────────────────────────────────────────
+  const W = 310, H = 82;
+  const PL = 8, PR = 8, PT = 10, PB = 6;
+  const cW = W - PL - PR, cH = H - PT - PB;
+
+  const vols  = WEEKS.map(w => Math.round(baseVol * w.m));
+  const minV  = Math.min(...vols) * 0.80;
+  const maxV  = Math.max(...vols) * 1.10;
+  const range = maxV - minV || 1;
+
+  const pts = vols.map((v, i) => ({
+    x: PL + (i / 5) * cW,
+    y: PT + cH - ((v - minV) / range) * cH,
+    v, week: WEEKS[i], i,
+  }));
+
+  const linePath = pts.reduce((d, p, i) => {
+    if (i === 0) return `M${p.x.toFixed(1)},${p.y.toFixed(1)}`;
+    const prev = pts[i-1];
+    const t = 0.42;
+    const cp1x = (prev.x + (p.x - prev.x) * t).toFixed(1);
+    const cp2x = (p.x  - (p.x - prev.x) * t).toFixed(1);
+    return `${d} C${cp1x},${prev.y.toFixed(1)} ${cp2x},${p.y.toFixed(1)} ${p.x.toFixed(1)},${p.y.toFixed(1)}`;
+  }, '');
+
+  const fillPath = `${linePath} L${pts[5].x.toFixed(1)},${H} L${pts[0].x.toFixed(1)},${H} Z`;
+
+  const dotCol = (w) =>
+    w.type === 'Déload' ? '#F87171' :
+    w.type === 'Pic'    ? '#F59E0B' : '#3B82F6';
+
   return (
     <>
-    {/* Carte cliquable */}
-    <div onClick={()=>setOpen(true)} style={{background:C.s1,border:`1px solid ${C.bd}`,borderRadius:20,padding:"18px 16px",marginBottom:16,cursor:"pointer"}}>
-      <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:18}}>
+    {/* ── Carte cliquable ── */}
+    <div onClick={()=>setOpen(true)}
+      style={{background:C.s1,border:`1px solid ${C.bd}`,borderRadius:20,padding:"16px 16px 14px",marginBottom:16,cursor:"pointer"}}>
+
+      {/* Header */}
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:12}}>
         <div>
-          <div style={{fontSize:9,fontWeight:700,letterSpacing:"1.3px",textTransform:"uppercase",color:C.blue,fontFamily:DISP_F,marginBottom:4}}>Mésocycle</div>
-          <div style={{fontSize:16,fontWeight:700,color:"${C.text}",fontFamily:DISP_F,letterSpacing:-0.3}}>Volume 6 semaines</div>
-          <div style={{fontSize:11,color:"${C.dim}",fontFamily:DISP_F,marginTop:3}}>Progression planifiée · {baseVol} séries/sem</div>
+          <div style={{fontSize:9,fontWeight:700,letterSpacing:"1.3px",textTransform:"uppercase",color:C.blue,fontFamily:DISP_F,marginBottom:4}}>
+            Progression de la semaine
+          </div>
+          <div style={{fontSize:10.5,color:"#374151",fontFamily:DISP_F}}>
+            Volume (séries)
+          </div>
         </div>
         <div style={{textAlign:"right"}}>
-          <div style={{fontSize:9,color:"${C.dim}",fontFamily:DISP_F}}>Sem. actuelle</div>
-          <div style={{fontSize:20,fontWeight:800,color:C.blue,fontFamily:DISP_F,lineHeight:1}}>{currentWeek+1}<span style={{fontSize:11,color:"${C.dim}",fontWeight:400}}>/6</span></div>
+          <div style={{fontSize:9,color:"#9CA3AF",fontFamily:DISP_F}}>Sem. actuelle</div>
+          <div style={{fontSize:22,fontWeight:800,color:C.blue,fontFamily:DISP_F,lineHeight:1,marginTop:2}}>
+            {curVol}
+            <span style={{fontSize:11,color:"#9CA3AF",fontWeight:400,marginLeft:3}}>séries</span>
+          </div>
+          <div style={{fontSize:9,color:"#9CA3AF",fontFamily:DISP_F,marginTop:1}}>
+            {WEEKS[currentWeek].lbl} · {WEEKS[currentWeek].type}
+          </div>
         </div>
       </div>
-      <div style={{display:"flex",gap:8,alignItems:"flex-end",height:maxH,marginBottom:10}}>
-        {WEEKS.map((w,i) => {
-          const isCur = i===currentWeek;
-          const h = Math.round((w.m/maxM)*maxH);
-          const bg = w.type==="Déload" ? "rgba(248,113,113,0.4)"
-            : w.type==="Pic" ? "rgba(245,158,11,0.55)"
-            : isCur ? "linear-gradient(180deg,#60A5FA,#2563EB)" : "rgba(59,130,246,0.22)";
+
+      {/* Line chart */}
+      <svg width="100%" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none"
+           style={{display:"block",overflow:"visible",marginBottom:4}}>
+        <defs>
+          <linearGradient id="mc-line-grad" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0%"   stopColor="#3B82F6" stopOpacity="0.16"/>
+            <stop offset="100%" stopColor="#3B82F6" stopOpacity="0.01"/>
+          </linearGradient>
+        </defs>
+        {/* Grid lines */}
+        {[0.33, 0.66].map((f,i) => (
+          <line key={i} x1={PL} x2={W-PR}
+            y1={PT + cH*(1-f)} y2={PT + cH*(1-f)}
+            stroke="rgba(0,0,0,0.05)" strokeWidth="1" strokeDasharray="3 4"/>
+        ))}
+        {/* Fill + stroke */}
+        <path d={fillPath} fill="url(#mc-line-grad)"/>
+        <path d={linePath} fill="none" stroke="#3B82F6" strokeWidth="2.5"
+              strokeLinecap="round" strokeLinejoin="round"/>
+        {/* Dots */}
+        {pts.map((p, i) => {
+          const isCur  = i === currentWeek;
+          const isPast = i < currentWeek;
+          const dc = dotCol(p.week);
           return (
-            <div key={i} style={{flex:1,display:"flex",flexDirection:"column",justifyContent:"flex-end"}}>
-              <div style={{height:h,borderRadius:"5px 5px 3px 3px",background:bg,border:isCur?"1px solid #3B82F6":"1px solid transparent",boxShadow:isCur?"0 4px 14px rgba(59,130,246,0.3)":"none"}}/>
-            </div>
+            <g key={i}>
+              {isCur && <circle cx={p.x} cy={p.y} r={10} fill={dc} opacity={0.13}/>}
+              <circle
+                cx={p.x} cy={p.y}
+                r={isCur ? 6 : 4}
+                fill={isPast || isCur ? dc : "rgba(59,130,246,0.22)"}
+                stroke="#fff" strokeWidth={isCur ? 2 : 1.5}
+                style={{filter: isCur ? `drop-shadow(0 2px 7px ${dc}70)` : 'none'}}
+              />
+            </g>
           );
         })}
-      </div>
-      <div style={{display:"flex",gap:8}}>
+      </svg>
+
+      {/* Week labels */}
+      <div style={{display:"flex"}}>
         {WEEKS.map((w,i) => {
-          const isCur = i===currentWeek;
-          const col = w.type==="Déload" ? "rgba(248,113,113,0.7)" : w.type==="Pic" ? "rgba(245,158,11,0.7)" : isCur ? "#60A5FA" : "${C.dim}";
+          const isCur = i === currentWeek;
+          const col = w.type==="Déload" ? "rgba(248,113,113,0.75)"
+            : w.type==="Pic" ? "rgba(245,158,11,0.80)"
+            : isCur ? "#60A5FA" : "#9CA3AF";
           return (
             <div key={i} style={{flex:1,textAlign:"center"}}>
-              <div style={{fontSize:isCur?12:11,fontWeight:isCur?800:600,color:col,fontFamily:DISP_F}}>{w.lbl}</div>
-              <div style={{fontSize:8,color:"#6B7280",fontFamily:DISP_F,marginTop:1}}>{w.type}</div>
+              <div style={{fontSize:isCur?11.5:10.5,fontWeight:isCur?800:600,color:col,fontFamily:DISP_F}}>{w.lbl}</div>
+              <div style={{fontSize:7.5,color:"#9CA3AF",fontFamily:DISP_F,marginTop:1}}>{w.type}</div>
             </div>
           );
         })}
       </div>
+
+      {/* CTA */}
       <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:6,marginTop:14,paddingTop:12,borderTop:`1px solid ${C.bd}`,color:"#60A5FA",fontSize:12,fontWeight:700,fontFamily:DISP_F}}>
         Voir l'analyse complète
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
       </div>
     </div>
 
-    {/* Overlay analyse complète */}
+    {/* Overlay (inchangé) */}
     {open && <MesocycleDetail prog={prog} semC={semC} baseVol={baseVol} MEV={MEV} MAV={MAV} MRV={MRV} curVol={curVol} currentWeek={currentWeek} WEEKS={WEEKS} cycleStart={cycleStart} checkedEx={checkedEx} onClose={()=>setOpen(false)}/>}
     </>
   );
