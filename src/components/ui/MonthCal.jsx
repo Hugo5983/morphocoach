@@ -255,185 +255,136 @@ export function DayModal({ date, sessions, onSave, onDelete, onToggleDone, onClo
 }
 
 // ─── BILAN DU MOIS ────────────────────────────────────────────────────────────
-const CHARGE_FEM = { leger:'Légère', modere:'Modérée', lourd:'Lourde', intense:'Intense', mobilite:'Mobilité' };
-const CHARGE_SUB = { leger:'Récup bien gérée', modere:'Bon équilibre fatigue', lourd:'Charge soutenue', intense:'Surveille la récup', mobilite:'Récupération active' };
-
-function BilanMois({ sessions, year, month, cycleStart, currentWeek }) {
+function BilanMois({ sessions, year, month, currentWeek }) {
   const stats = useMemo(() => {
     const toArr = v => Array.isArray(v) ? v : (v ? [v] : []);
-
-    // ── Tonnage réel depuis workoutLog ──
     const wLog = (() => { try { return JSON.parse(localStorage.getItem('morpho_workout_log')||'{}'); } catch{return{};} })();
-    const realTonnageOf = (dateKey) => {
-      const entry = wLog[dateKey];
-      return entry ? entry.totalVolume / 1000 : 0; // totalVolume en kg → tonnes
-    };
+    const realVolumeOf = (dateKey) => { const e = wLog[dateKey]; return e ? e.totalVolume : 0; };
 
-    // ── Mois courant ──
     const prefix = `${year}-${String(month+1).padStart(2,'0')}`;
-    const weeks = [0,0,0,0,0,0];
-    const intCounts = {};
+    const pd = new Date(year, month-1, 1);
+    const prevPrefix = `${pd.getFullYear()}-${String(pd.getMonth()+1).padStart(2,'0')}`;
+
     let planned = 0, validated = 0, tonnage = 0;
+    let prevValidated = 0, prevTonnage = 0;
 
     Object.entries(sessions).filter(([k]) => k.startsWith(prefix)).forEach(([k,v]) => {
-      const day  = parseInt(k.slice(8),10);
-      const wIdx = Math.min(5, Math.floor((day-1)/7));
       toArr(v).forEach(s => {
         planned++;
         if (s.done) {
           validated++;
-          const ik = s.intensite||'modere'; intCounts[ik] = (intCounts[ik]||0)+1;
-          // Préférer tonnage réel (workoutLog) > tonnage programmé (charge × séries × reps)
-          const real = realTonnageOf(k);
+          const real = realVolumeOf(k);
           const prog = (s.musculation?.exercices||[]).reduce((a,ex) =>
-            a + (parseInt(ex.series)||4)*(parseInt(ex.reps)||10)*(parseFloat(ex.charge)||0)/1000, 0);
-          const t = real > 0 ? real : prog;
-          tonnage += t; weeks[wIdx] += t;
+            a + (parseInt(ex.series)||4)*(parseInt(ex.reps)||10)*(parseFloat(ex.charge)||0), 0);
+          tonnage += real > 0 ? real : prog;
         }
       });
     });
 
-    // ── Mois précédent ──
-    const pd = new Date(year, month-1, 1);
-    const prevPrefix = `${pd.getFullYear()}-${String(pd.getMonth()+1).padStart(2,'0')}`;
-    let prevValidated = 0, prevTonnage = 0;
     Object.entries(sessions).filter(([k]) => k.startsWith(prevPrefix)).forEach(([k,v]) => {
       toArr(v).forEach(s => {
         if (s.done) {
           prevValidated++;
-          const real = realTonnageOf(k);
+          const real = realVolumeOf(k);
           const prog = (s.musculation?.exercices||[]).reduce((a,ex) =>
-            a + (parseInt(ex.series)||4)*(parseInt(ex.reps)||10)*(parseFloat(ex.charge)||0)/1000, 0);
+            a + (parseInt(ex.series)||4)*(parseInt(ex.reps)||10)*(parseFloat(ex.charge)||0), 0);
           prevTonnage += real > 0 ? real : prog;
         }
       });
     });
 
-    const assiduite = planned > 0 ? Math.min(100, Math.round((validated/planned)*100)) : 0;
-    const topInt    = Object.entries(intCounts).sort((a,b)=>b[1]-a[1])[0];
-    const tonPct    = prevTonnage > 0 ? Math.round((tonnage-prevTonnage)/prevTonnage*100) : null;
-    let lastWeek = 0; for (let i=0;i<weeks.length;i++) if (i*7 < new Date(year,month+1,0).getDate()) lastWeek = i;
-    const weeksTrim = weeks.slice(0, lastWeek+1);
+    const assiduite  = planned > 0 ? Math.min(100, Math.round((validated/planned)*100)) : 0;
+    const tonnageTon = tonnage / 1000; // en tonnes
+    const prevTonTon = prevTonnage / 1000;
+    const tonPct     = prevTonTon > 0 ? Math.round((tonnageTon-prevTonTon)/prevTonTon*100) : null;
+    const diff       = validated - prevValidated;
+    const volSess    = validated > 0 ? Math.round(tonnage / validated) : 0; // kg/séance
+    const MONTHS_SHORT = ['janv.','févr.','mars','avr.','mai','juin','juil.','août','sept.','oct.','nov.','déc.'];
+    const prevMonthName = MONTHS_SHORT[(month+11)%12];
 
-    return { planned, validated, tonnage, weeks: weeksTrim, assiduite, topInt, prevValidated, tonPct };
+    return { planned, validated, tonnage: tonnageTon, assiduite, tonPct, diff, prevValidated, prevMonthName, volSess };
   }, [sessions, year, month]);
 
-  const MONTHS_SHORT = ['janv.','févr.','mars','avr.','mai','juin','juil.','août','sept.','oct.','nov.','déc.'];
-  const prevMonthName = MONTHS_SHORT[(month+11)%12];
-
-  // Carte bilan
-  const Card = ({ label, main, sub, delta, deltaOk, accent }) => (
-    <div style={{flex:1,background:C.s1,border:`1px solid rgba(0,0,0,0.06)`,borderRadius:16,padding:'15px 13px',minWidth:0}}>
-      <div style={{...ey,marginBottom:9}}>{label}</div>
-      {(main!==undefined&&main!=='')&&(
-        <div style={{fontFamily:DISPLAY,fontSize:30,fontWeight:700,color:C.text,letterSpacing:-1,lineHeight:1,...NUM}}>
-          {main}
-          {sub&&<span style={{fontSize:13,fontWeight:400,color:'${C.dim}',marginLeft:3}}>{sub}</span>}
-        </div>
-      )}
-      {delta&&(
-        <div style={{fontSize:11,fontWeight:700,color:deltaOk?'#34D399':'#F87171',marginTop:8,fontFamily:DISPLAY,...NUM}}>{delta}</div>
-      )}
-      {accent&&<div style={{marginTop:8}}>{accent}</div>}
-    </div>
-  );
-
-  const topIntData = stats.topInt ? INT[stats.topInt[0]] : null;
-  const topIntKey  = stats.topInt ? stats.topInt[0] : null;
-
-  // Mini-graphique tonnage par semaine
-  const maxWeek = Math.max(...stats.weeks, 1);
-  const spark = stats.tonnage > 0 ? (
-    <div style={{display:'flex',alignItems:'flex-end',gap:5,height:36,marginTop:2}}>
-      {stats.weeks.map((w,i)=>(
-        <div key={i} style={{flex:1,height:`${w>0?14+(w/maxWeek)*22:6}px`,borderRadius:'5px 5px 3px 3px',
-          background:'linear-gradient(180deg,#60A5FA,#2563EB)',opacity:w>0?1:0.25,transition:'height .6s cubic-bezier(.4,0,.2,1)'}}/>
-      ))}
-    </div>
-  ) : null;
-
-  const assBarre = (
-    <div>
-      <div style={{height:7,background:'rgba(0,0,0,0.06)',borderRadius:5,overflow:'hidden',marginBottom:6}}>
-        <div style={{height:'100%',width:`${stats.assiduite}%`,background:'linear-gradient(90deg,#34D399,#10B981)',borderRadius:5,transition:'width .7s cubic-bezier(.4,0,.2,1)'}}/>
-      </div>
-      <div style={{fontSize:9.5,color:'${C.dim}',fontFamily:DISPLAY,...NUM}}>
-        {stats.validated} / {stats.planned} validée{stats.planned>1?'s':''}
-      </div>
-    </div>
-  );
-
-  const chargeBarre = topIntData ? (
-    <div>
-      <div style={{display:'flex',alignItems:'center',gap:9,marginTop:2}}>
-        <div style={{width:14,height:14,borderRadius:'50%',background:topIntData.c,flexShrink:0,boxShadow:`0 0 8px ${topIntData.c}`}}/>
-        <div style={{fontSize:22,fontWeight:700,color:topIntData.c,fontFamily:DISPLAY,letterSpacing:-0.5}}>{CHARGE_FEM[topIntKey]||topIntData.l}</div>
-      </div>
-      <div style={{fontSize:11,color:'#374151',fontFamily:DISPLAY,marginTop:6}}>{CHARGE_SUB[topIntKey]||''}</div>
-    </div>
-  ) : (
-    <div style={{fontSize:12,color:'${C.dim}',fontFamily:DISPLAY,marginTop:2}}>Aucune séance validée</div>
-  );
-
-  // Deltas séances / tonnage
-  const seancesDelta = stats.validated > 0
-    ? `▲ ${stats.validated} validée${stats.validated>1?'s':''}`
-    : 'Aucune validée';
-  const diff = stats.validated - stats.prevValidated;
-  const seancesVs = stats.prevValidated > 0
-    ? (diff>=0 ? `▲ +${diff} vs ${prevMonthName}` : `▼ ${diff} vs ${prevMonthName}`)
-    : seancesDelta;
-
   return (
-    <div style={{marginTop:28}}>
-      {/* ── Séparateur aéré ── */}
-      <div style={{display:'flex',alignItems:'center',gap:12,marginBottom:22}}>
+    <div style={{marginTop:24}}>
+      {/* ── Séparateur ── */}
+      <div style={{display:'flex',alignItems:'center',gap:12,marginBottom:18}}>
         <div style={{flex:1,height:1,background:'rgba(0,0,0,0.06)'}}/>
         <div style={{...ey,letterSpacing:'1.6px',flexShrink:0}}>Bilan du mois</div>
         <div style={{flex:1,height:1,background:'rgba(0,0,0,0.06)'}}/>
       </div>
 
+      {/* Mois + mésocycle */}
       <div style={{display:'flex',alignItems:'flex-end',justifyContent:'space-between',marginBottom:14}}>
         <div style={{fontFamily:SERIF,fontSize:30,fontWeight:400,color:C.text,letterSpacing:-0.5,lineHeight:1}}>
           {['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'][month]}
         </div>
-        <div style={{display:'flex',flexDirection:'column',alignItems:'flex-end',gap:3}}>
-          <div style={{...ey,paddingBottom:0}}>VS. MOIS PRÉC.</div>
-          {currentWeek !== undefined && (
-            <div style={{fontSize:9,fontWeight:700,color:'#60A5FA',fontFamily:DISPLAY,letterSpacing:'1px',textTransform:'uppercase'}}>
-              MÉSOCYCLE SEM. {(currentWeek||0)+1}/6
-            </div>
-          )}
+        {currentWeek !== undefined && (
+          <div style={{fontSize:9,fontWeight:700,color:'#60A5FA',fontFamily:DISPLAY,letterSpacing:'1px',textTransform:'uppercase',paddingBottom:2}}>
+            MÉSOCYCLE SEM. {(currentWeek||0)+1}/6
+          </div>
+        )}
+      </div>
+
+      {/* ── Row 1 : Séances + Tonnage ── */}
+      <div style={{display:'flex',gap:8,marginBottom:8}}>
+
+        {/* Séances */}
+        <div style={{flex:1,background:C.s1,border:'1px solid rgba(0,0,0,0.06)',borderRadius:16,padding:'15px 13px',minWidth:0}}>
+          <div style={{...ey,marginBottom:9}}>Séances</div>
+          <div style={{fontFamily:DISPLAY,fontSize:30,fontWeight:700,color:C.text,letterSpacing:-1,lineHeight:1,...NUM}}>
+            {stats.validated}
+            <span style={{fontSize:13,fontWeight:400,color:'#9CA3AF',marginLeft:3}}>/{stats.planned}</span>
+          </div>
+          <div style={{fontSize:11,fontWeight:700,marginTop:8,fontFamily:DISPLAY,
+            color: stats.validated>0&&stats.diff>=0 ? '#34D399' : '#F87171', ...NUM}}>
+            {stats.prevValidated>0
+              ? (stats.diff>=0 ? `▲ +${stats.diff} vs ${stats.prevMonthName}` : `▼ ${stats.diff} vs ${stats.prevMonthName}`)
+              : stats.validated>0 ? `▲ ${stats.validated} validée${stats.validated>1?'s':''}` : 'Aucune validée'}
+          </div>
+        </div>
+
+        {/* Tonnage */}
+        <div style={{flex:1,background:C.s1,border:'1px solid rgba(0,0,0,0.06)',borderRadius:16,padding:'15px 13px',minWidth:0}}>
+          <div style={{...ey,marginBottom:9}}>Tonnage</div>
+          <div style={{fontFamily:DISPLAY,fontSize:30,fontWeight:700,color:C.text,letterSpacing:-1,lineHeight:1,...NUM}}>
+            {stats.tonnage>0 ? stats.tonnage.toFixed(1) : '0'}
+            <span style={{fontSize:13,fontWeight:400,color:'#9CA3AF',marginLeft:3}}>t</span>
+          </div>
+          <div style={{fontSize:11,fontWeight:700,marginTop:8,fontFamily:DISPLAY,
+            color: stats.tonnage>0&&(stats.tonPct===null||stats.tonPct>=0) ? '#34D399' : '#F87171'}}>
+            {stats.tonnage>0
+              ? (stats.tonPct!==null ? `▲ ${stats.tonPct>=0?'+':''}${stats.tonPct}%` : '—')
+              : 'Loguer des charges'}
+          </div>
         </div>
       </div>
 
-      {/* Row 1 */}
-      <div style={{display:'flex',gap:8,marginBottom:8}}>
-        <Card
-          label="Séances"
-          main={stats.validated}
-          sub={`/${stats.planned}`}
-          delta={seancesVs}
-          deltaOk={diff>=0 && stats.validated>0}
-        />
-        <Card
-          label="Tonnage"
-          main={stats.tonnage > 0 ? stats.tonnage.toFixed(1) : '0'}
-          sub="t"
-          delta={stats.tonnage>0 ? (stats.tonPct!==null ? `▲ ${stats.tonPct>=0?'+':''}${stats.tonPct}%` : null) : 'Loguer des charges'}
-          deltaOk={stats.tonnage>0 && (stats.tonPct===null||stats.tonPct>=0)}
-          accent={spark}
-        />
-      </div>
-      {/* Row 2 */}
-      <div style={{display:'flex',gap:8}}>
-        <Card label="Charge" accent={chargeBarre}/>
-        <Card
-          label="Assiduité"
-          main={`${stats.assiduite}`}
-          sub="%"
-          accent={assBarre}
-        />
+      {/* ── Row 2 : Assiduité full-width ── */}
+      <div style={{background:C.s1,border:'1px solid rgba(0,0,0,0.06)',borderRadius:16,padding:'15px 13px'}}>
+        <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:12}}>
+          <div style={{...ey}}>Assiduité</div>
+          <div style={{fontFamily:DISPLAY,fontSize:26,fontWeight:700,color:C.text,letterSpacing:-0.8,...NUM}}>
+            {stats.assiduite}
+            <span style={{fontSize:13,fontWeight:400,color:'#9CA3AF',marginLeft:2}}>%</span>
+          </div>
+        </div>
+        <div style={{height:8,background:'rgba(0,0,0,0.05)',borderRadius:5,overflow:'hidden',marginBottom:9}}>
+          <div style={{height:'100%',width:`${stats.assiduite}%`,
+            background:'linear-gradient(90deg,#34D399,#10B981)',
+            borderRadius:5,transition:'width .7s cubic-bezier(.4,0,.2,1)'}}/>
+        </div>
+        <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+          <div style={{fontSize:10,color:'#374151',fontFamily:DISPLAY,...NUM}}>
+            {stats.validated} / {stats.planned} validée{stats.planned!==1?'s':''}
+          </div>
+          {stats.volSess > 0 && (
+            <div style={{fontSize:10,color:'#374151',fontFamily:DISPLAY,...NUM}}>
+              <span style={{fontWeight:700,color:C.blue}}>{stats.volSess.toLocaleString('fr-FR')} kg</span>
+              <span style={{color:'#9CA3AF'}}> / séance</span>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
