@@ -182,14 +182,18 @@ export default function RecordDetailPage({ exData, prog, setProg, push, onClose 
 
   const canSave = kgNum > 0 && repsNum > 0;
 
-  // Style input tile
-  const tileStyle = (field) => ({
-    flex:1, background:S1,
-    border:`1.5px solid ${focusField===field?"rgba(59,130,246,0.5)":BD}`,
-    borderRadius:14, padding:"11px 10px", textAlign:"center",
-    boxShadow: focusField===field ? "0 0 0 3px rgba(59,130,246,0.08)" : "none",
-    transition:"border-color .15s, box-shadow .15s",
-  });
+  // Styles partagés boutons stepper
+  const btnMinus = {
+    width:44, height:44, borderRadius:13, border:"none", cursor:"pointer",
+    fontSize:24, fontWeight:300, display:"flex", alignItems:"center", justifyContent:"center",
+    background:"#ECEEF4", color:MID, flexShrink:0,
+  };
+  const btnPlus = {
+    width:44, height:44, borderRadius:13, border:"none", cursor:"pointer",
+    fontSize:22, fontWeight:400, display:"flex", alignItems:"center", justifyContent:"center",
+    background:`linear-gradient(145deg,${BLLG},${BLDK})`,
+    color:"#fff", boxShadow:"0 4px 12px rgba(37,99,235,0.32)", flexShrink:0,
+  };
 
   return (
     <div style={{ position:"fixed", inset:0, zIndex:400,
@@ -305,9 +309,11 @@ export default function RecordDetailPage({ exData, prog, setProg, push, onClose 
 
         {/* ── Saisie : poids + reps ── */}
         <div style={{ margin:"0 18px 14px", background:S1, border:`1px solid ${BD}`,
-          borderRadius:18, overflow:"hidden" }}>
-          {/* Header avec 1RM live */}
-          <div style={{ padding:"11px 15px 10px", borderBottom:`1px solid ${BD}`,
+          borderRadius:18, overflow:"hidden",
+          boxShadow:"0 1px 2px rgba(15,23,42,0.03),0 3px 10px rgba(15,23,42,0.06)" }}>
+
+          {/* Header 1RM live */}
+          <div style={{ padding:"12px 15px 11px", borderBottom:`1px solid ${BD}`,
             display:"flex", alignItems:"center", justifyContent:"space-between" }}>
             <div style={{ fontSize:9, fontWeight:800, letterSpacing:"1.5px",
               textTransform:"uppercase", color:GRY }}>Nouvelle performance</div>
@@ -316,9 +322,9 @@ export default function RecordDetailPage({ exData, prog, setProg, push, onClose 
                 <span style={{ fontSize:16, fontWeight:800, color:BLDK, ...NUM }}>{liveRM}</span>
                 <span style={{ fontSize:9.5, color:GRY }}>kg 1RM</span>
                 <span style={{ fontSize:9, fontWeight:700, padding:"2px 7px", borderRadius:99,
-                  background: isNew ? "rgba(52,211,153,0.12)" : "rgba(248,113,113,0.10)",
+                  background: isNew ? "rgba(16,185,129,0.12)" : "rgba(248,113,113,0.10)",
                   color: isNew ? "#059669" : "#DC2626" }}>
-                  {isNew ? `↗ Nouveau record` : `↘ ${diffRM} kg`}
+                  {isNew ? "↗ Nouveau record" : `↘ ${diffRM} kg`}
                 </span>
               </div>
             ) : (
@@ -326,90 +332,80 @@ export default function RecordDetailPage({ exData, prog, setProg, push, onClose 
             )}
           </div>
 
-          <div style={{ padding:"14px 15px 12px" }}>
-            <div style={{ display:"flex", gap:10, marginBottom:12 }}>
-
-              {/* Poids */}
-              <div style={tileStyle("kg")}>
-                <div style={{ fontSize:7.5, fontWeight:800, letterSpacing:"1.5px",
-                  textTransform:"uppercase", color:GRY, marginBottom:8 }}>Poids</div>
-                <div style={{ position:"relative", display:"flex", alignItems:"baseline",
-                  justifyContent:"center", gap:3, marginBottom:10 }}>
-                  <input type="number" inputMode="decimal" step="0.5" value={kg}
-                    onChange={e => setKg(e.target.value)}
-                    onFocus={() => setFocusField("kg")} onBlur={() => setFocusField(null)}
-                    placeholder="–"
-                    style={{ position:"absolute", inset:0, opacity:0, width:"100%",
-                      fontSize:36, textAlign:"center", border:"none", background:"transparent",
-                      cursor:"text", zIndex:2, WebkitUserSelect:"auto" }}/>
-                  <span style={{ fontSize:36, fontWeight:800, letterSpacing:"-1.5px", ...NUM,
-                    color: kg ? TEXT : "#D1D5DB", pointerEvents:"none" }}>
-                    {kg || "–"}
-                  </span>
-                  <span style={{ fontSize:12, color:GRY, fontWeight:600, pointerEvents:"none" }}>kg</span>
-                </div>
-                <div style={{ display:"flex", gap:6 }}>
-                  <button onClick={() => stepKg(-2.5)} style={{ flex:1, height:32, borderRadius:9,
-                    border:"none", cursor:"pointer", fontSize:18, background:"#ECEEF4", color:MID }}>−</button>
-                  <button onClick={() => stepKg(+2.5)} style={{ flex:1, height:32, borderRadius:9,
-                    border:"none", cursor:"pointer", fontSize:18,
-                    background:`linear-gradient(145deg,${BLLG},${BLDK})`,
-                    color:"#fff", boxShadow:"0 3px 8px rgba(37,99,235,0.28)" }}>+</button>
-                </div>
+          {/* Ligne Poids */}
+          <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between",
+            padding:"16px 15px", gap:12, borderBottom:`1px solid ${BD}` }}>
+            <div style={{ flex:1, position:"relative" }}>
+              <div style={{ fontSize:9, fontWeight:800, letterSpacing:"1.2px",
+                textTransform:"uppercase", color:GRY, marginBottom:4 }}>Poids</div>
+              <div style={{ display:"flex", alignItems:"baseline", gap:5 }}>
+                <span style={{ fontSize:40, fontWeight:800, letterSpacing:"-2px",
+                  lineHeight:1, color: kg ? TEXT : "#D1D5DB", ...NUM }}>
+                  {kg || "–"}
+                </span>
+                <span style={{ fontSize:13, color:GRY, fontWeight:600 }}>kg</span>
               </div>
-
-              {/* Reps */}
-              <div style={tileStyle("reps")}>
-                <div style={{ fontSize:7.5, fontWeight:800, letterSpacing:"1.5px",
-                  textTransform:"uppercase", color:GRY, marginBottom:8 }}>Répétitions</div>
-                <div style={{ position:"relative", display:"flex", alignItems:"baseline",
-                  justifyContent:"center", marginBottom:10 }}>
-                  <input type="number" inputMode="numeric" value={reps}
-                    onChange={e => setReps(e.target.value)}
-                    onFocus={() => setFocusField("reps")} onBlur={() => setFocusField(null)}
-                    placeholder="–"
-                    style={{ position:"absolute", inset:0, opacity:0, width:"100%",
-                      fontSize:36, textAlign:"center", border:"none", background:"transparent",
-                      cursor:"text", zIndex:2, WebkitUserSelect:"auto" }}/>
-                  <span style={{ fontSize:36, fontWeight:800, letterSpacing:"-1.5px", ...NUM,
-                    color: reps ? TEXT : "#D1D5DB", pointerEvents:"none" }}>
-                    {reps || "–"}
-                  </span>
-                </div>
-                <div style={{ display:"flex", gap:6 }}>
-                  <button onClick={() => stepReps(-1)} style={{ flex:1, height:32, borderRadius:9,
-                    border:"none", cursor:"pointer", fontSize:18, background:"#ECEEF4", color:MID }}>−</button>
-                  <button onClick={() => stepReps(+1)} style={{ flex:1, height:32, borderRadius:9,
-                    border:"none", cursor:"pointer", fontSize:18,
-                    background:`linear-gradient(145deg,${BLLG},${BLDK})`,
-                    color:"#fff", boxShadow:"0 3px 8px rgba(37,99,235,0.28)" }}>+</button>
-                </div>
-              </div>
-
+              {/* Input invisible pour clavier natif */}
+              <input type="number" inputMode="decimal" step="0.5" value={kg}
+                onChange={e => setKg(e.target.value)}
+                onFocus={() => setFocusField("kg")} onBlur={() => setFocusField(null)}
+                style={{ position:"absolute", inset:0, opacity:0, width:"100%",
+                  fontSize:1, border:"none", background:"transparent",
+                  cursor:"text", zIndex:2, WebkitUserSelect:"auto" }}/>
             </div>
+            <div style={{ display:"flex", gap:8, flexShrink:0 }}>
+              <button onClick={() => stepKg(-2.5)} style={btnMinus}>−</button>
+              <button onClick={() => stepKg(+2.5)} style={btnPlus}>+</button>
+            </div>
+          </div>
 
-            {/* Formule */}
-            <div style={{ fontSize:9.5, textAlign:"center", color: canSave ? GRY : "#D1D5DB",
-              fontFamily:F, paddingBottom:2 }}>
-              {canSave
-                ? `${kgNum} × (1 + ${repsNum}/30) = ${liveRM} kg 1RM`
-                : "poids × (1 + reps / 30) = 1RM Epley"}
+          {/* Ligne Répétitions */}
+          <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between",
+            padding:"16px 15px", gap:12 }}>
+            <div style={{ flex:1, position:"relative" }}>
+              <div style={{ fontSize:9, fontWeight:800, letterSpacing:"1.2px",
+                textTransform:"uppercase", color:GRY, marginBottom:4 }}>Répétitions</div>
+              <div style={{ display:"flex", alignItems:"baseline", gap:5 }}>
+                <span style={{ fontSize:40, fontWeight:800, letterSpacing:"-2px",
+                  lineHeight:1, color: reps ? TEXT : "#D1D5DB", ...NUM }}>
+                  {reps || "–"}
+                </span>
+                <span style={{ fontSize:13, color:GRY, fontWeight:600 }}>reps</span>
+              </div>
+              <input type="number" inputMode="numeric" value={reps}
+                onChange={e => setReps(e.target.value)}
+                onFocus={() => setFocusField("reps")} onBlur={() => setFocusField(null)}
+                style={{ position:"absolute", inset:0, opacity:0, width:"100%",
+                  fontSize:1, border:"none", background:"transparent",
+                  cursor:"text", zIndex:2, WebkitUserSelect:"auto" }}/>
+            </div>
+            <div style={{ display:"flex", gap:8, flexShrink:0 }}>
+              <button onClick={() => stepReps(-1)} style={btnMinus}>−</button>
+              <button onClick={() => stepReps(+1)} style={btnPlus}>+</button>
             </div>
           </div>
 
           {/* CTA */}
-          <button onClick={handleSave} disabled={!canSave}
-            style={{ display:"block", width:"calc(100% - 28px)", margin:"0 14px 14px",
-              height:46, borderRadius:12, border:"none", fontFamily:F,
-              fontSize:13, fontWeight:700, cursor: canSave ? "pointer" : "default",
-              background: canSave ? `linear-gradient(180deg,${BLLG},${BLDK})` : "#F0F2F7",
-              color: canSave ? "#fff" : "#D1D5DB",
-              boxShadow: canSave ? "0 6px 18px rgba(37,99,235,0.38)" : "none",
-              transition:"all .15s" }}>
-            {canSave
-              ? `Enregistrer · ${kgNum} kg × ${repsNum} → ${liveRM} kg 1RM`
-              : "Enregistrer"}
-          </button>
+          <div style={{ padding:"0 14px 14px" }}>
+            <button onClick={handleSave} disabled={!canSave}
+              style={{ display:"flex", alignItems:"center", justifyContent:"center", gap:6,
+                width:"100%", height:46, borderRadius:13, border:"none", fontFamily:F,
+                fontSize:13, fontWeight:700, cursor: canSave ? "pointer" : "default",
+                background: canSave ? `linear-gradient(180deg,${BLLG},${BLDK})` : "#F0F2F7",
+                color: canSave ? "#fff" : "#D1D5DB",
+                boxShadow: canSave ? "0 6px 18px rgba(37,99,235,0.38)" : "none",
+                transition:"all .15s" }}>
+              {canSave ? (
+                <>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                    <path d="M20 6L9 17l-5-5"/>
+                  </svg>
+                  {`Enregistrer · ${kgNum} kg × ${repsNum} → ${liveRM} kg 1RM`}
+                </>
+              ) : "Enregistrer"}
+            </button>
+          </div>
         </div>
 
         {/* ── Graphique ── */}
