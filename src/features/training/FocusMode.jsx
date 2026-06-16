@@ -614,12 +614,18 @@ export default function FocusMode({
   const [elapsed,  setElapsed]  = useState(0);  // chrono séance globale
   const [rest,     setRest]     = useState(REST_DEFAULT);  // countdown repos
 
+  // Toggles UI (Guide / Tip / Historique)
+  const [showGuide, setShowGuide] = useState(false);
+  const [showTip,   setShowTip]   = useState(false);
+  const [showHisto, setShowHisto] = useState(false);
+
   useEffect(() => {
     if (!ex) return;
     setPhase('set'); setSetIdx(0);
     setKg(parseFloat(ex.charge) || 60);
     setReps(parseInt(ex.reps)   || 10);
     setRest(REST_DEFAULT); setLoggedSets([]);
+    setShowTip(false); setShowGuide(false); setShowHisto(false);
   }, [exIdx]);
 
   // Chrono global séance
@@ -699,6 +705,9 @@ export default function FocusMode({
 
   const lastEntry    = ex?.historique?.[ex.historique.length - 1];
   const lastSetLabel = lastEntry ? `Dernière ${lastEntry.poids}×${lastEntry.reps}` : null;
+  const kgDelta      = lastEntry
+    ? +(kg - parseFloat(lastEntry.poids || 0)).toFixed(1)
+    : null;
   const restSecs     = parseInt(String(ex?.repos || REST_DEFAULT).replace(/\D/g,'')) || REST_DEFAULT;
   const coachMsg     = loggedSets.length > 0
     ? `${loggedSets.length} séries bouclées. Beau travail, continue.`
@@ -729,13 +738,14 @@ export default function FocusMode({
             <I n="x" sz={17}/>
           </button>
           <div style={{ textAlign:'center', flex:1, padding:'0 10px' }}>
-            <div style={{ fontFamily:F, fontSize:13.5, fontWeight:600,
-                          color:T.t1, letterSpacing:-0.2,
-                          overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>
+            <div style={{ fontFamily:F, fontSize:18, fontWeight:700,
+                          color:T.t1, letterSpacing:-0.3, lineHeight:1.15,
+                          overflow:'hidden', textOverflow:'ellipsis',
+                          whiteSpace:'nowrap' }}>
               {ex ? ex.nom : '—'}
             </div>
             <div style={{ display:'flex', alignItems:'center', justifyContent:'center',
-                          gap:6, marginTop:4 }}>
+                          gap:6, marginTop:6 }}>
               <span style={{ fontFamily:MON, fontSize:8, fontWeight:500, color:T.t4,
                              letterSpacing:'1.8px', textTransform:'uppercase' }}>
                 EXO {exIdx+1}/{exercices.length}
@@ -772,6 +782,123 @@ export default function FocusMode({
             );
           })}
         </div>
+
+        {/* ── Barre d'actions rapides : Guide · Tip coach · Historique ── */}
+        {phase === 'set' && (
+          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr',
+                        gap:8, marginTop:16 }}>
+            <button className="fm-tap" onClick={() => setShowGuide(true)}
+              style={{ ...GL, padding:'10px 6px', border:'none', borderRadius:14,
+                       display:'flex', flexDirection:'column', alignItems:'center',
+                       gap:5, cursor:'pointer' }}>
+              <span style={{ width:30, height:30, borderRadius:9,
+                             background:T.acSoft, color:T.acLt,
+                             display:'grid', placeItems:'center' }}>
+                <I n="skip" sz={14} s={2}/>
+              </span>
+              <span style={{ fontFamily:F, fontSize:11, fontWeight:600, color:T.t1 }}>
+                Guide
+              </span>
+            </button>
+
+            <button className="fm-tap" onClick={() => setShowTip(v => !v)}
+              style={{ ...GL, padding:'10px 6px', border:'none', borderRadius:14,
+                       display:'flex', flexDirection:'column', alignItems:'center',
+                       gap:5, cursor:'pointer' }}>
+              <span style={{ width:30, height:30, borderRadius:9,
+                             background:'rgba(245,158,11,0.12)', color:'#F59E0B',
+                             display:'grid', placeItems:'center' }}>
+                <I n="spark" sz={14} s={2}/>
+              </span>
+              <span style={{ fontFamily:F, fontSize:11, fontWeight:600, color:T.t1 }}>
+                Tip coach
+              </span>
+            </button>
+
+            <button className="fm-tap" onClick={() => setShowHisto(true)}
+              style={{ ...GL, padding:'10px 6px', border:'none', borderRadius:14,
+                       display:'flex', flexDirection:'column', alignItems:'center',
+                       gap:5, cursor:'pointer' }}>
+              <span style={{ width:30, height:30, borderRadius:9,
+                             background:'rgba(99,102,241,0.12)', color:'#6366F1',
+                             display:'grid', placeItems:'center' }}>
+                <I n="trend" sz={14} s={2}/>
+              </span>
+              <span style={{ fontFamily:F, fontSize:11, fontWeight:600, color:T.t1 }}>
+                Historique
+              </span>
+            </button>
+          </div>
+        )}
+
+        {/* ── Card Dernière séance ── */}
+        {phase === 'set' && lastEntry && (
+          <div style={{ marginTop:10, padding:'11px 13px',
+                        ...GL, borderRadius:14,
+                        display:'flex', alignItems:'center', gap:11 }}>
+            <div style={{ width:34, height:34, borderRadius:10,
+                          background:'linear-gradient(135deg,#6366F1,#818CF8)',
+                          color:'#fff', display:'grid', placeItems:'center',
+                          flexShrink:0 }}>
+              <I n="trend" sz={16} s={2}/>
+            </div>
+            <div style={{ flex:1, minWidth:0 }}>
+              <div style={{ fontFamily:MON, fontSize:9, color:T.t3,
+                            textTransform:'uppercase', letterSpacing:'0.1em',
+                            fontWeight:600, marginBottom:2 }}>
+                Dernière séance
+              </div>
+              <div style={{ fontFamily:F, fontSize:13, color:T.t1, fontWeight:500 }}>
+                <b style={{ fontWeight:700 }}>
+                  {lastEntry.poids} kg × {lastEntry.reps} reps
+                </b>
+              </div>
+            </div>
+            {kgDelta !== null && (
+              <div style={{ fontFamily:MON, fontSize:11, fontWeight:700,
+                            color: kgDelta >= 0 ? '#10B981' : '#EF4444',
+                            background: kgDelta >= 0
+                              ? 'rgba(16,185,129,0.10)'
+                              : 'rgba(239,68,68,0.10)',
+                            padding:'3px 7px', borderRadius:6,
+                            flexShrink:0, ...NUM }}>
+                {kgDelta > 0 ? '+' : ''}{kgDelta} {kgDelta >= 0 ? '↗' : '↘'}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ── Bandeau Tip coach (toggle) ── */}
+        {phase === 'set' && showTip && (
+          <div style={{ marginTop:10, padding:'11px 13px',
+                        background:'linear-gradient(135deg,rgba(254,243,199,0.6) 0%,rgba(254,249,232,0.6) 100%)',
+                        border:'1px solid rgba(245,158,11,0.25)',
+                        borderRadius:14,
+                        display:'flex', alignItems:'flex-start', gap:10 }}>
+            <div style={{ width:26, height:26, borderRadius:8,
+                          background:'linear-gradient(135deg,#F59E0B,#FBBF24)',
+                          color:'#fff', display:'grid', placeItems:'center',
+                          flexShrink:0 }}>
+              <I n="spark" sz={13} s={2}/>
+            </div>
+            <div style={{ flex:1 }}>
+              <div style={{ fontFamily:MON, fontSize:9, color:'#B45309',
+                            textTransform:'uppercase', letterSpacing:'0.1em',
+                            fontWeight:600, marginBottom:2 }}>
+                Tip du coach
+              </div>
+              <div style={{ fontFamily:F, fontSize:12, color:'#6B4D14',
+                            lineHeight:1.4 }}>
+                {ex?.tip || 'Garde la position de référence : omoplates serrées, gainage actif, amplitude contrôlée.'}
+              </div>
+            </div>
+            <button onClick={() => setShowTip(false)}
+              style={{ background:'none', border:'none', color:'#B45309',
+                       padding:2, cursor:'pointer', display:'grid', placeItems:'center' }}>
+              <I n="x" sz={14} s={2}/>
+            </button>
+          </div>
+        )}
       </div>
 
       {/* ── Stage — enfant direct du flex root ── */}
@@ -803,6 +930,111 @@ export default function FocusMode({
           coachMsg={coachMsg}
           premium={premium}
         />
+      )}
+
+      {/* ── Modale Guide vidéo / instructions ── */}
+      {showGuide && (
+        <div onClick={() => setShowGuide(false)}
+          style={{ position:'absolute', inset:0, zIndex:60,
+                   background:'rgba(15,25,35,0.55)',
+                   backdropFilter:'blur(8px)', WebkitBackdropFilter:'blur(8px)',
+                   display:'flex', alignItems:'flex-end', justifyContent:'center',
+                   animation:'fm-fadeUp .25s ease both' }}>
+          <div onClick={e => e.stopPropagation()}
+            style={{ width:'100%', maxWidth:520, background:T.surf,
+                     borderTopLeftRadius:28, borderTopRightRadius:28,
+                     padding:'24px 22px max(28px,env(safe-area-inset-bottom,28px))',
+                     boxShadow:'0 -20px 60px rgba(0,0,0,0.25)' }}>
+            <div style={{ width:36, height:4, borderRadius:2, background:T.bdHi,
+                          margin:'0 auto 20px' }}/>
+            <div style={{ fontFamily:F, fontSize:11, fontWeight:600, color:T.ac,
+                          letterSpacing:'1.2px', textTransform:'uppercase',
+                          marginBottom:6 }}>
+              Guide
+            </div>
+            <h3 style={{ fontFamily:F, fontSize:22, fontWeight:700, color:T.t1,
+                         margin:'0 0 14px', letterSpacing:-0.3 }}>
+              {ex?.nom}
+            </h3>
+            <div style={{ aspectRatio:'16/9', borderRadius:14, background:T.surfFlat,
+                          display:'grid', placeItems:'center',
+                          border:`1px solid ${T.bd}`, marginBottom:16 }}>
+              <div style={{ display:'flex', flexDirection:'column', alignItems:'center',
+                            gap:8, color:T.t3 }}>
+                <I n="skip" sz={32} c={T.t3} s={1.6}/>
+                <span style={{ fontFamily:F, fontSize:12 }}>Vidéo à venir</span>
+              </div>
+            </div>
+            <div style={{ fontFamily:F, fontSize:13, color:T.t2, lineHeight:1.6 }}>
+              {ex?.instructions || ex?.tip || "Position de départ, contrôle excentrique, amplitude complète. Garde le gainage et respire."}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Modale Historique ── */}
+      {showHisto && (
+        <div onClick={() => setShowHisto(false)}
+          style={{ position:'absolute', inset:0, zIndex:60,
+                   background:'rgba(15,25,35,0.55)',
+                   backdropFilter:'blur(8px)', WebkitBackdropFilter:'blur(8px)',
+                   display:'flex', alignItems:'flex-end', justifyContent:'center',
+                   animation:'fm-fadeUp .25s ease both' }}>
+          <div onClick={e => e.stopPropagation()}
+            style={{ width:'100%', maxWidth:520, maxHeight:'75vh',
+                     background:T.surf,
+                     borderTopLeftRadius:28, borderTopRightRadius:28,
+                     padding:'24px 22px max(28px,env(safe-area-inset-bottom,28px))',
+                     boxShadow:'0 -20px 60px rgba(0,0,0,0.25)',
+                     display:'flex', flexDirection:'column' }}>
+            <div style={{ width:36, height:4, borderRadius:2, background:T.bdHi,
+                          margin:'0 auto 20px' }}/>
+            <div style={{ fontFamily:F, fontSize:11, fontWeight:600, color:'#6366F1',
+                          letterSpacing:'1.2px', textTransform:'uppercase',
+                          marginBottom:6 }}>
+              Historique
+            </div>
+            <h3 style={{ fontFamily:F, fontSize:22, fontWeight:700, color:T.t1,
+                         margin:'0 0 16px', letterSpacing:-0.3 }}>
+              {ex?.nom}
+            </h3>
+            <div style={{ flex:1, overflowY:'auto', display:'flex',
+                          flexDirection:'column', gap:8 }}>
+              {(ex?.historique || []).length === 0 && (
+                <div style={{ fontFamily:F, fontSize:13, color:T.t3,
+                              textAlign:'center', padding:'30px 0' }}>
+                  Pas encore d'historique sur cet exercice.
+                </div>
+              )}
+              {(ex?.historique || []).slice().reverse().map((h, i) => (
+                <div key={i} style={{ display:'flex', alignItems:'center',
+                                      justifyContent:'space-between',
+                                      padding:'12px 14px', borderRadius:12,
+                                      background:T.surfFlat,
+                                      border:`1px solid ${T.bd}` }}>
+                  <div>
+                    <div style={{ fontFamily:F, fontSize:14, fontWeight:700, color:T.t1 }}>
+                      {h.poids} kg × {h.reps} reps
+                    </div>
+                    {h.date && (
+                      <div style={{ fontFamily:MON, fontSize:10, color:T.t3,
+                                    marginTop:2, letterSpacing:'0.04em' }}>
+                        {h.date}
+                      </div>
+                    )}
+                  </div>
+                  {h.rpe && (
+                    <div style={{ fontFamily:MON, fontSize:11, fontWeight:600,
+                                  color:T.ac, background:T.acSoft,
+                                  padding:'3px 8px', borderRadius:6 }}>
+                      RPE {h.rpe}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
