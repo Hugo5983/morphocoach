@@ -55,6 +55,9 @@ function I({ n, sz=18, c='currentColor', s=1.7 }) {
     minus: <path d="M5 12h14"/>,
     plus:  <path d="M12 5v14M5 12h14"/>,
     skip:  <><path d="M5 5v14l9-7z"/><path d="M19 5v14"/></>,
+    play:  <path d="M8 5v14l11-7z" fill="currentColor" stroke="none"/>,
+    bulb:  <><path d="M9 18h6M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.2 1 2v.3h6V17c0-.7.4-1.5 1-2A7 7 0 0 0 12 2z"/></>,
+    pulse: <path d="M3 12h4l3-9 4 18 3-9h4"/>,
     chevR: <path d="m9 6 6 6-6 6"/>,
     share: <><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></>,
     award: <><circle cx="12" cy="9" r="6"/><path d="m9 14-2 7 5-3 5 3-2-7"/></>,
@@ -738,21 +741,19 @@ export default function FocusMode({
             <I n="x" sz={17}/>
           </button>
           <div style={{ textAlign:'center', flex:1, padding:'0 10px' }}>
-            <div style={{ fontFamily:F, fontSize:18, fontWeight:700,
-                          color:T.t1, letterSpacing:-0.3, lineHeight:1.15,
-                          overflow:'hidden', textOverflow:'ellipsis',
-                          whiteSpace:'nowrap' }}>
+            <div style={{ fontFamily:F, fontSize:22, fontWeight:700,
+                          color:T.t1, letterSpacing:-0.5, lineHeight:1.15 }}>
               {ex ? ex.nom : '—'}
             </div>
             <div style={{ display:'flex', alignItems:'center', justifyContent:'center',
-                          gap:6, marginTop:6 }}>
-              <span style={{ fontFamily:MON, fontSize:8, fontWeight:500, color:T.t4,
+                          gap:6, marginTop:8 }}>
+              <span style={{ fontFamily:MON, fontSize:9, fontWeight:500, color:T.t4,
                              letterSpacing:'1.8px', textTransform:'uppercase' }}>
                 EXO {exIdx+1}/{exercices.length}
               </span>
               <span style={{ width:3, height:3, borderRadius:'50%', background:T.t5 }}/>
               <I n="clock" sz={9} c={T.t4} s={2}/>
-              <span style={{ fontFamily:MON, fontSize:9.5, fontWeight:600, color:T.t3, ...NUM }}>
+              <span style={{ fontFamily:MON, fontSize:10, fontWeight:600, color:T.t3, ...NUM }}>
                 {mm2}:{ss2}
               </span>
             </div>
@@ -788,43 +789,49 @@ export default function FocusMode({
           <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr',
                         gap:8, marginTop:16 }}>
             <button className="fm-tap" onClick={() => setShowGuide(true)}
-              style={{ ...GL, padding:'10px 6px', border:'none', borderRadius:14,
+              style={{ background:T.surf, border:`1px solid ${T.bd}`,
+                       boxShadow:'0 1px 2px rgba(15,23,42,0.03), 0 2px 6px rgba(15,23,42,0.04)',
+                       padding:'12px 6px', borderRadius:14,
                        display:'flex', flexDirection:'column', alignItems:'center',
-                       gap:5, cursor:'pointer' }}>
-              <span style={{ width:30, height:30, borderRadius:9,
-                             background:T.acSoft, color:T.acLt,
+                       gap:6, cursor:'pointer' }}>
+              <span style={{ width:32, height:32, borderRadius:10,
+                             background:T.acSoft, color:T.ac,
                              display:'grid', placeItems:'center' }}>
-                <I n="skip" sz={14} s={2}/>
+                <I n="play" sz={16}/>
               </span>
-              <span style={{ fontFamily:F, fontSize:11, fontWeight:600, color:T.t1 }}>
+              <span style={{ fontFamily:F, fontSize:12, fontWeight:600, color:T.t1 }}>
                 Guide
               </span>
             </button>
 
             <button className="fm-tap" onClick={() => setShowTip(v => !v)}
-              style={{ ...GL, padding:'10px 6px', border:'none', borderRadius:14,
+              style={{ background:T.surf, border:`1px solid ${T.bd}`,
+                       boxShadow:'0 1px 2px rgba(15,23,42,0.03), 0 2px 6px rgba(15,23,42,0.04)',
+                       padding:'12px 6px', borderRadius:14,
                        display:'flex', flexDirection:'column', alignItems:'center',
-                       gap:5, cursor:'pointer' }}>
-              <span style={{ width:30, height:30, borderRadius:9,
-                             background:'rgba(245,158,11,0.12)', color:'#F59E0B',
+                       gap:6, cursor:'pointer' }}>
+              <span style={{ width:32, height:32, borderRadius:10,
+                             background:'rgba(245,158,11,0.14)', color:'#D97706',
                              display:'grid', placeItems:'center' }}>
-                <I n="spark" sz={14} s={2}/>
+                <I n="bulb" sz={16} s={2}/>
               </span>
-              <span style={{ fontFamily:F, fontSize:11, fontWeight:600, color:T.t1 }}>
+              <span style={{ fontFamily:F, fontSize:12, fontWeight:600, color:T.t1 }}>
                 Tip coach
               </span>
             </button>
 
             <button className="fm-tap" onClick={() => setShowHisto(true)}
-              style={{ ...GL, padding:'10px 6px', border:'none', borderRadius:14,
+              style={{ background:T.surf, border:`1px solid ${T.bd}`,
+                       boxShadow:'0 1px 2px rgba(15,23,42,0.03), 0 2px 6px rgba(15,23,42,0.04)',
+                       padding:'12px 6px', borderRadius:14,
                        display:'flex', flexDirection:'column', alignItems:'center',
-                       gap:5, cursor:'pointer' }}>
-              <span style={{ width:30, height:30, borderRadius:9,
-                             background:'rgba(99,102,241,0.12)', color:'#6366F1',
+                       gap:6, cursor:'pointer' }}>
+              <span style={{ width:32, height:32, borderRadius:10,
+                             background:'rgba(99,102,241,0.14)', color:'#6366F1',
                              display:'grid', placeItems:'center' }}>
-                <I n="trend" sz={14} s={2}/>
+                <I n="pulse" sz={16} s={2}/>
               </span>
-              <span style={{ fontFamily:F, fontSize:11, fontWeight:600, color:T.t1 }}>
+              <span style={{ fontFamily:F, fontSize:12, fontWeight:600, color:T.t1 }}>
                 Historique
               </span>
             </button>
@@ -832,35 +839,43 @@ export default function FocusMode({
         )}
 
         {/* ── Card Dernière séance ── */}
-        {phase === 'set' && lastEntry && (
-          <div style={{ marginTop:10, padding:'11px 13px',
-                        ...GL, borderRadius:14,
+        {phase === 'set' && (
+          <div style={{ marginTop:10, padding:'12px 14px',
+                        background:T.surf, border:`1px solid ${T.bd}`,
+                        boxShadow:'0 1px 2px rgba(15,23,42,0.03), 0 2px 6px rgba(15,23,42,0.04)',
+                        borderRadius:14,
                         display:'flex', alignItems:'center', gap:11 }}>
-            <div style={{ width:34, height:34, borderRadius:10,
+            <div style={{ width:36, height:36, borderRadius:10,
                           background:'linear-gradient(135deg,#6366F1,#818CF8)',
                           color:'#fff', display:'grid', placeItems:'center',
                           flexShrink:0 }}>
-              <I n="trend" sz={16} s={2}/>
+              <I n="pulse" sz={16} s={2}/>
             </div>
             <div style={{ flex:1, minWidth:0 }}>
               <div style={{ fontFamily:MON, fontSize:9, color:T.t3,
                             textTransform:'uppercase', letterSpacing:'0.1em',
                             fontWeight:600, marginBottom:2 }}>
-                Dernière séance
+                {lastEntry
+                  ? `Dernière séance${lastEntry.date ? ' · '+lastEntry.date : ''}`
+                  : 'Dernière séance'}
               </div>
-              <div style={{ fontFamily:F, fontSize:13, color:T.t1, fontWeight:500 }}>
-                <b style={{ fontWeight:700 }}>
+              {lastEntry ? (
+                <div style={{ fontFamily:F, fontSize:14, color:T.t1, fontWeight:700 }}>
                   {lastEntry.poids} kg × {lastEntry.reps} reps
-                </b>
-              </div>
+                </div>
+              ) : (
+                <div style={{ fontFamily:F, fontSize:13, color:T.t3, fontWeight:500 }}>
+                  Pas encore enregistrée
+                </div>
+              )}
             </div>
-            {kgDelta !== null && (
+            {lastEntry && kgDelta !== null && (
               <div style={{ fontFamily:MON, fontSize:11, fontWeight:700,
                             color: kgDelta >= 0 ? '#10B981' : '#EF4444',
                             background: kgDelta >= 0
-                              ? 'rgba(16,185,129,0.10)'
-                              : 'rgba(239,68,68,0.10)',
-                            padding:'3px 7px', borderRadius:6,
+                              ? 'rgba(16,185,129,0.12)'
+                              : 'rgba(239,68,68,0.12)',
+                            padding:'4px 8px', borderRadius:7,
                             flexShrink:0, ...NUM }}>
                 {kgDelta > 0 ? '+' : ''}{kgDelta} {kgDelta >= 0 ? '↗' : '↘'}
               </div>
