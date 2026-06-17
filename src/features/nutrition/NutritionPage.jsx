@@ -77,27 +77,33 @@ function MacroCard({label,value,goal,color,colorDk}){
   const pct=Math.round(Math.min(value/(goal||1),1)*100);
   const letter=label[0];
   return(
-    <div style={{flex:1,padding:'13px 12px',borderRadius:16,
-      background:`linear-gradient(160deg, ${color}14, ${color}06)`,
-      border:`1px solid ${color}33`,
-      boxShadow:`0 4px 14px -8px ${color}80`,
-      display:'flex',flexDirection:'column',gap:9}}>
+    <div style={{flex:1,padding:'14px 12px',borderRadius:16,
+      background:`linear-gradient(145deg, ${color}, ${colorDk})`,
+      boxShadow:`0 6px 18px ${colorDk}55`,
+      display:'flex',flexDirection:'column',gap:8}}>
       <div style={{display:'flex',alignItems:'center',gap:7}}>
-        <span style={{width:22,height:22,borderRadius:7,flexShrink:0,
-          background:`linear-gradient(145deg, ${color}, ${colorDk})`,
-          color:'#fff',fontSize:11,fontWeight:800,fontFamily:DISPLAY,
-          display:'grid',placeItems:'center',
-          boxShadow:`0 2px 6px ${color}66`}}>{letter}</span>
-        <span style={{...eyebrowS,color:colorDk,fontSize:8.5}}>{label}</span>
+        <span style={{width:24,height:24,borderRadius:7,flexShrink:0,
+          background:'rgba(0,0,0,0.18)',
+          color:'#fff',fontSize:12,fontWeight:900,fontFamily:DISPLAY,
+          display:'grid',placeItems:'center'}}>{letter}</span>
+        <span style={{fontSize:8.5,fontWeight:800,
+          color:'rgba(255,255,255,0.88)',letterSpacing:'1.2px',
+          textTransform:'uppercase',fontFamily:DISPLAY}}>{label}</span>
       </div>
       <div style={{display:'flex',alignItems:'baseline',gap:3}}>
-        <span style={{fontFamily:DISPLAY,fontSize:22,fontWeight:700,color:C.text,letterSpacing:-0.5,...NUM}}>{value}</span>
-        <span style={{fontSize:10.5,color:C.dim,fontWeight:500,...NUM}}>/{goal}g</span>
+        <span style={{fontFamily:DISPLAY,fontSize:22,fontWeight:700,
+          color:'white',letterSpacing:-0.5,...NUM}}>{value}</span>
+        <span style={{fontSize:10.5,color:'rgba(255,255,255,0.72)',
+          fontWeight:500,...NUM}}>/{goal}g</span>
       </div>
-      <div style={{height:5,background:`${color}1F`,borderRadius:3,overflow:'hidden'}}>
-        <div style={{height:'100%',width:pct+'%',background:`linear-gradient(90deg,${color},${colorDk})`,borderRadius:3,transition:'width .8s ease',boxShadow:`0 0 8px ${color}`}}/>
+      <div style={{height:5,background:'rgba(255,255,255,0.25)',
+        borderRadius:3,overflow:'hidden'}}>
+        <div style={{height:'100%',width:pct+'%',background:'white',
+          borderRadius:3,transition:'width .8s ease',
+          boxShadow:'0 0 8px rgba(255,255,255,0.5)'}}/>
       </div>
-      <span style={{fontSize:10.5,color:colorDk,fontWeight:800,...NUM,letterSpacing:0.3,fontFamily:DISPLAY}}>{pct}%</span>
+      <span style={{fontSize:10.5,color:'rgba(255,255,255,0.92)',
+        fontWeight:800,...NUM,letterSpacing:0.3,fontFamily:DISPLAY}}>{pct}%</span>
     </div>
   );
 }
@@ -337,9 +343,9 @@ export default function Nutrition(props){
             {/* Macro cards */}
             <div style={{padding:'20px 16px 0'}}>
               <div style={{display:'flex',gap:8}}>
-                <MacroCard label="Protéines" value={tot.p} goal={pObj} color="#60A5FA" colorDk="#3B82F6"/>
-                <MacroCard label="Glucides"  value={tot.g} goal={gObj} color="#22D3EE" colorDk="#0EA5E9"/>
-                <MacroCard label="Lipides"   value={tot.l} goal={lObj} color="#34D399" colorDk="#10B981"/>
+                <MacroCard label="Protéines" value={tot.p} goal={pObj} color="#60A5FA" colorDk="#1D4ED8"/>
+                <MacroCard label="Glucides"  value={tot.g} goal={gObj} color="#22D3EE" colorDk="#0E7490"/>
+                <MacroCard label="Lipides"   value={tot.l} goal={lObj} color="#FB923C" colorDk="#EA580C"/>
               </div>
             </div>
 
