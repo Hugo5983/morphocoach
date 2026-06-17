@@ -193,17 +193,17 @@ function NoteCalme({ nbLogged, totalDays }) {
   const daysLeft = Math.max(0, MIN_DAYS_FULL_BILAN - nbLogged);
   return (
     <div style={{ display:"flex",alignItems:"center",gap:12,padding:"15px 16px",
-      borderRadius:16,background:"#FEF3C7",border:"1px solid rgba(245,158,11,0.25)",
+      borderRadius:16,background:"rgba(238,242,255,0.95)",border:"1px solid rgba(99,102,241,0.22)",
       marginBottom:20,cursor:"pointer" }}>
-      <div style={{ width:36,height:36,borderRadius:11,background:"#FDE68A",
+      <div style={{ width:36,height:36,borderRadius:11,background:"#E0E7FF",
         display:"grid",placeItems:"center",flexShrink:0 }}>
-        <I name="info" size={17} color={AMB} stroke={2.2}/>
+        <I name="info" size={17} color="#4338CA" stroke={2.2}/>
       </div>
-      <div style={{ flex:1,fontSize:14,color:"#78350F",lineHeight:1.5,fontFamily:FONT }}>
+      <div style={{ flex:1,fontSize:14,color:"#312E81",lineHeight:1.5,fontFamily:FONT }}>
         <b>{nbLogged} jour{nbLogged>1?"s":""} sur {totalDays} renseigné{nbLogged>1?"s":""}.</b>
         {" "}Il te faut {daysLeft} jour{daysLeft>1?"s":""} de plus pour un score fiable.
       </div>
-      <I name="chevR" size={17} color="#D97706"/>
+      <I name="chevR" size={17} color="#6366F1"/>
     </div>
   );
 }
@@ -262,7 +262,7 @@ function StreakGrid({ days, calObj }) {
     ok:    { bg:"linear-gradient(135deg,#2EE89A,#059669)", shadow:"0 5px 14px rgba(5,150,105,0.45)", bd:"none" },
     warn:  { bg:"linear-gradient(135deg,#FFD15C,#F59E0B)", shadow:"0 5px 14px rgba(245,158,11,0.42)", bd:"none" },
     bad:   { bg:"linear-gradient(135deg,#F87171,#DC2626)", shadow:"0 5px 14px rgba(220,38,38,0.40)", bd:"none" },
-    empty: { bg:"transparent", shadow:"none", bd:"1.5px dashed rgba(18,26,48,0.13)" },
+    empty: { bg:"rgba(18,26,48,0.04)", shadow:"none", bd:"1.5px solid rgba(18,26,48,0.16)" },
   };
 
   return (
