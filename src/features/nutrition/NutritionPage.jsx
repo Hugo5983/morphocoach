@@ -382,36 +382,44 @@ export default function Nutrition(props){
                 )}
               </div>
 
-              {/* Grille 2×2 — tap ouvre RepasSheet plein écran */}
-              <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8,marginBottom:10}}>
+              {/* Liste verticale — tap ouvre RepasSheet plein écran */}
+              <div style={{display:'flex',flexDirection:'column',gap:8,marginBottom:10}}>
                 {MEALS.map(m=>{
                   const items=repas[m.id]||[];
                   const rTot=items.reduce((a,f)=>({cal:a.cal+f.c,p:a.p+f.p,g:a.g+f.g,l:a.l+f.l}),{cal:0,p:0,g:0,l:0});
+                  const isEmpty=rTot.cal===0;
                   return(
                     <button key={m.id} className="tap" onClick={()=>setRepasSheet(m.id)}
                       style={{background:`linear-gradient(145deg,${m.accent}22,${m.accentDk}10)`,
                         border:`1px solid ${m.accent}35`,borderRadius:16,
-                        padding:'14px 14px 12px',textAlign:'left',cursor:'pointer',
+                        padding:'12px 14px',textAlign:'left',cursor:'pointer',
+                        display:'flex',alignItems:'center',gap:12,
                         transition:'box-shadow .2s'}}>
-                      <div style={{width:40,height:40,borderRadius:12,
+                      <div style={{width:44,height:44,borderRadius:12,
                         background:`linear-gradient(145deg,${m.accent},${m.accentDk})`,
-                        display:'grid',placeItems:'center',marginBottom:10,
+                        display:'grid',placeItems:'center',flexShrink:0,
                         boxShadow:`0 4px 10px ${m.accent}50, inset 0 1px 0 rgba(0,0,0,0.14)`,
                         position:'relative',overflow:'hidden'}}>
                         <div style={{position:'absolute',inset:0,background:'radial-gradient(110% 60% at 30% 10%,rgba(0,0,0,0.14),transparent 60%)',pointerEvents:'none'}}/>
-                        <I name={m.icon} size={20} stroke={2} color={m.dark}/>
+                        <I name={m.icon} size={22} stroke={2} color={m.dark}/>
                       </div>
-                      <div style={{fontSize:12.5,fontWeight:700,color:C.text,fontFamily:DISPLAY,marginBottom:2}}>
-                        {m.l}
-                      </div>
-                      {rTot.cal>0?(
-                        <div style={{display:'flex',alignItems:'baseline',gap:3}}>
-                          <span style={{fontSize:15,fontWeight:700,color:m.accent,fontFamily:DISPLAY,...NUM}}>{rTot.cal}</span>
-                          <span style={{fontSize:9,color:C.dim,fontWeight:700}}>KCAL</span>
+                      <div style={{flex:1,minWidth:0}}>
+                        <div style={{fontSize:14,fontWeight:700,color:C.text,fontFamily:DISPLAY,letterSpacing:-0.2}}>
+                          {m.l}
                         </div>
-                      ):(
-                        <div style={{fontSize:11,color:C.dim,fontFamily:DISPLAY}}>Aucun aliment</div>
-                      )}
+                        {isEmpty&&(
+                          <div style={{fontSize:11.5,color:C.dim,fontFamily:DISPLAY,marginTop:2}}>Aucun aliment</div>
+                        )}
+                      </div>
+                      <div style={{display:'flex',alignItems:'center',gap:6,flexShrink:0}}>
+                        <div style={{textAlign:'right'}}>
+                          <div style={{display:'flex',alignItems:'baseline',gap:3,justifyContent:'flex-end'}}>
+                            <span style={{fontSize:17,fontWeight:700,color:isEmpty?C.dim:m.accent,fontFamily:DISPLAY,...NUM}}>{rTot.cal}</span>
+                            <span style={{fontSize:9,color:C.dim,fontWeight:700}}>KCAL</span>
+                          </div>
+                        </div>
+                        <I name="chevR" size={16} stroke={2} color={C.dim}/>
+                      </div>
                     </button>
                   );
                 })}
