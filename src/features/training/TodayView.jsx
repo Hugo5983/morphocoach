@@ -139,6 +139,22 @@ export default function TodayView(props) {
   ];
 
   const rmData       = prog ? getRM() : [];
+
+  // Streak d'entraînements consécutifs depuis le log localStorage
+  const streak = (() => {
+    try {
+      const log = JSON.parse(localStorage.getItem('morpho_workout_log') || '{}');
+      let count = 0;
+      const d = new Date();
+      while (count < 365) {
+        const key = d.toISOString().split('T')[0];
+        if (log[key]) { count++; d.setDate(d.getDate() - 1); }
+        else if (count === 0) { d.setDate(d.getDate() - 1); if (count < 1) break; }
+        else break;
+      }
+      return count;
+    } catch { return 0; }
+  })();
   const objectif     = profil?.objectif || "hypertrophie";
   const currentTarget = OBJ_TARGET[objectif] || DEFAULT_TARGET;
 
@@ -184,11 +200,31 @@ export default function TodayView(props) {
 
       {/* ── Greeting ─────────────────────────────────────────────── */}
       <div style={{ paddingTop: 6, marginBottom: 14 }}>
-        <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "2px", color: "#6B7280", textTransform: "uppercase", fontFamily: DISP, marginBottom: 5 }}>
-          {today.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" })}
-        </div>
-        <div style={{ fontFamily: SERIF_F, fontSize: 28, color: "${C.text}", lineHeight: 1.1, letterSpacing: -1 }}>
-          Séance du <span style={{ fontStyle: "italic", color: C.blue }}>jour</span>
+        <div style={{ display:"flex", alignItems:"flex-start", justifyContent:"space-between" }}>
+          <div>
+            <div style={{ fontFamily: SERIF_F, fontSize: 28, color: C.text, lineHeight: 1.1, letterSpacing: -1 }}>
+              Séance du <span style={{ fontStyle: "italic", color: C.blue }}>jour</span>
+            </div>
+            {todaySeance && (
+              <div style={{ fontSize:12, color:"#6B7280", fontFamily:DISP, marginTop:4 }}>
+                Continue ta progression 💪
+              </div>
+            )}
+          </div>
+          {streak > 0 && (
+            <div style={{ display:"flex", flexDirection:"column", alignItems:"center",
+              background:"rgba(245,158,11,0.10)", border:"1px solid rgba(245,158,11,0.22)",
+              borderRadius:14, padding:"8px 12px", flexShrink:0 }}>
+              <div style={{ display:"flex", alignItems:"center", gap:4 }}>
+                <span style={{ fontSize:16 }}>🔥</span>
+                <span style={{ fontSize:20, fontWeight:800, color:"#D97706", fontFamily:DISP, lineHeight:1 }}>{streak}</span>
+              </div>
+              <div style={{ fontSize:9, fontWeight:600, color:"#92400E", fontFamily:DISP,
+                letterSpacing:"0.5px", marginTop:2, textAlign:"center" }}>
+                série actuelle
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -202,87 +238,235 @@ export default function TodayView(props) {
         return (
           <>
             {/* Hero card */}
-            <div style={{
-              background: `linear-gradient(150deg, ${intData.c} 0%, ${intData.c}CC 60%, ${intData.c}88 100%)`,
-              borderRadius: 22, padding: "20px 18px", marginBottom: 12,
-              position: "relative", overflow: "hidden",
-              boxShadow: `0 18px 40px ${intData.c}40`,
-            }}>
-              <div style={{ position: "absolute", top: -50, right: -40, width: 170, height: 170, borderRadius: "50%", background: "radial-gradient(circle, rgba(0,0,0,0.11), transparent 65%)", pointerEvents: "none" }}/>
+            {(() => {
+              const R = 34, CIRC = 2 * Math.PI * R;
+              const ringOffset = CIRC * (1 - pct / 100);
+              const dureeMin = todaySeance.duree?.replace(/[^0-9-]/g, '') || "45-60";
+              const restMin = total > 0 && done > 0
+                ? (() => {
+                    const parts = dureeMin.split('-').map(Number);
+                    const avg = parts.reduce((a,b) => a+b, 0) / parts.length;
+                    const rem = Math.round(avg * (1 - pct / 100));
+                    return rem > 0 ? `~${rem} min` : "Presque fini !";
+                  })()
+                : null;
+              return (
+                <div style={{
+                  background: "linear-gradient(150deg, #1E3A8A 0%, #1E40AF 50%, #2563EB 100%)",
+                  borderRadius: 22, padding: "18px 18px 0", marginBottom: 12,
+                  position: "relative", overflow: "hidden",
+                  boxShadow: "0 18px 40px rgba(30,58,138,0.45)",
+                }}>
+                  {/* Halo décoratif */}
+                  <div style={{ position:"absolute", top:-60, right:-40, width:200, height:200,
+                    borderRadius:"50%", background:"radial-gradient(circle, rgba(96,165,250,0.18), transparent 65%)",
+                    pointerEvents:"none" }}/>
+                  {/* Silhouette athlete (placeholder gradient) */}
+                  <div style={{ position:"absolute", right:0, top:0, bottom:0, width:"45%",
+                    background:"linear-gradient(90deg, transparent 0%, rgba(30,58,138,0.0) 20%, rgba(255,255,255,0.04) 100%)",
+                    pointerEvents:"none" }}/>
 
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 34, position: "relative" }}>
-                <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: "1.4px", color: "rgba(0,0,0,0.46)", background: "rgba(0,0,0,0.18)", padding: "6px 12px", borderRadius: 99, fontFamily: DISP }}>
-                  SÉANCE DU JOUR
-                </div>
-                <div style={{ textAlign: "right" }}>
-                  <div style={{ fontFamily: SERIF_F, fontSize: 30, color: "#fff", lineHeight: 1 }}>{pct}%</div>
-                  <div style={{ fontSize: 11, color: "rgba(0,0,0,0.35)", fontFamily: DISP, marginTop: 2 }}>{done}/{total}</div>
-                </div>
-              </div>
-
-              <div style={{ position: "relative" }}>
-                <div style={{ fontFamily: SERIF_F, fontSize: 31, color: "#fff", lineHeight: 1, marginBottom: 6, letterSpacing: -1 }}>
-                  {todaySeance.nom}
-                </div>
-                <div style={{ fontSize: 12.5, color: "rgba(0,0,0,0.42)", fontFamily: DISP, marginBottom: 15, display: "flex", alignItems: "center", gap: 7 }}>
-                  <span style={{ width: 7, height: 7, borderRadius: "50%", background: "rgba(0,0,0,0.38)", flexShrink: 0 }}/>
-                  {intData.l} · {todaySeance.duree || "60 min"} · {total} exercice{total !== 1 ? "s" : ""}
-                </div>
-                {/* Barre progression */}
-                <div style={{ height: 4, background: "rgba(0,0,0,0.12)", borderRadius: 99, overflow: "hidden" }}>
-                  <div style={{ height: "100%", width: `${pct}%`, background: "#fff", borderRadius: 99, transition: "width .5s ease" }}/>
-                </div>
-              </div>
-            </div>
-
-            {/* Checklist exercices */}
-            {!todaySeance.complete && (
-              <div style={{ background: C.s1, border: `1px solid ${C.bd}`, borderRadius: 18, padding: "4px 14px", marginBottom: 10 }}>
-                {(todaySeance.exercices || []).map((ex, idx) => {
-                  const isChecked = !!checkedEx[`${todaySeance.id}-${idx}`];
-                  const exColor   = cc(ex.cat);
-                  const last      = idx === todaySeance.exercices.length - 1;
-                  const lastEntry = ex.historique?.[ex.historique.length - 1];
-                  return (
-                    <div key={idx} style={{ display: "flex", alignItems: "center", gap: 10, padding: "12px 0", borderBottom: last ? "none" : `1px solid ${C.bd}` }}>
-                      <div onClick={() => toggleCheck(todaySeance.id, idx, ex.repos, todaySeance._calKey)} style={{
-                        width: 32, height: 32, borderRadius: 10, flexShrink: 0,
-                        display: "grid", placeItems: "center",
-                        cursor: "pointer",
-                        background: isChecked ? "linear-gradient(145deg,#5FE0A5,#2DA67D)" : `${exColor}18`,
-                        border: isChecked ? "none" : `1px solid ${exColor}35`,
-                        color: isChecked ? "#0B1F18" : exColor,
-                        fontSize: isChecked ? 14 : 12, fontWeight: 800, fontFamily: DISP,
-                        boxShadow: isChecked ? "0 4px 10px rgba(95,224,165,0.35)" : "none",
-                        transition: "all .15s",
-                      }}>{isChecked ? "✓" : idx + 1}</div>
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontSize: 13, fontWeight: 700, color: isChecked ? "${C.dim}" : "${C.text}", fontFamily: DISP, textDecoration: isChecked ? "line-through" : "none", letterSpacing: -0.2 }}>{ex.nom}</div>
-                        <div style={{ fontSize: 10, color: "${C.dim}", fontFamily: DISP, marginTop: 2 }}>{ex.series}×{ex.reps} · {ex.repos}{ex.methode && ex.methode !== "Classique" ? ` · ${ex.methode}` : ""}</div>
-                      </div>
-                      {lastEntry && (
-                        <div style={{ fontSize: 10, fontWeight: 700, color: exColor, fontFamily: DISP, flexShrink: 0, ...NUM }}>
-                          {lastEntry.poids}kg
-                        </div>
-                      )}
+                  {/* Row : badge + ring */}
+                  <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:14, position:"relative" }}>
+                    <div style={{ fontSize:9, fontWeight:700, letterSpacing:"1.4px",
+                      color:"rgba(255,255,255,0.7)", background:"rgba(0,0,0,0.30)",
+                      padding:"6px 12px", borderRadius:99, fontFamily:DISP, backdropFilter:"blur(8px)" }}>
+                      SÉANCE DU JOUR
                     </div>
-                  );
-                })}
-              </div>
+                    {/* Ring SVG */}
+                    <svg width={88} height={88} viewBox="0 0 88 88" style={{ flexShrink:0 }}>
+                      <circle cx={44} cy={44} r={R} fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth={5}/>
+                      <circle cx={44} cy={44} r={R} fill="none" stroke="#34D399" strokeWidth={5}
+                        strokeDasharray={CIRC} strokeDashoffset={ringOffset}
+                        strokeLinecap="round" transform="rotate(-90 44 44)"
+                        style={{ transition:"stroke-dashoffset .6s ease" }}/>
+                      <text x={44} y={40} textAnchor="middle" fill="#fff"
+                        fontSize="17" fontWeight="800" fontFamily={DISP}>{pct}%</text>
+                      <text x={44} y={56} textAnchor="middle" fill="rgba(255,255,255,0.55)"
+                        fontSize="10" fontFamily={DISP}>{done}/{total}</text>
+                    </svg>
+                  </div>
+
+                  {/* Titre */}
+                  <div style={{ fontFamily:SERIF_F, fontSize:34, color:"#fff", lineHeight:1,
+                    marginBottom:10, letterSpacing:-1, position:"relative" }}>
+                    {todaySeance.nom}
+                  </div>
+
+                  {/* Méta */}
+                  <div style={{ display:"flex", alignItems:"center", gap:14, marginBottom:14,
+                    position:"relative" }}>
+                    <div style={{ display:"flex", alignItems:"center", gap:5,
+                      fontSize:12, color:"rgba(255,255,255,0.65)", fontFamily:DISP }}>
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+                        stroke="rgba(255,255,255,0.65)" strokeWidth="2" strokeLinecap="round">
+                        <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>
+                      </svg>
+                      {intData.l} · {todaySeance.duree || "45-60 min"}
+                    </div>
+                    <div style={{ display:"flex", alignItems:"center", gap:5,
+                      fontSize:12, color:"rgba(255,255,255,0.65)", fontFamily:DISP }}>
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+                        stroke="rgba(255,255,255,0.65)" strokeWidth="2" strokeLinecap="round">
+                        <path d="M6.5 6.5h11M6.5 6.5A2.5 2.5 0 014 4M17.5 6.5A2.5 2.5 0 0020 4M6.5 17.5h11M6.5 17.5A2.5 2.5 0 014 20M17.5 17.5A2.5 2.5 0 0020 20M12 6.5v11"/>
+                      </svg>
+                      {total} exercice{total !== 1 ? "s" : ""}
+                    </div>
+                  </div>
+
+                  {/* Progress bar */}
+                  <div style={{ height:3, background:"rgba(255,255,255,0.12)", borderRadius:99,
+                    overflow:"hidden", marginBottom:0, position:"relative" }}>
+                    <div style={{ height:"100%", width:`${pct}%`, borderRadius:99, transition:"width .5s ease",
+                      background:"linear-gradient(90deg, #34D399, #10B981)" }}/>
+                  </div>
+
+                  {/* Footer barre */}
+                  <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center",
+                    padding:"10px 0 14px", position:"relative" }}>
+                    <div style={{ fontSize:11, color:"rgba(255,255,255,0.50)", fontFamily:DISP }}>
+                      {restMin ? `Temps estimé restant : ${restMin}` : `Prêt à commencer`}
+                    </div>
+                    <button onClick={() => setViewSeance(todaySeance)}
+                      style={{ fontSize:11, fontWeight:600, color:"rgba(255,255,255,0.65)",
+                        background:"none", border:"none", cursor:"pointer", fontFamily:DISP,
+                        display:"flex", alignItems:"center", gap:3 }}>
+                      Détails
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                        <path d="M9 6l6 6-6 6"/>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              );
+            })()}
+
+            {/* Exercices */}
+            {!todaySeance.complete && (
+              <>
+                {/* Header section */}
+                <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between",
+                  marginBottom:10, marginTop:4 }}>
+                  <div style={{ fontSize:16, fontWeight:700, color:C.text, fontFamily:DISP,
+                    letterSpacing:-0.3 }}>Exercices</div>
+                  <button onClick={() => setViewSeance(todaySeance)}
+                    style={{ fontSize:12, fontWeight:600, color:"#374151", background:"#F0F2F7",
+                      border:"none", borderRadius:10, padding:"5px 11px", cursor:"pointer",
+                      fontFamily:DISP }}>
+                    Voir tout
+                  </button>
+                </div>
+
+                {/* Cards */}
+                <div style={{ display:"flex", flexDirection:"column", gap:8, marginBottom:10 }}>
+                  {(todaySeance.exercices || []).map((ex, idx) => {
+                    const isChecked = !!checkedEx[`${todaySeance.id}-${idx}`];
+                    const exColor   = cc(ex.cat);
+                    const lastEntry = ex.historique?.[ex.historique.length - 1];
+                    // Palette thumbnails par catégorie
+                    const thumbColors = {
+                      push:["#EAF1FF","#3B82F6"], pull:["#E8FAF1","#10B981"],
+                      legs:["#FEF6E7","#F59E0B"], core:["#F3F0FF","#6366F1"],
+                    };
+                    const tc = thumbColors[ex.cat] || ["#F0F2F7","#6B7280"];
+                    return (
+                      <div key={idx} style={{
+                        background:C.s1, border:`1px solid ${C.bd}`, borderRadius:16,
+                        padding:"12px 14px",
+                        boxShadow:"0 1px 2px rgba(15,23,42,0.03),0 2px 6px rgba(15,23,42,0.04)",
+                        display:"flex", alignItems:"center", gap:12,
+                      }}>
+                        {/* Thumbnail coloré */}
+                        <div style={{
+                          width:52, height:52, borderRadius:13, flexShrink:0,
+                          background:`linear-gradient(135deg, ${tc[0]}, ${tc[1]}22)`,
+                          border:`1px solid ${tc[1]}30`,
+                          display:"grid", placeItems:"center",
+                        }}>
+                          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+                            stroke={tc[1]} strokeWidth="1.8" strokeLinecap="round">
+                            <path d="M6.5 6.5h11M6.5 6.5A2.5 2.5 0 014 4M17.5 6.5A2.5 2.5 0 0120 4M6.5 17.5h11M6.5 17.5A2.5 2.5 0 014 20M17.5 17.5A2.5 2.5 0 0120 20M12 6.5v11"/>
+                          </svg>
+                        </div>
+
+                        {/* Numéro badge */}
+                        <div onClick={() => toggleCheck(todaySeance.id, idx, ex.repos, todaySeance._calKey)}
+                          style={{
+                            width:28, height:28, borderRadius:9, flexShrink:0,
+                            display:"grid", placeItems:"center", cursor:"pointer",
+                            background: isChecked ? "linear-gradient(145deg,#5FE0A5,#2DA67D)" : "rgba(59,130,246,0.10)",
+                            border: isChecked ? "none" : "1px solid rgba(59,130,246,0.20)",
+                            color: isChecked ? "#0B1F18" : "#3B82F6",
+                            fontSize: 12, fontWeight:800, fontFamily:DISP,
+                            boxShadow: isChecked ? "0 3px 8px rgba(95,224,165,0.35)" : "none",
+                            transition:"all .15s",
+                          }}>
+                          {isChecked ? (
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+                              stroke="currentColor" strokeWidth="2.8" strokeLinecap="round">
+                              <path d="M20 6L9 17l-5-5"/>
+                            </svg>
+                          ) : idx + 1}
+                        </div>
+
+                        {/* Infos */}
+                        <div style={{ flex:1, minWidth:0 }}>
+                          <div style={{
+                            fontSize:13.5, fontWeight:700, color: isChecked ? "#9CA3AF" : C.text,
+                            fontFamily:DISP, letterSpacing:-0.2,
+                            textDecoration: isChecked ? "line-through" : "none",
+                          }}>{ex.nom}</div>
+                          <div style={{ fontSize:10.5, color:"#6B7280", fontFamily:DISP, marginTop:2 }}>
+                            {ex.series}×{ex.reps} · {ex.repos}s{ex.methode && ex.methode !== "Classique" ? ` · ${ex.methode}` : ""}
+                          </div>
+                        </div>
+
+                        {/* Poids / check */}
+                        <div style={{ display:"flex", flexDirection:"column", alignItems:"flex-end",
+                          gap:3, flexShrink:0 }}>
+                          {isChecked && (
+                            <div style={{
+                              width:28, height:28, borderRadius:9,
+                              background:"linear-gradient(145deg,#5FE0A5,#2DA67D)",
+                              display:"grid", placeItems:"center",
+                              boxShadow:"0 3px 8px rgba(95,224,165,0.35)",
+                            }}>
+                              <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+                                stroke="#0B1F18" strokeWidth="2.8" strokeLinecap="round">
+                                <path d="M20 6L9 17l-5-5"/>
+                              </svg>
+                            </div>
+                          )}
+                          {lastEntry && (
+                            <div style={{ fontSize:10.5, fontWeight:700, color:exColor,
+                              fontFamily:DISP, ...NUM }}>
+                              {lastEntry.poids}kg
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </>
             )}
 
             {/* CTA démarrer */}
             {!todaySeance.complete && (
               <button onClick={() => setFocusActive(true)} style={{
-                width: "100%", padding: "15px", borderRadius: 16,
-                background: "#F5F1E8", border: "none",
-                color: "#0B0F1F", fontSize: 14, fontWeight: 700,
-                fontFamily: DISP, cursor: "pointer",
-                display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-                boxShadow: "0 8px 24px rgba(245,241,232,0.14)",
-                marginBottom: 20,
+                width:"100%", padding:"16px", borderRadius:18,
+                background:"linear-gradient(160deg, #34D399 0%, #10B981 50%, #059669 100%)",
+                border:"none", color:"#fff", fontSize:15, fontWeight:700,
+                fontFamily:DISP, cursor:"pointer",
+                display:"flex", alignItems:"center", justifyContent:"center", gap:10,
+                boxShadow:"0 10px 28px rgba(16,185,129,0.38), inset 0 1px 0 rgba(255,255,255,0.25)",
+                marginBottom:20, letterSpacing:0.1,
               }}>
-                ▶ Démarrer la séance
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+                Démarrer la séance
               </button>
             )}
             {todaySeance.complete && (
@@ -430,8 +614,21 @@ export default function TodayView(props) {
         return (
         <div style={{ marginBottom: 20 }}>
           {/* Header */}
-          <div style={{ marginBottom: 13 }}>
-            <div style={{ fontFamily: SERIF_F, fontSize: 21, fontWeight: 400, color: "${C.text}", letterSpacing: -0.4 }}>Records & Objectifs</div>
+          <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:13 }}>
+            <div style={{ fontFamily:SERIF_F, fontSize:21, fontWeight:400, color:C.text, letterSpacing:-0.4 }}>
+              Records & Objectifs
+            </div>
+            <button onClick={() => setShowManualRM(true)}
+              style={{ fontSize:11.5, fontWeight:600, color:"#374151",
+                background:"#F0F2F7", border:"none", borderRadius:10,
+                padding:"5px 11px", cursor:"pointer", fontFamily:DISP,
+                display:"flex", alignItems:"center", gap:4 }}>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <path d="M3 17 9 11 13 15 21 7"/><path d="M14 7h7v7"/>
+              </svg>
+              Historique
+            </button>
           </div>
 
           {rmData.length === 0 ? (
@@ -450,26 +647,73 @@ export default function TodayView(props) {
             </div>
           ) : (
             <div>
-              <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:9, marginBottom:10 }}>
+              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10, marginBottom:12 }}>
                 {rmData.map((ex, i) => {
-                  const col = REC_PALETTE[i % REC_PALETTE.length];
-                  const tr  = trendOf(ex.historique);
+                  const col  = REC_PALETTE[i % REC_PALETTE.length];
+                  const tr   = trendOf(ex.historique);
+                  const iconBg = [
+                    ["#EAF1FF","#3B82F6"],["#E8FAF1","#10B981"],
+                    ["#FEF6E7","#F59E0B"],["#F3F0FF","#6366F1"],
+                    ["#FEE8E8","#F87171"],["#E8FAF1","#34D399"],
+                  ][i % 6];
                   return (
                     <div key={i} onClick={() => setEditRecord(ex)} style={{
                       background:C.s1, border:`1px solid ${C.bd}`, borderRadius:16,
-                      padding:"16px 8px 13px", textAlign:"center", cursor:"pointer", overflow:"hidden",
+                      padding:"14px 14px 12px", cursor:"pointer",
+                      boxShadow:"0 1px 2px rgba(15,23,42,0.03),0 2px 6px rgba(15,23,42,0.04)",
                     }}>
-                      <div style={{ fontFamily:DISP, fontSize:26, fontWeight:800, color:col, letterSpacing:-1, lineHeight:1, ...NUM }}>{ex.rm1}</div>
-                      <div style={{ fontSize:9.5, color:"${C.dim}", fontWeight:600, marginTop:2, fontFamily:DISP }}>kg · 1RM</div>
-                      <div style={{ fontSize:11, color:"${C.mid}", fontWeight:600, marginTop:9, fontFamily:DISP, lineHeight:1.2, overflow:"hidden", textOverflow:"ellipsis", display:"-webkit-box", WebkitLineClamp:2, WebkitBoxOrient:"vertical" }}>{ex.nom}</div>
-                      {tr && <div style={{ fontSize:9.5, color:"#34D399", fontWeight:700, marginTop:3, fontFamily:DISP }}>▲ +{tr}</div>}
+                      {/* Icône */}
+                      <div style={{ width:36, height:36, borderRadius:11,
+                        background:`linear-gradient(135deg, ${iconBg[0]}, ${iconBg[1]}33)`,
+                        border:`1px solid ${iconBg[1]}30`,
+                        display:"flex", alignItems:"center", justifyContent:"center",
+                        marginBottom:8 }}>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                          stroke={iconBg[1]} strokeWidth="1.8" strokeLinecap="round">
+                          <path d="M6.5 6.5h11M6.5 6.5A2.5 2.5 0 014 4M17.5 6.5A2.5 2.5 0 0120 4M6.5 17.5h11M6.5 17.5A2.5 2.5 0 014 20M17.5 17.5A2.5 2.5 0 0120 20M12 6.5v11"/>
+                        </svg>
+                      </div>
+                      <div style={{ fontFamily:DISP, fontSize:26, fontWeight:800, color:col,
+                        letterSpacing:-1, lineHeight:1, ...NUM }}>{ex.rm1}</div>
+                      <div style={{ fontSize:10, color:"#9CA3AF", fontWeight:600,
+                        marginTop:1, fontFamily:DISP }}>kg · 1RM</div>
+                      <div style={{ fontSize:12, color:C.text, fontWeight:600, marginTop:8,
+                        fontFamily:DISP, lineHeight:1.3, overflow:"hidden", textOverflow:"ellipsis",
+                        display:"-webkit-box", WebkitLineClamp:2, WebkitBoxOrient:"vertical" }}>
+                        {ex.nom}
+                      </div>
+                      {tr && (
+                        <div style={{ fontSize:10, color:"#10B981", fontWeight:700,
+                          marginTop:4, fontFamily:DISP }}>▲ +{tr} kg</div>
+                      )}
                     </div>
                   );
                 })}
               </div>
-              <button onClick={() => setShowManualRM(true)} style={recBtn}>
-                Saisir un record
-              </button>
+              {/* Saisie rapide banner */}
+              <div onClick={() => setShowManualRM(true)} style={{
+                background:"linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)",
+                borderRadius:16, padding:"14px 16px",
+                display:"flex", alignItems:"center", justifyContent:"space-between",
+                cursor:"pointer", boxShadow:"0 8px 24px rgba(59,130,246,0.32)",
+              }}>
+                <div>
+                  <div style={{ fontSize:14, fontWeight:700, color:"#fff", fontFamily:DISP }}>
+                    Saisie rapide
+                  </div>
+                  <div style={{ fontSize:11, color:"rgba(255,255,255,0.65)", fontFamily:DISP, marginTop:2 }}>
+                    Ajoute un nouveau record
+                  </div>
+                </div>
+                <div style={{ width:40, height:40, borderRadius:"50%",
+                  background:"rgba(255,255,255,0.15)", backdropFilter:"blur(8px)",
+                  display:"grid", placeItems:"center" }}>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                    stroke="#fff" strokeWidth="2.2" strokeLinecap="round">
+                    <path d="M12 5v14M5 12h14"/>
+                  </svg>
+                </div>
+              </div>
             </div>
           )}
         </div>
