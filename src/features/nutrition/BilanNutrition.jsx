@@ -42,10 +42,10 @@ const MCFG = {
     role:"Carburant sport", brd:"rgba(18,26,48,0.09)",
   },
   Lipides: {
-    L:"L", sq:"linear-gradient(135deg,#34D399,#047857)", sqS:"rgba(4,120,87,0.40)",
-    bar:"linear-gradient(90deg,#6EE7B7,#10B981)", barG:"rgba(16,185,129,0.42)",
-    color:"#10B981", roleC:"#047857", roleBg:"#D1FAE5",
-    role:"Récupération", brd:"rgba(18,26,48,0.09)",
+    L:"L", sq:"linear-gradient(135deg,#FB923C,#EA580C)", sqS:"rgba(234,88,12,0.40)",
+    bar:"linear-gradient(90deg,#FDBA74,#F97316)", barG:"rgba(249,115,22,0.42)",
+    color:"#F97316", roleC:"#C2410C", roleBg:"#FFEDD5",
+    role:"Récupération", brd:"rgba(249,115,22,0.22)",
   },
 };
 
@@ -71,27 +71,27 @@ function I({ name, size=16, color="currentColor", stroke=2 }) {
 
 // ─── Mini-ring animé (par macro) ───────────────────────────────────────────
 function MiniRing({ pct, color, go, delay=0 }) {
-  const sz=68, r=(sz-9)/2, cx=sz/2, cy=sz/2, len=2*Math.PI*r;
+  const sz=76, r=(sz-10)/2, cx=sz/2, cy=sz/2, len=2*Math.PI*r;
   const off=(1-Math.min(pct/100,1))*len;
   return (
     <div style={{ display:"flex",flexDirection:"column",alignItems:"center",flexShrink:0 }}>
       <div style={{ position:"relative",width:sz,height:sz }}>
         <svg width={sz} height={sz} style={{ position:"absolute",inset:0 }}>
-          <circle cx={cx} cy={cy} r={r} fill="none" stroke="rgba(18,26,48,0.07)" strokeWidth={9}/>
-          <circle cx={cx} cy={cy} r={r} fill="none" stroke={color} strokeWidth={9}
+          <circle cx={cx} cy={cy} r={r} fill="none" stroke="rgba(18,26,48,0.07)" strokeWidth={10}/>
+          <circle cx={cx} cy={cy} r={r} fill="none" stroke={color} strokeWidth={10}
             strokeLinecap="round" strokeDasharray={len} strokeDashoffset={go?off:len}
             transform={`rotate(-90 ${cx} ${cy})`}
             style={{ transition:`stroke-dashoffset 1.3s cubic-bezier(.34,1.2,.64,1) ${delay}s`,
-              filter:`drop-shadow(0 0 5px ${color}88)` }}
+              filter:`drop-shadow(0 0 6px ${color}88)` }}
           />
         </svg>
         <div style={{ position:"absolute",inset:0,display:"flex",alignItems:"center",
           justifyContent:"center",flexDirection:"column" }}>
-          <span style={{ fontSize:14,fontWeight:800,color:TEXT,lineHeight:1,fontFamily:FONT,...NUM }}>
+          <span style={{ fontSize:16,fontWeight:800,color:TEXT,lineHeight:1,fontFamily:FONT,...NUM }}>
             {Math.min(100,pct)}%
           </span>
-          <span style={{ fontSize:9,color:DIM,fontWeight:600,marginTop:2,
-            textAlign:"center",lineHeight:1.2,fontFamily:FONT }}>
+          <span style={{ fontSize:10,color:DIM,fontWeight:600,marginTop:3,
+            textAlign:"center",lineHeight:1.3,fontFamily:FONT }}>
             de la<br/>cible
           </span>
         </div>
@@ -111,36 +111,36 @@ function MacroCard({ label, value, goal, pct, isPointFort, go, delay=0 }) {
   const tagColor = pct >= 90 ? "#047857" : isPointFort ? cfg.roleC  : "#92400E";
 
   return (
-    <div style={{ borderRadius:20, padding:"16px 16px 14px", background:S1,
+    <div style={{ borderRadius:20, padding:"20px 18px 16px", background:S1,
       border:`1px solid ${cfg.brd}`,
       boxShadow:"0 1px 3px rgba(16,24,40,0.05),0 8px 20px rgba(16,24,40,0.07)" }}>
 
       {/* Ligne haute : icône + nom/valeur + mini-ring */}
-      <div style={{ display:"flex",alignItems:"center",gap:13 }}>
-        <div style={{ width:52,height:52,borderRadius:15,flexShrink:0,
+      <div style={{ display:"flex",alignItems:"center",gap:14 }}>
+        <div style={{ width:56,height:56,borderRadius:16,flexShrink:0,
           background:cfg.sq, display:"grid",placeItems:"center",
-          boxShadow:`0 6px 20px ${cfg.sqS},inset 0 1px 0 rgba(255,255,255,0.28)`,
-          fontSize:21,fontWeight:900,color:"white",fontFamily:FONT }}>
+          boxShadow:`0 8px 22px ${cfg.sqS},inset 0 1px 0 rgba(255,255,255,0.28)`,
+          fontSize:22,fontWeight:900,color:"white",fontFamily:FONT }}>
           {cfg.L}
         </div>
         <div style={{ flex:1,minWidth:0 }}>
-          <div style={{ display:"flex",alignItems:"center",gap:7,flexWrap:"wrap" }}>
-            <span style={{ fontSize:15,fontWeight:700,color:TEXT,fontFamily:FONT }}>{label}</span>
-            <span style={{ fontSize:10.5,fontWeight:800,padding:"2px 8px",borderRadius:7,
+          <div style={{ display:"flex",alignItems:"center",gap:8,flexWrap:"wrap" }}>
+            <span style={{ fontSize:17,fontWeight:700,color:TEXT,fontFamily:FONT }}>{label}</span>
+            <span style={{ fontSize:12,fontWeight:800,padding:"3px 10px",borderRadius:8,
               background:cfg.roleBg,color:cfg.roleC,fontFamily:FONT }}>{cfg.role}</span>
           </div>
-          <div style={{ display:"flex",alignItems:"baseline",gap:4,marginTop:3 }}>
-            <span style={{ fontSize:26,fontWeight:800,color:TEXT,fontFamily:SERIF,
+          <div style={{ display:"flex",alignItems:"baseline",gap:5,marginTop:5 }}>
+            <span style={{ fontSize:30,fontWeight:800,color:TEXT,fontFamily:SERIF,
               letterSpacing:-.5,...NUM }}>{Math.round(value)}</span>
-            <span style={{ fontSize:13,color:DIM,fontWeight:600,fontFamily:FONT }}>/ {goal} g</span>
+            <span style={{ fontSize:15,color:DIM,fontWeight:600,fontFamily:FONT }}>/ {goal} g</span>
           </div>
         </div>
         <MiniRing pct={pct} color={cfg.color} go={go} delay={delay}/>
       </div>
 
       {/* Barre de progression */}
-      <div style={{ height:8,borderRadius:6,background:"rgba(18,26,48,0.07)",
-        margin:"12px 0 0",overflow:"hidden" }}>
+      <div style={{ height:9,borderRadius:6,background:"rgba(18,26,48,0.07)",
+        margin:"14px 0 0",overflow:"hidden" }}>
         <div style={{ height:"100%",borderRadius:6,background:cfg.bar,
           boxShadow:`2px 0 12px ${cfg.barG}`,
           width:go?`${Math.min(100,pct)}%`:"0%",
@@ -148,16 +148,16 @@ function MacroCard({ label, value, goal, pct, isPointFort, go, delay=0 }) {
       </div>
 
       {/* Ligne basse : badge + texte + chevron */}
-      <div style={{ display:"flex",alignItems:"center",gap:8,marginTop:10 }}>
-        <span style={{ fontSize:11,fontWeight:800,padding:"3px 9px",borderRadius:7,
+      <div style={{ display:"flex",alignItems:"center",gap:10,marginTop:12 }}>
+        <span style={{ fontSize:13,fontWeight:800,padding:"4px 11px",borderRadius:8,
           background:tagBg,color:tagColor,flexShrink:0,fontFamily:FONT }}>
           {tagLabel}
         </span>
-        <span style={{ fontSize:12,color:DIM,fontWeight:500,flex:1,minWidth:0,
+        <span style={{ fontSize:13,color:DIM,fontWeight:500,flex:1,minWidth:0,
           overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",fontFamily:FONT }}>
           {remaining > 0 ? `Encore ${remaining} g pour atteindre ta cible` : "Cible atteinte 🎯"}
         </span>
-        <I name="chevR" size={16} color={DIM}/>
+        <I name="chevR" size={17} color={DIM}/>
       </div>
     </div>
   );
@@ -166,23 +166,23 @@ function MacroCard({ label, value, goal, pct, isPointFort, go, delay=0 }) {
 // ─── En-tête de section ────────────────────────────────────────────────────
 function SecHead({ title, sub, color=BL, icon=null }) {
   return (
-    <div style={{ marginBottom:11 }}>
-      <div style={{ display:"flex",alignItems:"center",gap:7 }}>
+    <div style={{ marginBottom:13 }}>
+      <div style={{ display:"flex",alignItems:"center",gap:8 }}>
         {icon
-          ? <div style={{ width:20,height:20,borderRadius:6,background:color,
+          ? <div style={{ width:22,height:22,borderRadius:7,background:color,
               display:"grid",placeItems:"center",flexShrink:0 }}>{icon}</div>
-          : <div style={{ width:3,height:14,borderRadius:2,background:color,flexShrink:0 }}/>
+          : <div style={{ width:4,height:16,borderRadius:2,background:color,flexShrink:0 }}/>
         }
-        <span style={{ fontSize:12,fontWeight:800,letterSpacing:"0.9px",
+        <span style={{ fontSize:13,fontWeight:800,letterSpacing:"0.9px",
           textTransform:"uppercase",color:TEXT,fontFamily:FONT }}>{title}</span>
-        <div style={{ width:18,height:18,borderRadius:"50%",border:`1px solid ${BD}`,
+        <div style={{ width:20,height:20,borderRadius:"50%",border:`1px solid ${BD}`,
           display:"grid",placeItems:"center",opacity:.7 }}>
-          <I name="info" size={10} color={DIM}/>
+          <I name="info" size={11} color={DIM}/>
         </div>
       </div>
       {sub && (
-        <div style={{ fontSize:11,color:DIM,fontWeight:500,marginTop:3,
-          paddingLeft:icon?27:10,fontFamily:FONT }}>{sub}</div>
+        <div style={{ fontSize:13,color:DIM,fontWeight:500,marginTop:5,
+          paddingLeft:icon?30:12,fontFamily:FONT,lineHeight:1.4 }}>{sub}</div>
       )}
     </div>
   );
@@ -192,18 +192,18 @@ function SecHead({ title, sub, color=BL, icon=null }) {
 function NoteCalme({ nbLogged, totalDays }) {
   const daysLeft = Math.max(0, MIN_DAYS_FULL_BILAN - nbLogged);
   return (
-    <div style={{ display:"flex",alignItems:"center",gap:10,padding:"13px 15px",
-      borderRadius:14,background:"#FEF3C7",border:"1px solid rgba(245,158,11,0.25)",
-      marginBottom:18,cursor:"pointer" }}>
-      <div style={{ width:32,height:32,borderRadius:10,background:"#FDE68A",
+    <div style={{ display:"flex",alignItems:"center",gap:12,padding:"15px 16px",
+      borderRadius:16,background:"#FEF3C7",border:"1px solid rgba(245,158,11,0.25)",
+      marginBottom:20,cursor:"pointer" }}>
+      <div style={{ width:36,height:36,borderRadius:11,background:"#FDE68A",
         display:"grid",placeItems:"center",flexShrink:0 }}>
-        <I name="info" size={15} color={AMB} stroke={2.2}/>
+        <I name="info" size={17} color={AMB} stroke={2.2}/>
       </div>
-      <div style={{ flex:1,fontSize:13,color:"#78350F",lineHeight:1.45,fontFamily:FONT }}>
+      <div style={{ flex:1,fontSize:14,color:"#78350F",lineHeight:1.5,fontFamily:FONT }}>
         <b>{nbLogged} jour{nbLogged>1?"s":""} sur {totalDays} renseigné{nbLogged>1?"s":""}.</b>
         {" "}Il te faut {daysLeft} jour{daysLeft>1?"s":""} de plus pour un score fiable.
       </div>
-      <I name="chevR" size={16} color="#D97706"/>
+      <I name="chevR" size={17} color="#D97706"/>
     </div>
   );
 }
@@ -212,29 +212,29 @@ function NoteCalme({ nbLogged, totalDays }) {
 function NextBilanCard({ nextDate, daysUntil, onOpen }) {
   return (
     <div onClick={onOpen} style={{ background:S1,
-      border:`1px solid ${BD}`, borderRadius:18,
-      padding:"14px 16px", display:"flex", gap:13, alignItems:"center",
+      border:`1px solid ${BD}`, borderRadius:20,
+      padding:"16px 18px", display:"flex", gap:14, alignItems:"center",
       cursor:"pointer",
       boxShadow:"0 1px 3px rgba(16,24,40,0.05),0 6px 16px rgba(16,24,40,0.06)" }}>
-      <div style={{ width:46,height:46,borderRadius:13,
+      <div style={{ width:50,height:50,borderRadius:14,
         background:`linear-gradient(135deg,#60A5FA,${BLD})`,
         display:"grid",placeItems:"center",
         boxShadow:"0 5px 16px rgba(37,99,235,0.38)",flexShrink:0 }}>
-        <I name="calendar" size={21} color="#fff"/>
+        <I name="calendar" size={23} color="#fff"/>
       </div>
       <div style={{ flex:1,minWidth:0 }}>
-        <div style={{ fontSize:10.5,fontWeight:800,letterSpacing:".8px",
-          textTransform:"uppercase",color:BL,marginBottom:2,fontFamily:FONT }}>
+        <div style={{ fontSize:11,fontWeight:800,letterSpacing:".8px",
+          textTransform:"uppercase",color:BL,marginBottom:3,fontFamily:FONT }}>
           Prochain bilan complet
         </div>
-        <div style={{ fontSize:14,fontWeight:700,color:TEXT,fontFamily:FONT }}>
+        <div style={{ fontSize:15,fontWeight:700,color:TEXT,fontFamily:FONT }}>
           {nextDate}{daysUntil!=null ? ` · dans ${daysUntil} jour${daysUntil>1?"s":""}` : ""}
         </div>
-        <div style={{ fontSize:12,color:MID,fontFamily:FONT,marginTop:1 }}>
+        <div style={{ fontSize:13,color:MID,fontFamily:FONT,marginTop:2 }}>
           Rapport bi-hebdomadaire automatique
         </div>
       </div>
-      <I name="chevR" size={17} color={MID}/>
+      <I name="chevR" size={18} color={MID}/>
     </div>
   );
 }
@@ -266,33 +266,33 @@ function StreakGrid({ days, calObj }) {
   };
 
   return (
-    <div style={{ display:"flex", gap:6, marginBottom:14 }}>
+    <div style={{ display:"flex", gap:7, marginBottom:16 }}>
       {padded.map((day, i) => {
         const st = statusOf(day);
         const s  = STYLES[st];
         const letter = day ? dayLetter(day.date) : null;
         return (
-          <div key={i} style={{ flex:1, display:"flex", flexDirection:"column", alignItems:"center", gap:6 }}>
-            <div style={{ width:"100%", aspectRatio:"1", borderRadius:11,
+          <div key={i} style={{ flex:1, display:"flex", flexDirection:"column", alignItems:"center", gap:7 }}>
+            <div style={{ width:"100%", aspectRatio:"1", borderRadius:12,
               display:"grid", placeItems:"center",
               background:s.bg, border:s.bd, boxShadow:s.shadow }}>
               {st==="ok" && (
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M5 12.5L10 17l9-10"/>
                 </svg>
               )}
               {st==="warn" && (
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3.2" strokeLinecap="round">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3.2" strokeLinecap="round">
                   <path d="M5 12h14"/>
                 </svg>
               )}
               {st==="bad" && (
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round">
                   <path d="M18 6L6 18M6 6l12 12"/>
                 </svg>
               )}
             </div>
-            <span style={{ fontSize:11, fontWeight:700, color:DIM, fontFamily:FONT }}>
+            <span style={{ fontSize:12, fontWeight:700, color:DIM, fontFamily:FONT }}>
               {letter || "·"}
             </span>
           </div>
@@ -535,6 +535,7 @@ export default function BilanNutrition({
         </div>
 
         {/* ── RÉGULARITÉ ── */}
+        <div style={{ marginTop:26 }}>
         <SecHead
           title="Régularité du suivi"
           sub="La constance crée les résultats."
@@ -546,16 +547,16 @@ export default function BilanNutrition({
           boxShadow:"0 1px 3px rgba(16,24,40,0.05),0 8px 20px rgba(16,24,40,0.07)",
           marginBottom:20 }}>
           {/* Header : chiffre + illustration calendrier */}
-          <div style={{ display:"flex",alignItems:"flex-start",justifyContent:"space-between",marginBottom:16 }}>
+          <div style={{ display:"flex",alignItems:"flex-start",justifyContent:"space-between",marginBottom:18 }}>
             <div>
               <div style={{ display:"flex",alignItems:"baseline",gap:8 }}>
-                <span style={{ fontFamily:SERIF,fontSize:34,fontWeight:400,
-                  letterSpacing:-1.5,lineHeight:1,color:TEXT,...NUM }}>
+                <span style={{ fontFamily:SERIF,fontSize:42,fontWeight:400,
+                  letterSpacing:-2,lineHeight:1,color:TEXT,...NUM }}>
                   {(repasHistory||[]).slice(-7).filter(d=>d&&d.kcal&&d.kcal>0).length}
                 </span>
-                <span style={{ fontSize:14,color:DIM,fontFamily:FONT }}>/7</span>
+                <span style={{ fontSize:17,color:DIM,fontFamily:FONT }}>/7</span>
               </div>
-              <div style={{ fontSize:12,color:MID,fontWeight:600,fontFamily:FONT,marginTop:3 }}>
+              <div style={{ fontSize:14,color:MID,fontWeight:600,fontFamily:FONT,marginTop:5 }}>
                 jours renseignés
               </div>
             </div>
@@ -571,7 +572,7 @@ export default function BilanNutrition({
 
           <StreakGrid days={repasHistory} calObj={calObj}/>
 
-          <div style={{ display:"flex",gap:14,paddingTop:11,
+          <div style={{ display:"flex",gap:14,paddingTop:13,
             borderTop:"1px solid rgba(16,185,129,0.10)",flexWrap:"wrap" }}>
             {[
               { color:GRN, label:"Atteint" },
@@ -579,9 +580,9 @@ export default function BilanNutrition({
               { color:RED, bg:"rgba(248,113,113,0.15)", label:"Hors cible" },
               { bg:"rgba(0,0,0,0.03)", bd:"1.5px dashed rgba(18,26,48,0.12)", label:"Non renseigné" },
             ].map((x,i) => (
-              <div key={i} style={{ display:"flex",alignItems:"center",gap:6,
-                fontSize:11,color:MID,fontFamily:FONT }}>
-                <span style={{ width:9,height:9,borderRadius:3,flexShrink:0,
+              <div key={i} style={{ display:"flex",alignItems:"center",gap:7,
+                fontSize:12,color:MID,fontFamily:FONT }}>
+                <span style={{ width:10,height:10,borderRadius:3,flexShrink:0,
                   background:x.bg||x.color,border:x.bd||"none" }}/>
                 {x.label}
               </div>
@@ -589,7 +590,10 @@ export default function BilanNutrition({
           </div>
         </div>
 
+        </div>{/* fin régularité */}
+
         {/* ── MACRONUTRIMENTS ── */}
+        <div style={{ marginTop:26 }}>
         <SecHead
           title="Macronutriments"
           sub={`Moyenne sur ${totalDays} jours · tes 3 carburants clés`}
@@ -610,39 +614,42 @@ export default function BilanNutrition({
           />
         </div>
 
+        </div>{/* fin macros */}
+
         {/* ── HYDRATATION ── */}
+        <div style={{ marginTop:26 }}>
         <SecHead
           title="Hydratation"
           sub="Optimal : 35 ml / kg de poids de corps"
           color={GRN}
-          icon={<I name="drop" size={11} color="white" stroke={2}/>}
+          icon={<I name="drop" size={12} color="white" stroke={2}/>}
         />
-        <div style={{ borderRadius:20,padding:"16px",background:S1,
+        <div style={{ borderRadius:20,padding:"20px 18px",background:S1,
           border:"1px solid rgba(16,185,129,0.22)",
           boxShadow:"0 1px 3px rgba(16,24,40,0.05),0 8px 20px rgba(16,24,40,0.07)",
-          marginBottom:12 }}>
+          marginBottom:14 }}>
           <div style={{ display:"flex",alignItems:"center",gap:14 }}>
-            <div style={{ width:52,height:52,borderRadius:15,flexShrink:0,
+            <div style={{ width:56,height:56,borderRadius:16,flexShrink:0,
               background:"linear-gradient(135deg,#34D399,#047857)",
               display:"grid",placeItems:"center",
-              boxShadow:"0 6px 20px rgba(4,120,87,0.40),inset 0 1px 0 rgba(255,255,255,0.28)" }}>
-              <I name="drop" size={24} color="white" stroke={2}/>
+              boxShadow:"0 8px 22px rgba(4,120,87,0.40),inset 0 1px 0 rgba(255,255,255,0.28)" }}>
+              <I name="drop" size={26} color="white" stroke={2}/>
             </div>
             <div style={{ flex:1 }}>
               <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center" }}>
-                <div style={{ display:"flex",alignItems:"baseline",gap:4 }}>
-                  <span style={{ fontSize:26,fontWeight:800,color:TEXT,fontFamily:SERIF,letterSpacing:-.5,...NUM }}>
+                <div style={{ display:"flex",alignItems:"baseline",gap:5 }}>
+                  <span style={{ fontSize:30,fontWeight:800,color:TEXT,fontFamily:SERIF,letterSpacing:-.5,...NUM }}>
                     {(avgEauP*0.25).toFixed(1)} L
                   </span>
-                  <span style={{ fontSize:13,color:DIM,fontWeight:600,fontFamily:FONT }}>/ 2 L</span>
+                  <span style={{ fontSize:15,color:DIM,fontWeight:600,fontFamily:FONT }}>/ 2 L</span>
                 </div>
-                <span style={{ fontSize:12,fontWeight:800,color:GRN,
-                  border:`1.5px solid ${GRN}`,padding:"4px 11px",borderRadius:999,fontFamily:FONT }}>
+                <span style={{ fontSize:13,fontWeight:800,color:GRN,
+                  border:`1.5px solid ${GRN}`,padding:"5px 12px",borderRadius:999,fontFamily:FONT }}>
                   {Math.min(100,Math.round((avgEauP*0.25/2)*100))}%
                 </span>
               </div>
-              <div style={{ height:8,borderRadius:6,background:"rgba(16,185,129,0.10)",
-                marginTop:10,overflow:"hidden" }}>
+              <div style={{ height:9,borderRadius:6,background:"rgba(16,185,129,0.10)",
+                marginTop:12,overflow:"hidden" }}>
                 <div style={{ height:"100%",borderRadius:6,
                   background:"linear-gradient(90deg,#6EE7B7,#10B981)",
                   boxShadow:"2px 0 10px rgba(16,185,129,0.42)",
@@ -651,20 +658,24 @@ export default function BilanNutrition({
               </div>
             </div>
           </div>
-          <div style={{ display:"flex",alignItems:"center",justifyContent:"space-between",marginTop:10 }}>
-            <span style={{ fontSize:12,color:DIM,fontWeight:500,fontFamily:FONT }}>
+          <div style={{ display:"flex",alignItems:"center",justifyContent:"space-between",marginTop:12 }}>
+            <span style={{ fontSize:13,color:DIM,fontWeight:500,fontFamily:FONT }}>
               Encore {Math.max(0,(2-avgEauP*0.25).toFixed(1))} L pour ton objectif
             </span>
-            <I name="trend" size={17} color={GRN}/>
+            <I name="trend" size={18} color={GRN}/>
           </div>
         </div>
 
+        </div>{/* fin hydratation */}
+
         {/* ── PROCHAIN BILAN ── */}
+        <div style={{ marginTop:14 }}>
         <NextBilanCard
           nextDate={nextBilanLabel}
           daysUntil={daysToSunday}
           onOpen={onOpenArchive}
         />
+        </div>
 
       </div>
     );
