@@ -239,9 +239,11 @@ function NextBilanCard({ nextDate, daysUntil, onOpen }) {
   );
 }
 
-// ─── Grille régularité ─────────────────────────────────────────────────────
+// ─── Grille régularité — 7 jours avec lettres ──────────────────────────────
 function StreakGrid({ days, calObj }) {
-  const arr = Array.isArray(days) ? days.slice(-14) : [];
+  const arr = Array.isArray(days) ? days.slice(-7) : [];
+  const padded = [...Array(Math.max(0, 7 - arr.length)).fill(null), ...arr];
+
   const statusOf = (day) => {
     if (!day || !day.kcal) return "empty";
     const diff = Math.abs(day.kcal - calObj);
@@ -249,36 +251,49 @@ function StreakGrid({ days, calObj }) {
     if (diff < calObj * 0.30) return "warn";
     return "bad";
   };
-  const dayNum = (iso) => { try { return String(parseInt(iso.split("-")[2],10)); } catch { return ""; } };
-  const styleFor = (st) => {
-    if (st==="ok")   return { bg:"linear-gradient(135deg,#34D399,#059669)", bd:"none", shadow:"0 3px 10px rgba(5,150,105,0.35)", color:"white" };
-    if (st==="warn") return { bg:"linear-gradient(135deg,#FCD34D,#F59E0B)", bd:"none", shadow:"0 3px 10px rgba(245,158,11,0.3)", color:"white" };
-    if (st==="bad")  return { bg:"rgba(248,113,113,0.15)", bd:"1px solid rgba(248,113,113,0.3)", shadow:"none", color:RED };
-    return               { bg:"transparent", bd:"1.5px dashed rgba(18,26,48,0.12)", shadow:"none", color:DIM };
+
+  const dayLetter = (iso) => {
+    if (!iso) return null;
+    try { return ["D","L","M","M","J","V","S"][new Date(iso + "T12:00:00").getDay()]; }
+    catch { return null; }
   };
-  const padded = [...Array(Math.max(0,14-arr.length)).fill(null), ...arr];
-  const rows = [padded.slice(0,7), padded.slice(7,14)];
+
+  const STYLES = {
+    ok:    { bg:"linear-gradient(135deg,#34D399,#059669)", shadow:"0 4px 12px rgba(5,150,105,0.38)", bd:"none" },
+    warn:  { bg:"linear-gradient(135deg,#FCD34D,#F59E0B)", shadow:"0 4px 12px rgba(245,158,11,0.32)", bd:"none" },
+    bad:   { bg:"rgba(248,113,113,0.14)", shadow:"none", bd:"1px solid rgba(248,113,113,0.28)" },
+    empty: { bg:"transparent", shadow:"none", bd:"1.5px dashed rgba(18,26,48,0.13)" },
+  };
+
   return (
-    <>
-      {rows.map((row,w) => (
-        <div key={w} style={{ display:"flex",gap:5,marginBottom:w===0?5:12 }}>
-          {row.map((day,d) => {
-            const st=statusOf(day), s=styleFor(st);
-            return (
-              <div key={d} style={{ flex:1,aspectRatio:"1",borderRadius:9,
-                display:"flex",flexDirection:"column",alignItems:"center",
-                justifyContent:"center",fontFamily:FONT,
-                background:s.bg,border:s.bd,color:s.color,
-                boxShadow:s.shadow }}>
-                <span style={{ fontSize:11,fontWeight:800,...NUM }}>
-                  {day ? dayNum(day.date) : "·"}
-                </span>
-              </div>
-            );
-          })}
-        </div>
-      ))}
-    </>
+    <div style={{ display:"flex", gap:6, marginBottom:14 }}>
+      {padded.map((day, i) => {
+        const st = statusOf(day);
+        const s  = STYLES[st];
+        const letter = day ? dayLetter(day.date) : null;
+        return (
+          <div key={i} style={{ flex:1, display:"flex", flexDirection:"column", alignItems:"center", gap:6 }}>
+            <div style={{ width:"100%", aspectRatio:"1", borderRadius:11,
+              display:"grid", placeItems:"center",
+              background:s.bg, border:s.bd, boxShadow:s.shadow }}>
+              {st==="ok" && (
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 12.5L10 17l9-10"/>
+                </svg>
+              )}
+              {st==="warn" && (
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3.2" strokeLinecap="round">
+                  <path d="M5 12h14"/>
+                </svg>
+              )}
+            </div>
+            <span style={{ fontSize:11, fontWeight:700, color:DIM, fontFamily:FONT }}>
+              {letter || "·"}
+            </span>
+          </div>
+        );
+      })}
+    </div>
   );
 }
 
