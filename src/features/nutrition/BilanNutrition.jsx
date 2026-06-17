@@ -421,6 +421,156 @@ export default function BilanNutrition({
           <NoteCalme nbLogged={bilan.nbLogged} totalDays={bilan.totalDays}/>
         )}
 
+        {/* ── COHÉRENCE — HERO CARD (en premier) ── */}
+        <SecHead
+          title="Cohérence Nutrition"
+          sub="Ton alimentation soutient-elle ta progression ?"
+          color={BL}
+        />
+        <div style={{
+          borderRadius:22,padding:"22px 20px",marginBottom:20,
+          background:"linear-gradient(140deg,#1E3A8A 0%,#4C1D95 52%,#9D174D 100%)",
+          boxShadow:"0 12px 40px rgba(99,102,241,0.38)",
+          color:"white",display:"flex",alignItems:"center",gap:18,
+          position:"relative",overflow:"hidden",
+        }}>
+          <div style={{ position:"absolute",top:-50,right:-30,width:160,height:160,
+            borderRadius:"50%",background:"rgba(255,255,255,0.06)",pointerEvents:"none" }}/>
+          <div style={{ position:"absolute",bottom:-25,left:10,width:90,height:90,
+            borderRadius:"50%",background:"rgba(255,255,255,0.04)",pointerEvents:"none" }}/>
+
+          {bilan.isPartial ? (
+            <div style={{ position:"relative",width:108,height:108,flexShrink:0 }}>
+              <svg width="108" height="108" style={{ position:"absolute",inset:0 }}>
+                <circle cx="54" cy="54" r="48" fill="none" stroke="rgba(255,255,255,0.14)" strokeWidth={11}/>
+                <circle cx="54" cy="54" r="48" fill="none" stroke="white" strokeWidth={11}
+                  strokeLinecap="round"
+                  strokeDasharray={2*Math.PI*48}
+                  strokeDashoffset={go?(1-Math.min(bilan.nbLogged/MIN_DAYS_FULL_BILAN,1))*(2*Math.PI*48):(2*Math.PI*48)}
+                  transform="rotate(-90 54 54)"
+                  style={{ transition:"stroke-dashoffset 1.5s cubic-bezier(.34,1.2,.64,1) .1s",
+                    filter:"drop-shadow(0 0 7px rgba(255,255,255,0.65))" }}
+                />
+              </svg>
+              <div style={{ position:"absolute",inset:0,display:"flex",alignItems:"center",
+                justifyContent:"center",flexDirection:"column",textAlign:"center" }}>
+                <div style={{ fontFamily:SERIF,fontSize:27,lineHeight:1,color:"white" }}>
+                  {bilan.nbLogged}<span style={{ fontSize:14,opacity:.65 }}>/{MIN_DAYS_FULL_BILAN}</span>
+                </div>
+                <div style={{ fontSize:10,opacity:.75,fontWeight:600,marginTop:3,fontFamily:FONT }}>
+                  jours complets
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div style={{ position:"relative",width:108,height:108,flexShrink:0 }}>
+              <svg width="108" height="108" style={{ position:"absolute",inset:0 }}>
+                <circle cx="54" cy="54" r="48" fill="none" stroke="rgba(255,255,255,0.14)" strokeWidth={11}/>
+                <circle cx="54" cy="54" r="48" fill="none" stroke="white" strokeWidth={11}
+                  strokeLinecap="round"
+                  strokeDasharray={2*Math.PI*48}
+                  strokeDashoffset={go?(1-parseFloat(bilan.score)/10)*(2*Math.PI*48):(2*Math.PI*48)}
+                  transform="rotate(-90 54 54)"
+                  style={{ transition:"stroke-dashoffset 1.5s cubic-bezier(.34,1.2,.64,1) .1s",
+                    filter:"drop-shadow(0 0 7px rgba(255,255,255,0.65))" }}
+                />
+              </svg>
+              <div style={{ position:"absolute",inset:0,display:"flex",alignItems:"center",
+                justifyContent:"center",flexDirection:"column",textAlign:"center" }}>
+                <div style={{ fontFamily:SERIF,fontSize:32,lineHeight:1,color:"white" }}>{bilan.score}</div>
+                <div style={{ fontSize:10,opacity:.75,fontWeight:600,marginTop:3,fontFamily:FONT }}>sur 10</div>
+              </div>
+            </div>
+          )}
+
+          <div style={{ flex:1 }}>
+            {bilan.isPartial ? (
+              <div style={{ display:"inline-flex",alignItems:"center",gap:6,fontSize:10.5,
+                fontWeight:800,color:"rgba(255,255,255,0.92)",
+                background:"rgba(255,255,255,0.16)",padding:"4px 10px",borderRadius:8,fontFamily:FONT }}>
+                <I name="lock" size={11} color="rgba(255,255,255,0.9)"/>
+                {" "}Score dans {Math.max(0,MIN_DAYS_FULL_BILAN-bilan.nbLogged)} jours
+              </div>
+            ) : (
+              <div style={{ display:"inline-block",fontSize:10.5,fontWeight:800,
+                color:"rgba(255,255,255,0.92)",background:"rgba(255,255,255,0.16)",
+                padding:"4px 10px",borderRadius:8,fontFamily:FONT }}>
+                Objectif · {obj?.l || "Prise de muscle"}
+              </div>
+            )}
+            <div style={{ fontFamily:SERIF,fontSize:28,color:"white",marginTop:11,
+              letterSpacing:-.5,lineHeight:1 }}>
+              {avgKcalP}{" "}
+              <span style={{ fontFamily:FONT,fontSize:13,fontWeight:600,opacity:.72 }}>kcal/j moy.</span>
+            </div>
+            <div style={{ fontSize:11.5,opacity:.72,marginTop:6,lineHeight:1.55,fontFamily:FONT }}>
+              Cible : {calObj} kcal/j · {pctKcalP}% atteint<br/>
+              <span style={{ opacity:.9,fontWeight:600 }}>
+                {bilan.isPartial
+                  ? "Continue à tout enregistrer ✦"
+                  : `${bilan.daysOk} jour${bilan.daysOk>1?"s":""} dans la cible ✦`}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* ── RÉGULARITÉ ── */}
+        <SecHead
+          title="Régularité du suivi"
+          sub="La constance crée les résultats."
+          color={GRN}
+        />
+        <div style={{ borderRadius:20,padding:"18px",
+          background:"linear-gradient(140deg,#F0FDF4,#FFF8F0)",
+          border:"1px solid rgba(16,185,129,0.16)",
+          boxShadow:"0 1px 3px rgba(16,24,40,0.05),0 8px 20px rgba(16,24,40,0.07)",
+          marginBottom:20 }}>
+          {/* Header : chiffre + illustration calendrier */}
+          <div style={{ display:"flex",alignItems:"flex-start",justifyContent:"space-between",marginBottom:16 }}>
+            <div>
+              <div style={{ display:"flex",alignItems:"baseline",gap:8 }}>
+                <span style={{ fontFamily:SERIF,fontSize:34,fontWeight:400,
+                  letterSpacing:-1.5,lineHeight:1,color:TEXT,...NUM }}>
+                  {bilan.nbLogged}
+                </span>
+                <span style={{ fontSize:14,color:DIM,fontFamily:FONT }}>
+                  /{(repasHistory||[]).length}
+                </span>
+              </div>
+              <div style={{ fontSize:12,color:MID,fontWeight:600,fontFamily:FONT,marginTop:3 }}>
+                jours renseignés
+              </div>
+            </div>
+            {/* Illustration calendrier */}
+            <svg width="82" height="68" viewBox="0 0 86 72" fill="none">
+              <rect x="10" y="14" width="66" height="52" rx="8" fill="#EEF2FB" stroke="#C9D6F0" strokeWidth="2"/>
+              <rect x="10" y="14" width="66" height="15" rx="8" fill="#DBE6FB"/>
+              <path d="M24 8v12M62 8v12" stroke="#9DB5E6" strokeWidth="3.5" strokeLinecap="round"/>
+              <path d="M26 44l5 5 9-11" stroke="#3B82F6" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+              <circle cx="56" cy="48" r="3.2" fill="#CDD9F1"/>
+            </svg>
+          </div>
+
+          <StreakGrid days={repasHistory} calObj={calObj}/>
+
+          <div style={{ display:"flex",gap:14,paddingTop:11,
+            borderTop:"1px solid rgba(16,185,129,0.10)",flexWrap:"wrap" }}>
+            {[
+              { color:GRN, label:"Atteint" },
+              { color:AMB, label:"Proche cible" },
+              { color:RED, bg:"rgba(248,113,113,0.15)", label:"Hors cible" },
+              { bg:"rgba(0,0,0,0.03)", bd:"1.5px dashed rgba(18,26,48,0.12)", label:"Non renseigné" },
+            ].map((x,i) => (
+              <div key={i} style={{ display:"flex",alignItems:"center",gap:6,
+                fontSize:11,color:MID,fontFamily:FONT }}>
+                <span style={{ width:9,height:9,borderRadius:3,flexShrink:0,
+                  background:x.bg||x.color,border:x.bd||"none" }}/>
+                {x.label}
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* ── MACRONUTRIMENTS ── */}
         <SecHead
           title="Macronutriments"
@@ -498,143 +648,6 @@ export default function BilanNutrition({
           onOpen={onOpenArchive}
         />
 
-        {/* ── COHÉRENCE — HERO CARD ── */}
-        <SecHead
-          title="Cohérence Nutrition"
-          sub="Ton alimentation soutient-elle ta progression ?"
-          color={BL}
-          style={{ marginTop:20 }}
-        />
-        <div style={{
-          borderRadius:22,padding:"22px 20px",marginTop:11,
-          background:"linear-gradient(140deg,#1E3A8A 0%,#4C1D95 52%,#9D174D 100%)",
-          boxShadow:"0 12px 40px rgba(99,102,241,0.38)",
-          color:"white",display:"flex",alignItems:"center",gap:18,
-          position:"relative",overflow:"hidden",marginBottom:20
-        }}>
-          {/* Orbes décoratifs */}
-          <div style={{ position:"absolute",top:-50,right:-30,width:160,height:160,
-            borderRadius:"50%",background:"rgba(255,255,255,0.06)",pointerEvents:"none" }}/>
-          <div style={{ position:"absolute",bottom:-25,left:10,width:90,height:90,
-            borderRadius:"50%",background:"rgba(255,255,255,0.04)",pointerEvents:"none" }}/>
-
-          {/* Ring : score réel si complet, complétude si partiel */}
-          {bilan.isPartial ? (
-            <div style={{ position:"relative",width:108,height:108,flexShrink:0 }}>
-              <svg width="108" height="108" style={{ position:"absolute",inset:0 }}>
-                <circle cx="54" cy="54" r="48" fill="none" stroke="rgba(255,255,255,0.14)" strokeWidth={11}/>
-                <circle cx="54" cy="54" r="48" fill="none" stroke="white" strokeWidth={11}
-                  strokeLinecap="round"
-                  strokeDasharray={2*Math.PI*48}
-                  strokeDashoffset={go ? (1-Math.min(bilan.nbLogged/MIN_DAYS_FULL_BILAN,1))*(2*Math.PI*48) : (2*Math.PI*48)}
-                  transform="rotate(-90 54 54)"
-                  style={{ transition:"stroke-dashoffset 1.5s cubic-bezier(.34,1.2,.64,1) .1s",
-                    filter:"drop-shadow(0 0 7px rgba(255,255,255,0.65))" }}
-                />
-              </svg>
-              <div style={{ position:"absolute",inset:0,display:"flex",alignItems:"center",
-                justifyContent:"center",flexDirection:"column",textAlign:"center" }}>
-                <div style={{ fontFamily:SERIF,fontSize:27,lineHeight:1,color:"white" }}>
-                  {bilan.nbLogged}<span style={{ fontSize:14,opacity:.65 }}>/{MIN_DAYS_FULL_BILAN}</span>
-                </div>
-                <div style={{ fontSize:10,opacity:.75,fontWeight:600,marginTop:3,fontFamily:FONT }}>
-                  jours complets
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div style={{ position:"relative",width:108,height:108,flexShrink:0 }}>
-              <svg width="108" height="108" style={{ position:"absolute",inset:0 }}>
-                <circle cx="54" cy="54" r="48" fill="none" stroke="rgba(255,255,255,0.14)" strokeWidth={11}/>
-                <circle cx="54" cy="54" r="48" fill="none" stroke="white" strokeWidth={11}
-                  strokeLinecap="round"
-                  strokeDasharray={2*Math.PI*48}
-                  strokeDashoffset={go ? (1-parseFloat(bilan.score)/10)*(2*Math.PI*48) : (2*Math.PI*48)}
-                  transform="rotate(-90 54 54)"
-                  style={{ transition:"stroke-dashoffset 1.5s cubic-bezier(.34,1.2,.64,1) .1s",
-                    filter:"drop-shadow(0 0 7px rgba(255,255,255,0.65))" }}
-                />
-              </svg>
-              <div style={{ position:"absolute",inset:0,display:"flex",alignItems:"center",
-                justifyContent:"center",flexDirection:"column",textAlign:"center" }}>
-                <div style={{ fontFamily:SERIF,fontSize:32,lineHeight:1,color:"white" }}>
-                  {bilan.score}
-                </div>
-                <div style={{ fontSize:10,opacity:.75,fontWeight:600,marginTop:3,fontFamily:FONT }}>
-                  sur 10
-                </div>
-              </div>
-            </div>
-          )}
-
-          <div style={{ flex:1 }}>
-            {bilan.isPartial ? (
-              <div style={{ display:"inline-flex",alignItems:"center",gap:6,fontSize:10.5,
-                fontWeight:800,color:"rgba(255,255,255,0.92)",
-                background:"rgba(255,255,255,0.16)",padding:"4px 10px",borderRadius:8,fontFamily:FONT }}>
-                <I name="lock" size={11} color="rgba(255,255,255,0.9)"/> Score dans {Math.max(0,MIN_DAYS_FULL_BILAN-bilan.nbLogged)} jours
-              </div>
-            ) : (
-              <div style={{ display:"inline-block",fontSize:10.5,fontWeight:800,
-                color:"rgba(255,255,255,0.92)",background:"rgba(255,255,255,0.16)",
-                padding:"4px 10px",borderRadius:8,fontFamily:FONT }}>
-                Objectif · {obj?.l || "Prise de muscle"}
-              </div>
-            )}
-            <div style={{ fontFamily:SERIF,fontSize:28,color:"white",marginTop:11,
-              letterSpacing:-.5,lineHeight:1 }}>
-              {avgKcalP} <span style={{ fontFamily:FONT,fontSize:13,fontWeight:600,opacity:.72 }}>kcal/j moy.</span>
-            </div>
-            <div style={{ fontSize:11.5,opacity:.72,marginTop:6,lineHeight:1.55,fontFamily:FONT }}>
-              Cible : {calObj} kcal/j · {pctKcalP}% atteint<br/>
-              <span style={{ opacity:.9,fontWeight:600 }}>
-                {bilan.isPartial ? "Continue à tout enregistrer ✦" : `${bilan.daysOk} jour${bilan.daysOk>1?"s":""} dans la cible ✦`}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* ── RÉGULARITÉ ── */}
-        <SecHead
-          title="Régularité du suivi"
-          sub="La constance crée les résultats."
-          color={GRN}
-        />
-        <div style={{ borderRadius:20,padding:"16px 18px",
-          background:"linear-gradient(140deg,#F0FDF4,#FFF8F0)",
-          border:"1px solid rgba(16,185,129,0.15)",
-          boxShadow:"0 1px 3px rgba(16,24,40,0.05),0 8px 20px rgba(16,24,40,0.07)",
-          marginBottom:16 }}>
-          <div style={{ display:"flex",justifyContent:"space-between",alignItems:"baseline",marginBottom:14 }}>
-            <div style={{ display:"flex",alignItems:"baseline",gap:8 }}>
-              <div style={{ fontFamily:SERIF,fontSize:34,fontWeight:400,
-                letterSpacing:-1.5,lineHeight:1,color:TEXT,...NUM }}>
-                {bilan.nbLogged}
-                <span style={{ fontSize:14,color:DIM,marginLeft:4,fontFamily:FONT }}>
-                  /{(repasHistory||[]).length}
-                </span>
-              </div>
-              <div style={{ fontSize:12,color:MID,fontWeight:600,fontFamily:FONT }}>jours renseignés</div>
-            </div>
-          </div>
-          <StreakGrid days={repasHistory} calObj={calObj}/>
-          <div style={{ display:"flex",gap:14,paddingTop:11,
-            borderTop:"1px solid rgba(0,0,0,0.04)",flexWrap:"wrap" }}>
-            {[
-              { color:GRN, label:"Atteint" },
-              { color:AMB, label:"Proche" },
-              { color:RED, label:"Hors cible", bg:"rgba(248,113,113,0.15)" },
-              { bg:"rgba(0,0,0,0.02)", bd:"1px dashed rgba(0,0,0,0.10)", label:"Non renseigné" },
-            ].map((x,i) => (
-              <div key={i} style={{ display:"flex",alignItems:"center",gap:6,
-                fontSize:11,color:MID,fontFamily:FONT }}>
-                <span style={{ width:8,height:8,borderRadius:2,
-                  background:x.bg||x.color,border:x.bd,flexShrink:0 }}/>
-                {x.label}
-              </div>
-            ))}
-          </div>
-        </div>
       </div>
     );
   };
