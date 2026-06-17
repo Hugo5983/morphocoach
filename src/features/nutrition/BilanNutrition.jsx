@@ -259,9 +259,9 @@ function StreakGrid({ days, calObj }) {
   };
 
   const STYLES = {
-    ok:    { bg:"linear-gradient(135deg,#34D399,#059669)", shadow:"0 4px 12px rgba(5,150,105,0.38)", bd:"none" },
-    warn:  { bg:"linear-gradient(135deg,#FCD34D,#F59E0B)", shadow:"0 4px 12px rgba(245,158,11,0.32)", bd:"none" },
-    bad:   { bg:"rgba(248,113,113,0.14)", shadow:"none", bd:"1px solid rgba(248,113,113,0.28)" },
+    ok:    { bg:"linear-gradient(135deg,#2EE89A,#059669)", shadow:"0 5px 14px rgba(5,150,105,0.45)", bd:"none" },
+    warn:  { bg:"linear-gradient(135deg,#FFD15C,#F59E0B)", shadow:"0 5px 14px rgba(245,158,11,0.42)", bd:"none" },
+    bad:   { bg:"linear-gradient(135deg,#F87171,#DC2626)", shadow:"0 5px 14px rgba(220,38,38,0.40)", bd:"none" },
     empty: { bg:"transparent", shadow:"none", bd:"1.5px dashed rgba(18,26,48,0.13)" },
   };
 
@@ -284,6 +284,11 @@ function StreakGrid({ days, calObj }) {
               {st==="warn" && (
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3.2" strokeLinecap="round">
                   <path d="M5 12h14"/>
+                </svg>
+              )}
+              {st==="bad" && (
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round">
+                  <path d="M18 6L6 18M6 6l12 12"/>
                 </svg>
               )}
             </div>
@@ -546,11 +551,9 @@ export default function BilanNutrition({
               <div style={{ display:"flex",alignItems:"baseline",gap:8 }}>
                 <span style={{ fontFamily:SERIF,fontSize:34,fontWeight:400,
                   letterSpacing:-1.5,lineHeight:1,color:TEXT,...NUM }}>
-                  {bilan.nbLogged}
+                  {(repasHistory||[]).slice(-7).filter(d=>d&&d.kcal&&d.kcal>0).length}
                 </span>
-                <span style={{ fontSize:14,color:DIM,fontFamily:FONT }}>
-                  /{(repasHistory||[]).length}
-                </span>
+                <span style={{ fontSize:14,color:DIM,fontFamily:FONT }}>/7</span>
               </div>
               <div style={{ fontSize:12,color:MID,fontWeight:600,fontFamily:FONT,marginTop:3 }}>
                 jours renseignés
