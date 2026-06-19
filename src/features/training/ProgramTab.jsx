@@ -388,14 +388,14 @@ function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, curVol, currentWe
     </div>
   );
   const detailBox = (key, children) => exp===key ? (
-    <div style={{marginTop:12,paddingTop:12,borderTop:`1px solid ${C.bd}`,fontSize:12,color:"${C.mid}",lineHeight:1.6,fontFamily:DISP_F}}>{children}</div>
+    <div style={{marginTop:12,paddingTop:12,borderTop:`1px solid ${C.bd}`,fontSize:12,color:C.mid,lineHeight:1.6,fontFamily:DISP_F}}>{children}</div>
   ) : null;
   const reco = (icon, txt) => (
     <div style={{marginTop:10,padding:"10px 12px",background:"rgba(59,130,246,0.07)",border:"1px solid rgba(59,130,246,0.18)",borderRadius:10,display:"flex",gap:9,alignItems:"flex-start"}}>
-      <span style={{fontSize:14,flexShrink:0}}>{icon}</span><div style={{fontSize:11.5,color:"${C.mid}",lineHeight:1.5}}>{txt}</div>
+      <span style={{fontSize:14,flexShrink:0}}>{icon}</span><div style={{fontSize:11.5,color:C.mid,lineHeight:1.5}}>{txt}</div>
     </div>
   );
-  const lbl = {fontSize:9,fontWeight:700,letterSpacing:"1.2px",textTransform:"uppercase",color:"${C.dim}",marginBottom:6,fontFamily:DISP_F};
+  const lbl = {fontSize:9,fontWeight:700,letterSpacing:"1.2px",textTransform:"uppercase",color:C.dim,marginBottom:6,fontFamily:DISP_F};
   const badge = (bg,col,txt) => <span style={{fontSize:9,fontWeight:700,padding:"4px 9px",borderRadius:99,background:bg,color:col,whiteSpace:"nowrap",fontFamily:DISP_F}}>{txt}</span>;
   const demoBadge = badge("rgba(245,158,11,0.12)","#F59E0B","Démo · active le suivi");
 
@@ -413,7 +413,7 @@ function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, curVol, currentWe
           </button>
           <div style={{fontSize:9,fontWeight:700,letterSpacing:"1.8px",textTransform:"uppercase",color:C.blue,fontFamily:DISP_F,marginBottom:5}}>Mésocycle · Semaine {currentWeek+1} / 6</div>
           <div style={{fontFamily:SERIF_F,fontSize:25,letterSpacing:-0.8,lineHeight:1.1}}>Analyse <span style={{fontStyle:"italic",color:"#60A5FA"}}>de charge</span></div>
-          <div style={{fontSize:11,color:"${C.dim}",marginTop:4,fontFamily:DISP_F}}>{WEEKS[currentWeek].type==="Déload"?"Phase de récupération":WEEKS[currentWeek].type==="Pic"?"Phase de pic":"Phase d'accumulation"} · Hypertrophie</div>
+          <div style={{fontSize:11,color:C.dim,marginTop:4,fontFamily:DISP_F}}>{WEEKS[currentWeek].type==="Déload"?"Phase de récupération":WEEKS[currentWeek].type==="Pic"?"Phase de pic":"Phase d'accumulation"} · Hypertrophie</div>
         </div>
 
         {/* 1. VOLUME vs MEV/MAV/MRV (RÉEL) */}
@@ -421,7 +421,7 @@ function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, curVol, currentWe
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
             <div>
               <div style={lbl}>Volume vs capacité de récupération</div>
-              <div><span style={{fontSize:30,fontWeight:800,color:nearMRV?"#F59E0B":"#34D399",letterSpacing:-1}}>{curVol}</span> <span style={{fontSize:13,fontWeight:600,color:"${C.dim}"}}>séries cette sem.</span></div>
+              <div><span style={{fontSize:30,fontWeight:800,color:nearMRV?"#F59E0B":"#34D399",letterSpacing:-1}}>{curVol}</span> <span style={{fontSize:13,fontWeight:600,color:C.dim}}>séries cette sem.</span></div>
             </div>
             {nearMRV ? badge("rgba(245,158,11,0.15)","#F59E0B","Limite proche") : badge("rgba(52,211,153,0.15)","#34D399","Zone optimale")}
           </div>
@@ -447,10 +447,10 @@ function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, curVol, currentWe
           {expandRow("vol","Lire les seuils MEV / MAV / MRV")}
           {detailBox("vol", <>
             Chaque muscle a des seuils de volume hebdo (en séries) :<br/>
-            • <b style={{color:"${C.text}"}}>MEV</b> ({MEV}) minimum efficace — sous ce seuil, pas de gain<br/>
-            • <b style={{color:"${C.text}"}}>MAV</b> ({MAV}) volume adaptatif optimal — la zone de progression<br/>
-            • <b style={{color:"${C.text}"}}>MRV</b> ({MRV}) max récupérable — plafond, au-delà = surentraînement
-            {reco("⚠️", <>Tu es à <b style={{color:"${C.text}"}}>{curVol} séries</b>{nearMRV?<>, proche de ton MRV ({MRV}). Le <b style={{color:"${C.text}"}}>déload S5 est essentiel</b> pour dissiper la fatigue.</>:<>, dans ta zone optimale. Continue la progression.</>}</>)}
+            • <b style={{color:C.text}}>MEV</b> ({MEV}) minimum efficace — sous ce seuil, pas de gain<br/>
+            • <b style={{color:C.text}}>MAV</b> ({MAV}) volume adaptatif optimal — la zone de progression<br/>
+            • <b style={{color:C.text}}>MRV</b> ({MRV}) max récupérable — plafond, au-delà = surentraînement
+            {reco("⚠️", <>Tu es à <b style={{color:C.text}}>{curVol} séries</b>{nearMRV?<>, proche de ton MRV ({MRV}). Le <b style={{color:C.text}}>déload S5 est essentiel</b> pour dissiper la fatigue.</>:<>, dans ta zone optimale. Continue la progression.</>}</>)}
           </>)}
         </>)}
 
@@ -527,7 +527,7 @@ function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, curVol, currentWe
                   </span>
                 </div>
                 {!hasData && (
-                  <div style={{fontSize:10,color:"${C.dim}",fontFamily:DISP_F,fontStyle:"italic"}}>
+                  <div style={{fontSize:10,color:C.dim,fontFamily:DISP_F,fontStyle:"italic"}}>
                     Log sommeil + mobilité pour activer
                   </div>
                 )}
@@ -535,7 +535,7 @@ function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, curVol, currentWe
             </div>
             {expandRow("ready","Que faire avec ce score ?")}
             {detailBox("ready", <>
-              Le <b style={{color:"${C.text}"}}>score de récupération</b> combine la moyenne de sommeil des 7 derniers jours (55%) et le taux de mobilité complétée (45%).
+              Le <b style={{color:C.text}}>score de récupération</b> combine la moyenne de sommeil des 7 derniers jours (55%) et le taux de mobilité complétée (45%).
               {score!==null && score<60 && reco("⚠️","Score bas — réduis le volume cette semaine et priorise le sommeil. Sous 50, avance le déload.")}
               {score!==null && score>=60 && score<75 && reco("🎯","Fatigue modérée. Maintiens la charge mais dors plus. Cible : "+sTgt+"h/nuit.")}
               {score!==null && score>=75 && reco("✅","Bonne récupération. Tu peux progresser en charge cette semaine.")}
@@ -568,7 +568,7 @@ function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, curVol, currentWe
                   <span style={{fontSize:30,fontWeight:800,color:acwrCol,letterSpacing:-1}}>
                     {hasRatio ? ratio.toFixed(2) : "—"}
                   </span>
-                  {' '}<span style={{fontSize:13,fontWeight:600,color:"${C.dim}"}}>{acwrLabel}</span>
+                  {' '}<span style={{fontSize:13,fontWeight:600,color:C.dim}}>{acwrLabel}</span>
                 </div>
               </div>
               {liveBadge}
@@ -576,7 +576,7 @@ function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, curVol, currentWe
             {insufficient ? (
               <div style={{margin:"14px 0 4px"}}>
                 <div style={{fontSize:12,color:"#374151",lineHeight:1.5,fontFamily:DISP_F,marginBottom:10}}>
-                  L'ACWR a besoin d'au moins <b style={{color:"${C.text}"}}>{need} jours</b> d'entraînement loggé pour établir une base chronique fiable. On ne l'invente pas avant.
+                  L'ACWR a besoin d'au moins <b style={{color:C.text}}>{need} jours</b> d'entraînement loggé pour établir une base chronique fiable. On ne l'invente pas avant.
                 </div>
                 <div style={{height:8,borderRadius:99,background:"rgba(0,0,0,0.05)",overflow:"hidden"}}>
                   <div style={{height:"100%",width:`${Math.min(100,Math.round((spanDays/need)*100))}%`,background:"linear-gradient(90deg,#F59E0B,#FBBF24)",borderRadius:99,transition:"width .6s"}}/>
@@ -594,16 +594,16 @@ function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, curVol, currentWe
               <div style={{display:"flex",gap:12,marginTop:16}}>
                 {[{l:"Charge 7j",v:acute+" kg"},{l:"Moyenne/sem 28j",v:chronic+" kg"}].map(({l,v})=>(
                   <div key={l} style={{flex:1,background:"rgba(0,0,0,0.03)",borderRadius:10,padding:"8px 10px"}}>
-                    <div style={{fontSize:8,color:"${C.dim}",textTransform:"uppercase",letterSpacing:"1px",fontFamily:DISP_F}}>{l}</div>
-                    <div style={{fontSize:14,fontWeight:700,color:"${C.text}",marginTop:3,fontFamily:DISP_F}}>{v}</div>
+                    <div style={{fontSize:8,color:C.dim,textTransform:"uppercase",letterSpacing:"1px",fontFamily:DISP_F}}>{l}</div>
+                    <div style={{fontSize:14,fontWeight:700,color:C.text,marginTop:3,fontFamily:DISP_F}}>{v}</div>
                   </div>
                 ))}
               </div>
             )}
             {expandRow("acwr","Pourquoi c'est crucial")}
             {detailBox("acwr", <>
-              L'<b style={{color:"${C.text}"}}>ACWR</b> compare ta charge des 7 derniers jours à ta moyenne 28 jours. Indicateur n°1 du <b style={{color:"${C.text}"}}>risque de blessure</b>.<br/><br/>
-              • <b style={{color:"${C.text}"}}>0,8–1,3</b> : adaptation optimale · <b style={{color:"${C.text}"}}>&gt;1,5</b> : pic dangereux · <b style={{color:"${C.text}"}}>&lt;0,8</b> : désentraînement
+              L'<b style={{color:C.text}}>ACWR</b> compare ta charge des 7 derniers jours à ta moyenne 28 jours. Indicateur n°1 du <b style={{color:C.text}}>risque de blessure</b>.<br/><br/>
+              • <b style={{color:C.text}}>0,8–1,3</b> : adaptation optimale · <b style={{color:C.text}}>&gt;1,5</b> : pic dangereux · <b style={{color:C.text}}>&lt;0,8</b> : désentraînement
               {insufficient && reco("⏳",`Continue à logger tes séances : encore ${Math.max(0,need-spanDays)} jour(s) avant un ACWR fiable.`)}
               {hasRatio && ratio >= 1.3 && reco("⚠️",`À ${ratio}, tu approches la zone de risque. Évite d'augmenter le volume cette semaine.`)}
               {hasRatio && ratio >= 0.8 && ratio < 1.3 && reco("✅",`À ${ratio} tu progresses sans danger. Continue la progression planifiée.`)}
@@ -648,8 +648,8 @@ function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, curVol, currentWe
                 <div key={k} style={{display:"flex",alignItems:"center",gap:11,padding:"9px 0",borderBottom:k<3?"1px solid rgba(0,0,0,0.03)":"none"}}>
                   <div style={{width:34,height:34,borderRadius:10,background:bg,display:"grid",placeItems:"center",flexShrink:0,fontSize:15}}>{ic}</div>
                   <div style={{flex:1}}>
-                    <div style={{fontSize:13,fontWeight:600,color:"${C.text}",fontFamily:DISP_F}}>{t}</div>
-                    <div style={{fontSize:10.5,color:"${C.dim}",marginTop:1,fontFamily:DISP_F}}>{s}</div>
+                    <div style={{fontSize:13,fontWeight:600,color:C.text,fontFamily:DISP_F}}>{t}</div>
+                    <div style={{fontSize:10.5,color:C.dim,marginTop:1,fontFamily:DISP_F}}>{s}</div>
                   </div>
                   {badge(`${col}15`,col,st)}
                 </div>
@@ -670,7 +670,7 @@ function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, curVol, currentWe
               return (
                 <div style={{marginTop:10,padding:"12px 12px 8px",background:"rgba(0,0,0,0.02)",borderRadius:12}}>
                   <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}>
-                    <span style={{fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:"${C.dim}",fontFamily:DISP_F}}>Sommeil · 14 jours</span>
+                    <span style={{fontSize:9,fontWeight:700,letterSpacing:"1px",textTransform:"uppercase",color:C.dim,fontFamily:DISP_F}}>Sommeil · 14 jours</span>
                     <span style={{fontSize:10,color:"#9CA3AF",fontFamily:DISP_F}}>cible {slpTgt}h</span>
                   </div>
                   <div style={{position:"relative",display:"flex",alignItems:"flex-end",gap:3,height:54}}>
@@ -693,7 +693,7 @@ function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, curVol, currentWe
 
             {expandRow("over","Interprétation coach")}
             {detailBox("over", <>
-              <b style={{color:"${C.text}"}}>Sommeil</b> et <b style={{color:"${C.text}"}}>performance</b> sont calculés en temps réel depuis tes logs.
+              <b style={{color:C.text}}>Sommeil</b> et <b style={{color:C.text}}>performance</b> sont calculés en temps réel depuis tes logs.
               FC repos et Motivation arriveront avec le check-in hebdo (20 s).
               {alertCount>=2 && reco("🩺","2+ signaux en rouge. Réduis le volume cette semaine et priorise le sommeil.")}
               {alertCount===1 && reco("⚠️","1 signal alerte. Surveille ta récup, un déload préventif peut être bénéfique.")}
@@ -738,7 +738,7 @@ function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, curVol, currentWe
                   <span style={{fontSize:30,fontWeight:800,color:pctCol,letterSpacing:-1}}>
                     {pct!==null ? `${pct>=0?'+':''}${pct}` : "–"}
                   </span>
-                  {' '}<span style={{fontSize:13,fontWeight:600,color:"${C.dim}"}}>
+                  {' '}<span style={{fontSize:13,fontWeight:600,color:C.dim}}>
                     {hasProg ? `% sur ${sessions.length} séances` : hasAny ? "1 séance seulement" : "Log des charges pour activer"}
                   </span>
                 </div>
@@ -804,7 +804,7 @@ function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, curVol, currentWe
             )}
             {expandRow("rm","Détail de la progression")}
             {detailBox("rm", <>
-              Le <b style={{color:"${C.text}"}}>1RM estimé</b> est calculé via la formule d'Epley sur tes meilleures séries : <code>poids × (1 + reps/30)</code>. La courbe suit ton 1RM réel séance après séance.
+              Le <b style={{color:C.text}}>1RM estimé</b> est calculé via la formule d'Epley sur tes meilleures séries : <code>poids × (1 + reps/30)</code>. La courbe suit ton 1RM réel séance après séance.
               {hasProg && pct!==null && pct>=2 && reco("📈",`Progression saine (+${pct}%) sur ${exLabel}. Continue la périodisation.`)}
               {hasProg && pct!==null && pct<0 && reco("⚠️",`Baisse détectée sur ${exLabel}. Vérifie ton sommeil et ton volume total.`)}
               {!hasProg && reco("💡","Logge des charges en séance Focus Mode pour voir ta courbe de progression réelle.")}
@@ -910,7 +910,7 @@ function ProgrammeView(props) {
       {confirmDel && (
         <div style={{position:"fixed",inset:0,background:"rgba(15,26,46,0.55)",zIndex:500,display:"flex",alignItems:"center",justifyContent:"center",padding:20}}>
           <div style={{background:C.s1,borderRadius:16,padding:"22px 20px",width:"100%",maxWidth:340}}>
-            <div style={{fontFamily:DISP_F,fontSize:16,fontWeight:500,marginBottom:8,color:"${C.text}"}}>
+            <div style={{fontFamily:DISP_F,fontSize:16,fontWeight:500,marginBottom:8,color:C.text}}>
               {confirmDel.type==="prog" ? "Supprimer ce programme ?" : "Supprimer cette séance ?"}
             </div>
             <div style={{fontSize:12,color:"#374151",marginBottom:20,lineHeight:1.5}}>
@@ -956,6 +956,11 @@ function ProgrammeView(props) {
       {/* ── Programme actif ── */}
       {prog && prog.jours?.length > 0 && (<>
 
+        {/* Label section */}
+        <div style={{ fontSize:13, fontWeight:700, color:C.text, fontFamily:DISP_F, marginBottom:10 }}>
+          Séances du programme
+        </div>
+
         {/* Séances accordion */}
         {prog.jours.map((j, jIdx) => {
           const int  = INT[j.intensite||"modere"];
@@ -963,34 +968,51 @@ function ProgrammeView(props) {
           const isOpen = openJour===jIdx;
           const exos = j.exercices||[];
           return (
-            <div key={jIdx} style={{background:C.s1,border:`1px solid ${isOpen?int.c+"40":C.bd}`,borderRadius:18,marginBottom:10,overflow:"hidden",transition:"border-color .2s"}}>
-              <div style={{display:"flex",alignItems:"center",gap:12,padding:"13px 14px",cursor:"pointer"}} onClick={()=>setOpenJour(isOpen?null:jIdx)}>
-                <div style={{width:46,height:46,borderRadius:13,background:int.c,border:"none",color:"#fff",display:"grid",placeItems:"center",flexShrink:0,fontFamily:DISP_F,fontSize:12,fontWeight:800,boxShadow:`0 4px 12px ${int.c}55`}}>
+            <div key={jIdx} style={{
+              background:C.s1,
+              border:`1px solid ${isOpen ? int.c+"35" : C.bd}`,
+              borderRadius:18, marginBottom:10, overflow:"hidden",
+              boxShadow:"0 1px 8px rgba(15,25,35,0.06)",
+              transition:"border-color .2s, box-shadow .2s",
+            }}>
+              <div style={{display:"flex",alignItems:"center",gap:13,padding:"14px 14px",cursor:"pointer"}} onClick={()=>setOpenJour(isOpen?null:jIdx)}>
+                {/* Badge jour */}
+                <div style={{
+                  width:50,height:50,borderRadius:14,
+                  background:int.c, color:"#fff",
+                  display:"grid",placeItems:"center",
+                  flexShrink:0, fontFamily:DISP_F,
+                  fontSize:12,fontWeight:800,
+                  boxShadow:`0 4px 14px ${int.c}55`,
+                }}>
                   {j.focus||j.nom?.slice(0,3)||"—"}
                 </div>
+                {/* Infos */}
                 <div style={{flex:1,minWidth:0}}>
-                  <div style={{fontSize:15,fontWeight:700,color:"${C.text}",letterSpacing:-0.2,fontFamily:DISP_F}}>{j.nom}</div>
-                  <div style={{display:"flex",alignItems:"center",gap:6,marginTop:3,fontSize:11.5,color:"#374151",fontFamily:DISP_F}}>
+                  <div style={{fontSize:15,fontWeight:700,color:C.text,letterSpacing:-0.2,fontFamily:DISP_F}}>{j.nom}</div>
+                  <div style={{display:"flex",alignItems:"center",gap:6,marginTop:4,fontSize:11.5,color:C.mid,fontFamily:DISP_F}}>
                     <span style={{width:6,height:6,borderRadius:"50%",background:int.c,boxShadow:`0 0 5px ${int.c}60`,flexShrink:0}}/>
                     {int.l} · {exos.length} exercice{exos.length!==1?"s":""}{dur?` · ~${dur} min`:""}
                   </div>
                 </div>
+                {/* Bouton éditer */}
                 <button onClick={e=>{e.stopPropagation();setSelectedJour({jIdx});}}
-                  style={{width:34,height:34,borderRadius:10,background:"rgba(59,130,246,0.08)",border:"1px solid rgba(59,130,246,0.22)",color:"#60A5FA",cursor:"pointer",display:"grid",placeItems:"center",flexShrink:0,fontSize:14}}>✏️</button>
-                <div style={{color:"#374151",fontSize:18,transition:"transform .2s",transform:isOpen?"rotate(180deg)":"rotate(0)",flexShrink:0}}>⌄</div>
+                  style={{width:34,height:34,borderRadius:10,background:"rgba(59,130,246,0.07)",border:"1px solid rgba(59,130,246,0.18)",color:"#60A5FA",cursor:"pointer",display:"grid",placeItems:"center",flexShrink:0,fontSize:14}}>✏️</button>
+                {/* Chevron */}
+                <div style={{color:C.dim,fontSize:18,transition:"transform .2s",transform:isOpen?"rotate(180deg)":"rotate(0)",flexShrink:0}}>⌄</div>
               </div>
               {isOpen && (
                 <div style={{borderTop:`1px solid ${C.bd}`,padding:"8px 14px 14px"}}>
                   {exos.length===0
-                    ? <div style={{textAlign:"center",padding:"12px 0",fontSize:11,color:"${C.dim}",fontFamily:DISP_F}}>Aucun exercice — tape ✏️ pour en ajouter</div>
+                    ? <div style={{textAlign:"center",padding:"12px 0",fontSize:11,color:C.dim,fontFamily:DISP_F}}>Aucun exercice — tape ✏️ pour en ajouter</div>
                     : exos.map((ex,k) => (
                       <div key={k} style={{display:"flex",alignItems:"flex-start",gap:11,padding:"9px 0",borderBottom:k<exos.length-1?"1px solid rgba(0,0,0,0.03)":"none"}}>
                         <div style={{width:30,height:30,borderRadius:9,background:`${cc(ex.cat)}20`,border:`1px solid ${cc(ex.cat)}35`,color:cc(ex.cat),display:"grid",placeItems:"center",fontFamily:DISP_F,fontSize:11,fontWeight:800,flexShrink:0}}>{k+1}</div>
                         <div style={{flex:1,minWidth:0}}>
-                          <div style={{fontSize:13.5,fontWeight:700,color:"${C.text}",fontFamily:DISP_F,letterSpacing:-0.1}}>{ex.nom}</div>
-                          <div style={{fontSize:9,fontWeight:800,letterSpacing:"1px",color:"${C.dim}",textTransform:"uppercase",fontFamily:DISP_F,marginTop:2}}>{ex.cat||"Principal"}</div>
+                          <div style={{fontSize:13.5,fontWeight:700,color:C.text,fontFamily:DISP_F,letterSpacing:-0.1}}>{ex.nom}</div>
+                          <div style={{fontSize:9,fontWeight:800,letterSpacing:"1px",color:C.dim,textTransform:"uppercase",fontFamily:DISP_F,marginTop:2}}>{ex.cat||"Principal"}</div>
                         </div>
-                        <div style={{fontSize:12,fontWeight:600,color:"#374151",fontFamily:DISP_F,flexShrink:0,marginTop:2,textAlign:"right",whiteSpace:"nowrap"}}>
+                        <div style={{fontSize:12,fontWeight:600,color:C.mid,fontFamily:DISP_F,flexShrink:0,marginTop:2,textAlign:"right",whiteSpace:"nowrap"}}>
                           {ex.series}×{ex.reps} · {ex.repos}s
                         </div>
                       </div>
@@ -1017,7 +1039,7 @@ function ProgrammeView(props) {
             return (
               <div key={pIdx} style={{display:"flex",alignItems:"center",gap:10,padding:"10px 12px",background:C.s1,border:`1px solid ${C.bd}`,borderRadius:12,marginBottom:6}}>
                 <div style={{flex:1,minWidth:0}}>
-                  <div style={{fontSize:13,fontWeight:600,color:"${C.text}",fontFamily:DISP_F}}>{p.titre}</div>
+                  <div style={{fontSize:13,fontWeight:600,color:C.text,fontFamily:DISP_F}}>{p.titre}</div>
                   <div style={{fontSize:10.5,color:"#374151",marginTop:1}}>{p.jours?.length||0} séances</div>
                 </div>
                 <button onClick={()=>{setProg(p);push("✅","Programme activé",p.titre);}} style={{padding:"6px 10px",background:"rgba(52,211,153,0.10)",border:"1px solid rgba(52,211,153,0.25)",borderRadius:8,color:"#34D399",cursor:"pointer",fontSize:10,fontWeight:700,fontFamily:DISP_F}}>Activer</button>
@@ -1031,7 +1053,7 @@ function ProgrammeView(props) {
       {/* ── Empty state ── */}
       {allProgs.length === 0 && !showCreerForm && (
         <div style={{textAlign:"center",padding:"32px 0 16px"}}>
-          <div style={{fontFamily:SERIF_F,fontSize:22,fontWeight:400,color:"${C.text}",marginBottom:8}}>Aucun programme</div>
+          <div style={{fontFamily:SERIF_F,fontSize:22,fontWeight:400,color:C.text,marginBottom:8}}>Aucun programme</div>
           <div style={{fontSize:12,color:"#374151",lineHeight:1.6,maxWidth:240,margin:"0 auto 24px",fontFamily:DISP_F}}>Génère un programme IA adapté à ta morphologie ou crée-le manuellement.</div>
         </div>
       )}
