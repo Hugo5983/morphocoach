@@ -927,18 +927,26 @@ function ProgrammeView(props) {
       )}
 
       {/* ── Header ── */}
-      <div style={{ marginBottom:16 }}>
-        <div style={{ fontFamily:SERIF_F, fontSize:26, color:C.text, lineHeight:1.1, letterSpacing:-1 }}>
-          Ton <span style={{ fontStyle:"italic", color:C.blue }}>programme</span>
-        </div>
-        <div style={{ fontSize:12, color:C.dim, marginTop:5, fontFamily:DISP_F }}>
-          {prog ? `${prog.jours?.length||0} séances/sem · Semaine ${semN}` : "Crée ton premier programme pour commencer."}
+      <div style={{ marginBottom:16, display:"flex", alignItems:"flex-start", justifyContent:"space-between" }}>
+        <div>
+          <div style={{ fontFamily:SERIF_F, fontSize:26, color:C.text, lineHeight:1.1, letterSpacing:-1 }}>
+            Ton <span style={{ fontStyle:"italic", color:C.blue }}>programme</span>
+          </div>
+          <div style={{ fontSize:12, color:C.dim, marginTop:5, fontFamily:DISP_F }}>
+            {prog ? `${prog.jours?.length||0} séances/sem · Semaine ${semN}` : "Crée ton premier programme pour commencer."}
+          </div>
         </div>
         {prog && (
           <button onClick={()=>setConfirmDel({type:"prog",pIdx:progIdx})}
-            style={{ marginTop:10,background:"transparent",border:"none",color:"rgba(248,113,113,0.55)",cursor:"pointer",fontSize:12,fontFamily:DISP_F,fontWeight:600,padding:0,display:"flex",alignItems:"center",gap:5 }}>
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
-            Supprimer ce programme
+            style={{ padding:"8px 13px", borderRadius:11, background:C.s1,
+              border:`1px solid ${C.bd}`, display:"flex", alignItems:"center", gap:6,
+              cursor:"pointer", flexShrink:0, marginTop:4,
+              boxShadow:"0 1px 4px rgba(0,0,0,0.06)" }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={C.dim}
+              strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5Z"/>
+            </svg>
+            <span style={{ fontSize:12, fontWeight:600, color:C.dim, fontFamily:DISP_F }}>Éditer</span>
           </button>
         )}
       </div>
@@ -963,48 +971,55 @@ function ProgrammeView(props) {
 
         {/* Séances accordion */}
         {prog.jours.map((j, jIdx) => {
-          const int  = INT[j.intensite||"modere"];
-          const dur  = durOf(j);
+          const int    = INT[j.intensite||"modere"];
+          const dur    = durOf(j);
           const isOpen = openJour===jIdx;
-          const exos = j.exercices||[];
+          const exos   = j.exercices||[];
+          // Status dynamique basé sur semC
+          const jDone = jIdx < (semC||0);
+          const jNext = jIdx === (semC||0);
+          const status     = jDone ? "FAIT"     : jNext ? "PROCHAIN"  : "PLANIFIÉ";
+          const statusColor = jDone ? C.green   : jNext ? C.blue      : C.dim;
+          const statusBg    = jDone ? `${C.green}18` : jNext ? `${C.blue}14` : "rgba(107,114,128,0.07)";
           return (
             <div key={jIdx} style={{
-              background:C.s1,
-              border:`1px solid ${isOpen ? int.c+"35" : C.bd}`,
+              background:C.s1, border:`1px solid ${C.bd}`,
               borderRadius:18, marginBottom:10, overflow:"hidden",
               boxShadow:"0 1px 8px rgba(15,25,35,0.06)",
-              transition:"border-color .2s, box-shadow .2s",
             }}>
-              <div style={{display:"flex",alignItems:"center",gap:13,padding:"14px 14px",cursor:"pointer"}} onClick={()=>setOpenJour(isOpen?null:jIdx)}>
+              <div style={{display:"flex",alignItems:"center",gap:13,padding:"14px 14px",cursor:"pointer"}}
+                onClick={()=>setOpenJour(isOpen?null:jIdx)}>
                 {/* Badge jour */}
-                <div style={{
-                  width:50,height:50,borderRadius:14,
-                  background:int.c, color:"#fff",
-                  display:"grid",placeItems:"center",
-                  flexShrink:0, fontFamily:DISP_F,
-                  fontSize:12,fontWeight:800,
-                  boxShadow:`0 4px 14px ${int.c}55`,
-                }}>
+                <div style={{width:50,height:50,borderRadius:14,background:int.c,color:"#fff",
+                  display:"grid",placeItems:"center",flexShrink:0,fontFamily:DISP_F,fontSize:12,fontWeight:800,
+                  boxShadow:`0 4px 14px ${int.c}55`}}>
                   {j.focus||j.nom?.slice(0,3)||"—"}
                 </div>
                 {/* Infos */}
                 <div style={{flex:1,minWidth:0}}>
                   <div style={{fontSize:15,fontWeight:700,color:C.text,letterSpacing:-0.2,fontFamily:DISP_F}}>{j.nom}</div>
-                  <div style={{display:"flex",alignItems:"center",gap:6,marginTop:4,fontSize:11.5,color:C.mid,fontFamily:DISP_F}}>
-                    <span style={{width:6,height:6,borderRadius:"50%",background:int.c,boxShadow:`0 0 5px ${int.c}60`,flexShrink:0}}/>
-                    {int.l} · {exos.length} exercice{exos.length!==1?"s":""}{dur?` · ~${dur} min`:""}
+                  <div style={{fontSize:11.5,color:C.mid,marginTop:4,fontFamily:DISP_F}}>
+                    {int.l} · {exos.length} exercice{exos.length!==1?"s":""}{dur?` · ~${dur}min`:""}
                   </div>
                 </div>
-                {/* Bouton éditer */}
-                <button onClick={e=>{e.stopPropagation();setSelectedJour({jIdx});}}
-                  style={{width:34,height:34,borderRadius:10,background:"rgba(59,130,246,0.07)",border:"1px solid rgba(59,130,246,0.18)",color:"#60A5FA",cursor:"pointer",display:"grid",placeItems:"center",flexShrink:0,fontSize:14}}>✏️</button>
-                {/* Chevron */}
-                <div style={{color:C.dim,fontSize:18,transition:"transform .2s",transform:isOpen?"rotate(180deg)":"rotate(0)",flexShrink:0}}>⌄</div>
+                {/* Badge statut */}
+                <div style={{padding:"5px 10px",borderRadius:9,background:statusBg,flexShrink:0}}>
+                  <span style={{fontSize:10,fontWeight:700,letterSpacing:"0.5px",
+                    color:statusColor,fontFamily:DISP_F}}>{status}</span>
+                </div>
               </div>
               {isOpen && (
                 <div style={{borderTop:`1px solid ${C.bd}`,padding:"8px 14px 14px"}}>
+                  {/* Bouton éditer séance */}
+                  <button onClick={e=>{e.stopPropagation();setSelectedJour({jIdx});}}
+                    style={{display:"flex",alignItems:"center",gap:6,padding:"7px 12px",
+                      background:"rgba(59,130,246,0.07)",border:"1px solid rgba(59,130,246,0.16)",
+                      borderRadius:10,cursor:"pointer",marginBottom:10,color:"#60A5FA",
+                      fontSize:12,fontWeight:600,fontFamily:DISP_F}}>
+                    <span>✏️</span> Modifier la séance
+                  </button>
                   {exos.length===0
-                    ? <div style={{textAlign:"center",padding:"12px 0",fontSize:11,color:C.dim,fontFamily:DISP_F}}>Aucun exercice — tape ✏️ pour en ajouter</div>
+                    ? <div style={{textAlign:"center",padding:"12px 0",fontSize:11,color:C.dim,fontFamily:DISP_F}}>Aucun exercice — tape Modifier pour en ajouter</div>
                     : exos.map((ex,k) => (
                       <div key={k} style={{display:"flex",alignItems:"flex-start",gap:11,padding:"9px 0",borderBottom:k<exos.length-1?"1px solid rgba(0,0,0,0.03)":"none"}}>
                         <div style={{width:30,height:30,borderRadius:9,background:`${cc(ex.cat)}20`,border:`1px solid ${cc(ex.cat)}35`,color:cc(ex.cat),display:"grid",placeItems:"center",fontFamily:DISP_F,fontSize:11,fontWeight:800,flexShrink:0}}>{k+1}</div>
@@ -1024,7 +1039,10 @@ function ProgrammeView(props) {
           );
         })}
 
-        {/* Mésocycle */}
+        {/* Charge progressive */}
+        <div style={{fontSize:13,fontWeight:700,color:C.text,fontFamily:DISP_F,marginTop:6,marginBottom:10}}>
+          Charge progressive
+        </div>
         <MesocycleChart prog={prog} semC={semC} checkedEx={checkedEx} cycleStart={cycleStart}/>
 
       </>)}
@@ -1060,9 +1078,20 @@ function ProgrammeView(props) {
 
       {/* ── CTAs ── */}
       {!showCreerForm && (
-        <div style={{marginBottom:12}}>
-          <Btn onClick={()=>{ if(!premium) setPaywall(true); else setProgView("analyse"); }}>✨ Nouveau programme IA</Btn>
-          <Btn v="out" onClick={()=>{ setIsCreating(true); setCS(0); setNewP({nom:"",jours:[],seances:{}}); }}>+ Créer manuellement</Btn>
+        <div style={{marginBottom:12,display:"flex",gap:9}}>
+          <button onClick={()=>{ if(!premium) setPaywall(true); else setProgView("analyse"); }}
+            style={{flex:1,padding:"13px 10px",background:C.accent,color:"#fff",border:"none",
+              borderRadius:12,fontSize:13,fontWeight:700,fontFamily:DISP_F,cursor:"pointer",
+              boxShadow:"0 4px 16px -4px rgba(59,130,246,0.55)",
+              display:"flex",alignItems:"center",justifyContent:"center",gap:7}}>
+            <span>+</span> Nouveau programme IA
+          </button>
+          <button onClick={()=>{ setIsCreating(true); setCS(0); setNewP({nom:"",jours:[],seances:{}}); }}
+            style={{padding:"13px 16px",background:C.s1,color:C.mid,
+              border:`1px solid ${C.bd}`,borderRadius:12,fontSize:13,fontWeight:600,
+              fontFamily:DISP_F,cursor:"pointer",whiteSpace:"nowrap"}}>
+            Manuel
+          </button>
         </div>
       )}
 
