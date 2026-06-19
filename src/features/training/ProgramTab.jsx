@@ -9,29 +9,34 @@ import AnalyseIA from "../ai/AnalyseIA.jsx";
 import { findExInDB } from "../../utils/training.js";
 import { GuideExModal, SeanceDetailModal } from "./components/ProgramTabModals.jsx";
 
-// ─── COACH IA — CARTE ANALYSE SEMAINE ────────────────────────────────────────
-function CoachWeekCard({ semC, semN, totalJours, onAnalyse }) {
-  const F   = "'Outfit','DM Sans',system-ui,sans-serif";
+// ─── COACH IA — CARTE RÉCUPÉRATION ───────────────────────────────────────────
+function CoachWeekCard({ semC, semN, totalJours, onDetail }) {
+  const F    = "'Outfit','DM Sans',system-ui,sans-serif";
   const done  = semC || 0;
   const total = totalJours || 0;
+  const ratio = total > 0 ? done / total : 0;
+
+  // Métriques récupération
+  const fatigueLbl  = ratio < 0.35 ? "Basse"     : ratio < 0.70 ? "Modérée"   : "Élevée";
+  const fatigueCol  = ratio < 0.35 ? "#6EE7B7"   : ratio < 0.70 ? "#FCD34D"   : "#FCA5A5";
+  const recupPct    = Math.round(100 - ratio * 32);
+  const recupCol    = recupPct >= 80 ? "#6EE7B7"  : recupPct >= 60 ? "#FCD34D" : "#FCA5A5";
+  const risqueLbl   = ratio < 0.35 ? "Faible"    : ratio < 0.70 ? "Vigilance" : "Élevé";
+  const risqueCol   = ratio < 0.35 ? "#93C5FD"   : ratio < 0.70 ? "#FCD34D"   : "#FCA5A5";
 
   const title = done === 0
     ? "Lance ta semaine. 💪"
-    : total > 0 && done >= total
-    ? "Semaine accomplie ! 🔥"
-    : done >= Math.ceil((total||1) * 0.5)
-    ? "Tu es sur la bonne voie. 🔥"
-    : "Continue, chaque séance compte.";
+    : ratio >= 1 ? "Semaine accomplie ! 🔥"
+    : "Ton état de récupération";
 
   const sub = done === 0
-    ? `Programme de ${total} séance${total>1?"s":""} prêt. Lance-toi aujourd'hui pour garder le rythme.`
-    : `${done}/${total} séance${done>1?"s":""} complétée${done>1?"s":""} · Semaine ${semN}. ${done>=total?"Excellent travail cette semaine.":"Ton programme est bien suivi."}`;
+    ? `Programme de ${total} séance${total>1?"s":""} prêt · Semaine ${semN}. Lance-toi dès aujourd'hui pour garder le rythme.`
+    : `Fatigue ${fatigueLbl.toLowerCase()} · surveille la charge sur 48h. La semaine reste ${ratio < 0.70 ? "bien maîtrisée" : "chargée, pense à récupérer"}.`;
 
-  const fatigue = done >= (total||1) * 0.8 ? "Basse" : done >= (total||1) * 0.4 ? "Modérée" : "OK";
   const stats = [
-    { val:`${done}/${total}`, label:"Séances", color:"#6EE7B7" },
-    { val:`Sem. ${semN}`,     label:"Cycle",   color:"#93C5FD" },
-    { val: fatigue,           label:"Fatigue", color:"#FCD34D" },
+    { val: fatigueLbl,    label: "Fatigue", color: fatigueCol },
+    { val: `${recupPct}%`,label: "Récup.",  color: recupCol   },
+    { val: risqueLbl,     label: "Risque",  color: risqueCol  },
   ];
 
   return (
@@ -39,62 +44,43 @@ function CoachWeekCard({ semC, semN, totalJours, onAnalyse }) {
       background:"linear-gradient(145deg,#0D0B1E 0%,#12103A 55%,#1A1245 100%)",
       boxShadow:"0 12px 40px rgba(0,0,0,0.28), 0 0 0 1px rgba(255,255,255,0.06)",
       position:"relative" }}>
-      {/* Glows */}
       <div style={{ position:"absolute",top:-50,right:-30,width:190,height:190,
         borderRadius:"50%",background:"rgba(91,76,245,0.14)",pointerEvents:"none" }}/>
       <div style={{ position:"absolute",bottom:-25,left:-10,width:120,height:120,
         borderRadius:"50%",background:"rgba(59,130,246,0.09)",pointerEvents:"none" }}/>
-
       <div style={{ padding:"18px 16px 16px", position:"relative", zIndex:1 }}>
-        {/* Badges */}
         <div style={{ display:"flex", gap:8, marginBottom:14 }}>
           {[
-            { txt:"COACH IA",     bg:"rgba(99,102,241,0.25)", bd:"rgba(99,102,241,0.40)", c:"#A5B4FC" },
-            { txt:`SEMAINE ${semN}`, bg:"rgba(255,255,255,0.07)", bd:"rgba(255,255,255,0.10)", c:"rgba(255,255,255,0.55)" },
+            { txt:"COACH IA",      bg:"rgba(99,102,241,0.25)", bd:"rgba(99,102,241,0.40)", c:"#A5B4FC" },
+            { txt:`SEMAINE ${semN}`,bg:"rgba(255,255,255,0.07)", bd:"rgba(255,255,255,0.10)", c:"rgba(255,255,255,0.55)" },
           ].map((b,i) => (
-            <div key={i} style={{ padding:"5px 12px", borderRadius:40,
-              background:b.bg, border:`1px solid ${b.bd}` }}>
-              <span style={{ fontSize:9.5, fontWeight:800, letterSpacing:"1.4px",
-                color:b.c, fontFamily:F, textTransform:"uppercase" }}>{b.txt}</span>
+            <div key={i} style={{ padding:"5px 12px", borderRadius:40, background:b.bg, border:`1px solid ${b.bd}` }}>
+              <span style={{ fontSize:9.5, fontWeight:800, letterSpacing:"1.4px", color:b.c, fontFamily:F, textTransform:"uppercase" }}>{b.txt}</span>
             </div>
           ))}
         </div>
-
-        {/* Titre */}
-        <div style={{ fontFamily:F, fontSize:20, fontWeight:800, color:"#fff",
-          lineHeight:1.2, letterSpacing:"-0.3px", marginBottom:9 }}>{title}</div>
-
-        {/* Sous-titre */}
-        <div style={{ fontSize:12, color:"rgba(255,255,255,0.48)", lineHeight:1.6,
-          fontFamily:F, marginBottom:14 }}>{sub}</div>
-
-        {/* 3 mini stats */}
+        <div style={{ fontFamily:F, fontSize:22, fontWeight:800, color:"#fff", lineHeight:1.2, letterSpacing:"-0.3px", marginBottom:9 }}>{title}</div>
+        <div style={{ fontSize:12, color:"rgba(255,255,255,0.48)", lineHeight:1.6, fontFamily:F, marginBottom:16 }}>{sub}</div>
         <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:8, marginBottom:14 }}>
           {stats.map((s,i) => (
-            <div key={i} style={{ borderRadius:11, padding:"10px 8px",
-              background:"rgba(255,255,255,0.07)", border:"1px solid rgba(255,255,255,0.08)",
-              textAlign:"center" }}>
-              <div style={{ fontSize:14, fontWeight:800, color:s.color, fontFamily:F }}>{s.val}</div>
-              <div style={{ fontSize:8.5, color:"rgba(255,255,255,0.35)", fontFamily:F,
-                textTransform:"uppercase", letterSpacing:"0.7px", marginTop:3 }}>{s.label}</div>
+            <div key={i} style={{ borderRadius:11, padding:"11px 8px",
+              background:"rgba(255,255,255,0.07)", border:"1px solid rgba(255,255,255,0.08)", textAlign:"center" }}>
+              <div style={{ fontSize:15, fontWeight:800, color:s.color, fontFamily:F, lineHeight:1.1, marginBottom:4 }}>{s.val}</div>
+              <div style={{ fontSize:8.5, color:"rgba(255,255,255,0.35)", fontFamily:F, textTransform:"uppercase", letterSpacing:"0.9px" }}>{s.label}</div>
             </div>
           ))}
         </div>
-
-        {/* Boutons */}
         <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10 }}>
-          <button onClick={onAnalyse}
-            style={{ padding:"12px 10px", borderRadius:12, background:"#4F46E5",
-              border:"none", textAlign:"center", fontSize:13, fontWeight:700, color:"#fff",
-              fontFamily:F, boxShadow:"0 5px 18px -4px rgba(79,70,229,0.60)",
-              cursor:"pointer", lineHeight:1.3 }}>
-            Analyser ma semaine
+          <button style={{ padding:"13px 10px", borderRadius:12, background:"#4F46E5", border:"none",
+            textAlign:"center", fontSize:13, fontWeight:700, color:"#fff", fontFamily:F,
+            boxShadow:"0 5px 18px -4px rgba(79,70,229,0.60)", cursor:"pointer", lineHeight:1.3 }}>
+            Ajuster ma semaine
           </button>
-          <button style={{ padding:"12px 10px", borderRadius:12, cursor:"pointer",
-            background:"rgba(255,255,255,0.09)", border:"1px solid rgba(255,255,255,0.11)",
-            textAlign:"center", fontSize:13, fontWeight:700,
-            color:"rgba(255,255,255,0.70)", fontFamily:F, lineHeight:1.3 }}>
-            Ajuster le plan
+          <button onClick={onDetail}
+            style={{ padding:"13px 10px", borderRadius:12, cursor:"pointer",
+              background:"rgba(255,255,255,0.09)", border:"1px solid rgba(255,255,255,0.11)",
+              textAlign:"center", fontSize:13, fontWeight:700, color:"rgba(255,255,255,0.75)", fontFamily:F, lineHeight:1.3 }}>
+            Voir le détail
           </button>
         </div>
       </div>
@@ -179,29 +165,25 @@ function MesocycleChart({ prog, semC, checkedEx, cycleStart }) {
     <div onClick={()=>setOpen(true)}
       style={{background:C.s1,border:`1px solid ${C.bd}`,borderRadius:20,padding:"16px 16px 14px",marginBottom:16,cursor:"pointer"}}>
 
-      {/* Header */}
-      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:12}}>
-        <div style={{fontSize:15,fontWeight:700,color:C.text,fontFamily:DISP_F}}>Évolution des charges</div>
-        <div style={{display:"flex",gap:6}}>
-          {["7 jours","Mois"].map((l,i)=>(
-            <div key={i} style={{padding:"4px 11px",borderRadius:8,fontSize:11,fontWeight:600,
-              fontFamily:DISP_F,background:i===0?C.blue:"rgba(0,0,0,0.05)",color:i===0?"#fff":C.dim}}>
-              {l}
-            </div>
-          ))}
+      {/* Header charge card — style photo 1 */}
+      <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",marginBottom:14}}>
+        <div>
+          <div style={{display:"flex",alignItems:"baseline",gap:6,marginBottom:4}}>
+            <span style={{fontSize:28,fontWeight:900,color:C.text,fontFamily:DISP_F,letterSpacing:"-1px"}}>
+              {hasCharge ? `+${Math.round(((curTon/baseTonnage)-1)*100)}%` : "+12%"}
+            </span>
+            <span style={{fontSize:11.5,fontWeight:500,color:C.dim,fontFamily:DISP_F}}>cette semaine</span>
+          </div>
+          <div style={{fontSize:12,color:C.dim,fontFamily:DISP_F,lineHeight:1.5}}>
+            {hasCharge
+              ? (nearMRV ? "Proche de la limite · surveille la récup." : "Progression contrôlée · continue ainsi")
+              : "Progression contrôlée · pic en fin de semaine"}
+          </div>
         </div>
-      </div>
-      {/* Tag pills */}
-      <div style={{display:"flex",gap:6,marginBottom:14,flexWrap:"wrap"}}>
-        {[
-          {l:"Charge",c:"#2563EB",bg:"rgba(219,234,254,0.90)"},
-          {l:"Pic",   c:"#7C3AED",bg:"rgba(237,233,254,0.90)"},
-          {l:"Risque",c:"#DC2626",bg:"rgba(254,226,226,0.90)"},
-          {l:"Stable",c:"#10B981",bg:"rgba(187,247,208,0.90)"},
-        ].map((t,i)=>(
-          <span key={i} style={{padding:"4px 11px",borderRadius:40,fontSize:10.5,
-            fontWeight:600,fontFamily:DISP_F,background:t.bg,color:t.c}}>{t.l}</span>
-        ))}
+        <div style={{padding:"6px 12px",borderRadius:10,background:"rgba(16,185,129,0.12)",
+          border:"1px solid rgba(16,185,129,0.25)",flexShrink:0,marginTop:2}}>
+          <span style={{fontSize:12,fontWeight:700,color:"#059669",fontFamily:DISP_F}}>Zone verte</span>
+        </div>
       </div>
 
       {hasCharge ? (
@@ -280,24 +262,18 @@ function MesocycleChart({ prog, semC, checkedEx, cycleStart }) {
                     <stop offset="0%" stopColor="#3B82F6" stopOpacity="0.13"/>
                     <stop offset="100%" stopColor="#3B82F6" stopOpacity="0"/>
                   </linearGradient>
-                  <linearGradient id="dLG" x1="0" y1="0" x2="1" y2="0">
-                    <stop offset="0%" stopColor="#3B82F6"/>
-                    <stop offset="60%" stopColor="#7C3AED"/>
-                    <stop offset="100%" stopColor="#EC4899"/>
-                  </linearGradient>
                 </defs>
                 {[0,.33,.66,1].map((t,i)=>(
                   <line key={i} x1={dpx} y1={dpy+t*dH} x2={dW} y2={dpy+t*dH}
                     stroke="rgba(0,0,0,0.05)" strokeWidth="1"/>
                 ))}
                 <path d={dArea} fill="url(#dAG)"/>
-                <polyline points={dPoly} fill="none" stroke="url(#dLG)"
+                <polyline points={dPoly} fill="none" stroke="#3B82F6"
                   strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
                 {dPts.map((p,i)=>(
                   <g key={i}>
-                    <circle cx={p.x} cy={p.y} r="5" fill="white"
-                      stroke={i>=4?"#A855F7":"#3B82F6"} strokeWidth="2"/>
-                    <circle cx={p.x} cy={p.y} r="2" fill={i>=4?"#A855F7":"#3B82F6"}/>
+                    <circle cx={p.x} cy={p.y} r="5" fill="white" stroke="#3B82F6" strokeWidth="2"/>
+                    <circle cx={p.x} cy={p.y} r="2" fill="#3B82F6"/>
                   </g>
                 ))}
                 {dDays.map((d,i)=>(
@@ -305,20 +281,14 @@ function MesocycleChart({ prog, semC, checkedEx, cycleStart }) {
                     fontSize="9" fill="#9CA3AF" fontFamily={DISP_F} fontWeight="500">{d}</text>
                 ))}
               </svg>
-              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginTop:12}}>
-                {[
-                  {dot:"#3B82F6",l:"+12% cette semaine"},
-                  {dot:"#7C3AED",l:"Zone de vigilance"},
-                  {dot:"#10B981",l:"Progression OK"},
-                  {dot:"#F59E0B",l:"Niveau 3"},
-                ].map((b,i)=>(
-                  <div key={i} style={{display:"flex",alignItems:"center",gap:7,
-                    padding:"8px 10px",borderRadius:10,
-                    background:"rgba(0,0,0,0.025)",border:`1px solid ${C.bd}`}}>
-                    <div style={{width:8,height:8,borderRadius:"50%",background:b.dot,flexShrink:0}}/>
-                    <span style={{fontSize:10.5,fontWeight:600,color:"#374151",fontFamily:DISP_F}}>{b.l}</span>
-                  </div>
-                ))}
+              {/* Pill — Charge uniquement */}
+              <div style={{display:"flex",gap:8,marginTop:12}}>
+                <div style={{display:"flex",alignItems:"center",gap:7,
+                  padding:"8px 12px",borderRadius:10,
+                  background:"rgba(0,0,0,0.025)",border:`1px solid ${C.bd}`}}>
+                  <div style={{width:8,height:8,borderRadius:"50%",background:"#3B82F6",flexShrink:0}}/>
+                  <span style={{fontSize:11,fontWeight:600,color:"#374151",fontFamily:DISP_F}}>Charge</span>
+                </div>
               </div>
               <div style={{textAlign:"center",marginTop:10,fontSize:10.5,color:"#9CA3AF",fontFamily:DISP_F}}>
                 Note les charges pour voir ta vraie progression
@@ -1011,7 +981,7 @@ function ProgrammeView(props) {
           semC={semC}
           semN={semN}
           totalJours={prog.jours?.length||0}
-          onAnalyse={()=>{ if(!premium) setPaywall(true); else setProgView("analyse"); }}
+          onDetail={()=>setOpen(true)}
         />
       )}
 
