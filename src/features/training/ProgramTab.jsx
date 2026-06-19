@@ -9,6 +9,99 @@ import AnalyseIA from "../ai/AnalyseIA.jsx";
 import { findExInDB } from "../../utils/training.js";
 import { GuideExModal, SeanceDetailModal } from "./components/ProgramTabModals.jsx";
 
+// ─── COACH IA — CARTE ANALYSE SEMAINE ────────────────────────────────────────
+function CoachWeekCard({ semC, semN, totalJours, onAnalyse }) {
+  const F   = "'Outfit','DM Sans',system-ui,sans-serif";
+  const done  = semC || 0;
+  const total = totalJours || 0;
+
+  const title = done === 0
+    ? "Lance ta semaine. 💪"
+    : total > 0 && done >= total
+    ? "Semaine accomplie ! 🔥"
+    : done >= Math.ceil((total||1) * 0.5)
+    ? "Tu es sur la bonne voie. 🔥"
+    : "Continue, chaque séance compte.";
+
+  const sub = done === 0
+    ? `Programme de ${total} séance${total>1?"s":""} prêt. Lance-toi aujourd'hui pour garder le rythme.`
+    : `${done}/${total} séance${done>1?"s":""} complétée${done>1?"s":""} · Semaine ${semN}. ${done>=total?"Excellent travail cette semaine.":"Ton programme est bien suivi."}`;
+
+  const fatigue = done >= (total||1) * 0.8 ? "Basse" : done >= (total||1) * 0.4 ? "Modérée" : "OK";
+  const stats = [
+    { val:`${done}/${total}`, label:"Séances", color:"#6EE7B7" },
+    { val:`Sem. ${semN}`,     label:"Cycle",   color:"#93C5FD" },
+    { val: fatigue,           label:"Fatigue", color:"#FCD34D" },
+  ];
+
+  return (
+    <div style={{ borderRadius:20, overflow:"hidden", marginBottom:16,
+      background:"linear-gradient(145deg,#0D0B1E 0%,#12103A 55%,#1A1245 100%)",
+      boxShadow:"0 12px 40px rgba(0,0,0,0.28), 0 0 0 1px rgba(255,255,255,0.06)",
+      position:"relative" }}>
+      {/* Glows */}
+      <div style={{ position:"absolute",top:-50,right:-30,width:190,height:190,
+        borderRadius:"50%",background:"rgba(91,76,245,0.14)",pointerEvents:"none" }}/>
+      <div style={{ position:"absolute",bottom:-25,left:-10,width:120,height:120,
+        borderRadius:"50%",background:"rgba(59,130,246,0.09)",pointerEvents:"none" }}/>
+
+      <div style={{ padding:"18px 16px 16px", position:"relative", zIndex:1 }}>
+        {/* Badges */}
+        <div style={{ display:"flex", gap:8, marginBottom:14 }}>
+          {[
+            { txt:"COACH IA",     bg:"rgba(99,102,241,0.25)", bd:"rgba(99,102,241,0.40)", c:"#A5B4FC" },
+            { txt:`SEMAINE ${semN}`, bg:"rgba(255,255,255,0.07)", bd:"rgba(255,255,255,0.10)", c:"rgba(255,255,255,0.55)" },
+          ].map((b,i) => (
+            <div key={i} style={{ padding:"5px 12px", borderRadius:40,
+              background:b.bg, border:`1px solid ${b.bd}` }}>
+              <span style={{ fontSize:9.5, fontWeight:800, letterSpacing:"1.4px",
+                color:b.c, fontFamily:F, textTransform:"uppercase" }}>{b.txt}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* Titre */}
+        <div style={{ fontFamily:F, fontSize:20, fontWeight:800, color:"#fff",
+          lineHeight:1.2, letterSpacing:"-0.3px", marginBottom:9 }}>{title}</div>
+
+        {/* Sous-titre */}
+        <div style={{ fontSize:12, color:"rgba(255,255,255,0.48)", lineHeight:1.6,
+          fontFamily:F, marginBottom:14 }}>{sub}</div>
+
+        {/* 3 mini stats */}
+        <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:8, marginBottom:14 }}>
+          {stats.map((s,i) => (
+            <div key={i} style={{ borderRadius:11, padding:"10px 8px",
+              background:"rgba(255,255,255,0.07)", border:"1px solid rgba(255,255,255,0.08)",
+              textAlign:"center" }}>
+              <div style={{ fontSize:14, fontWeight:800, color:s.color, fontFamily:F }}>{s.val}</div>
+              <div style={{ fontSize:8.5, color:"rgba(255,255,255,0.35)", fontFamily:F,
+                textTransform:"uppercase", letterSpacing:"0.7px", marginTop:3 }}>{s.label}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Boutons */}
+        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10 }}>
+          <button onClick={onAnalyse}
+            style={{ padding:"12px 10px", borderRadius:12, background:"#4F46E5",
+              border:"none", textAlign:"center", fontSize:13, fontWeight:700, color:"#fff",
+              fontFamily:F, boxShadow:"0 5px 18px -4px rgba(79,70,229,0.60)",
+              cursor:"pointer", lineHeight:1.3 }}>
+            Analyser ma semaine
+          </button>
+          <button style={{ padding:"12px 10px", borderRadius:12, cursor:"pointer",
+            background:"rgba(255,255,255,0.09)", border:"1px solid rgba(255,255,255,0.11)",
+            textAlign:"center", fontSize:13, fontWeight:700,
+            color:"rgba(255,255,255,0.70)", fontFamily:F, lineHeight:1.3 }}>
+            Ajuster le plan
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ─── PROGRESSION DE LA SEMAINE CHART ─────────────────────────────────────────
 function MesocycleChart({ prog, semC, checkedEx, cycleStart }) {
   const DISP_F  = "'Outfit','DM Sans',system-ui,sans-serif";
@@ -834,22 +927,31 @@ function ProgrammeView(props) {
       )}
 
       {/* ── Header ── */}
-      <div style={{paddingTop:6,marginBottom:18}}>
-        <div style={{fontSize:9,fontWeight:700,letterSpacing:"2px",textTransform:"uppercase",color:C.blue,fontFamily:DISP_F,marginBottom:5}}>Programme</div>
-        <div style={{fontFamily:SERIF_F,fontSize:28,color:"${C.text}",lineHeight:1.1,letterSpacing:-1}}>
-          Ton <span style={{fontStyle:"italic",color:C.blue}}>programme</span>
+      <div style={{ marginBottom:16 }}>
+        <div style={{ fontFamily:SERIF_F, fontSize:26, color:C.text, lineHeight:1.1, letterSpacing:-1 }}>
+          Ton <span style={{ fontStyle:"italic", color:C.blue }}>programme</span>
         </div>
-        <div style={{fontSize:11,color:"${C.dim}",marginTop:5,fontFamily:DISP_F}}>
-          {prog ? `${prog.titre} · ${prog.jours?.length||0} séances/sem · Sem. ${semN}` : "Crée ton premier programme pour commencer."}
+        <div style={{ fontSize:12, color:C.dim, marginTop:5, fontFamily:DISP_F }}>
+          {prog ? `${prog.jours?.length||0} séances/sem · Semaine ${semN}` : "Crée ton premier programme pour commencer."}
         </div>
         {prog && (
           <button onClick={()=>setConfirmDel({type:"prog",pIdx:progIdx})}
-            style={{marginTop:10,background:"transparent",border:"none",color:"rgba(248,113,113,0.55)",cursor:"pointer",fontSize:12,fontFamily:DISP_F,fontWeight:600,padding:0,display:"flex",alignItems:"center",gap:5}}>
+            style={{ marginTop:10,background:"transparent",border:"none",color:"rgba(248,113,113,0.55)",cursor:"pointer",fontSize:12,fontFamily:DISP_F,fontWeight:600,padding:0,display:"flex",alignItems:"center",gap:5 }}>
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
             Supprimer ce programme
           </button>
         )}
       </div>
+
+      {/* ── Coach IA — Analyse de la semaine ── */}
+      {prog && (
+        <CoachWeekCard
+          semC={semC}
+          semN={semN}
+          totalJours={prog.jours?.length||0}
+          onAnalyse={()=>{ if(!premium) setPaywall(true); else setProgView("analyse"); }}
+        />
+      )}
 
       {/* ── Programme actif ── */}
       {prog && prog.jours?.length > 0 && (<>
