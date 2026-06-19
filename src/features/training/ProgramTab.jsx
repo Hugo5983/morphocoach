@@ -31,7 +31,11 @@ function CoachWeekCard({ semC, semN, totalJours, onDetail }) {
 
   const sub = done === 0
     ? `Programme de ${total} séance${total>1?"s":""} prêt · Semaine ${semN}. Lance-toi dès aujourd'hui pour garder le rythme.`
-    : `Fatigue ${fatigueLbl.toLowerCase()} · surveille la charge sur 48h. La semaine reste ${ratio < 0.70 ? "bien maîtrisée" : "chargée, pense à récupérer"}.`;
+    : ratio < 0.35
+    ? "Fatigue basse · bon signal de récupération. Tu peux maintenir l'intensité et progresser en charge cette semaine."
+    : ratio < 0.70
+    ? "Fatigue modérée · surveille la charge sur 48h. La semaine reste acceptable, mais l'accumulation commence à se voir."
+    : "Fatigue élevée · réduis l'intensité. Priorise la récupération avant ta prochaine séance pour éviter la surcharge.";
 
   const stats = [
     { val: fatigueLbl,    label: "Fatigue", color: fatigueCol },
@@ -66,7 +70,7 @@ function CoachWeekCard({ semC, semN, totalJours, onDetail }) {
             <div key={i} style={{ borderRadius:11, padding:"11px 8px",
               background:"rgba(255,255,255,0.07)", border:"1px solid rgba(255,255,255,0.08)", textAlign:"center" }}>
               <div style={{ fontSize:15, fontWeight:800, color:s.color, fontFamily:F, lineHeight:1.1, marginBottom:4 }}>{s.val}</div>
-              <div style={{ fontSize:8.5, color:"rgba(255,255,255,0.35)", fontFamily:F, textTransform:"uppercase", letterSpacing:"0.9px" }}>{s.label}</div>
+              <div style={{ fontSize:9, color:"rgba(255,255,255,0.62)", fontFamily:F, textTransform:"uppercase", letterSpacing:"1px" }}>{s.label}</div>
             </div>
           ))}
         </div>
@@ -289,9 +293,6 @@ function MesocycleChart({ prog, semC, checkedEx, cycleStart }) {
                   <div style={{width:8,height:8,borderRadius:"50%",background:"#3B82F6",flexShrink:0}}/>
                   <span style={{fontSize:11,fontWeight:600,color:"#374151",fontFamily:DISP_F}}>Charge</span>
                 </div>
-              </div>
-              <div style={{textAlign:"center",marginTop:10,fontSize:10.5,color:"#9CA3AF",fontFamily:DISP_F}}>
-                Note les charges pour voir ta vraie progression
               </div>
             </div>
           );
@@ -956,9 +957,6 @@ function ProgrammeView(props) {
           <div style={{ fontFamily:SERIF_F, fontSize:26, color:C.text, lineHeight:1.1, letterSpacing:-1 }}>
             Ton <span style={{ fontStyle:"italic", color:C.blue }}>programme</span>
           </div>
-          <div style={{ fontSize:12, color:C.dim, marginTop:5, fontFamily:DISP_F }}>
-            {prog ? `${prog.jours?.length||0} séances/sem · Semaine ${semN}` : "Crée ton premier programme pour commencer."}
-          </div>
         </div>
         {prog && (
           <button onClick={()=>setConfirmDel({type:"prog",pIdx:progIdx})}
@@ -989,8 +987,11 @@ function ProgrammeView(props) {
       {prog && prog.jours?.length > 0 && (<>
 
         {/* Label section */}
-        <div style={{ fontSize:16, fontWeight:700, color:C.text, fontFamily:DISP_F, marginBottom:12 }}>
-          Séances du programme
+        <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:12 }}>
+          <div style={{ fontSize:16, fontWeight:700, color:C.text, fontFamily:DISP_F }}>Programme</div>
+          <div style={{ fontSize:12, fontWeight:500, color:C.dim, fontFamily:DISP_F }}>
+            {prog?.jours?.length||0} séance{(prog?.jours?.length||0)!==1?"s":""} · Sem. {semN}
+          </div>
         </div>
 
         {/* Séances accordion */}
