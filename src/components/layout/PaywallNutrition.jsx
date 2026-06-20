@@ -83,7 +83,7 @@ export function PaywallNutrition({ onSubscribe, onClose }) {
                 background:"rgba(5,150,105,0.10)",
                 border:"1px solid rgba(5,150,105,0.30)",
                 display:"grid", placeItems:"center",
-                fontSize:11, color:"#065F46", fontWeight:800,
+                fontSize:11, color:"#065F46", fontWeight:700,
               }}>✓</div>
             </div>
           ))}
