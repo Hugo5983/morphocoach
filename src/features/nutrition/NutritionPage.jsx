@@ -84,9 +84,9 @@ function MacroCard({label,value,goal,color,colorDk}){
       <div style={{display:'flex',alignItems:'center',gap:7}}>
         <span style={{width:24,height:24,borderRadius:7,flexShrink:0,
           background:'rgba(0,0,0,0.18)',
-          color:'#fff',fontSize:12,fontWeight:900,fontFamily:DISPLAY,
+          color:'#fff',fontSize:12,fontWeight:700,fontFamily:DISPLAY,
           display:'grid',placeItems:'center'}}>{letter}</span>
-        <span style={{fontSize:8.5,fontWeight:800,
+        <span style={{fontSize:8.5,fontWeight:700,
           color:'rgba(255,255,255,0.88)',letterSpacing:'1.2px',
           textTransform:'uppercase',fontFamily:DISPLAY}}>{label}</span>
       </div>
@@ -103,7 +103,7 @@ function MacroCard({label,value,goal,color,colorDk}){
           boxShadow:'0 0 8px rgba(255,255,255,0.5)'}}/>
       </div>
       <span style={{fontSize:10.5,color:'rgba(255,255,255,0.92)',
-        fontWeight:800,...NUM,letterSpacing:0.3,fontFamily:DISPLAY}}>{pct}%</span>
+        fontWeight:700,...NUM,letterSpacing:0.3,fontFamily:DISPLAY}}>{pct}%</span>
     </div>
   );
 }
