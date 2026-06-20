@@ -22,8 +22,8 @@ const T = {
   acSoft:'rgba(59,130,246,0.10)', acGlow:'rgba(59,130,246,0.18)',
   green:'#34D399', red:'#F87171',
 };
-const F   = "'Outfit','DM Sans',system-ui,sans-serif";
-const SER = "'DM Serif Display','Georgia',serif";
+const F   = "'General Sans',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif";
+const SER = "'General Sans',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif";
 const MON = '"JetBrains Mono",ui-monospace,monospace';
 
 const CARD = {
@@ -124,7 +124,7 @@ function PoseCard({ view, hint, filled, photo, onTap, index }) {
             style={{ width:"100%", height:260, objectFit:"cover", display:"block" }}/>
           <div style={{ position:"absolute", top:10, right:10,
             background:T.ac, color:"#fff", borderRadius:8,
-            padding:"3px 10px", fontSize:10, fontWeight:800, letterSpacing:".5px" }}>
+            padding:"3px 10px", fontSize:10, fontWeight:700, letterSpacing:".5px" }}>
             ✓ AJOUTÉE
           </div>
         </div>
@@ -147,7 +147,7 @@ function PoseCard({ view, hint, filled, photo, onTap, index }) {
             {/* Titre numéroté */}
             <div style={{ display:"flex", alignItems:"center", gap:9 }}>
               <span style={{ width:26, height:26, borderRadius:"50%",
-                background:T.ac, color:"#fff", fontSize:13, fontWeight:800,
+                background:T.ac, color:"#fff", fontSize:13, fontWeight:700,
                 fontFamily:F, display:"grid", placeItems:"center", flexShrink:0 }}>
                 {index}
               </span>
