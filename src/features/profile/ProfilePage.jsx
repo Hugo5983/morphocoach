@@ -62,7 +62,7 @@ function StatCard({ value, unit, label, color }) {
           pointerEvents: "none",
         }}/>
         <div style={{ position: "relative" }}>
-          <span style={{ fontSize: 28, fontWeight: 800, color, letterSpacing: -1, fontFamily: FONT, ...NUM }}>{value ?? "—"}</span>
+          <span style={{ fontSize: 28, fontWeight:700, color, letterSpacing: -1, fontFamily: FONT, ...NUM }}>{value ?? "—"}</span>
           {unit && <span style={{ fontSize: 13, fontWeight: 700, color, marginLeft: 2, fontFamily: FONT }}>{unit}</span>}
         </div>
         <div style={{ position: "relative", fontSize: 11.5, color: "#374151", marginTop: 4, fontWeight: 600, fontFamily: FONT }}>{label}</div>
@@ -219,7 +219,7 @@ function MacroRing({ value, max, label, color }) {
         </svg>
         <div style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center" }}>
           <div>
-            <div style={{ fontSize: 18, fontWeight: 800, color, fontFamily: FONT, ...NUM }}>{value || 0}</div>
+            <div style={{ fontSize: 18, fontWeight:700, color, fontFamily: FONT, ...NUM }}>{value || 0}</div>
             <div style={{ fontSize: 10, color: "${C.dim}", marginTop: -2 }}>g</div>
           </div>
         </div>
@@ -344,13 +344,13 @@ function WeightChart({ log }) {
           <div>
             <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "1.5px", color: C.dim, fontFamily: FONT, marginBottom: 5 }}>SUIVI DU POIDS</div>
             <div style={{ display: "flex", alignItems: "baseline", gap: 6 }}>
-              <span style={{ fontSize: 26, fontWeight: 800, color: "#60a5fa", fontFamily: FONT, letterSpacing: -0.8, ...NUM }}>{last.poids}</span>
+              <span style={{ fontSize: 26, fontWeight:700, color: "#60a5fa", fontFamily: FONT, letterSpacing: -0.8, ...NUM }}>{last.poids}</span>
               <span style={{ fontSize: 13, color: "#374151", fontWeight: 600 }}>kg</span>
             </div>
           </div>
           <div style={{ textAlign: "right" }}>
             <div style={{ fontSize: 9, color: "#9CA3AF", fontFamily: FONT }}>Depuis le {fmtShort(first.date)}</div>
-            <div style={{ fontSize: 15, fontWeight: 800, color: deltaColor, fontFamily: FONT, ...NUM }}>
+            <div style={{ fontSize: 15, fontWeight:700, color: deltaColor, fontFamily: FONT, ...NUM }}>
               {delta > 0 ? "+" : ""}{delta.toFixed(1)} kg
             </div>
           </div>
@@ -378,8 +378,8 @@ function WeightChart({ log }) {
             </g>
           ))}
           {/* Labels dates extrêmes */}
-          <text x={pts[0].x} y={H - 6} fontSize="9" fill="#9CA3AF" textAnchor="start" fontFamily="'Outfit',sans-serif">{fmtShort(first.date)}</text>
-          <text x={pts[pts.length - 1].x} y={H - 6} fontSize="9" fill="#9CA3AF" textAnchor="end" fontFamily="'Outfit',sans-serif">{fmtShort(last.date)}</text>
+          <text x={pts[0].x} y={H - 6} fontSize="9" fill="#9CA3AF" textAnchor="start" fontFamily="'General Sans',system-ui,-apple-system,sans-serif">{fmtShort(first.date)}</text>
+          <text x={pts[pts.length - 1].x} y={H - 6} fontSize="9" fill="#9CA3AF" textAnchor="end" fontFamily="'General Sans',system-ui,-apple-system,sans-serif">{fmtShort(last.date)}</text>
         </svg>
 
         <div style={{ marginTop: 6, fontSize: 10.5, color: "#9CA3AF", fontFamily: FONT, textAlign: "center" }}>
@@ -453,7 +453,7 @@ export default function Profile(props) {
             {(premium || premiumNutrition) && (
               <span style={{
                 display: "inline-flex", alignItems: "center", gap: 5,
-                fontSize: 11, fontWeight: 800, letterSpacing: "1.2px",
+                fontSize: 11, fontWeight:700, letterSpacing: "1.2px",
                 color: "#fff", padding: "5px 11px", borderRadius: 9,
                 background: "linear-gradient(145deg, #3B82F6, #2563EB)",
                 border: "1px solid rgba(37,99,235,0.6)",
@@ -566,7 +566,7 @@ export default function Profile(props) {
               <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: 10 }}>
                 <div>
                   <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "1.5px", color: C.dim, fontFamily: FONT, marginBottom: 6 }}>IMC</div>
-                  <span style={{ fontSize: 30, fontWeight: 800, color: imcColor, fontFamily: FONT, ...NUM }}>{imc || "—"}</span>
+                  <span style={{ fontSize: 30, fontWeight:700, color: imcColor, fontFamily: FONT, ...NUM }}>{imc || "—"}</span>
                   <span style={{ fontSize: 13, color: imcColor, marginLeft: 6, fontFamily: FONT }}>{imc ? imcCat : ""}</span>
                 </div>
               </div>
