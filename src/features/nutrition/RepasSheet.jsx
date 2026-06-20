@@ -225,7 +225,7 @@ export default function RepasSheet({
         {/* Aliments déjà ajoutés */}
         {items.length > 0 && (
           <div className="rs-fade" style={{ marginBottom: 16 }}>
-            <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: "1.2px",
+            <div style={{ fontSize: 10, fontWeight:700, letterSpacing: "1.2px",
               textTransform: "uppercase", color: DIM, fontFamily: F,
               marginBottom: 10 }}>
               Ajoutés ({items.length})
@@ -264,7 +264,7 @@ export default function RepasSheet({
         {/* Résultats de recherche */}
         {search && filtered.length > 0 && (
           <div className="rs-fade">
-            <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: "1.2px",
+            <div style={{ fontSize: 10, fontWeight:700, letterSpacing: "1.2px",
               textTransform: "uppercase", color: DIM, fontFamily: F,
               marginBottom: 10 }}>
               Résultats · {filtered.length}
@@ -317,7 +317,7 @@ export default function RepasSheet({
         {/* Raccourcis rapides (sans recherche active) */}
         {!search && (
           <>
-            <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: "1.2px",
+            <div style={{ fontSize: 10, fontWeight:700, letterSpacing: "1.2px",
               textTransform: "uppercase", color: DIM, fontFamily: F,
               marginBottom: 10 }}>
               Raccourcis
@@ -338,7 +338,7 @@ export default function RepasSheet({
             </div>
 
             {/* Scanner code-barres inline */}
-            <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: "1.2px",
+            <div style={{ fontSize: 10, fontWeight:700, letterSpacing: "1.2px",
               textTransform: "uppercase", color: DIM, fontFamily: F,
               marginBottom: 10 }}>
               Code-barres
@@ -478,7 +478,7 @@ export default function RepasSheet({
                   { l: "G", v: G + "g", c: "#22D3EE" }, { l: "L", v: L + "g", c: "#34D399" }].map(s => (
                   <div key={s.l} style={{ flex: 1, textAlign: "center", padding: "10px 0", borderRadius: 12,
                     background: `${s.c}12`, border: `1px solid ${s.c}30` }}>
-                    <div style={{ fontSize: 16, fontWeight: 800, color: s.c, fontFamily: F }}>{s.v}</div>
+                    <div style={{ fontSize: 16, fontWeight:700, color: s.c, fontFamily: F }}>{s.v}</div>
                     <div style={{ fontSize: 9, color: DIM, fontWeight: 700, letterSpacing: "0.5px", marginTop: 1 }}>{s.l}</div>
                   </div>
                 ))}
