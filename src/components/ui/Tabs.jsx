@@ -1,5 +1,5 @@
 import { C } from "../../data/constants.js";
-const DISPLAY = "'Space Grotesk','Inter',system-ui,sans-serif";
+const DISPLAY = "'General Sans',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif";
 
 export function Tabs({ items = [], value, onChange, style }) {
   return (
