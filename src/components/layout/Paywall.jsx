@@ -82,7 +82,7 @@ export function Paywall({ onSubscribe, onClose }) {
                 background:"rgba(59,130,246,0.12)",
                 border:"1px solid rgba(59,130,246,0.25)",
                 display:"grid", placeItems:"center",
-                fontSize:11, color:"#1D4ED8", fontWeight:800,
+                fontSize:11, color:"#1D4ED8", fontWeight:700,
               }}>✓</div>
             </div>
           ))}
