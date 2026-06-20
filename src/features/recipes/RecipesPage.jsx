@@ -48,7 +48,7 @@ function RecipeCard({ r, liked, onLike, onOpen }) {
           <span style={{ fontSize:11, color:"#374151",
             fontFamily:FONT }}>{r.kcal} kcal</span>
           <span style={{ padding:"2px 8px", borderRadius:5, fontSize:9.5,
-            fontWeight:800, fontFamily:FONT, letterSpacing:"0.4px",
+            fontWeight:700, fontFamily:FONT, letterSpacing:"0.4px",
             background: badge.c,
             border:`1px solid ${badge.c}`,
             color: "#0F1923" }}>{badge.l}</span>
@@ -175,11 +175,11 @@ export default function Recipes(props) {
           }}>🍽️</div>
           <div style={{ flex:1 }}>
             <div style={{ fontSize:13, fontWeight:700, color:C.text,
-              fontFamily:"'Outfit',sans-serif" }}>
+              fontFamily:"'General Sans',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" }}>
               Nutrition PRO — 6.99€/mois
             </div>
             <div style={{ fontSize:11.5, color:"#374151",
-              marginTop:2, fontFamily:"'Outfit',sans-serif" }}>
+              marginTop:2, fontFamily:"'General Sans',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" }}>
               Accès complet à toutes les recettes
             </div>
           </div>
@@ -187,7 +187,7 @@ export default function Recipes(props) {
             padding:"4px 10px", borderRadius:7,
             background:"#3B82F6", fontSize:11,
             color:"#fff", fontWeight:700,
-            fontFamily:"'Outfit',sans-serif",
+            fontFamily:"'General Sans',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif",
           }}>Voir</div>
         </div>
       )}
@@ -233,7 +233,7 @@ export default function Recipes(props) {
               <div style={{ position:"absolute", top:46, right:0, zIndex:41,
                 background:C.s1, border:"1px solid rgba(0,0,0,0.08)", borderRadius:14,
                 boxShadow:"0 10px 30px rgba(15,25,35,0.14)", padding:6, width:178 }}>
-                <div style={{ fontSize:9, fontWeight:800, letterSpacing:"1px", textTransform:"uppercase",
+                <div style={{ fontSize:9, fontWeight:700, letterSpacing:"1px", textTransform:"uppercase",
                   color:C.dim, fontFamily:FONT, padding:"7px 10px 5px" }}>Trier par</div>
                 {Object.entries(SORTS).map(([k, s]) => {
                   const on = sortBy === k;
@@ -294,7 +294,7 @@ export default function Recipes(props) {
                 background:"linear-gradient(to top,rgba(11,18,32,0.88) 0%,transparent 50%)" }}/>
               <div style={{ position:"absolute", bottom:12, left:12, right:52 }}>
                 <div style={{ display:"inline-flex", alignItems:"center", gap:5,
-                  fontSize:10, fontWeight:800, letterSpacing:"0.6px",
+                  fontSize:10, fontWeight:700, letterSpacing:"0.6px",
                   textTransform:"uppercase", color:"#fff",
                   background:"linear-gradient(135deg,#FB7185,#F43F5E)",
                   border:"1px solid rgba(244,63,94,0.5)",
