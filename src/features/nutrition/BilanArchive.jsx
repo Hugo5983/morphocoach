@@ -108,7 +108,7 @@ export default function BilanArchive({ onBack, bilans = [], onOpenBilan, current
       {currentBilan && (
         <>
           <div style={{ padding:"6px 16px 8px" }}>
-            <div style={{ fontSize:9.5, fontWeight:800, letterSpacing:"1.5px",
+            <div style={{ fontSize:9.5, fontWeight:700, letterSpacing:"1.5px",
               textTransform:"uppercase", color:DIM, padding:"0 4px", fontFamily:FONT }}>
               En cours
             </div>
@@ -123,7 +123,7 @@ export default function BilanArchive({ onBack, bilans = [], onOpenBilan, current
       {sorted.length > 0 ? (
         <>
           <div style={{ padding:"14px 16px 8px" }}>
-            <div style={{ fontSize:9.5, fontWeight:800, letterSpacing:"1.5px",
+            <div style={{ fontSize:9.5, fontWeight:700, letterSpacing:"1.5px",
               textTransform:"uppercase", color:DIM, padding:"0 4px", fontFamily:FONT }}>
               {sorted.length} bilan{sorted.length>1?"s":""} précédent{sorted.length>1?"s":""}
             </div>
@@ -151,7 +151,7 @@ export default function BilanArchive({ onBack, bilans = [], onOpenBilan, current
       {last6.length >= 2 && (
         <>
           <div style={{ padding:"20px 16px 8px" }}>
-            <div style={{ fontSize:9.5, fontWeight:800, letterSpacing:"1.5px",
+            <div style={{ fontSize:9.5, fontWeight:700, letterSpacing:"1.5px",
               textTransform:"uppercase", color:DIM, padding:"0 4px", fontFamily:FONT }}>
               Évolution score · {last6.length} derniers bilans
             </div>
@@ -206,7 +206,7 @@ function BilanCard({ bilan, onClick, current }) {
       {current ? (
         <span style={{ padding:"2px 8px", background:"rgba(59,130,246,0.15)",
           border:"1px solid rgba(59,130,246,0.35)", borderRadius:99,
-          fontSize:9, fontWeight:800, color:"#93C5FD", letterSpacing:"0.5px", fontFamily:FONT }}>
+          fontSize:9, fontWeight:700, color:"#93C5FD", letterSpacing:"0.5px", fontFamily:FONT }}>
           EN COURS
         </span>
       ) : (
