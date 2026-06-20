@@ -493,7 +493,7 @@ export default function PhotoAnalyse({ onClose, onAdd, premium, setPaywall, push
                     borderRadius: 12, padding: "10px 6px", textAlign: "center",
                   }}>
                     <div style={{
-                      fontSize: 17, fontWeight: 800, color: m.c,
+                      fontSize: 17, fontWeight:700, color: m.c,
                       fontFamily: FONT, letterSpacing: -0.5, lineHeight: 1,
                     }}>{Math.round(m.v)}</div>
                     <div style={{ fontSize: 9, color: "${C.dim}", marginTop: 3, fontFamily: FONT }}>{m.u}</div>
