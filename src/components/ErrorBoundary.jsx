@@ -24,7 +24,7 @@ export default class ErrorBoundary extends Component {
         }}>
           <div style={{ fontSize: 40, marginBottom: 16 }}>⚠️</div>
           <div style={{
-            fontFamily: "'Space Grotesk','Inter',system-ui,sans-serif",
+            fontFamily: "'General Sans',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif",
             fontSize: 18, fontWeight: 500, color: "#F5F1E8", marginBottom: 8,
           }}>
             Une erreur est survenue
@@ -37,7 +37,7 @@ export default class ErrorBoundary extends Component {
             style={{
               padding: "12px 24px", background: C.accent, border: "none",
               borderRadius: 12, color: C.s1, fontSize: 14, fontWeight: 600,
-              cursor: "pointer", fontFamily: "'Space Grotesk','Inter',system-ui,sans-serif",
+              cursor: "pointer", fontFamily: "'General Sans',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif",
             }}
           >
             Recharger l'application
