@@ -3,7 +3,7 @@ import { C, INT, SESS_COLORS, SERIF } from "../../data/constants.js";
 import { EX } from "../../data/exercises.js";
 import { Inp, Btn } from "./index.jsx";
 
-const DISPLAY = "'Outfit','DM Sans',system-ui,sans-serif";
+const DISPLAY = "'General Sans',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif";
 const NUM     = { fontVariantNumeric:'tabular-nums', fontFeatureSettings:'"tnum"' };
 const ey      = { fontSize:9, fontWeight:700, letterSpacing:'1.3px', textTransform:'uppercase', color:'#3B82F6', fontFamily:DISPLAY };
 
