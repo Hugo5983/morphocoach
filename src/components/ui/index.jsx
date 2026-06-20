@@ -70,7 +70,7 @@ export const Inp = ({ style, ...p }) => (
     width: "100%", padding: "13px 14px",
     background: C.s2, border: `1px solid ${C.bd}`,
     borderRadius: 12, color: C.text, fontSize: 14,
-    marginBottom: 8, fontFamily: "'DM Sans',sans-serif",
+    marginBottom: 8, fontFamily: "'General Sans',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif",
     boxShadow: "inset 0 1px 3px rgba(0,0,0,0.04)",
     ...style,
   }} {...p}/>
