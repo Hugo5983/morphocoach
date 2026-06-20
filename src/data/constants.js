@@ -26,9 +26,10 @@ export const C = {
 };
 
 // ─── POLICES CENTRALISÉES ─────────────────────────────────────────────────────
-// Source unique de vérité pour la typographie. Importer depuis ici partout.
-export const FONT  = "'Outfit','DM Sans',system-ui,sans-serif";
-export const SERIF = "'DM Serif Display','Georgia',serif";
+// General Sans (FontShare) — police unique sur toute l'application.
+// 400 = corps · 500 = secondaire · 600 = interface · 700 = titres (max)
+export const FONT  = "'General Sans',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif";
+export const SERIF = "'General Sans',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif";
 export const NUM   = { fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"' };
 
 // ─── INTENSITÉS DE SÉANCE ─────────────────────────────────────────────────────
@@ -66,12 +67,12 @@ export const ACTIVITE_FACTOR = {
 
 // ─── CSS GLOBAL ───────────────────────────────────────────────────────────────
 export const GLOBAL_CSS = `
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Serif+Display:ital@0;1&display=swap');
+@import url('https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap');
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
 html{height:100%;height:-webkit-fill-available}
-body{background:#F6F8FB;color:#0F1923;font-family:'DM Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh;min-height:-webkit-fill-available}
+body{background:#F6F8FB;color:#0F1923;font-family:'General Sans',system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh;min-height:-webkit-fill-available}
 #root{min-height:100vh;min-height:100dvh;background:#F6F8FB}
-input,textarea,select{outline:none;font-family:'DM Sans',sans-serif;color:${C.text}}
+input,textarea,select{outline:none;font-family:'General Sans',system-ui,sans-serif;color:${C.text}}
 input::placeholder,textarea::placeholder{color:#6B7280}
 select option{background:#111827;color:${C.text}}
 ::-webkit-scrollbar{width:2px;height:2px}
