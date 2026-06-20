@@ -87,7 +87,7 @@ function MiniRing({ pct, color, go, delay=0 }) {
         </svg>
         <div style={{ position:"absolute",inset:0,display:"flex",alignItems:"center",
           justifyContent:"center",flexDirection:"column" }}>
-          <span style={{ fontSize:16,fontWeight:800,color:TEXT,lineHeight:1,fontFamily:FONT,...NUM }}>
+          <span style={{ fontSize:16,fontWeight:700,color:TEXT,lineHeight:1,fontFamily:FONT,...NUM }}>
             {Math.min(100,pct)}%
           </span>
           <span style={{ fontSize:10,color:DIM,fontWeight:600,marginTop:3,
@@ -120,17 +120,17 @@ function MacroCard({ label, value, goal, pct, isPointFort, go, delay=0 }) {
         <div style={{ width:56,height:56,borderRadius:16,flexShrink:0,
           background:cfg.sq, display:"grid",placeItems:"center",
           boxShadow:`0 8px 22px ${cfg.sqS},inset 0 1px 0 rgba(255,255,255,0.28)`,
-          fontSize:22,fontWeight:900,color:"white",fontFamily:FONT }}>
+          fontSize:22,fontWeight:700,color:"white",fontFamily:FONT }}>
           {cfg.L}
         </div>
         <div style={{ flex:1,minWidth:0 }}>
           <div style={{ display:"flex",alignItems:"center",gap:8,flexWrap:"wrap" }}>
             <span style={{ fontSize:17,fontWeight:700,color:TEXT,fontFamily:FONT }}>{label}</span>
-            <span style={{ fontSize:12,fontWeight:800,padding:"3px 10px",borderRadius:8,
+            <span style={{ fontSize:12,fontWeight:700,padding:"3px 10px",borderRadius:8,
               background:cfg.roleBg,color:cfg.roleC,fontFamily:FONT }}>{cfg.role}</span>
           </div>
           <div style={{ display:"flex",alignItems:"baseline",gap:5,marginTop:5 }}>
-            <span style={{ fontSize:30,fontWeight:800,color:TEXT,fontFamily:SERIF,
+            <span style={{ fontSize:30,fontWeight:700,color:TEXT,fontFamily:SERIF,
               letterSpacing:-.5,...NUM }}>{Math.round(value)}</span>
             <span style={{ fontSize:15,color:DIM,fontWeight:600,fontFamily:FONT }}>/ {goal} g</span>
           </div>
@@ -149,7 +149,7 @@ function MacroCard({ label, value, goal, pct, isPointFort, go, delay=0 }) {
 
       {/* Ligne basse : badge + texte + chevron */}
       <div style={{ display:"flex",alignItems:"center",gap:10,marginTop:12 }}>
-        <span style={{ fontSize:13,fontWeight:800,padding:"4px 11px",borderRadius:8,
+        <span style={{ fontSize:13,fontWeight:700,padding:"4px 11px",borderRadius:8,
           background:tagBg,color:tagColor,flexShrink:0,fontFamily:FONT }}>
           {tagLabel}
         </span>
@@ -173,7 +173,7 @@ function SecHead({ title, sub, color=BL, icon=null }) {
               display:"grid",placeItems:"center",flexShrink:0 }}>{icon}</div>
           : <div style={{ width:4,height:16,borderRadius:2,background:color,flexShrink:0 }}/>
         }
-        <span style={{ fontSize:13,fontWeight:800,letterSpacing:"0.9px",
+        <span style={{ fontSize:13,fontWeight:700,letterSpacing:"0.9px",
           textTransform:"uppercase",color:TEXT,fontFamily:FONT }}>{title}</span>
         <div style={{ width:20,height:20,borderRadius:"50%",border:`1px solid ${BD}`,
           display:"grid",placeItems:"center",opacity:.7 }}>
@@ -223,7 +223,7 @@ function NextBilanCard({ nextDate, daysUntil, onOpen }) {
         <I name="calendar" size={23} color="#fff"/>
       </div>
       <div style={{ flex:1,minWidth:0 }}>
-        <div style={{ fontSize:11,fontWeight:800,letterSpacing:".8px",
+        <div style={{ fontSize:11,fontWeight:700,letterSpacing:".8px",
           textTransform:"uppercase",color:BL,marginBottom:3,fontFamily:FONT }}>
           Prochain bilan complet
         </div>
@@ -506,13 +506,13 @@ export default function BilanNutrition({
           <div style={{ flex:1 }}>
             {bilan.isPartial ? (
               <div style={{ display:"inline-flex",alignItems:"center",gap:6,fontSize:10.5,
-                fontWeight:800,color:"rgba(255,255,255,0.92)",
+                fontWeight:700,color:"rgba(255,255,255,0.92)",
                 background:"rgba(255,255,255,0.16)",padding:"4px 10px",borderRadius:8,fontFamily:FONT }}>
                 <I name="lock" size={11} color="rgba(255,255,255,0.9)"/>
                 {" "}Score dans {Math.max(0,MIN_DAYS_FULL_BILAN-bilan.nbLogged)} jours
               </div>
             ) : (
-              <div style={{ display:"inline-block",fontSize:10.5,fontWeight:800,
+              <div style={{ display:"inline-block",fontSize:10.5,fontWeight:700,
                 color:"rgba(255,255,255,0.92)",background:"rgba(255,255,255,0.16)",
                 padding:"4px 10px",borderRadius:8,fontFamily:FONT }}>
                 Objectif · {obj?.l || "Prise de muscle"}
@@ -638,12 +638,12 @@ export default function BilanNutrition({
             <div style={{ flex:1 }}>
               <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center" }}>
                 <div style={{ display:"flex",alignItems:"baseline",gap:5 }}>
-                  <span style={{ fontSize:30,fontWeight:800,color:TEXT,fontFamily:SERIF,letterSpacing:-.5,...NUM }}>
+                  <span style={{ fontSize:30,fontWeight:700,color:TEXT,fontFamily:SERIF,letterSpacing:-.5,...NUM }}>
                     {(avgEauP*0.25).toFixed(1)} L
                   </span>
                   <span style={{ fontSize:15,color:DIM,fontWeight:600,fontFamily:FONT }}>/ 2 L</span>
                 </div>
-                <span style={{ fontSize:13,fontWeight:800,color:GRN,
+                <span style={{ fontSize:13,fontWeight:700,color:GRN,
                   border:`1.5px solid ${GRN}`,padding:"5px 12px",borderRadius:999,fontFamily:FONT }}>
                   {Math.min(100,Math.round((avgEauP*0.25/2)*100))}%
                 </span>
@@ -704,7 +704,7 @@ export default function BilanNutrition({
           <div style={{ position:"absolute",top:-50,right:-50,width:180,height:180,
             borderRadius:"50%",background:`radial-gradient(circle,${health.color}25,transparent 70%)`,
             pointerEvents:"none" }}/>
-          <div style={{ fontSize:9.5,fontWeight:800,letterSpacing:"1.6px",
+          <div style={{ fontSize:9.5,fontWeight:700,letterSpacing:"1.6px",
             textTransform:"uppercase",color:DIM,marginBottom:14,fontFamily:FONT }}>
             Score santé · qualité des aliments rentrés
           </div>
@@ -712,7 +712,7 @@ export default function BilanNutrition({
             <div style={{ fontFamily:SERIF,fontSize:78,fontWeight:400,
               lineHeight:.9,color:health.color,letterSpacing:-3 }}>{health.letter}</div>
             <div style={{ textAlign:"right" }}>
-              <div style={{ fontSize:32,fontWeight:800,letterSpacing:-1,lineHeight:1,
+              <div style={{ fontSize:32,fontWeight:700,letterSpacing:-1,lineHeight:1,
                 color:TEXT,fontFamily:FONT,...NUM }}>
                 {health.score}<span style={{ color:DIM,fontSize:14,fontWeight:500 }}>/100</span>
               </div>
@@ -767,7 +767,7 @@ export default function BilanNutrition({
                       boxShadow:`0 0 7px ${m.color}` }}/>
                   </div>
                   <div style={{ fontSize:11,marginBottom:7,fontFamily:FONT }}>
-                    <span style={{ fontSize:14,fontWeight:800,color:TEXT,...NUM }}>
+                    <span style={{ fontSize:14,fontWeight:700,color:TEXT,...NUM }}>
                       {m.display!==undefined?m.display:(m.val<10?m.val.toFixed(1):Math.round(m.val))}{m.unit}
                     </span>
                     <span style={{ color:MID }}> {m.lower?"· viser <":"/"} {m.goal}{m.unit}</span>
