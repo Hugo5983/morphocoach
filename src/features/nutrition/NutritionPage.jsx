@@ -6,6 +6,7 @@ import BilanArchive from "./BilanArchive.jsx";
 import RepasSheet from "./RepasSheet.jsx";
 import BarcodeScanner from "./BarcodeScanner.jsx";
 import PhotoAnalyse from "./PhotoAnalyse.jsx";
+import { addXPNutrition } from "../../services/xpService.js";
 
 
 // Alias locaux → tokens centraux
@@ -225,7 +226,11 @@ export default function Nutrition(props){
           items={repas[m.id]||[]}
           allFoods={all}
           quickFoods={FOODS.slice(0,8)}
-          onAdd={item => setRepas(rp=>({...rp,[m.id]:[...(rp[m.id]||[]),item]}))}
+          onAdd={item => {
+            const wasEmpty = !(repas[m.id]?.length > 0);
+            setRepas(rp=>({...rp,[m.id]:[...(rp[m.id]||[]),item]}));
+            if (wasEmpty) addXPNutrition(m.id);
+          }}
           onUpdate={(idx,item) => setRepas(rp=>({...rp,[m.id]:(rp[m.id]||[]).map((x,j)=>j===idx?item:x)}))}
           onRemove={idx => setRepas(rp=>({...rp,[m.id]:rp[m.id].filter((_,j)=>j!==idx)}))}
           onClose={()=>setRepasSheet(null)}
