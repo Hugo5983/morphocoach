@@ -6,6 +6,8 @@ import { MOTIVATIONS } from "./data/motivations.js";
 
 import { Notif }           from "./components/ui/Notif.jsx";
 import { Spinner }         from "./components/ui/Loader.jsx";
+import { XPBar }           from "./components/ui/XPBar.jsx";
+import { LevelUpModal }    from "./components/ui/LevelUpModal.jsx";
 import { Header }          from "./components/layout/Header.jsx";
 import { BottomNav }       from "./components/layout/BottomNav.jsx";
 import { Paywall }         from "./components/layout/Paywall.jsx";
@@ -36,6 +38,18 @@ import { scanBarcode } from "./services/nutritionService.js";
 export default function App() {
 
   const [tab,              setTab]              = useState("home");
+
+  // ── Système XP Momentum ───────────────────────────────────────────────────
+  const [lvlUp, setLvlUp] = useState(null); // { levelInfo, amount, reason }
+  useEffect(() => {
+    const handler = (e) => {
+      if (e.detail?.leveledUp) {
+        setLvlUp({ levelInfo: e.detail.levelInfo, amount: e.detail.amount, reason: e.detail.reason });
+      }
+    };
+    window.addEventListener('morpho_xp_update', handler);
+    return () => window.removeEventListener('morpho_xp_update', handler);
+  }, []);
 
   // Toujours remonter en haut quand on change d'onglet/de page
   useEffect(() => {
@@ -208,6 +222,9 @@ export default function App() {
         <Notif n={notif} onClose={dismiss} />
         <Header premium={premium} cycleStart={cycleStart} jR={jR} tab={tab} setTab={setTab} />
 
+        {/* ── Barre XP Momentum — visible sur Entraînement + Nutrition ── */}
+        {(tab === "program" || tab === "home" || tab === "nutrition") && <XPBar />}
+
         {showOnboarding && (
           <Suspense fallback={<PageLoader />}>
             <Onboarding {...onboardingProps} />
@@ -250,6 +267,15 @@ export default function App() {
 
         {tab !== "coach" && <BottomNav tab={tab} setTab={setTab} />}
         <CoachFAB tab={tab} setTab={setTab} premium={premiumNutrition}/>
+
+        {/* ── Modal Level-Up Momentum XP ── */}
+        <LevelUpModal
+          show={!!lvlUp}
+          levelInfo={lvlUp?.levelInfo}
+          amount={lvlUp?.amount}
+          reason={lvlUp?.reason}
+          onClose={() => setLvlUp(null)}
+        />
 
         {paywall && (
           <Paywall
