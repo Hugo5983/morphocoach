@@ -6,6 +6,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { createPortal }                 from "react-dom";
+import { addXP, XP }                   from "../../services/xpService.js";
 
 // ── Tokens ───────────────────────────────────────────────────────────────────
 const T = {
@@ -16,8 +17,8 @@ const T = {
   ac:'#3B82F6', acLt:'#93C5FD', acDk:'#2563EB',
   acSoft:'rgba(59,130,246,0.10)', acGlow:'rgba(59,130,246,0.16)',
 };
-const F   = '"Space Grotesk","Inter",system-ui,sans-serif';
-const SER = '"Instrument Serif","Times New Roman",serif';
+const F   = "General Sans,system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif";
+const SER = "General Sans,system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif";
 const MON = '"JetBrains Mono",ui-monospace,monospace';
 const NUM = { fontVariantNumeric:'tabular-nums', fontFeatureSettings:'"tnum","cv11"' };
 const GL  = {
@@ -467,7 +468,7 @@ function DoneStage({ loggedSets, onNextExercise, coachMsg, premium }) {
                 <I n="spark" sz={14} c="#fff" s={1.8}/>
               </div>
               <div>
-                <div style={{ fontFamily:F, fontSize:12.5, fontWeight:800, color:T.t1 }}>
+                <div style={{ fontFamily:F, fontSize:12.5, fontWeight:700, color:T.t1 }}>
                   {premium ? 'Note Coach IA' : 'Note rapide'}
                 </div>
                 <div style={{ fontFamily:F, fontSize:10, color:T.t4, marginTop:1 }}>
@@ -672,7 +673,9 @@ export default function FocusMode({
     const n = exIdx + 1;
     if (n < exercices.length) { setExIdx(n); }
     else {
-      saveWorkoutLog();  // ← persiste tout avant de fermer
+      saveWorkoutLog();
+      // ── +250 XP pour séance terminée ──
+      addXP(XP.SESSION_COMPLETE, 'SESSION_COMPLETE');
       push?.("✅","Séance terminée !",`${exercices.length} exercice${exercices.length!==1?'s':''} complétés.`);
       onClose();
     }
