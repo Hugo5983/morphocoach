@@ -103,7 +103,7 @@ function CoachWeekCard({ semC, semN, totalJours, onDetail, premium, onUnlock }) 
       {/* ── Overlay cadenas si non PRO ── */}
       {!premium && (
         <div onClick={onUnlock}
-          style={{position:"absolute",inset:0,zIndex:10,cursor:"pointer",
+          style={{position:"absolute",top:0,left:0,right:0,bottom:0,zIndex:10,cursor:"pointer",
             borderRadius:20,
             background:"rgba(8,6,22,0.72)",
             backdropFilter:"blur(3px)",WebkitBackdropFilter:"blur(3px)",
