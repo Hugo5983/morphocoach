@@ -1202,32 +1202,59 @@ function ProgrammeView(props) {
         </div>
       )}
 
-      {/* ── Empty state ── */}
+      {/* ── Empty state — carte coach (sans programme) ── */}
       {allProgs.length === 0 && !showCreerForm && (
-        <div style={{textAlign:"center",padding:"32px 0 16px"}}>
-          <div style={{fontFamily:SERIF_F,fontSize:22,fontWeight:400,color:C.text,marginBottom:8}}>Aucun programme</div>
-          <div style={{fontSize:12,color:"#374151",lineHeight:1.6,maxWidth:240,margin:"0 auto 24px",fontFamily:DISP_F}}>Génère un programme IA adapté à ta morphologie ou crée-le manuellement.</div>
+        <div style={{borderRadius:20,border:`1.5px solid rgba(59,130,246,0.22)`,
+          background:"rgba(59,130,246,0.04)",padding:"22px 18px",
+          textAlign:"center",marginBottom:4}}>
+          {/* Icone */}
+          <div style={{width:54,height:54,borderRadius:16,
+            background:"rgba(59,130,246,0.10)",border:`1px solid rgba(59,130,246,0.18)`,
+            display:"grid",placeItems:"center",margin:"0 auto 14px"}}>
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke={C.blue}
+              strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+          </div>
+          {/* Titre */}
+          <div style={{fontSize:18,fontWeight:700,color:C.text,fontFamily:DISP_F,
+            letterSpacing:"-0.3px",marginBottom:8}}>
+            Lance-toi avec ton coach
+          </div>
+          <div style={{fontSize:13,color:"#374151",fontFamily:DISP_F,lineHeight:1.65,marginBottom:20}}>
+            Génère ton programme en quelques secondes ou fais appel directement à un coach pour un suivi personnalisé.
+          </div>
+          {/* CTA 1 — Génère */}
+          <button onClick={()=>{ if(!premium) setPaywall(true); else setProgView("analyse"); }}
+            style={{width:"100%",padding:"15px 10px",borderRadius:13,border:"none",cursor:"pointer",
+              background:C.accent,color:"#fff",fontSize:14,fontWeight:700,fontFamily:DISP_F,
+              boxShadow:"0 5px 18px -4px rgba(59,130,246,0.50)",
+              display:"flex",alignItems:"center",justifyContent:"center",gap:8,marginBottom:9}}>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="#fff" stroke="none">
+              <path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/>
+            </svg>
+            Génère ton programme
+          </button>
+          {/* CTA 2 — Coach */}
+          <button onClick={()=>{ setIsCreating(true); setCS(0); setNewP({nom:"",jours:[],seances:{}}); }}
+            style={{width:"100%",padding:"15px 10px",borderRadius:13,cursor:"pointer",
+              border:`1.5px solid rgba(59,130,246,0.25)`,background:C.s1,
+              color:C.blue,fontSize:14,fontWeight:700,fontFamily:DISP_F,
+              display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={C.blue}
+              strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+            </svg>
+            Fais appel à un coach
+          </button>
         </div>
       )}
 
-      {/* ── CTAs — état vide (aucun programme) ── */}
-      {!prog && !showCreerForm && (
-        <div style={{marginBottom:12,display:"flex",gap:9}}>
-          <button onClick={()=>{ if(!premium) setPaywall(true); else setProgView("analyse"); }}
-            style={{flex:1,padding:"13px 10px",background:C.accent,color:"#fff",border:"none",
-              borderRadius:12,fontSize:13,fontWeight:700,fontFamily:DISP_F,cursor:"pointer",
-              boxShadow:"0 4px 16px -4px rgba(59,130,246,0.55)",
-              display:"flex",alignItems:"center",justifyContent:"center",gap:7}}>
-            <span>+</span> Nouveau programme IA
-          </button>
-          <button onClick={()=>{ setIsCreating(true); setCS(0); setNewP({nom:"",jours:[],seances:{}}); }}
-            style={{padding:"13px 16px",background:C.s1,color:C.mid,
-              border:`1px solid ${C.bd}`,borderRadius:12,fontSize:13,fontWeight:600,
-              fontFamily:DISP_F,cursor:"pointer",whiteSpace:"nowrap"}}>
-            Manuel
-          </button>
-        </div>
-      )}
+      {/* ── CTAs avec programme — une seule fois ── */}
+      {!prog && false && null}
 
       {showCreerForm && (
         <Creer {...creerProps} progs={allProgs} setProgsAll={(next)=>{ setProgs(next); if(next.length>0) setProg(next[next.length-1]); }}/>
