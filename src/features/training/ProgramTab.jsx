@@ -1034,15 +1034,13 @@ function ProgrammeView(props) {
         )}
       </div>
 
-      {/* ── Coach IA — Analyse de la semaine ── */}
-      {prog && (
-        <CoachWeekCard
-          semC={semC}
-          semN={semN}
-          totalJours={prog.jours?.length||0}
-          onDetail={()=>setShowAnalyse(true)}
-        />
-      )}
+      {/* ── Coach IA — toujours visible ── */}
+      <CoachWeekCard
+        semC={semC}
+        semN={semN}
+        totalJours={prog?.jours?.length||0}
+        onDetail={()=>setShowAnalyse(true)}
+      />
 
       {/* ── Overlay Analyse de charge (depuis carte Coach IA) ── */}
       {showAnalyse && (
@@ -1156,13 +1154,32 @@ function ProgrammeView(props) {
           </div>
         )}
 
-        {/* Charge progressive */}
-        <div style={{fontSize:16,fontWeight:700,color:C.text,fontFamily:DISP_F,marginBottom:10}}>
-          Charge progressive
-        </div>
-        <MesocycleChart prog={prog} semC={semC} checkedEx={checkedEx} cycleStart={cycleStart}/>
-
       </>)}
+
+      {/* ── Aucun programme — CTAs seuls ── */}
+      {!prog && !showCreerForm && (
+        <div style={{marginBottom:16,display:"flex",gap:9}}>
+          <button onClick={()=>{ if(!premium) setPaywall(true); else setProgView("analyse"); }}
+            style={{flex:1,padding:"13px 10px",background:C.accent,color:"#fff",border:"none",
+              borderRadius:12,fontSize:13,fontWeight:700,fontFamily:DISP_F,cursor:"pointer",
+              boxShadow:"0 4px 16px -4px rgba(59,130,246,0.55)",
+              display:"flex",alignItems:"center",justifyContent:"center",gap:7}}>
+            <span>+</span> Nouveau programme IA
+          </button>
+          <button onClick={()=>{ setIsCreating(true); setCS(0); setNewP({nom:"",jours:[],seances:{}}); }}
+            style={{padding:"13px 16px",background:C.s1,color:C.mid,
+              border:`1px solid ${C.bd}`,borderRadius:12,fontSize:13,fontWeight:600,
+              fontFamily:DISP_F,cursor:"pointer",whiteSpace:"nowrap"}}>
+            Manuel
+          </button>
+        </div>
+      )}
+
+      {/* ── Charge progressive — toujours visible ── */}
+      <div style={{fontSize:16,fontWeight:700,color:C.text,fontFamily:DISP_F,marginBottom:10}}>
+        Charge progressive
+      </div>
+      <MesocycleChart prog={prog} semC={semC} checkedEx={checkedEx} cycleStart={cycleStart}/>
 
       {/* ── Autres programmes ── */}
       {allProgs.length > 1 && (
