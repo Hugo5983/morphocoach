@@ -11,7 +11,7 @@ import { GuideExModal, SeanceDetailModal } from "./components/ProgramTabModals.j
 
 // ─── COACH IA — CARTE RÉCUPÉRATION ───────────────────────────────────────────
 function CoachWeekCard({ semC, semN, totalJours, onDetail }) {
-  const F    = "'Outfit','DM Sans',system-ui,sans-serif";
+  const F    = "'General Sans',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif";
   const done  = semC || 0;
   const total = totalJours || 0;
   const ratio = total > 0 ? done / total : 0;
@@ -59,17 +59,17 @@ function CoachWeekCard({ semC, semN, totalJours, onDetail }) {
             { txt:`SEMAINE ${semN}`,bg:"rgba(255,255,255,0.07)", bd:"rgba(255,255,255,0.10)", c:"rgba(255,255,255,0.55)" },
           ].map((b,i) => (
             <div key={i} style={{ padding:"5px 12px", borderRadius:40, background:b.bg, border:`1px solid ${b.bd}` }}>
-              <span style={{ fontSize:9.5, fontWeight:800, letterSpacing:"1.4px", color:b.c, fontFamily:F, textTransform:"uppercase" }}>{b.txt}</span>
+              <span style={{ fontSize:9.5, fontWeight:700, letterSpacing:"1.4px", color:b.c, fontFamily:F, textTransform:"uppercase" }}>{b.txt}</span>
             </div>
           ))}
         </div>
-        <div style={{ fontFamily:F, fontSize:22, fontWeight:800, color:"#fff", lineHeight:1.2, letterSpacing:"-0.3px", marginBottom:9 }}>{title}</div>
+        <div style={{ fontFamily:F, fontSize:22, fontWeight:700, color:"#fff", lineHeight:1.2, letterSpacing:"-0.3px", marginBottom:9 }}>{title}</div>
         <div style={{ fontSize:12, color:"rgba(255,255,255,0.48)", lineHeight:1.6, fontFamily:F, marginBottom:16 }}>{sub}</div>
         <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:8, marginBottom:14 }}>
           {stats.map((s,i) => (
             <div key={i} style={{ borderRadius:11, padding:"11px 8px",
               background:"rgba(255,255,255,0.07)", border:"1px solid rgba(255,255,255,0.08)", textAlign:"center" }}>
-              <div style={{ fontSize:15, fontWeight:800, color:s.color, fontFamily:F, lineHeight:1.1, marginBottom:4 }}>{s.val}</div>
+              <div style={{ fontSize:15, fontWeight:700, color:s.color, fontFamily:F, lineHeight:1.1, marginBottom:4 }}>{s.val}</div>
               <div style={{ fontSize:9, color:"rgba(255,255,255,0.62)", fontFamily:F, textTransform:"uppercase", letterSpacing:"1px" }}>{s.label}</div>
             </div>
           ))}
@@ -94,8 +94,8 @@ function CoachWeekCard({ semC, semN, totalJours, onDetail }) {
 
 // ─── PROGRESSION DE LA SEMAINE CHART ─────────────────────────────────────────
 function MesocycleChart({ prog, semC, checkedEx, cycleStart }) {
-  const DISP_F  = "'Outfit','DM Sans',system-ui,sans-serif";
-  const SERIF_F = "'DM Serif Display','Georgia',serif";
+  const DISP_F  = "'General Sans',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif";
+  const SERIF_F = "'General Sans',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif";
   const [open, setOpen] = useState(false);
   const currentWeek = Math.min((semC||0), 5);
   const baseVol = (prog?.jours||[]).reduce((a,j) =>
@@ -173,7 +173,7 @@ function MesocycleChart({ prog, semC, checkedEx, cycleStart }) {
       <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",marginBottom:14}}>
         <div>
           <div style={{display:"flex",alignItems:"baseline",gap:6,marginBottom:4}}>
-            <span style={{fontSize:28,fontWeight:900,color:C.text,fontFamily:DISP_F,letterSpacing:"-1px"}}>
+            <span style={{fontSize:28,fontWeight:700,color:C.text,fontFamily:DISP_F,letterSpacing:"-1px"}}>
               {hasCharge ? `+${Math.round(((curTon/baseTonnage)-1)*100)}%` : "+12%"}
             </span>
             <span style={{fontSize:11.5,fontWeight:500,color:C.dim,fontFamily:DISP_F}}>cette semaine</span>
@@ -301,21 +301,23 @@ function MesocycleChart({ prog, semC, checkedEx, cycleStart }) {
 
       {/* CTA */}
       <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:6,marginTop:14,paddingTop:12,borderTop:`1px solid ${C.bd}`,color:"#60A5FA",fontSize:12,fontWeight:700,fontFamily:DISP_F}}>
-        Voir l'analyse complète
+        Voir la progression de force
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
       </div>
     </div>
 
-    {/* Overlay (inchangé) */}
-    {open && <MesocycleDetail prog={prog} semC={semC} baseVol={baseVol} MEV={MEV} MAV={MAV} MRV={MRV} curVol={curVol} currentWeek={currentWeek} WEEKS={WEEKS} cycleStart={cycleStart} checkedEx={checkedEx} onClose={()=>setOpen(false)}/>}
+    {/* Overlay — mode FORCE (progression de force par exercice) */}
+    {open && <MesocycleDetail mode="force" prog={prog} semC={semC} baseVol={baseVol} MEV={MEV} MAV={MAV} MRV={MRV} curVol={curVol} currentWeek={currentWeek} WEEKS={WEEKS} cycleStart={cycleStart} checkedEx={checkedEx} onClose={()=>setOpen(false)}/>}
     </>
   );
 }
 
 // ─── MÉSOCYCLE DETAIL (analyse complète, overlay) ────────────────────────────
-function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, curVol, currentWeek, WEEKS, cycleStart, checkedEx, onClose }) {
-  const DISP_F = "'Outfit','DM Sans',system-ui,sans-serif";
-  const SERIF_F = "'DM Serif Display','Georgia',serif";
+function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, curVol, currentWeek, WEEKS, cycleStart, checkedEx, onClose, mode = "analyse" }) {
+  const isForce   = mode === "force";
+  const [exMenu, setExMenu] = useState(false);   // dropdown sélecteur d'exercice (mode force)
+  const DISP_F = "'General Sans',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif";
+  const SERIF_F = "'General Sans',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif";
   const [exp, setExp] = useState(null);
 
   // ── Utilitaires data ──────────────────────────────────────────────────────
@@ -389,6 +391,17 @@ function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, curVol, currentWe
     return chosen;
   }, [perfAll, selEx]);
 
+  // ── Liste de TOUS les exercices du programme (pour le menu déroulant force) ──
+  const allExNames = useMemo(() => {
+    const names = new Set();
+    (prog?.jours||[]).forEach(j => (j.exercices||[]).forEach(ex => {
+      if (ex.nom) names.add(ex.nom);
+    }));
+    // ajoute aussi ceux loggés mais absents du prog actuel
+    perfAll.forEach(e => names.add(e.exNom));
+    return Array.from(names);
+  }, [prog, perfAll]);
+
   // ── Progression par semaine de mésocycle ─────────────────────────────────
   const progWeeks = useMemo(() => {
     if (!perfData?.sessions?.length || !cycleStart) return null;
@@ -436,17 +449,19 @@ function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, curVol, currentWe
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
             Retour
           </button>
-          <div style={{fontSize:9,fontWeight:700,letterSpacing:"1.8px",textTransform:"uppercase",color:C.blue,fontFamily:DISP_F,marginBottom:5}}>Mésocycle · Semaine {currentWeek+1} / 6</div>
-          <div style={{fontFamily:SERIF_F,fontSize:25,letterSpacing:-0.8,lineHeight:1.1}}>Analyse <span style={{fontStyle:"italic",color:"#60A5FA"}}>de charge</span></div>
-          <div style={{fontSize:11,color:C.dim,marginTop:4,fontFamily:DISP_F}}>{WEEKS[currentWeek].type==="Déload"?"Phase de récupération":WEEKS[currentWeek].type==="Pic"?"Phase de pic":"Phase d'accumulation"} · Hypertrophie</div>
+          <div style={{fontSize:9,fontWeight:700,letterSpacing:"1.8px",textTransform:"uppercase",color:C.blue,fontFamily:DISP_F,marginBottom:5}}>{isForce ? "Suivi de force · 1RM estimé" : `Mésocycle · Semaine ${currentWeek+1} / 6`}</div>
+          <div style={{fontFamily:SERIF_F,fontSize:25,letterSpacing:-0.8,lineHeight:1.1}}>{isForce ? <>Progression <span style={{fontStyle:"italic",color:"#60A5FA"}}>de force</span></> : <>Analyse <span style={{fontStyle:"italic",color:"#60A5FA"}}>de charge</span></>}</div>
+          <div style={{fontSize:11,color:C.dim,marginTop:4,fontFamily:DISP_F}}>{isForce ? "1RM réel par exercice · séance après séance" : `${WEEKS[currentWeek].type==="Déload"?"Phase de récupération":WEEKS[currentWeek].type==="Pic"?"Phase de pic":"Phase d'accumulation"} · Hypertrophie`}</div>
         </div>
 
+        {/* ── SECTIONS ANALYSE (mode analyse uniquement) ── */}
+        {!isForce && <>
         {/* 1. VOLUME vs MEV/MAV/MRV (RÉEL) */}
         {card("vol", <>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
             <div>
               <div style={lbl}>Volume vs capacité de récupération</div>
-              <div><span style={{fontSize:30,fontWeight:800,color:nearMRV?"#F59E0B":"#34D399",letterSpacing:-1}}>{curVol}</span> <span style={{fontSize:13,fontWeight:600,color:C.dim}}>séries cette sem.</span></div>
+              <div><span style={{fontSize:30,fontWeight:700,color:nearMRV?"#F59E0B":"#34D399",letterSpacing:-1}}>{curVol}</span> <span style={{fontSize:13,fontWeight:600,color:C.dim}}>séries cette sem.</span></div>
             </div>
             {nearMRV ? badge("rgba(245,158,11,0.15)","#F59E0B","Limite proche") : badge("rgba(52,211,153,0.15)","#34D399","Zone optimale")}
           </div>
@@ -519,7 +534,7 @@ function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, curVol, currentWe
                     transform="rotate(-90 48 48)" style={{transition:"stroke-dashoffset .6s,stroke .4s"}}/>
                 </svg>
                 <div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center"}}>
-                  <div style={{fontSize:26,fontWeight:800,color:col,lineHeight:1}}>{score??"-"}</div>
+                  <div style={{fontSize:26,fontWeight:700,color:col,lineHeight:1}}>{score??"-"}</div>
                   <div style={{fontSize:8,color:"#9CA3AF",letterSpacing:1,textTransform:"uppercase",marginTop:2}}>/ 100</div>
                 </div>
               </div>
@@ -590,7 +605,7 @@ function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, curVol, currentWe
               <div>
                 <div style={lbl}>Ratio charge aiguë / chronique</div>
                 <div>
-                  <span style={{fontSize:30,fontWeight:800,color:acwrCol,letterSpacing:-1}}>
+                  <span style={{fontSize:30,fontWeight:700,color:acwrCol,letterSpacing:-1}}>
                     {hasRatio ? ratio.toFixed(2) : "—"}
                   </span>
                   {' '}<span style={{fontSize:13,fontWeight:600,color:C.dim}}>{acwrLabel}</span>
@@ -664,7 +679,7 @@ function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, curVol, currentWe
             <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
               <div>
                 <div style={lbl}>Détection surentraînement</div>
-                <div style={{fontSize:22,fontWeight:800,color:statusColor}}>{overallLabel}</div>
+                <div style={{fontSize:22,fontWeight:700,color:statusColor}}>{overallLabel}</div>
               </div>
               {badge(`${statusColor}20`,statusColor,statusLabel)}
             </div>
@@ -727,8 +742,11 @@ function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, curVol, currentWe
           </>;
         })())}
 
+        </>}
+        {/* ── FIN SECTIONS ANALYSE ── */}
+
         {/* 5. PROGRESSION FORCE — 1RM réel par séance, avec sélecteur d'exercice */}
-        {card("rm", (() => {
+        {isForce && card("rm", (() => {
           const hasAny  = perfAll.length > 0;
           const hasProg = perfData && perfData.sessions.length >= 2;
           const sessions = perfData?.sessions || [];
@@ -760,7 +778,7 @@ function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, curVol, currentWe
               <div>
                 <div style={lbl}>Progression force · {exLabel}</div>
                 <div>
-                  <span style={{fontSize:30,fontWeight:800,color:pctCol,letterSpacing:-1}}>
+                  <span style={{fontSize:30,fontWeight:700,color:pctCol,letterSpacing:-1}}>
                     {pct!==null ? `${pct>=0?'+':''}${pct}` : "–"}
                   </span>
                   {' '}<span style={{fontSize:13,fontWeight:600,color:C.dim}}>
@@ -771,23 +789,51 @@ function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, curVol, currentWe
               {liveBadge}
             </div>
 
-            {/* Sélecteur d'exercice (scroll horizontal) */}
-            {perfAll.length > 1 && (
-              <div style={{display:"flex",gap:7,overflowX:"auto",marginTop:12,paddingBottom:4,WebkitOverflowScrolling:"touch"}}>
-                {perfAll.map(ex => {
-                  const on = ex.exNom === exLabel;
-                  return (
-                    <button key={ex.exNom} onClick={()=>setSelEx(ex.exNom)}
-                      style={{flexShrink:0,padding:"7px 13px",borderRadius:10,cursor:"pointer",
-                        background: on ? "linear-gradient(145deg,#3B82F6,#2563EB)" : "rgba(0,0,0,0.04)",
-                        border: on ? "1px solid rgba(37,99,235,0.5)" : "1px solid rgba(0,0,0,0.06)",
-                        color: on ? "#fff" : "#374151", fontSize:12, fontWeight:700, fontFamily:DISP_F,
-                        boxShadow: on ? "0 3px 10px rgba(59,130,246,0.35)" : "none",
-                        whiteSpace:"nowrap"}}>
-                      {ex.exNom}
-                    </button>
-                  );
-                })}
+            {/* Sélecteur d'exercice — menu déroulant */}
+            {allExNames.length > 0 && (
+              <div style={{position:"relative",marginTop:14,zIndex:5}}>
+                <button onClick={()=>setExMenu(m=>!m)}
+                  style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between",
+                    padding:"12px 14px",borderRadius:12,cursor:"pointer",
+                    background:"#fff",border:`1px solid ${exMenu?"rgba(59,130,246,0.45)":C.bd}`,
+                    boxShadow:exMenu?"0 4px 14px rgba(59,130,246,0.14)":"0 1px 4px rgba(15,25,35,0.05)",
+                    fontFamily:DISP_F}}>
+                  <span style={{display:"flex",alignItems:"center",gap:9,minWidth:0}}>
+                    <span style={{width:30,height:30,borderRadius:8,flexShrink:0,
+                      background:"rgba(59,130,246,0.10)",display:"grid",placeItems:"center"}}>
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="m6.5 17.5 11-11M4 15l-1.5 1.5M20 9l1.5-1.5M8.5 19.5l-3-3M18.5 7.5l-3-3"/></svg>
+                    </span>
+                    <span style={{fontSize:14,fontWeight:700,color:C.text,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>
+                      {selEx || perfData?.exNom || allExNames[0]}
+                    </span>
+                  </span>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={C.dim} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{transform:exMenu?"rotate(180deg)":"none",transition:"transform .2s",flexShrink:0}}><path d="m6 9 6 6 6-6"/></svg>
+                </button>
+                {exMenu && (
+                  <div style={{position:"absolute",top:"calc(100% + 6px)",left:0,right:0,
+                    background:"#fff",border:`1px solid ${C.bd}`,borderRadius:14,
+                    boxShadow:"0 16px 40px rgba(15,25,35,0.16)",overflow:"hidden",
+                    maxHeight:260,overflowY:"auto",WebkitOverflowScrolling:"touch"}}>
+                    {allExNames.map((nm,k) => {
+                      const on = nm === (selEx || perfData?.exNom || allExNames[0]);
+                      const logged = perfAll.some(e=>e.exNom===nm);
+                      return (
+                        <button key={nm} onClick={()=>{setSelEx(nm);setExMenu(false);}}
+                          style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between",
+                            padding:"12px 14px",cursor:"pointer",textAlign:"left",
+                            background:on?"rgba(59,130,246,0.07)":"transparent",
+                            border:"none",borderTop:k>0?`1px solid rgba(0,0,0,0.04)`:"none",fontFamily:DISP_F}}>
+                          <span style={{fontSize:13.5,fontWeight:on?700:500,color:on?"#2563EB":C.text,
+                            whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{nm}</span>
+                          {!logged && <span style={{fontSize:9.5,fontWeight:700,color:C.dim,
+                            background:"rgba(0,0,0,0.04)",padding:"3px 7px",borderRadius:6,flexShrink:0,
+                            marginLeft:8,whiteSpace:"nowrap"}}>à logger</span>}
+                          {on && logged && <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2563EB" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" style={{flexShrink:0}}><path d="M5 12.5 10 17l9-10"/></svg>}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             )}
 
@@ -808,12 +854,12 @@ function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, curVol, currentWe
                         <circle cx={p.x} cy={p.y} r={k===pts.length-1?5:3}
                           fill="#3B82F6" stroke={k===pts.length-1?"#fff":"none"} strokeWidth={k===pts.length-1?1.5:0}/>
                         {(k===0||k===pts.length-1) && (
-                          <text x={p.x} y={p.y-9} fontSize="10" fontWeight="700" fill="#2563EB" textAnchor="middle" fontFamily="'Outfit',sans-serif">{p.rm}kg</text>
+                          <text x={p.x} y={p.y-9} fontSize="10" fontWeight="700" fill="#2563EB" textAnchor="middle" fontFamily="'General Sans',system-ui,-apple-system,sans-serif">{p.rm}kg</text>
                         )}
                       </g>
                     ))}
-                    <text x={pts[0].x} y={SVG_H-6} fontSize="9" fill="#9CA3AF" textAnchor="start" fontFamily="'Outfit',sans-serif">{fmtD(sessions[0].date)}</text>
-                    <text x={pts[pts.length-1].x} y={SVG_H-6} fontSize="9" fill="#9CA3AF" textAnchor="end" fontFamily="'Outfit',sans-serif">{fmtD(sessions[sessions.length-1].date)}</text>
+                    <text x={pts[0].x} y={SVG_H-6} fontSize="9" fill="#9CA3AF" textAnchor="start" fontFamily="'General Sans',system-ui,-apple-system,sans-serif">{fmtD(sessions[0].date)}</text>
+                    <text x={pts[pts.length-1].x} y={SVG_H-6} fontSize="9" fill="#9CA3AF" textAnchor="end" fontFamily="'General Sans',system-ui,-apple-system,sans-serif">{fmtD(sessions[sessions.length-1].date)}</text>
                   </svg>
                 </div>
                 <div style={{display:"flex",justifyContent:"space-between",marginTop:6,fontSize:10.5,color:"#9CA3AF",fontFamily:DISP_F}}>
@@ -852,6 +898,21 @@ function ProgrammeView(props) {
   const [confirmDel, setConfirmDel] = useState(null); // {type:"prog"|"jour", progIdx, jourIdx}
   const [isCreating, setIsCreating] = useState(false);
   const [openJour,   setOpenJour]   = useState(null);
+  const [showAnalyse, setShowAnalyse] = useState(false);  // overlay analyse de charge (depuis carte Coach IA)
+
+  // ── Valeurs mésocycle pour l'overlay analyse (depuis le bouton Coach IA) ──
+  const anaCurrentWeek = Math.min((semC||0), 5);
+  const anaWEEKS = [
+    {lbl:"S1", type:"Base",   m:1.00},{lbl:"S2", type:"Vol+",   m:1.10},
+    {lbl:"S3", type:"Vol+",   m:1.20},{lbl:"S4", type:"Vol+",   m:1.30},
+    {lbl:"S5", type:"Déload", m:0.70},{lbl:"S6", type:"Pic",    m:1.40},
+  ];
+  const anaBaseVol = (prog?.jours||[]).reduce((a,j) =>
+    a + (j.exercices||[]).reduce((b,ex) => b + (parseInt(ex.series)||4), 0), 0);
+  const anaMEV = Math.round(anaBaseVol*0.65);
+  const anaMAV = anaBaseVol;
+  const anaMRV = Math.round(anaBaseVol*1.35);
+  const anaCurVol = Math.round(anaBaseVol * anaWEEKS[anaCurrentWeek].m);
 
   const allProgs = progs && progs.length > 0 ? progs : (prog ? [prog] : []);
 
@@ -913,8 +974,8 @@ function ProgrammeView(props) {
   };
 
   // ── Helpers ────────────────────────────────────────────────────────────────
-  const SERIF_F  = "'DM Serif Display','Georgia',serif";
-  const DISP_F   = "'Outfit','DM Sans',system-ui,sans-serif";
+  const SERIF_F  = "'General Sans',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif";
+  const DISP_F   = "'General Sans',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif";
   const semN     = (semC||0)+1;
   const cc = (cat) => ({principal:"#4D8BFF",correctif:"#FF7A6B",gainage:"#5FE0A5",isolation:"#B69DFF"}[cat||"principal"]||"#4D8BFF");
   const progIdx = Math.max(0, allProgs.findIndex(p => prog && (p.id===prog.id || p.titre===prog.titre)));
@@ -979,7 +1040,19 @@ function ProgrammeView(props) {
           semC={semC}
           semN={semN}
           totalJours={prog.jours?.length||0}
-          onDetail={()=>setOpen(true)}
+          onDetail={()=>setShowAnalyse(true)}
+        />
+      )}
+
+      {/* ── Overlay Analyse de charge (depuis carte Coach IA) ── */}
+      {showAnalyse && (
+        <MesocycleDetail
+          mode="analyse"
+          prog={prog} semC={semC}
+          baseVol={anaBaseVol} MEV={anaMEV} MAV={anaMAV} MRV={anaMRV} curVol={anaCurVol}
+          currentWeek={anaCurrentWeek} WEEKS={anaWEEKS}
+          cycleStart={cycleStart} checkedEx={checkedEx}
+          onClose={()=>setShowAnalyse(false)}
         />
       )}
 
@@ -1016,7 +1089,7 @@ function ProgrammeView(props) {
                 onClick={()=>setOpenJour(isOpen?null:jIdx)}>
                 {/* Badge jour */}
                 <div style={{width:50,height:50,borderRadius:14,background:int.c,color:"#fff",
-                  display:"grid",placeItems:"center",flexShrink:0,fontFamily:DISP_F,fontSize:12,fontWeight:800,
+                  display:"grid",placeItems:"center",flexShrink:0,fontFamily:DISP_F,fontSize:12,fontWeight:700,
                   boxShadow:`0 4px 14px ${int.c}55`}}>
                   {j.focus||j.nom?.slice(0,3)||"—"}
                 </div>
@@ -1047,10 +1120,10 @@ function ProgrammeView(props) {
                     ? <div style={{textAlign:"center",padding:"12px 0",fontSize:11,color:C.dim,fontFamily:DISP_F}}>Aucun exercice — tape Modifier pour en ajouter</div>
                     : exos.map((ex,k) => (
                       <div key={k} style={{display:"flex",alignItems:"flex-start",gap:11,padding:"9px 0",borderBottom:k<exos.length-1?"1px solid rgba(0,0,0,0.03)":"none"}}>
-                        <div style={{width:30,height:30,borderRadius:9,background:`${cc(ex.cat)}20`,border:`1px solid ${cc(ex.cat)}35`,color:cc(ex.cat),display:"grid",placeItems:"center",fontFamily:DISP_F,fontSize:11,fontWeight:800,flexShrink:0}}>{k+1}</div>
+                        <div style={{width:30,height:30,borderRadius:9,background:`${cc(ex.cat)}20`,border:`1px solid ${cc(ex.cat)}35`,color:cc(ex.cat),display:"grid",placeItems:"center",fontFamily:DISP_F,fontSize:11,fontWeight:700,flexShrink:0}}>{k+1}</div>
                         <div style={{flex:1,minWidth:0}}>
                           <div style={{fontSize:13.5,fontWeight:700,color:C.text,fontFamily:DISP_F,letterSpacing:-0.1}}>{ex.nom}</div>
-                          <div style={{fontSize:9,fontWeight:800,letterSpacing:"1px",color:C.dim,textTransform:"uppercase",fontFamily:DISP_F,marginTop:2}}>{ex.cat||"Principal"}</div>
+                          <div style={{fontSize:9,fontWeight:700,letterSpacing:"1px",color:C.dim,textTransform:"uppercase",fontFamily:DISP_F,marginTop:2}}>{ex.cat||"Principal"}</div>
                         </div>
                         <div style={{fontSize:12,fontWeight:600,color:C.mid,fontFamily:DISP_F,flexShrink:0,marginTop:2,textAlign:"right",whiteSpace:"nowrap"}}>
                           {ex.series}×{ex.reps} · {ex.repos}s
@@ -1251,7 +1324,7 @@ export default function ProgramTab(props){
                 background:on?"#FFFFFF":"transparent",
                 border:on?"1px solid rgba(59,130,246,0.30)":"1px solid transparent",
                 color:on?"#0F1923":"#6B7280",
-                fontSize:11.5,fontWeight:700,fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",letterSpacing:0.2,
+                fontSize:11.5,fontWeight:700,fontFamily:"'General Sans',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif",letterSpacing:0.2,
                 boxShadow:on?"0 1px 4px rgba(0,0,0,0.08)":"none",cursor:"pointer",
                 display:"flex",alignItems:"center",justifyContent:"center",gap:4,
               }}>
@@ -1279,14 +1352,14 @@ export default function ProgramTab(props){
       {progView==="analyse" && premium && <AnalyseIA {...analyseProps} />}
       {progView==="analyse" && !premium && (
         <div style={{padding:"4px 20px 0"}}>
-          <div style={{fontSize:9,fontWeight:700,color:C.dim,letterSpacing:2,textTransform:"uppercase",fontFamily:"'Outfit','DM Sans',system-ui,sans-serif"}}>MorphoCoach</div>
-          <div style={{fontFamily:"'Instrument Serif',serif",fontSize:32,fontWeight:400,letterSpacing:-1.2,color:C.text,lineHeight:1.05,marginTop:6}}>Passe en <span style={{fontStyle:"italic",color:C.goldL}}>Pro</span></div>
+          <div style={{fontSize:9,fontWeight:700,color:C.dim,letterSpacing:2,textTransform:"uppercase",fontFamily:"'General Sans',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"}}>MorphoCoach</div>
+          <div style={{fontFamily:"'General Sans',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif",fontSize:32,fontWeight:700,letterSpacing:-1.2,color:C.text,lineHeight:1.05,marginTop:6}}>Passe en <span style={{fontStyle:"italic",color:C.goldL}}>Pro</span></div>
           <div style={{fontSize:12.5,color:C.mid,marginTop:6,fontWeight:500,lineHeight:1.4}}>L'expérience complète. Programmes générés sur-mesure, suivi avancé, accès illimité.</div>
 
           <div style={{position:"relative",borderRadius:26,overflow:"hidden",marginTop:20,padding:"26px 22px 24px",background:`radial-gradient(120% 60% at 70% 0%, rgba(255,171,93,0.22), transparent 60%), radial-gradient(80% 60% at 0% 100%, rgba(77,139,255,0.18), transparent 60%), linear-gradient(160deg, ${C.s2} 0%, ${C.s1} 100%)`,border:`1px solid ${C.bdHi}`,boxShadow:"0 24px 48px rgba(0,0,0,0.5), inset 0 1px 0 rgba(0,0,0,0.05)"}}>
             <div style={{position:"absolute",top:0,left:0,right:0,height:1,background:`linear-gradient(90deg, transparent, ${C.gold}, ${C.blue}, transparent)`}}/>
-            <div style={{display:"inline-flex",alignItems:"center",gap:5,padding:"5px 10px",borderRadius:999,background:`${C.gold}20`,border:`1px solid ${C.gold}40`,color:C.goldL,fontSize:10,fontWeight:800,fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",letterSpacing:1}}>♛ PRO</div>
-            <div style={{fontFamily:"'Instrument Serif',serif",fontSize:36,fontWeight:400,letterSpacing:-1.3,color:C.text,lineHeight:1,marginTop:16}}>L'expérience<br/><span style={{fontStyle:"italic",color:C.goldL}}>complète.</span></div>
+            <div style={{display:"inline-flex",alignItems:"center",gap:5,padding:"5px 10px",borderRadius:999,background:`${C.gold}20`,border:`1px solid ${C.gold}40`,color:C.goldL,fontSize:10,fontWeight:700,fontFamily:"'General Sans',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif",letterSpacing:1}}>♛ PRO</div>
+            <div style={{fontFamily:"'General Sans',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif",fontSize:36,fontWeight:700,letterSpacing:-1.3,color:C.text,lineHeight:1,marginTop:16}}>L'expérience<br/><span style={{fontStyle:"italic",color:C.goldL}}>complète.</span></div>
             <div style={{marginTop:20,display:"flex",flexDirection:"column",gap:12}}>
               {[
                 {i:"✦",t:"Coach morphologique",s:"Programme adapté à ta morphologie précise"},
@@ -1297,7 +1370,7 @@ export default function ProgramTab(props){
                 <div key={f.t} style={{display:"flex",alignItems:"flex-start",gap:12}}>
                   <div style={{width:32,height:32,borderRadius:10,flexShrink:0,background:`${C.gold}18`,border:`1px solid ${C.gold}35`,color:C.goldL,display:"grid",placeItems:"center",fontSize:14}}>{f.i}</div>
                   <div>
-                    <div style={{fontSize:13,fontWeight:700,color:C.text,fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",letterSpacing:-0.1}}>{f.t}</div>
+                    <div style={{fontSize:13,fontWeight:700,color:C.text,fontFamily:"'General Sans',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif",letterSpacing:-0.1}}>{f.t}</div>
                     <div style={{fontSize:11.5,color:C.mid,fontWeight:500,marginTop:2,lineHeight:1.4}}>{f.s}</div>
                   </div>
                 </div>
@@ -1305,16 +1378,16 @@ export default function ProgramTab(props){
             </div>
             <div style={{marginTop:20,padding:"14px 16px",borderRadius:16,background:"rgba(11,15,31,0.5)",border:`1px solid ${C.bd}`,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
               <div>
-                <div style={{fontSize:9,fontWeight:700,color:C.dim,letterSpacing:1.5,textTransform:"uppercase",fontFamily:"'Outfit','DM Sans',system-ui,sans-serif"}}>Cycle 6 semaines</div>
+                <div style={{fontSize:9,fontWeight:700,color:C.dim,letterSpacing:1.5,textTransform:"uppercase",fontFamily:"'General Sans',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"}}>Cycle 6 semaines</div>
                 <div style={{marginTop:4,display:"flex",alignItems:"baseline",gap:4}}>
-                  <span style={{fontFamily:"'Instrument Serif',serif",fontSize:34,fontWeight:400,letterSpacing:-1,color:C.text,lineHeight:1}}>19,99</span>
+                  <span style={{fontFamily:"'General Sans',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif",fontSize:34,fontWeight:700,letterSpacing:-1,color:C.text,lineHeight:1}}>19,99</span>
                   <span style={{fontSize:13,color:C.mid,fontWeight:600}}>€ / cycle</span>
                 </div>
               </div>
-              <div style={{padding:"5px 10px",borderRadius:999,background:`${C.mint}18`,border:`1px solid ${C.mint}40`,color:C.mint,fontSize:10,fontWeight:800,fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",letterSpacing:0.5}}>ÉCONOMIE 40%</div>
+              <div style={{padding:"5px 10px",borderRadius:999,background:`${C.mint}18`,border:`1px solid ${C.mint}40`,color:C.mint,fontSize:10,fontWeight:700,fontFamily:"'General Sans',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif",letterSpacing:0.5}}>ÉCONOMIE 40%</div>
             </div>
-            <button className="tap" onClick={()=>setPaywall(true)} style={{marginTop:16,width:"100%",padding:"16px",borderRadius:16,background:`linear-gradient(135deg, ${C.gold}, ${C.amberDk})`,border:"1px solid rgba(0,0,0,0.11)",color:"#1A1308",fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",fontSize:15,fontWeight:700,letterSpacing:0.2,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:8,boxShadow:`0 10px 24px ${C.amberDk}55, inset 0 1px 0 rgba(0,0,0,0.23)`}}>⚡ Commencer maintenant</button>
-            <button onClick={()=>setProgView("today")} style={{marginTop:10,width:"100%",padding:"6px",background:"transparent",border:"none",color:C.mid,fontSize:12,fontWeight:600,fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",cursor:"pointer"}}>Continuer en gratuit</button>
+            <button className="tap" onClick={()=>setPaywall(true)} style={{marginTop:16,width:"100%",padding:"16px",borderRadius:16,background:`linear-gradient(135deg, ${C.gold}, ${C.amberDk})`,border:"1px solid rgba(0,0,0,0.11)",color:"#1A1308",fontFamily:"'General Sans',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif",fontSize:15,fontWeight:700,letterSpacing:0.2,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:8,boxShadow:`0 10px 24px ${C.amberDk}55, inset 0 1px 0 rgba(0,0,0,0.23)`}}>⚡ Commencer maintenant</button>
+            <button onClick={()=>setProgView("today")} style={{marginTop:10,width:"100%",padding:"6px",background:"transparent",border:"none",color:C.mid,fontSize:12,fontWeight:600,fontFamily:"'General Sans',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif",cursor:"pointer"}}>Continuer en gratuit</button>
           </div>
         </div>
       )}
