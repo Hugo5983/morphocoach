@@ -16,13 +16,24 @@ function CoachWeekCard({ semC, semN, totalJours, onDetail, premium, onUnlock }) 
   const total = totalJours || 0;
   const ratio = total > 0 ? done / total : 0;
 
-  // Métriques récupération
+  // Vérifie si des séances ont vraiment été loggées
+  const hasRealData = useMemo(() => {
+    try {
+      const log = JSON.parse(localStorage.getItem('morpho_workout_log') || '{}');
+      return Object.values(log).some(d => d?.totalVolume > 0 || (d?.sets || []).length > 0);
+    } catch { return false; }
+  }, [done]);
+
+  // Métriques récupération — seulement si données réelles
   const fatigueLbl  = ratio < 0.35 ? "Basse"     : ratio < 0.70 ? "Modérée"   : "Élevée";
   const fatigueCol  = ratio < 0.35 ? "#6EE7B7"   : ratio < 0.70 ? "#FCD34D"   : "#FCA5A5";
   const recupPct    = Math.round(100 - ratio * 32);
   const recupCol    = recupPct >= 80 ? "#6EE7B7"  : recupPct >= 60 ? "#FCD34D" : "#FCA5A5";
   const risqueLbl   = ratio < 0.35 ? "Faible"    : ratio < 0.70 ? "Vigilance" : "Élevé";
   const risqueCol   = ratio < 0.35 ? "#93C5FD"   : ratio < 0.70 ? "#FCD34D"   : "#FCA5A5";
+
+  const EMPTY_VAL   = "À remplir";
+  const EMPTY_COL   = "#FCA5A5"; // rouge doux sur fond sombre
 
   const title = done === 0
     ? "Lance ta semaine. 💪"
@@ -38,9 +49,9 @@ function CoachWeekCard({ semC, semN, totalJours, onDetail, premium, onUnlock }) 
     : "Fatigue élevée · réduis l'intensité. Priorise la récupération avant ta prochaine séance pour éviter la surcharge.";
 
   const stats = [
-    { val: fatigueLbl,    label: "Fatigue", color: fatigueCol },
-    { val: `${recupPct}%`,label: "Récup.",  color: recupCol   },
-    { val: risqueLbl,     label: "Risque",  color: risqueCol  },
+    { val: hasRealData ? fatigueLbl   : EMPTY_VAL, label: "Fatigue", color: hasRealData ? fatigueCol : EMPTY_COL },
+    { val: hasRealData ? `${recupPct}%`: EMPTY_VAL, label: "Récup.",  color: hasRealData ? recupCol   : EMPTY_COL },
+    { val: hasRealData ? risqueLbl    : EMPTY_VAL, label: "Risque",  color: hasRealData ? risqueCol  : EMPTY_COL },
   ];
 
   return (
@@ -1196,24 +1207,6 @@ function ProgrammeView(props) {
 
       </>)}
 
-      {/* ── Aucun programme — CTAs seuls ── */}
-      {!prog && !showCreerForm && (
-        <div style={{marginBottom:16,display:"flex",gap:9}}>
-          <button onClick={()=>{ if(!premium) setPaywall(true); else setProgView("analyse"); }}
-            style={{flex:1,padding:"13px 10px",background:C.accent,color:"#fff",border:"none",
-              borderRadius:12,fontSize:13,fontWeight:700,fontFamily:DISP_F,cursor:"pointer",
-              boxShadow:"0 4px 16px -4px rgba(59,130,246,0.55)",
-              display:"flex",alignItems:"center",justifyContent:"center",gap:7}}>
-            <span>+</span> Nouveau programme IA
-          </button>
-          <button onClick={()=>{ setIsCreating(true); setCS(0); setNewP({nom:"",jours:[],seances:{}}); }}
-            style={{padding:"13px 16px",background:C.s1,color:C.mid,
-              border:`1px solid ${C.bd}`,borderRadius:12,fontSize:13,fontWeight:600,
-              fontFamily:DISP_F,cursor:"pointer",whiteSpace:"nowrap"}}>
-            Manuel
-          </button>
-        </div>
-      )}
 
       {/* ── Charge progressive — toujours visible ── */}
       <div style={{fontSize:16,fontWeight:700,color:C.text,fontFamily:DISP_F,marginBottom:10}}>
