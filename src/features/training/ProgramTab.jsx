@@ -10,7 +10,7 @@ import { findExInDB } from "../../utils/training.js";
 import { GuideExModal, SeanceDetailModal } from "./components/ProgramTabModals.jsx";
 
 // ─── COACH IA — CARTE RÉCUPÉRATION ───────────────────────────────────────────
-function CoachWeekCard({ semC, semN, totalJours, onDetail }) {
+function CoachWeekCard({ semC, semN, totalJours, onDetail, premium, onUnlock }) {
   const F    = "'General Sans',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif";
   const done  = semC || 0;
   const total = totalJours || 0;
@@ -88,6 +88,40 @@ function CoachWeekCard({ semC, semN, totalJours, onDetail }) {
           </button>
         </div>
       </div>
+
+      {/* ── Overlay cadenas si non PRO ── */}
+      {!premium && (
+        <div onClick={onUnlock}
+          style={{position:"absolute",inset:0,zIndex:10,cursor:"pointer",
+            borderRadius:20,
+            background:"rgba(8,6,22,0.72)",
+            backdropFilter:"blur(3px)",WebkitBackdropFilter:"blur(3px)",
+            display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:12}}>
+          <div style={{width:52,height:52,borderRadius:16,
+            background:"rgba(255,255,255,0.10)",border:"1px solid rgba(255,255,255,0.18)",
+            display:"grid",placeItems:"center"}}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+              stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+          </div>
+          <div style={{textAlign:"center"}}>
+            <div style={{fontSize:15,fontWeight:700,color:"#fff",fontFamily:F,letterSpacing:"-0.2px",marginBottom:4}}>
+              Fonctionnalité Coach PRO
+            </div>
+            <div style={{fontSize:12,color:"rgba(255,255,255,0.60)",fontFamily:F,lineHeight:1.5}}>
+              Passe à Coach PRO pour accéder<br/>à ton analyse hebdomadaire
+            </div>
+          </div>
+          <div style={{padding:"10px 22px",borderRadius:40,
+            background:"linear-gradient(135deg,#6366F1,#4F46E5)",
+            fontSize:12,fontWeight:700,color:"#fff",fontFamily:F,
+            boxShadow:"0 6px 18px rgba(79,70,229,0.50)"}}>
+            Débloquer Coach PRO
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -169,30 +203,43 @@ function MesocycleChart({ prog, semC, checkedEx, cycleStart }) {
     <div onClick={()=>setOpen(true)}
       style={{background:C.s1,border:`1px solid ${C.bd}`,borderRadius:20,padding:"16px 16px 14px",marginBottom:16,cursor:"pointer"}}>
 
-      {/* Header charge card — style photo 1 */}
+      {/* Header charge card */}
       <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",marginBottom:14}}>
         <div>
-          <div style={{display:"flex",alignItems:"baseline",gap:6,marginBottom:4}}>
-            <span style={{fontSize:28,fontWeight:700,color:C.text,fontFamily:DISP_F,letterSpacing:"-1px"}}>
-              {hasCharge ? `+${Math.round(((curTon/baseTonnage)-1)*100)}%` : "+12%"}
+          {hasCharge ? (
+            <>
+              <div style={{display:"flex",alignItems:"baseline",gap:6,marginBottom:4}}>
+                <span style={{fontSize:28,fontWeight:700,color:C.text,fontFamily:DISP_F,letterSpacing:"-1px"}}>
+                  {`${((curTon/baseTonnage)-1)>=0?"+":""}${Math.round(((curTon/baseTonnage)-1)*100)}%`}
+                </span>
+                <span style={{fontSize:11.5,fontWeight:500,color:C.dim,fontFamily:DISP_F}}>cette semaine</span>
+              </div>
+              <div style={{fontSize:12,color:C.dim,fontFamily:DISP_F,lineHeight:1.5}}>
+                {nearMRV ? "Proche de la limite · surveille la récup." : "Progression contrôlée · continue ainsi"}
+              </div>
+            </>
+          ) : (
+            <div style={{fontSize:14,fontWeight:700,color:C.text,fontFamily:DISP_F}}>
+              Charge progressive
+            </div>
+          )}
+        </div>
+        {hasCharge && (
+          <div style={{padding:"6px 12px",borderRadius:10,
+            background:nearMRV?"rgba(245,158,11,0.12)":"rgba(16,185,129,0.12)",
+            border:nearMRV?"1px solid rgba(245,158,11,0.25)":"1px solid rgba(16,185,129,0.25)",
+            flexShrink:0,marginTop:2}}>
+            <span style={{fontSize:12,fontWeight:700,
+              color:nearMRV?"#B45309":"#059669",fontFamily:DISP_F}}>
+              {nearMRV?"Limite proche":"Zone verte"}
             </span>
-            <span style={{fontSize:11.5,fontWeight:500,color:C.dim,fontFamily:DISP_F}}>cette semaine</span>
           </div>
-          <div style={{fontSize:12,color:C.dim,fontFamily:DISP_F,lineHeight:1.5}}>
-            {hasCharge
-              ? (nearMRV ? "Proche de la limite · surveille la récup." : "Progression contrôlée · continue ainsi")
-              : "Progression contrôlée · pic en fin de semaine"}
-          </div>
-        </div>
-        <div style={{padding:"6px 12px",borderRadius:10,background:"rgba(16,185,129,0.12)",
-          border:"1px solid rgba(16,185,129,0.25)",flexShrink:0,marginTop:2}}>
-          <span style={{fontSize:12,fontWeight:700,color:"#059669",fontFamily:DISP_F}}>Zone verte</span>
-        </div>
+        )}
       </div>
 
       {hasCharge ? (
       <>
-      {/* Line chart */}
+      {/* Line chart — données réelles mésocycle */}
       <svg width="100%" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none"
            style={{display:"block",overflow:"visible",marginBottom:4}}>
         <defs>
@@ -201,17 +248,14 @@ function MesocycleChart({ prog, semC, checkedEx, cycleStart }) {
             <stop offset="100%" stopColor="#3B82F6" stopOpacity="0.01"/>
           </linearGradient>
         </defs>
-        {/* Grid lines */}
         {[0.33, 0.66].map((f,i) => (
           <line key={i} x1={PL} x2={W-PR}
             y1={PT + cH*(1-f)} y2={PT + cH*(1-f)}
             stroke="rgba(0,0,0,0.05)" strokeWidth="1" strokeDasharray="3 4"/>
         ))}
-        {/* Fill + stroke */}
         <path d={fillPath} fill="url(#mc-line-grad)"/>
         <path d={linePath} fill="none" stroke="#3B82F6" strokeWidth="2.5"
               strokeLinecap="round" strokeLinejoin="round"/>
-        {/* Dots */}
         {pts.map((p, i) => {
           const isCur  = i === currentWeek;
           const isPast = i < currentWeek;
@@ -230,8 +274,6 @@ function MesocycleChart({ prog, semC, checkedEx, cycleStart }) {
           );
         })}
       </svg>
-
-      {/* Week labels */}
       <div style={{display:"flex"}}>
         {WEEKS.map((w,i) => {
           const isCur = i === currentWeek;
@@ -240,7 +282,7 @@ function MesocycleChart({ prog, semC, checkedEx, cycleStart }) {
             : isCur ? "#60A5FA" : "#9CA3AF";
           return (
             <div key={i} style={{flex:1,textAlign:"center"}}>
-              <div style={{fontSize:isCur?11.5:10.5,fontWeight:isCur?800:600,color:col,fontFamily:DISP_F}}>{w.lbl}</div>
+              <div style={{fontSize:isCur?11.5:10.5,fontWeight:isCur?700:600,color:col,fontFamily:DISP_F}}>{w.lbl}</div>
               <div style={{fontSize:7.5,color:"#9CA3AF",fontFamily:DISP_F,marginTop:1}}>{w.type}</div>
             </div>
           );
@@ -248,55 +290,20 @@ function MesocycleChart({ prog, semC, checkedEx, cycleStart }) {
       </div>
       </>
       ) : (
-        /* État vide → graphique de prévisualisation */
-        (() => {
-          const dRaw=[38,55,50,72,88,78,96];
-          const dDays=["Lun","Mar","Mer","Jeu","Ven","Sam","Dim"];
-          const dW=280,dH=95,dpx=10,dpy=8;
-          const dTx=(i)=>dpx+(i/6)*(dW-dpx*2);
-          const dTy=(v)=>dH+dpy-((v-30)/75)*dH;
-          const dPts=dRaw.map((v,i)=>({x:dTx(i),y:dTy(v)}));
-          const dPoly=dPts.map(p=>`${p.x},${p.y}`).join(" ");
-          const dArea=`M${dPts[0].x},${dH+dpy} `+dPts.map(p=>`L${p.x},${p.y}`).join(" ")+` L${dPts[dPts.length-1].x},${dH+dpy} Z`;
-          return (
-            <div>
-              <svg width="100%" viewBox={`0 0 ${dW+dpx} ${dH+dpy*2+18}`} style={{overflow:"visible",display:"block"}}>
-                <defs>
-                  <linearGradient id="dAG" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#3B82F6" stopOpacity="0.13"/>
-                    <stop offset="100%" stopColor="#3B82F6" stopOpacity="0"/>
-                  </linearGradient>
-                </defs>
-                {[0,.33,.66,1].map((t,i)=>(
-                  <line key={i} x1={dpx} y1={dpy+t*dH} x2={dW} y2={dpy+t*dH}
-                    stroke="rgba(0,0,0,0.05)" strokeWidth="1"/>
-                ))}
-                <path d={dArea} fill="url(#dAG)"/>
-                <polyline points={dPoly} fill="none" stroke="#3B82F6"
-                  strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-                {dPts.map((p,i)=>(
-                  <g key={i}>
-                    <circle cx={p.x} cy={p.y} r="5" fill="white" stroke="#3B82F6" strokeWidth="2"/>
-                    <circle cx={p.x} cy={p.y} r="2" fill="#3B82F6"/>
-                  </g>
-                ))}
-                {dDays.map((d,i)=>(
-                  <text key={i} x={dTx(i)} y={dH+dpy*2+14} textAnchor="middle"
-                    fontSize="9" fill="#9CA3AF" fontFamily={DISP_F} fontWeight="500">{d}</text>
-                ))}
-              </svg>
-              {/* Pill — Charge uniquement */}
-              <div style={{display:"flex",gap:8,marginTop:12}}>
-                <div style={{display:"flex",alignItems:"center",gap:7,
-                  padding:"8px 12px",borderRadius:10,
-                  background:"rgba(0,0,0,0.025)",border:`1px solid ${C.bd}`}}>
-                  <div style={{width:8,height:8,borderRadius:"50%",background:"#3B82F6",flexShrink:0}}/>
-                  <span style={{fontSize:11,fontWeight:600,color:"#374151",fontFamily:DISP_F}}>Charge</span>
-                </div>
-              </div>
-            </div>
-          );
-        })()
+        /* État vide — aucune donnée loggée, on n'invente rien */
+        <div style={{padding:"20px 0 8px",textAlign:"center"}}>
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none"
+            stroke="rgba(0,0,0,0.18)" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"
+            style={{display:"block",margin:"0 auto 10px"}}>
+            <path d="M3 3v18M7 16l4-8 4 5 3-3"/>
+          </svg>
+          <div style={{fontSize:13,fontWeight:600,color:C.mid,fontFamily:DISP_F,marginBottom:4}}>
+            Aucune donnée de charge
+          </div>
+          <div style={{fontSize:11.5,color:C.dim,fontFamily:DISP_F,lineHeight:1.55}}>
+            Logge tes charges en séance Focus Mode<br/>pour activer le suivi de progression
+          </div>
+        </div>
       )}
 
       {/* CTA */}
@@ -1040,6 +1047,8 @@ function ProgrammeView(props) {
         semN={semN}
         totalJours={prog?.jours?.length||0}
         onDetail={()=>setShowAnalyse(true)}
+        premium={premium}
+        onUnlock={()=>setPaywall(true)}
       />
 
       {/* ── Overlay Analyse de charge (depuis carte Coach IA) ── */}
@@ -1183,24 +1192,7 @@ function ProgrammeView(props) {
           );
         })}
 
-        {/* CTAs — entre séances et graphique */}
-        {!showCreerForm && (
-          <div style={{marginBottom:16,display:"flex",gap:9}}>
-            <button onClick={()=>{ if(!premium) setPaywall(true); else setProgView("analyse"); }}
-              style={{flex:1,padding:"13px 10px",background:C.accent,color:"#fff",border:"none",
-                borderRadius:12,fontSize:13,fontWeight:700,fontFamily:DISP_F,cursor:"pointer",
-                boxShadow:"0 4px 16px -4px rgba(59,130,246,0.55)",
-                display:"flex",alignItems:"center",justifyContent:"center",gap:7}}>
-              <span>+</span> Nouveau programme IA
-            </button>
-            <button onClick={()=>{ setIsCreating(true); setCS(0); setNewP({nom:"",jours:[],seances:{}}); }}
-              style={{padding:"13px 16px",background:C.s1,color:C.mid,
-                border:`1px solid ${C.bd}`,borderRadius:12,fontSize:13,fontWeight:600,
-                fontFamily:DISP_F,cursor:"pointer",whiteSpace:"nowrap"}}>
-              Manuel
-            </button>
-          </div>
-        )}
+        {/* CTAs supprimés — remplacés par la carte coach entre les 2 hero blocs */}
 
       </>)}
 
