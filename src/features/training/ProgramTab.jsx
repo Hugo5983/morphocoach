@@ -1221,53 +1221,206 @@ function ProgrammeView(props) {
         />
       )}
 
-      {/* ── Carte création — entre les 2 hero blocs, visible uniquement sans programme ── */}
-      {!prog && !showCreerForm && (
-        <div style={{borderRadius:20,border:`1.5px solid rgba(59,130,246,0.22)`,
-          background:"rgba(59,130,246,0.04)",padding:"22px 18px",textAlign:"center"}}>
-          <div style={{width:54,height:54,borderRadius:16,
-            background:"rgba(59,130,246,0.10)",border:`1px solid rgba(59,130,246,0.18)`,
-            display:"grid",placeItems:"center",margin:"0 auto 14px"}}>
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke={C.blue}
-              strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-              <circle cx="9" cy="7" r="4"/>
-              <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+      {/* ── Hero Card premium — entre les 2 blocs, visible sans programme ── */}
+      {!prog && !showCreerForm && (() => {
+        const F2 = "'General Sans',system-ui,-apple-system,sans-serif";
+        const days = ["L","M","M","J","V","S","D"];
+        const doneD = [false,false,false,false,false,false,false];
+        const scoreR = 87; const R2=18,cx2=21,cy2=21;
+        const circ2 = 2*Math.PI*R2;
+        const dash2 = (scoreR/100)*circ2;
+        return (
+          <div style={{borderRadius:24,overflow:"hidden",position:"relative",
+            background:"linear-gradient(140deg,#04001C 0%,#080528 30%,#0B0E40 65%,#060A30 100%)",
+            boxShadow:"0 20px 60px rgba(0,0,0,0.55),0 0 0 1px rgba(139,92,246,0.20)"}}>
+
+            {/* Glows */}
+            <div style={{position:"absolute",top:-60,left:-30,width:200,height:200,borderRadius:"50%",
+              background:"radial-gradient(circle,rgba(109,40,217,0.28),transparent 65%)",pointerEvents:"none"}}/>
+            <div style={{position:"absolute",bottom:-40,right:50,width:180,height:180,borderRadius:"50%",
+              background:"radial-gradient(circle,rgba(59,130,246,0.16),transparent 65%)",pointerEvents:"none"}}/>
+
+            {/* Grille abstraite */}
+            <svg style={{position:"absolute",top:0,left:0,width:"100%",height:"100%",
+              opacity:0.05,pointerEvents:"none"}} viewBox="0 0 380 240" preserveAspectRatio="xMidYMid slice">
+              {[0,1,2,3,4,5,6].map(i=><line key={`h${i}`} x1="0" y1={i*40} x2="380" y2={i*40} stroke="#818CF8" strokeWidth="0.6"/>)}
+              {[0,1,2,3,4,5,6,7,8,9,10].map(i=><line key={`v${i}`} x1={i*38} y1="0" x2={i*38} y2="240" stroke="#818CF8" strokeWidth="0.6"/>)}
             </svg>
+
+            {/* Ligne lumineuse top */}
+            <div style={{position:"absolute",top:0,left:0,right:0,height:1,
+              background:"linear-gradient(90deg,transparent,rgba(99,102,241,0.75),rgba(139,92,246,0.75),transparent)",
+              pointerEvents:"none"}}/>
+
+            {/* Particules */}
+            {[[18,25,"#8B5CF6"],[220,16,"#60A5FA"],[170,140,"#A78BFA"],[45,125,"#6366F1"]].map(([x,y,c],i)=>(
+              <div key={i} style={{position:"absolute",left:x,top:y,width:2.5,height:2.5,borderRadius:"50%",
+                background:c,boxShadow:`0 0 7px ${c}`,opacity:0.75,pointerEvents:"none"}}/>
+            ))}
+
+            {/* Layout gauche + droite */}
+            <div style={{display:"flex",alignItems:"center",padding:"16px 14px 16px 18px",gap:10,position:"relative",zIndex:1}}>
+
+              {/* ── Gauche ── */}
+              <div style={{flex:1,minWidth:0}}>
+                {/* Badge */}
+                <div style={{display:"inline-flex",alignItems:"center",gap:5,
+                  padding:"4px 10px",borderRadius:40,marginBottom:10,
+                  background:"linear-gradient(135deg,rgba(109,40,217,0.28),rgba(99,102,241,0.18))",
+                  border:"1px solid rgba(139,92,246,0.42)",backdropFilter:"blur(6px)"}}>
+                  <span style={{fontSize:9}}>🚀</span>
+                  <span style={{fontSize:9,fontWeight:700,color:"#C4B5FD",fontFamily:F2,letterSpacing:"0.8px"}}>PRO · IA Coach</span>
+                  <div style={{width:3.5,height:3.5,borderRadius:"50%",background:"#8B5CF6",boxShadow:"0 0 5px #8B5CF6"}}/>
+                </div>
+
+                {/* Titre */}
+                <div style={{fontSize:17,fontWeight:700,color:"#fff",fontFamily:F2,
+                  lineHeight:1.18,letterSpacing:"-0.4px",marginBottom:7}}>
+                  <span style={{
+                    background:"linear-gradient(90deg,#fff,#E0E7FF)",
+                    WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text"}}>
+                    Ton coach IA
+                  </span>
+                  <br/>t'attend. 🧠
+                </div>
+
+                {/* Sous-titre */}
+                <div style={{fontSize:10,color:"rgba(255,255,255,0.48)",lineHeight:1.55,fontFamily:F2,marginBottom:13}}>
+                  Programme complet adapté à ta récupération et tes objectifs.
+                </div>
+
+                {/* CTA 1 — coach (violet plein) */}
+                <button onClick={()=>{ if(!premium) setPaywall(true); else setProgView("analyse"); }}
+                  style={{width:"100%",padding:"11px 10px",borderRadius:13,border:"none",cursor:"pointer",
+                    background:"linear-gradient(135deg,#6D28D9,#7C3AED,#4F46E5)",
+                    color:"#fff",fontSize:12.5,fontWeight:700,fontFamily:F2,
+                    boxShadow:"0 8px 24px rgba(109,40,217,0.50),0 0 0 1px rgba(167,139,250,0.28)",
+                    display:"flex",alignItems:"center",justifyContent:"center",gap:7,
+                    letterSpacing:"-0.1px",marginBottom:7}}>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+                  </svg>
+                  Parler à un coach
+                </button>
+
+                {/* CTA 2 — programme (blanc contour) */}
+                <button onClick={()=>{ setIsCreating(true); setCS(0); setNewP({nom:"",jours:[],seances:{}}); }}
+                  style={{width:"100%",padding:"11px 10px",borderRadius:13,cursor:"pointer",
+                    background:"rgba(255,255,255,0.07)",border:"1px solid rgba(255,255,255,0.16)",
+                    color:"rgba(255,255,255,0.82)",fontSize:12.5,fontWeight:700,fontFamily:F2,
+                    display:"flex",alignItems:"center",justifyContent:"center",gap:7,letterSpacing:"-0.1px"}}>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="#fff" stroke="none">
+                    <path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/>
+                  </svg>
+                  Créer mon programme
+                </button>
+              </div>
+
+              {/* ── Droite : Phone miniature ── */}
+              <div style={{position:"relative",flexShrink:0,
+                transform:"rotate(6deg) translateY(-8px)",transformOrigin:"center bottom"}}>
+                {/* Glow */}
+                <div style={{position:"absolute",top:-20,left:-18,right:-18,bottom:-12,zIndex:0,pointerEvents:"none",
+                  background:"radial-gradient(ellipse at 50% 55%,rgba(139,92,246,0.55),rgba(59,130,246,0.18),transparent 68%)",
+                  filter:"blur(16px)"}}/>
+                {/* Phone */}
+                <div style={{position:"relative",zIndex:1,width:118,borderRadius:18,
+                  background:"linear-gradient(165deg,#0D0B2E,#0E1245,#0A1650)",
+                  border:"1.5px solid rgba(139,92,246,0.45)",
+                  boxShadow:"0 18px 55px rgba(0,0,0,0.72),0 0 0 1px rgba(255,255,255,0.06),inset 0 1px 0 rgba(255,255,255,0.09)",
+                  overflow:"hidden",padding:"8px 7px 10px"}}>
+                  {/* Reflet */}
+                  <div style={{position:"absolute",top:0,left:0,right:0,height:48,
+                    background:"linear-gradient(180deg,rgba(255,255,255,0.07),transparent)",
+                    pointerEvents:"none",zIndex:2}}/>
+                  {/* Notch */}
+                  <div style={{width:36,height:5,borderRadius:3,background:"rgba(0,0,0,0.65)",margin:"0 auto 8px"}}/>
+                  {/* Header */}
+                  <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:8}}>
+                    <span style={{fontSize:8,fontWeight:700,color:"#fff",fontFamily:F2}}>MorphoCoach</span>
+                    <div style={{display:"flex",alignItems:"center",gap:3,padding:"1px 5px",borderRadius:8,
+                      background:"linear-gradient(135deg,rgba(139,92,246,0.30),rgba(99,102,241,0.20))",
+                      border:"1px solid rgba(139,92,246,0.50)"}}>
+                      <div style={{width:3,height:3,borderRadius:"50%",background:"#A78BFA",boxShadow:"0 0 4px #8B5CF6"}}/>
+                      <span style={{fontSize:6,fontWeight:700,color:"#C4B5FD",fontFamily:F2,letterSpacing:"0.6px"}}>IA</span>
+                    </div>
+                  </div>
+                  {/* Recovery ring */}
+                  <div style={{display:"flex",alignItems:"center",gap:8,borderRadius:10,padding:"7px 8px",
+                    marginBottom:7,background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.07)"}}>
+                    <svg width="42" height="42" viewBox="0 0 42 42" style={{flexShrink:0}}>
+                      <circle cx={cx2} cy={cy2} r={R2} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="4.5"/>
+                      <circle cx={cx2} cy={cy2} r={R2} fill="none" stroke="url(#mcHeroRG)" strokeWidth="4.5"
+                        strokeDasharray={`${dash2} ${circ2}`} strokeLinecap="round"
+                        transform={`rotate(-90 ${cx2} ${cy2})`}/>
+                      <defs>
+                        <linearGradient id="mcHeroRG" x1="0%" y1="0%" x2="100%" y2="0%">
+                          <stop offset="0%" stopColor="#6EE7B7"/><stop offset="100%" stopColor="#3B82F6"/>
+                        </linearGradient>
+                      </defs>
+                      <text x={cx2} y={cy2+0.5} textAnchor="middle" dominantBaseline="middle"
+                        fontSize="9.5" fontWeight="700" fill="#fff" fontFamily={F2}>{scoreR}</text>
+                      <text x={cx2} y={cy2+8} textAnchor="middle" dominantBaseline="middle"
+                        fontSize="4.5" fill="rgba(255,255,255,0.40)" fontFamily={F2}>RÉCUP.</text>
+                    </svg>
+                    <div>
+                      <div style={{fontSize:7.5,fontWeight:700,color:"#6EE7B7",fontFamily:F2,marginBottom:2}}>Prêt à performer</div>
+                      <div style={{fontSize:6.5,color:"rgba(255,255,255,0.40)",fontFamily:F2,lineHeight:1.45}}>Programme IA<br/>généré ✓</div>
+                    </div>
+                  </div>
+                  {/* Days */}
+                  <div style={{display:"flex",gap:2.5,marginBottom:7}}>
+                    {days.map((d,i)=>(
+                      <div key={i} style={{flex:1,textAlign:"center"}}>
+                        <div style={{fontSize:5.5,color:doneD[i]?"#A78BFA":"rgba(255,255,255,0.22)",
+                          fontFamily:F2,fontWeight:600,marginBottom:2}}>{d}</div>
+                        <div style={{height:14,borderRadius:3,display:"grid",placeItems:"center",
+                          background:i===0?"linear-gradient(135deg,#7C3AED,#4F46E5)"
+                            :"rgba(255,255,255,0.07)",
+                          border:i===0?"1px solid rgba(139,92,246,0.60)":"none"}}>
+                          {i===0&&<span style={{fontSize:5,color:"#fff"}}>▸</span>}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  {/* Séance preview */}
+                  <div style={{borderRadius:9,padding:"7px 8px",marginBottom:5,
+                    background:"linear-gradient(135deg,rgba(139,92,246,0.18),rgba(99,102,241,0.10))",
+                    border:"1px solid rgba(139,92,246,0.28)"}}>
+                    <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}>
+                      <span style={{fontSize:6,fontWeight:700,color:"#A78BFA",fontFamily:F2,
+                        letterSpacing:"0.6px",textTransform:"uppercase"}}>Lundi · Prochain</span>
+                      <span style={{fontSize:6,fontWeight:700,color:"rgba(255,255,255,0.35)",fontFamily:F2}}>45min</span>
+                    </div>
+                    <div style={{fontSize:8,fontWeight:700,color:"#fff",fontFamily:F2,marginBottom:4}}>Push · Hypertrophie</div>
+                    {[{n:"Développé couché",s:"4×8"},{n:"Dips lestés",s:"3×10"}].map((ex,i)=>(
+                      <div key={i} style={{display:"flex",justifyContent:"space-between",
+                        borderTop:i===0?"1px solid rgba(255,255,255,0.06)":"none",paddingTop:i===0?3:2}}>
+                        <span style={{fontSize:5.5,color:"rgba(255,255,255,0.45)",fontFamily:F2}}>{ex.n}</span>
+                        <span style={{fontSize:5.5,fontWeight:700,color:"rgba(255,255,255,0.40)",fontFamily:F2}}>{ex.s}</span>
+                      </div>
+                    ))}
+                  </div>
+                  {/* Métriques mini */}
+                  {[{l:"Fatigue",v:"Basse",c:"#6EE7B7",b:0.22},{l:"Risque",v:"Faible",c:"#C4B5FD",b:0.15}].map((m,i)=>(
+                    <div key={i} style={{borderRadius:7,padding:"5px 7px",marginBottom:i===0?3:0,
+                      background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.06)",
+                      display:"flex",alignItems:"center",gap:6}}>
+                      <span style={{fontSize:6,color:"rgba(255,255,255,0.40)",fontFamily:F2,flex:1}}>{m.l}</span>
+                      <div style={{width:24,height:2.5,borderRadius:2,background:"rgba(255,255,255,0.08)",overflow:"hidden"}}>
+                        <div style={{width:`${m.b*100}%`,height:"100%",borderRadius:2,background:m.c}}/>
+                      </div>
+                      <span style={{fontSize:6,fontWeight:700,color:m.c,fontFamily:F2}}>{m.v}</span>
+                    </div>
+                  ))}
+                  <div style={{height:2,borderRadius:1,background:"rgba(255,255,255,0.15)",margin:"8px 18px 0"}}/>
+                </div>
+              </div>
+            </div>
           </div>
-          <div style={{fontSize:18,fontWeight:700,color:C.text,fontFamily:DISP_F,
-            letterSpacing:"-0.3px",marginBottom:8}}>
-            Lance-toi avec ton coach
-          </div>
-          <div style={{fontSize:13,color:C.mid,fontFamily:DISP_F,lineHeight:1.65,marginBottom:20}}>
-            Génère ton programme en quelques secondes ou fais appel directement à un coach pour un suivi personnalisé.
-          </div>
-          {/* Fais appel à un coach — bleu plein, prioritaire */}
-          <button onClick={()=>{ if(!premium) setPaywall(true); else setProgView("analyse"); }}
-            style={{width:"100%",padding:"15px 10px",borderRadius:13,border:"none",cursor:"pointer",
-              background:C.accent,color:"#fff",fontSize:14,fontWeight:700,fontFamily:DISP_F,
-              boxShadow:"0 5px 18px -4px rgba(59,130,246,0.50)",
-              display:"flex",alignItems:"center",justifyContent:"center",gap:8,marginBottom:9}}>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff"
-              strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-              <circle cx="9" cy="7" r="4"/>
-            </svg>
-            Fais appel à un coach
-          </button>
-          {/* Génère ton programme — blanc contour, secondaire */}
-          <button onClick={()=>{ setIsCreating(true); setCS(0); setNewP({nom:"",jours:[],seances:{}}); }}
-            style={{width:"100%",padding:"15px 10px",borderRadius:13,cursor:"pointer",
-              border:`1.5px solid rgba(59,130,246,0.25)`,background:C.s1,
-              color:C.blue,fontSize:14,fontWeight:700,fontFamily:DISP_F,
-              display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill={C.blue} stroke="none">
-              <path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/>
-            </svg>
-            Génère ton programme
-          </button>
-        </div>
-      )}
+        );
+      })()}
 
       {/* ── Programme actif ── */}
       {prog && prog.jours?.length > 0 && (<>
