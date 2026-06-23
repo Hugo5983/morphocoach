@@ -9,133 +9,280 @@ import AnalyseIA from "../ai/AnalyseIA.jsx";
 import { findExInDB } from "../../utils/training.js";
 import { GuideExModal, SeanceDetailModal } from "./components/ProgramTabModals.jsx";
 
-// ─── COACH IA — CARTE RÉCUPÉRATION ───────────────────────────────────────────
+// ─── COACH IA — CARTE RÉCUPÉRATION (3 états) ─────────────────────────────────
+// État 1 : !premium         → verrouillé, flou, CTA conversion PRO
+// État 2 : premium && !data → déverrouillé, données insuffisantes
+// État 3 : premium && data  → expérience premium complète
 function CoachWeekCard({ semC, semN, totalJours, onDetail, premium, onUnlock }) {
-  const F    = "'General Sans',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif";
-  const done  = semC || 0;
+  const F   = "'General Sans',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif";
+  const done = semC || 0;
   const total = totalJours || 0;
   const ratio = total > 0 ? done / total : 0;
 
-  // Vérifie si des séances ont vraiment été loggées
+  // Détecte si des séances ont vraiment été loggées avec des charges
   const hasRealData = useMemo(() => {
     try {
       const log = JSON.parse(localStorage.getItem('morpho_workout_log') || '{}');
-      return Object.values(log).some(d => d?.totalVolume > 0 || (d?.sets || []).length > 0);
-    } catch { return false; }
+      return Object.values(log).some(d => d?.totalVolume > 0 || (d?.sets||[]).length > 0);
+    } catch(e) { return false; }
   }, [done]);
 
-  // Métriques récupération — seulement si données réelles
-  const fatigueLbl  = ratio < 0.35 ? "Basse"     : ratio < 0.70 ? "Modérée"   : "Élevée";
-  const fatigueCol  = ratio < 0.35 ? "#6EE7B7"   : ratio < 0.70 ? "#FCD34D"   : "#FCA5A5";
-  const recupPct    = Math.round(100 - ratio * 32);
-  const recupCol    = recupPct >= 80 ? "#6EE7B7"  : recupPct >= 60 ? "#FCD34D" : "#FCA5A5";
-  const risqueLbl   = ratio < 0.35 ? "Faible"    : ratio < 0.70 ? "Vigilance" : "Élevé";
-  const risqueCol   = ratio < 0.35 ? "#93C5FD"   : ratio < 0.70 ? "#FCD34D"   : "#FCA5A5";
+  // Métriques calculées depuis les vraies données
+  const fatigueLbl = ratio < 0.35 ? "Basse"     : ratio < 0.70 ? "Modérée"   : "Élevée";
+  const fatigueCol = ratio < 0.35 ? "#6EE7B7"   : ratio < 0.70 ? "#FCD34D"   : "#FCA5A5";
+  const fatigueBar = ratio < 0.35 ? 0.20        : ratio < 0.70 ? 0.55        : 0.90;
+  const recupPct   = Math.round(100 - ratio * 32);
+  const recupCol   = recupPct >= 80 ? "#6EE7B7" : recupPct >= 60 ? "#FCD34D" : "#FCA5A5";
+  const recupBar   = recupPct / 100;
+  const risqueLbl  = ratio < 0.35 ? "Faible"    : ratio < 0.70 ? "Vigilance" : "Élevé";
+  const risqueCol  = ratio < 0.35 ? "#93C5FD"   : ratio < 0.70 ? "#FCD34D"   : "#FCA5A5";
+  const risqueBar  = ratio < 0.35 ? 0.15        : ratio < 0.70 ? 0.55        : 0.90;
 
-  const EMPTY_VAL   = "À remplir";
-  const EMPTY_COL   = "#FCA5A5"; // rouge doux sur fond sombre
+  // Badges communs
+  const Badges = () => (
+    <div style={{display:"flex",gap:8,marginBottom:14}}>
+      {[
+        {txt:"COACH IA",   bg:"rgba(99,102,241,0.25)",bd:"rgba(99,102,241,0.40)",c:"#A5B4FC"},
+        {txt:`SEMAINE ${semN}`,bg:"rgba(255,255,255,0.07)",bd:"rgba(255,255,255,0.10)",c:"rgba(255,255,255,0.55)"},
+      ].map((b,i)=>(
+        <div key={i} style={{padding:"5px 12px",borderRadius:40,background:b.bg,border:`1px solid ${b.bd}`}}>
+          <span style={{fontSize:9.5,fontWeight:700,letterSpacing:"1.4px",color:b.c,fontFamily:F,textTransform:"uppercase"}}>{b.txt}</span>
+        </div>
+      ))}
+    </div>
+  );
 
-  const title = done === 0
-    ? "Lance ta semaine. 💪"
-    : ratio >= 1 ? "Semaine accomplie ! 🔥"
-    : "Ton état de récupération";
-
-  const sub = done === 0
-    ? `Programme de ${total} séance${total>1?"s":""} prêt · Semaine ${semN}. Lance-toi dès aujourd'hui pour garder le rythme.`
-    : ratio < 0.35
-    ? "Fatigue basse · bon signal de récupération. Tu peux maintenir l'intensité et progresser en charge cette semaine."
-    : ratio < 0.70
-    ? "Fatigue modérée · surveille la charge sur 48h. La semaine reste acceptable, mais l'accumulation commence à se voir."
-    : "Fatigue élevée · réduis l'intensité. Priorise la récupération avant ta prochaine séance pour éviter la surcharge.";
-
-  const stats = [
-    { val: hasRealData ? fatigueLbl   : EMPTY_VAL, label: "Fatigue", color: hasRealData ? fatigueCol : EMPTY_COL },
-    { val: hasRealData ? `${recupPct}%`: EMPTY_VAL, label: "Récup.",  color: hasRealData ? recupCol   : EMPTY_COL },
-    { val: hasRealData ? risqueLbl    : EMPTY_VAL, label: "Risque",  color: hasRealData ? risqueCol  : EMPTY_COL },
-  ];
-
-  return (
-    <div style={{ borderRadius:20, overflow:"hidden", marginBottom:16,
+  // Conteneur commun
+  const Shell = ({children,blur}) => (
+    <div style={{borderRadius:22,overflow:"hidden",marginBottom:16,
       background:"linear-gradient(145deg,#0D0B1E 0%,#12103A 55%,#1A1245 100%)",
-      boxShadow:"0 12px 40px rgba(0,0,0,0.28), 0 0 0 1px rgba(255,255,255,0.06)",
-      position:"relative" }}>
-      <div style={{ position:"absolute",top:-50,right:-30,width:190,height:190,
-        borderRadius:"50%",background:"rgba(91,76,245,0.14)",pointerEvents:"none" }}/>
-      <div style={{ position:"absolute",bottom:-25,left:-10,width:120,height:120,
-        borderRadius:"50%",background:"rgba(59,130,246,0.09)",pointerEvents:"none" }}/>
-      <div style={{ padding:"18px 16px 16px", position:"relative", zIndex:1 }}>
-        <div style={{ display:"flex", gap:8, marginBottom:14 }}>
-          {[
-            { txt:"COACH IA",      bg:"rgba(99,102,241,0.25)", bd:"rgba(99,102,241,0.40)", c:"#A5B4FC" },
-            { txt:`SEMAINE ${semN}`,bg:"rgba(255,255,255,0.07)", bd:"rgba(255,255,255,0.10)", c:"rgba(255,255,255,0.55)" },
-          ].map((b,i) => (
-            <div key={i} style={{ padding:"5px 12px", borderRadius:40, background:b.bg, border:`1px solid ${b.bd}` }}>
-              <span style={{ fontSize:9.5, fontWeight:700, letterSpacing:"1.4px", color:b.c, fontFamily:F, textTransform:"uppercase" }}>{b.txt}</span>
+      boxShadow:"0 14px 44px rgba(0,0,0,0.32),0 0 0 1px rgba(255,255,255,0.06)",
+      position:"relative",
+      ...(blur ? {filter:"blur(1.5px)",opacity:0.55,userSelect:"none",pointerEvents:"none"} : {})}}>
+      <div style={{position:"absolute",top:-50,right:-30,width:190,height:190,
+        borderRadius:"50%",background:"rgba(91,76,245,0.14)",pointerEvents:"none"}}/>
+      <div style={{position:"absolute",bottom:-25,left:-10,width:120,height:120,
+        borderRadius:"50%",background:"rgba(59,130,246,0.09)",pointerEvents:"none"}}/>
+      <div style={{padding:"18px 16px 16px",position:"relative",zIndex:1}}>
+        {children}
+      </div>
+    </div>
+  );
+
+  // ── ÉTAT 1 : GRATUIT — contenu flouté + overlay de conversion ────────────────
+  if (!premium) return (
+    <div style={{position:"relative",marginBottom:16}}>
+      {/* Contenu flouté derrière */}
+      <Shell blur>
+        <Badges/>
+        <div style={{fontSize:22,fontWeight:700,color:"#fff",lineHeight:1.2,letterSpacing:"-0.3px",marginBottom:9,fontFamily:F}}>
+          Ta semaine est prête 💪
+        </div>
+        <div style={{fontSize:12,color:"rgba(255,255,255,0.48)",lineHeight:1.6,fontFamily:F,marginBottom:16}}>
+          Programme généré selon tes performances récentes · Sem. {semN}
+        </div>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:8,marginBottom:14}}>
+          {[{v:"Basse",l:"Fatigue"},{v:"87%",l:"Récup."},{v:"Faible",l:"Risque"}].map((s,i)=>(
+            <div key={i} style={{borderRadius:11,padding:"11px 8px",
+              background:"rgba(255,255,255,0.07)",border:"1px solid rgba(255,255,255,0.08)",textAlign:"center"}}>
+              <div style={{fontSize:15,fontWeight:700,color:"rgba(255,255,255,0.20)",fontFamily:F,lineHeight:1.1,marginBottom:4}}>{s.v}</div>
+              <div style={{fontSize:9,color:"rgba(255,255,255,0.18)",fontFamily:F,textTransform:"uppercase",letterSpacing:"1px"}}>{s.l}</div>
             </div>
           ))}
         </div>
-        <div style={{ fontFamily:F, fontSize:22, fontWeight:700, color:"#fff", lineHeight:1.2, letterSpacing:"-0.3px", marginBottom:9 }}>{title}</div>
-        <div style={{ fontSize:12, color:"rgba(255,255,255,0.48)", lineHeight:1.6, fontFamily:F, marginBottom:16 }}>{sub}</div>
-        <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:8, marginBottom:14 }}>
-          {stats.map((s,i) => (
-            <div key={i} style={{ borderRadius:11, padding:"11px 8px",
-              background:"rgba(255,255,255,0.07)", border:"1px solid rgba(255,255,255,0.08)", textAlign:"center" }}>
-              <div style={{ fontSize:15, fontWeight:700, color:s.color, fontFamily:F, lineHeight:1.1, marginBottom:4 }}>{s.val}</div>
-              <div style={{ fontSize:9, color:"rgba(255,255,255,0.62)", fontFamily:F, textTransform:"uppercase", letterSpacing:"1px" }}>{s.label}</div>
-            </div>
-          ))}
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+          <div style={{padding:"13px 10px",borderRadius:12,background:"rgba(79,70,229,0.35)",textAlign:"center",fontSize:13,fontWeight:700,color:"rgba(255,255,255,0.30)",fontFamily:F}}>Ajuster</div>
+          <div style={{padding:"13px 10px",borderRadius:12,background:"rgba(255,255,255,0.06)",textAlign:"center",fontSize:13,fontWeight:700,color:"rgba(255,255,255,0.20)",fontFamily:F}}>Voir le détail</div>
         </div>
-        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10 }}>
-          <button style={{ padding:"13px 10px", borderRadius:12, background:"#4F46E5", border:"none",
-            textAlign:"center", fontSize:13, fontWeight:700, color:"#fff", fontFamily:F,
-            boxShadow:"0 5px 18px -4px rgba(79,70,229,0.60)", cursor:"pointer", lineHeight:1.3 }}>
-            Ajuster ma semaine
-          </button>
-          <button onClick={onDetail}
-            style={{ padding:"13px 10px", borderRadius:12, cursor:"pointer",
-              background:"rgba(255,255,255,0.09)", border:"1px solid rgba(255,255,255,0.11)",
-              textAlign:"center", fontSize:13, fontWeight:700, color:"rgba(255,255,255,0.75)", fontFamily:F, lineHeight:1.3 }}>
-            Voir le détail
-          </button>
+      </Shell>
+
+      {/* Badge PRO — coin supérieur droit, par-dessus */}
+      <div style={{position:"absolute",top:14,right:14,zIndex:20,
+        display:"flex",alignItems:"center",gap:6,padding:"6px 13px",borderRadius:40,
+        background:"linear-gradient(135deg,#E6B758,#C9912F)",
+        boxShadow:"0 4px 14px rgba(201,145,47,0.50)"}}>
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+        <span style={{fontSize:10,fontWeight:700,color:"#fff",fontFamily:F,letterSpacing:"0.8px"}}>PRO</span>
+      </div>
+
+      {/* Overlay CTA conversion */}
+      <div style={{position:"absolute",top:0,left:0,right:0,bottom:0,zIndex:10,borderRadius:22,
+        background:"linear-gradient(180deg,rgba(8,5,20,0.10) 0%,rgba(8,5,20,0.85) 38%,rgba(8,5,20,0.97) 100%)",
+        display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"flex-end",
+        padding:"0 18px 20px"}}>
+        {/* Icône cadenas */}
+        <div style={{width:54,height:54,borderRadius:17,
+          background:"linear-gradient(135deg,rgba(129,140,248,0.22),rgba(79,70,229,0.32))",
+          border:"1px solid rgba(129,140,248,0.32)",
+          display:"grid",placeItems:"center",marginBottom:13,
+          boxShadow:"0 8px 24px rgba(79,70,229,0.28)"}}>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#A5B4FC" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+        </div>
+        <div style={{fontSize:15,fontWeight:700,color:"#fff",fontFamily:F,textAlign:"center",letterSpacing:"-0.2px",marginBottom:7}}>
+          🔒 Réservé aux membres PRO
+        </div>
+        <div style={{fontSize:12,color:"rgba(255,255,255,0.62)",fontFamily:F,textAlign:"center",lineHeight:1.65,marginBottom:20,maxWidth:240}}>
+          Débloque ton plan hebdomadaire personnalisé selon tes performances et ton évolution.
+        </div>
+        {/* CTA principal */}
+        <button onClick={onUnlock}
+          style={{width:"100%",padding:"15px",borderRadius:14,border:"none",cursor:"pointer",
+            background:"linear-gradient(135deg,#818CF8,#4F46E5)",
+            color:"#fff",fontSize:15,fontWeight:700,fontFamily:F,
+            boxShadow:"0 8px 24px rgba(79,70,229,0.50)",marginBottom:10,
+            display:"flex",alignItems:"center",justifyContent:"center",gap:8,letterSpacing:"-0.1px"}}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#fff" stroke="none">
+            <path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/>
+          </svg>
+          Passer au PRO
+        </button>
+        {/* CTA secondaire */}
+        <button onClick={onUnlock}
+          style={{width:"100%",padding:"13px",borderRadius:14,cursor:"pointer",
+            background:"rgba(255,255,255,0.08)",border:"1px solid rgba(255,255,255,0.15)",
+            color:"rgba(255,255,255,0.78)",fontSize:13,fontWeight:600,fontFamily:F,
+            display:"flex",alignItems:"center",justifyContent:"center",gap:7}}>
+          Découvrir les avantages
+        </button>
+      </div>
+    </div>
+  );
+
+  // ── ÉTAT 2 : PRO SANS DONNÉES — programme impossible à calculer ───────────────
+  if (!hasRealData) return (
+    <Shell>
+      {/* Badge PRO étoile */}
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:0}}>
+        <Badges/>
+        <div style={{display:"flex",alignItems:"center",gap:5,padding:"5px 11px",borderRadius:40,
+          background:"linear-gradient(135deg,#E6B758,#C9912F)",
+          boxShadow:"0 3px 10px rgba(201,145,47,0.40)",marginTop:0,flexShrink:0}}>
+          <svg width="9" height="9" viewBox="0 0 24 24" fill="#fff" stroke="none">
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+          </svg>
+          <span style={{fontSize:9.5,fontWeight:700,color:"#fff",fontFamily:F}}>PRO</span>
         </div>
       </div>
 
-      {/* ── Overlay cadenas si non PRO ── */}
-      {!premium && (
-        <div onClick={onUnlock}
-          style={{position:"absolute",top:0,left:0,right:0,bottom:0,zIndex:10,cursor:"pointer",
-            borderRadius:20,
-            background:"rgba(8,6,22,0.72)",
-            backdropFilter:"blur(3px)",WebkitBackdropFilter:"blur(3px)",
-            display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:12}}>
-          <div style={{width:52,height:52,borderRadius:16,
-            background:"rgba(255,255,255,0.10)",border:"1px solid rgba(255,255,255,0.18)",
-            display:"grid",placeItems:"center"}}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-              stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-            </svg>
-          </div>
-          <div style={{textAlign:"center"}}>
-            <div style={{fontSize:15,fontWeight:700,color:"#fff",fontFamily:F,letterSpacing:"-0.2px",marginBottom:4}}>
-              Fonctionnalité Coach PRO
-            </div>
-            <div style={{fontSize:12,color:"rgba(255,255,255,0.60)",fontFamily:F,lineHeight:1.5}}>
-              Passe à Coach PRO pour accéder<br/>à ton analyse hebdomadaire
-            </div>
-          </div>
-          <div style={{padding:"10px 22px",borderRadius:40,
-            background:"linear-gradient(135deg,#6366F1,#4F46E5)",
-            fontSize:12,fontWeight:700,color:"#fff",fontFamily:F,
-            boxShadow:"0 6px 18px rgba(79,70,229,0.50)"}}>
-            Débloquer Coach PRO
-          </div>
+      {/* Icône + message */}
+      <div style={{textAlign:"center",padding:"4px 0 18px"}}>
+        <div style={{width:58,height:58,borderRadius:17,
+          background:"rgba(255,255,255,0.07)",border:"1px solid rgba(255,255,255,0.11)",
+          display:"grid",placeItems:"center",margin:"0 auto 14px"}}>
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none"
+            stroke="rgba(255,255,255,0.40)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M3 3v18M7 16l4-8 4 5 3-3"/>
+          </svg>
         </div>
-      )}
-    </div>
+        <div style={{fontSize:20,fontWeight:700,color:"#fff",fontFamily:F,letterSpacing:"-0.3px",marginBottom:8}}>
+          Données insuffisantes
+        </div>
+        <div style={{fontSize:12.5,color:"rgba(255,255,255,0.52)",lineHeight:1.65,fontFamily:F}}>
+          Fais ta première séance pour que MorphoCoach analyse ton niveau et génère ton programme personnalisé.
+        </div>
+      </div>
+
+      {/* Métriques avec tirets */}
+      <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:8,marginBottom:16}}>
+        {["Fatigue","Récup.","Risque"].map((l,i)=>(
+          <div key={i} style={{borderRadius:11,padding:"11px 8px",
+            background:"rgba(255,255,255,0.06)",border:"1px solid rgba(255,255,255,0.07)",textAlign:"center"}}>
+            <div style={{fontSize:20,fontWeight:700,color:"rgba(255,255,255,0.22)",fontFamily:F,lineHeight:1,marginBottom:5}}>—</div>
+            <div style={{fontSize:9,color:"rgba(255,255,255,0.35)",fontFamily:F,textTransform:"uppercase",letterSpacing:"1px"}}>{l}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* CTA */}
+      <button style={{width:"100%",padding:"14px",borderRadius:13,border:"none",cursor:"pointer",
+        background:"linear-gradient(145deg,#3B82F6,#2563EB)",
+        color:"#fff",fontSize:14,fontWeight:700,fontFamily:F,
+        boxShadow:"0 6px 20px rgba(59,130,246,0.45)",marginBottom:10,
+        display:"flex",alignItems:"center",justifyContent:"center",gap:8,letterSpacing:"-0.1px"}}>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <polygon points="5 3 19 12 5 21 5 3"/>
+        </svg>
+        Faire ma première séance
+      </button>
+      <button onClick={onDetail}
+        style={{width:"100%",padding:"12px",borderRadius:13,cursor:"pointer",
+          background:"rgba(255,255,255,0.07)",border:"1px solid rgba(255,255,255,0.12)",
+          color:"rgba(255,255,255,0.65)",fontSize:12.5,fontWeight:600,fontFamily:F,
+          display:"flex",alignItems:"center",justifyContent:"center",gap:7}}>
+        Comment ça fonctionne ?
+      </button>
+    </Shell>
+  );
+
+  // ── ÉTAT 3 : PRO AVEC DONNÉES — expérience premium complète ──────────────────
+  const title = ratio >= 1 ? "Semaine accomplie ! 🔥" : "Ta semaine est prête 💪";
+  const sub   = ratio < 0.35
+    ? "Fatigue basse · bon signal. Tu peux maintenir l'intensité et progresser en charge."
+    : ratio < 0.70
+    ? "Fatigue modérée · surveille la charge sur 48h. Progression acceptable cette semaine."
+    : "Fatigue élevée · réduis l'intensité. Priorise la récupération avant ta prochaine séance.";
+
+  const metrics = [
+    {v:fatigueLbl,   l:"Fatigue", c:fatigueCol, bar:fatigueBar},
+    {v:`${recupPct}%`,l:"Récup.", c:recupCol,   bar:recupBar},
+    {v:risqueLbl,    l:"Risque",  c:risqueCol,  bar:risqueBar},
+  ];
+
+  return (
+    <Shell>
+      {/* Header badges + PRO */}
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
+        <Badges/>
+        <div style={{display:"flex",alignItems:"center",gap:5,padding:"5px 11px",borderRadius:40,
+          background:"linear-gradient(135deg,#E6B758,#C9912F)",
+          boxShadow:"0 3px 10px rgba(201,145,47,0.40)",flexShrink:0}}>
+          <svg width="9" height="9" viewBox="0 0 24 24" fill="#fff" stroke="none">
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+          </svg>
+          <span style={{fontSize:9.5,fontWeight:700,color:"#fff",fontFamily:F}}>PRO</span>
+        </div>
+      </div>
+      <div style={{fontSize:22,fontWeight:700,color:"#fff",lineHeight:1.2,letterSpacing:"-0.3px",marginBottom:9,fontFamily:F}}>{title}</div>
+      <div style={{fontSize:12,color:"rgba(255,255,255,0.48)",lineHeight:1.6,fontFamily:F,marginBottom:16}}>{sub}</div>
+
+      {/* Métriques avec mini barres */}
+      <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:8,marginBottom:14}}>
+        {metrics.map((s,i)=>(
+          <div key={i} style={{borderRadius:11,padding:"11px 8px 10px",
+            background:"rgba(255,255,255,0.07)",border:"1px solid rgba(255,255,255,0.09)",textAlign:"center"}}>
+            <div style={{fontSize:15,fontWeight:700,color:s.c,fontFamily:F,lineHeight:1.1,marginBottom:5}}>{s.v}</div>
+            <div style={{height:3,borderRadius:2,background:"rgba(255,255,255,0.10)",overflow:"hidden",marginBottom:5}}>
+              <div style={{width:`${s.bar*100}%`,height:"100%",borderRadius:2,background:s.c,opacity:0.80}}/>
+            </div>
+            <div style={{fontSize:9,color:"rgba(255,255,255,0.55)",fontFamily:F,textTransform:"uppercase",letterSpacing:"1px"}}>{s.l}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* CTA */}
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+        <button style={{padding:"13px 10px",borderRadius:12,background:"linear-gradient(135deg,#818CF8,#4F46E5)",border:"none",
+          textAlign:"center",fontSize:13,fontWeight:700,color:"#fff",fontFamily:F,
+          boxShadow:"0 5px 18px -4px rgba(79,70,229,0.60)",cursor:"pointer",letterSpacing:"-0.1px"}}>
+          Commencer la semaine
+        </button>
+        <button onClick={onDetail}
+          style={{padding:"13px 10px",borderRadius:12,cursor:"pointer",
+            background:"rgba(255,255,255,0.09)",border:"1px solid rgba(255,255,255,0.11)",
+            textAlign:"center",fontSize:13,fontWeight:700,color:"rgba(255,255,255,0.75)",fontFamily:F,letterSpacing:"-0.1px"}}>
+          Voir le détail
+        </button>
+      </div>
+    </Shell>
   );
 }
+
 
 // ─── PROGRESSION DE LA SEMAINE CHART ─────────────────────────────────────────
 function MesocycleChart({ prog, semC, checkedEx, cycleStart }) {
