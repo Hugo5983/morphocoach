@@ -305,12 +305,12 @@ export default function TodayView(props) {
                         {total} exercice{total !== 1 ? 's' : ''}
                       </div>
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <div>
                       {!todaySeance.complete ? (
                         <button onClick={() => setFocusActive(true)} style={{
                           background: '#22c55e', border: 'none', borderRadius: 22,
-                          padding: '9px 20px', color: '#fff', fontSize: 12.5, fontWeight: 800,
-                          display: 'flex', alignItems: 'center', gap: 6,
+                          padding: '9px 22px', color: '#fff', fontSize: 12.5, fontWeight: 800,
+                          display: 'inline-flex', alignItems: 'center', gap: 6,
                           cursor: 'pointer', fontFamily: DISP, letterSpacing: '0.01em',
                         }}>
                           <svg width="11" height="11" viewBox="0 0 24 24" fill="white"><polygon points="5,3 19,12 5,21"/></svg>
@@ -319,14 +319,6 @@ export default function TodayView(props) {
                       ) : (
                         <div style={{ fontSize: 12, color: '#5FE0A5', fontWeight: 700, fontFamily: DISP }}>✓ Séance complétée</div>
                       )}
-                      <button onClick={() => setViewSeance(todaySeance)} style={{
-                        fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.55)',
-                        background: 'none', border: 'none', cursor: 'pointer', fontFamily: DISP,
-                        display: 'flex', alignItems: 'center', gap: 3,
-                      }}>
-                        Détails
-                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M9 6l6 6-6 6"/></svg>
-                      </button>
                     </div>
                   </div>
                 </div>
@@ -337,16 +329,9 @@ export default function TodayView(props) {
             {!todaySeance.complete && (
               <>
                 {/* Header section */}
-                <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between",
-                  marginBottom:10, marginTop:4 }}>
+                <div style={{ display:"flex", alignItems:"center", marginBottom:10, marginTop:4 }}>
                   <div style={{ fontSize:16, fontWeight:700, color:C.text, fontFamily:DISP,
                     letterSpacing:-0.3 }}>Exercices</div>
-                  <button onClick={() => setViewSeance(todaySeance)}
-                    style={{ fontSize:12, fontWeight:600, color:"#374151", background:"#F0F2F7",
-                      border:"none", borderRadius:10, padding:"5px 11px", cursor:"pointer",
-                      fontFamily:DISP }}>
-                    Voir tout
-                  </button>
                 </div>
 
                 {/* Cards */}
@@ -368,33 +353,22 @@ export default function TodayView(props) {
                         boxShadow:"0 1px 2px rgba(15,23,42,0.03),0 2px 6px rgba(15,23,42,0.04)",
                         display:"flex", alignItems:"center", gap:12,
                       }}>
-                        {/* Thumbnail coloré */}
-                        <div style={{
-                          width:52, height:52, borderRadius:13, flexShrink:0,
-                          background:`linear-gradient(135deg, ${tc[0]}, ${tc[1]}22)`,
-                          border:`1px solid ${tc[1]}30`,
-                          display:"grid", placeItems:"center",
-                        }}>
-                          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
-                            stroke={tc[1]} strokeWidth="1.8" strokeLinecap="round">
-                            <path d="M6.5 6.5h11M6.5 6.5A2.5 2.5 0 014 4M17.5 6.5A2.5 2.5 0 0120 4M6.5 17.5h11M6.5 17.5A2.5 2.5 0 014 20M17.5 17.5A2.5 2.5 0 0120 20M12 6.5v11"/>
-                          </svg>
-                        </div>
-
-                        {/* Numéro badge */}
+                        {/* Carré numéroté coloré (clic = valider) */}
                         <div onClick={() => toggleCheck(todaySeance.id, idx, ex.repos, todaySeance._calKey)}
                           style={{
-                            width:28, height:28, borderRadius:9, flexShrink:0,
+                            width:48, height:48, borderRadius:13, flexShrink:0,
                             display:"grid", placeItems:"center", cursor:"pointer",
-                            background: isChecked ? "linear-gradient(145deg,#5FE0A5,#2DA67D)" : "rgba(59,130,246,0.10)",
-                            border: isChecked ? "none" : "1px solid rgba(59,130,246,0.20)",
-                            color: isChecked ? "#0B1F18" : "#3B82F6",
-                            fontSize: 12, fontWeight:800, fontFamily:DISP,
+                            background: isChecked
+                              ? "linear-gradient(145deg,#5FE0A5,#2DA67D)"
+                              : `linear-gradient(135deg, ${tc[0]}, ${tc[1]}22)`,
+                            border: isChecked ? "none" : `1px solid ${tc[1]}3a`,
+                            color: isChecked ? "#0B1F18" : tc[1],
+                            fontSize: 19, fontWeight:800, fontFamily:DISP,
                             boxShadow: isChecked ? "0 3px 8px rgba(95,224,165,0.35)" : "none",
                             transition:"all .15s",
                           }}>
                           {isChecked ? (
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
                               stroke="currentColor" strokeWidth="2.8" strokeLinecap="round">
                               <path d="M20 6L9 17l-5-5"/>
                             </svg>
