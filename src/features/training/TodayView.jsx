@@ -244,7 +244,7 @@ export default function TodayView(props) {
                 <div style={{
                   margin: "0 0 16px", borderRadius: 26, position: "relative",
                   overflow: "hidden", background: "#01020a",
-                  boxShadow: "0 10px 30px rgba(12,14,34,0.4)", minHeight: 420,
+                  boxShadow: "0 10px 30px rgba(12,14,34,0.4)", minHeight: 260,
                 }}>
                   {/* Mannequin violet */}
                   <img src={HERO_PURPLE} alt="" aria-hidden="true" style={{
@@ -257,7 +257,7 @@ export default function TodayView(props) {
                     background: "linear-gradient(95deg,rgba(1,2,10,0.97) 0%,rgba(1,2,10,0.92) 32%,rgba(1,2,10,0.65) 52%,rgba(1,2,10,0.30) 72%,rgba(1,2,10,0.10) 100%)",
                   }} />
                   {/* Contenu */}
-                  <div style={{ position: "relative", zIndex: 2, padding: "22px 22px 0" }}>
+                  <div style={{ position: "relative", zIndex: 2, padding: "22px 22px 70px" }}>
                     <div style={{ color: "#9aa6ff", fontSize: 13.5, fontWeight: 800, letterSpacing: "1.5px", fontFamily: FONT }}>
                       SÉANCE DU JOUR
                     </div>
@@ -279,20 +279,21 @@ export default function TodayView(props) {
                         {total} exercice{total !== 1 ? "s" : ""}
                       </span>
                     </div>
-                    {/* CTA — lance la séance */}
+                    {/* CTA — position absolute bas gauche */}
                     {!todaySeance.complete ? (
                       <button onClick={() => setFocusActive(true)} style={{
-                        marginTop: 18, marginBottom: 22, width: 225, border: "none", cursor: "pointer",
+                        position: "absolute", bottom: 18, left: 22,
+                        width: 200, border: "none", cursor: "pointer",
                         background: "linear-gradient(90deg,#2f6bff,#7c3aed)", color: "#fff",
-                        fontFamily: FONT, fontWeight: 800, fontSize: 18, padding: 16, borderRadius: 16,
+                        fontFamily: FONT, fontWeight: 800, fontSize: 16, padding: "13px 16px", borderRadius: 16,
                         display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
                         boxShadow: "0 8px 20px rgba(80,70,230,0.45)",
                       }}>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="#fff"><path d="M6 4l14 8-14 8z"/></svg>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="#fff"><path d="M6 4l14 8-14 8z"/></svg>
                         Démarrer
                       </button>
                     ) : (
-                      <div style={{ marginTop: 18, marginBottom: 22, fontSize: 14, color: "#5FE0A5", fontWeight: 700, fontFamily: FONT }}>
+                      <div style={{ position: "absolute", bottom: 18, left: 22, fontSize: 13, color: "#5FE0A5", fontWeight: 700, fontFamily: FONT }}>
                         ✓ Séance complétée
                       </div>
                     )}
