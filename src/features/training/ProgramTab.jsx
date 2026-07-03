@@ -423,7 +423,7 @@ function MesocycleChart({ prog, semC, checkedEx, cycleStart }) {
             </div>
           )}
         </div>
-        {hasCharge && (
+        {hasCharge ? (
           <div style={{padding:"6px 12px",borderRadius:10,
             background:nearMRV?"rgba(245,158,11,0.12)":"rgba(16,185,129,0.12)",
             border:nearMRV?"1px solid rgba(245,158,11,0.25)":"1px solid rgba(16,185,129,0.25)",
@@ -432,6 +432,11 @@ function MesocycleChart({ prog, semC, checkedEx, cycleStart }) {
               color:nearMRV?"#B45309":"#059669",fontFamily:DISP_F}}>
               {nearMRV?"Limite proche":"Zone verte"}
             </span>
+          </div>
+        ) : (
+          <div style={{padding:"4px 10px",borderRadius:20,
+            background:"#EFF6FF",border:"1px solid #BFDBFE",flexShrink:0}}>
+            <span style={{fontSize:10,fontWeight:700,color:"#3B82F6",fontFamily:DISP_F}}>🔒 Verrouillé</span>
           </div>
         )}
       </div>
@@ -489,77 +494,66 @@ function MesocycleChart({ prog, semC, checkedEx, cycleStart }) {
       </div>
       </>
       ) : (
-        /* État vide redesigné — graphe fantôme + CTA */
-        <div style={{padding:"4px 0 0"}}>
+        /* État vide compact — graphe flouté en fond + texte + CTA bleu */
+        <div style={{position:"relative"}}>
 
-          {/* Graphe fantôme */}
-          <div style={{position:"relative",width:"100%",height:80,marginBottom:4}}>
-            <svg width="100%" viewBox="0 0 320 80" preserveAspectRatio="none" style={{overflow:"visible"}}>
-              <line x1="0" y1="27" x2="320" y2="27" stroke="#F1F5F9" strokeWidth="1"/>
-              <line x1="0" y1="54" x2="320" y2="54" stroke="#F1F5F9" strokeWidth="1"/>
+          {/* Graphe fantôme flouté en fond */}
+          <div style={{position:"absolute",top:0,left:0,right:0,height:88,
+            filter:"blur(2.5px)",opacity:0.5,pointerEvents:"none",zIndex:0}}>
+            <svg width="100%" viewBox="0 0 320 88" preserveAspectRatio="none" style={{overflow:"visible"}}>
               <path
-                d="M20,65 C60,58 85,46 115,40 C145,34 165,29 200,24 C228,20 260,18 300,16"
-                fill="none" stroke="#BFDBFE" strokeWidth="2.5"
+                d="M20,70 C60,62 85,48 115,42 C145,36 165,30 200,24 C228,20 260,18 300,15"
+                fill="none" stroke="#BFDBFE" strokeWidth="3"
                 strokeLinecap="round" strokeDasharray="6 4"
               />
               {[
-                {cx:20,  cy:65, r:4.5, fill:"#EFF6FF", stroke:"#BFDBFE", glow:false},
-                {cx:85,  cy:47, r:4.5, fill:"#EFF6FF", stroke:"#BFDBFE", glow:false},
-                {cx:155, cy:35, r:4.5, fill:"#EFF6FF", stroke:"#BFDBFE", glow:false},
-                {cx:228, cy:26, r:4.5, fill:"#EFF6FF", stroke:"#BFDBFE", glow:false},
-                {cx:300, cy:18, r:6,   fill:"#3B82F6", stroke:"#fff",    glow:true},
+                {cx:20,  cy:70, r:5},
+                {cx:115, cy:42, r:5},
+                {cx:200, cy:24, r:5},
+                {cx:300, cy:15, r:6, blue:true},
               ].map((p,i) => (
-                <circle key={i}
-                  cx={p.cx} cy={p.cy} r={p.r}
-                  fill={p.fill} stroke={p.stroke} strokeWidth={p.glow ? 2.5 : 1.8}
-                  style={p.glow ? {filter:"drop-shadow(0 2px 6px rgba(59,130,246,0.45))"} : {}}
-                />
+                <circle key={i} cx={p.cx} cy={p.cy} r={p.r}
+                  fill={p.blue ? "#3B82F6" : "#EFF6FF"}
+                  stroke={p.blue ? "#fff" : "#BFDBFE"} strokeWidth="2"/>
               ))}
             </svg>
           </div>
 
-          {/* Labels semaines */}
-          <div style={{display:"flex",justifyContent:"space-between",padding:"0 4px",marginBottom:28}}>
-            {["S1","S2","S3","S4","S5","S6"].map((l,i) => (
-              <div key={i} style={{flex:1,textAlign:"center",fontSize:9,fontWeight:600,color:"#CBD5E1",fontFamily:DISP_F}}>{l}</div>
-            ))}
-          </div>
-
-          {/* Texte */}
-          <div style={{textAlign:"center",marginBottom:28}}>
-            <div style={{fontSize:10,fontWeight:700,color:"#3B82F6",textTransform:"uppercase",letterSpacing:"0.8px",fontFamily:DISP_F,marginBottom:8}}>
+          {/* Contenu par-dessus */}
+          <div style={{position:"relative",zIndex:1,textAlign:"center",padding:"30px 0 0"}}>
+            <div style={{fontSize:10,fontWeight:700,color:"#3B82F6",textTransform:"uppercase",letterSpacing:"0.7px",fontFamily:DISP_F,marginBottom:6}}>
               📊 Aucune donnée
             </div>
-            <div style={{fontSize:17,fontWeight:800,color:C.text,fontFamily:DISP_F,letterSpacing:"-0.3px",marginBottom:8}}>
+            <div style={{fontSize:16,fontWeight:800,color:C.text,fontFamily:DISP_F,letterSpacing:"-0.3px",marginBottom:6}}>
               Commence à t'entraîner
             </div>
-            <div style={{fontSize:12.5,color:C.dim,fontFamily:DISP_F,lineHeight:1.65,maxWidth:240,margin:"0 auto"}}>
-              Enregistre tes séances pour suivre ta progression de charge et éviter le surentraînement.
+            <div style={{fontSize:12,color:C.dim,fontFamily:DISP_F,lineHeight:1.5,maxWidth:230,margin:"0 auto 16px"}}>
+              Lance une séance pour débloquer ta progression de charge.
             </div>
+            <button style={{
+              width:"100%",padding:"13px",border:"none",borderRadius:13,
+              background:"linear-gradient(135deg,#2563EB,#3B82F6)",color:"white",
+              fontSize:14,fontWeight:700,fontFamily:DISP_F,
+              display:"flex",alignItems:"center",justifyContent:"center",gap:7,
+              boxShadow:"0 4px 16px rgba(59,130,246,0.35)",cursor:"pointer",
+            }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <polygon points="5 3 19 12 5 21 5 3"/>
+              </svg>
+              Commencer une séance
+            </button>
           </div>
-
-          {/* CTA */}
-          <button style={{
-            width:"100%",padding:"14px",border:"none",borderRadius:13,
-            background:"#0F172A",color:"white",
-            fontSize:14,fontWeight:700,fontFamily:DISP_F,
-            display:"flex",alignItems:"center",justifyContent:"center",gap:7,
-            cursor:"pointer",marginBottom:0,
-          }}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-              <polygon points="5 3 19 12 5 21 5 3"/>
-            </svg>
-            Commencer une séance
-          </button>
 
         </div>
       )}
 
-      {/* CTA */}
+      {/* CTA — uniquement si données présentes */}
+      {hasCharge && (
       <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:6,marginTop:14,paddingTop:12,borderTop:`1px solid ${C.bd}`,color:"#60A5FA",fontSize:12,fontWeight:700,fontFamily:DISP_F}}>
         Voir la progression de force
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
       </div>
+      )}
     </div>
 
     {/* Overlay — mode FORCE (progression de force par exercice) */}
@@ -1365,8 +1359,8 @@ function ProgrammeView(props) {
                 </div>
 
                 {/* Titre */}
-                <div style={{fontSize:17,fontWeight:700,color:"#fff",fontFamily:F2,
-                  lineHeight:1.18,letterSpacing:"-0.4px",marginBottom:7}}>
+                <div style={{fontSize:20,fontWeight:800,color:"#fff",fontFamily:F2,
+                  lineHeight:1.15,letterSpacing:"-0.5px",marginBottom:8}}>
                   <span style={{
                     background:"linear-gradient(90deg,#fff,#E0E7FF)",
                     WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text"}}>
@@ -1376,35 +1370,36 @@ function ProgrammeView(props) {
                 </div>
 
                 {/* Sous-titre */}
-                <div style={{fontSize:10,color:"rgba(255,255,255,0.48)",lineHeight:1.55,fontFamily:F2,marginBottom:13}}>
+                <div style={{fontSize:11.5,color:"rgba(255,255,255,0.55)",lineHeight:1.5,fontFamily:F2,marginBottom:15}}>
                   Programme complet adapté à ta récupération et tes objectifs.
                 </div>
 
-                {/* CTA 1 — coach (violet plein) */}
+                {/* CTA 1 — CRÉER PROGRAMME (bleu plein, principal) */}
+                <button onClick={()=>{ setIsCreating(true); setCS(0); setNewP({nom:"",jours:[],seances:{}}); }}
+                  style={{width:"100%",padding:"13px 10px",borderRadius:13,border:"none",cursor:"pointer",
+                    background:"linear-gradient(135deg,#2563EB,#3B82F6)",
+                    color:"#fff",fontSize:14,fontWeight:800,fontFamily:F2,
+                    boxShadow:"0 8px 24px rgba(59,130,246,0.48),0 0 0 1px rgba(96,165,250,0.28)",
+                    display:"flex",alignItems:"center",justifyContent:"center",gap:8,
+                    letterSpacing:"-0.2px",marginBottom:9}}>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="#fff" stroke="none">
+                    <path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/>
+                  </svg>
+                  Créer mon programme
+                </button>
+
+                {/* CTA 2 — PARLER À UN COACH (transparent, secondaire) */}
                 <button onClick={()=>{ if(!premium) setPaywall(true); else setProgView("analyse"); }}
-                  style={{width:"100%",padding:"11px 10px",borderRadius:13,border:"none",cursor:"pointer",
-                    background:"linear-gradient(135deg,#6D28D9,#7C3AED,#4F46E5)",
-                    color:"#fff",fontSize:12.5,fontWeight:700,fontFamily:F2,
-                    boxShadow:"0 8px 24px rgba(109,40,217,0.50),0 0 0 1px rgba(167,139,250,0.28)",
-                    display:"flex",alignItems:"center",justifyContent:"center",gap:7,
-                    letterSpacing:"-0.1px",marginBottom:7}}>
+                  style={{width:"100%",padding:"12px 10px",borderRadius:13,cursor:"pointer",
+                    background:"rgba(255,255,255,0.07)",border:"1px solid rgba(255,255,255,0.18)",
+                    color:"rgba(255,255,255,0.85)",fontSize:12.5,fontWeight:600,fontFamily:F2,
+                    display:"flex",alignItems:"center",justifyContent:"center",gap:7,letterSpacing:"-0.1px",
+                    backdropFilter:"blur(6px)"}}>
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
                     <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
                   </svg>
                   Parler à un coach
-                </button>
-
-                {/* CTA 2 — programme (blanc contour) */}
-                <button onClick={()=>{ setIsCreating(true); setCS(0); setNewP({nom:"",jours:[],seances:{}}); }}
-                  style={{width:"100%",padding:"11px 10px",borderRadius:13,cursor:"pointer",
-                    background:"rgba(255,255,255,0.07)",border:"1px solid rgba(255,255,255,0.16)",
-                    color:"rgba(255,255,255,0.82)",fontSize:12.5,fontWeight:700,fontFamily:F2,
-                    display:"flex",alignItems:"center",justifyContent:"center",gap:7,letterSpacing:"-0.1px"}}>
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="#fff" stroke="none">
-                    <path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/>
-                  </svg>
-                  Créer mon programme
                 </button>
               </div>
 
@@ -1600,7 +1595,7 @@ function ProgrammeView(props) {
 
 
       {/* ── Charge progressive — toujours visible ── */}
-      <div style={{fontSize:20,fontWeight:800,color:C.text,fontFamily:DISP_F,marginBottom:12,letterSpacing:"-0.4px"}}>
+      <div style={{fontSize:20,fontWeight:800,color:C.text,fontFamily:DISP_F,marginTop:20,marginBottom:12,letterSpacing:"-0.4px"}}>
         Charge <span style={{fontStyle:"italic",color:"#3B82F6"}}>progressive</span>
       </div>
       <MesocycleChart prog={prog} semC={semC} checkedEx={checkedEx} cycleStart={cycleStart}/>
