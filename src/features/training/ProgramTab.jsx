@@ -50,13 +50,7 @@ function CoachWeekCard({ semC, semN, totalJours, onDetail, premium, onUnlock }) 
   };
 
   // Barre accent bleue en haut de la card
-  const AccentBar = () => (
-    <div style={{
-      position: "absolute", top: 0, left: 0, right: 0, height: 3,
-      background: "linear-gradient(90deg, #2563EB, #3B82F6, #60A5FA)",
-      zIndex: 1,
-    }}/>
-  );
+  const AccentBar = () => null;
 
   // Pills Semaine + statut
   const PillsSemaine = ({ statusLabel = "En forme", statusColor = "#16A34A", statusBg = "#F0FDF4", statusBorder = "#BBF7D0" }) => (
@@ -127,8 +121,9 @@ function CoachWeekCard({ semC, semN, totalJours, onDetail, premium, onUnlock }) 
   const BtnAnalyse = ({ onClick }) => (
     <button onClick={onClick} style={{
       width:"100%", padding:"14px", border:"none", borderRadius:14,
-      background:"#0F172A", color:"white",
+      background:"linear-gradient(135deg,#2563EB,#3B82F6)", color:"white",
       fontSize:14, fontWeight:700, fontFamily:F,
+      boxShadow:"0 4px 16px rgba(59,130,246,0.35)",
       display:"flex", alignItems:"center", justifyContent:"center", gap:8,
       cursor:"pointer", letterSpacing:"0.1px",
     }}>
@@ -146,7 +141,7 @@ function CoachWeekCard({ semC, semN, totalJours, onDetail, premium, onUnlock }) 
       {/* Carte blanche floue derrière */}
       <div style={{...cardShell, filter:"blur(1.5px)", opacity:0.55, userSelect:"none", pointerEvents:"none"}}>
         <AccentBar/>
-        <div style={{padding:"20px 18px 18px", paddingTop:23}}>
+        <div style={{padding:"20px 18px 18px"}}>
           <PillsSemaine/>
           <div style={{fontSize:21, fontWeight:800, color:"#0F172A", lineHeight:1.2, letterSpacing:"-0.4px", marginBottom:4, fontFamily:F}}>
             Ta semaine est prête 💪
@@ -226,7 +221,7 @@ function CoachWeekCard({ semC, semN, totalJours, onDetail, premium, onUnlock }) 
   if (!hasRealData) return (
     <div style={cardShell}>
       <AccentBar/>
-      <div style={{padding:"20px 18px 18px", paddingTop:23}}>
+      <div style={{padding:"20px 18px 18px"}}>
         <PillsSemaine statusLabel="En attente" statusColor="#F59E0B" statusBg="#FFFBEB" statusBorder="#FDE68A"/>
         <div style={{textAlign:"center", padding:"8px 0 18px"}}>
           <div style={{
@@ -297,7 +292,7 @@ function CoachWeekCard({ semC, semN, totalJours, onDetail, premium, onUnlock }) 
   return (
     <div style={cardShell}>
       <AccentBar/>
-      <div style={{padding:"20px 18px 18px", paddingTop:23}}>
+      <div style={{padding:"20px 18px 18px"}}>
 
         {/* Header : titre + anneau récup */}
         <div style={{display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:16}}>
@@ -1335,7 +1330,7 @@ function ProgrammeView(props) {
             ))}
 
             {/* Layout gauche + droite */}
-            <div style={{display:"flex",alignItems:"center",padding:"16px 14px 16px 18px",gap:10,position:"relative",zIndex:1}}>
+            <div style={{display:"flex",alignItems:"flex-start",padding:"20px 14px 18px 18px",gap:10,position:"relative",zIndex:1}}>
 
               {/* ── Gauche ── */}
               <div style={{flex:1,minWidth:0}}>
