@@ -1284,15 +1284,6 @@ function ProgrammeView(props) {
         )}
       </div>
 
-      {/* ── Coach IA — toujours visible ── */}
-      <CoachWeekCard
-        semC={semC}
-        semN={semN}
-        totalJours={prog?.jours?.length||0}
-        onDetail={()=>setShowAnalyse(true)}
-        premium={premium}
-        onUnlock={()=>setPaywall(true)}
-      />
 
       {/* ── Overlay Analyse de charge (depuis carte Coach IA) ── */}
       {showAnalyse && (
@@ -1369,11 +1360,6 @@ function ProgrammeView(props) {
                   <br/>t'attend. 🧠
                 </div>
 
-                {/* Sous-titre */}
-                <div style={{fontSize:11.5,color:"rgba(255,255,255,0.55)",lineHeight:1.5,fontFamily:F2,marginBottom:15}}>
-                  Programme complet adapté à ta récupération et tes objectifs.
-                </div>
-
                 {/* CTA 1 — CRÉER PROGRAMME (bleu plein, principal) */}
                 <button onClick={()=>{ setIsCreating(true); setCS(0); setNewP({nom:"",jours:[],seances:{}}); }}
                   style={{width:"100%",padding:"17px 12px",borderRadius:15,border:"none",cursor:"pointer",
@@ -1390,12 +1376,12 @@ function ProgrammeView(props) {
 
                 {/* CTA 2 — PARLER À UN COACH (transparent, secondaire) */}
                 <button onClick={()=>{ if(!premium) setPaywall(true); else setProgView("analyse"); }}
-                  style={{width:"100%",padding:"15px 12px",borderRadius:15,cursor:"pointer",
+                  style={{width:"100%",padding:"17px 12px",borderRadius:15,cursor:"pointer",
                     background:"rgba(255,255,255,0.07)",border:"1px solid rgba(255,255,255,0.18)",
-                    color:"rgba(255,255,255,0.88)",fontSize:14,fontWeight:600,fontFamily:F2,
-                    display:"flex",alignItems:"center",justifyContent:"center",gap:8,letterSpacing:"-0.1px",
+                    color:"rgba(255,255,255,0.88)",fontSize:15.5,fontWeight:700,fontFamily:F2,
+                    display:"flex",alignItems:"center",justifyContent:"center",gap:9,letterSpacing:"-0.2px",
                     backdropFilter:"blur(6px)"}}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
                     <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
                   </svg>
@@ -1593,6 +1579,18 @@ function ProgrammeView(props) {
 
       </>)}
 
+
+      {/* ── Bilan semaine (Ta semaine est prête) ── */}
+      <div style={{marginTop:20}}>
+      <CoachWeekCard
+        semC={semC}
+        semN={semN}
+        totalJours={prog?.jours?.length||0}
+        onDetail={()=>setShowAnalyse(true)}
+        premium={premium}
+        onUnlock={()=>setPaywall(true)}
+      />
+      </div>
 
       {/* ── Charge progressive — toujours visible ── */}
       <div style={{fontSize:20,fontWeight:800,color:C.text,fontFamily:DISP_F,marginTop:20,marginBottom:12,letterSpacing:"-0.4px"}}>
