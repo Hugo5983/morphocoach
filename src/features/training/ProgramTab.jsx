@@ -1376,13 +1376,13 @@ function ProgrammeView(props) {
 
                 {/* CTA 1 — CRÉER PROGRAMME (bleu plein, principal) */}
                 <button onClick={()=>{ setIsCreating(true); setCS(0); setNewP({nom:"",jours:[],seances:{}}); }}
-                  style={{width:"100%",padding:"13px 10px",borderRadius:13,border:"none",cursor:"pointer",
+                  style={{width:"100%",padding:"17px 12px",borderRadius:15,border:"none",cursor:"pointer",
                     background:"linear-gradient(135deg,#2563EB,#3B82F6)",
-                    color:"#fff",fontSize:14,fontWeight:800,fontFamily:F2,
+                    color:"#fff",fontSize:15.5,fontWeight:800,fontFamily:F2,
                     boxShadow:"0 8px 24px rgba(59,130,246,0.48),0 0 0 1px rgba(96,165,250,0.28)",
-                    display:"flex",alignItems:"center",justifyContent:"center",gap:8,
-                    letterSpacing:"-0.2px",marginBottom:9}}>
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="#fff" stroke="none">
+                    display:"flex",alignItems:"center",justifyContent:"center",gap:9,
+                    letterSpacing:"-0.2px",marginBottom:11}}>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="#fff" stroke="none">
                     <path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/>
                   </svg>
                   Créer mon programme
@@ -1390,12 +1390,12 @@ function ProgrammeView(props) {
 
                 {/* CTA 2 — PARLER À UN COACH (transparent, secondaire) */}
                 <button onClick={()=>{ if(!premium) setPaywall(true); else setProgView("analyse"); }}
-                  style={{width:"100%",padding:"12px 10px",borderRadius:13,cursor:"pointer",
+                  style={{width:"100%",padding:"15px 12px",borderRadius:15,cursor:"pointer",
                     background:"rgba(255,255,255,0.07)",border:"1px solid rgba(255,255,255,0.18)",
-                    color:"rgba(255,255,255,0.85)",fontSize:12.5,fontWeight:600,fontFamily:F2,
-                    display:"flex",alignItems:"center",justifyContent:"center",gap:7,letterSpacing:"-0.1px",
+                    color:"rgba(255,255,255,0.88)",fontSize:14,fontWeight:600,fontFamily:F2,
+                    display:"flex",alignItems:"center",justifyContent:"center",gap:8,letterSpacing:"-0.1px",
                     backdropFilter:"blur(6px)"}}>
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
                     <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
                   </svg>
