@@ -489,7 +489,7 @@ function MesocycleChart({ prog, semC, checkedEx, cycleStart }) {
       </div>
       </>
       ) : (
-        /* État vide redesigné — graphe fantôme + steps + CTA */
+        /* État vide redesigné — graphe fantôme + CTA */
         <div style={{padding:"4px 0 0"}}>
 
           {/* Graphe fantôme */}
@@ -519,76 +519,37 @@ function MesocycleChart({ prog, semC, checkedEx, cycleStart }) {
           </div>
 
           {/* Labels semaines */}
-          <div style={{display:"flex",justifyContent:"space-between",padding:"0 4px",marginBottom:18}}>
+          <div style={{display:"flex",justifyContent:"space-between",padding:"0 4px",marginBottom:28}}>
             {["S1","S2","S3","S4","S5","S6"].map((l,i) => (
               <div key={i} style={{flex:1,textAlign:"center",fontSize:9,fontWeight:600,color:"#CBD5E1",fontFamily:DISP_F}}>{l}</div>
             ))}
           </div>
 
           {/* Texte */}
-          <div style={{textAlign:"center",marginBottom:16}}>
-            <div style={{fontSize:10,fontWeight:700,color:"#3B82F6",textTransform:"uppercase",letterSpacing:"0.8px",fontFamily:DISP_F,marginBottom:5}}>
+          <div style={{textAlign:"center",marginBottom:28}}>
+            <div style={{fontSize:10,fontWeight:700,color:"#3B82F6",textTransform:"uppercase",letterSpacing:"0.8px",fontFamily:DISP_F,marginBottom:8}}>
               📊 Aucune donnée
             </div>
-            <div style={{fontSize:16,fontWeight:800,color:C.text,fontFamily:DISP_F,letterSpacing:"-0.3px",marginBottom:5}}>
-              Lance ta première séance
+            <div style={{fontSize:17,fontWeight:800,color:C.text,fontFamily:DISP_F,letterSpacing:"-0.3px",marginBottom:8}}>
+              Commence à t'entraîner
             </div>
-            <div style={{fontSize:12,color:C.dim,fontFamily:DISP_F,lineHeight:1.6,maxWidth:240,margin:"0 auto"}}>
-              Logge tes charges en Focus Mode pour voir ta courbe se construire semaine après semaine.
+            <div style={{fontSize:12.5,color:C.dim,fontFamily:DISP_F,lineHeight:1.65,maxWidth:240,margin:"0 auto"}}>
+              Enregistre tes séances pour suivre ta progression de charge et éviter le surentraînement.
             </div>
-          </div>
-
-          {/* 3 étapes */}
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:6,marginBottom:14}}>
-            {[
-              {n:"1",t:"Lance une séance"},
-              {n:"2",t:"Logge tes charges"},
-              {n:"3",t:"Vois ta progression"},
-            ].map((s,i) => (
-              <div key={i} style={{
-                background:"#F8FAFC",border:"1px solid #F1F5F9",
-                borderRadius:12,padding:"10px 6px",textAlign:"center",
-                position:"relative",
-              }}>
-                <div style={{
-                  width:20,height:20,borderRadius:"50%",
-                  background:"#3B82F6",
-                  fontSize:10,fontWeight:800,color:"white",
-                  display:"flex",alignItems:"center",justifyContent:"center",
-                  margin:"0 auto 6px",fontFamily:DISP_F,
-                }}>{s.n}</div>
-                <div style={{fontSize:10,fontWeight:600,color:"#475569",lineHeight:1.4,fontFamily:DISP_F}}>{s.t}</div>
-                {i < 2 && (
-                  <div style={{
-                    position:"absolute",top:"50%",right:-6,
-                    width:6,height:2,background:"#E2E8F0",
-                    transform:"translateY(-50%)",
-                  }}/>
-                )}
-              </div>
-            ))}
           </div>
 
           {/* CTA */}
           <button style={{
-            width:"100%",padding:"13px",border:"none",borderRadius:13,
+            width:"100%",padding:"14px",border:"none",borderRadius:13,
             background:"#0F172A",color:"white",
-            fontSize:13,fontWeight:700,fontFamily:DISP_F,
+            fontSize:14,fontWeight:700,fontFamily:DISP_F,
             display:"flex",alignItems:"center",justifyContent:"center",gap:7,
-            cursor:"pointer",marginBottom:8,
+            cursor:"pointer",marginBottom:0,
           }}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
               <polygon points="5 3 19 12 5 21 5 3"/>
             </svg>
             Commencer une séance
-          </button>
-          <button onClick={()=>setOpen(true)} style={{
-            width:"100%",padding:"11px",borderRadius:12,cursor:"pointer",
-            background:"#F8FAFC",border:"1px solid #E2E8F0",
-            color:"#64748B",fontSize:12,fontWeight:600,fontFamily:DISP_F,
-            display:"flex",alignItems:"center",justifyContent:"center",gap:6,
-          }}>
-            💡 Comment ça fonctionne ?
           </button>
 
         </div>
