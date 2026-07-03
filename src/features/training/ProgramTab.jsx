@@ -9,13 +9,13 @@ import AnalyseIA from "../ai/AnalyseIA.jsx";
 import { findExInDB } from "../../utils/training.js";
 import { GuideExModal, SeanceDetailModal } from "./components/ProgramTabModals.jsx";
 
-// ─── COACH IA — CARTE RÉCUPÉRATION (3 états) ─────────────────────────────────
+// ─── CARD SEMAINE — VARIANTE B BLEU (design blanc + accent #3B82F6) ─────────
 // État 1 : !premium         → verrouillé, flou, CTA conversion PRO
 // État 2 : premium && !data → déverrouillé, données insuffisantes
 // État 3 : premium && data  → expérience premium complète
 function CoachWeekCard({ semC, semN, totalJours, onDetail, premium, onUnlock }) {
-  const F   = "'General Sans',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif";
-  const done = semC || 0;
+  const F = "'General Sans',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif";
+  const done  = semC || 0;
   const total = totalJours || 0;
   const ratio = total > 0 ? done / total : 0;
 
@@ -29,125 +29,193 @@ function CoachWeekCard({ semC, semN, totalJours, onDetail, premium, onUnlock }) 
 
   // Métriques calculées depuis les vraies données
   const fatigueLbl = ratio < 0.35 ? "Basse"     : ratio < 0.70 ? "Modérée"   : "Élevée";
-  const fatigueCol = ratio < 0.35 ? "#6EE7B7"   : ratio < 0.70 ? "#FCD34D"   : "#FCA5A5";
+  const fatigueCol = ratio < 0.35 ? "#10B981"   : ratio < 0.70 ? "#F59E0B"   : "#EF4444";
   const fatigueBar = ratio < 0.35 ? 0.20        : ratio < 0.70 ? 0.55        : 0.90;
   const recupPct   = Math.round(100 - ratio * 32);
-  const recupCol   = recupPct >= 80 ? "#6EE7B7" : recupPct >= 60 ? "#FCD34D" : "#FCA5A5";
+  const recupCol   = recupPct >= 80 ? "#3B82F6" : recupPct >= 60 ? "#F59E0B" : "#EF4444";
   const recupBar   = recupPct / 100;
   const risqueLbl  = ratio < 0.35 ? "Faible"    : ratio < 0.70 ? "Vigilance" : "Élevé";
-  const risqueCol  = ratio < 0.35 ? "#93C5FD"   : ratio < 0.70 ? "#FCD34D"   : "#FCA5A5";
+  const risqueCol  = ratio < 0.35 ? "#F59E0B"   : ratio < 0.70 ? "#F59E0B"   : "#EF4444";
   const risqueBar  = ratio < 0.35 ? 0.15        : ratio < 0.70 ? 0.55        : 0.90;
 
-  // Badges communs
-  const Badges = () => (
-    <div style={{display:"flex",gap:8,marginBottom:14}}>
-      {[
-        {txt:"COACH IA",   bg:"rgba(99,102,241,0.25)",bd:"rgba(99,102,241,0.40)",c:"#A5B4FC"},
-        {txt:`SEMAINE ${semN}`,bg:"rgba(255,255,255,0.07)",bd:"rgba(255,255,255,0.10)",c:"rgba(255,255,255,0.55)"},
-      ].map((b,i)=>(
-        <div key={i} style={{padding:"5px 12px",borderRadius:40,background:b.bg,border:`1px solid ${b.bd}`}}>
-          <span style={{fontSize:9.5,fontWeight:700,letterSpacing:"1.4px",color:b.c,fontFamily:F,textTransform:"uppercase"}}>{b.txt}</span>
+  // Styles partagés
+  const cardShell = {
+    borderRadius: 22,
+    overflow: "hidden",
+    marginBottom: 16,
+    background: "#FFFFFF",
+    boxShadow: "0 2px 16px rgba(15,23,42,0.07), 0 1px 4px rgba(15,23,42,0.04)",
+    border: "1px solid #EDF1F7",
+    position: "relative",
+  };
+
+  // Barre accent bleue en haut de la card
+  const AccentBar = () => (
+    <div style={{
+      position: "absolute", top: 0, left: 0, right: 0, height: 3,
+      background: "linear-gradient(90deg, #2563EB, #3B82F6, #60A5FA)",
+      zIndex: 1,
+    }}/>
+  );
+
+  // Pills Semaine + statut
+  const PillsSemaine = ({ statusLabel = "En forme", statusColor = "#16A34A", statusBg = "#F0FDF4", statusBorder = "#BBF7D0" }) => (
+    <div style={{display:"flex", gap:6, marginBottom:8}}>
+      <div style={{
+        padding:"3px 10px", borderRadius:20,
+        background:"#EFF6FF", border:"1px solid #BFDBFE",
+        fontSize:10, fontWeight:700, color:"#2563EB", fontFamily:F,
+        letterSpacing:"0.2px",
+      }}>
+        Semaine {semN}
+      </div>
+      <div style={{
+        padding:"3px 10px", borderRadius:20,
+        background:statusBg, border:`1px solid ${statusBorder}`,
+        fontSize:10, fontWeight:700, color:statusColor, fontFamily:F,
+        display:"flex", alignItems:"center", gap:4,
+      }}>
+        <div style={{width:5,height:5,borderRadius:"50%",background:statusColor}}/>
+        {statusLabel}
+      </div>
+    </div>
+  );
+
+  // Anneau récup bleu
+  const RecupRing = ({ value, color = "#3B82F6" }) => {
+    const r = 26;
+    const circ = 2 * Math.PI * r;
+    const offset = circ * (1 - value / 100);
+    return (
+      <div style={{position:"relative", width:62, height:62, flexShrink:0}}>
+        <svg width="62" height="62" viewBox="0 0 62 62" style={{transform:"rotate(-90deg)"}}>
+          <circle cx="31" cy="31" r={r} fill="none" stroke="#EFF6FF" strokeWidth="5"/>
+          <circle cx="31" cy="31" r={r} fill="none" stroke={color} strokeWidth="5"
+            strokeDasharray={circ} strokeDashoffset={offset} strokeLinecap="round"/>
+        </svg>
+        <div style={{
+          position:"absolute", inset:0,
+          display:"flex", flexDirection:"column",
+          alignItems:"center", justifyContent:"center", gap:0,
+        }}>
+          <span style={{fontSize:19, fontWeight:900, color, lineHeight:1, fontFamily:F}}>{value}</span>
+          <span style={{fontSize:8, fontWeight:700, color:"#94A3B8", textTransform:"uppercase", letterSpacing:"0.3px", fontFamily:F}}>Récup</span>
+        </div>
+      </div>
+    );
+  };
+
+  // Métriques row (3 chips)
+  const MetricsRow = ({ items }) => (
+    <div style={{display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:8, marginBottom:14}}>
+      {items.map((s,i) => (
+        <div key={i} style={{
+          borderRadius:12, padding:"10px 8px", textAlign:"center",
+          background:"#F8FAFC", border:"1px solid #F1F5F9",
+        }}>
+          <div style={{fontSize:14, fontWeight:800, color:s.c, fontFamily:F, marginBottom:2, letterSpacing:"-0.2px"}}>{s.v}</div>
+          <div style={{height:3, borderRadius:2, background:"#E2E8F0", overflow:"hidden", margin:"4px 0"}}>
+            <div style={{width:`${s.bar*100}%`, height:"100%", borderRadius:2, background:s.c}}/>
+          </div>
+          <div style={{fontSize:9, fontWeight:700, color:"#94A3B8", fontFamily:F, textTransform:"uppercase", letterSpacing:"0.4px"}}>{s.l}</div>
         </div>
       ))}
     </div>
   );
 
-  // Conteneur commun
-  const Shell = ({children,blur}) => (
-    <div style={{borderRadius:22,overflow:"hidden",marginBottom:16,
-      background:"linear-gradient(145deg,#0D0B1E 0%,#12103A 55%,#1A1245 100%)",
-      boxShadow:"0 14px 44px rgba(0,0,0,0.32),0 0 0 1px rgba(255,255,255,0.06)",
-      position:"relative",
-      ...(blur ? {filter:"blur(1.5px)",opacity:0.55,userSelect:"none",pointerEvents:"none"} : {})}}>
-      <div style={{position:"absolute",top:-50,right:-30,width:190,height:190,
-        borderRadius:"50%",background:"rgba(91,76,245,0.14)",pointerEvents:"none"}}/>
-      <div style={{position:"absolute",bottom:-25,left:-10,width:120,height:120,
-        borderRadius:"50%",background:"rgba(59,130,246,0.09)",pointerEvents:"none"}}/>
-      <div style={{padding:"18px 16px 16px",position:"relative",zIndex:1}}>
-        {children}
-      </div>
-    </div>
+  // Bouton principal "Analyser ma semaine"
+  const BtnAnalyse = ({ onClick }) => (
+    <button onClick={onClick} style={{
+      width:"100%", padding:"14px", border:"none", borderRadius:14,
+      background:"#0F172A", color:"white",
+      fontSize:14, fontWeight:700, fontFamily:F,
+      display:"flex", alignItems:"center", justifyContent:"center", gap:8,
+      cursor:"pointer", letterSpacing:"0.1px",
+    }}>
+      📊 Analyser ma semaine
+      <span style={{
+        background:"rgba(255,255,255,0.12)", padding:"3px 8px",
+        borderRadius:6, fontSize:11, fontWeight:600,
+      }}>Sem. {semN}</span>
+    </button>
   );
 
   // ── ÉTAT 1 : GRATUIT — contenu flouté + overlay de conversion ────────────────
   if (!premium) return (
-    <div style={{position:"relative",marginBottom:16}}>
-      {/* Contenu flouté derrière */}
-      <Shell blur>
-        <Badges/>
-        <div style={{fontSize:22,fontWeight:700,color:"#fff",lineHeight:1.2,letterSpacing:"-0.3px",marginBottom:9,fontFamily:F}}>
-          Ta semaine est prête 💪
+    <div style={{position:"relative", marginBottom:16}}>
+      {/* Carte blanche floue derrière */}
+      <div style={{...cardShell, filter:"blur(1.5px)", opacity:0.55, userSelect:"none", pointerEvents:"none"}}>
+        <AccentBar/>
+        <div style={{padding:"20px 18px 18px", paddingTop:23}}>
+          <PillsSemaine/>
+          <div style={{fontSize:21, fontWeight:800, color:"#0F172A", lineHeight:1.2, letterSpacing:"-0.4px", marginBottom:4, fontFamily:F}}>
+            Ta semaine est prête 💪
+          </div>
+          <div style={{fontSize:12, color:"#94A3B8", marginBottom:16, fontFamily:F}}>Fatigue basse · bon signal</div>
+          <MetricsRow items={[
+            {v:"Basse", l:"Fatigue", c:"#10B981", bar:0.20},
+            {v:"87%",   l:"Récup.",  c:"#3B82F6", bar:0.87},
+            {v:"Faible",l:"Risque",  c:"#F59E0B", bar:0.15},
+          ]}/>
+          <BtnAnalyse/>
         </div>
-        <div style={{fontSize:12,color:"rgba(255,255,255,0.48)",lineHeight:1.6,fontFamily:F,marginBottom:16}}>
-          Programme généré selon tes performances récentes · Sem. {semN}
-        </div>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:8,marginBottom:14}}>
-          {[{v:"Basse",l:"Fatigue"},{v:"87%",l:"Récup."},{v:"Faible",l:"Risque"}].map((s,i)=>(
-            <div key={i} style={{borderRadius:11,padding:"11px 8px",
-              background:"rgba(255,255,255,0.07)",border:"1px solid rgba(255,255,255,0.08)",textAlign:"center"}}>
-              <div style={{fontSize:15,fontWeight:700,color:"rgba(255,255,255,0.20)",fontFamily:F,lineHeight:1.1,marginBottom:4}}>{s.v}</div>
-              <div style={{fontSize:9,color:"rgba(255,255,255,0.18)",fontFamily:F,textTransform:"uppercase",letterSpacing:"1px"}}>{s.l}</div>
-            </div>
-          ))}
-        </div>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
-          <div style={{padding:"13px 10px",borderRadius:12,background:"rgba(79,70,229,0.35)",textAlign:"center",fontSize:13,fontWeight:700,color:"rgba(255,255,255,0.30)",fontFamily:F}}>Ajuster</div>
-          <div style={{padding:"13px 10px",borderRadius:12,background:"rgba(255,255,255,0.06)",textAlign:"center",fontSize:13,fontWeight:700,color:"rgba(255,255,255,0.20)",fontFamily:F}}>Voir le détail</div>
-        </div>
-      </Shell>
-
-      {/* Badge PRO — coin supérieur droit, par-dessus */}
-      <div style={{position:"absolute",top:14,right:14,zIndex:20,
-        display:"flex",alignItems:"center",gap:6,padding:"6px 13px",borderRadius:40,
-        background:"linear-gradient(135deg,#E6B758,#C9912F)",
-        boxShadow:"0 4px 14px rgba(201,145,47,0.50)"}}>
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-          <rect x="3" y="11" width="18" height="11" rx="2"/>
-          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-        </svg>
-        <span style={{fontSize:10,fontWeight:700,color:"#fff",fontFamily:F,letterSpacing:"0.8px"}}>PRO</span>
       </div>
 
-      {/* Overlay CTA conversion */}
-      <div style={{position:"absolute",top:0,left:0,right:0,bottom:0,zIndex:10,borderRadius:22,
-        background:"linear-gradient(180deg,rgba(8,5,20,0.10) 0%,rgba(8,5,20,0.85) 38%,rgba(8,5,20,0.97) 100%)",
-        display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"flex-end",
-        padding:"0 18px 20px"}}>
-        {/* Icône cadenas */}
-        <div style={{width:54,height:54,borderRadius:17,
-          background:"linear-gradient(135deg,rgba(129,140,248,0.22),rgba(79,70,229,0.32))",
-          border:"1px solid rgba(129,140,248,0.32)",
-          display:"grid",placeItems:"center",marginBottom:13,
-          boxShadow:"0 8px 24px rgba(79,70,229,0.28)"}}>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#A5B4FC" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+      {/* Badge PRO coin supérieur droit */}
+      <div style={{
+        position:"absolute", top:14, right:14, zIndex:20,
+        display:"flex", alignItems:"center", gap:6, padding:"6px 13px", borderRadius:40,
+        background:"linear-gradient(135deg,#E6B758,#C9912F)",
+        boxShadow:"0 4px 14px rgba(201,145,47,0.50)",
+      }}>
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+        <span style={{fontSize:10, fontWeight:700, color:"#fff", fontFamily:F, letterSpacing:"0.8px"}}>PRO</span>
+      </div>
+
+      {/* Overlay conversion */}
+      <div style={{
+        position:"absolute", top:0, left:0, right:0, bottom:0, zIndex:10, borderRadius:22,
+        background:"linear-gradient(180deg,rgba(246,248,251,0.05) 0%,rgba(246,248,251,0.88) 38%,rgba(246,248,251,0.98) 100%)",
+        display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"flex-end",
+        padding:"0 18px 20px",
+      }}>
+        <div style={{
+          width:54, height:54, borderRadius:17,
+          background:"linear-gradient(135deg,rgba(59,130,246,0.15),rgba(37,99,235,0.25))",
+          border:"1px solid rgba(59,130,246,0.3)",
+          display:"grid", placeItems:"center", marginBottom:13,
+          boxShadow:"0 8px 24px rgba(59,130,246,0.20)",
+        }}>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
           </svg>
         </div>
-        <div style={{fontSize:15,fontWeight:700,color:"#fff",fontFamily:F,textAlign:"center",letterSpacing:"-0.2px",marginBottom:7}}>
+        <div style={{fontSize:15, fontWeight:700, color:"#0F172A", fontFamily:F, textAlign:"center", letterSpacing:"-0.2px", marginBottom:7}}>
           🔒 Réservé aux membres PRO
         </div>
-        <div style={{fontSize:12,color:"rgba(255,255,255,0.62)",fontFamily:F,textAlign:"center",lineHeight:1.65,marginBottom:20,maxWidth:240}}>
+        <div style={{fontSize:12, color:"#64748B", fontFamily:F, textAlign:"center", lineHeight:1.65, marginBottom:20, maxWidth:240}}>
           Débloque ton plan hebdomadaire personnalisé selon tes performances et ton évolution.
         </div>
-        {/* CTA principal */}
-        <button onClick={onUnlock}
-          style={{width:"100%",padding:"15px",borderRadius:14,border:"none",cursor:"pointer",
-            background:"linear-gradient(135deg,#818CF8,#4F46E5)",
-            color:"#fff",fontSize:15,fontWeight:700,fontFamily:F,
-            boxShadow:"0 8px 24px rgba(79,70,229,0.50)",marginBottom:10,
-            display:"flex",alignItems:"center",justifyContent:"center",gap:8,letterSpacing:"-0.1px"}}>
+        <button onClick={onUnlock} style={{
+          width:"100%", padding:"15px", borderRadius:14, border:"none", cursor:"pointer",
+          background:"linear-gradient(135deg,#2563EB,#3B82F6)",
+          color:"#fff", fontSize:15, fontWeight:700, fontFamily:F,
+          boxShadow:"0 8px 24px rgba(59,130,246,0.40)", marginBottom:10,
+          display:"flex", alignItems:"center", justifyContent:"center", gap:8, letterSpacing:"-0.1px",
+        }}>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="#fff" stroke="none">
             <path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/>
           </svg>
           Passer au PRO
         </button>
-        {/* CTA secondaire */}
-        <button onClick={onUnlock}
-          style={{width:"100%",padding:"13px",borderRadius:14,cursor:"pointer",
-            background:"rgba(255,255,255,0.08)",border:"1px solid rgba(255,255,255,0.15)",
-            color:"rgba(255,255,255,0.78)",fontSize:13,fontWeight:600,fontFamily:F,
-            display:"flex",alignItems:"center",justifyContent:"center",gap:7}}>
+        <button onClick={onUnlock} style={{
+          width:"100%", padding:"13px", borderRadius:14, cursor:"pointer",
+          background:"rgba(15,23,42,0.06)", border:"1px solid #E2E8F0",
+          color:"#475569", fontSize:13, fontWeight:600, fontFamily:F,
+          display:"flex", alignItems:"center", justifyContent:"center", gap:7,
+        }}>
           Découvrir les avantages
         </button>
       </div>
@@ -156,130 +224,103 @@ function CoachWeekCard({ semC, semN, totalJours, onDetail, premium, onUnlock }) 
 
   // ── ÉTAT 2 : PRO SANS DONNÉES — programme impossible à calculer ───────────────
   if (!hasRealData) return (
-    <Shell>
-      {/* Badge PRO étoile */}
-      <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:0}}>
-        <Badges/>
-        <div style={{display:"flex",alignItems:"center",gap:5,padding:"5px 11px",borderRadius:40,
-          background:"linear-gradient(135deg,#E6B758,#C9912F)",
-          boxShadow:"0 3px 10px rgba(201,145,47,0.40)",marginTop:0,flexShrink:0}}>
-          <svg width="9" height="9" viewBox="0 0 24 24" fill="#fff" stroke="none">
-            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-          </svg>
-          <span style={{fontSize:9.5,fontWeight:700,color:"#fff",fontFamily:F}}>PRO</span>
-        </div>
-      </div>
-
-      {/* Icône + message */}
-      <div style={{textAlign:"center",padding:"4px 0 18px"}}>
-        <div style={{width:58,height:58,borderRadius:17,
-          background:"rgba(255,255,255,0.07)",border:"1px solid rgba(255,255,255,0.11)",
-          display:"grid",placeItems:"center",margin:"0 auto 14px"}}>
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none"
-            stroke="rgba(255,255,255,0.40)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M3 3v18M7 16l4-8 4 5 3-3"/>
-          </svg>
-        </div>
-        <div style={{fontSize:20,fontWeight:700,color:"#fff",fontFamily:F,letterSpacing:"-0.3px",marginBottom:8}}>
-          Données insuffisantes
-        </div>
-        <div style={{fontSize:12.5,color:"rgba(255,255,255,0.52)",lineHeight:1.65,fontFamily:F}}>
-          Fais ta première séance pour que MorphoCoach analyse ton niveau et génère ton programme personnalisé.
-        </div>
-      </div>
-
-      {/* Métriques avec tirets */}
-      <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:8,marginBottom:16}}>
-        {["Fatigue","Récup.","Risque"].map((l,i)=>(
-          <div key={i} style={{borderRadius:11,padding:"11px 8px",
-            background:"rgba(255,255,255,0.06)",border:"1px solid rgba(255,255,255,0.07)",textAlign:"center"}}>
-            <div style={{fontSize:20,fontWeight:700,color:"rgba(255,255,255,0.22)",fontFamily:F,lineHeight:1,marginBottom:5}}>—</div>
-            <div style={{fontSize:9,color:"rgba(255,255,255,0.35)",fontFamily:F,textTransform:"uppercase",letterSpacing:"1px"}}>{l}</div>
+    <div style={cardShell}>
+      <AccentBar/>
+      <div style={{padding:"20px 18px 18px", paddingTop:23}}>
+        <PillsSemaine statusLabel="En attente" statusColor="#F59E0B" statusBg="#FFFBEB" statusBorder="#FDE68A"/>
+        <div style={{textAlign:"center", padding:"8px 0 18px"}}>
+          <div style={{
+            width:58, height:58, borderRadius:17,
+            background:"#F0F9FF", border:"1px solid #BAE6FD",
+            display:"grid", placeItems:"center", margin:"0 auto 14px",
+          }}>
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none"
+              stroke="#3B82F6" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M3 3v18M7 16l4-8 4 5 3-3"/>
+            </svg>
           </div>
-        ))}
+          <div style={{fontSize:20, fontWeight:800, color:"#0F172A", fontFamily:F, letterSpacing:"-0.3px", marginBottom:8}}>
+            Données insuffisantes
+          </div>
+          <div style={{fontSize:12.5, color:"#64748B", lineHeight:1.65, fontFamily:F}}>
+            Fais ta première séance pour que MorphoCoach analyse ton niveau et génère ton programme personnalisé.
+          </div>
+        </div>
+        <MetricsRow items={[
+          {v:"—", l:"Fatigue", c:"#CBD5E1", bar:0},
+          {v:"—", l:"Récup.",  c:"#CBD5E1", bar:0},
+          {v:"—", l:"Risque",  c:"#CBD5E1", bar:0},
+        ]}/>
+        <button style={{
+          width:"100%", padding:"14px", borderRadius:14, border:"none", cursor:"pointer",
+          background:"linear-gradient(135deg,#2563EB,#3B82F6)",
+          color:"#fff", fontSize:14, fontWeight:700, fontFamily:F,
+          boxShadow:"0 6px 20px rgba(59,130,246,0.35)", marginBottom:10,
+          display:"flex", alignItems:"center", justifyContent:"center", gap:8,
+        }}>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <polygon points="5 3 19 12 5 21 5 3"/>
+          </svg>
+          Faire ma première séance
+        </button>
+        <button onClick={onDetail} style={{
+          width:"100%", padding:"12px", borderRadius:14, cursor:"pointer",
+          background:"#F8FAFC", border:"1px solid #E2E8F0",
+          color:"#475569", fontSize:12.5, fontWeight:600, fontFamily:F,
+          display:"flex", alignItems:"center", justifyContent:"center", gap:7,
+        }}>
+          Comment ça fonctionne ?
+        </button>
       </div>
-
-      {/* CTA */}
-      <button style={{width:"100%",padding:"14px",borderRadius:13,border:"none",cursor:"pointer",
-        background:"linear-gradient(145deg,#3B82F6,#2563EB)",
-        color:"#fff",fontSize:14,fontWeight:700,fontFamily:F,
-        boxShadow:"0 6px 20px rgba(59,130,246,0.45)",marginBottom:10,
-        display:"flex",alignItems:"center",justifyContent:"center",gap:8,letterSpacing:"-0.1px"}}>
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-          <polygon points="5 3 19 12 5 21 5 3"/>
-        </svg>
-        Faire ma première séance
-      </button>
-      <button onClick={onDetail}
-        style={{width:"100%",padding:"12px",borderRadius:13,cursor:"pointer",
-          background:"rgba(255,255,255,0.07)",border:"1px solid rgba(255,255,255,0.12)",
-          color:"rgba(255,255,255,0.65)",fontSize:12.5,fontWeight:600,fontFamily:F,
-          display:"flex",alignItems:"center",justifyContent:"center",gap:7}}>
-        Comment ça fonctionne ?
-      </button>
-    </Shell>
+    </div>
   );
 
   // ── ÉTAT 3 : PRO AVEC DONNÉES — expérience premium complète ──────────────────
-  const title = ratio >= 1 ? "Semaine accomplie ! 🔥" : "Ta semaine est prête 💪";
-  const sub   = ratio < 0.35
-    ? "Fatigue basse · bon signal. Tu peux maintenir l'intensité et progresser en charge."
+  const title  = ratio >= 1 ? "Semaine accomplie ! 🔥" : "Ta semaine est prête 💪";
+  const sub    = ratio < 0.35
+    ? "Fatigue basse · bon signal"
     : ratio < 0.70
-    ? "Fatigue modérée · surveille la charge sur 48h. Progression acceptable cette semaine."
-    : "Fatigue élevée · réduis l'intensité. Priorise la récupération avant ta prochaine séance.";
+    ? "Fatigue modérée · surveille la charge"
+    : "Fatigue élevée · priorise la récupération";
+
+  const statusLabel  = ratio >= 1 ? "Accomplie 🔥" : ratio < 0.35 ? "En forme" : ratio < 0.70 ? "Modérée" : "Attention";
+  const statusColor  = ratio >= 1 ? "#2563EB" : ratio < 0.35 ? "#16A34A" : ratio < 0.70 ? "#D97706" : "#DC2626";
+  const statusBg     = ratio >= 1 ? "#EFF6FF" : ratio < 0.35 ? "#F0FDF4" : ratio < 0.70 ? "#FFFBEB" : "#FEF2F2";
+  const statusBorder = ratio >= 1 ? "#BFDBFE" : ratio < 0.35 ? "#BBF7D0" : ratio < 0.70 ? "#FDE68A" : "#FECACA";
 
   const metrics = [
-    {v:fatigueLbl,   l:"Fatigue", c:fatigueCol, bar:fatigueBar},
-    {v:`${recupPct}%`,l:"Récup.", c:recupCol,   bar:recupBar},
-    {v:risqueLbl,    l:"Risque",  c:risqueCol,  bar:risqueBar},
+    {v:fatigueLbl,    l:"Fatigue", c:fatigueCol, bar:fatigueBar},
+    {v:`${recupPct}%`,l:"Récup.",  c:recupCol,   bar:recupBar},
+    {v:risqueLbl,     l:"Risque",  c:risqueCol,  bar:risqueBar},
   ];
 
   return (
-    <Shell>
-      {/* Header badges + PRO */}
-      <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
-        <Badges/>
-        <div style={{display:"flex",alignItems:"center",gap:5,padding:"5px 11px",borderRadius:40,
-          background:"linear-gradient(135deg,#E6B758,#C9912F)",
-          boxShadow:"0 3px 10px rgba(201,145,47,0.40)",flexShrink:0}}>
-          <svg width="9" height="9" viewBox="0 0 24 24" fill="#fff" stroke="none">
-            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-          </svg>
-          <span style={{fontSize:9.5,fontWeight:700,color:"#fff",fontFamily:F}}>PRO</span>
-        </div>
-      </div>
-      <div style={{fontSize:22,fontWeight:700,color:"#fff",lineHeight:1.2,letterSpacing:"-0.3px",marginBottom:9,fontFamily:F}}>{title}</div>
-      <div style={{fontSize:12,color:"rgba(255,255,255,0.48)",lineHeight:1.6,fontFamily:F,marginBottom:16}}>{sub}</div>
+    <div style={cardShell}>
+      <AccentBar/>
+      <div style={{padding:"20px 18px 18px", paddingTop:23}}>
 
-      {/* Métriques avec mini barres */}
-      <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:8,marginBottom:14}}>
-        {metrics.map((s,i)=>(
-          <div key={i} style={{borderRadius:11,padding:"11px 8px 10px",
-            background:"rgba(255,255,255,0.07)",border:"1px solid rgba(255,255,255,0.09)",textAlign:"center"}}>
-            <div style={{fontSize:15,fontWeight:700,color:s.c,fontFamily:F,lineHeight:1.1,marginBottom:5}}>{s.v}</div>
-            <div style={{height:3,borderRadius:2,background:"rgba(255,255,255,0.10)",overflow:"hidden",marginBottom:5}}>
-              <div style={{width:`${s.bar*100}%`,height:"100%",borderRadius:2,background:s.c,opacity:0.80}}/>
+        {/* Header : titre + anneau récup */}
+        <div style={{display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:16}}>
+          <div style={{flex:1, paddingRight:12}}>
+            <PillsSemaine statusLabel={statusLabel} statusColor={statusColor} statusBg={statusBg} statusBorder={statusBorder}/>
+            <div style={{fontSize:21, fontWeight:800, color:"#0F172A", lineHeight:1.2, letterSpacing:"-0.4px", marginBottom:4, fontFamily:F}}>
+              {title}
             </div>
-            <div style={{fontSize:9,color:"rgba(255,255,255,0.55)",fontFamily:F,textTransform:"uppercase",letterSpacing:"1px"}}>{s.l}</div>
+            <div style={{fontSize:12, color:"#94A3B8", fontFamily:F}}>{sub}</div>
           </div>
-        ))}
-      </div>
+          <RecupRing value={recupPct} color={recupCol}/>
+        </div>
 
-      {/* CTA */}
-      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
-        <button style={{padding:"13px 10px",borderRadius:12,background:"linear-gradient(135deg,#818CF8,#4F46E5)",border:"none",
-          textAlign:"center",fontSize:13,fontWeight:700,color:"#fff",fontFamily:F,
-          boxShadow:"0 5px 18px -4px rgba(79,70,229,0.60)",cursor:"pointer",letterSpacing:"-0.1px"}}>
-          Commencer la semaine
-        </button>
-        <button onClick={onDetail}
-          style={{padding:"13px 10px",borderRadius:12,cursor:"pointer",
-            background:"rgba(255,255,255,0.09)",border:"1px solid rgba(255,255,255,0.11)",
-            textAlign:"center",fontSize:13,fontWeight:700,color:"rgba(255,255,255,0.75)",fontFamily:F,letterSpacing:"-0.1px"}}>
-          Voir le détail
-        </button>
+        {/* Séparateur */}
+        <div style={{height:1, background:"#F1F5F9", marginBottom:14}}/>
+
+        {/* Métriques */}
+        <MetricsRow items={metrics}/>
+
+        {/* CTA */}
+        <BtnAnalyse onClick={onDetail}/>
       </div>
-    </Shell>
+    </div>
   );
 }
 
