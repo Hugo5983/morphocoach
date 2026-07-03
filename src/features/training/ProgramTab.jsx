@@ -419,7 +419,7 @@ function MesocycleChart({ prog, semC, checkedEx, cycleStart }) {
             </>
           ) : (
             <div style={{fontSize:14,fontWeight:700,color:C.text,fontFamily:DISP_F}}>
-              Charge progressive
+              Sem. {currentWeek + 1} / 6
             </div>
           )}
         </div>
@@ -489,19 +489,108 @@ function MesocycleChart({ prog, semC, checkedEx, cycleStart }) {
       </div>
       </>
       ) : (
-        /* État vide — aucune donnée loggée, on n'invente rien */
-        <div style={{padding:"20px 0 8px",textAlign:"center"}}>
-          <svg width="36" height="36" viewBox="0 0 24 24" fill="none"
-            stroke="rgba(0,0,0,0.18)" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"
-            style={{display:"block",margin:"0 auto 10px"}}>
-            <path d="M3 3v18M7 16l4-8 4 5 3-3"/>
-          </svg>
-          <div style={{fontSize:13,fontWeight:600,color:C.mid,fontFamily:DISP_F,marginBottom:4}}>
-            Aucune donnée de charge
+        /* État vide redesigné — graphe fantôme + steps + CTA */
+        <div style={{padding:"4px 0 0"}}>
+
+          {/* Graphe fantôme */}
+          <div style={{position:"relative",width:"100%",height:80,marginBottom:4}}>
+            <svg width="100%" viewBox="0 0 320 80" preserveAspectRatio="none" style={{overflow:"visible"}}>
+              <line x1="0" y1="27" x2="320" y2="27" stroke="#F1F5F9" strokeWidth="1"/>
+              <line x1="0" y1="54" x2="320" y2="54" stroke="#F1F5F9" strokeWidth="1"/>
+              <path
+                d="M20,65 C60,58 85,46 115,40 C145,34 165,29 200,24 C228,20 260,18 300,16"
+                fill="none" stroke="#BFDBFE" strokeWidth="2.5"
+                strokeLinecap="round" strokeDasharray="6 4"
+              />
+              {[
+                {cx:20,  cy:65, r:4.5, fill:"#EFF6FF", stroke:"#BFDBFE", glow:false},
+                {cx:85,  cy:47, r:4.5, fill:"#EFF6FF", stroke:"#BFDBFE", glow:false},
+                {cx:155, cy:35, r:4.5, fill:"#EFF6FF", stroke:"#BFDBFE", glow:false},
+                {cx:228, cy:26, r:4.5, fill:"#EFF6FF", stroke:"#BFDBFE", glow:false},
+                {cx:300, cy:18, r:6,   fill:"#3B82F6", stroke:"#fff",    glow:true},
+              ].map((p,i) => (
+                <circle key={i}
+                  cx={p.cx} cy={p.cy} r={p.r}
+                  fill={p.fill} stroke={p.stroke} strokeWidth={p.glow ? 2.5 : 1.8}
+                  style={p.glow ? {filter:"drop-shadow(0 2px 6px rgba(59,130,246,0.45))"} : {}}
+                />
+              ))}
+            </svg>
           </div>
-          <div style={{fontSize:11.5,color:C.dim,fontFamily:DISP_F,lineHeight:1.55}}>
-            Logge tes charges en séance Focus Mode<br/>pour activer le suivi de progression
+
+          {/* Labels semaines */}
+          <div style={{display:"flex",justifyContent:"space-between",padding:"0 4px",marginBottom:18}}>
+            {["S1","S2","S3","S4","S5","S6"].map((l,i) => (
+              <div key={i} style={{flex:1,textAlign:"center",fontSize:9,fontWeight:600,color:"#CBD5E1",fontFamily:DISP_F}}>{l}</div>
+            ))}
           </div>
+
+          {/* Texte */}
+          <div style={{textAlign:"center",marginBottom:16}}>
+            <div style={{fontSize:10,fontWeight:700,color:"#3B82F6",textTransform:"uppercase",letterSpacing:"0.8px",fontFamily:DISP_F,marginBottom:5}}>
+              📊 Aucune donnée
+            </div>
+            <div style={{fontSize:16,fontWeight:800,color:C.text,fontFamily:DISP_F,letterSpacing:"-0.3px",marginBottom:5}}>
+              Lance ta première séance
+            </div>
+            <div style={{fontSize:12,color:C.dim,fontFamily:DISP_F,lineHeight:1.6,maxWidth:240,margin:"0 auto"}}>
+              Logge tes charges en Focus Mode pour voir ta courbe se construire semaine après semaine.
+            </div>
+          </div>
+
+          {/* 3 étapes */}
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:6,marginBottom:14}}>
+            {[
+              {n:"1",t:"Lance une séance"},
+              {n:"2",t:"Logge tes charges"},
+              {n:"3",t:"Vois ta progression"},
+            ].map((s,i) => (
+              <div key={i} style={{
+                background:"#F8FAFC",border:"1px solid #F1F5F9",
+                borderRadius:12,padding:"10px 6px",textAlign:"center",
+                position:"relative",
+              }}>
+                <div style={{
+                  width:20,height:20,borderRadius:"50%",
+                  background:"#3B82F6",
+                  fontSize:10,fontWeight:800,color:"white",
+                  display:"flex",alignItems:"center",justifyContent:"center",
+                  margin:"0 auto 6px",fontFamily:DISP_F,
+                }}>{s.n}</div>
+                <div style={{fontSize:10,fontWeight:600,color:"#475569",lineHeight:1.4,fontFamily:DISP_F}}>{s.t}</div>
+                {i < 2 && (
+                  <div style={{
+                    position:"absolute",top:"50%",right:-6,
+                    width:6,height:2,background:"#E2E8F0",
+                    transform:"translateY(-50%)",
+                  }}/>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* CTA */}
+          <button style={{
+            width:"100%",padding:"13px",border:"none",borderRadius:13,
+            background:"#0F172A",color:"white",
+            fontSize:13,fontWeight:700,fontFamily:DISP_F,
+            display:"flex",alignItems:"center",justifyContent:"center",gap:7,
+            cursor:"pointer",marginBottom:8,
+          }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <polygon points="5 3 19 12 5 21 5 3"/>
+            </svg>
+            Commencer une séance
+          </button>
+          <button onClick={()=>setOpen(true)} style={{
+            width:"100%",padding:"11px",borderRadius:12,cursor:"pointer",
+            background:"#F8FAFC",border:"1px solid #E2E8F0",
+            color:"#64748B",fontSize:12,fontWeight:600,fontFamily:DISP_F,
+            display:"flex",alignItems:"center",justifyContent:"center",gap:6,
+          }}>
+            💡 Comment ça fonctionne ?
+          </button>
+
         </div>
       )}
 
@@ -1550,8 +1639,8 @@ function ProgrammeView(props) {
 
 
       {/* ── Charge progressive — toujours visible ── */}
-      <div style={{fontSize:16,fontWeight:700,color:C.text,fontFamily:DISP_F,marginBottom:10}}>
-        Charge progressive
+      <div style={{fontSize:20,fontWeight:800,color:C.text,fontFamily:DISP_F,marginBottom:12,letterSpacing:"-0.4px"}}>
+        Charge <span style={{fontStyle:"italic",color:"#3B82F6"}}>progressive</span>
       </div>
       <MesocycleChart prog={prog} semC={semC} checkedEx={checkedEx} cycleStart={cycleStart}/>
 
