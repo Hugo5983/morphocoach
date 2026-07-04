@@ -1,0 +1,499 @@
+// ─── RepasSheet — Page plein écran d'ajout d'aliment par repas ────────────────
+// Ouvert quand l'utilisateur tape un repas (Petit-déj, Déjeuner…).
+// Design aligné avec BiblioSheet de Creer.jsx : même overlay, handle, typo, etc.
+
+import { useState, useRef, useCallback, useEffect } from "react";
+import { C, FONT, SERIF } from "../../data/constants.js";
+
+const F   = FONT;
+const SF  = SERIF;
+const BL  = C.accent  || "#3B82F6";
+const BLD = C.accentDk|| "#2563EB";
+const BG  = C.bg;
+const S1  = C.s1;
+const S2  = C.s2;
+const BD  = C.bd || "rgba(0,0,0,0.06)";
+const TEXT= C.text;
+const MID = C.mid;
+const DIM = C.dim;
+const GRN = "#34D399";
+const RED = "#F87171";
+
+// Détecte si un aliment est exprimé pour 100 g (sinon : à l'unité/portion)
+const per100Test = (f) => /100\s*g/i.test((f && f.n) || "");
+
+// ─── Icônes ──────────────────────────────────────────────────────────────────
+function Ico({name,size=18,color="currentColor",stroke=1.6}){
+  const p={width:size,height:size,viewBox:"0 0 24 24",fill:"none",stroke:color,strokeWidth:stroke,strokeLinecap:"round",strokeLinejoin:"round"};
+  const paths={
+    search:<><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></>,
+    scan:<><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M7 12h10"/></>,
+    camera:<><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></>,
+    x:<path d="M18 6 6 18M6 6l12 12"/>,
+    plus:<path d="M12 5v14M5 12h14"/>,
+    chevL:<path d="m15 18-6-6 6-6"/>,
+    trash:<><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></>,
+    sun:<><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M5 12H3M21 12h-2M5.6 5.6 7 7M17 17l1.4 1.4M5.6 18.4 7 17M17 7l1.4-1.4"/></>,
+    coffee:<><path d="M6 9h11v6a4 4 0 0 1-4 4H10a4 4 0 0 1-4-4V9Z"/><path d="M17 11h2a2 2 0 0 1 0 4h-2"/><path d="M9 3v3M13 3v3"/></>,
+    moon:<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/>,
+    apple:<><path d="M16 4c-1.5 0-3 1-3 2.5"/><path d="M19 14c0 4-2 7-4 7-1.5 0-2-1-3-1s-1.5 1-3 1c-2 0-4-3-4-7s2-7 4-7c1.5 0 2 1 3 1s1.5-1 3-1c2 0 4 3 4 7Z"/></>,
+    spark:<path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z" fill="currentColor" stroke="none"/>,
+    pencil:<><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></>,
+  };
+  return <svg {...p}>{paths[name]}</svg>;
+}
+
+// ─── CSS ─────────────────────────────────────────────────────────────────────
+const CSS = `
+@keyframes rsFadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes rsPop{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:none}}
+.rs-fade{animation:rsFadeUp .28s cubic-bezier(.22,1,.36,1) both}
+.rs-pop{animation:rsPop .22s cubic-bezier(.34,1.56,.64,1) both}
+.rs-scroll::-webkit-scrollbar{width:0}
+.rs-scroll{scrollbar-width:none}
+`;
+
+// ═════════════════════════════════════════════════════════════════════════════
+export default function RepasSheet({
+  meal,           // { id, l, icon, accent, accentDk, dark }
+  items,          // aliments déjà dans ce repas
+  allFoods,       // FOODS + myFoods
+  quickFoods,     // FOODS.slice(0,8) pour les raccourcis
+  onAdd,          // (aliment) => void
+  onRemove,       // (index) => void
+  onUpdate,       // (index, aliment) => void — modifier la quantité d'un aliment
+  onClose,
+  onScan,         // ouvre le BarcodeScanner caméra
+  onPhoto,        // ouvre PhotoAnalyse
+  premium,
+  scanRes,        // résultat scan code-barres
+  setScanRes,     // pour le reset
+  handleScan,     // (code) => fetch OFF
+  push,
+}) {
+  const [search, setSearch] = useState("");
+  const [manualCode, setManualCode] = useState("");
+  const inputRef = useRef(null);
+  const scrollRef = useRef(null);
+
+  // ── Sélecteur de quantité (type Lifesum) ──────────────────────────────────
+  const [qtyFood, setQtyFood] = useState(null);   // aliment en attente de quantité
+  const [amount,  setAmount]  = useState(100);
+  const [editIndex, setEditIndex] = useState(null); // null = ajout, sinon index à modifier
+  const per100 = qtyFood ? /100\s*g/i.test(qtyFood.n || "") : false; // base 100g ?
+  const pickFood = (f) => { setEditIndex(null); setQtyFood(f); setAmount(per100Test(f) ? 100 : 1); };
+  const editItem = (item, idx) => {
+    const base = item.base || item;
+    setEditIndex(idx);
+    setQtyFood(base);
+    setAmount(item.grams ?? item.qty ?? (per100Test(base) ? 100 : 1));
+  };
+  const closeQty = () => { setQtyFood(null); setEditIndex(null); };
+  const confirmQty = () => {
+    if (!qtyFood) return;
+    const factor = per100 ? amount / 100 : amount;
+    const sc = (v) => v == null ? v : Math.round(v * factor * 10) / 10;
+    const baseName = (qtyFood.n || "").replace(/\s*\(100\s*g\)/i, "").trim();
+    const scaled = {
+      ...qtyFood,
+      n:  per100 ? `${baseName} · ${amount}g` : `${baseName}${amount !== 1 ? ` · ×${amount}` : ""}`,
+      c:  Math.round((qtyFood.c || 0) * factor),
+      p:  sc(qtyFood.p), g: sc(qtyFood.g), l: sc(qtyFood.l),
+      fi: sc(qtyFood.fi), na: sc(qtyFood.na), su: sc(qtyFood.su), sa: sc(qtyFood.sa),
+      grams: per100 ? amount : undefined,
+      qty:   per100 ? undefined : amount,
+      base:  { n: qtyFood.n, c: qtyFood.c, p: qtyFood.p, g: qtyFood.g, l: qtyFood.l,
+               fi: qtyFood.fi, na: qtyFood.na, su: qtyFood.su, sa: qtyFood.sa },
+    };
+    if (editIndex != null && onUpdate) onUpdate(editIndex, scaled);
+    else onAdd(scaled);
+    setQtyFood(null);
+    setEditIndex(null);
+    setSearch("");
+  };
+
+  // À l'ouverture, on commence toujours en haut de la page (vue d'ensemble)
+  useEffect(() => {
+    if (scrollRef.current) scrollRef.current.scrollTop = 0;
+    window.scrollTo(0, 0);
+  }, []);
+
+  const filtered = search
+    ? allFoods.filter(f => f.n.toLowerCase().includes(search.toLowerCase()))
+    : [];
+
+  const mealTotal = items.reduce(
+    (a, f) => ({ cal: a.cal + f.c, p: a.p + f.p, g: a.g + f.g, l: a.l + f.l }),
+    { cal: 0, p: 0, g: 0, l: 0 }
+  );
+
+  return (
+    <div style={{ position: "fixed", inset: 0, background: BG, zIndex: 10002,
+      display: "flex", flexDirection: "column" }}>
+      <style>{CSS}</style>
+
+      {/* ── Header ─────────────────────────────────────────────────────── */}
+      <div style={{ padding: "20px 20px 0", flexShrink: 0 }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between",
+          marginBottom: 18 }}>
+          <button onClick={onClose} style={{ background: "transparent", border: "none",
+            color: BL, cursor: "pointer", fontSize: 13, fontWeight: 700,
+            display: "flex", alignItems: "center", gap: 4, fontFamily: F }}>
+            <Ico name="chevL" size={15} color={BL} stroke={2.5}/> Retour
+          </button>
+          <button onClick={onClose} style={{ width: 38, height: 38, borderRadius: 12,
+            border: `1px solid ${BD}`, background: S1,
+            display: "grid", placeItems: "center",
+            color: MID, cursor: "pointer", fontSize: 20 }}>×</button>
+        </div>
+
+        {/* Icône + Titre repas */}
+        <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 18 }}>
+          <div style={{ width: 48, height: 48, borderRadius: 14,
+            background: `linear-gradient(145deg,${meal.accent},${meal.accentDk})`,
+            display: "grid", placeItems: "center",
+            boxShadow: `0 6px 16px ${meal.accent}50, inset 0 1px 0 rgba(0,0,0,0.14)`,
+            position: "relative", overflow: "hidden" }}>
+            <div style={{ position: "absolute", inset: 0,
+              background: "radial-gradient(110% 60% at 30% 10%,rgba(0,0,0,0.14),transparent 60%)",
+              pointerEvents: "none" }}/>
+            <Ico name={meal.icon} size={22} stroke={2} color={meal.dark}/>
+          </div>
+          <div>
+            <div style={{ fontFamily: SF, fontSize: 24, fontWeight: 700, color: TEXT,
+              letterSpacing: -0.5, lineHeight: 1.1 }}>{meal.l}</div>
+            {mealTotal.cal > 0 && (
+              <div style={{ fontSize: 12, color: MID, fontFamily: F, marginTop: 3 }}>
+                <span style={{ color: meal.accent, fontWeight: 700 }}>{mealTotal.cal}</span> kcal ·
+                P {mealTotal.p}g · G {mealTotal.g}g · L {mealTotal.l}g
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* ── Barre de recherche ───────────────────────────────────────── */}
+        <div style={{ position: "relative", marginBottom: 14 }}>
+          <div style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)",
+            pointerEvents: "none" }}>
+            <Ico name="search" size={16} color={DIM} stroke={2}/>
+          </div>
+          <input
+            ref={inputRef}
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder="Rechercher un aliment…"
+            style={{ width: "100%", padding: "13px 16px 13px 42px",
+              background: S1, border: `1px solid ${BD}`, borderRadius: 14,
+              color: TEXT, fontSize: 14, fontFamily: F, outline: "none",
+              boxSizing: "border-box", transition: "border-color .18s" }}
+            onFocus={e => e.target.style.borderColor = "rgba(59,130,246,0.35)"}
+            onBlur={e => e.target.style.borderColor = BD}
+          />
+        </div>
+
+        {/* ── Actions Scanner + Photo ──────────────────────────────────── */}
+        <div style={{ display: "flex", gap: 8, marginBottom: 14 }}>
+          <button onClick={onScan} style={{ flex: 1, display: "flex", alignItems: "center",
+            justifyContent: "center", gap: 8, padding: "12px 0",
+            background: "linear-gradient(145deg,#3B82F6,#2563EB)", border: "1px solid rgba(37,99,235,0.5)",
+            borderRadius: 13, color: "#fff", fontSize: 13, fontWeight: 700,
+            boxShadow: "0 4px 12px rgba(59,130,246,0.42)",
+            fontFamily: F, cursor: "pointer", transition: "all .16s" }}>
+            <Ico name="scan" size={16} stroke={2.2} color="#fff"/> Scanner
+          </button>
+          <button onClick={onPhoto} style={{ flex: 1, display: "flex", alignItems: "center",
+            justifyContent: "center", gap: 8, padding: "12px 0",
+            background: premium ? "linear-gradient(145deg,#818CF8,#6366F1)" : "linear-gradient(145deg,#A5B4FC,#818CF8)",
+            border: premium ? "1px solid rgba(99,102,241,0.5)" : "1px solid rgba(129,140,248,0.5)",
+            borderRadius: 13,
+            color: "#fff",
+            boxShadow: "0 4px 12px rgba(99,102,241,0.4)",
+            fontSize: 13, fontWeight: 700, fontFamily: F, cursor: "pointer",
+            transition: "all .16s" }}>
+            {!premium
+              ? <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              : <Ico name="camera" size={15} stroke={1.9} color="#fff"/>
+            }
+            Photo
+          </button>
+        </div>
+      </div>
+
+      {/* ── Contenu scrollable ─────────────────────────────────────────── */}
+      <div ref={scrollRef} style={{ flex: 1, overflowY: "auto", padding: "0 20px 32px" }} className="rs-scroll">
+
+        {/* Aliments déjà ajoutés */}
+        {items.length > 0 && (
+          <div className="rs-fade" style={{ marginBottom: 16 }}>
+            <div style={{ fontSize: 10, fontWeight:700, letterSpacing: "1.2px",
+              textTransform: "uppercase", color: DIM, fontFamily: F,
+              marginBottom: 10 }}>
+              Ajoutés ({items.length})
+            </div>
+            {items.map((item, i) => (
+              <div key={i} style={{ display: "flex", alignItems: "center", gap: 10,
+                padding: "11px 13px", background: S1, border: `1px solid ${BD}`,
+                borderRadius: 14, marginBottom: 6 }}>
+                <div style={{ width: 4, height: 32, borderRadius: 2,
+                  background: meal.accent, flexShrink: 0 }}/>
+                <div onClick={() => editItem(item, i)} style={{ flex: 1, minWidth: 0, cursor: "pointer" }}>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: TEXT, fontFamily: F, display: "flex", alignItems: "center", gap: 6 }}>
+                    {item.n}
+                    <Ico name="pencil" size={11} stroke={2} color="#9CA3AF"/>
+                  </div>
+                  <div style={{ display: "flex", gap: 8, marginTop: 2 }}>
+                    <span style={{ fontSize: 10, color: "#60A5FA", fontFamily: F }}>P {item.p}g</span>
+                    <span style={{ fontSize: 10, color: "#22D3EE", fontFamily: F }}>G {item.g}g</span>
+                    <span style={{ fontSize: 10, color: GRN, fontFamily: F }}>L {item.l}g</span>
+                    <span style={{ fontSize: 10, color: "#9CA3AF", fontFamily: F }}>· toucher pour modifier</span>
+                  </div>
+                </div>
+                <span style={{ fontSize: 13, fontWeight: 700, color: TEXT, fontFamily: F,
+                  marginRight: 6 }}>{item.c}</span>
+                <button onClick={() => onRemove(i)} style={{ width: 32, height: 32,
+                  borderRadius: 10, border: "1px solid rgba(248,113,113,.20)",
+                  background: "rgba(248,113,113,.06)", display: "grid", placeItems: "center",
+                  cursor: "pointer", color: RED, flexShrink: 0, fontSize: 14 }}>
+                  <Ico name="trash" size={13} stroke={2} color={RED}/>
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Résultats de recherche */}
+        {search && filtered.length > 0 && (
+          <div className="rs-fade">
+            <div style={{ fontSize: 10, fontWeight:700, letterSpacing: "1.2px",
+              textTransform: "uppercase", color: DIM, fontFamily: F,
+              marginBottom: 10 }}>
+              Résultats · {filtered.length}
+            </div>
+            {filtered.slice(0, 15).map((item, i) => {
+              const alreadyAdded = items.some(x => x.n === item.n);
+              return (
+                <div key={i} onClick={() => { if (!alreadyAdded) { pickFood(item); }}}
+                  style={{ display: "flex", alignItems: "center", gap: 10,
+                    padding: "12px 14px",
+                    background: alreadyAdded
+                      ? "linear-gradient(135deg,rgba(52,211,153,.06),transparent)"
+                      : S1,
+                    border: `1px solid ${alreadyAdded ? "rgba(52,211,153,.25)" : BD}`,
+                    borderRadius: 14, marginBottom: 6,
+                    cursor: alreadyAdded ? "default" : "pointer",
+                    transition: "border-color .18s" }}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: 13.5, fontWeight: 600, color: TEXT, fontFamily: F }}>{item.n}</div>
+                    <div style={{ display: "flex", gap: 6, marginTop: 2 }}>
+                      <span style={{ fontSize: 10, color: MID }}>{item.c} kcal</span>
+                      <span style={{ fontSize: 10, color: "#60A5FA" }}>P {item.p}g</span>
+                      <span style={{ fontSize: 10, color: "#22D3EE" }}>G {item.g}g</span>
+                      <span style={{ fontSize: 10, color: GRN }}>L {item.l}g</span>
+                    </div>
+                  </div>
+                  {alreadyAdded ? (
+                    <span style={{ fontSize: 11, fontWeight: 700, color: GRN, fontFamily: F }}>✓ Ajouté</span>
+                  ) : (
+                    <div style={{ width: 34, height: 34, borderRadius: 11,
+                      background: `linear-gradient(135deg,${BL},${BLD})`,
+                      display: "grid", placeItems: "center", flexShrink: 0,
+                      boxShadow: "0 4px 12px rgba(59,130,246,0.30)" }}>
+                      <Ico name="plus" size={16} stroke={2.5} color="#fff"/>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {search && filtered.length === 0 && (
+          <div style={{ textAlign: "center", padding: "28px 10px", color: MID,
+            fontSize: 13, fontFamily: F }}>
+            Aucun aliment trouvé pour « {search} »
+          </div>
+        )}
+
+        {/* Raccourcis rapides (sans recherche active) */}
+        {!search && (
+          <>
+            <div style={{ fontSize: 10, fontWeight:700, letterSpacing: "1.2px",
+              textTransform: "uppercase", color: DIM, fontFamily: F,
+              marginBottom: 10 }}>
+              Raccourcis
+            </div>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 18 }}>
+              {quickFoods.map((f, i) => (
+                <button key={i} onClick={() => pickFood(f)}
+                  className="rs-pop"
+                  style={{ padding: "8px 13px", background: S1,
+                    border: `1px solid ${BD}`, borderRadius: 999,
+                    cursor: "pointer", fontSize: 11.5, color: MID,
+                    fontFamily: F, fontWeight: 600, transition: "all .16s",
+                    display: "inline-flex", alignItems: "center", gap: 4 }}>
+                  {f.n.split("(")[0].trim()}
+                  <span style={{ color: meal.accent, fontWeight: 700 }}>{f.c}</span>
+                </button>
+              ))}
+            </div>
+
+            {/* Scanner code-barres inline */}
+            <div style={{ fontSize: 10, fontWeight:700, letterSpacing: "1.2px",
+              textTransform: "uppercase", color: DIM, fontFamily: F,
+              marginBottom: 10 }}>
+              Code-barres
+            </div>
+            <div style={{ display: "flex", gap: 8, marginBottom: 14 }}>
+              <input
+                value={manualCode}
+                onChange={e => setManualCode(e.target.value)}
+                onKeyDown={e => { if (e.key === "Enter" && manualCode.length >= 8) handleScan(manualCode); }}
+                placeholder="EAN (ex: 3017620422003)"
+                inputMode="numeric"
+                style={{ flex: 1, padding: "11px 14px",
+                  background: S1, border: `1px solid ${BD}`, borderRadius: 12,
+                  color: TEXT, fontSize: 13, fontFamily: F, outline: "none",
+                  boxSizing: "border-box" }}
+              />
+              <button
+                onClick={() => { if (manualCode.length >= 8) handleScan(manualCode); }}
+                style={{ padding: "11px 18px",
+                  background: manualCode.length >= 8 ? `linear-gradient(135deg,${BL},${BLD})` : S2,
+                  border: "none", borderRadius: 12,
+                  color: manualCode.length >= 8 ? "#fff" : DIM,
+                  fontSize: 13, fontWeight: 700, fontFamily: F, cursor: "pointer",
+                  transition: "all .2s",
+                  boxShadow: manualCode.length >= 8 ? "0 4px 14px rgba(59,130,246,0.30)" : "none" }}>
+                OK
+              </button>
+            </div>
+
+            {/* Résultat scan */}
+            {scanRes && !scanRes.error && (
+              <div className="rs-fade" style={{ padding: 16, background: "rgba(52,211,153,0.06)",
+                border: "1px solid rgba(52,211,153,0.22)", borderRadius: 16, marginBottom: 14 }}>
+                <div style={{ fontWeight: 700, fontSize: 15, color: GRN,
+                  marginBottom: 10, fontFamily: F }}>{scanRes.n}</div>
+                <div style={{ display: "flex", gap: 5, flexWrap: "wrap", marginBottom: 12 }}>
+                  {[
+                    { l: `${scanRes.c} kcal`, c: "#F59E0B" },
+                    { l: `P ${scanRes.p}g`, c: "#60A5FA" },
+                    { l: `G ${scanRes.g}g`, c: "#22D3EE" },
+                    { l: `L ${scanRes.l}g`, c: GRN },
+                  ].map(s => (
+                    <div key={s.l} style={{ padding: "4px 10px", background: `${s.c}20`,
+                      border: `1px solid ${s.c}40`, borderRadius: 999,
+                      fontSize: 11, color: s.c, fontWeight: 700, fontFamily: F }}>{s.l}</div>
+                  ))}
+                </div>
+                <button onClick={() => {
+                  onAdd(scanRes);
+                  push("✅", "Ajouté !", `${scanRes.n} ajouté au ${meal.l.toLowerCase()}.`);
+                  setScanRes(null);
+                  setManualCode("");
+                }} style={{ width: "100%", padding: "13px",
+                  background: `linear-gradient(135deg,${BL},${BLD})`,
+                  border: "none", borderRadius: 13,
+                  color: "#fff", fontSize: 14, fontWeight: 700, fontFamily: F,
+                  cursor: "pointer",
+                  boxShadow: "0 6px 18px rgba(59,130,246,0.30)",
+                  display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+                  <Ico name="plus" size={15} stroke={2.5} color="#fff"/>
+                  Ajouter au {meal.l.toLowerCase()}
+                </button>
+              </div>
+            )}
+            {scanRes?.error && (
+              <div style={{ padding: "10px 12px", background: "rgba(248,113,113,0.08)",
+                border: "1px solid rgba(248,113,113,0.22)", borderRadius: 12,
+                fontSize: 12, color: RED, fontFamily: F, marginBottom: 14 }}>
+                Produit non trouvé. Essaie la recherche ou ajoute-le manuellement.
+              </div>
+            )}
+          </>
+        )}
+      </div>
+
+      {/* ── Sélecteur de quantité (type Lifesum) ──────────────────────────── */}
+      {qtyFood && (() => {
+        const factor = per100 ? amount / 100 : amount;
+        const kcal = Math.round((qtyFood.c || 0) * factor);
+        const P = Math.round((qtyFood.p || 0) * factor);
+        const G = Math.round((qtyFood.g || 0) * factor);
+        const L = Math.round((qtyFood.l || 0) * factor);
+        const step = per100 ? 10 : 0.5;
+        const presets = per100 ? [50, 100, 150, 200] : [0.5, 1, 1.5, 2];
+        const baseName = (qtyFood.n || "").replace(/\s*\(100\s*g\)/i, "").trim();
+        return (
+          <div onClick={closeQty} style={{ position: "fixed", inset: 0, zIndex: 10010,
+            background: "rgba(15,25,35,0.45)", backdropFilter: "blur(3px)",
+            display: "flex", alignItems: "center", justifyContent: "center", padding: "20px" }}>
+            <div onClick={e => e.stopPropagation()} className="rs-pop" style={{
+              width: "100%", maxWidth: 420, background: BG, borderRadius: 24,
+              padding: "22px 20px 20px",
+              boxShadow: "0 24px 60px rgba(15,25,35,0.32)" }}>
+              <div style={{ fontSize: 18, fontWeight: 700, color: TEXT, fontFamily: SF, marginBottom: 3 }}>
+                {editIndex != null ? "Modifier · " : ""}{baseName}
+              </div>
+              <div style={{ fontSize: 12, color: DIM, fontFamily: F, marginBottom: 18 }}>
+                {per100 ? "Choisis la quantité en grammes" : "Choisis le nombre de portions"}
+              </div>
+
+              {/* Stepper */}
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 18, marginBottom: 16 }}>
+                <button onClick={() => setAmount(a => Math.max(step, Math.round((a - step) * 10) / 10))}
+                  style={{ width: 46, height: 46, borderRadius: 14, cursor: "pointer",
+                    background: S2, border: `1px solid ${BD}`, color: TEXT, fontSize: 24, fontWeight: 700,
+                    display: "grid", placeItems: "center", lineHeight: 1 }}>−</button>
+                <div style={{ minWidth: 110, textAlign: "center" }}>
+                  <span style={{ fontFamily: SF, fontSize: 34, fontWeight: 700, color: BL }}>{amount}</span>
+                  <span style={{ fontSize: 15, color: MID, marginLeft: 3, fontWeight: 600 }}>{per100 ? "g" : "×"}</span>
+                </div>
+                <button onClick={() => setAmount(a => Math.round((a + step) * 10) / 10)}
+                  style={{ width: 46, height: 46, borderRadius: 14, cursor: "pointer",
+                    background: "linear-gradient(145deg,#3B82F6,#2563EB)", border: "1px solid rgba(37,99,235,0.5)",
+                    color: "#fff", fontSize: 24, fontWeight: 700, boxShadow: "0 4px 12px rgba(59,130,246,0.4)",
+                    display: "grid", placeItems: "center", lineHeight: 1 }}>+</button>
+              </div>
+
+              {/* Presets */}
+              <div style={{ display: "flex", gap: 8, marginBottom: 18 }}>
+                {presets.map(p => {
+                  const on = amount === p;
+                  return (
+                    <button key={p} onClick={() => setAmount(p)}
+                      style={{ flex: 1, padding: "9px 0", borderRadius: 11, cursor: "pointer",
+                        background: on ? "rgba(59,130,246,0.12)" : S1,
+                        border: `1px solid ${on ? "rgba(59,130,246,0.4)" : BD}`,
+                        color: on ? "#2563EB" : MID, fontSize: 13, fontWeight: 700, fontFamily: F }}>
+                      {per100 ? `${p}g` : `×${p}`}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Aperçu macros live */}
+              <div style={{ display: "flex", gap: 8, marginBottom: 18 }}>
+                {[{ l: "kcal", v: kcal, c: "#F59E0B" }, { l: "P", v: P + "g", c: "#60A5FA" },
+                  { l: "G", v: G + "g", c: "#22D3EE" }, { l: "L", v: L + "g", c: "#34D399" }].map(s => (
+                  <div key={s.l} style={{ flex: 1, textAlign: "center", padding: "10px 0", borderRadius: 12,
+                    background: `${s.c}12`, border: `1px solid ${s.c}30` }}>
+                    <div style={{ fontSize: 16, fontWeight:700, color: s.c, fontFamily: F }}>{s.v}</div>
+                    <div style={{ fontSize: 9, color: DIM, fontWeight: 700, letterSpacing: "0.5px", marginTop: 1 }}>{s.l}</div>
+                  </div>
+                ))}
+              </div>
+
+              <button onClick={confirmQty} style={{ width: "100%", padding: "15px", borderRadius: 15,
+                background: "linear-gradient(145deg,#3B82F6,#2563EB)", border: "none", color: "#fff",
+                fontSize: 15, fontWeight: 700, fontFamily: F, cursor: "pointer",
+                boxShadow: "0 8px 22px -8px rgba(59,130,246,0.9)" }}>
+                {editIndex != null ? "Modifier" : "Ajouter"} · {kcal} kcal
+              </button>
+            </div>
+          </div>
+        );
+      })()}
+    </div>
+  );
+}
