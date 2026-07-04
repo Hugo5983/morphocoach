@@ -398,15 +398,17 @@ export default function TodayView(props) {
           </>
         );
       })() : (
-        /* Jour de repos — design récupération LIGHT */
+        /* Jour de repos — design récupération DARK (style Coach IA) */
         <div style={{
-          background: "#FFFFFF",
-          border: "1px solid rgba(59,130,246,0.18)",
-          borderRadius: 22, padding: "22px 20px 18px",
+          background: `radial-gradient(ellipse 90% 60% at 85% 0%, rgba(99,72,235,0.35), transparent 55%),
+            radial-gradient(ellipse 70% 50% at 10% 100%, rgba(47,107,255,0.22), transparent 60%),
+            linear-gradient(160deg, #0e0c28 0%, #12102f 55%, #191243 100%)`,
+          border: "1px solid rgba(170,180,255,0.16)",
+          borderRadius: 26, padding: "22px 20px 18px",
           marginBottom: 14, position: "relative", overflow: "hidden",
-          boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+          boxShadow: "0 12px 32px rgba(12,14,34,0.45)",
         }}>
-          <div style={{ position:"absolute",top:-30,right:-30,width:160,height:160,borderRadius:"50%",background:"radial-gradient(circle,rgba(52,211,153,0.08),transparent 68%)",pointerEvents:"none" }}/>
+          <div style={{ position:"absolute",top:-40,right:-40,width:180,height:180,borderRadius:"50%",background:"radial-gradient(circle, rgba(124,140,255,0.20), transparent 70%)",pointerEvents:"none" }}/>
 
           {/* Badge + date */}
           <div style={{ display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:16 }}>
@@ -414,16 +416,16 @@ export default function TodayView(props) {
               <span style={{ fontSize:13 }}>🌿</span>
               <span style={{ fontSize:10,fontWeight:700,color:"#34D399",letterSpacing:"0.8px",fontFamily:DISP }}>JOUR DE RÉCUPÉRATION</span>
             </div>
-            <div style={{ fontSize:11,color:"${C.dim}",fontWeight:600,fontFamily:DISP }}>
+            <div style={{ fontSize:11,color:"#c3c8e6",fontWeight:600,fontFamily:DISP }}>
               {today.toLocaleDateString("fr-FR",{weekday:"short",day:"numeric",month:"short"})}
             </div>
           </div>
 
           {/* Titre */}
-          <div style={{ fontFamily:SERIF_F,fontSize:30,color:"${C.text}",lineHeight:1.08,letterSpacing:-1,marginBottom:10 }}>
+          <div style={{ fontFamily:SERIF_F,fontSize:30,color:"#FFFFFF",lineHeight:1.08,letterSpacing:-1,marginBottom:10 }}>
             Aujourd'hui, on<br/><span style={{ color:"#60A5FA",fontStyle:"italic" }}>récupère.</span>
           </div>
-          <div style={{ fontSize:12.5,color:"#374151",lineHeight:1.6,fontFamily:DISP,marginBottom:18 }}>
+          <div style={{ fontSize:12.5,color:"#c3c8e6",lineHeight:1.6,fontFamily:DISP,marginBottom:18 }}>
             La récup fait partie du programme. Voici 3 gestes qui comptent vraiment.
           </div>
 
@@ -431,7 +433,8 @@ export default function TodayView(props) {
           {[
             {
               ic: "💧",
-              bg: "rgba(52,211,153,0.12)", bd: "rgba(52,211,153,0.25)",
+              bg: "linear-gradient(135deg,#4ade80,#10b981)", bd: "rgba(255,255,255,0.25)",
+              glow: "0 4px 14px rgba(16,185,129,0.45)",
               t:  "Hydratation · 2,5 L",
               s:  "Tap pour tracker ton eau →",
               tap: () => setTab?.("nutrition"),
@@ -442,24 +445,26 @@ export default function TodayView(props) {
                 ? todaySleepLogged >= sleepTarget ? "✅" : todaySleepLogged >= sleepTarget - 1.5 ? "🟡" : "🔴"
                 : "😴",
               bg: todaySleepLogged !== null
-                ? todaySleepLogged >= sleepTarget ? "rgba(52,211,153,0.12)" : todaySleepLogged >= sleepTarget-1.5 ? "rgba(251,146,60,0.14)" : "rgba(248,113,113,0.12)"
-                : "rgba(129,140,248,0.14)",
-              bd: todaySleepLogged !== null
-                ? todaySleepLogged >= sleepTarget ? "rgba(52,211,153,0.30)" : todaySleepLogged >= sleepTarget-1.5 ? "rgba(251,146,60,0.30)" : "rgba(248,113,113,0.30)"
-                : "rgba(129,140,248,0.28)",
+                ? todaySleepLogged >= sleepTarget ? "linear-gradient(135deg,#4ade80,#10b981)" : todaySleepLogged >= sleepTarget-1.5 ? "linear-gradient(135deg,#fbbf24,#f59e0b)" : "linear-gradient(135deg,#f87171,#ef4444)"
+                : "linear-gradient(135deg,#818cf8,#6366f1)",
+              bd: "rgba(255,255,255,0.25)",
+              glow: todaySleepLogged !== null
+                ? todaySleepLogged >= sleepTarget ? "0 4px 14px rgba(16,185,129,0.45)" : todaySleepLogged >= sleepTarget-1.5 ? "0 4px 14px rgba(245,158,11,0.45)" : "0 4px 14px rgba(239,68,68,0.45)"
+                : "0 4px 14px rgba(99,102,241,0.45)",
               t: todaySleepLogged !== null
                 ? `Sommeil · ${todaySleepLogged}h dormies`
                 : `Sommeil · cible ${sleepTarget}h`,
               s: todaySleepLogged !== null
                 ? todaySleepLogged >= sleepTarget ? "✓ Objectif atteint — super récup" : `${(sleepTarget - todaySleepLogged).toFixed(1)}h sous la cible`
-                : "Tap pour logger · 80% des gains la nuit",
+                : "Tap pour checker ta nuit · 80% des gains la nuit",
               tap: () => { setSleepInput(todaySleepLogged ?? sleepTarget); setShowSleepModal(true); },
               arrow: true,
             },
             {
               ic: todayMobilite ? "✅" : "🧘",
-              bg: todayMobilite ? "rgba(52,211,153,0.14)" : "rgba(59,130,246,0.14)",
-              bd: todayMobilite ? "rgba(52,211,153,0.32)" : "rgba(59,130,246,0.28)",
+              bg: todayMobilite ? "linear-gradient(135deg,#4ade80,#10b981)" : "linear-gradient(135deg,#60a5fa,#2563eb)",
+              bd: "rgba(255,255,255,0.25)",
+              glow: todayMobilite ? "0 4px 14px rgba(16,185,129,0.45)" : "0 4px 14px rgba(37,99,235,0.45)",
               t:  todayMobilite ? "Mobilité · Fait ✓" : "Mobilité · 10 min",
               s:  todayMobilite ? "Hanches & thoracique — bien joué !" : "Tap pour marquer comme fait",
               tap: toggleMobilite,
@@ -470,45 +475,45 @@ export default function TodayView(props) {
           ].map((g,i) => (
             <div key={i} onClick={g.tap||undefined} style={{
               display:"flex", alignItems:"center", gap:13, padding:"11px 0",
-              borderTop:"1px solid rgba(0,0,0,0.05)",
+              borderTop:"1px solid rgba(170,180,255,0.13)",
               cursor: g.tap ? "pointer" : "default",
               transition: "opacity .15s",
             }}>
               <div style={{
                 width:42, height:42, borderRadius:13,
-                background: g.flash ? "rgba(52,211,153,0.30)" : g.bg,
-                border:`1px solid ${g.flash ? "rgba(52,211,153,0.60)" : g.bd}`,
+                background: g.flash ? "linear-gradient(135deg,#4ade80,#10b981)" : g.bg,
+                border:`1px solid ${g.flash ? "rgba(255,255,255,0.45)" : g.bd}`,
                 display:"grid", placeItems:"center", flexShrink:0, fontSize:20,
-                transition:"background .3s, border .3s",
-                boxShadow: g.flash ? "0 0 16px rgba(52,211,153,0.40)" : "none",
+                transition:"background .3s, border .3s, box-shadow .3s",
+                boxShadow: g.flash ? "0 0 18px rgba(52,211,153,0.60)" : (g.glow || "none"),
               }}>{g.ic}</div>
               <div style={{ flex:1, minWidth:0 }}>
-                <div style={{ fontSize:14.5, fontWeight:700, color:"${C.text}", fontFamily:DISP, letterSpacing:-0.2 }}>{g.t}</div>
-                <div style={{ fontSize:11.5, color:"#374151", fontFamily:DISP, marginTop:1 }}>{g.s}</div>
+                <div style={{ fontSize:14.5, fontWeight:700, color:"#FFFFFF", fontFamily:DISP, letterSpacing:-0.2 }}>{g.t}</div>
+                <div style={{ fontSize:11.5, color:"#9aa2c8", fontFamily:DISP, marginTop:1 }}>{g.s}</div>
               </div>
               {/* Indicateur interactif */}
               {g.badge && (
                 <div style={{
                   width:28, height:28, borderRadius:9, flexShrink:0,
-                  background: todayMobilite ? "rgba(52,211,153,0.18)" : "rgba(0,0,0,0.04)",
-                  border: `1.5px solid ${todayMobilite ? "rgba(52,211,153,0.50)" : "rgba(0,0,0,0.08)"}`,
+                  background: todayMobilite ? "rgba(52,211,153,0.18)" : "rgba(255,255,255,0.06)",
+                  border: `1.5px solid ${todayMobilite ? "rgba(52,211,153,0.50)" : "rgba(170,180,255,0.38)"}`,
                   display:"grid", placeItems:"center",
                   transition:"all .2s",
                 }}>
                   {todayMobilite
                     ? <span style={{ color:"#34D399", fontSize:13 }}>✓</span>
-                    : <span style={{ color:"rgba(0,0,0,0.10)", fontSize:11 }}>○</span>}
+                    : <span style={{ color:"rgba(255,255,255,0.28)", fontSize:11 }}>○</span>}
                 </div>
               )}
-              {g.arrow && <div style={{ fontSize:14, color:"#6B7280", flexShrink:0 }}>›</div>}
+              {g.arrow && <div style={{ fontSize:14, color:"#8f95b8", flexShrink:0 }}>›</div>}
             </div>
           ))}
 
           {/* CTA — créer une séance malgré tout */}
           <button onClick={() => setShowCreateSeance(true)} style={{
             width:"100%",marginTop:16,padding:"13px",borderRadius:14,
-            background:"rgba(59,130,246,0.10)",border:"1px solid rgba(59,130,246,0.25)",
-            color:"#60A5FA",cursor:"pointer",fontSize:13,fontWeight:700,fontFamily:DISP,
+            background:"rgba(47,107,255,0.16)",border:"1px solid rgba(110,150,255,0.40)",
+            color:"#8fb0ff",cursor:"pointer",fontSize:13,fontWeight:700,fontFamily:DISP,
           }}>
             + Créer une séance aujourd'hui
           </button>
