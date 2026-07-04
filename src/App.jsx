@@ -223,7 +223,7 @@ export default function App() {
         <Header premium={premium} cycleStart={cycleStart} jR={jR} tab={tab} setTab={setTab} />
 
         {/* ── Barre XP Momentum — visible sur Entraînement + Nutrition ── */}
-        {(tab === "program" || tab === "home" || tab === "nutrition") && <XPBar />}
+        <XPBar />
 
         {showOnboarding && (
           <Suspense fallback={<PageLoader />}>
