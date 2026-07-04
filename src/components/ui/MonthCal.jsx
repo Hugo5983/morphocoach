@@ -181,7 +181,7 @@ export function DayModal({ date, sessions, onSave, onDelete, onToggleDone, onClo
             <div style={{...ey,marginBottom:3}}>Planning</div>
             <div style={{fontFamily:DISPLAY,fontSize:15,fontWeight:700,color:C.text,textTransform:'capitalize'}}>{fmtDate(date)}</div>
           </div>
-          <button onClick={onClose} style={{width:32,height:32,borderRadius:9,background:C.s2,border:`1px solid ${C.bd}`,color:'#374151',cursor:'pointer',display:'grid',placeItems:'center'}}>
+          <button onClick={onClose} style={{width:32,height:32,borderRadius:9,background:'rgba(255,255,255,0.07)',border:'1px solid rgba(170,180,255,0.22)',color:'#374151',cursor:'pointer',display:'grid',placeItems:'center'}}>
             <I name="x" size={14} stroke={2}/>
           </button>
         </div>
@@ -396,26 +396,26 @@ export const MonthCal = memo(function MonthCal({ sessions, onUpdate, semC, curre
     <div style={{paddingBottom:4}}>
 
       {/* ── Calendrier card ── */}
-      <div style={{background:C.s1,border:`1px solid ${C.bd}`,borderRadius:18,padding:'16px 14px 14px'}}>
+      <div style={{background:`radial-gradient(ellipse 90% 60% at 85% 0%, rgba(99,72,235,0.35), transparent 55%), radial-gradient(ellipse 70% 50% at 10% 100%, rgba(47,107,255,0.22), transparent 60%), linear-gradient(160deg, #0e0c28 0%, #12102f 55%, #191243 100%)`,border:'1px solid rgba(170,180,255,0.16)',boxShadow:'0 12px 32px rgba(12,14,34,0.45)',borderRadius:22,padding:'16px 14px 14px'}}>
         <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:14}}>
           <button onClick={()=>canPrev&&setDate(new Date(y,m-1,1))} disabled={!canPrev} className="tap"
-            style={{width:30,height:30,borderRadius:9,background:C.s2,border:`1px solid ${C.bd}`,color:canPrev?C.mid:C.dim,cursor:canPrev?'pointer':'not-allowed',display:'grid',placeItems:'center',padding:0,flexShrink:0}}>
-            <I name="chevL" size={13} stroke={2} color={canPrev?C.mid:C.dim}/>
+            style={{width:30,height:30,borderRadius:9,background:'rgba(255,255,255,0.07)',border:'1px solid rgba(170,180,255,0.22)',color:canPrev?C.mid:C.dim,cursor:canPrev?'pointer':'not-allowed',display:'grid',placeItems:'center',padding:0,flexShrink:0}}>
+            <I name="chevL" size={13} stroke={2} color={canPrev?'#c3c8e6':'#565d85'}/>
           </button>
           <div style={{textAlign:'center'}}>
-            <div style={{...ey,color:'#3B82F6',marginBottom:3}}>Calendrier</div>
-            <div style={{fontFamily:DISPLAY,fontSize:19,fontWeight:700,color:C.text,letterSpacing:-0.5}}>
+            <div style={{...ey,color:'#9aa6ff',marginBottom:3}}>Calendrier</div>
+            <div style={{fontFamily:DISPLAY,fontSize:19,fontWeight:700,color:'#FFFFFF',letterSpacing:-0.5}}>
               {MONTHS[m]} <span style={{color:'#60A5FA',fontWeight:400,fontStyle:'italic',fontFamily:SERIF}}>{y}</span>
             </div>
           </div>
           <button onClick={()=>canNext&&setDate(new Date(y,m+1,1))} disabled={!canNext} className="tap"
-            style={{width:30,height:30,borderRadius:9,background:C.s2,border:`1px solid ${C.bd}`,color:canNext?C.mid:C.dim,cursor:canNext?'pointer':'not-allowed',display:'grid',placeItems:'center',padding:0,flexShrink:0}}>
-            <I name="chevR" size={13} stroke={2} color={canNext?C.mid:C.dim}/>
+            style={{width:30,height:30,borderRadius:9,background:'rgba(255,255,255,0.07)',border:'1px solid rgba(170,180,255,0.22)',color:canNext?C.mid:C.dim,cursor:canNext?'pointer':'not-allowed',display:'grid',placeItems:'center',padding:0,flexShrink:0}}>
+            <I name="chevR" size={13} stroke={2} color={canNext?'#c3c8e6':'#565d85'}/>
           </button>
         </div>
         <div style={{display:'grid',gridTemplateColumns:'repeat(7,1fr)',gap:3,marginBottom:5}}>
           {DAYS.map((d,i)=>(
-            <div key={i} style={{textAlign:'center',fontSize:9,color:'#6B7280',fontWeight:700,letterSpacing:0.8,fontFamily:DISPLAY}}>{d}</div>
+            <div key={i} style={{textAlign:'center',fontSize:9,color:'#8f95b8',fontWeight:700,letterSpacing:0.8,fontFamily:DISPLAY}}>{d}</div>
           ))}
         </div>
         <div style={{display:'grid',gridTemplateColumns:'repeat(7,1fr)',gap:3}}>
@@ -434,8 +434,8 @@ export const MonthCal = memo(function MonthCal({ sessions, onUpdate, semC, curre
             // ── Styles selon l'état : validée = plein, planifiée = teintée ──
             let bg, bd, numColor;
             if (isDone)       { bg = color;            bd = `1px solid ${color}`;      numColor = '#fff'; }
-            else if (hasSess) { bg = `${color}22`;     bd = `1px solid ${color}66`;    numColor = color; }
-            else              { bg = isPast?'rgba(0,0,0,0.01)':C.s2; bd = `1px solid ${C.bd}`; numColor = isPast?'${C.dim}':C.text; }
+            else if (hasSess) { bg = `linear-gradient(${color}40,${color}40), #20264c`; bd = `1px solid ${color}88`; numColor = '#fff'; }
+            else              { bg = isPast?'#171b38':'#232a55'; bd = '1px solid rgba(170,180,255,0.14)'; numColor = isPast?'#565d85':'#e8eaf6'; }
 
             const boxShadow = isToday
               ? `0 0 0 2px #60A5FA, 0 4px 12px rgba(59,130,246,0.35)`
@@ -464,25 +464,25 @@ export const MonthCal = memo(function MonthCal({ sessions, onUpdate, semC, curre
             );
           })}
         </div>
-        <div style={{marginTop:12,paddingTop:12,borderTop:`1px solid ${C.bd}`,display:'flex',flexWrap:'wrap',gap:8,alignItems:'center'}}>
-          <div style={{...ey,marginRight:4}}>Intensité</div>
+        <div style={{marginTop:12,paddingTop:12,borderTop:'1px solid rgba(170,180,255,0.14)',display:'flex',flexWrap:'wrap',gap:8,alignItems:'center'}}>
+          <div style={{...ey,color:'#9aa6ff',marginRight:4}}>Intensité</div>
           {Object.entries(INT).map(([k,v])=>(
             <div key={k} style={{display:'flex',alignItems:'center',gap:4}}>
               <div style={{width:6,height:6,borderRadius:2,background:v.c,flexShrink:0}}/>
-              <span style={{fontSize:9.5,color:'#374151',fontFamily:DISPLAY}}>{v.l}</span>
+              <span style={{fontSize:9.5,color:'#c3c8e6',fontFamily:DISPLAY}}>{v.l}</span>
             </div>
           ))}
         </div>
         <div style={{marginTop:9,display:'flex',flexWrap:'wrap',gap:12,alignItems:'center'}}>
           <div style={{display:'flex',alignItems:'center',gap:5}}>
             <div style={{width:13,height:13,borderRadius:4,background:'rgba(59,130,246,0.22)',border:'1px solid rgba(59,130,246,0.55)',flexShrink:0}}/>
-            <span style={{fontSize:9.5,color:'#374151',fontFamily:DISPLAY}}>Planifiée</span>
+            <span style={{fontSize:9.5,color:'#c3c8e6',fontFamily:DISPLAY}}>Planifiée</span>
           </div>
           <div style={{display:'flex',alignItems:'center',gap:5}}>
             <div style={{width:13,height:13,borderRadius:4,background:'#3B82F6',flexShrink:0,display:'grid',placeItems:'center'}}>
               <svg viewBox="0 0 24 24" width="8" height="8" fill="none" stroke="#fff" strokeWidth="3.4" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
             </div>
-            <span style={{fontSize:9.5,color:'#374151',fontFamily:DISPLAY}}>Validée (faite)</span>
+            <span style={{fontSize:9.5,color:'#c3c8e6',fontFamily:DISPLAY}}>Validée (faite)</span>
           </div>
         </div>
       </div>
