@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { getXPState, getLevelInfo } from "../../services/xpService.js";
+import { getLevelBadge } from "../../data/levelBadges.js";
 
 const GS     = "'General Sans',system-ui,-apple-system,sans-serif";
 const GOLD1  = "#E6B758";
@@ -16,7 +17,8 @@ export function XPBar() {
     return () => window.removeEventListener('morpho_xp_update', handler);
   }, []);
 
-  const info = getLevelInfo(state.xp || 0);
+  const info  = getLevelInfo(state.xp || 0);
+  const badge = getLevelBadge(info.cur.level);
 
   return (
     <div style={{
@@ -30,20 +32,19 @@ export function XPBar() {
       alignItems: "center",
       gap: 11,
     }}>
-      {/* Badge niveau doré */}
-      <div style={{
-        width: 38, height: 38, borderRadius: 11,
-        flexShrink: 0,
-        background: `linear-gradient(140deg,${GOLD1},${GOLD2})`,
-        display: "grid", placeItems: "center",
-        boxShadow: `0 4px 12px rgba(201,145,47,0.38)`,
-      }}>
-        <span style={{
-          fontSize: 18, fontWeight: 700, color: "#fff", fontFamily: GS,
-        }}>
-          {info.cur.level}
-        </span>
-      </div>
+      {/* Badge niveau hexagonal */}
+      <img
+        src={badge}
+        alt={`Niveau ${info.cur.level}`}
+        style={{
+          width: 46,
+          height: "auto",
+          flexShrink: 0,
+          objectFit: "contain",
+          filter: "drop-shadow(0 3px 8px rgba(30,80,220,0.35))",
+          display: "block",
+        }}
+      />
 
       {/* Barre + infos */}
       <div style={{ flex: 1, minWidth: 0 }}>
