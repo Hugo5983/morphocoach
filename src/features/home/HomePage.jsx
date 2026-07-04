@@ -4,11 +4,9 @@
 // Connecté aux données réelles via props + xpService.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { useMemo } from "react";
 import { FONT } from "../../data/constants.js";
-import { getXPState } from "../../services/xpService.js";
 import {
-  LevelCard, HeroCard, NutritionCard, PacksCard,
+  HeroCard, NutritionCard, PacksCard,
   BadgesCard, StreakCard, CoachIACard,
 } from "./components/HomeCards.jsx";
 
@@ -25,9 +23,8 @@ export default function HomePage({
   lObj,
   totR,
   getStreak,
+  calSess,
 }) {
-  // XP state lu depuis localStorage
-  const xpState = useMemo(() => getXPState(), []);
   const streak  = getStreak ?? 0;
 
   return (
@@ -36,11 +33,8 @@ export default function HomePage({
       fontFamily: FONT,
       WebkitFontSmoothing: "antialiased",
     }}>
-      {/* Carte niveau XP */}
-      <LevelCard xpState={xpState} />
-
       {/* Entraînement du jour */}
-      <HeroCard prog={prog} setTab={setTab} />
+      <HeroCard prog={prog} calSess={calSess} setTab={setTab} />
 
       {/* Nutrition */}
       <NutritionCard
