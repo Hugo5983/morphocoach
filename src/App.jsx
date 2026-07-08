@@ -25,6 +25,8 @@ const Profile    = lazy(() => import("./features/profile/ProfilePage.jsx"));
 const ProgramTab = lazy(() => import("./features/training/ProgramTab.jsx"));
 const Recipes    = lazy(() => import("./features/recipes/RecipesPage.jsx"));
 
+import { useAuth }          from "./hooks/useAuth.js";
+import AuthPage             from "./features/auth/AuthPage.jsx";
 import { useStorage }       from "./hooks/useStorage.js";
 import { useNotif }         from "./hooks/useNotif.js";
 import { useMacros }        from "./hooks/useMacros.js";
@@ -36,6 +38,9 @@ import { useDailyReset }    from "./hooks/useDailyReset.js";
 import { scanBarcode } from "./services/nutritionService.js";
 
 export default function App() {
+
+  // ── Authentification Supabase — protège l'accès à toute l'app ────────────
+  const { user, loading: authLoading } = useAuth();
 
   const [tab,              setTab]              = useState("home");
 
@@ -214,6 +219,19 @@ export default function App() {
       <Spinner size={32} />
     </div>
   );
+
+  // ── Gate auth : écran de chargement pendant la vérification de session,
+  //    puis écran de connexion si personne n'est connecté ────────────────
+  if (authLoading) {
+    return (
+      <div style={{ minHeight: "100vh", display: "grid", placeItems: "center", background: C.bg }}>
+        <Spinner size={32} />
+      </div>
+    );
+  }
+  if (!user) {
+    return <AuthPage />;
+  }
 
   return (
     <AppContext.Provider value={contextValue}>
