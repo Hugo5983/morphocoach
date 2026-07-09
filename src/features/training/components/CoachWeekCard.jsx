@@ -167,9 +167,9 @@ export default function CoachWeekCard({ semC, semN, totalJours, onDetail, premiu
       {/* Overlay conversion */}
       <div style={{
         position:"absolute", top:0, left:0, right:0, bottom:0, zIndex:10, borderRadius:20,
-        background:"linear-gradient(180deg,rgba(246,248,251,0.05) 0%,rgba(246,248,251,0.85) 38%,rgba(246,248,251,0.98) 100%)",
-        display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"flex-end",
-        padding:"0 20px 20px",
+        background:"linear-gradient(180deg,rgba(246,248,251,0.15) 0%,rgba(246,248,251,0.94) 30%,rgba(246,248,251,0.98) 100%)",
+        display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center",
+        padding:"20px",
       }}>
         <div style={{
           width:56, height:56, borderRadius:16,
