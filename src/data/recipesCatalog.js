@@ -70,7 +70,7 @@ export const RECIPES_500 = [
     temps:25, portions:2, difficulte:"Facile",
     prix:2, cout:2.38, nutriScore:"B", cuisine:"thaïlandaise",
     micros:{ fer:2.95, magnesium:94.57, calcium:133.63, zinc:2.56, potassium:888.36, vitC:20.16, omega3:0.02 },
-    img:IMG.poulet, imgQuery:"Bowl thaï poulet grillé",
+    img:IMG.poulet, imgQuery:"bowl thai chicken grilled",
     desc:"Forte densité protéique et volume végétal pour un effet rassasiant maximal à faible apport calorique : on coupe la faim sans dépasser le déficit.",
     astuce:"Déglacez la poêle du poulet avec un trait de nuoc-mâm et de jus de citron vert pour récupérer les sucs et napper la viande.",
     ingredients:[
@@ -103,7 +103,7 @@ export const RECIPES_500 = [
     temps:35, portions:2, difficulte:"Moyen",
     prix:3, cout:4.29, nutriScore:"A", cuisine:"méditerranéenne moderne",
     micros:{ fer:5.44, magnesium:111.7, calcium:170.68, zinc:1.94, potassium:1780.15, vitC:34.1, vitD:2.26, vitB12:2.23, omega3:0.97 },
-    img:IMG.cabillaud, imgQuery:"Cabillaud rôti",
+    img:IMG.cabillaud, imgQuery:"cod roasted",
     desc:"Le cabillaud offre un maximum de protéines pour très peu de calories, et le chou-fleur remplace l'amidon tout en gardant le côté réconfortant d'une purée.",
     astuce:"Égouttez bien le chou-fleur avant de l'écraser : moins d'eau, plus de crémeux sans matière grasse ajoutée.",
     ingredients:[
@@ -132,7 +132,7 @@ export const RECIPES_500 = [
     temps:30, portions:2, difficulte:"Moyen",
     prix:2, cout:1.88, nutriScore:"C", cuisine:"japonaise",
     micros:{ fer:13.32, magnesium:209.79, calcium:207.02, zinc:2.55, potassium:1585.35, vitC:3.68, vitD:0.02, vitB12:1.62, omega3:0.78 },
-    img:IMG.oeufs, imgQuery:"Bowl teriyaki",
+    img:IMG.oeufs, imgQuery:"bowl teriyaki",
     desc:"Apport calorique dense mais propre : protéines complètes du bœuf et de l'œuf, glucides du riz pour soutenir l'entraînement et la récupération.",
     astuce:"Laissez la sauce réduire jusqu'à ce qu'elle nappe la cuillère : elle enrobe le bœuf d'un glaçage brillant sans excès de sucre.",
     ingredients:[
@@ -162,7 +162,7 @@ export const RECIPES_500 = [
     temps:25, portions:2, difficulte:"Facile",
     prix:3, cout:3.35, nutriScore:"B", cuisine:"italienne moderne",
     micros:{ fer:5.01, magnesium:122.86, calcium:209.35, zinc:2.3, potassium:998.99, vitC:38.29, vitD:3.69, vitB12:3.95, omega3:2.09 },
-    img:IMG.yaourt, imgQuery:"Pâtes complètes saumon",
+    img:IMG.yaourt, imgQuery:"pasta salmon",
     desc:"Les glucides complets rechargent le glycogène pendant que saumon et yaourt apportent protéines et bons lipides pour une prise de masse de qualité.",
     astuce:"Ajoutez le yaourt hors du feu pour une sauce crémeuse sans la faire trancher.",
     ingredients:[
@@ -190,7 +190,7 @@ export const RECIPES_500 = [
     temps:40, portions:4, difficulte:"Facile",
     prix:2, cout:1.71, nutriScore:"B", cuisine:"indienne",
     micros:{ fer:8.02, magnesium:199.55, calcium:277.17, zinc:3.46, potassium:1168.62, vitC:39.92, vitB12:0.03, omega3:0.51 },
-    img:IMG.curry, imgQuery:"Curry pois chiches patate douce",
+    img:IMG.curry, imgQuery:"curry chickpea sweet potato",
     desc:"Légumineuses et céréale complète se complètent en acides aminés, les fibres et l'index glycémique modéré assurent une énergie stable et une vraie satiété.",
     astuce:"Torréfiez la pâte de curry 1 min dans l'huile avant d'ajouter le liquide : les arômes explosent.",
     ingredients:[
@@ -222,7 +222,7 @@ export const RECIPES_500 = [
     temps:35, portions:2, difficulte:"Moyen",
     prix:2, cout:2.52, nutriScore:"B", cuisine:"fusion asiatique",
     micros:{ fer:5.13, magnesium:214.66, calcium:207.84, zinc:3.84, potassium:1352.19, vitC:119.56, vitB12:0.02, omega3:0.35 },
-    img:IMG.buddha, imgQuery:"Buddha bowl tempeh laqué",
+    img:IMG.buddha, imgQuery:"buddha bowl tempeh",
     desc:"Le tempeh est l'une des sources végétales les plus riches en protéines complètes ; associé au quinoa, il couvre largement les besoins musculaires.",
     astuce:"Faites bouillir le tempeh 5 min avant de le laquer pour adoucir son amertume et lui faire absorber la marinade.",
     ingredients:[
@@ -252,7 +252,7 @@ export const RECIPES_500 = [
     temps:30, portions:2, difficulte:"Facile",
     prix:3, cout:3.66, nutriScore:"A", cuisine:"indo-méditerranéenne",
     micros:{ fer:8.14, magnesium:116.89, calcium:204.47, zinc:3.14, potassium:1167.85, vitC:38.06, vitD:4.06, vitB12:4.34, omega3:2.33 },
-    img:IMG.yaourt, imgQuery:"Saumon rôti curcuma",
+    img:IMG.yaourt, imgQuery:"salmon roasted turmeric",
     desc:"Oméga-3 du saumon, curcumine du curcuma (boostée par le poivre) et fibres des lentilles forment un trio reconnu pour limiter l'inflammation post-effort.",
     astuce:"Ajoutez une pincée de poivre noir au curcuma : la pipérine multiplie l'absorption de la curcumine.",
     ingredients:[
@@ -281,7 +281,7 @@ export const RECIPES_500 = [
     temps:40, portions:2, difficulte:"Facile",
     prix:1, cout:1.25, nutriScore:"B", cuisine:"moyen-orientale moderne",
     micros:{ fer:6.5, magnesium:226.26, calcium:149.58, zinc:2.4, potassium:1408.75, vitC:46.39, omega3:0.39 },
-    img:IMG.poulet, imgQuery:"Bol doré sarrasin",
+    img:IMG.poulet, imgQuery:"bowl buckwheat",
     desc:"Sarrasin, légumes orange et curcuma concentrent les antioxydants ; le tahini apporte des graisses anti-inflammatoires et du croquant aux graines.",
     astuce:"Rôtissez les légumes bien dorés, presque caramélisés : la réaction de Maillard intensifie les saveurs sans sucre ajouté.",
     ingredients:[
@@ -310,7 +310,7 @@ export const RECIPES_500 = [
     temps:30, portions:2, difficulte:"Facile",
     prix:2, cout:2.57, nutriScore:"B", cuisine:"indienne",
     micros:{ fer:1.59, magnesium:59.26, calcium:141.2, zinc:1.8, potassium:799.6, vitC:11.41, omega3:0.04 },
-    img:IMG.yaourt, imgQuery:"Poulet mariné yaourt tandoori",
+    img:IMG.yaourt, imgQuery:"chicken yogurt tandoori",
     desc:"Environ 50 g de protéines par portion pour seulement 350 kcal : idéal pour atteindre ses objectifs protéiques en sèche sans saturer en calories.",
     astuce:"La marinade au yaourt attendrit les fibres du poulet et crée une croûte épicée légèrement charbonnée.",
     ingredients:[
@@ -339,7 +339,7 @@ export const RECIPES_500 = [
     temps:20, portions:2, difficulte:"Moyen",
     prix:3, cout:3.83, nutriScore:"B", cuisine:"japonaise",
     micros:{ fer:16.63, magnesium:298.57, calcium:299.97, zinc:4.0, potassium:2152.85, vitC:6.93, vitD:11.7, vitB12:5.72, omega3:3.21 },
-    img:IMG.thon, imgQuery:"Steak thon mi-cuit",
+    img:IMG.thon, imgQuery:"steak tuna",
     desc:"Le thon est ultra-protéiné et quasi sans lipides ; associé à des glucides propres, c'est un plat de champion pour la prise de muscle sèche.",
     astuce:"Saisissez le thon dans une poêle fumante et ne le retournez qu'une fois : croûte dorée, cœur rosé.",
     ingredients:[
@@ -368,7 +368,7 @@ export const RECIPES_500 = [
     temps:20, portions:2, difficulte:"Facile",
     prix:2, cout:1.66, nutriScore:"B", cuisine:"américaine revisitée",
     micros:{ fer:2.39, magnesium:106.78, calcium:116.68, zinc:2.05, potassium:447.64, vitC:5.34, vitD:0.02, vitB12:0.13, omega3:0.06 },
-    img:IMG.pancakes, imgQuery:"Pancakes protéinés banane avoine",
+    img:IMG.pancakes, imgQuery:"pancakes banana oatmeal",
     desc:"Glucides à diffusion lente de l'avoine et protéines complètes pour démarrer la journée rassasié et soutenir la masse musculaire dès le matin.",
     astuce:"Laissez reposer la pâte 5 min : l'avoine absorbe le liquide et les pancakes gonflent davantage.",
     ingredients:[
@@ -396,7 +396,7 @@ export const RECIPES_500 = [
     temps:13, portions:2, difficulte:"Facile",
     prix:2, cout:1.94, nutriScore:"B", cuisine:"brunch moderne",
     micros:{ fer:0.67, magnesium:16.04, calcium:21.79, zinc:0.26, potassium:247.41, vitC:6.08, vitD:0.04, vitB12:0.03, omega3:0.03 },
-    img:IMG.omelette, imgQuery:"ufs brouillés crémeux l'avocat",
+    img:IMG.omelette, imgQuery:"eggs avocado",
     desc:"Protéines complètes des œufs et bons lipides de l'avocat assurent satiété durable et stabilité glycémique le matin.",
     astuce:"Retirez les œufs du feu encore légèrement baveux : la chaleur résiduelle termine la cuisson sans les dessécher.",
     ingredients:[
@@ -423,7 +423,7 @@ export const RECIPES_500 = [
     temps:27, portions:2, difficulte:"Facile",
     prix:2, cout:2.51, nutriScore:"B", cuisine:"levantine",
     micros:{ fer:6.74, magnesium:180.25, calcium:190.79, zinc:3.92, potassium:1164.3, vitC:21.93, vitB12:0.16, omega3:0.35 },
-    img:IMG.poulet, imgQuery:"Salade quinoa",
+    img:IMG.poulet, imgQuery:"salad quinoa",
     desc:"Protéines maigres, glucides complets et antioxydants de la grenade : un déjeuner complet qui tient jusqu'au soir et se transporte parfaitement.",
     astuce:"Assaisonnez le quinoa encore tiède : il absorbe mieux la vinaigrette et reste moelleux une fois froid.",
     ingredients:[
@@ -452,7 +452,7 @@ export const RECIPES_500 = [
     temps:18, portions:2, difficulte:"Facile",
     prix:2, cout:2.54, nutriScore:"B", cuisine:"street food healthy",
     micros:{ fer:4.24, magnesium:43.94, calcium:45.37, zinc:4.87, potassium:626.98, vitC:8.36, vitD:0.25, vitB12:2.12, omega3:0.62 },
-    img:IMG.oeufs, imgQuery:"Wrap galette complète",
+    img:IMG.oeufs, imgQuery:"wrap flatbread",
     desc:"Bœuf maigre et houmous combinent protéines et fibres pour un repas rapide qui rassasie sans alourdir l'après-midi.",
     astuce:"Faites bien colorer le bœuf à sec avant d'ajouter les épices : plus de goût, moins de matière grasse.",
     ingredients:[
@@ -480,7 +480,7 @@ export const RECIPES_500 = [
     temps:35, portions:2, difficulte:"Moyen",
     prix:1, cout:1.49, nutriScore:"A", cuisine:"bistronomie française",
     micros:{ fer:4.99, magnesium:104.64, calcium:112.43, zinc:1.92, potassium:1661.95, vitC:13.96, vitD:4.67, vitB12:4.74, omega3:1.52 },
-    img:IMG.cabillaud, imgQuery:"Filet dorade croûte d'herbes",
+    img:IMG.cabillaud, imgQuery:"fillet sea bream herbs",
     desc:"Poisson blanc maigre et légumes verts : un dîner léger qui ferme la journée sur des protéines et peu de glucides, idéal le soir en sèche.",
     astuce:"Gardez les petits pois bien verts en les mixant à peine refroidis : la purée reste éclatante et sucrée.",
     ingredients:[
@@ -508,7 +508,7 @@ export const RECIPES_500 = [
     temps:18, portions:2, difficulte:"Facile",
     prix:3, cout:2.95, nutriScore:"B", cuisine:"asiatique",
     micros:{ fer:5.77, magnesium:126.39, calcium:182.82, zinc:4.41, potassium:952.03, vitC:28.07, vitB12:1.33, omega3:0.15 },
-    img:IMG.crevettes, imgQuery:"Sauté crevettes l'ail",
+    img:IMG.crevettes, imgQuery:"shrimp",
     desc:"Très protéiné et quasiment sans lipides, avec des glucides modérés : parfait pour un dîner de sèche qui reste rassasiant.",
     astuce:"Ne surcuisez pas les crevettes : dès qu'elles forment un C et virent rose, elles sont prêtes.",
     ingredients:[
@@ -537,7 +537,7 @@ export const RECIPES_500 = [
     temps:12, portions:6, difficulte:"Facile",
     prix:1, cout:0.26, nutriScore:"C", cuisine:"snack healthy",
     micros:{ fer:2.01, magnesium:51.59, calcium:27.62, zinc:0.75, potassium:372.18, vitC:0.75, vitD:0.07, omega3:0.02 },
-    img:IMG.energy, imgQuery:"Energy balls cacao cacahuète protéinées",
+    img:IMG.energy, imgQuery:"energy balls cocoa peanut",
     desc:"Glucides rapides des dattes et protéines pour une collation pré ou post-entraînement, sans sucre raffiné ajouté. Portion = 2 boules.",
     astuce:"Roulez les boules dans un peu de cacao ou de coco râpée pour une finition pro et une texture qui ne colle pas.",
     ingredients:[
@@ -563,7 +563,7 @@ export const RECIPES_500 = [
     temps:25, portions:2, difficulte:"Facile",
     prix:1, cout:1.27, nutriScore:"B", cuisine:"snack moderne",
     micros:{ fer:1.36, magnesium:47.53, calcium:214.47, zinc:1.19, potassium:529.23, vitC:19.6, vitD:0.1, vitB12:0.17, omega3:0.84 },
-    img:IMG.toast, imgQuery:"Toasts patate douce",
+    img:IMG.toast, imgQuery:"toasts sweet potato",
     desc:"Glucides à index modéré de la patate douce et lipides de qualité des noix pour une collation rassasiante et réconfortante.",
     astuce:"Pour un côté toast croustillant, repassez les tranches de patate douce 2 min sous le grill avant de garnir.",
     ingredients:[
@@ -589,7 +589,7 @@ export const RECIPES_500 = [
     temps:5, portions:1, difficulte:"Facile",
     prix:3, cout:3.32, nutriScore:"B", cuisine:"boisson de récupération",
     micros:{ fer:3.97, magnesium:103.87, calcium:70.93, zinc:1.67, potassium:622.34, vitC:0.07, vitD:0.14, omega3:0.07 },
-    img:IMG.shakeP, imgQuery:"Smoothie post-training banane",
+    img:IMG.shakeP, imgQuery:"smoothie post-training banana",
     desc:"Glucides rapides de la banane pour recharger le glycogène et protéines pour relancer la synthèse musculaire dans la fenêtre post-effort.",
     astuce:"Congelez la banane en rondelles à l'avance : le smoothie devient onctueux comme un milkshake, sans glace.",
     ingredients:[
@@ -614,7 +614,7 @@ export const RECIPES_500 = [
     temps:12, portions:2, difficulte:"Facile",
     prix:2, cout:2.46, nutriScore:"B", cuisine:"poke hawaïen",
     micros:{ fer:11.92, magnesium:220.96, calcium:264.86, zinc:3.13, potassium:1666.12, vitC:4.97, vitD:7.8, vitB12:3.85, omega3:2.26 },
-    img:IMG.yaourt, imgQuery:"Bowl riz thon",
+    img:IMG.yaourt, imgQuery:"bowl rice tuna",
     desc:"Le combo riz + thon recharge le glycogène et apporte des protéines maigres ; parfait après une grosse séance, en version propre pour la prise de muscle.",
     astuce:"Assaisonnez le riz d'un trait de vinaigre de riz : il réveille l'ensemble et équilibre le piquant de la sriracha.",
     ingredients:[
@@ -643,7 +643,7 @@ export const RECIPES_500 = [
     temps:30, portions:2, difficulte:"Facile",
     prix:3, cout:3.37, nutriScore:"B", cuisine:"vietnamienne",
     micros:{ fer:3.56, magnesium:103.99, calcium:151.41, zinc:2.71, potassium:1077.19, vitC:37.59, vitD:0.18, omega3:0.04 },
-    img:IMG.miso, imgQuery:"Soupe-repas vietnamienne poulet",
+    img:IMG.miso, imgQuery:"soupe-repas vietnamienne chicken",
     desc:"Un grand bol chaud, très protéiné et quasi sans lipides : l'effet rassasiant est maximal pour à peine 320 kcal.",
     astuce:"Infusez le gingembre écrasé et un oignon brûlé à sec dans le bouillon : c'est ce qui donne sa profondeur au vrai pho.",
     ingredients:[
@@ -673,7 +673,7 @@ export const RECIPES_500 = [
     temps:35, portions:2, difficulte:"Facile",
     prix:3, cout:4.42, nutriScore:"A", cuisine:"française",
     micros:{ fer:7.8, magnesium:123.63, calcium:248.78, zinc:3.81, potassium:2189.39, vitC:26.97, vitD:0.15, vitB12:1.09, omega3:0.23 },
-    img:IMG.dinde, imgQuery:"Escalope dinde",
+    img:IMG.dinde, imgQuery:"cutlet turkey",
     desc:"Le céleri-rave remplace la pomme de terre pour diviser les glucides, tandis que la dinde maximise les protéines à faible apport gras.",
     astuce:"Ne touchez pas les champignons les 2 premières minutes : laissez-les colorer avant de remuer pour un vrai goût grillé.",
     ingredients:[
@@ -701,7 +701,7 @@ export const RECIPES_500 = [
     temps:30, portions:2, difficulte:"Facile",
     prix:3, cout:2.75, nutriScore:"A", cuisine:"mexicaine",
     micros:{ fer:4.76, magnesium:159.22, calcium:176.5, zinc:3.61, potassium:984.0, vitC:20.11, vitB12:0.06, omega3:0.07 },
-    img:IMG.houmous, imgQuery:"Burrito bowl poulet",
+    img:IMG.houmous, imgQuery:"burrito bowl chicken",
     desc:"Trio protéines + riz + légumineuses pour un surplus calorique dense mais nutritif, parfait pour construire du muscle proprement.",
     astuce:"Faites griller le maïs à sec dans la poêle chaude : quelques grains noircis et tout le bowl prend un goût fumé.",
     ingredients:[
@@ -730,7 +730,7 @@ export const RECIPES_500 = [
     temps:28, portions:2, difficulte:"Facile",
     prix:3, cout:2.99, nutriScore:"B", cuisine:"italienne",
     micros:{ fer:9.39, magnesium:140.06, calcium:528.53, zinc:4.31, potassium:1133.15, vitC:5.17, vitB12:0.4, omega3:0.08 },
-    img:IMG.poulet, imgQuery:"Gnocchi poêlés",
+    img:IMG.poulet, imgQuery:"gnocchi",
     desc:"Glucides denses des gnocchi et protéines du poulet : un plat de prise de masse qui reste réconfortant sans excès de matière grasse.",
     astuce:"Poêlez les gnocchi sans les bouillir d'abord : ils deviennent croustillants dehors, moelleux dedans.",
     ingredients:[
@@ -757,7 +757,7 @@ export const RECIPES_500 = [
     temps:40, portions:4, difficulte:"Facile",
     prix:2, cout:1.77, nutriScore:"B", cuisine:"tex-mex",
     micros:{ fer:8.33, magnesium:219.75, calcium:165.58, zinc:4.18, potassium:1479.43, vitC:85.4, omega3:0.36 },
-    img:IMG.chili, imgQuery:"Chili sin carne haricots rouges",
+    img:IMG.chili, imgQuery:"chili carne red beans",
     desc:"Haricots et quinoa se complètent en acides aminés, et la richesse en fibres assure satiété durable et énergie stable.",
     astuce:"Une pincée de cacao non sucré et un trait de vinaigre en fin de cuisson donnent de la profondeur au chili.",
     ingredients:[
@@ -788,7 +788,7 @@ export const RECIPES_500 = [
     temps:45, portions:2, difficulte:"Moyen",
     prix:2, cout:1.76, nutriScore:"B", cuisine:"moyen-orientale",
     micros:{ fer:7.32, magnesium:138.95, calcium:240.87, zinc:2.57, potassium:974.06, vitC:28.77, omega3:1.02 },
-    img:IMG.houmous, imgQuery:"Falafels four",
+    img:IMG.houmous, imgQuery:"falafel baked",
     desc:"Pois chiches et houmous combinent protéines et fibres pour un repas végétal rassasiant, sans l'excès de gras d'une friture.",
     astuce:"N'utilisez pas de pois chiches trop humides et ne mixez pas en purée lisse : la texture grossière empêche les falafels de s'effriter.",
     ingredients:[
@@ -818,7 +818,7 @@ export const RECIPES_500 = [
     temps:18, portions:2, difficulte:"Facile",
     prix:2, cout:2.12, nutriScore:"C", cuisine:"nordique-méditerranéenne",
     micros:{ fer:2.15, magnesium:97.05, calcium:158.96, zinc:1.67, potassium:1095.34, vitC:44.32, vitD:7.08, vitB12:5.39, omega3:3.63 },
-    img:IMG.truite, imgQuery:"Maquereau grillé",
+    img:IMG.truite, imgQuery:"mackerel grilled",
     desc:"Le maquereau est l'un des poissons les plus riches en oméga-3, et betterave, orange et noix multiplient les antioxydants anti-inflammatoires.",
     astuce:"Quadrillez la peau du maquereau avant cuisson : elle devient croustillante et la chair reste nacrée.",
     ingredients:[
@@ -845,7 +845,7 @@ export const RECIPES_500 = [
     temps:10, portions:2, difficulte:"Facile",
     prix:2, cout:1.69, nutriScore:"B", cuisine:"méditerranéenne",
     micros:{ fer:4.32, magnesium:76.48, calcium:374.38, zinc:2.37, potassium:1054.4, vitC:21.53, vitD:6.8, vitB12:12.24, omega3:1.8 },
-    img:IMG.toast, imgQuery:"Tartines sardines",
+    img:IMG.toast, imgQuery:"toast sardines",
     desc:"Les sardines concentrent oméga-3 et calcium pour un repas anti-inflammatoire prêt en 10 minutes, sans cuisson.",
     astuce:"Un zeste de citron par-dessus à la fin réveille les sardines et équilibre leur richesse.",
     ingredients:[
@@ -872,7 +872,7 @@ export const RECIPES_500 = [
     temps:37, portions:2, difficulte:"Moyen",
     prix:3, cout:2.86, nutriScore:"B", cuisine:"italienne",
     micros:{ fer:8.83, magnesium:134.37, calcium:387.98, zinc:3.4, potassium:1231.1, vitC:37.83, vitD:0.1, vitB12:0.17, omega3:0.31 },
-    img:IMG.poivron, imgQuery:"Suprêmes poulet farcis épinards-ricotta",
+    img:IMG.poivron, imgQuery:"chicken farcis epinards-ricotta",
     desc:"45 g de protéines pour 345 kcal et très peu de glucides : la recette parfaite pour atteindre ses objectifs protéiques en restant léger.",
     astuce:"Essorez bien les épinards avant de les mélanger à la ricotta : une farce trop humide s'échappe à la cuisson.",
     ingredients:[
@@ -899,7 +899,7 @@ export const RECIPES_500 = [
     temps:15, portions:2, difficulte:"Moyen",
     prix:3, cout:3.42, nutriScore:"B", cuisine:"française",
     micros:{ fer:0.53, magnesium:20.34, calcium:137.16, zinc:0.7, potassium:247.91, vitC:3.99, vitD:1.96, vitB12:2.14, omega3:0.99 },
-    img:IMG.omelette, imgQuery:"Omelette soufflée",
+    img:IMG.omelette, imgQuery:"omelette",
     desc:"Œufs, blancs et saumon fumé empilent les protéines pour très peu de glucides : idéal en sèche, au petit-déjeuner comme au dîner.",
     astuce:"Incorporez les blancs montés en deux fois et sans casser le mélange : c'est ce qui rend l'omelette aérienne.",
     ingredients:[
@@ -925,7 +925,7 @@ export const RECIPES_500 = [
     temps:8, portions:2, difficulte:"Facile",
     prix:1, cout:1.43, nutriScore:"B", cuisine:"petit-déjeuner moderne",
     micros:{ fer:5.93, magnesium:183.69, calcium:314.94, zinc:3.54, potassium:893.31, vitC:2.41, vitD:0.14, vitB12:0.57, omega3:1.51 },
-    img:IMG.bircher, imgQuery:"Overnight oats protéinés cacao-banane beurre",
+    img:IMG.bircher, imgQuery:"overnight oats cacao-banane beurre",
     desc:"Glucides lents de l'avoine et protéines complètes prêts dès le réveil : énergie stable et satiété toute la matinée, sans aucune cuisson.",
     astuce:"Préparez-en 3 jours d'avance ; ajoutez les fruits et le beurre d'amande seulement au moment de servir pour garder la texture.",
     ingredients:[
@@ -952,7 +952,7 @@ export const RECIPES_500 = [
     temps:25, portions:2, difficulte:"Facile",
     prix:2, cout:1.91, nutriScore:"C", cuisine:"moyen-orientale",
     micros:{ fer:4.62, magnesium:67.3, calcium:154.23, zinc:1.23, potassium:1067.76, vitC:132.16, vitD:0.04, vitB12:0.19, omega3:0.25 },
-    img:IMG.shaksh, imgQuery:"Shakshuka",
+    img:IMG.shaksh, imgQuery:"shakshuka",
     desc:"Un petit-déjeuner salé riche en protéines et en légumes, rassasiant et qui évite le pic glycémique des options sucrées.",
     astuce:"Arrêtez la cuisson quand les jaunes sont encore coulants : ils créent une sauce naturelle en se mélangeant à la tomate.",
     ingredients:[
@@ -980,7 +980,7 @@ export const RECIPES_500 = [
     temps:25, portions:2, difficulte:"Facile",
     prix:3, cout:4.28, nutriScore:"B", cuisine:"française",
     micros:{ fer:4.68, magnesium:67.69, calcium:68.7, zinc:1.29, potassium:1179.36, vitC:32.37, vitD:10.16, vitB12:4.94, omega3:2.03 },
-    img:IMG.oeufs, imgQuery:"Salade niçoise thon frais grillé",
+    img:IMG.oeufs, imgQuery:"salad nicoise tuna grilled",
     desc:"Thon frais ultra-protéiné et légumes croquants : un déjeuner complet qui rassasie longtemps avec peu de glucides.",
     astuce:"Plongez les haricots verts dans l'eau glacée après cuisson : ils gardent un vert éclatant et un croquant parfait.",
     ingredients:[
@@ -1009,7 +1009,7 @@ export const RECIPES_500 = [
     temps:27, portions:2, difficulte:"Facile",
     prix:2, cout:2.31, nutriScore:"B", cuisine:"japonaise",
     micros:{ fer:14.96, magnesium:286.25, calcium:279.91, zinc:4.53, potassium:2019.46, vitC:8.4, vitB12:0.13, omega3:1.12 },
-    img:IMG.pates, imgQuery:"Soba froides",
+    img:IMG.pates, imgQuery:"soba",
     desc:"Protéines maigres et glucides modérés dans un plat froid qui se transporte sans problème pour le déjeuner du bureau.",
     astuce:"Rincez les soba à l'eau glacée et égouttez-les bien : elles ne collent pas et restent fermes même froides.",
     ingredients:[
@@ -1038,7 +1038,7 @@ export const RECIPES_500 = [
     temps:32, portions:2, difficulte:"Facile",
     prix:2, cout:2.56, nutriScore:"A", cuisine:"méditerranéenne",
     micros:{ fer:2.42, magnesium:53.26, calcium:53.69, zinc:1.78, potassium:652.61, vitC:5.73, omega3:0.05 },
-    img:IMG.poulet, imgQuery:"Poulet rôti citron",
+    img:IMG.poulet, imgQuery:"chicken roasted lemon",
     desc:"Un dîner léger et très protéiné qui ferme la journée sur peu de glucides, idéal en sèche, avec un seul plat à laver.",
     astuce:"Glissez quelques rondelles de citron sous le poulet : elles confisent et parfument la viande de l'intérieur.",
     ingredients:[
@@ -1065,7 +1065,7 @@ export const RECIPES_500 = [
     temps:35, portions:2, difficulte:"Moyen",
     prix:2, cout:2.5, nutriScore:"B", cuisine:"italienne",
     micros:{ fer:5.9, magnesium:131.92, calcium:264.79, zinc:5.07, potassium:1545.67, vitC:67.03, vitD:0.31, vitB12:2.7, omega3:0.3 },
-    img:IMG.pates, imgQuery:"Boulettes dinde",
+    img:IMG.pates, imgQuery:"meatballs turkey",
     desc:"Les courgettes spaghetti remplacent les pâtes pour diviser les glucides, et la dinde apporte des protéines maigres réconfortantes.",
     astuce:"Salez les courgettes spaghetti et laissez-les dégorger 10 min : elles rendent leur eau et ne détrempent pas l'assiette.",
     ingredients:[
@@ -1093,7 +1093,7 @@ export const RECIPES_500 = [
     temps:10, portions:2, difficulte:"Facile",
     prix:1, cout:1.17, nutriScore:"B", cuisine:"dessert healthy",
     micros:{ fer:4.61, magnesium:66.83, calcium:44.94, zinc:1.09, potassium:515.07, vitC:0.02, vitD:0.22, omega3:0.05 },
-    img:IMG.mousse, imgQuery:"Mousse protéinée chocolat-avocat",
+    img:IMG.mousse, imgQuery:"mousse chocolat-avocat",
     desc:"L'avocat donne une onctuosité de mousse riche en bons lipides, la protéine en fait une vraie collation rassasiante sans sucre raffiné.",
     astuce:"Une pincée de sel et quelques gouttes de café fort intensifient le goût du chocolat.",
     ingredients:[
@@ -1120,7 +1120,7 @@ export const RECIPES_500 = [
     temps:8, portions:2, difficulte:"Facile",
     prix:2, cout:2.21, nutriScore:"B", cuisine:"snack moderne",
     micros:{ fer:0.84, magnesium:32.66, calcium:230.43, zinc:1.09, potassium:495.42, vitC:67.51, vitD:2.25, vitB12:0.6, omega3:0.05 },
-    img:IMG.yaourt, imgQuery:"Cottage cheese fouetté herbes",
+    img:IMG.yaourt, imgQuery:"cottage cheese fouette herbs",
     desc:"Le cottage cheese est l'une des collations les plus protéinées et rassasiantes pour le moins de calories, parfait entre deux repas.",
     astuce:"Fouettez le cottage cheese 30 secondes au mixeur : il devient lisse et crémeux comme une vraie sauce.",
     ingredients:[
@@ -1146,7 +1146,7 @@ export const RECIPES_500 = [
     temps:8, portions:1, difficulte:"Facile",
     prix:2, cout:2.48, nutriScore:"B", cuisine:"boisson de récupération",
     micros:{ fer:3.78, magnesium:72.71, calcium:278.9, zinc:1.42, potassium:441.55, vitC:20.09, vitD:0.36, vitB12:0.54, omega3:1.04 },
-    img:IMG.granola, imgQuery:"Smoothie bowl récupération myrtille-banane",
+    img:IMG.granola, imgQuery:"smoothie bowl myrtille-banane",
     desc:"Glucides des fruits et du granola pour recharger le glycogène, protéines du yaourt et de la poudre pour relancer la construction musculaire.",
     astuce:"Utilisez des fruits congelés et peu de liquide : la texture devient celle d'une glace à la cuillère.",
     ingredients:[
@@ -1173,7 +1173,7 @@ export const RECIPES_500 = [
     temps:15, portions:2, difficulte:"Facile",
     prix:3, cout:3.52, nutriScore:"B", cuisine:"brunch new-yorkais",
     micros:{ fer:0.75, magnesium:34.37, calcium:270.49, zinc:1.51, potassium:348.7, vitC:5.41, vitD:2.35, vitB12:2.93, omega3:1.15 },
-    img:IMG.oeufs, imgQuery:"Bagel complet",
+    img:IMG.oeufs, imgQuery:"bagel",
     desc:"Les glucides du bagel rechargent le glycogène, saumon et œuf apportent des protéines de qualité pour une récupération complète.",
     astuce:"Toastez bien le bagel et tartinez le fromage frais sur le côté chaud : il fond légèrement et tient mieux la garniture.",
     ingredients:[
@@ -1200,7 +1200,7 @@ export const RECIPES_500 = [
     temps:15, portions:2, difficulte:"Facile",
     prix:2, cout:1.97, nutriScore:"B", cuisine:"péruvienne",
     micros:{ fer:2.05, magnesium:89.68, calcium:86.56, zinc:1.23, potassium:1075.18, vitC:26.06, vitD:4.67, vitB12:4.74, omega3:1.36 },
-    img:IMG.cabillaud, imgQuery:"Ceviche dorade citron vert",
+    img:IMG.cabillaud, imgQuery:"ceviche sea bream lemon",
     desc:"Protéines maigres et beaucoup de fraîcheur pour seulement 260 kcal : un plat ultra-rassasiant sans matière grasse de cuisson.",
     astuce:"Utilisez un poisson d'une fraîcheur irréprochable et ne mariez qu'au dernier moment : trop d'acide et la chair se dénature.",
     ingredients:[
@@ -1228,7 +1228,7 @@ export const RECIPES_500 = [
     temps:22, portions:2, difficulte:"Facile",
     prix:2, cout:2.44, nutriScore:"B", cuisine:"japonaise",
     micros:{ fer:5.77, magnesium:228.9, calcium:163.19, zinc:7.9, potassium:1696.14, vitC:27.5, vitD:3.14, vitB12:0.01, omega3:0.58 },
-    img:IMG.oeufs, imgQuery:"Soupe miso enrichie tofu",
+    img:IMG.oeufs, imgQuery:"soup miso enrichie tofu",
     desc:"Un grand bol chaud et savoureux, riche en protéines végétales et animales, qui rassasie pour très peu de calories.",
     astuce:"N'ajoutez jamais le miso dans une eau bouillante : la chaleur excessive tue ses arômes. Délayez-le toujours hors du feu.",
     ingredients:[
@@ -1256,7 +1256,7 @@ export const RECIPES_500 = [
     temps:35, portions:2, difficulte:"Facile",
     prix:3, cout:3.1, nutriScore:"B", cuisine:"française moderne",
     micros:{ fer:6.38, magnesium:149.85, calcium:205.86, zinc:4.34, potassium:2144.64, vitC:200.33, vitD:0.51, vitB12:0.53, omega3:0.19 },
-    img:IMG.boeuf, imgQuery:"Filet mignon porc rôti miel-moutarde",
+    img:IMG.boeuf, imgQuery:"fillet mignon pork roasted",
     desc:"Le filet mignon est une viande maigre très protéinée ; associé à la patate douce, il offre un surplus calorique propre idéal pour la masse.",
     astuce:"Laissez reposer le porc 5 min sous une feuille d'alu après cuisson : les jus se répartissent et la viande reste juteuse.",
     ingredients:[
@@ -1284,7 +1284,7 @@ export const RECIPES_500 = [
     temps:24, portions:2, difficulte:"Facile",
     prix:3, cout:3.13, nutriScore:"C", cuisine:"chinoise",
     micros:{ fer:4.15, magnesium:93.46, calcium:116.6, zinc:3.6, potassium:772.29, vitC:1.37, vitD:0.02, vitB12:0.68, omega3:0.03 },
-    img:IMG.oeufs, imgQuery:"Riz cantonais protéiné poulet",
+    img:IMG.oeufs, imgQuery:"rice cantonais chicken",
     desc:"Riz pour l'énergie, poulet, crevettes et œuf pour près de 50 g de protéines : un grand classique transformé en repas de prise de masse propre.",
     astuce:"Utilisez du riz froid de la veille : il saute sans coller et reste bien grainé, comme au restaurant.",
     ingredients:[
@@ -1313,7 +1313,7 @@ export const RECIPES_500 = [
     temps:30, portions:2, difficulte:"Facile",
     prix:2, cout:2.1, nutriScore:"C", cuisine:"thaïlandaise",
     micros:{ fer:15.77, magnesium:278.48, calcium:406.75, zinc:3.87, potassium:914.45, vitC:98.09, vitB12:0.05, omega3:0.79 },
-    img:IMG.curry, imgQuery:"Curry thaï rouge tofu",
+    img:IMG.curry, imgQuery:"curry thai tofu",
     desc:"Le tofu doré apporte des protéines complètes, le riz l'énergie, et le curry rouge un maximum de goût pour un plat vegan loin d'être fade.",
     astuce:"Faites bien dorer le tofu avant de l'ajouter à la sauce : il garde du croustillant au lieu de devenir spongieux.",
     ingredients:[
@@ -1341,7 +1341,7 @@ export const RECIPES_500 = [
     temps:35, portions:4, difficulte:"Facile",
     prix:1, cout:1.11, nutriScore:"B", cuisine:"indienne",
     micros:{ fer:9.03, magnesium:120.55, calcium:113.51, zinc:3.8, potassium:1151.09, vitC:32.75, vitB12:0.03, omega3:0.21 },
-    img:IMG.dahl, imgQuery:"Dahl lentilles corail lait coco",
+    img:IMG.dahl, imgQuery:"dal lentils corail milk",
     desc:"Les lentilles corail sont riches en protéines et en fibres, le lait de coco apporte de la rondeur : un repas vegan complet et nourrissant.",
     astuce:"Terminez par un tempérage : faites chauffer cumin et graines de moutarde dans un peu d'huile et versez-le sur le dahl au moment de servir.",
     ingredients:[
@@ -1370,7 +1370,7 @@ export const RECIPES_500 = [
     temps:25, portions:2, difficulte:"Facile",
     prix:3, cout:3.43, nutriScore:"B", cuisine:"nordique",
     micros:{ fer:6.14, magnesium:170.17, calcium:104.27, zinc:3.29, potassium:1435.43, vitC:33.73, vitD:2.94, vitB12:7.0, omega3:0.16 },
-    img:IMG.truite, imgQuery:"Truite rôtie",
+    img:IMG.truite, imgQuery:"trout roasted",
     desc:"La truite est riche en oméga-3, les asperges et le quinoa en antioxydants et fibres : un repas anti-inflammatoire complet et léger.",
     astuce:"Rôtissez la truite côté peau d'abord pour la rendre croustillante, puis terminez doucement côté chair.",
     ingredients:[
@@ -1397,7 +1397,7 @@ export const RECIPES_500 = [
     temps:27, portions:2, difficulte:"Facile",
     prix:3, cout:4.33, nutriScore:"B", cuisine:"indienne",
     micros:{ fer:14.17, magnesium:218.81, calcium:349.52, zinc:6.71, potassium:1522.1, vitC:55.89, vitB12:1.65, omega3:0.28 },
-    img:IMG.crevettes, imgQuery:"Curry crevettes curcuma épinards",
+    img:IMG.crevettes, imgQuery:"curry shrimp turmeric spinach",
     desc:"Curcuma et gingembre pour leurs propriétés anti-inflammatoires, crevettes pour des protéines maigres : un curry léger et puissant en goût.",
     astuce:"Une pincée de poivre noir avec le curcuma décuple l'absorption de la curcumine.",
     ingredients:[
@@ -1425,7 +1425,7 @@ export const RECIPES_500 = [
     temps:22, portions:2, difficulte:"Moyen",
     prix:2, cout:1.95, nutriScore:"B", cuisine:"argentine",
     micros:{ fer:9.25, magnesium:129.12, calcium:188.0, zinc:1.48, potassium:1691.88, vitC:43.86, vitD:61.82, vitB12:10.5, omega3:1.09 },
-    img:IMG.oeufs, imgQuery:"Faux-filet grillé",
+    img:IMG.oeufs, imgQuery:"faux-filet grilled",
     desc:"Près de 50 g de protéines et très peu de glucides : un plat de force pour la prise de muscle sèche, plein de goût grâce au chimichurri.",
     astuce:"Laissez reposer la viande 5 min hors du feu avant de la trancher contre le grain : elle reste tendre et juteuse.",
     ingredients:[
@@ -1453,7 +1453,7 @@ export const RECIPES_500 = [
     temps:22, portions:2, difficulte:"Moyen",
     prix:3, cout:5.18, nutriScore:"A", cuisine:"française",
     micros:{ fer:6.73, magnesium:119.47, calcium:129.26, zinc:4.86, potassium:1141.0, vitC:2.63, vitB12:2.8, omega3:0.19 },
-    img:IMG.crevettes, imgQuery:"Saint-Jacques crevettes poêlées",
+    img:IMG.crevettes, imgQuery:"scallops shrimp",
     desc:"Saint-Jacques et crevettes offrent un maximum de protéines pour très peu de lipides : un plat de restaurant parfaitement aligné avec une sèche.",
     astuce:"Séchez bien les Saint-Jacques avant de les saisir dans une poêle brûlante : c'est la clé d'une croûte caramélisée.",
     ingredients:[
@@ -1481,7 +1481,7 @@ export const RECIPES_500 = [
     temps:13, portions:2, difficulte:"Facile",
     prix:1, cout:1.47, nutriScore:"B", cuisine:"petit-déjeuner réconfort",
     micros:{ fer:3.29, magnesium:126.74, calcium:227.06, zinc:3.15, potassium:641.72, vitC:1.97, vitB12:0.46, omega3:0.2 },
-    img:IMG.porridge, imgQuery:"Porridge protéiné pommes",
+    img:IMG.porridge, imgQuery:"porridge potatoes",
     desc:"Glucides lents de l'avoine et protéines pour une énergie stable toute la matinée et une vraie satiété au réveil.",
     astuce:"Ajoutez la protéine hors du feu : à trop forte température elle devient granuleuse.",
     ingredients:[
@@ -1507,7 +1507,7 @@ export const RECIPES_500 = [
     temps:26, portions:2, difficulte:"Facile",
     prix:2, cout:2.63, nutriScore:"B", cuisine:"italienne",
     micros:{ fer:9.27, magnesium:121.7, calcium:314.92, zinc:1.91, potassium:1254.67, vitC:40.76, vitD:0.04, vitB12:0.24, omega3:0.3 },
-    img:IMG.omelette, imgQuery:"Frittata blancs ufs",
+    img:IMG.omelette, imgQuery:"frittata eggs",
     desc:"Œufs et blancs concentrent les protéines pour peu de glucides ; elle se prépare à l'avance et se mange chaude ou froide.",
     astuce:"Terminez 2 min sous le grill pour une surface dorée et gonflée.",
     ingredients:[
@@ -1534,7 +1534,7 @@ export const RECIPES_500 = [
     temps:27, portions:2, difficulte:"Facile",
     prix:3, cout:3.12, nutriScore:"A", cuisine:"grecque",
     micros:{ fer:3.39, magnesium:105.49, calcium:216.75, zinc:3.2, potassium:962.5, vitC:107.17, omega3:0.16 },
-    img:IMG.poulet, imgQuery:"Bowl souvlaki poulet",
+    img:IMG.poulet, imgQuery:"bowl souvlaki chicken",
     desc:"Protéines maigres, glucides complets et tzatziki frais : un déjeuner équilibré qui se prépare la veille et se transporte facilement.",
     astuce:"Marinez le poulet au moins 30 min : le citron et l'origan parfument la viande en profondeur.",
     ingredients:[
@@ -1561,7 +1561,7 @@ export const RECIPES_500 = [
     temps:25, portions:2, difficulte:"Moyen",
     prix:3, cout:3.98, nutriScore:"B", cuisine:"vietnamienne",
     micros:{ fer:3.87, magnesium:132.59, calcium:321.83, zinc:2.95, potassium:697.38, vitC:12.7, vitB12:1.64, omega3:0.35 },
-    img:IMG.crevettes, imgQuery:"Rouleaux printemps crevettes",
+    img:IMG.crevettes, imgQuery:"rouleaux printemps shrimp",
     desc:"Crevettes maigres et beaucoup d'herbes fraîches pour un déjeuner léger, coloré et faible en lipides.",
     astuce:"Ne trempez la galette que quelques secondes : elle finit de ramollir en s'enroulant et ne se déchire pas.",
     ingredients:[
@@ -1588,7 +1588,7 @@ export const RECIPES_500 = [
     temps:45, portions:4, difficulte:"Moyen",
     prix:2, cout:2.31, nutriScore:"B", cuisine:"marocaine",
     micros:{ fer:1.45, magnesium:45.96, calcium:77.85, zinc:0.68, potassium:503.6, vitC:43.52, vitB12:0.02, omega3:0.12 },
-    img:IMG.poivron, imgQuery:"Tajine poulet citrons confits",
+    img:IMG.poivron, imgQuery:"tagine chicken citrons confits",
     desc:"Un dîner riche en protéines et très parfumé, naturellement faible en glucides, qui mijote tout seul et se garde plusieurs jours.",
     astuce:"N'utilisez que la peau du citron confit, rincée : la pulpe est trop salée et amère.",
     ingredients:[
@@ -1617,7 +1617,7 @@ export const RECIPES_500 = [
     temps:27, portions:2, difficulte:"Facile",
     prix:3, cout:4.4, nutriScore:"B", cuisine:"asiatique",
     micros:{ fer:3.71, magnesium:112.22, calcium:127.92, zinc:1.58, potassium:1284.17, vitC:28.89, vitD:2.54, vitB12:2.38, omega3:0.41 },
-    img:IMG.cabillaud, imgQuery:"Cabillaud papillote",
+    img:IMG.cabillaud, imgQuery:"cod baked parchment",
     desc:"La cuisson en papillote ne demande aucune matière grasse : 35 g de protéines pour seulement 240 kcal, parfait en sèche le soir.",
     astuce:"Fermez bien la papillote : la vapeur emprisonnée cuit le poisson en douceur et concentre tous les arômes.",
     ingredients:[
@@ -1644,7 +1644,7 @@ export const RECIPES_500 = [
     temps:15, portions:2, difficulte:"Facile",
     prix:1, cout:0.41, nutriScore:"B", cuisine:"snack moderne",
     micros:{ fer:16.03, magnesium:256.02, calcium:223.76, zinc:3.02, potassium:1781.63, vitC:6.86, omega3:1.33 },
-    img:IMG.energy, imgQuery:"Edamame rôtis épicés paprika fumé",
+    img:IMG.energy, imgQuery:"edamame rotis paprika",
     desc:"Les edamame sont l'une des rares collations végétales très riches en protéines complètes, rassasiantes et faibles en calories.",
     astuce:"Ajoutez les épices à mi-cuisson plutôt qu'au début : elles ne brûlent pas et restent éclatantes.",
     ingredients:[
@@ -1670,7 +1670,7 @@ export const RECIPES_500 = [
     temps:30, portions:8, difficulte:"Facile",
     prix:1, cout:0.43, nutriScore:"B", cuisine:"snack healthy",
     micros:{ fer:1.3, magnesium:57.77, calcium:48.86, zinc:1.12, potassium:213.16, vitC:0.97, omega3:0.03 },
-    img:IMG.energy, imgQuery:"Barres protéinées avoine-myrtilles",
+    img:IMG.energy, imgQuery:"bars",
     desc:"Une vraie alternative aux barres industrielles : protéines, glucides lents et zéro additif, idéale en collation autour de l'entraînement.",
     astuce:"Sous-cuisez légèrement pour des barres moelleuses : elles se raffermissent en refroidissant.",
     ingredients:[
@@ -1697,7 +1697,7 @@ export const RECIPES_500 = [
     temps:37, portions:2, difficulte:"Facile",
     prix:3, cout:2.77, nutriScore:"A", cuisine:"tex-mex",
     micros:{ fer:6.4, magnesium:170.11, calcium:260.72, zinc:3.44, potassium:1452.15, vitC:37.04, omega3:0.13 },
-    img:IMG.yaourt, imgQuery:"Bowl patate douce rôtie",
+    img:IMG.yaourt, imgQuery:"bowl sweet potato roasted",
     desc:"Glucides de la patate douce et du maïs pour recharger le glycogène, poulet et haricots pour la reconstruction musculaire : la combinaison parfaite après l'effort.",
     astuce:"Effilochez le poulet encore chaud à la fourchette : il s'imprègne mieux des sucs et de la sauce.",
     ingredients:[
@@ -1725,7 +1725,7 @@ export const RECIPES_500 = [
     temps:25, portions:2, difficulte:"Facile",
     prix:2, cout:2.15, nutriScore:"C", cuisine:"dessert de récupération",
     micros:{ fer:1.65, magnesium:66.88, calcium:306.43, zinc:1.7, potassium:704.98, vitC:72.68, vitB12:0.8, omega3:0.04 },
-    img:IMG.energy, imgQuery:"Riz lait protéiné vanille fruits",
+    img:IMG.energy, imgQuery:"rice milk vanilla fruits",
     desc:"Un riz au lait revisité, riche en glucides et protéines mais pauvre en lipides : idéal pour relancer la récupération avec gourmandise.",
     astuce:"Ajoutez la protéine hors du feu et fouettez vivement pour une texture crémeuse et homogène.",
     ingredients:[
@@ -1751,7 +1751,7 @@ export const RECIPES_500 = [
     temps:20, portions:2, difficulte:"Facile",
     prix:3, cout:5.78, nutriScore:"B", cuisine:"espagnole",
     micros:{ fer:9.01, magnesium:140.65, calcium:257.9, zinc:4.21, potassium:1493.16, vitC:122.7, vitB12:1.2, omega3:0.07 },
-    img:IMG.crevettes, imgQuery:"Gaspacho andalou brochettes crevettes grillées",
+    img:IMG.crevettes, imgQuery:"gazpacho andalou skewers shrimp",
     desc:"Un grand bol de légumes mixés et des crevettes maigres : beaucoup de volume et de protéines pour seulement 260 kcal.",
     astuce:"Mixez le gaspacho longtemps puis passez-le au chinois pour une texture veloutée digne d'un restaurant.",
     ingredients:[
@@ -1779,7 +1779,7 @@ export const RECIPES_500 = [
     temps:18, portions:2, difficulte:"Facile",
     prix:3, cout:4.28, nutriScore:"C", cuisine:"chinoise",
     micros:{ fer:2.67, magnesium:68.78, calcium:56.89, zinc:4.48, potassium:829.48, vitC:6.67, vitD:0.36, vitB12:2.93, omega3:0.15 },
-    img:IMG.wrapV, imgQuery:"Lettuce wraps dinde épicée",
+    img:IMG.wrapV, imgQuery:"lettuce wraps turkey",
     desc:"La laitue remplace le pain ou le riz pour un repas très protéiné et pauvre en glucides, parfait en sèche.",
     astuce:"Laissez la dinde colorer sans remuer au début : elle dore au lieu de bouillir et gagne en goût.",
     ingredients:[
@@ -1807,7 +1807,7 @@ export const RECIPES_500 = [
     temps:35, portions:2, difficulte:"Moyen",
     prix:3, cout:3.46, nutriScore:"C", cuisine:"coréenne",
     micros:{ fer:7.65, magnesium:117.31, calcium:178.07, zinc:2.0, potassium:1333.72, vitC:46.26, vitD:0.02, vitB12:1.76, omega3:0.24 },
-    img:IMG.oeufs, imgQuery:"Bibimbap",
+    img:IMG.oeufs, imgQuery:"bibimbap",
     desc:"Le bowl coréen par excellence : riz pour l'énergie, bœuf et œuf pour les protéines, et une montagne de légumes, idéal pour construire du muscle proprement.",
     astuce:"Cuisez chaque légume séparément pour préserver couleurs et textures : c'est ce qui fait un vrai bibimbap.",
     ingredients:[
@@ -1836,7 +1836,7 @@ export const RECIPES_500 = [
     temps:35, portions:2, difficulte:"Moyen",
     prix:3, cout:3.21, nutriScore:"B", cuisine:"italienne",
     micros:{ fer:7.56, magnesium:96.37, calcium:273.99, zinc:7.44, potassium:1032.77, vitC:23.28, vitD:0.33, vitB12:3.17, omega3:0.09 },
-    img:IMG.oeufs, imgQuery:"Penne complètes boulettes",
+    img:IMG.oeufs, imgQuery:"penne meatballs",
     desc:"Le plat de pâtes-boulettes revisité avec des céréales complètes et du bœuf maigre : un grand classique de prise de masse propre.",
     astuce:"Faites mijoter les boulettes directement dans la sauce : elles restent moelleuses et la parfument.",
     ingredients:[
@@ -1863,7 +1863,7 @@ export const RECIPES_500 = [
     temps:30, portions:2, difficulte:"Facile",
     prix:2, cout:2.52, nutriScore:"C", cuisine:"indonésienne",
     micros:{ fer:4.45, magnesium:201.41, calcium:195.24, zinc:3.03, potassium:974.43, vitC:14.73, vitB12:0.01, omega3:0.72 },
-    img:IMG.tofuC, imgQuery:"Gado-gado",
+    img:IMG.tofuC, imgQuery:"gado-gado",
     desc:"Tofu et tempeh cumulent les protéines complètes, la sauce cacahuète apporte gourmandise et énergie : un plat vegan vraiment rassasiant.",
     astuce:"Faites bien dorer le tempeh : sa texture devient plus ferme et son goût de noisette ressort.",
     ingredients:[
@@ -1891,7 +1891,7 @@ export const RECIPES_500 = [
     temps:27, portions:2, difficulte:"Moyen",
     prix:2, cout:1.72, nutriScore:"B", cuisine:"américaine revisitée",
     micros:{ fer:6.76, magnesium:117.73, calcium:180.27, zinc:1.86, potassium:740.48, vitC:16.08, omega3:0.97 },
-    img:IMG.poulet, imgQuery:"Burger végétal haricots noirs-avoine",
+    img:IMG.poulet, imgQuery:"burger vegetal black beans",
     desc:"Un burger 100% végétal riche en fibres et en glucides complexes, qui cale durablement sans viande ni friture.",
     astuce:"Laissez reposer les steaks au frais avant cuisson : le lin et l'avoine gélifient et les empêchent de s'effriter.",
     ingredients:[
@@ -1919,7 +1919,7 @@ export const RECIPES_500 = [
     temps:27, portions:2, difficulte:"Facile",
     prix:3, cout:3.86, nutriScore:"B", cuisine:"française",
     micros:{ fer:17.85, magnesium:286.02, calcium:314.11, zinc:10.86, potassium:1815.72, vitC:29.22, vitB12:96.5, omega3:2.39 },
-    img:IMG.gambas, imgQuery:"Moules curcuma",
+    img:IMG.gambas, imgQuery:"mussels turmeric",
     desc:"Les moules sont riches en oméga-3, en zinc et en sélénium ; associées au curcuma et au gingembre, elles composent un repas anti-inflammatoire de premier choix.",
     astuce:"Ne cuisez pas trop les moules : dès qu'elles s'ouvrent, elles sont prêtes ; au-delà, elles caoutchoutent.",
     ingredients:[
@@ -1947,7 +1947,7 @@ export const RECIPES_500 = [
     temps:15, portions:2, difficulte:"Facile",
     prix:2, cout:1.62, nutriScore:"B", cuisine:"française",
     micros:{ fer:6.42, magnesium:162.75, calcium:225.4, zinc:3.32, potassium:1357.08, vitC:19.4, omega3:1.28 },
-    img:IMG.dahl, imgQuery:"Salade tiède lentilles vertes",
+    img:IMG.dahl, imgQuery:"salad lentils",
     desc:"Lentilles, betterave et noix réunissent fibres, antioxydants et oméga-3 végétaux : une assiette anti-inflammatoire complète et rassasiante.",
     astuce:"Assaisonnez les lentilles encore tièdes : elles absorbent la vinaigrette et révèlent toutes leurs saveurs.",
     ingredients:[
@@ -1974,7 +1974,7 @@ export const RECIPES_500 = [
     temps:12, portions:2, difficulte:"Facile",
     prix:2, cout:2.73, nutriScore:"B", cuisine:"italienne",
     micros:{ fer:4.0, magnesium:34.84, calcium:280.06, zinc:4.91, potassium:211.2, vitC:8.15, vitB12:2.6, omega3:0.12 },
-    img:IMG.oeufs, imgQuery:"Carpaccio",
+    img:IMG.oeufs, imgQuery:"carpaccio",
     desc:"Protéines pures et quasi zéro glucide pour un plat élégant et léger, parfaitement compatible avec une sèche.",
     astuce:"Utilisez une viande d'une fraîcheur irréprochable d'un boucher de confiance, et tranchez-la bien froide pour des lamelles très fines.",
     ingredients:[
@@ -2001,7 +2001,7 @@ export const RECIPES_500 = [
     temps:33, portions:2, difficulte:"Facile",
     prix:3, cout:3.15, nutriScore:"A", cuisine:"cuisine maison moderne",
     micros:{ fer:6.34, magnesium:151.47, calcium:117.23, zinc:2.49, potassium:1224.84, vitC:10.86, vitD:9.38, vitB12:4.56, omega3:1.92 },
-    img:IMG.thon, imgQuery:"Galettes thon quinoa four",
+    img:IMG.thon, imgQuery:"tuna quinoa baked",
     desc:"Thon et œufs offrent un maximum de protéines pour un coût minime, le quinoa apporte des glucides de qualité : une recette ultra-pratique et complète.",
     astuce:"Laissez reposer l'appareil 10 min avant de former les galettes : il se tient mieux et ne se délite pas à la cuisson.",
     ingredients:[
@@ -2029,7 +2029,7 @@ export const RECIPES_500 = [
     temps:8, portions:2, difficulte:"Facile",
     prix:2, cout:1.63, nutriScore:"B", cuisine:"petit-déjeuner moderne",
     micros:{ fer:5.98, magnesium:181.1, calcium:246.62, zinc:2.53, potassium:675.45, vitC:26.36, omega3:5.4 },
-    img:IMG.chiapot, imgQuery:"Pudding chia coco-mangue",
+    img:IMG.chiapot, imgQuery:"pudding chia coco-mangue",
     desc:"Le chia gonfle pour un petit-déjeuner crémeux ultra-rassasiant, riche en fibres et oméga-3 végétaux, prêt à l'avance.",
     astuce:"Fouettez à nouveau après 10 min de repos : cela répartit les graines et évite qu'elles ne se massent au fond.",
     ingredients:[
@@ -2055,7 +2055,7 @@ export const RECIPES_500 = [
     temps:28, portions:2, difficulte:"Facile",
     prix:2, cout:1.72, nutriScore:"B", cuisine:"petit-déjeuner moderne",
     micros:{ fer:1.68, magnesium:36.8, calcium:273.53, zinc:1.38, potassium:357.92, vitC:27.65, vitD:0.22, vitB12:0.56, omega3:0.14 },
-    img:IMG.oeufs, imgQuery:"Muffins ufs",
+    img:IMG.oeufs, imgQuery:"muffins eggs",
     desc:"Préparés en lot, ces muffins offrent un petit-déjeuner salé riche en protéines et pauvre en glucides, prêt à emporter.",
     astuce:"Huilez très bien les empreintes ou utilisez des caissettes en silicone : les muffins aux œufs accrochent facilement.",
     ingredients:[
@@ -2082,7 +2082,7 @@ export const RECIPES_500 = [
     temps:40, portions:2, difficulte:"Facile",
     prix:3, cout:2.96, nutriScore:"B", cuisine:"italienne",
     micros:null,
-    img:IMG.poulet, imgQuery:"Salade farro",
+    img:IMG.poulet, imgQuery:"salad farro",
     desc:"Le farro apporte des glucides complets à index modéré, le poulet les protéines, la courge des fibres et antioxydants : un déjeuner nourrissant qui se transporte.",
     astuce:"Rôtissez la courge jusqu'aux bords caramélisés : sa douceur contraste parfaitement avec le salé de la feta.",
     ingredients:[
@@ -2110,7 +2110,7 @@ export const RECIPES_500 = [
     temps:27, portions:2, difficulte:"Facile",
     prix:3, cout:3.07, nutriScore:"B", cuisine:"moyen-orientale",
     micros:{ fer:1.16, magnesium:52.8, calcium:126.9, zinc:1.75, potassium:577.24, vitC:10.07, omega3:0.07 },
-    img:IMG.yaourt, imgQuery:"Pita poulet shawarma yaourt-ail",
+    img:IMG.yaourt, imgQuery:"pita chicken shawarma yaourt-ail",
     desc:"Poulet épicé maigre et pita complet : un déjeuner type street food, mais équilibré et très protéiné.",
     astuce:"Saisissez le poulet à feu vif et sans le remuer trop souvent pour obtenir des bords grillés façon broche.",
     ingredients:[
@@ -2138,7 +2138,7 @@ export const RECIPES_500 = [
     temps:27, portions:2, difficulte:"Facile",
     prix:3, cout:3.42, nutriScore:"B", cuisine:"turque",
     micros:{ fer:7.76, magnesium:81.9, calcium:207.59, zinc:8.0, potassium:1189.0, vitC:21.63, vitD:0.4, vitB12:3.39, omega3:0.21 },
-    img:IMG.oeufs, imgQuery:"Köfte épicées",
+    img:IMG.oeufs, imgQuery:"kofte",
     desc:"Bœuf maigre très protéiné et beaucoup de légumes frais : un dîner faible en glucides et plein de goût, idéal en sèche.",
     astuce:"Pétrissez bien la viande quelques minutes : elle devient compacte et les köfte ne se cassent pas à la cuisson.",
     ingredients:[
@@ -2165,7 +2165,7 @@ export const RECIPES_500 = [
     temps:20, portions:2, difficulte:"Moyen",
     prix:3, cout:3.73, nutriScore:"A", cuisine:"espagnole",
     micros:{ fer:5.28, magnesium:165.19, calcium:207.86, zinc:3.23, potassium:1340.8, vitC:39.56, vitD:0.72, vitB12:6.3, omega3:1.01 },
-    img:IMG.gambas, imgQuery:"Calamars grillés l'ail persil",
+    img:IMG.gambas, imgQuery:"squid grilled persil",
     desc:"Les calamars sont très protéinés et pauvres en lipides : un dîner léger et raffiné, parfait en sèche.",
     astuce:"Cuisez les calamars très vite et très fort, ou très longtemps en ragoût : entre les deux, ils deviennent caoutchouteux.",
     ingredients:[
@@ -2192,7 +2192,7 @@ export const RECIPES_500 = [
     temps:35, portions:2, difficulte:"Facile",
     prix:1, cout:0.4, nutriScore:"B", cuisine:"snack moderne",
     micros:{ fer:2.55, magnesium:59.33, calcium:99.26, zinc:1.44, potassium:261.4, vitC:0.09, omega3:0.14 },
-    img:IMG.energy, imgQuery:"Pois chiches rôtis croustillants épicés",
+    img:IMG.energy, imgQuery:"chickpea rotis croustillants",
     desc:"Une alternative croustillante aux chips, riche en fibres et en protéines végétales, qui rassasie sans pic glycémique.",
     astuce:"Séchez bien les pois chiches avant de les rôtir : toute l'eau résiduelle empêche le croustillant.",
     ingredients:[
@@ -2218,7 +2218,7 @@ export const RECIPES_500 = [
     temps:6, portions:1, difficulte:"Facile",
     prix:1, cout:1.04, nutriScore:"B", cuisine:"dessert healthy",
     micros:{ fer:4.31, magnesium:80.81, calcium:105.64, zinc:1.66, potassium:563.98, vitC:0.79, vitD:0.3, vitB12:0.23, omega3:0.08 },
-    img:IMG.moelleux, imgQuery:"Mug cake protéiné chocolat",
+    img:IMG.moelleux, imgQuery:"cake chocolate",
     desc:"Un dessert chaud et fondant prêt en une minute, riche en protéines, pour calmer une envie de sucré sans craquer.",
     astuce:"Ne dépassez pas 80 secondes de cuisson : un mug cake trop cuit devient sec et caoutchouteux.",
     ingredients:[
@@ -2245,7 +2245,7 @@ export const RECIPES_500 = [
     temps:5, portions:1, difficulte:"Facile",
     prix:2, cout:2.12, nutriScore:"B", cuisine:"boisson de récupération",
     micros:{ fer:2.51, magnesium:116.79, calcium:362.82, zinc:2.71, potassium:918.2, vitC:57.79, vitB12:0.95, omega3:0.09 },
-    img:IMG.shakeP, imgQuery:"Shake récupération vanille-fraise avoine",
+    img:IMG.shakeP, imgQuery:"shake vanille-fraise oatmeal",
     desc:"Glucides de la banane, des fraises et de l'avoine pour recharger le glycogène, protéines pour relancer la construction musculaire, le tout liquide et rapide à assimiler.",
     astuce:"Mixez longuement l'avoine pour qu'elle se fonde dans le shake sans laisser de grumeaux.",
     ingredients:[
@@ -2269,7 +2269,7 @@ export const RECIPES_500 = [
     temps:20, portions:2, difficulte:"Facile",
     prix:2, cout:2.17, nutriScore:"B", cuisine:"petit-déjeuner revisité",
     micros:{ fer:3.49, magnesium:107.27, calcium:252.26, zinc:2.06, potassium:909.91, vitC:72.22, vitD:0.13, vitB12:0.16, omega3:0.11 },
-    img:IMG.pancakes, imgQuery:"Pancakes patate douce protéinés",
+    img:IMG.pancakes, imgQuery:"pancakes sweet potato",
     desc:"Patate douce et avoine fournissent des glucides de qualité pour reconstituer le glycogène, œufs, protéine et yaourt couvrent les besoins en protéines après l'effort.",
     astuce:"Laissez reposer la pâte 5 min : l'avoine absorbe le liquide et les pancakes tiennent mieux à la cuisson.",
     ingredients:[
@@ -2297,7 +2297,7 @@ export const RECIPES_500 = [
     temps:40, portions:4, difficulte:"Facile",
     prix:1, cout:1.46, nutriScore:"B", cuisine:"italienne",
     micros:{ fer:5.05, magnesium:101.8, calcium:287.79, zinc:1.76, potassium:1150.05, vitC:28.34, vitB12:0.13, omega3:0.46 },
-    img:IMG.bowl, imgQuery:"Minestrone haricots blancs légumes",
+    img:IMG.bowl, imgQuery:"minestrone beans vegetables",
     desc:"Un grand bol de soupe consistante, riche en fibres et en légumes, qui rassasie pour peu de calories.",
     astuce:"Ajoutez une croûte de parmesan dans le bouillon pendant la cuisson : elle fond lentement et donne une profondeur incroyable.",
     ingredients:[
@@ -2325,7 +2325,7 @@ export const RECIPES_500 = [
     temps:25, portions:2, difficulte:"Facile",
     prix:2, cout:2.04, nutriScore:"A", cuisine:"libanaise",
     micros:{ fer:4.24, magnesium:81.89, calcium:101.89, zinc:2.18, potassium:1055.89, vitC:32.0, omega3:0.19 },
-    img:IMG.fattouche, imgQuery:"Salade fattoush poulet grillé sumac",
+    img:IMG.fattouche, imgQuery:"salad fattoush chicken grilled",
     desc:"Beaucoup de fraîcheur et de protéines maigres, le sumac apportant une acidité qui réveille tout sans calories.",
     astuce:"Ajoutez les croûtons de pita à la toute fin pour qu'ils gardent leur croquant dans la salade.",
     ingredients:[
@@ -2352,7 +2352,7 @@ export const RECIPES_500 = [
     temps:40, portions:4, difficulte:"Moyen",
     prix:3, cout:3.4, nutriScore:"B", cuisine:"cajun",
     micros:{ fer:5.92, magnesium:101.9, calcium:174.75, zinc:4.28, potassium:926.23, vitC:55.65, vitB12:0.86, omega3:0.05 },
-    img:IMG.crevettes, imgQuery:"Jambalaya poulet crevettes",
+    img:IMG.crevettes, imgQuery:"jambalaya chicken shrimp",
     desc:"Riz pour l'énergie, poulet et crevettes pour plus de 50 g de protéines : un plat unique généreux et propre pour la masse.",
     astuce:"Laissez le riz accrocher légèrement au fond de la cocotte : cette fine croûte parfumée est la signature du jambalaya.",
     ingredients:[
@@ -2379,7 +2379,7 @@ export const RECIPES_500 = [
     temps:42, portions:2, difficulte:"Moyen",
     prix:3, cout:4.34, nutriScore:"B", cuisine:"italienne",
     micros:{ fer:8.91, magnesium:215.08, calcium:389.65, zinc:5.71, potassium:1676.8, vitC:20.67, vitB12:0.69, omega3:0.31 },
-    img:IMG.risotto, imgQuery:"Risotto d'orge perlé poulet champignons",
+    img:IMG.risotto, imgQuery:"risotto orge perle chicken",
     desc:"L'orge perlé offre des glucides complets à diffusion lente et plus de fibres que le riz, parfait pour un risotto de prise de masse propre.",
     astuce:"Remuez régulièrement : l'amidon de l'orge libéré rend le risotto crémeux sans crème.",
     ingredients:[
@@ -2407,7 +2407,7 @@ export const RECIPES_500 = [
     temps:40, portions:4, difficulte:"Facile",
     prix:1, cout:1.31, nutriScore:"B", cuisine:"ouest-africaine",
     micros:{ fer:3.15, magnesium:130.53, calcium:157.82, zinc:2.33, potassium:1071.22, vitC:28.67, omega3:0.13 },
-    img:IMG.poulet, imgQuery:"Mafé légumes pois chiches cacahuète",
+    img:IMG.poulet, imgQuery:"mafe vegetables chickpea peanut",
     desc:"La cacahuète apporte énergie et onctuosité, les pois chiches les protéines et les fibres : un ragoût vegan réconfortant et nourrissant.",
     astuce:"Délayez le beurre de cacahuète dans un peu de bouillon chaud avant de l'incorporer : il fond sans former de grumeaux.",
     ingredients:[
@@ -2435,7 +2435,7 @@ export const RECIPES_500 = [
     temps:40, portions:2, difficulte:"Facile",
     prix:2, cout:1.91, nutriScore:"B", cuisine:"tex-mex",
     micros:{ fer:6.69, magnesium:209.24, calcium:155.24, zinc:3.47, potassium:921.35, vitC:11.73, omega3:0.21 },
-    img:IMG.poivron, imgQuery:"Poivrons farcis quinoa",
+    img:IMG.poivron, imgQuery:"bell peppers farcis quinoa",
     desc:"Quinoa et haricots noirs forment une protéine complète, dans un plat coloré et très riche en fibres.",
     astuce:"Pré-cuisez les poivrons 5 min à la vapeur si vous les aimez fondants plutôt que croquants.",
     ingredients:[
@@ -2463,7 +2463,7 @@ export const RECIPES_500 = [
     temps:35, portions:4, difficulte:"Facile",
     prix:1, cout:1.09, nutriScore:"B", cuisine:"nord-africaine",
     micros:{ fer:6.98, magnesium:98.08, calcium:114.88, zinc:3.32, potassium:1063.79, vitC:11.55, omega3:0.1 },
-    img:IMG.miso, imgQuery:"Soupe lentilles curcuma cumin",
+    img:IMG.miso, imgQuery:"soup lentils turmeric cumin",
     desc:"Curcuma, cumin et gingembre pour leurs propriétés anti-inflammatoires, lentilles pour les fibres et les protéines végétales.",
     astuce:"Faites torréfier les épices à sec une minute avant d'ajouter le liquide : leurs arômes se libèrent pleinement.",
     ingredients:[
@@ -2490,7 +2490,7 @@ export const RECIPES_500 = [
     temps:30, portions:2, difficulte:"Facile",
     prix:3, cout:4.75, nutriScore:"B", cuisine:"méditerranéenne",
     micros:{ fer:3.21, magnesium:129.03, calcium:233.35, zinc:2.38, potassium:1565.17, vitC:220.1, vitD:2.54, vitB12:2.57, omega3:1.51 },
-    img:IMG.cabillaud, imgQuery:"Cabillaud rôti",
+    img:IMG.cabillaud, imgQuery:"cod roasted",
     desc:"Les noix du pesto apportent des oméga-3 végétaux et le brocoli des composés anti-inflammatoires, autour d'un poisson blanc très protéiné.",
     astuce:"Réservez quelques noix concassées pour parsemer à la fin : le contraste croquant fait toute la différence.",
     ingredients:[
@@ -2517,7 +2517,7 @@ export const RECIPES_500 = [
     temps:30, portions:2, difficulte:"Facile",
     prix:3, cout:3.54, nutriScore:"B", cuisine:"française",
     micros:{ fer:3.87, magnesium:96.66, calcium:265.44, zinc:2.44, potassium:1133.0, vitC:22.05, vitD:3.19, vitB12:8.41, omega3:0.59 },
-    img:IMG.cabillaud, imgQuery:"Lieu noir croûte parmesan four",
+    img:IMG.cabillaud, imgQuery:"lieu parmesan baked",
     desc:"Un poisson blanc maigre offrant beaucoup de protéines pour peu de calories, avec une croûte gourmande sans friture.",
     astuce:"Terminez sous le grill 1–2 min pour une croûte bien dorée et croustillante.",
     ingredients:[
@@ -2543,7 +2543,7 @@ export const RECIPES_500 = [
     temps:27, portions:2, difficulte:"Facile",
     prix:3, cout:3.12, nutriScore:"B", cuisine:"chypriote",
     micros:{ fer:2.94, magnesium:75.37, calcium:108.86, zinc:1.9, potassium:843.4, vitC:89.07, omega3:0.1 },
-    img:IMG.poulet, imgQuery:"Brochettes poulet halloumi",
+    img:IMG.poulet, imgQuery:"skewers chicken halloumi",
     desc:"Poulet et halloumi cumulent les protéines pour un repas riche et rassasiant, faible en glucides.",
     astuce:"Saisissez le halloumi à feu vif pour une croûte dorée tout en gardant le cœur fondant.",
     ingredients:[
@@ -2569,7 +2569,7 @@ export const RECIPES_500 = [
     temps:35, portions:2, difficulte:"Facile",
     prix:2, cout:1.85, nutriScore:"B", cuisine:"petit-déjeuner moderne",
     micros:{ fer:3.08, magnesium:109.34, calcium:173.96, zinc:2.56, potassium:555.64, vitC:8.9, vitD:0.23, vitB12:0.3, omega3:0.1 },
-    img:IMG.oats, imgQuery:"Baked oats banane-myrtilles protéinés",
+    img:IMG.oats, imgQuery:"baked oats",
     desc:"Une version au four du porridge, fondante et riche en protéines, qui se prépare en lot pour plusieurs matins.",
     astuce:"Réservez quelques myrtilles pour le dessus : elles éclatent à la cuisson et forment une jolie croûte juteuse.",
     ingredients:[
@@ -2596,7 +2596,7 @@ export const RECIPES_500 = [
     temps:20, portions:2, difficulte:"Moyen",
     prix:2, cout:1.8, nutriScore:"C", cuisine:"française",
     micros:{ fer:1.77, magnesium:104.29, calcium:312.95, zinc:2.77, potassium:538.44, vitC:20.3, vitD:0.13, vitB12:0.92, omega3:0.12 },
-    img:IMG.oeufs, imgQuery:"Galette sarrasin salée",
+    img:IMG.oeufs, imgQuery:"flatbread buckwheat",
     desc:"Le sarrasin apporte des glucides complets sans gluten, la dinde et l'œuf des protéines maigres : un petit-déjeuner salé complet.",
     astuce:"Laissez reposer la pâte 30 min : la galette devient plus souple et se replie sans casser.",
     ingredients:[
@@ -2623,7 +2623,7 @@ export const RECIPES_500 = [
     temps:15, portions:2, difficulte:"Facile",
     prix:3, cout:3.23, nutriScore:"C", cuisine:"hawaïenne",
     micros:{ fer:11.66, magnesium:238.83, calcium:276.97, zinc:3.27, potassium:1678.83, vitC:23.73, vitD:3.69, vitB12:4.0, omega3:2.62 },
-    img:IMG.poke, imgQuery:"Poke bowl saumon-mangue",
+    img:IMG.poke, imgQuery:"poke bowl saumon-mangue",
     desc:"Saumon riche en oméga-3, riz pour l'énergie et légumes frais : un bowl équilibré idéal en déjeuner ou en récupération.",
     astuce:"Utilisez un saumon de qualité sushi très frais et coupez-le au dernier moment avec un couteau bien aiguisé.",
     ingredients:[
@@ -2651,7 +2651,7 @@ export const RECIPES_500 = [
     temps:24, portions:2, difficulte:"Facile",
     prix:3, cout:4.13, nutriScore:"A", cuisine:"thaïlandaise",
     micros:{ fer:8.09, magnesium:141.72, calcium:218.05, zinc:5.52, potassium:1034.24, vitC:21.66, vitB12:1.41, omega3:0.04 },
-    img:IMG.crevettes, imgQuery:"Soupe tom yum crevettes nouilles",
+    img:IMG.crevettes, imgQuery:"soup shrimp noodles",
     desc:"Un grand bol parfumé, très protéiné grâce aux crevettes et pauvre en lipides : rassasiant pour peu de calories.",
     astuce:"Ajoutez le jus de citron vert hors du feu : la chaleur excessive en détruit la fraîcheur acidulée.",
     ingredients:[
@@ -2678,7 +2678,7 @@ export const RECIPES_500 = [
     temps:40, portions:4, difficulte:"Facile",
     prix:2, cout:2.6, nutriScore:"B", cuisine:"française",
     micros:{ fer:3.44, magnesium:86.98, calcium:105.58, zinc:2.58, potassium:1123.85, vitC:122.19, vitB12:0.04, omega3:0.09 },
-    img:IMG.poulet, imgQuery:"Poulet basquaise riz",
+    img:IMG.poulet, imgQuery:"chicken basquaise rice",
     desc:"Poulet maigre et poivrons mijotés, accompagnés de riz : un dîner familial réconfortant et bien équilibré.",
     astuce:"Laissez les poivrons compoter à feu doux : ils deviennent fondants et sucrés, base de la vraie basquaise.",
     ingredients:[
@@ -2705,7 +2705,7 @@ export const RECIPES_500 = [
     temps:30, portions:2, difficulte:"Moyen",
     prix:3, cout:4.77, nutriScore:"A", cuisine:"portugaise",
     micros:{ fer:5.06, magnesium:133.65, calcium:91.11, zinc:2.83, potassium:1390.72, vitC:47.08, vitD:2.54, vitB12:2.38, omega3:0.51 },
-    img:IMG.cabillaud, imgQuery:"Dos cabillaud",
+    img:IMG.cabillaud, imgQuery:"healthy food plate",
     desc:"Cabillaud très protéiné et lentilles riches en fibres ; une petite quantité de chorizo suffit à parfumer tout le plat sans l'alourdir.",
     astuce:"Faites rendre le gras du chorizo en premier : il sert d'huile parfumée pour cuire les lentilles.",
     ingredients:[
@@ -2731,7 +2731,7 @@ export const RECIPES_500 = [
     temps:55, portions:8, difficulte:"Facile",
     prix:1, cout:0.52, nutriScore:"B", cuisine:"snack healthy",
     micros:{ fer:1.2, magnesium:43.16, calcium:40.77, zinc:0.89, potassium:191.2, vitC:0.16, vitD:0.02, vitB12:0.03, omega3:0.22 },
-    img:IMG.mousse, imgQuery:"Banana bread protéiné",
+    img:IMG.mousse, imgQuery:"banana bread",
     desc:"Une part de banana bread maison sans sucre raffiné, riche en protéines : la collation réconfortante qui reste alignée avec les objectifs.",
     astuce:"Utilisez des bananes très mûres, presque noires : elles sucrent naturellement le cake sans sucre ajouté.",
     ingredients:[
@@ -2759,7 +2759,7 @@ export const RECIPES_500 = [
     temps:10, portions:2, difficulte:"Facile",
     prix:1, cout:0.96, nutriScore:"B", cuisine:"moyen-orientale",
     micros:{ fer:2.37, magnesium:69.26, calcium:111.56, zinc:1.43, potassium:705.9, vitC:65.61, omega3:0.08 },
-    img:IMG.houmous, imgQuery:"Houmous betterave rôtie crudités",
+    img:IMG.houmous, imgQuery:"hummus beetroot roasted raw",
     desc:"Pois chiches et tahini apportent protéines et fibres, la betterave une couleur spectaculaire et des antioxydants : une collation aussi saine que jolie.",
     astuce:"Mixez longuement avec un glaçon : le houmous devient incroyablement lisse et aérien.",
     ingredients:[
@@ -2785,7 +2785,7 @@ export const RECIPES_500 = [
     temps:5, portions:1, difficulte:"Facile",
     prix:1, cout:1.38, nutriScore:"C", cuisine:"bol de récupération",
     micros:{ fer:2.86, magnesium:73.41, calcium:369.34, zinc:1.78, potassium:486.03, vitC:12.33, vitD:0.36, vitB12:1.34, omega3:0.04 },
-    img:IMG.granola, imgQuery:"Skyr bowl récupération banane",
+    img:IMG.granola, imgQuery:"skyr bowl banana",
     desc:"Le skyr est très riche en protéines, banane, miel et granola fournissent les glucides rapides pour recharger le glycogène après l'effort.",
     astuce:"Réchauffez légèrement le beurre d'amande pour pouvoir le verser en filet bien régulier.",
     ingredients:[
@@ -2810,7 +2810,7 @@ export const RECIPES_500 = [
     temps:40, portions:2, difficulte:"Facile",
     prix:3, cout:2.96, nutriScore:"B", cuisine:"cuisine maison moderne",
     micros:{ fer:5.0, magnesium:141.34, calcium:225.39, zinc:2.43, potassium:1575.35, vitC:46.3, vitD:9.0, vitB12:4.11, omega3:1.46 },
-    img:IMG.yaourt, imgQuery:"Patate douce rôtie farcie thon",
+    img:IMG.yaourt, imgQuery:"sweet potato roasted farcie",
     desc:"La patate douce recharge le glycogène, thon et cottage cheese apportent des protéines maigres : une récupération complète quasiment sans lipides.",
     astuce:"Piquez les patates douces et rôtissez-les jusqu'à ce qu'elles soient fondantes : la chair devient naturellement sucrée et crémeuse.",
     ingredients:[
@@ -2836,7 +2836,7 @@ export const RECIPES_500 = [
     temps:20, portions:2, difficulte:"Facile",
     prix:3, cout:3.62, nutriScore:"C", cuisine:"thaï-laotienne",
     micros:{ fer:2.57, magnesium:61.11, calcium:72.24, zinc:2.21, potassium:535.28, vitC:7.58, vitD:0.23, vitB12:0.58, omega3:0.3 },
-    img:IMG.poulet, imgQuery:"Larb poulet feuilles salade",
+    img:IMG.poulet, imgQuery:"larb chicken salad",
     desc:"Protéines maigres et beaucoup d'herbes fraîches pour un plat très rassasiant à seulement 265 kcal, parfait en sèche.",
     astuce:"Le riz grillé moulu est la signature du larb : il apporte un parfum de noisette et une texture sablée irremplaçable.",
     ingredients:[
@@ -2864,7 +2864,7 @@ export const RECIPES_500 = [
     temps:20, portions:2, difficulte:"Facile",
     prix:2, cout:1.54, nutriScore:"B", cuisine:"française",
     micros:{ fer:6.24, magnesium:66.62, calcium:85.69, zinc:1.82, potassium:953.39, vitC:4.21, vitD:0.02, vitB12:0.01, omega3:0.03 },
-    img:IMG.oeufs, imgQuery:"Velouté petits pois menthe poché",
+    img:IMG.oeufs, imgQuery:"green peas menthe poche",
     desc:"Un velouté riche en fibres et un œuf protéiné : beaucoup de volume et de satiété pour peu de calories.",
     astuce:"Mixez les petits pois à peine cuits avec la menthe crue : la couleur reste d'un vert éclatant.",
     ingredients:[
@@ -2890,7 +2890,7 @@ export const RECIPES_500 = [
     temps:22, portions:2, difficulte:"Facile",
     prix:2, cout:2.1, nutriScore:"C", cuisine:"japonaise",
     micros:{ fer:4.66, magnesium:66.64, calcium:71.53, zinc:0.81, potassium:845.14, vitC:3.16, vitD:0.02, vitB12:2.18 },
-    img:IMG.oeufs, imgQuery:"Gyudon",
+    img:IMG.oeufs, imgQuery:"gyudon",
     desc:"Bœuf mijoté et riz : un bol japonais simple et nourrissant, équilibré pour la prise de masse propre.",
     astuce:"Laissez l'oignon confire longuement dans la sauce : il devient fondant et sucré, cœur du gyudon.",
     ingredients:[
@@ -2917,7 +2917,7 @@ export const RECIPES_500 = [
     temps:25, portions:2, difficulte:"Facile",
     prix:2, cout:2.26, nutriScore:"B", cuisine:"italienne",
     micros:{ fer:6.93, magnesium:125.91, calcium:102.85, zinc:2.28, potassium:1232.55, vitC:30.26, vitD:8.35, vitB12:3.82, omega3:1.69 },
-    img:IMG.thon, imgQuery:"Pâtes complètes puttanesca thon",
+    img:IMG.thon, imgQuery:"pasta puttanesca tuna",
     desc:"Le thon transforme une puttanesca en plat riche en protéines, les pâtes complètes apportant l'énergie pour la masse.",
     astuce:"Faites fondre les anchois dans l'huile chaude : ils disparaissent et laissent un fond umami profond.",
     ingredients:[
@@ -2945,7 +2945,7 @@ export const RECIPES_500 = [
     temps:20, portions:2, difficulte:"Facile",
     prix:2, cout:1.98, nutriScore:"A", cuisine:"mexicaine",
     micros:{ fer:2.96, magnesium:66.05, calcium:148.64, zinc:0.81, potassium:559.67, vitC:16.09, vitB12:0.01, omega3:0.08 },
-    img:IMG.wrapV, imgQuery:"Tacos vegan haricots noirs épicés",
+    img:IMG.wrapV, imgQuery:"tacos vegan black beans",
     desc:"Haricots noirs et maïs apportent fibres, protéines végétales et glucides complets : des tacos rassasiants et 100% végétaux.",
     astuce:"Faites chauffer les tortillas directement sur la flamme quelques secondes : elles gonflent et prennent un goût grillé.",
     ingredients:[
@@ -2971,7 +2971,7 @@ export const RECIPES_500 = [
     temps:30, portions:2, difficulte:"Facile",
     prix:2, cout:2.69, nutriScore:"B", cuisine:"coréenne",
     micros:{ fer:7.43, magnesium:236.32, calcium:340.15, zinc:3.6, potassium:965.61, vitC:41.29, vitD:0.17, vitB12:0.08, omega3:1.36 },
-    img:IMG.tofuC, imgQuery:"Bowl tofu bulgogi coréen",
+    img:IMG.tofuC, imgQuery:"bowl tofu bulgogi coreen",
     desc:"Le tofu mariné apporte des protéines complètes et beaucoup de goût, le riz et les légumes complètent un bowl vegan rassasiant.",
     astuce:"Pressez bien le tofu avant de le mariner : il absorbe davantage de sauce et caramélise mieux.",
     ingredients:[
@@ -2997,7 +2997,7 @@ export const RECIPES_500 = [
     temps:30, portions:2, difficulte:"Facile",
     prix:3, cout:5.21, nutriScore:"B", cuisine:"brésilienne",
     micros:{ fer:8.23, magnesium:171.06, calcium:188.77, zinc:2.79, potassium:1482.42, vitC:97.98, vitD:3.18, vitB12:3.84, omega3:0.75 },
-    img:IMG.cabillaud, imgQuery:"Moqueca poisson blanc lait coco",
+    img:IMG.cabillaud, imgQuery:"moqueca fish milk coconut",
     desc:"Curcuma et lait de coco autour d'un poisson maigre : un ragoût parfumé, anti-inflammatoire et riche en protéines.",
     astuce:"Ne remuez pas une fois le poisson ajouté : il reste en morceaux nacrés au lieu de s'émietter.",
     ingredients:[
@@ -3024,7 +3024,7 @@ export const RECIPES_500 = [
     temps:12, portions:2, difficulte:"Facile",
     prix:2, cout:2.45, nutriScore:"C", cuisine:"nordique",
     micros:{ fer:2.96, magnesium:80.52, calcium:178.99, zinc:1.13, potassium:1189.51, vitC:45.96, vitD:4.68, vitB12:8.92, omega3:5.28 },
-    img:IMG.truite, imgQuery:"Salade maquereau fumé",
+    img:IMG.truite, imgQuery:"salad mackerel",
     desc:"Le maquereau fumé est très riche en oméga-3, la betterave en antioxydants : une assiette anti-inflammatoire prête en 12 minutes.",
     astuce:"La pomme acidulée et le raifort équilibrent parfaitement la richesse du maquereau fumé.",
     ingredients:[
@@ -3050,7 +3050,7 @@ export const RECIPES_500 = [
     temps:18, portions:2, difficulte:"Facile",
     prix:3, cout:4.67, nutriScore:"B", cuisine:"italienne",
     micros:{ fer:4.34, magnesium:81.11, calcium:320.97, zinc:5.25, potassium:1090.65, vitC:15.6, vitB12:3.73, omega3:0.24 },
-    img:IMG.boeuf, imgQuery:"Escalope veau tagliata",
+    img:IMG.boeuf, imgQuery:"cutlet veal tagliata",
     desc:"Le veau est une viande maigre très protéinée ; servi en tagliata sur roquette, c'est un plat élégant et pauvre en glucides idéal en sèche.",
     astuce:"Tranchez le veau encore rosé et contre le grain : il reste tendre et juteux.",
     ingredients:[
@@ -3076,7 +3076,7 @@ export const RECIPES_500 = [
     temps:12, portions:2, difficulte:"Facile",
     prix:3, cout:2.77, nutriScore:"C", cuisine:"cuisine maison moderne",
     micros:{ fer:2.22, magnesium:56.25, calcium:307.95, zinc:2.93, potassium:628.24, vitC:26.25, vitD:0.49, vitB12:0.76, omega3:0.22 },
-    img:IMG.omelette, imgQuery:"Wrap d'omelette blancs ufs",
+    img:IMG.omelette, imgQuery:"wrap omelette eggs",
     desc:"Blancs d'œufs et jambon maigre offrent un maximum de protéines pour très peu de calories et de glucides, prêts en 12 minutes.",
     astuce:"Cuisez l'omelette à feu doux et roulez-la tant qu'elle est souple : elle ne craque pas.",
     ingredients:[
@@ -3102,7 +3102,7 @@ export const RECIPES_500 = [
     temps:6, portions:1, difficulte:"Facile",
     prix:2, cout:2.2, nutriScore:"B", cuisine:"petit-déjeuner moderne",
     micros:{ fer:3.14, magnesium:74.43, calcium:310.58, zinc:1.44, potassium:705.8, vitC:40.34, vitD:0.25, vitB12:0.35, omega3:0.22 },
-    img:IMG.smoothieB, imgQuery:"Smoothie bowl vert épinards-banane-mangue protéiné",
+    img:IMG.smoothieB, imgQuery:"smoothie bowl epinards-banane-mangue",
     desc:"Une dose élevée de protéines, des fruits pour l'énergie et une portion cachée de légumes verts : un petit-déjeuner complet et rassasiant.",
     astuce:"Les épinards frais disparaissent totalement dans la mangue et la banane : on ne sent que le fruité, avec une belle couleur verte.",
     ingredients:[
@@ -3129,7 +3129,7 @@ export const RECIPES_500 = [
     temps:16, portions:2, difficulte:"Facile",
     prix:2, cout:1.97, nutriScore:"B", cuisine:"petit-déjeuner réconfort",
     micros:{ fer:2.18, magnesium:52.77, calcium:167.71, zinc:1.27, potassium:551.75, vitC:70.7, vitD:0.23, vitB12:0.3, omega3:0.07 },
-    img:IMG.oats, imgQuery:"Pain doré protéiné",
+    img:IMG.oats, imgQuery:"bread",
     desc:"Le classique réconfortant transformé en petit-déjeuner protéiné grâce à la poudre dans l'appareil à tremper.",
     astuce:"Laissez bien imbiber le pain dans l'appareil : il devient moelleux à cœur et doré dehors.",
     ingredients:[
@@ -3156,7 +3156,7 @@ export const RECIPES_500 = [
     temps:25, portions:2, difficulte:"Facile",
     prix:2, cout:2.51, nutriScore:"B", cuisine:"vietnamienne",
     micros:{ fer:2.27, magnesium:70.65, calcium:79.88, zinc:2.07, potassium:761.8, vitC:9.04, vitD:0.17, vitB12:0.03, omega3:0.36 },
-    img:IMG.poulet, imgQuery:"Banh poulet citronnelle légumes marinés",
+    img:IMG.poulet, imgQuery:"banh chicken citronnelle vegetables",
     desc:"Poulet maigre parfumé et légumes croquants : un sandwich vietnamien équilibré et très protéiné.",
     astuce:"Faites une marinade express de carotte-radis au vinaigre et sucre : 15 min suffisent pour le croquant acidulé typique.",
     ingredients:[
@@ -3183,7 +3183,7 @@ export const RECIPES_500 = [
     temps:22, portions:2, difficulte:"Facile",
     prix:2, cout:2.54, nutriScore:"B", cuisine:"américaine revisitée",
     micros:{ fer:2.92, magnesium:75.75, calcium:355.14, zinc:3.07, potassium:856.12, vitC:22.12, vitD:0.04, vitB12:1.05, omega3:0.3 },
-    img:IMG.poulet, imgQuery:"Salade César poulet grillé",
+    img:IMG.poulet, imgQuery:"salad cesar chicken grilled",
     desc:"La sauce au yaourt remplace l'huile et l'œuf de la César classique : on garde le goût et on monte les protéines à plus de 50 g.",
     astuce:"Une pointe d'anchois et d'ail dans le yaourt recrée toute la profondeur d'une vraie sauce César, sans la lourdeur.",
     ingredients:[
@@ -3210,7 +3210,7 @@ export const RECIPES_500 = [
     temps:45, portions:4, difficulte:"Moyen",
     prix:3, cout:3.38, nutriScore:"B", cuisine:"britannique",
     micros:{ fer:7.9, magnesium:99.1, calcium:250.97, zinc:8.08, potassium:1529.9, vitC:41.2, vitD:0.43, vitB12:3.52, omega3:0.09 },
-    img:IMG.oeufs, imgQuery:"Hachis parmentier patate douce maigre",
+    img:IMG.oeufs, imgQuery:"hachis parmentier sweet potato",
     desc:"La patate douce remplace la pomme de terre pour des glucides à index plus modéré, le bœuf maigre apportant les protéines de ce plat réconfortant.",
     astuce:"Passez une fourchette sur la purée avant de gratiner : les sillons dorent et croustillent au four.",
     ingredients:[
@@ -3238,7 +3238,7 @@ export const RECIPES_500 = [
     temps:40, portions:4, difficulte:"Moyen",
     prix:2, cout:2.47, nutriScore:"B", cuisine:"indienne",
     micros:{ fer:2.73, magnesium:89.6, calcium:170.88, zinc:2.55, potassium:866.5, vitC:17.14, vitB12:0.05, omega3:0.07 },
-    img:IMG.poulet, imgQuery:"Poulet tikka masala riz",
+    img:IMG.poulet, imgQuery:"chicken tikka masala rice",
     desc:"Le yaourt remplace une partie de la crème pour un tikka masala riche en protéines mais bien plus léger, idéal accompagné de riz.",
     astuce:"Faites mariner le poulet dans le yaourt épicé au moins 1 h : il devient tendre et s'imprègne de saveurs.",
     ingredients:[
@@ -3267,7 +3267,7 @@ export const RECIPES_500 = [
     temps:24, portions:5, difficulte:"Facile",
     prix:1, cout:0.53, nutriScore:"B", cuisine:"snack healthy",
     micros:{ fer:1.93, magnesium:74.96, calcium:51.88, zinc:1.47, potassium:257.29, vitC:0.01, omega3:0.05 },
-    img:IMG.cookies, imgQuery:"Cookies protéinés avoine-chocolat noir",
+    img:IMG.cookies, imgQuery:"cookies avoine-chocolat",
     desc:"Des cookies maison sans sucre raffiné, riches en protéines et en glucides lents : une collation plaisir alignée avec l'entraînement. Portion = 2 cookies.",
     astuce:"Sortez-les du four encore moelleux : ils se raffermissent en refroidissant et restent fondants.",
     ingredients:[
@@ -3295,7 +3295,7 @@ export const RECIPES_500 = [
     temps:19, portions:2, difficulte:"Facile",
     prix:1, cout:0.83, nutriScore:"B", cuisine:"française",
     micros:{ fer:0.36, magnesium:4.4, calcium:52.32, zinc:0.1, potassium:42.98, vitC:2.0, vitD:0.04, vitB12:0.03, omega3:0.05 },
-    img:IMG.oeufs, imgQuery:"ufs mimosa allégés yaourt",
+    img:IMG.oeufs, imgQuery:"eggs mimosa yogurt",
     desc:"Le yaourt remplace la mayonnaise pour des œufs mimosa très protéinés et légers, parfaits en collation rassasiante.",
     astuce:"Plongez les œufs durs dans l'eau glacée dès la cuisson : la coquille se retire sans abîmer le blanc.",
     ingredients:[
@@ -3320,7 +3320,7 @@ export const RECIPES_500 = [
     temps:5, portions:1, difficulte:"Facile",
     prix:2, cout:1.7, nutriScore:"B", cuisine:"boisson de récupération",
     micros:{ fer:4.9, magnesium:137.84, calcium:361.72, zinc:2.98, potassium:1160.7, vitC:7.4, vitD:0.81, vitB12:0.9, omega3:0.13 },
-    img:IMG.shakeP, imgQuery:"Smoothie récupération chocolat-cerise avoine",
+    img:IMG.shakeP, imgQuery:"smoothie chocolat-cerise oatmeal",
     desc:"Glucides de la cerise, de la banane et de l'avoine pour recharger le glycogène, protéines pour la reconstruction musculaire, le tout assimilable rapidement.",
     astuce:"Les cerises congelées donnent une texture épaisse et glacée et une jolie couleur sans glaçons.",
     ingredients:[
@@ -3345,7 +3345,7 @@ export const RECIPES_500 = [
     temps:24, portions:2, difficulte:"Moyen",
     prix:2, cout:2.44, nutriScore:"B", cuisine:"japonaise",
     micros:{ fer:1.71, magnesium:61.14, calcium:62.93, zinc:2.08, potassium:648.48, vitC:3.72, vitD:0.02, vitB12:0.07, omega3:0.03 },
-    img:IMG.oeufs, imgQuery:"Omurice protéiné",
+    img:IMG.oeufs, imgQuery:"omurice",
     desc:"Riz pour recharger le glycogène, poulet et œufs pour les protéines : un plat de récupération complet et réconfortant.",
     astuce:"Cuisez l'omelette encore baveuse et déposez-la sur le riz chaud : elle finit de prendre et reste fondante.",
     ingredients:[
@@ -3372,7 +3372,7 @@ export const RECIPES_500 = [
     temps:15, portions:2, difficulte:"Facile",
     prix:2, cout:2.5, nutriScore:"B", cuisine:"américaine",
     micros:{ fer:1.04, magnesium:23.25, calcium:122.01, zinc:0.48, potassium:433.27, vitC:13.65, vitD:0.12, vitB12:0.07, omega3:0.07 },
-    img:IMG.oeufs, imgQuery:"Salade Cobb poulet",
+    img:IMG.oeufs, imgQuery:"salad cobb chicken",
     desc:"Une salade composée très protéinée qui rassasie durablement pour peu de calories et de glucides, idéale en sèche.",
     astuce:"Disposez les ingrédients en rangées nettes : on assaisonne et on mélange seulement à table, comme une vraie Cobb.",
     ingredients:[
@@ -3400,7 +3400,7 @@ export const RECIPES_500 = [
     temps:32, portions:2, difficulte:"Facile",
     prix:2, cout:1.79, nutriScore:"C", cuisine:"japonaise",
     micros:{ fer:4.55, magnesium:169.4, calcium:186.55, zinc:2.35, potassium:855.98, vitC:5.29, omega3:0.63 },
-    img:IMG.miso, imgQuery:"Aubergines rôties miso tofu grillé",
+    img:IMG.miso, imgQuery:"miso tofu grilled",
     desc:"L'aubergine très volumineuse et peu calorique rassasie, le miso lui donne une profondeur umami, le tofu complète en protéines.",
     astuce:"Quadrillez la chair des aubergines avant de les glacer : le miso pénètre et caramélise jusqu'au cœur.",
     ingredients:[
@@ -3427,7 +3427,7 @@ export const RECIPES_500 = [
     temps:45, portions:4, difficulte:"Moyen",
     prix:3, cout:3.78, nutriScore:"B", cuisine:"espagnole",
     micros:{ fer:10.2, magnesium:195.1, calcium:205.55, zinc:8.52, potassium:1288.98, vitC:48.96, vitB12:23.86, omega3:0.59 },
-    img:IMG.gambas, imgQuery:"Paella poulet fruits mer",
+    img:IMG.gambas, imgQuery:"paella chicken fruits",
     desc:"Poulet, crevettes et moules cumulent les protéines, le riz apporte l'énergie : un plat de fête équilibré pour la prise de masse propre.",
     astuce:"Ne remuez jamais une paella après avoir ajouté le bouillon : c'est ce qui forme le socarrat, la croûte dorée du fond.",
     ingredients:[
@@ -3456,7 +3456,7 @@ export const RECIPES_500 = [
     temps:24, portions:2, difficulte:"Facile",
     prix:2, cout:1.94, nutriScore:"D", cuisine:"chinoise",
     micros:{ fer:4.7, magnesium:66.86, calcium:80.58, zinc:0.94, potassium:999.55, vitC:31.07, vitD:0.07, vitB12:2.18, omega3:0.16 },
-    img:IMG.oeufs, imgQuery:"sauté poivrons poivre noir",
+    img:IMG.oeufs, imgQuery:"bell peppers poivre",
     desc:"Un sauté express riche en protéines et en glucides, parfait pour reconstituer l'énergie et soutenir la prise de muscle.",
     astuce:"Saisissez le bœuf en deux fois dans un wok très chaud : surchargé, il bout au lieu de saisir.",
     ingredients:[
@@ -3483,7 +3483,7 @@ export const RECIPES_500 = [
     temps:40, portions:4, difficulte:"Facile",
     prix:1, cout:1.49, nutriScore:"B", cuisine:"égyptienne",
     micros:{ fer:2.83, magnesium:95.99, calcium:116.13, zinc:2.12, potassium:916.3, vitC:7.39, vitB12:0.03, omega3:0.13 },
-    img:IMG.dahl, imgQuery:"Koshari égyptien",
+    img:IMG.dahl, imgQuery:"koshari egyptien",
     desc:"Le plat de rue égyptien par excellence : lentilles, pois chiches et céréales empilent les glucides complexes et les fibres pour une énergie durable.",
     astuce:"La sauce doit être bien relevée en cumin et vinaigre : c'est elle qui réveille tout l'empilement de féculents.",
     ingredients:[
@@ -3510,7 +3510,7 @@ export const RECIPES_500 = [
     temps:32, portions:4, difficulte:"Facile",
     prix:2, cout:1.53, nutriScore:"B", cuisine:"indienne",
     micros:{ fer:8.06, magnesium:154.18, calcium:262.33, zinc:3.11, potassium:1058.35, vitC:48.86, vitB12:0.04, omega3:0.37 },
-    img:IMG.curry, imgQuery:"Chana saag",
+    img:IMG.curry, imgQuery:"chana saag",
     desc:"Pois chiches et épinards apportent protéines végétales, fibres et fer, dans un curry parfumé et complet une fois servi avec du riz.",
     astuce:"Faites revenir les épices dans l'huile chaude avant les légumes : elles libèrent tout leur parfum (technique du tarka).",
     ingredients:[
@@ -3537,7 +3537,7 @@ export const RECIPES_500 = [
     temps:42, portions:4, difficulte:"Facile",
     prix:1, cout:1.17, nutriScore:"B", cuisine:"marocaine",
     micros:{ fer:6.5, magnesium:112.34, calcium:169.28, zinc:3.25, potassium:1267.86, vitC:34.38, omega3:0.16 },
-    img:IMG.dahl, imgQuery:"Harira marocaine",
+    img:IMG.dahl, imgQuery:"harira marocaine",
     desc:"Curcuma, gingembre et cannelle pour leurs vertus anti-inflammatoires, lentilles et pois chiches pour les fibres et les protéines végétales.",
     astuce:"Liez la soupe avec un peu de farine délayée ou de tomate mixée pour la texture veloutée typique de la harira.",
     ingredients:[
@@ -3565,7 +3565,7 @@ export const RECIPES_500 = [
     temps:34, portions:2, difficulte:"Facile",
     prix:2, cout:1.93, nutriScore:"B", cuisine:"californienne",
     micros:{ fer:6.78, magnesium:198.13, calcium:335.64, zinc:2.73, potassium:1112.66, vitC:144.2, omega3:1.06 },
-    img:IMG.tofuC, imgQuery:"Bowl tofu curcuma",
+    img:IMG.tofuC, imgQuery:"bowl tofu turmeric",
     desc:"Curcuma, kale et graines réunissent antioxydants et bons lipides anti-inflammatoires, le tofu apportant des protéines complètes.",
     astuce:"Massez le kale 1 minute avec un peu d'huile et de sel : il perd son amertume et devient tendre et brillant.",
     ingredients:[
@@ -3592,7 +3592,7 @@ export const RECIPES_500 = [
     temps:22, portions:2, difficulte:"Moyen",
     prix:3, cout:3.7, nutriScore:"A", cuisine:"française",
     micros:{ fer:0.06, magnesium:2.57, calcium:10.22, zinc:0.04, potassium:42.0, vitC:1.29, omega3:0.03 },
-    img:IMG.dinde, imgQuery:"Magret canard maigre",
+    img:IMG.dinde, imgQuery:"magret duck",
     desc:"Sans la peau, le magret devient une viande rouge maigre très protéinée, parfaite pour un dîner raffiné et faible en glucides.",
     astuce:"Laissez reposer le magret 5 min sous l'alu avant de le trancher finement contre le grain : il reste tendre et juteux.",
     ingredients:[
@@ -3618,7 +3618,7 @@ export const RECIPES_500 = [
     temps:18, portions:2, difficulte:"Facile",
     prix:3, cout:3.58, nutriScore:"A", cuisine:"française",
     micros:{ fer:6.41, magnesium:65.03, calcium:72.88, zinc:7.26, potassium:974.34, vitC:8.81, vitD:0.39, vitB12:3.19, omega3:0.18 },
-    img:IMG.boeuf, imgQuery:"Steak haché maigre cheval",
+    img:IMG.boeuf, imgQuery:"steak hache cheval",
     desc:"Bœuf maigre et œuf empilent les protéines pour un repas bistrot simple, faible en glucides et idéal en sèche.",
     astuce:"Cuisez l'œuf au plat avec un blanc bien pris et un jaune coulant : il sert de sauce naturelle au steak.",
     ingredients:[
@@ -3644,7 +3644,7 @@ export const RECIPES_500 = [
     temps:20, portions:2, difficulte:"Facile",
     prix:2, cout:1.99, nutriScore:"B", cuisine:"américaine revisitée",
     micros:{ fer:2.72, magnesium:83.33, calcium:157.44, zinc:2.13, potassium:584.69, vitC:9.07, vitD:0.29, vitB12:0.37, omega3:0.11 },
-    img:IMG.crepes, imgQuery:"Gaufres protéinées l'avoine myrtilles",
+    img:IMG.crepes, imgQuery:"waffles oatmeal blueberries",
     desc:"Des gaufres maison riches en protéines et en glucides lents pour un petit-déjeuner gourmand qui tient toute la matinée.",
     astuce:"Ne soulevez pas le gaufrier trop tôt : attendez que la vapeur cesse pour des gaufres croustillantes qui se détachent seules.",
     ingredients:[
@@ -3670,7 +3670,7 @@ export const RECIPES_500 = [
     temps:30, portions:2, difficulte:"Facile",
     prix:2, cout:2.05, nutriScore:"B", cuisine:"iranienne",
     micros:{ fer:10.31, magnesium:133.6, calcium:261.87, zinc:2.27, potassium:1079.74, vitC:40.27, vitD:0.04, vitB12:0.03, omega3:1.08 },
-    img:IMG.omelette, imgQuery:"Kuku sabzi",
+    img:IMG.omelette, imgQuery:"kuku sabzi",
     desc:"Une frittata où les herbes dominent les œufs : riche en protéines, en antioxydants et incroyablement parfumée.",
     astuce:"Plus il y a d'herbes, meilleur est le kuku : visez un appareil presque vert, à peine lié par les œufs.",
     ingredients:[
@@ -3697,7 +3697,7 @@ export const RECIPES_500 = [
     temps:25, portions:2, difficulte:"Facile",
     prix:3, cout:3.65, nutriScore:"A", cuisine:"libanaise",
     micros:{ fer:13.68, magnesium:186.39, calcium:259.31, zinc:4.05, potassium:2118.4, vitC:57.84, omega3:0.62 },
-    img:IMG.taboule, imgQuery:"Taboulé libanais poulet grillé",
+    img:IMG.taboule, imgQuery:"tabbouleh libanais chicken grilled",
     desc:"Le vrai taboulé est dominé par les herbes, pas le boulgour : peu de glucides, beaucoup de fraîcheur et un poulet maigre très protéiné.",
     astuce:"Séchez bien les herbes après lavage : un taboulé détrempé perd toute sa fraîcheur.",
     ingredients:[
@@ -3725,7 +3725,7 @@ export const RECIPES_500 = [
     temps:20, portions:2, difficulte:"Facile",
     prix:2, cout:2.23, nutriScore:"A", cuisine:"mexicaine",
     micros:{ fer:0.62, magnesium:29.37, calcium:205.47, zinc:0.97, potassium:257.3, vitC:40.98, vitD:0.07, vitB12:0.34, omega3:0.08 },
-    img:IMG.poulet, imgQuery:"Quesadilla protéinée poulet haricots",
+    img:IMG.poulet, imgQuery:"quesadilla chicken beans",
     desc:"Poulet, haricots et fromage allégé offrent un déjeuner très protéiné et rassasiant, dans un format réconfortant.",
     astuce:"Cuisez la quesadilla à sec dans une poêle bien chaude : le fromage colle les bords et la tortilla croustille sans gras.",
     ingredients:[
@@ -3752,7 +3752,7 @@ export const RECIPES_500 = [
     temps:45, portions:4, difficulte:"Moyen",
     prix:2, cout:1.84, nutriScore:"C", cuisine:"hongroise",
     micros:{ fer:5.65, magnesium:71.96, calcium:68.2, zinc:0.66, potassium:1346.05, vitC:33.64, vitD:0.01, vitB12:2.11, omega3:0.07 },
-    img:IMG.oeufs, imgQuery:"Goulash maigre paprika poivrons",
+    img:IMG.oeufs, imgQuery:"goulash paprika bell peppers",
     desc:"Bœuf maigre mijoté longuement et beaucoup de poivrons : un plat réconfortant riche en protéines, faible en glucides.",
     astuce:"Ajoutez le paprika hors du feu : sur feu vif il brûle et devient amer en quelques secondes.",
     ingredients:[
@@ -3779,7 +3779,7 @@ export const RECIPES_500 = [
     temps:40, portions:2, difficulte:"Facile",
     prix:2, cout:2.24, nutriScore:"B", cuisine:"méditerranéenne",
     micros:{ fer:2.17, magnesium:92.64, calcium:143.33, zinc:3.07, potassium:1278.45, vitC:54.96, vitD:0.23, vitB12:0.74, omega3:0.49 },
-    img:IMG.poivron, imgQuery:"Courgettes farcies poulet",
+    img:IMG.poivron, imgQuery:"zucchini chicken",
     desc:"La courgette, peu calorique et volumineuse, sert d'écrin à un poulet maigre très protéiné : un dîner léger et rassasiant.",
     astuce:"Faites dégorger les courgettes évidées 10 min au sel : elles rendent leur eau et restent fermes après cuisson.",
     ingredients:[
@@ -3805,7 +3805,7 @@ export const RECIPES_500 = [
     temps:32, portions:6, difficulte:"Facile",
     prix:1, cout:0.67, nutriScore:"B", cuisine:"snack healthy",
     micros:{ fer:1.17, magnesium:31.01, calcium:32.84, zinc:0.77, potassium:154.17, vitC:1.66, vitD:0.01, omega3:0.05 },
-    img:IMG.moelleux, imgQuery:"Muffins protéinés banane-myrtille",
+    img:IMG.moelleux, imgQuery:"muffins banane-myrtille",
     desc:"Des muffins moelleux sans sucre raffiné, riches en protéines, parfaits en collation à emporter autour de l'entraînement.",
     astuce:"Enrobez les myrtilles d'un peu de farine avant de les ajouter : elles ne tombent pas au fond des muffins.",
     ingredients:[
@@ -3832,7 +3832,7 @@ export const RECIPES_500 = [
     temps:10, portions:2, difficulte:"Facile",
     prix:2, cout:1.58, nutriScore:"B", cuisine:"grecque",
     micros:{ fer:0.97, magnesium:22.89, calcium:327.05, zinc:0.4, potassium:378.49, vitC:68.59, omega3:0.13 },
-    img:IMG.energy, imgQuery:"Tzatziki épais protéiné crudités",
+    img:IMG.energy, imgQuery:"tzatziki epais raw vegetables",
     desc:"Le yaourt grec épais est très protéiné et rassasiant ; en dip avec des crudités, c'est une collation saine et fraîche.",
     astuce:"Essorez vraiment bien le concombre : c'est ce qui empêche le tzatziki de devenir liquide.",
     ingredients:[
@@ -3858,7 +3858,7 @@ export const RECIPES_500 = [
     temps:38, portions:2, difficulte:"Facile",
     prix:2, cout:2.2, nutriScore:"C", cuisine:"chinoise",
     micros:{ fer:1.55, magnesium:53.04, calcium:21.45, zinc:1.45, potassium:445.6, vitC:0.04, omega3:0.03 },
-    img:IMG.porridge, imgQuery:"Congee poulet",
+    img:IMG.porridge, imgQuery:"chicken",
     desc:"Un porridge de riz doux et facile à digérer, qui recharge le glycogène et apporte des protéines maigres : parfait en récupération.",
     astuce:"Remuez de temps en temps en fin de cuisson : le riz éclate et libère son amidon pour une texture soyeuse.",
     ingredients:[
@@ -3885,7 +3885,7 @@ export const RECIPES_500 = [
     temps:6, portions:1, difficulte:"Facile",
     prix:2, cout:2.38, nutriScore:"B", cuisine:"bol de récupération",
     micros:null,
-    img:IMG.granola, imgQuery:"Açaí bowl protéiné",
+    img:IMG.granola, imgQuery:"acai bowl",
     desc:"Açaï et fruits riches en antioxydants, glucides pour recharger le glycogène et protéines pour la récupération musculaire.",
     astuce:"Mixez avec très peu de liquide : le bowl doit être assez épais pour se manger à la cuillère, pas à la paille.",
     ingredients:[
@@ -3912,7 +3912,7 @@ export const RECIPES_500 = [
     temps:25, portions:2, difficulte:"Facile",
     prix:2, cout:2.54, nutriScore:"B", cuisine:"thaïlandaise",
     micros:{ fer:2.19, magnesium:92.16, calcium:124.95, zinc:2.4, potassium:967.19, vitC:58.76, omega3:0.03 },
-    img:IMG.poulet, imgQuery:"Salade som tam poulet",
+    img:IMG.poulet, imgQuery:"salad chicken",
     desc:"Beaucoup de légumes croquants peu caloriques et un poulet maigre très protéiné : un plat thaï rassasiant et léger.",
     astuce:"Pétrissez la salade quelques secondes avec la sauce : les légumes ramollissent à peine et absorbent l'assaisonnement, comme au pilon.",
     ingredients:[
@@ -3939,7 +3939,7 @@ export const RECIPES_500 = [
     temps:27, portions:2, difficulte:"Facile",
     prix:3, cout:3.32, nutriScore:"B", cuisine:"chinoise",
     micros:{ fer:3.06, magnesium:117.46, calcium:105.6, zinc:2.85, potassium:748.17, vitC:4.84, vitD:0.02, vitB12:0.01, omega3:0.44 },
-    img:IMG.miso, imgQuery:"Soupe aigre-piquante poulet tofu",
+    img:IMG.miso, imgQuery:"soup aigre-piquante chicken tofu",
     desc:"Un grand bol chaud très protéiné grâce au poulet, au tofu et à l'œuf, pour très peu de calories.",
     astuce:"Versez l'œuf battu en mince filet dans le bouillon frémissant en remuant : il forme de jolis rubans soyeux.",
     ingredients:[
@@ -3967,7 +3967,7 @@ export const RECIPES_500 = [
     temps:40, portions:2, difficulte:"Moyen",
     prix:3, cout:2.83, nutriScore:"B", cuisine:"japonaise",
     micros:{ fer:2.68, magnesium:92.34, calcium:107.96, zinc:2.89, potassium:752.47, vitC:3.01, vitD:0.01, vitB12:0.06, omega3:0.06 },
-    img:IMG.curry, imgQuery:"Katsu curry poulet four",
+    img:IMG.curry, imgQuery:"katsu curry chicken baked",
     desc:"Poulet pané cuit au four (sans friture) et riz pour l'énergie : un katsu curry riche en protéines et glucides, idéal pour la masse.",
     astuce:"Faites dorer le panko à sec à la poêle avant de paner : le poulet ressort croustillant même cuit au four.",
     ingredients:[
@@ -3995,7 +3995,7 @@ export const RECIPES_500 = [
     temps:24, portions:2, difficulte:"Facile",
     prix:3, cout:4.71, nutriScore:"C", cuisine:"indonésienne",
     micros:{ fer:1.33, magnesium:64.68, calcium:71.92, zinc:2.2, potassium:673.69, vitC:44.09, vitD:0.02, vitB12:0.08, omega3:0.04 },
-    img:IMG.oeufs, imgQuery:"Nasi goreng poulet",
+    img:IMG.oeufs, imgQuery:"nasi goreng chicken",
     desc:"Riz pour l'énergie, poulet et œuf pour les protéines, sauces indonésiennes pour le goût : un riz sauté complet pour la prise de masse.",
     astuce:"Le kecap manis (soja sucré) caramélise le riz et lui donne sa couleur brune et son goût umami-sucré typiques.",
     ingredients:[
@@ -4022,7 +4022,7 @@ export const RECIPES_500 = [
     temps:27, portions:2, difficulte:"Moyen",
     prix:2, cout:2.64, nutriScore:"C", cuisine:"sichuanaise",
     micros:{ fer:6.07, magnesium:234.8, calcium:244.81, zinc:3.51, potassium:628.41, vitC:5.43, vitB12:0.05, omega3:1.14 },
-    img:IMG.tofuC, imgQuery:"Mapo tofu végétal riz",
+    img:IMG.tofuC, imgQuery:"mapo tofu vegetal rice",
     desc:"Le tofu en grande quantité fait un plat vegan très protéiné, les champignons remplaçant la viande hachée du mapo classique.",
     astuce:"Ne remuez pas trop le tofu une fois ajouté : il reste en cubes nets au lieu de s'écraser dans la sauce.",
     ingredients:[
@@ -4050,7 +4050,7 @@ export const RECIPES_500 = [
     temps:34, portions:4, difficulte:"Facile",
     prix:1, cout:1.1, nutriScore:"B", cuisine:"indienne",
     micros:{ fer:5.7, magnesium:109.38, calcium:179.72, zinc:2.4, potassium:957.0, vitC:15.7, vitB12:0.03, omega3:0.25 },
-    img:IMG.curry, imgQuery:"Rajma",
+    img:IMG.curry, imgQuery:"rajma",
     desc:"Les haricots rouges sont riches en fibres et en protéines végétales ; servis avec du riz, ils forment un plat complet et rassasiant.",
     astuce:"Écrasez une partie des haricots dans la sauce : elle épaissit naturellement et devient crémeuse.",
     ingredients:[
@@ -4076,7 +4076,7 @@ export const RECIPES_500 = [
     temps:40, portions:4, difficulte:"Moyen",
     prix:3, cout:4.95, nutriScore:"C", cuisine:"provençale",
     micros:{ fer:6.22, magnesium:147.34, calcium:231.63, zinc:5.48, potassium:1480.45, vitC:22.11, vitD:2.86, vitB12:18.9, omega3:1.72 },
-    img:IMG.cabillaud, imgQuery:"Bouillabaisse",
+    img:IMG.cabillaud, imgQuery:"bouillabaisse",
     desc:"Poissons et moules apportent protéines maigres et oméga-3, le fenouil, la tomate et le safran complètent un bouillon anti-inflammatoire et léger.",
     astuce:"Ajoutez les poissons par ordre de fermeté, les plus délicats en dernier, pour qu'aucun ne se défasse.",
     ingredients:[
@@ -4102,7 +4102,7 @@ export const RECIPES_500 = [
     temps:20, portions:2, difficulte:"Facile",
     prix:2, cout:1.97, nutriScore:"A", cuisine:"méditerranéenne",
     micros:{ fer:5.8, magnesium:129.72, calcium:587.99, zinc:3.69, potassium:1198.02, vitC:52.37, vitD:8.32, vitB12:14.96, omega3:2.2 },
-    img:IMG.truite, imgQuery:"Sardines grillées",
+    img:IMG.truite, imgQuery:"sardines grilled",
     desc:"Les sardines sont une mine d'oméga-3, le fenouil et l'orange apportent des antioxydants, les pois chiches des fibres : une assiette anti-inflammatoire complète.",
     astuce:"Le fenouil cru tranché très finement à la mandoline reste croquant et frais sous les sardines chaudes.",
     ingredients:[
@@ -4129,7 +4129,7 @@ export const RECIPES_500 = [
     temps:24, portions:2, difficulte:"Facile",
     prix:2, cout:2.52, nutriScore:"B", cuisine:"chinoise",
     micros:{ fer:1.56, magnesium:86.14, calcium:64.19, zinc:2.42, potassium:894.8, vitC:66.81, omega3:0.05 },
-    img:IMG.poulet, imgQuery:"Poulet kung pao",
+    img:IMG.poulet, imgQuery:"chicken kung",
     desc:"Beaucoup de poulet maigre et peu de glucides : un plat très protéiné, idéal seul ou avec une petite portion de riz.",
     astuce:"Faites griller les piments et le poivre du Sichuan à sec quelques secondes avant de cuisiner : leur parfum se libère pleinement.",
     ingredients:[
@@ -4156,7 +4156,7 @@ export const RECIPES_500 = [
     temps:35, portions:2, difficulte:"Facile",
     prix:3, cout:3.17, nutriScore:"A", cuisine:"française",
     micros:{ fer:4.63, magnesium:81.3, calcium:112.4, zinc:3.53, potassium:1537.1, vitC:23.75, vitB12:0.76, omega3:0.55 },
-    img:IMG.dinde, imgQuery:"Filet dinde rôti moutarde-herbes",
+    img:IMG.dinde, imgQuery:"fillet turkey roasted",
     desc:"Le filet de dinde est l'une des viandes les plus protéinées et maigres : 54 g de protéines pour 380 kcal, idéal en sèche.",
     astuce:"Rôtissez le chou-fleur jusqu'aux pointes dorées : il développe un goût de noisette qui change tout.",
     ingredients:[
@@ -4181,7 +4181,7 @@ export const RECIPES_500 = [
     temps:30, portions:2, difficulte:"Moyen",
     prix:2, cout:1.77, nutriScore:"C", cuisine:"espagnole",
     micros:{ fer:1.39, magnesium:41.44, calcium:41.85, zinc:0.53, potassium:776.69, vitC:10.14, vitD:0.04, vitB12:0.03, omega3:0.12 },
-    img:IMG.omelette, imgQuery:"Tortilla española",
+    img:IMG.omelette, imgQuery:"tortilla espanola",
     desc:"On garde le goût d'une vraie tortilla mais on ajoute des blancs d'œufs et on réduit l'huile pour monter les protéines et alléger les lipides.",
     astuce:"Cuisez à feu doux et laissez le cœur légèrement baveux : la tortilla espagnole se mange moelleuse, pas sèche.",
     ingredients:[
@@ -4207,7 +4207,7 @@ export const RECIPES_500 = [
     temps:20, portions:2, difficulte:"Facile",
     prix:1, cout:1.03, nutriScore:"B", cuisine:"petit-déjeuner moderne",
     micros:{ fer:1.89, magnesium:101.64, calcium:246.73, zinc:1.95, potassium:586.07, vitC:2.06, vitD:0.41, vitB12:0.54, omega3:0.09 },
-    img:IMG.porridge, imgQuery:"Porridge quinoa",
+    img:IMG.porridge, imgQuery:"porridge quinoa",
     desc:"Le quinoa est une céréale complète sans gluten, riche en protéines végétales : un porridge nourrissant qui change de l'avoine.",
     astuce:"Rincez bien le quinoa avant cuisson pour retirer la saponine, qui peut donner un goût amer.",
     ingredients:[
@@ -4233,7 +4233,7 @@ export const RECIPES_500 = [
     temps:15, portions:2, difficulte:"Facile",
     prix:2, cout:2.67, nutriScore:"B", cuisine:"américaine",
     micros:{ fer:1.29, magnesium:41.3, calcium:152.31, zinc:0.7, potassium:578.45, vitC:32.14, omega3:0.96 },
-    img:IMG.poulet, imgQuery:"Salade poulet Waldorf",
+    img:IMG.poulet, imgQuery:"salad chicken waldorf",
     desc:"La sauce au yaourt remplace la mayonnaise pour une Waldorf très protéinée, croquante et fraîche.",
     astuce:"Citronnez la pomme dès qu'elle est coupée : elle ne brunit pas et garde son croquant acidulé.",
     ingredients:[
@@ -4260,7 +4260,7 @@ export const RECIPES_500 = [
     temps:24, portions:2, difficulte:"Facile",
     prix:3, cout:3.13, nutriScore:"B", cuisine:"japonaise",
     micros:{ fer:1.92, magnesium:67.98, calcium:100.01, zinc:1.99, potassium:796.35, vitC:73.36, vitD:0.13, vitB12:0.02, omega3:0.31 },
-    img:IMG.pates, imgQuery:"Yakisoba poulet légumes",
+    img:IMG.pates, imgQuery:"yakisoba chicken vegetables",
     desc:"Nouilles sautées, poulet maigre et légumes : un déjeuner complet et rassasiant, riche en protéines et en glucides.",
     astuce:"Faites sauter les nouilles à feu très vif et sans trop remuer pour qu'elles colorent légèrement et ne deviennent pas pâteuses.",
     ingredients:[
@@ -4286,7 +4286,7 @@ export const RECIPES_500 = [
     temps:40, portions:4, difficulte:"Moyen",
     prix:2, cout:2.17, nutriScore:"B", cuisine:"jamaïcaine",
     micros:{ fer:2.43, magnesium:48.11, calcium:60.17, zinc:1.13, potassium:275.23, vitC:0.47, vitB12:0.05, omega3:0.1 },
-    img:IMG.poulet, imgQuery:"Poulet jerk riz haricots rouges",
+    img:IMG.poulet, imgQuery:"chicken jerk rice red",
     desc:"Poulet épicé maigre et riz aux haricots rouges : un dîner caribéen complet, protéiné et plein de saveurs.",
     astuce:"Plus la marinade jerk repose longtemps (idéalement une nuit), plus le poulet est parfumé et tendre.",
     ingredients:[
@@ -4313,7 +4313,7 @@ export const RECIPES_500 = [
     temps:40, portions:2, difficulte:"Facile",
     prix:3, cout:4.62, nutriScore:"A", cuisine:"provençale",
     micros:{ fer:8.78, magnesium:131.41, calcium:231.11, zinc:1.87, potassium:1541.1, vitC:88.77, vitD:2.54, vitB12:2.38, omega3:0.46 },
-    img:IMG.cabillaud, imgQuery:"Cabillaud rôti ratatouille provençale",
+    img:IMG.cabillaud, imgQuery:"cod roasted ratatouille provencale",
     desc:"Poisson blanc maigre et une montagne de légumes mijotés : un dîner léger, peu calorique et très protéiné.",
     astuce:"Cuisez chaque légume un peu séparément avant de les réunir : la ratatouille garde du caractère plutôt que de fondre en bouillie.",
     ingredients:[
@@ -4339,7 +4339,7 @@ export const RECIPES_500 = [
     temps:8, portions:2, difficulte:"Facile",
     prix:1, cout:1.41, nutriScore:"B", cuisine:"snack moderne",
     micros:{ fer:0.63, magnesium:22.14, calcium:238.55, zinc:0.45, potassium:123.77, vitC:0.16, omega3:0.7 },
-    img:IMG.yaourt, imgQuery:"Pommes-cannelle dip yaourt protéiné noix",
+    img:IMG.yaourt, imgQuery:"pommes-cannelle yogurt walnuts",
     desc:"Le yaourt grec enrichi en protéine fait un dip rassasiant, les pommes apportent fibres et fraîcheur : une collation saine et gourmande.",
     astuce:"Une pointe de vanille et un peu de zeste de citron dans le yaourt subliment le côté dessert.",
     ingredients:[
@@ -4364,7 +4364,7 @@ export const RECIPES_500 = [
     temps:8, portions:2, difficulte:"Facile",
     prix:1, cout:1.13, nutriScore:"C", cuisine:"snack moderne",
     micros:{ fer:1.33, magnesium:67.65, calcium:535.34, zinc:4.73, potassium:738.35, vitC:15.03, vitD:0.83, vitB12:1.42, omega3:0.23 },
-    img:IMG.energy, imgQuery:"Roulés jambon",
+    img:IMG.energy, imgQuery:"healthy food plate",
     desc:"Jambon maigre et fromage frais offrent une collation très protéinée et pauvre en glucides, prête en quelques minutes.",
     astuce:"Choisissez un jambon de qualité, peu salé : il fait toute la différence dans une recette aussi simple.",
     ingredients:[
@@ -4388,7 +4388,7 @@ export const RECIPES_500 = [
     temps:22, portions:2, difficulte:"Facile",
     prix:2, cout:2.71, nutriScore:"C", cuisine:"japonaise",
     micros:{ fer:1.25, magnesium:66.26, calcium:63.93, zinc:2.31, potassium:614.41, vitC:3.16, vitD:0.03, vitB12:0.08 },
-    img:IMG.oeufs, imgQuery:"Oyakodon",
+    img:IMG.oeufs, imgQuery:"oyakodon",
     desc:"Riz pour recharger le glycogène, poulet et œuf pour les protéines : le bol japonais 'parent-enfant' est une récupération complète et réconfortante.",
     astuce:"Couvrez dès que vous versez les œufs et coupez le feu : la vapeur les fige en restant baveux et soyeux.",
     ingredients:[
@@ -4414,7 +4414,7 @@ export const RECIPES_500 = [
     temps:22, portions:2, difficulte:"Facile",
     prix:2, cout:2.48, nutriScore:"B", cuisine:"coréenne",
     micros:{ fer:2.15, magnesium:78.57, calcium:158.67, zinc:2.29, potassium:653.48, vitC:40.4, vitD:0.02, vitB12:0.08, omega3:0.08 },
-    img:IMG.oeufs, imgQuery:"Kimchi fried rice poulet",
+    img:IMG.oeufs, imgQuery:"kimchi fried rice chicken",
     desc:"Riz pour le glycogène, poulet et œuf pour les protéines, kimchi fermenté pour les probiotiques : une récupération savoureuse et complète.",
     astuce:"Faites bien revenir le kimchi avant d'ajouter le riz : sa saveur s'intensifie et parfume tout le plat.",
     ingredients:[
@@ -4441,7 +4441,7 @@ export const RECIPES_500 = [
     temps:20, portions:2, difficulte:"Facile",
     prix:3, cout:5.66, nutriScore:"B", cuisine:"catalane",
     micros:{ fer:4.13, magnesium:88.27, calcium:74.94, zinc:1.27, potassium:1393.43, vitC:104.43, vitD:2.54, vitB12:2.38, omega3:0.49 },
-    img:IMG.cabillaud, imgQuery:"Esqueixada cabillaud",
+    img:IMG.cabillaud, imgQuery:"esqueixada cod",
     desc:"Beaucoup de légumes frais et un poisson blanc très protéiné : un plat catalan léger, parfait en sèche.",
     astuce:"Faites mariner brièvement l'oignon dans le vinaigre : il perd son agressivité et devient digeste.",
     ingredients:[
@@ -4468,7 +4468,7 @@ export const RECIPES_500 = [
     temps:28, portions:2, difficulte:"Facile",
     prix:2, cout:2.71, nutriScore:"B", cuisine:"grecque",
     micros:{ fer:2.34, magnesium:66.64, calcium:41.07, zinc:2.28, potassium:523.29, vitC:3.95, vitD:0.11, vitB12:0.1, omega3:0.02 },
-    img:IMG.oeufs, imgQuery:"Avgolemono",
+    img:IMG.oeufs, imgQuery:"avgolemono",
     desc:"Une soupe veloutée et acidulée, très protéinée grâce au poulet et à l'œuf, pour peu de calories.",
     astuce:"Tempérez les œufs avec du bouillon chaud avant de les verser : ils lient la soupe sans coaguler.",
     ingredients:[
@@ -4494,7 +4494,7 @@ export const RECIPES_500 = [
     temps:30, portions:2, difficulte:"Facile",
     prix:2, cout:1.77, nutriScore:"D", cuisine:"péruvienne",
     micros:{ fer:5.16, magnesium:76.69, calcium:84.45, zinc:0.89, potassium:1159.74, vitC:17.16, vitB12:2.16, omega3:0.03 },
-    img:IMG.oeufs, imgQuery:"Lomo saltado péruvien riz",
+    img:IMG.oeufs, imgQuery:"lomo saltado peruvien rice",
     desc:"Bœuf saisi, riz et pommes de terre apportent protéines et glucides en quantité pour soutenir la prise de masse.",
     astuce:"Saisissez le bœuf en une seule couche dans un wok brûlant : il caramélise au lieu de bouillir.",
     ingredients:[
@@ -4521,7 +4521,7 @@ export const RECIPES_500 = [
     temps:24, portions:2, difficulte:"Facile",
     prix:2, cout:1.94, nutriScore:"C", cuisine:"chinoise",
     micros:{ fer:6.31, magnesium:99.82, calcium:163.94, zinc:1.53, potassium:1357.55, vitC:212.18, vitD:0.04, vitB12:2.17, omega3:0.11 },
-    img:IMG.oeufs, imgQuery:"brocoli sauté",
+    img:IMG.oeufs, imgQuery:"broccoli",
     desc:"Bœuf riche en protéines, brocoli pour les fibres et riz pour l'énergie : un sauté complet pour la masse propre.",
     astuce:"Couvrez le brocoli 1 min après un filet d'eau : il cuit à la vapeur et reste vert et croquant.",
     ingredients:[
@@ -4547,7 +4547,7 @@ export const RECIPES_500 = [
     temps:37, portions:4, difficulte:"Facile",
     prix:1, cout:1.06, nutriScore:"A", cuisine:"libanaise",
     micros:{ fer:5.1, magnesium:105.2, calcium:131.94, zinc:2.73, potassium:796.28, vitC:11.18, vitB12:0.04, omega3:0.1 },
-    img:IMG.dahl, imgQuery:"Mujadara",
+    img:IMG.dahl, imgQuery:"mujadara",
     desc:"Lentilles et riz se complètent en acides aminés ; les oignons caramélisés en font un plat vegan réconfortant et nourrissant.",
     astuce:"Prenez le temps de bien caraméliser les oignons (15 min) : leur douceur sucrée fait tout le plat.",
     ingredients:[
@@ -4573,7 +4573,7 @@ export const RECIPES_500 = [
     temps:25, portions:4, difficulte:"Facile",
     prix:1, cout:1.08, nutriScore:"B", cuisine:"égyptienne",
     micros:{ fer:6.44, magnesium:116.31, calcium:145.95, zinc:2.76, potassium:942.5, vitC:17.43, omega3:0.24 },
-    img:IMG.bowl, imgQuery:"Ful medames égyptien pain",
+    img:IMG.bowl, imgQuery:"egyptien bread",
     desc:"Les fèves sont riches en protéines végétales et en fibres ; ce plat traditionnel égyptien est rassasiant et très économique.",
     astuce:"Écrasez une partie des fèves et gardez l'autre entière : la texture est plus intéressante.",
     ingredients:[
@@ -4599,7 +4599,7 @@ export const RECIPES_500 = [
     temps:45, portions:4, difficulte:"Moyen",
     prix:2, cout:1.84, nutriScore:"A", cuisine:"iranienne",
     micros:{ fer:20.16, magnesium:187.22, calcium:294.62, zinc:3.71, potassium:1502.31, vitC:45.39, vitB12:0.06, omega3:0.43 },
-    img:IMG.miso, imgQuery:"Ash reshteh",
+    img:IMG.miso, imgQuery:"reshteh",
     desc:"Une soupe gorgée d'herbes fraîches et de légumineuses, riche en fibres et en antioxydants, parfumée au curcuma anti-inflammatoire.",
     astuce:"L'huile chauffée à la menthe séchée versée sur le dessus (na'na dagh) est la signature aromatique de cette soupe.",
     ingredients:[
@@ -4625,7 +4625,7 @@ export const RECIPES_500 = [
     temps:20, portions:2, difficulte:"Facile",
     prix:3, cout:3.4, nutriScore:"B", cuisine:"nordique",
     micros:{ fer:1.83, magnesium:67.56, calcium:104.88, zinc:0.84, potassium:1035.34, vitC:9.96, vitD:4.06, vitB12:4.34, omega3:2.12 },
-    img:IMG.saumon, imgQuery:"Salade saumon poché",
+    img:IMG.saumon, imgQuery:"salad salmon poche",
     desc:"Saumon riche en oméga-3, avocat, graines et gingembre forment une assiette aux multiples atouts anti-inflammatoires.",
     astuce:"Pochez le saumon à frémissement, jamais à gros bouillons : il reste nacré et fondant.",
     ingredients:[
@@ -4651,7 +4651,7 @@ export const RECIPES_500 = [
     temps:30, portions:2, difficulte:"Facile",
     prix:2, cout:2.59, nutriScore:"A", cuisine:"autrichienne",
     micros:{ fer:2.05, magnesium:66.65, calcium:65.87, zinc:2.2, potassium:715.37, vitC:2.17, vitD:0.01, vitB12:0.01, omega3:0.06 },
-    img:IMG.poulet, imgQuery:"Escalope poulet schnitzel four",
+    img:IMG.poulet, imgQuery:"cutlet chicken schnitzel baked",
     desc:"Une escalope panée croustillante mais cuite au four : beaucoup de protéines maigres sans l'excès de gras de la friture.",
     astuce:"Aplatissez bien fin l'escalope : elle cuit vite et de façon homogène, et reste tendre.",
     ingredients:[
@@ -4677,7 +4677,7 @@ export const RECIPES_500 = [
     temps:15, portions:2, difficulte:"Moyen",
     prix:3, cout:3.38, nutriScore:"B", cuisine:"française",
     micros:{ fer:6.26, magnesium:32.79, calcium:64.49, zinc:5.59, potassium:401.14, vitC:7.3, vitD:0.02, vitB12:2.8, omega3:0.18 },
-    img:IMG.oeufs, imgQuery:"Tartare",
+    img:IMG.oeufs, imgQuery:"tartare",
     desc:"Protéines pures et quasi zéro glucide pour un plat élégant et très rassasiant, parfaitement compatible avec une sèche.",
     astuce:"Utilisez une viande d'une fraîcheur irréprochable et un œuf très frais, et hachez le bœuf au couteau juste avant de servir.",
     ingredients:[
@@ -4703,7 +4703,7 @@ export const RECIPES_500 = [
     temps:22, portions:2, difficulte:"Facile",
     prix:2, cout:1.68, nutriScore:"C", cuisine:"ukrainienne",
     micros:{ fer:0.97, magnesium:59.71, calcium:329.96, zinc:1.64, potassium:492.57, vitC:34.8, vitD:3.33, vitB12:0.94, omega3:0.09 },
-    img:IMG.yaourt, imgQuery:"Syrniki",
+    img:IMG.yaourt, imgQuery:"syrniki",
     desc:"Le fromage blanc fait de ces galettes un petit-déjeuner très riche en protéines, moelleux et réconfortant.",
     astuce:"Égouttez bien le fromage blanc : une pâte trop humide s'étale et les syrniki ne tiennent pas.",
     ingredients:[
@@ -4729,7 +4729,7 @@ export const RECIPES_500 = [
     temps:10, portions:2, difficulte:"Facile",
     prix:1, cout:1.29, nutriScore:"B", cuisine:"suisse",
     micros:{ fer:3.45, magnesium:112.01, calcium:413.29, zinc:2.4, potassium:455.83, vitC:18.91, vitD:0.16, vitB12:0.22, omega3:0.1 },
-    img:IMG.bircher, imgQuery:"Bircher muesli pomme-avoine",
+    img:IMG.bircher, imgQuery:"bircher muesli pomme-avoine",
     desc:"La pomme râpée et l'avoine trempée donnent un petit-déjeuner riche en fibres et en protéines, prêt dès le réveil.",
     astuce:"La pomme avec sa peau apporte plus de fibres et une jolie texture ; un trait de citron l'empêche de brunir.",
     ingredients:[
@@ -4755,7 +4755,7 @@ export const RECIPES_500 = [
     temps:20, portions:2, difficulte:"Moyen",
     prix:3, cout:3.04, nutriScore:"B", cuisine:"japonaise",
     micros:{ fer:8.27, magnesium:167.27, calcium:157.12, zinc:2.39, potassium:1301.8, vitC:6.5, vitD:5.77, vitB12:5.09, omega3:2.11 },
-    img:IMG.cabillaud, imgQuery:"Chirashi bowl",
+    img:IMG.cabillaud, imgQuery:"chirashi bowl",
     desc:"Poisson cru riche en oméga-3 et protéines, riz pour l'énergie, légumes frais : un bol japonais équilibré et complet.",
     astuce:"Utilisez un poisson de qualité sushi très frais et un couteau bien aiguisé pour des tranches nettes.",
     ingredients:[
@@ -4781,7 +4781,7 @@ export const RECIPES_500 = [
     temps:27, portions:2, difficulte:"Facile",
     prix:2, cout:2.37, nutriScore:"B", cuisine:"israélienne",
     micros:{ fer:3.07, magnesium:51.49, calcium:64.63, zinc:0.77, potassium:831.64, vitC:21.31, vitD:0.01, vitB12:0.01, omega3:0.88 },
-    img:IMG.oeufs, imgQuery:"Sabich",
+    img:IMG.oeufs, imgQuery:"sabich",
     desc:"Œuf et houmous apportent protéines et fibres, l'aubergine fondante du moelleux : un pita végétarien complet et rassasiant.",
     astuce:"Salez les tranches d'aubergine et laissez-les dégorger avant cuisson : elles deviennent fondantes sans absorber trop d'huile.",
     ingredients:[
@@ -4808,7 +4808,7 @@ export const RECIPES_500 = [
     temps:40, portions:4, difficulte:"Facile",
     prix:2, cout:2.27, nutriScore:"B", cuisine:"philippine",
     micros:{ fer:1.1, magnesium:27.55, calcium:41.0, zinc:0.53, potassium:135.48, vitC:0.92, vitB12:0.05, omega3:0.01 },
-    img:IMG.poulet, imgQuery:"Poulet adobo philippin riz",
+    img:IMG.poulet, imgQuery:"chicken adobo philippin rice",
     desc:"Le poulet mijoté dans soja et vinaigre est très protéiné et savoureux ; servi avec du riz, c'est un dîner complet.",
     astuce:"Laissez la sauce réduire jusqu'à devenir sirupeuse et brillante : elle enrobe le poulet d'un glaçage acidulé.",
     ingredients:[
@@ -4834,7 +4834,7 @@ export const RECIPES_500 = [
     temps:42, portions:4, difficulte:"Facile",
     prix:1, cout:1.47, nutriScore:"B", cuisine:"grecque",
     micros:{ fer:2.62, magnesium:79.5, calcium:217.51, zinc:1.28, potassium:1024.22, vitC:39.2, vitB12:0.16, omega3:0.25 },
-    img:IMG.poulet, imgQuery:"Gigantes",
+    img:IMG.poulet, imgQuery:"healthy food plate",
     desc:"Les gros haricots blancs sont riches en fibres et en protéines végétales ; mijotés à la tomate avec un peu de feta, ils font un dîner complet et réconfortant.",
     astuce:"Un filet de bon huile d'olive crue au moment de servir rehausse tout le plat, comme en Grèce.",
     ingredients:[
@@ -4860,7 +4860,7 @@ export const RECIPES_500 = [
     temps:10, portions:2, difficulte:"Facile",
     prix:2, cout:1.85, nutriScore:"B", cuisine:"dessert healthy",
     micros:{ fer:0.81, magnesium:31.42, calcium:278.23, zinc:1.17, potassium:370.92, vitC:8.05, vitB12:0.81, omega3:0.02 },
-    img:IMG.yaourt, imgQuery:"Mousse skyr citron-myrtille cheesecake",
+    img:IMG.yaourt, imgQuery:"mousse skyr citron-myrtille cheesecake",
     desc:"Le skyr est extrêmement riche en protéines et pauvre en lipides : une verrine façon cheesecake aussi gourmande que rassasiante.",
     astuce:"Le zeste de citron apporte tout le parfum sans acidité agressive : ne lésinez pas dessus.",
     ingredients:[
@@ -4886,7 +4886,7 @@ export const RECIPES_500 = [
     temps:10, portions:2, difficulte:"Facile",
     prix:2, cout:2.37, nutriScore:"B", cuisine:"française",
     micros:{ fer:2.7, magnesium:76.61, calcium:435.01, zinc:2.67, potassium:881.75, vitC:10.37, vitD:9.53, vitB12:5.36, omega3:1.8 },
-    img:IMG.thon, imgQuery:"Rillettes thon allégées crudités",
+    img:IMG.thon, imgQuery:"tuna raw vegetables",
     desc:"Thon et fromage frais offrent une collation très protéinée et pauvre en lipides, fraîche et rassasiante.",
     astuce:"Une pointe de moutarde et beaucoup de ciboulette transforment ces rillettes light en vraie tartinade gourmande.",
     ingredients:[
@@ -4911,7 +4911,7 @@ export const RECIPES_500 = [
     temps:22, portions:2, difficulte:"Facile",
     prix:3, cout:3.74, nutriScore:"B", cuisine:"japonaise",
     micros:{ fer:3.84, magnesium:89.3, calcium:132.2, zinc:2.36, potassium:965.45, vitC:44.13, vitB12:0.01, omega3:0.17 },
-    img:IMG.miso, imgQuery:"Udon poulet bouillon",
+    img:IMG.miso, imgQuery:"udon chicken bouillon",
     desc:"Les udon rechargent le glycogène, le poulet apporte les protéines : un bol chaud réconfortant idéal en récupération.",
     astuce:"Ne faites pas bouillir le poulet à gros bouillons : un pochage doux le garde tendre et juteux.",
     ingredients:[
@@ -4937,7 +4937,7 @@ export const RECIPES_500 = [
     temps:5, portions:1, difficulte:"Facile",
     prix:2, cout:1.68, nutriScore:"B", cuisine:"boisson de récupération",
     micros:{ fer:2.6, magnesium:119.54, calcium:301.56, zinc:2.82, potassium:938.7, vitC:37.9, vitD:0.54, vitB12:0.72, omega3:0.19 },
-    img:IMG.shakeP, imgQuery:"Smoothie récupération mangue-passion avoine",
+    img:IMG.shakeP, imgQuery:"smoothie mangue-passion oatmeal",
     desc:"Mangue, passion, banane et avoine fournissent des glucides pour recharger le glycogène, la protéine relance la construction musculaire.",
     astuce:"Filtrez à peine la pulpe de fruit de la passion : les petites graines apportent du croquant et beaucoup d'arôme.",
     ingredients:[
@@ -4962,7 +4962,7 @@ export const RECIPES_500 = [
     temps:45, portions:4, difficulte:"Facile",
     prix:2, cout:2.06, nutriScore:"C", cuisine:"ukrainienne",
     micros:{ fer:3.95, magnesium:69.66, calcium:142.73, zinc:0.79, potassium:1340.16, vitC:21.4, vitB12:1.4, omega3:0.05 },
-    img:IMG.oeufs, imgQuery:"Borscht maigre",
+    img:IMG.oeufs, imgQuery:"borscht",
     desc:"Beaucoup de légumes peu caloriques et du bœuf maigre : une grande assiette de soupe rassasiante pour peu de calories.",
     astuce:"Ajoutez un trait de vinaigre en fin de cuisson : il ravive la couleur rubis et équilibre la douceur de la betterave.",
     ingredients:[
@@ -4989,7 +4989,7 @@ export const RECIPES_500 = [
     temps:27, portions:2, difficulte:"Facile",
     prix:3, cout:3.81, nutriScore:"A", cuisine:"philippine",
     micros:{ fer:7.42, magnesium:124.94, calcium:215.75, zinc:5.26, potassium:1023.56, vitC:34.7, vitB12:1.6, omega3:0.12 },
-    img:IMG.crevettes, imgQuery:"Sinigang crevettes",
+    img:IMG.crevettes, imgQuery:"sinigang shrimp",
     desc:"Une soupe acidulée très protéinée et presque sans lipides : un maximum de satiété pour seulement 240 kcal, idéale en sèche.",
     astuce:"Ajustez le tamarin progressivement : le sinigang doit être franchement acidulé, c'est sa signature.",
     ingredients:[
@@ -5015,7 +5015,7 @@ export const RECIPES_500 = [
     temps:45, portions:4, difficulte:"Moyen",
     prix:2, cout:1.64, nutriScore:"D", cuisine:"thaïlandaise",
     micros:{ fer:11.06, magnesium:153.75, calcium:193.96, zinc:2.17, potassium:1336.55, vitC:3.83, vitD:0.06, vitB12:1.87, omega3:0.09 },
-    img:IMG.oeufs, imgQuery:"Massaman",
+    img:IMG.oeufs, imgQuery:"massaman",
     desc:"Bœuf, pommes de terre et riz apportent protéines et glucides en quantité, le curry massaman du goût : un plat copieux pour la masse propre.",
     astuce:"Le massaman gagne à mijoter longtemps : la viande devient fondante et les épices douces se développent.",
     ingredients:[
@@ -5042,7 +5042,7 @@ export const RECIPES_500 = [
     temps:50, portions:4, difficulte:"Moyen",
     prix:2, cout:2.49, nutriScore:"B", cuisine:"indienne",
     micros:{ fer:2.72, magnesium:80.24, calcium:180.15, zinc:2.66, potassium:731.57, vitC:8.39, vitB12:0.06, omega3:0.07 },
-    img:IMG.poulet, imgQuery:"Biryani poulet",
+    img:IMG.poulet, imgQuery:"biryani chicken",
     desc:"Riz basmati et poulet mariné offrent un plat de fête riche en glucides et protéines, allégé grâce au yaourt et au minimum d'huile.",
     astuce:"La cuisson finale à l'étouffée (dum) parfume le riz de toutes les épices et garde le poulet moelleux.",
     ingredients:[
@@ -5069,7 +5069,7 @@ export const RECIPES_500 = [
     temps:37, portions:4, difficulte:"Facile",
     prix:1, cout:1.0, nutriScore:"B", cuisine:"indienne",
     micros:{ fer:6.56, magnesium:109.78, calcium:110.39, zinc:3.64, potassium:952.93, vitC:27.59, vitB12:0.04, omega3:0.19 },
-    img:IMG.cabillaud, imgQuery:"Sambar",
+    img:IMG.cabillaud, imgQuery:"sambar",
     desc:"Lentilles corail et légumes variés réunissent protéines végétales et fibres ; servi avec du riz, c'est un plat complet et léger.",
     astuce:"Le tempérage final (tarka) versé sur le sambar libère un parfum intense de moutarde grillée et de curry.",
     ingredients:[
@@ -5095,7 +5095,7 @@ export const RECIPES_500 = [
     temps:30, portions:2, difficulte:"Facile",
     prix:2, cout:1.95, nutriScore:"C", cuisine:"thaïlandaise",
     micros:{ fer:12.77, magnesium:264.99, calcium:335.51, zinc:3.75, potassium:1000.8, vitC:72.52, vitB12:0.04, omega3:0.82 },
-    img:IMG.curry, imgQuery:"Green curry thaï tofu légumes",
+    img:IMG.curry, imgQuery:"green curry thai tofu",
     desc:"Le tofu apporte des protéines complètes, le curry vert un maximum de goût : un plat vegan parfumé et rassasiant.",
     astuce:"Réservez quelques feuilles de basilic thaï crues pour la fin : leur parfum anisé ne supporte pas la cuisson.",
     ingredients:[
@@ -5121,7 +5121,7 @@ export const RECIPES_500 = [
     temps:20, portions:4, difficulte:"Moyen",
     prix:3, cout:3.35, nutriScore:"C", cuisine:"scandinave",
     micros:{ fer:1.83, magnesium:56.91, calcium:100.06, zinc:0.85, potassium:786.24, vitC:15.62, vitD:3.69, vitB12:3.95, omega3:2.0 },
-    img:IMG.saumon, imgQuery:"Gravlax saumon salade",
+    img:IMG.saumon, imgQuery:"gravlax salmon salad",
     desc:"Le saumon est l'une des meilleures sources d'oméga-3 anti-inflammatoires ; la cure maison contrôle le sel et évite les additifs du commerce.",
     astuce:"Utilisez un saumon d'une fraîcheur irréprochable et tranchez-le très fin en biais pour des lamelles fondantes.",
     ingredients:[
@@ -5147,7 +5147,7 @@ export const RECIPES_500 = [
     temps:37, portions:4, difficulte:"Facile",
     prix:2, cout:1.65, nutriScore:"C", cuisine:"californienne",
     micros:{ fer:6.46, magnesium:88.96, calcium:104.26, zinc:2.08, potassium:1228.28, vitC:16.69, omega3:0.18 },
-    img:IMG.miso, imgQuery:"Velouté potimarron",
+    img:IMG.miso, imgQuery:"potimarron",
     desc:"Gingembre et curcuma anti-inflammatoires, courge riche en antioxydants et lentilles pour les protéines et fibres : un velouté complet et réconfortant.",
     astuce:"Ajoutez une pincée de poivre noir avec le curcuma : la pipérine en décuple l'absorption.",
     ingredients:[
@@ -5174,7 +5174,7 @@ export const RECIPES_500 = [
     temps:35, portions:2, difficulte:"Moyen",
     prix:2, cout:2.04, nutriScore:"B", cuisine:"suédoise",
     micros:{ fer:2.89, magnesium:83.56, calcium:130.95, zinc:4.94, potassium:1166.18, vitC:10.4, vitD:0.57, vitB12:3.08, omega3:0.74 },
-    img:IMG.dinde, imgQuery:"Boulettes suédoises dinde",
+    img:IMG.dinde, imgQuery:"meatballs turkey",
     desc:"Dinde maigre et chou-fleur à la place de la purée de pomme de terre : 53 g de protéines pour peu de glucides, idéal en sèche.",
     astuce:"Liez la sauce au yaourt hors du feu pour qu'elle reste crémeuse sans trancher.",
     ingredients:[
@@ -5200,7 +5200,7 @@ export const RECIPES_500 = [
     temps:30, portions:2, difficulte:"Facile",
     prix:3, cout:3.38, nutriScore:"C", cuisine:"indienne",
     micros:{ fer:8.58, magnesium:133.04, calcium:440.08, zinc:2.66, potassium:1443.35, vitC:90.09, vitD:2.25, vitB12:0.6, omega3:0.5 },
-    img:IMG.bowl, imgQuery:"Palak paneer",
+    img:IMG.bowl, imgQuery:"palak paneer",
     desc:"En remplaçant une partie du paneer par du cottage cheese, on garde un plat très protéiné tout en réduisant les lipides ; les épinards apportent fer et fibres.",
     astuce:"Ajoutez le fromage en toute fin et ne faites pas bouillir : il reste fondant au lieu de durcir.",
     ingredients:[
@@ -5226,7 +5226,7 @@ export const RECIPES_500 = [
     temps:28, portions:2, difficulte:"Facile",
     prix:2, cout:1.97, nutriScore:"B", cuisine:"américaine",
     micros:{ fer:4.79, magnesium:96.46, calcium:171.15, zinc:1.38, potassium:1257.53, vitC:102.76, vitD:0.04, vitB12:0.03, omega3:0.23 },
-    img:IMG.oeufs, imgQuery:"Breakfast hash patate douce",
+    img:IMG.oeufs, imgQuery:"breakfast hash sweet potato",
     desc:"La patate douce fournit des glucides de qualité, les œufs des protéines complètes : un petit-déjeuner salé rassasiant et coloré.",
     astuce:"Ne remuez pas trop les dés de patate douce : laissez-les colorer sur chaque face pour un hash croustillant.",
     ingredients:[
@@ -5252,7 +5252,7 @@ export const RECIPES_500 = [
     temps:22, portions:2, difficulte:"Facile",
     prix:2, cout:2.5, nutriScore:"B", cuisine:"mexicaine",
     micros:{ fer:1.31, magnesium:47.02, calcium:97.1, zinc:0.49, potassium:509.62, vitC:22.76, vitD:0.04, vitB12:0.04, omega3:0.09 },
-    img:IMG.oats, imgQuery:"Huevos rancheros allégés",
+    img:IMG.oats, imgQuery:"huevos rancheros",
     desc:"Œufs et haricots noirs apportent protéines et fibres, pour un petit-déjeuner salé complet qui tient toute la matinée.",
     astuce:"Faites légèrement griller les tortillas à sec : elles tiennent mieux sous les œufs et la salsa.",
     ingredients:[
@@ -5278,7 +5278,7 @@ export const RECIPES_500 = [
     temps:30, portions:2, difficulte:"Moyen",
     prix:3, cout:3.54, nutriScore:"D", cuisine:"coréenne",
     micros:{ fer:6.78, magnesium:96.88, calcium:135.82, zinc:1.07, potassium:1474.52, vitC:89.33, vitB12:1.83, omega3:0.13 },
-    img:IMG.oeufs, imgQuery:"Japchae",
+    img:IMG.oeufs, imgQuery:"japchae",
     desc:"Les nouilles de patate douce apportent des glucides, le bœuf les protéines : un plat coréen complet et savoureux.",
     astuce:"Sautez chaque légume à part pour préserver couleurs et textures, puis réunissez : c'est ce qui fait un beau japchae.",
     ingredients:[
@@ -5303,7 +5303,7 @@ export const RECIPES_500 = [
     temps:12, portions:2, difficulte:"Facile",
     prix:2, cout:2.19, nutriScore:"A", cuisine:"scandinave",
     micros:{ fer:1.11, magnesium:20.31, calcium:48.79, zinc:0.63, potassium:279.88, vitC:5.28, vitD:0.12, vitB12:0.06, omega3:0.02 },
-    img:IMG.poulet, imgQuery:"Smørrebrød poulet",
+    img:IMG.poulet, imgQuery:"rrebr chicken",
     desc:"Le pain de seigle riche en fibres et le poulet maigre font une tartine danoise nourrissante et très protéinée, prête en 12 minutes.",
     astuce:"Le pain de seigle dense supporte une garniture généreuse sans se détremper : empilez sans crainte.",
     ingredients:[
@@ -5329,7 +5329,7 @@ export const RECIPES_500 = [
     temps:33, portions:4, difficulte:"Facile",
     prix:2, cout:2.68, nutriScore:"B", cuisine:"coréenne",
     micros:{ fer:2.03, magnesium:83.88, calcium:121.11, zinc:2.57, potassium:974.3, vitC:21.52, vitD:0.26, vitB12:0.09, omega3:0.52 },
-    img:IMG.poulet, imgQuery:"Dakgalbi",
+    img:IMG.poulet, imgQuery:"dakgalbi",
     desc:"Poulet maigre mariné et beaucoup de légumes, accompagnés de riz : un dîner coréen complet, protéiné et plein de saveurs.",
     astuce:"Laissez le poulet et les légumes caraméliser sans trop remuer : la sauce gochujang accroche et concentre son goût.",
     ingredients:[
@@ -5355,7 +5355,7 @@ export const RECIPES_500 = [
     temps:27, portions:2, difficulte:"Facile",
     prix:3, cout:2.98, nutriScore:"B", cuisine:"indonésienne",
     micros:{ fer:2.59, magnesium:100.67, calcium:76.74, zinc:2.75, potassium:962.14, vitC:13.9, omega3:0.07 },
-    img:IMG.poulet, imgQuery:"Brochettes poulet satay salade",
+    img:IMG.poulet, imgQuery:"skewers chicken satay salad",
     desc:"Beaucoup de poulet maigre et peu de glucides : un dîner très protéiné, la sauce cacahuète apportant juste ce qu'il faut de gourmandise.",
     astuce:"Faites mariner le poulet au moins 30 min dans les épices satay : il devient parfumé et reste juteux.",
     ingredients:[
@@ -5380,7 +5380,7 @@ export const RECIPES_500 = [
     temps:35, portions:8, difficulte:"Facile",
     prix:1, cout:0.41, nutriScore:"B", cuisine:"snack healthy",
     micros:{ fer:1.77, magnesium:71.33, calcium:75.55, zinc:1.35, potassium:226.42, vitC:0.61, omega3:0.06 },
-    img:IMG.granola, imgQuery:"Granola protéiné noix graines",
+    img:IMG.granola, imgQuery:"granola walnuts",
     desc:"Un granola maison sans sucres cachés, enrichi en protéine, parfait en collation (≈ 50 g) ou sur un yaourt après l'effort.",
     astuce:"Le blanc d'œuf est le secret des gros clusters croustillants : ne remuez pas trop pendant la cuisson.",
     ingredients:[
@@ -5407,7 +5407,7 @@ export const RECIPES_500 = [
     temps:10, portions:2, difficulte:"Facile",
     prix:1, cout:1.1, nutriScore:"B", cuisine:"italienne",
     micros:{ fer:5.13, magnesium:63.3, calcium:281.6, zinc:1.28, potassium:560.2, vitC:12.44, vitD:1.8, vitB12:0.48, omega3:0.07 },
-    img:IMG.yaourt, imgQuery:"Bruschetta protéinée cottage cheese-tomate basilic",
+    img:IMG.yaourt, imgQuery:"bruschetta cottage cheese-tomate basilic",
     desc:"Le cottage cheese apporte beaucoup de protéines pour peu de calories, sur une base de pain complet rassasiante.",
     astuce:"Salez les tomates et laissez-les dégorger 5 min : le pain reste croustillant sous la garniture.",
     ingredients:[
@@ -5432,7 +5432,7 @@ export const RECIPES_500 = [
     temps:22, portions:2, difficulte:"Facile",
     prix:2, cout:2.6, nutriScore:"A", cuisine:"tex-mex",
     micros:{ fer:1.96, magnesium:76.71, calcium:191.48, zinc:2.47, potassium:629.43, vitC:38.57, vitD:0.04, vitB12:0.23, omega3:0.07 },
-    img:IMG.wrapV, imgQuery:"Burrito récupération poulet",
+    img:IMG.wrapV, imgQuery:"burrito chicken",
     desc:"Riz, haricots et tortilla rechargent fortement le glycogène, poulet et fromage couvrent les protéines : un burrito de récupération complet après une grosse séance.",
     astuce:"Saisissez le burrito roulé dans une poêle sèche : il se scelle et devient croustillant sans gras ajouté.",
     ingredients:[
@@ -5459,7 +5459,7 @@ export const RECIPES_500 = [
     temps:25, portions:2, difficulte:"Facile",
     prix:3, cout:3.73, nutriScore:"C", cuisine:"japonaise",
     micros:{ fer:10.42, magnesium:227.2, calcium:245.67, zinc:3.17, potassium:1928.64, vitC:164.28, vitD:4.43, vitB12:4.8, omega3:2.84 },
-    img:IMG.saumon, imgQuery:"Bowl saumon teriyaki",
+    img:IMG.saumon, imgQuery:"bowl salmon teriyaki",
     desc:"Riz pour recharger le glycogène, saumon riche en protéines et oméga-3, légumes verts : un bol de récupération complet après l'entraînement.",
     astuce:"Laquez le saumon en deux fois pendant la cuisson : il développe une belle laque brillante sans brûler.",
     ingredients:[
@@ -5485,7 +5485,7 @@ export const RECIPES_500 = [
     temps:27, portions:2, difficulte:"Facile",
     prix:3, cout:3.67, nutriScore:"C", cuisine:"thaïlandaise",
     micros:{ fer:7.39, magnesium:143.02, calcium:160.29, zinc:3.19, potassium:1326.33, vitC:43.94, vitB12:0.02, omega3:0.09 },
-    img:IMG.miso, imgQuery:"Tom kha gai",
+    img:IMG.miso, imgQuery:"healthy food plate",
     desc:"Beaucoup de poulet maigre dans un bouillon coco léger et parfumé : une soupe très protéinée et peu calorique, plus douce que le tom yum.",
     astuce:"Le galanga et le combava ne se mangent pas : laissez-les infuser puis retirez-les avant de servir.",
     ingredients:[
@@ -5511,7 +5511,7 @@ export const RECIPES_500 = [
     temps:15, portions:2, difficulte:"Facile",
     prix:2, cout:2.15, nutriScore:"C", cuisine:"française",
     micros:{ fer:2.3, magnesium:58.8, calcium:120.15, zinc:2.12, potassium:1044.66, vitC:15.38, vitD:0.62, vitB12:0.32, omega3:0.31 },
-    img:IMG.oeufs, imgQuery:"Salade lyonnaise",
+    img:IMG.oeufs, imgQuery:"salad lyonnaise",
     desc:"Les lardons de dinde remplacent le lard gras : on garde l'esprit lyonnais avec beaucoup de protéines et peu de calories.",
     astuce:"Ajoutez une larme de vinaigre dans l'eau de pochage : le blanc enveloppe le jaune en une jolie bourse.",
     ingredients:[
@@ -5536,7 +5536,7 @@ export const RECIPES_500 = [
     temps:45, portions:4, difficulte:"Moyen",
     prix:2, cout:2.4, nutriScore:"B", cuisine:"ouest-africaine",
     micros:{ fer:4.26, magnesium:65.88, calcium:118.02, zinc:2.46, potassium:482.53, vitC:1.81, vitB12:0.07, omega3:0.04 },
-    img:IMG.poulet, imgQuery:"Jollof rice poulet",
+    img:IMG.poulet, imgQuery:"jollof rice chicken",
     desc:"Riz parfumé et poulet maigre fournissent glucides et protéines en quantité : un grand classique festif d'Afrique de l'Ouest, parfait pour la masse.",
     astuce:"Laissez le riz légèrement accrocher au fond (le précieux 'bottom pot') : c'est là que se concentre toute la saveur.",
     ingredients:[
@@ -5562,7 +5562,7 @@ export const RECIPES_500 = [
     temps:24, portions:2, difficulte:"Facile",
     prix:2, cout:1.75, nutriScore:"C", cuisine:"thaïlandaise",
     micros:{ fer:4.98, magnesium:74.41, calcium:111.71, zinc:1.12, potassium:1075.17, vitC:159.18, vitD:0.05, vitB12:1.89, omega3:0.1 },
-    img:IMG.oeufs, imgQuery:"Pad see",
+    img:IMG.oeufs, imgQuery:"healthy food plate",
     desc:"Nouilles de riz et bœuf maigre apportent glucides et protéines pour la masse, avec le goût fumé caractéristique du wok.",
     astuce:"Faites sauter les nouilles dans un wok très chaud sans trop remuer : la légère caramélisation (le 'wok hei') fait tout le plat.",
     ingredients:[
@@ -5588,7 +5588,7 @@ export const RECIPES_500 = [
     temps:40, portions:4, difficulte:"Facile",
     prix:2, cout:1.82, nutriScore:"B", cuisine:"sicilienne",
     micros:{ fer:6.94, magnesium:154.95, calcium:266.2, zinc:2.85, potassium:1329.14, vitC:16.08, vitD:0.01, omega3:0.22 },
-    img:IMG.poulet, imgQuery:"Caponata sicilienne pois chiches",
+    img:IMG.poulet, imgQuery:"caponata sicilienne chickpea",
     desc:"L'aubergine et les pois chiches donnent un plat vegan rassasiant et riche en fibres ; l'aigre-doux le rend irrésistible, chaud ou froid.",
     astuce:"La caponata est encore meilleure le lendemain : laissez les saveurs aigres-douces se marier une nuit au frais.",
     ingredients:[
@@ -5615,7 +5615,7 @@ export const RECIPES_500 = [
     temps:37, portions:4, difficulte:"Facile",
     prix:1, cout:1.31, nutriScore:"B", cuisine:"toscane",
     micros:{ fer:2.65, magnesium:87.68, calcium:173.5, zinc:1.18, potassium:848.39, vitC:20.26, omega3:0.15 },
-    img:IMG.miso, imgQuery:"Pasta fagioli",
+    img:IMG.miso, imgQuery:"pasta fagioli",
     desc:"Haricots et pâtes se complètent pour une soupe nourrissante, riche en fibres et en protéines végétales, typiquement toscane.",
     astuce:"Mixez une louche de haricots avant d'ajouter les pâtes : la soupe devient crémeuse sans aucune crème.",
     ingredients:[
@@ -5641,7 +5641,7 @@ export const RECIPES_500 = [
     temps:30, portions:2, difficulte:"Facile",
     prix:3, cout:4.8, nutriScore:"B", cuisine:"sri-lankaise",
     micros:{ fer:7.07, magnesium:136.28, calcium:123.95, zinc:2.3, potassium:1231.6, vitC:14.56, vitD:3.18, vitB12:3.84, omega3:0.72 },
-    img:IMG.cabillaud, imgQuery:"Curry poisson blanc sri-lankais lait",
+    img:IMG.cabillaud, imgQuery:"curry fish sri-lankais milk",
     desc:"Curcuma, gingembre et ail anti-inflammatoires parfument un poisson blanc maigre et très protéiné, dans une sauce coco légère.",
     astuce:"Ajoutez une pincée de poivre noir avec le curcuma : il en booste l'absorption.",
     ingredients:[
@@ -5667,7 +5667,7 @@ export const RECIPES_500 = [
     temps:15, portions:2, difficulte:"Facile",
     prix:2, cout:2.12, nutriScore:"B", cuisine:"californienne",
     micros:{ fer:4.79, magnesium:181.68, calcium:160.83, zinc:3.04, potassium:1091.6, vitC:23.52, omega3:1.31 },
-    img:IMG.saladeQ, imgQuery:"Salade quinoa",
+    img:IMG.saladeQ, imgQuery:"salad quinoa",
     desc:"Betterave, myrtilles et noix concentrent des antioxydants anti-inflammatoires ; le quinoa apporte des protéines végétales complètes.",
     astuce:"Mélangez la betterave en dernier, à part, pour éviter qu'elle ne colore tout le quinoa en rose.",
     ingredients:[
@@ -5693,7 +5693,7 @@ export const RECIPES_500 = [
     temps:40, portions:4, difficulte:"Moyen",
     prix:3, cout:5.01, nutriScore:"B", cuisine:"française",
     micros:{ fer:2.4, magnesium:81.27, calcium:132.35, zinc:3.58, potassium:1456.35, vitC:36.27, vitB12:0.73, omega3:0.12 },
-    img:IMG.dinde, imgQuery:"Blanquette dinde",
+    img:IMG.dinde, imgQuery:"stew turkey",
     desc:"La dinde maigre offre 55 g de protéines, le yaourt remplace la crème : une blanquette onctueuse et légère.",
     astuce:"Incorporez le yaourt hors du feu et ne faites plus bouillir : la sauce reste lisse sans trancher.",
     ingredients:[
@@ -5719,7 +5719,7 @@ export const RECIPES_500 = [
     temps:25, portions:2, difficulte:"Facile",
     prix:2, cout:1.82, nutriScore:"B", cuisine:"française",
     micros:{ fer:3.4, magnesium:65.33, calcium:304.86, zinc:2.39, potassium:662.68, vitC:38.13, vitD:0.34, vitB12:0.39, omega3:0.29 },
-    img:IMG.oeufs, imgQuery:"ufs cocotte jambon-épinards",
+    img:IMG.oeufs, imgQuery:"eggs cocotte jambon-epinards",
     desc:"Œufs, jambon et fromage offrent un plat très protéiné et pauvre en glucides ; les épinards apportent fer et fibres.",
     astuce:"Sortez les ramequins quand les jaunes sont encore tremblotants : la chaleur résiduelle finit la cuisson.",
     ingredients:[
@@ -5745,7 +5745,7 @@ export const RECIPES_500 = [
     temps:26, portions:2, difficulte:"Facile",
     prix:2, cout:1.97, nutriScore:"B", cuisine:"petit-déjeuner moderne",
     micros:{ fer:1.57, magnesium:65.88, calcium:143.29, zinc:1.18, potassium:509.48, vitC:71.77, vitD:0.25, vitB12:0.32, omega3:0.06 },
-    img:IMG.crepes, imgQuery:"Dutch baby protéiné",
+    img:IMG.crepes, imgQuery:"dutch baby",
     desc:"Cette crêpe géante au four est riche en protéines grâce aux œufs et à la poudre, sans le sucre des pancakes classiques.",
     astuce:"N'ouvrez jamais le four pendant la cuisson : c'est le choc thermique qui fait gonfler spectaculairement le Dutch baby.",
     ingredients:[
@@ -5771,7 +5771,7 @@ export const RECIPES_500 = [
     temps:22, portions:2, difficulte:"Facile",
     prix:3, cout:2.77, nutriScore:"C", cuisine:"mexicaine",
     micros:null,
-    img:IMG.oeufs, imgQuery:"Chilaquiles allégés",
+    img:IMG.oeufs, imgQuery:"healthy food plate",
     desc:"Œufs et fromage frais apportent des protéines, la salsa verde un maximum de saveur pour peu de calories : un petit-déjeuner mexicain réconfortant.",
     astuce:"Ajoutez les chips dans la salsa juste avant de servir : elles doivent s'imprégner tout en gardant un peu de croquant.",
     ingredients:[
@@ -5797,7 +5797,7 @@ export const RECIPES_500 = [
     temps:20, portions:2, difficulte:"Facile",
     prix:3, cout:2.85, nutriScore:"B", cuisine:"italienne",
     micros:{ fer:8.31, magnesium:126.14, calcium:527.52, zinc:4.17, potassium:1160.85, vitC:31.06, vitD:0.24, vitB12:1.37, omega3:0.1 },
-    img:IMG.poulet, imgQuery:"Salade caprese poulet grillé",
+    img:IMG.poulet, imgQuery:"salad caprese chicken grilled",
     desc:"Le poulet grillé renforce la caprese en protéines : une assiette fraîche, gourmande et très rassasiante pour peu de glucides.",
     astuce:"Sortez la mozzarella du frais 15 min avant : à température ambiante, elle est bien plus fondante et parfumée.",
     ingredients:[
@@ -5822,7 +5822,7 @@ export const RECIPES_500 = [
     temps:27, portions:2, difficulte:"Moyen",
     prix:2, cout:2.63, nutriScore:"C", cuisine:"vietnamienne",
     micros:{ fer:1.98, magnesium:98.65, calcium:52.05, zinc:3.76, potassium:1063.15, vitC:23.71, vitB12:0.57, omega3:0.06 },
-    img:IMG.boeuf, imgQuery:"Bun cha",
+    img:IMG.boeuf, imgQuery:"healthy food plate",
     desc:"Porc maigre grillé et vermicelles apportent protéines et glucides, les herbes fraîches et la sauce acidulée allègent l'ensemble.",
     astuce:"Faites bien caraméliser le porc au gril : le contraste entre la viande chaude fumée et les herbes fraîches est l'âme du bun cha.",
     ingredients:[
@@ -5848,7 +5848,7 @@ export const RECIPES_500 = [
     temps:45, portions:4, difficulte:"Moyen",
     prix:2, cout:1.74, nutriScore:"C", cuisine:"sud-africaine",
     micros:{ fer:8.43, magnesium:73.64, calcium:90.34, zinc:0.77, potassium:992.54, vitC:2.41, vitD:0.02, vitB12:2.28, omega3:0.07 },
-    img:IMG.oeufs, imgQuery:"Bobotie",
+    img:IMG.oeufs, imgQuery:"bobotie",
     desc:"Bœuf maigre et œufs apportent beaucoup de protéines ; les épices douces et les fruits secs font de ce gratin sud-africain un plat unique et réconfortant.",
     astuce:"Les feuilles de laurier plantées dans la viande avant le gratin parfument subtilement tout le plat.",
     ingredients:[
@@ -5874,7 +5874,7 @@ export const RECIPES_500 = [
     temps:27, portions:2, difficulte:"Facile",
     prix:3, cout:5.72, nutriScore:"B", cuisine:"coréenne",
     micros:{ fer:9.56, magnesium:287.24, calcium:378.53, zinc:6.08, potassium:1129.99, vitC:38.37, vitD:0.02, vitB12:1.02, omega3:1.22 },
-    img:IMG.gambas, imgQuery:"Sundubu jjigae",
+    img:IMG.gambas, imgQuery:"sundubu jjigae",
     desc:"Tofu soyeux, fruits de mer et œuf forment un ragoût très protéiné et pauvre en glucides, parfait pour un dîner réconfortant.",
     astuce:"Cassez l'œuf dans le ragoût bouillonnant juste avant de servir : il pochera à table dans le bouillon brûlant.",
     ingredients:[
@@ -5900,7 +5900,7 @@ export const RECIPES_500 = [
     temps:5, portions:1, difficulte:"Facile",
     prix:1, cout:1.19, nutriScore:"B", cuisine:"dessert healthy",
     micros:{ fer:5.69, magnesium:80.14, calcium:83.38, zinc:1.32, potassium:666.2, vitC:0.63, vitD:0.38, vitB12:0.14, omega3:0.06 },
-    img:IMG.glace, imgQuery:"Nice cream banane-protéine",
+    img:IMG.glace, imgQuery:"nice cream banane-proteine",
     desc:"La banane congelée donne une glace crémeuse sans sucre ajouté, la protéine en fait une collation gourmande et rassasiante presque sans lipides.",
     astuce:"Coupez la banane en rondelles avant de la congeler : elle se mixe bien plus facilement en glace onctueuse.",
     ingredients:[
@@ -5924,7 +5924,7 @@ export const RECIPES_500 = [
     temps:10, portions:2, difficulte:"Facile",
     prix:1, cout:1.05, nutriScore:"B", cuisine:"méditerranéenne",
     micros:{ fer:3.96, magnesium:67.84, calcium:102.8, zinc:1.69, potassium:814.62, vitC:54.75, omega3:0.06 },
-    img:IMG.infusion, imgQuery:"Houmous petits pois-menthe crudités",
+    img:IMG.infusion, imgQuery:"hummus green peas menthe",
     desc:"Petits pois et pois chiches font un dip vert riche en protéines végétales et en fibres, frais et original, pour une collation saine.",
     astuce:"La menthe et le citron donnent une fraîcheur printanière qui change agréablement du houmois classique.",
     ingredients:[
@@ -5949,7 +5949,7 @@ export const RECIPES_500 = [
     temps:18, portions:2, difficulte:"Facile",
     prix:3, cout:3.66, nutriScore:"B", cuisine:"japonaise",
     micros:{ fer:16.49, magnesium:292.65, calcium:257.09, zinc:3.83, potassium:2114.7, vitC:7.94, vitD:10.93, vitB12:6.14, omega3:3.03 },
-    img:IMG.thon, imgQuery:"Bowl thon teriyaki",
+    img:IMG.thon, imgQuery:"bowl tuna teriyaki",
     desc:"Thon très maigre et riche en protéines, riz pour recharger le glycogène : un bol de récupération idéal, à seulement 8 g de lipides.",
     astuce:"Saisissez le thon très brièvement à feu vif : trop cuit, il devient sec ; rosé à cœur, il reste fondant.",
     ingredients:[
@@ -5975,7 +5975,7 @@ export const RECIPES_500 = [
     temps:13, portions:2, difficulte:"Facile",
     prix:1, cout:1.19, nutriScore:"B", cuisine:"boisson de récupération",
     micros:{ fer:5.33, magnesium:143.85, calcium:302.99, zinc:3.18, potassium:916.75, vitC:2.66, vitD:0.68, vitB12:0.72, omega3:0.13 },
-    img:IMG.porridge, imgQuery:"Porridge protéiné chocolat-banane",
+    img:IMG.porridge, imgQuery:"porridge chocolat-banane",
     desc:"Avoine et banane rechargent le glycogène après l'effort, la protéine relance la récupération musculaire : un porridge gourmand façon dessert.",
     astuce:"Ajoutez la protéine hors du feu : à ébullition, elle deviendrait granuleuse au lieu de rester crémeuse.",
     ingredients:[
@@ -6001,7 +6001,7 @@ export const RECIPES_500 = [
     temps:20, portions:2, difficulte:"Facile",
     prix:3, cout:3.08, nutriScore:"B", cuisine:"laotienne",
     micros:{ fer:3.54, magnesium:83.96, calcium:133.74, zinc:2.82, potassium:869.23, vitC:21.53, vitD:0.27, vitB12:0.7, omega3:0.36 },
-    img:IMG.poulet, imgQuery:"Larb poulet",
+    img:IMG.poulet, imgQuery:"larb chicken",
     desc:"Du poulet haché maigre cuit sans gras et beaucoup d'herbes fraîches : 44 g de protéines pour seulement 260 kcal, parfait en sèche.",
     astuce:"Le riz grillé moulu (khao khua) apporte un parfum de noisette et une texture sableuse typiques du larb : ne l'oubliez pas.",
     ingredients:[
@@ -6026,7 +6026,7 @@ export const RECIPES_500 = [
     temps:30, portions:2, difficulte:"Facile",
     prix:2, cout:2.29, nutriScore:"A", cuisine:"indonésienne",
     micros:{ fer:3.04, magnesium:71.47, calcium:78.3, zinc:2.42, potassium:738.86, vitC:11.91, vitD:0.01, vitB12:0.01 },
-    img:IMG.miso, imgQuery:"Soto ayam",
+    img:IMG.miso, imgQuery:"soto ayam",
     desc:"Un bouillon doré et léger, riche en poulet maigre et en œuf : beaucoup de protéines et de volume pour peu de calories.",
     astuce:"Le curcuma frais donne une couleur dorée éclatante et un parfum bien plus vif que le curcuma en poudre.",
     ingredients:[
@@ -6052,7 +6052,7 @@ export const RECIPES_500 = [
     temps:25, portions:4, difficulte:"Facile",
     prix:2, cout:1.72, nutriScore:"C", cuisine:"coréenne",
     micros:{ fer:5.34, magnesium:66.39, calcium:87.49, zinc:0.97, potassium:843.27, vitC:11.91, vitD:1.69, vitB12:3.89, omega3:0.45 },
-    img:IMG.oeufs, imgQuery:"Bulgogi riz",
+    img:IMG.oeufs, imgQuery:"bulgogi rice",
     desc:"Bœuf mariné riche en protéines et riz pour l'énergie : un grand classique coréen, savoureux et calibré pour la masse propre.",
     astuce:"Tranchez le bœuf très finement (plus facile s'il est légèrement congelé) : il s'imprègne mieux de marinade et cuit en quelques secondes.",
     ingredients:[
@@ -6078,7 +6078,7 @@ export const RECIPES_500 = [
     temps:40, portions:4, difficulte:"Moyen",
     prix:2, cout:1.72, nutriScore:"C", cuisine:"chinoise",
     micros:{ fer:1.39, magnesium:67.25, calcium:118.15, zinc:2.88, potassium:1033.36, vitC:50.85, vitB12:0.67, omega3:0.1 },
-    img:IMG.boeuf, imgQuery:"Char siu porc riz",
+    img:IMG.boeuf, imgQuery:"char pork rice",
     desc:"Porc maigre laqué riche en protéines et riz pour les glucides : un plat gourmand et coloré, idéal pour soutenir la prise de masse.",
     astuce:"Laquez le porc en deux fois en fin de cuisson : la marinade caramélise en une laque brillante sans brûler.",
     ingredients:[
@@ -6103,7 +6103,7 @@ export const RECIPES_500 = [
     temps:40, portions:4, difficulte:"Facile",
     prix:1, cout:1.08, nutriScore:"B", cuisine:"indienne",
     micros:{ fer:3.78, magnesium:94.29, calcium:94.32, zinc:2.38, potassium:836.93, vitC:15.84, omega3:0.08 },
-    img:IMG.dahl, imgQuery:"Dal makhani",
+    img:IMG.dahl, imgQuery:"dal makhani",
     desc:"Lentilles noires et haricots offrent un plat vegan riche en fibres et protéines ; la crème végétale donne l'onctuosité du dal makhani classique sans beurre ni crème.",
     astuce:"Plus le dal makhani mijote doucement, plus il devient crémeux : écrasez quelques lentilles pour épaissir la sauce.",
     ingredients:[
@@ -6129,7 +6129,7 @@ export const RECIPES_500 = [
     temps:32, portions:2, difficulte:"Facile",
     prix:2, cout:2.08, nutriScore:"B", cuisine:"sicilienne",
     micros:{ fer:6.24, magnesium:141.06, calcium:164.96, zinc:1.87, potassium:1847.8, vitC:15.13, omega3:0.16 },
-    img:IMG.pates, imgQuery:"Pasta alla norma",
+    img:IMG.pates, imgQuery:"pasta alla norma",
     desc:"Un plat de pâtes généreux et réconfortant où l'aubergine fondante remplace la viande : rassasiant et riche en glucides, idéal autour de l'entraînement.",
     astuce:"Rôtissez l'aubergine au four plutôt que de la frire : elle reste fondante en absorbant beaucoup moins d'huile.",
     ingredients:[
@@ -6154,7 +6154,7 @@ export const RECIPES_500 = [
     temps:40, portions:4, difficulte:"Facile",
     prix:3, cout:3.96, nutriScore:"C", cuisine:"basque",
     micros:{ fer:4.57, magnesium:115.53, calcium:76.84, zinc:1.5, potassium:1800.67, vitC:84.62, vitD:11.7, vitB12:5.68, omega3:2.27 },
-    img:IMG.thon, imgQuery:"Marmitako",
+    img:IMG.thon, imgQuery:"marmitako",
     desc:"Le thon est riche en oméga-3 anti-inflammatoires et en protéines ; poivron et tomate complètent un ragoût basque réconfortant et équilibré.",
     astuce:"Cassez les pommes de terre à la cuillère plutôt que de les couper : elles libèrent de l'amidon qui lie naturellement le ragoût.",
     ingredients:[
@@ -6180,7 +6180,7 @@ export const RECIPES_500 = [
     temps:27, portions:2, difficulte:"Facile",
     prix:3, cout:3.16, nutriScore:"C", cuisine:"japonaise",
     micros:{ fer:14.1, magnesium:271.72, calcium:260.93, zinc:3.6, potassium:2014.49, vitC:7.68, vitD:3.69, vitB12:4.0, omega3:2.91 },
-    img:IMG.saumon, imgQuery:"Bowl saumon",
+    img:IMG.saumon, imgQuery:"bowl salmon",
     desc:"Saumon riche en oméga-3, riz noir gorgé d'antioxydants (anthocyanes) et gingembre anti-inflammatoire : un bol coloré aux multiples bénéfices.",
     astuce:"Le riz noir garde une jolie texture ferme et un goût de noisette : rincez-le bien et comptez une cuisson un peu plus longue que le riz blanc.",
     ingredients:[
@@ -6206,7 +6206,7 @@ export const RECIPES_500 = [
     temps:27, portions:2, difficulte:"Facile",
     prix:3, cout:3.85, nutriScore:"B", cuisine:"grecque",
     micros:{ fer:2.63, magnesium:80.5, calcium:201.01, zinc:2.87, potassium:937.75, vitC:9.68, vitD:0.46, vitB12:0.6, omega3:0.25 },
-    img:IMG.poulet, imgQuery:"Souvlaki poulet tzatziki",
+    img:IMG.poulet, imgQuery:"souvlaki chicken tzatziki",
     desc:"Beaucoup de poulet maigre et un tzatziki au yaourt : 52 g de protéines pour peu de glucides, parfait en sèche.",
     astuce:"Essorez bien le concombre râpé dans un linge avant de faire le tzatziki : la sauce reste épaisse et ne rend pas d'eau.",
     ingredients:[
@@ -6231,7 +6231,7 @@ export const RECIPES_500 = [
     temps:20, portions:2, difficulte:"Facile",
     prix:3, cout:5.13, nutriScore:"A", cuisine:"française",
     micros:{ fer:6.68, magnesium:70.58, calcium:46.73, zinc:9.17, potassium:1369.65, vitC:9.77, vitD:0.9, vitB12:3.82, omega3:0.15 },
-    img:IMG.boeuf, imgQuery:"Steak haché",
+    img:IMG.boeuf, imgQuery:"steak hache",
     desc:"Le steak haché 5% est une source de protéines simple et économique ; champignons et haricots verts apportent du volume sans calories.",
     astuce:"Ne salez la viande qu'au moment de la cuisson : un salage trop précoce la dessèche.",
     ingredients:[
@@ -6256,7 +6256,7 @@ export const RECIPES_500 = [
     temps:20, portions:2, difficulte:"Moyen",
     prix:1, cout:1.02, nutriScore:"C", cuisine:"bretonne",
     micros:{ fer:1.71, magnesium:100.93, calcium:234.83, zinc:3.09, potassium:452.44, vitC:5.2, vitD:0.35, vitB12:0.46, omega3:0.16 },
-    img:IMG.oeufs, imgQuery:"Galette sarrasin complète",
+    img:IMG.oeufs, imgQuery:"flatbread buckwheat",
     desc:"Le sarrasin sans gluten apporte des glucides complets, l'œuf, le jambon et le fromage les protéines : une galette complète équilibrée.",
     astuce:"Laissez reposer la pâte au moins 1 h : la galette est plus souple et plus facile à plier sans casser.",
     ingredients:[
@@ -6281,7 +6281,7 @@ export const RECIPES_500 = [
     temps:12, portions:2, difficulte:"Facile",
     prix:2, cout:1.91, nutriScore:"B", cuisine:"petit-déjeuner moderne",
     micros:{ fer:0.57, magnesium:16.69, calcium:116.9, zinc:0.68, potassium:179.29, vitC:1.99, vitD:1.24, vitB12:0.35, omega3:0.04 },
-    img:IMG.omelette, imgQuery:"ufs brouillés crémeux cottage cheese",
+    img:IMG.omelette, imgQuery:"eggs cottage cheese",
     desc:"Le cottage cheese rend les œufs ultra crémeux tout en augmentant les protéines : un petit-déjeuner riche et rassasiant en 12 minutes.",
     astuce:"Cuisez à feu doux et coupez le feu un peu avant la fin : les œufs continuent de prendre et restent baveux.",
     ingredients:[
@@ -6306,7 +6306,7 @@ export const RECIPES_500 = [
     temps:30, portions:2, difficulte:"Moyen",
     prix:3, cout:3.4, nutriScore:"B", cuisine:"britannique",
     micros:{ fer:5.7, magnesium:127.69, calcium:143.84, zinc:1.96, potassium:1032.37, vitC:3.57, vitD:1.29, vitB12:2.63, omega3:0.4 },
-    img:IMG.oeufs, imgQuery:"Kedgeree haddock fumé",
+    img:IMG.oeufs, imgQuery:"haddock",
     desc:"Le haddock fumé est très protéiné et maigre ; avec le riz et l'œuf, le kedgeree fait un déjeuner complet, original et parfumé.",
     astuce:"Pochez le haddock dans du lait : cela adoucit le fumé et le sel, et garde la chair moelleuse.",
     ingredients:[
@@ -6332,7 +6332,7 @@ export const RECIPES_500 = [
     temps:50, portions:4, difficulte:"Difficile",
     prix:2, cout:2.44, nutriScore:"B", cuisine:"levantine",
     micros:{ fer:2.82, magnesium:90.74, calcium:83.35, zinc:2.88, potassium:987.28, vitC:6.3, vitB12:0.05, omega3:0.2 },
-    img:IMG.poivron, imgQuery:"Maqluba poulet aubergine",
+    img:IMG.poivron, imgQuery:"maqluba chicken eggplant",
     desc:"Poulet maigre, riz et légumes rôtis composent un plat levantin complet et spectaculaire, riche en protéines et glucides.",
     astuce:"Laissez reposer la cocotte 5 min avant de la renverser d'un geste sûr : la maqluba garde sa forme de gâteau.",
     ingredients:[
@@ -6358,7 +6358,7 @@ export const RECIPES_500 = [
     temps:45, portions:4, difficulte:"Moyen",
     prix:3, cout:5.01, nutriScore:"C", cuisine:"britannique",
     micros:{ fer:3.41, magnesium:68.65, calcium:160.07, zinc:2.58, potassium:1092.72, vitC:10.06, vitD:0.14, vitB12:0.18, omega3:0.71 },
-    img:IMG.cabillaud, imgQuery:"Fish pie",
+    img:IMG.cabillaud, imgQuery:"fish",
     desc:"Beaucoup de poisson maigre, une sauce au lait sans crème et une purée mi-chou-fleur : un fish pie réconfortant et riche en protéines, bien allégé.",
     astuce:"Mélangez chou-fleur et pomme de terre pour la purée : on garde le moelleux en réduisant fortement les glucides.",
     ingredients:[
@@ -6384,7 +6384,7 @@ export const RECIPES_500 = [
     temps:45, portions:4, difficulte:"Facile",
     prix:2, cout:2.69, nutriScore:"B", cuisine:"sénégalaise",
     micros:{ fer:1.55, magnesium:34.66, calcium:96.28, zinc:0.92, potassium:349.66, vitC:10.75, vitD:0.01, vitB12:0.05, omega3:0.13 },
-    img:IMG.poulet, imgQuery:"Yassa poulet riz",
+    img:IMG.poulet, imgQuery:"yassa chicken rice",
     desc:"Poulet maigre mariné au citron et beaucoup d'oignons fondants : un plat sénégalais très protéiné, acidulé et réconfortant.",
     astuce:"Le secret du yassa, c'est la patience avec les oignons : laissez-les fondre longuement pour une sauce douce et confite.",
     ingredients:[
@@ -6410,7 +6410,7 @@ export const RECIPES_500 = [
     temps:8, portions:1, difficulte:"Facile",
     prix:1, cout:1.01, nutriScore:"B", cuisine:"boisson healthy",
     micros:{ fer:5.78, magnesium:104.5, calcium:329.0, zinc:2.14, potassium:1010.0, vitC:3.27, vitD:0.95, vitB12:0.9, omega3:0.09 },
-    img:IMG.latteO, imgQuery:"Chocolat chaud protéiné",
+    img:IMG.latteO, imgQuery:"chocolate chaud",
     desc:"Une boisson chaude réconfortante qui apporte 30 g de protéines : parfaite en collation du soir ou après un entraînement par temps froid.",
     astuce:"Incorporez la protéine hors du feu et fouettez énergiquement : à ébullition, elle deviendrait granuleuse.",
     ingredients:[
@@ -6434,7 +6434,7 @@ export const RECIPES_500 = [
     temps:5, portions:1, difficulte:"Facile",
     prix:1, cout:1.25, nutriScore:"C", cuisine:"snack moderne",
     micros:{ fer:0.78, magnesium:48.15, calcium:67.06, zinc:0.64, potassium:148.13, vitC:0.15 },
-    img:IMG.wrapV, imgQuery:"Galettes riz",
+    img:IMG.wrapV, imgQuery:"rice",
     desc:"Une collation rapide qui combine glucides et bons lipides : idéale avant un entraînement pour un coup d'énergie.",
     astuce:"Pour une collation plus protéinée avant la salle, ajoutez une fine couche de fromage frais ou de skyr sous la banane.",
     ingredients:[
@@ -6458,7 +6458,7 @@ export const RECIPES_500 = [
     temps:32, portions:2, difficulte:"Facile",
     prix:3, cout:3.01, nutriScore:"A", cuisine:"californienne",
     micros:{ fer:6.64, magnesium:210.82, calcium:167.28, zinc:4.32, potassium:1546.65, vitC:50.76, omega3:0.25 },
-    img:IMG.poulet, imgQuery:"Bowl récupération quinoa",
+    img:IMG.poulet, imgQuery:"bowl quinoa",
     desc:"Quinoa et patate douce rechargent le glycogène avec des glucides complets, le poulet couvre les protéines : un bol de récupération nourrissant et complet.",
     astuce:"Rôtissez la patate douce avec un peu de paprika fumé : elle se caramélise et gagne en profondeur.",
     ingredients:[
@@ -6484,7 +6484,7 @@ export const RECIPES_500 = [
     temps:5, portions:1, difficulte:"Facile",
     prix:2, cout:1.69, nutriScore:"B", cuisine:"boisson de récupération",
     micros:{ fer:2.52, magnesium:112.54, calcium:307.92, zinc:2.54, potassium:860.7, vitC:67.46, vitD:0.54, vitB12:0.72, omega3:0.12 },
-    img:IMG.shakeP, imgQuery:"Smoothie récupération fraise-banane avoine",
+    img:IMG.shakeP, imgQuery:"smoothie fraise-banane oatmeal",
     desc:"Fraise, banane et avoine rechargent le glycogène, la protéine relance la construction musculaire : un shake de récupération simple et efficace.",
     astuce:"Utilisez des fraises congelées pour un smoothie bien frais et épais, sans glaçons qui le diluent.",
     ingredients:[
@@ -6508,7 +6508,7 @@ export const RECIPES_500 = [
     temps:20, portions:2, difficulte:"Facile",
     prix:2, cout:2.24, nutriScore:"B", cuisine:"chinoise",
     micros:{ fer:4.38, magnesium:106.36, calcium:100.22, zinc:2.58, potassium:763.33, vitC:24.7, vitD:0.03, vitB12:0.02, omega3:0.15 },
-    img:IMG.poulet, imgQuery:"Egg drop soup enrichie poulet",
+    img:IMG.poulet, imgQuery:"egg drop soup enrichie",
     desc:"Poulet et œuf apportent 40 g de protéines pour seulement 335 kcal, dans un grand bol de soupe rassasiant.",
     astuce:"Versez l'œuf en mince filet dans le bouillon frémissant en dessinant des cercles : il forme de fins rubans soyeux.",
     ingredients:[
@@ -6534,7 +6534,7 @@ export const RECIPES_500 = [
     temps:12, portions:2, difficulte:"Facile",
     prix:3, cout:4.5, nutriScore:"A", cuisine:"méditerranéenne",
     micros:{ fer:3.29, magnesium:66.75, calcium:107.32, zinc:3.93, potassium:1053.08, vitC:67.04, omega3:0.1 },
-    img:IMG.mousse, imgQuery:"Salade crabe",
+    img:IMG.mousse, imgQuery:"salad crabe",
     desc:"Le crabe est très protéiné et maigre ; l'avocat apporte de bons lipides et le pamplemousse de la fraîcheur, pour une salade légère et raffinée.",
     astuce:"Récupérez le jus du pamplemousse en levant les suprêmes et ajoutez-le à la vinaigrette : zéro perte, maximum de parfum.",
     ingredients:[
@@ -6559,7 +6559,7 @@ export const RECIPES_500 = [
     temps:40, portions:4, difficulte:"Facile",
     prix:3, cout:3.42, nutriScore:"B", cuisine:"mexicaine",
     micros:{ fer:2.55, magnesium:92.42, calcium:284.46, zinc:2.75, potassium:843.29, vitC:39.46, vitD:1.12, vitB12:0.53, omega3:2.08 },
-    img:IMG.poulet, imgQuery:"Enchiladas poulet haricots four",
+    img:IMG.poulet, imgQuery:"enchiladas chicken beans baked",
     desc:"Poulet, haricots et tortillas réunissent protéines, fibres et glucides en quantité : un plat mexicain copieux et généreux pour la masse.",
     astuce:"Trempez brièvement les tortillas dans la sauce chaude avant de les rouler : elles deviennent souples et ne craquent pas.",
     ingredients:[
@@ -6585,7 +6585,7 @@ export const RECIPES_500 = [
     temps:24, portions:2, difficulte:"Facile",
     prix:2, cout:2.4, nutriScore:"B", cuisine:"thaïlandaise",
     micros:{ fer:10.45, magnesium:142.59, calcium:289.22, zinc:4.18, potassium:891.85, vitC:62.79, vitB12:1.49, omega3:0.07 },
-    img:IMG.poulet, imgQuery:"Drunken noodles poulet",
+    img:IMG.poulet, imgQuery:"drunken noodles chicken",
     desc:"Nouilles de riz et poulet maigre fournissent glucides et protéines, le basilic thaï et le piment apportent un maximum de saveur.",
     astuce:"Ajoutez le basilic thaï tout à la fin, juste flétri : son parfom poivré ne supporte pas une longue cuisson.",
     ingredients:[
@@ -6611,7 +6611,7 @@ export const RECIPES_500 = [
     temps:37, portions:4, difficulte:"Facile",
     prix:1, cout:1.49, nutriScore:"B", cuisine:"grecque",
     micros:{ fer:5.23, magnesium:104.25, calcium:330.2, zinc:1.87, potassium:1190.16, vitC:19.28, omega3:0.89 },
-    img:IMG.miso, imgQuery:"Fasolada",
+    img:IMG.miso, imgQuery:"fasolada",
     desc:"Considérée comme le plat national grec, cette soupe de haricots blancs est riche en fibres et en protéines végétales, et très rassasiante.",
     astuce:"Un généreux filet d'huile d'olive crue versé à la fin transforme cette soupe simple en plat réconfortant.",
     ingredients:[
@@ -6637,7 +6637,7 @@ export const RECIPES_500 = [
     temps:35, portions:4, difficulte:"Facile",
     prix:1, cout:0.83, nutriScore:"A", cuisine:"turque",
     micros:{ fer:6.26, magnesium:122.96, calcium:89.97, zinc:3.45, potassium:1111.6, vitC:20.4, omega3:0.18 },
-    img:IMG.dahl, imgQuery:"Mercimek köftesi",
+    img:IMG.dahl, imgQuery:"mercimek koftesi",
     desc:"Lentilles et boulgour se complètent en protéines végétales et fibres : un classique de rue turc, sain et rassasiant, sans cuisson au four.",
     astuce:"Façonnez les quenelles en serrant la pâte dans le poing : les marques de doigts sont la signature traditionnelle du köfte.",
     ingredients:[
@@ -6663,7 +6663,7 @@ export const RECIPES_500 = [
     temps:27, portions:2, difficulte:"Facile",
     prix:3, cout:5.17, nutriScore:"B", cuisine:"indienne",
     micros:{ fer:17.65, magnesium:246.65, calcium:399.02, zinc:7.78, potassium:1854.15, vitC:73.25, vitB12:2.0, omega3:0.37 },
-    img:IMG.crevettes, imgQuery:"Curry crevettes",
+    img:IMG.crevettes, imgQuery:"curry shrimp",
     desc:"Curcuma et gingembre anti-inflammatoires, épinards riches en fer, crevettes très protéinées et maigres : un curry léger aux multiples bénéfices.",
     astuce:"Ne cuisez les crevettes que quelques minutes : trop longtemps, elles deviennent caoutchouteuses.",
     ingredients:[
@@ -6689,7 +6689,7 @@ export const RECIPES_500 = [
     temps:12, portions:2, difficulte:"Facile",
     prix:2, cout:1.93, nutriScore:"C", cuisine:"nordique",
     micros:{ fer:2.64, magnesium:76.58, calcium:151.8, zinc:1.08, potassium:1181.4, vitC:35.67, vitD:3.64, vitB12:6.94, omega3:4.09 },
-    img:IMG.truite, imgQuery:"Salade maquereau fumé",
+    img:IMG.truite, imgQuery:"salad mackerel",
     desc:"Le maquereau fumé est exceptionnellement riche en oméga-3 anti-inflammatoires ; betterave et graines apportent antioxydants et bons lipides.",
     astuce:"Le raifort relève la douceur de la betterave et coupe le gras du maquereau : un trio classique du Nord.",
     ingredients:[
@@ -6715,7 +6715,7 @@ export const RECIPES_500 = [
     temps:25, portions:2, difficulte:"Facile",
     prix:3, cout:2.78, nutriScore:"B", cuisine:"marocaine",
     micros:{ fer:13.75, magnesium:109.72, calcium:282.62, zinc:1.25, potassium:1491.9, vitC:21.4, vitB12:2.52, omega3:0.2 },
-    img:IMG.oeufs, imgQuery:"Kefta grillées",
+    img:IMG.oeufs, imgQuery:"kefta grilled",
     desc:"Bœuf maigre épicé et sauce au yaourt : un plat très protéiné et pauvre en glucides, parfumé et rassasiant.",
     astuce:"Laissez reposer la viande assaisonnée 15 min avant de former les keftas : elles tiennent mieux et sont plus parfumées.",
     ingredients:[
@@ -6740,7 +6740,7 @@ export const RECIPES_500 = [
     temps:15, portions:2, difficulte:"Moyen",
     prix:3, cout:5.0, nutriScore:"B", cuisine:"italienne",
     micros:{ fer:3.91, magnesium:79.17, calcium:153.67, zinc:7.56, potassium:895.75, vitC:9.29, vitD:4.76, vitB12:7.83, omega3:0.98 },
-    img:IMG.thon, imgQuery:"Vitello tonnato",
+    img:IMG.thon, imgQuery:"vitello tonnato",
     desc:"Veau maigre et sauce au thon allégée au yaourt : un plat italien élégant offrant 61 g de protéines pour presque aucun glucide.",
     astuce:"Tranchez le veau froid très finement et nappez-le au dernier moment : la sauce reste brillante et le veau fondant.",
     ingredients:[
@@ -6765,7 +6765,7 @@ export const RECIPES_500 = [
     temps:25, portions:2, difficulte:"Facile",
     prix:2, cout:2.44, nutriScore:"B", cuisine:"israélienne",
     micros:{ fer:8.15, magnesium:121.55, calcium:288.62, zinc:2.1, potassium:1258.15, vitC:93.9, vitD:0.05, vitB12:0.14, omega3:0.46 },
-    img:IMG.shaksh, imgQuery:"Shakshuka verte",
+    img:IMG.shaksh, imgQuery:"shakshuka",
     desc:"Une version verte de la shakshuka, gorgée de légumes et riche en protéines grâce aux œufs et à la feta.",
     astuce:"Couvrez la poêle après avoir cassé les œufs : la vapeur cuit le dessus tout en gardant les jaunes coulants.",
     ingredients:[
@@ -6791,7 +6791,7 @@ export const RECIPES_500 = [
     temps:18, portions:2, difficulte:"Facile",
     prix:2, cout:1.81, nutriScore:"B", cuisine:"petit-déjeuner moderne",
     micros:{ fer:3.17, magnesium:101.74, calcium:319.69, zinc:2.87, potassium:369.91, vitC:10.47, vitD:0.02, vitB12:0.67, omega3:0.15 },
-    img:IMG.porridge, imgQuery:"Porridge salé",
+    img:IMG.porridge, imgQuery:"porridge sale",
     desc:"Une version salée et nourrissante du porridge : avoine pour les glucides complets, œuf et parmesan pour les protéines.",
     astuce:"Cuire l'avoine dans du bouillon plutôt que de l'eau change tout : le porridge devient savoureux comme un risotto.",
     ingredients:[
@@ -6817,7 +6817,7 @@ export const RECIPES_500 = [
     temps:33, portions:2, difficulte:"Moyen",
     prix:3, cout:4.8, nutriScore:"C", cuisine:"portugaise",
     micros:{ fer:4.29, magnesium:107.98, calcium:86.62, zinc:1.52, potassium:1642.9, vitC:18.94, vitD:2.58, vitB12:2.41, omega3:0.54 },
-    img:IMG.oeufs, imgQuery:"Bacalhau brás",
+    img:IMG.oeufs, imgQuery:"bacalhau bras",
     desc:"Cabillaud très protéiné et œufs, avec des pommes de terre cuites au four plutôt que frites : un classique portugais allégé mais fidèle.",
     astuce:"Coupez le feu quand les œufs sont encore crémeux : le bacalhau à brás ne doit jamais être sec.",
     ingredients:[
@@ -6843,7 +6843,7 @@ export const RECIPES_500 = [
     temps:35, portions:4, difficulte:"Moyen",
     prix:3, cout:3.93, nutriScore:"C", cuisine:"catalane",
     micros:{ fer:5.96, magnesium:152.86, calcium:289.21, zinc:9.34, potassium:1031.16, vitC:82.28, vitD:0.32, vitB12:17.89, omega3:0.89 },
-    img:IMG.gambas, imgQuery:"Fideuà fruits mer",
+    img:IMG.gambas, imgQuery:"fideua fruits",
     desc:"Cousine de la paella aux vermicelles, la fideuà associe fruits de mer maigres et glucides : un déjeuner complet et savoureux.",
     astuce:"Faites dorer les vermicelles à sec ou dans un peu d'huile avant d'ajouter le liquide : ils gagnent un goût de noisette typique.",
     ingredients:[
@@ -6869,7 +6869,7 @@ export const RECIPES_500 = [
     temps:32, portions:2, difficulte:"Facile",
     prix:3, cout:3.04, nutriScore:"C", cuisine:"coréenne",
     micros:{ fer:3.93, magnesium:148.56, calcium:239.25, zinc:3.19, potassium:1286.15, vitC:77.11, vitB12:0.42, omega3:0.58 },
-    img:IMG.boeuf, imgQuery:"Kimchi jjigae porc maigre",
+    img:IMG.boeuf, imgQuery:"kimchi jjigae pork",
     desc:"Porc maigre et tofu apportent beaucoup de protéines ; le kimchi fermenté ajoute des probiotiques et un maximum de goût pour peu de glucides.",
     astuce:"Utilisez un kimchi bien mûr (acide) : c'est lui qui donne toute la profondeur au jjigae.",
     ingredients:[
@@ -6895,7 +6895,7 @@ export const RECIPES_500 = [
     temps:45, portions:4, difficulte:"Moyen",
     prix:2, cout:1.93, nutriScore:"B", cuisine:"française",
     micros:{ fer:6.22, magnesium:96.07, calcium:311.03, zinc:2.65, potassium:941.81, vitC:11.34, vitB12:0.21, omega3:0.81 },
-    img:IMG.poulet, imgQuery:"Cassoulet",
+    img:IMG.poulet, imgQuery:"cassoulet",
     desc:"Beaucoup de haricots blancs (fibres et protéines végétales) et des viandes maigres en quantité raisonnable : un cassoulet réconfortant nettement allégé.",
     astuce:"Cassez la croûte de chapelure une fois en cours de cuisson et laissez-la se reformer : c'est le secret d'un bon cassoulet.",
     ingredients:[
@@ -6921,7 +6921,7 @@ export const RECIPES_500 = [
     temps:8, portions:2, difficulte:"Facile",
     prix:2, cout:1.72, nutriScore:"A", cuisine:"snack healthy",
     micros:{ fer:2.75, magnesium:135.0, calcium:411.74, zinc:2.39, potassium:688.68, vitC:17.96, vitD:0.54, vitB12:0.72, omega3:4.46 },
-    img:IMG.chiapot, imgQuery:"Pudding chia framboise-vanille protéiné",
+    img:IMG.chiapot, imgQuery:"pudding chia framboise-vanille",
     desc:"Le chia gélifie en un pudding riche en fibres et oméga-3 ; la protéine en fait une collation rassasiante, prête à l'avance.",
     astuce:"Remuez le mélange une fois après 10 min : cela évite que les graines ne forment des amas et donne un pudding homogène.",
     ingredients:[
@@ -6946,7 +6946,7 @@ export const RECIPES_500 = [
     temps:15, portions:8, difficulte:"Facile",
     prix:1, cout:0.4, nutriScore:"C", cuisine:"snack healthy",
     micros:{ fer:2.32, magnesium:70.15, calcium:46.97, zinc:1.04, potassium:433.29, vitC:0.75, vitD:0.07, omega3:0.21 },
-    img:IMG.energy, imgQuery:"Barres énergétiques cuisson dattes-noix-cacao",
+    img:IMG.energy, imgQuery:"bars cuisson dattes-noix-cacao",
     desc:"Des barres maison sans sucre ajouté ni cuisson, qui combinent glucides des dattes, bons lipides des noix et un boost de protéine : pratiques avant ou après l'effort.",
     astuce:"Si la pâte est trop sèche, ajoutez une datte ou un peu d'eau ; trop collante, un peu plus d'avoine.",
     ingredients:[
@@ -6972,7 +6972,7 @@ export const RECIPES_500 = [
     temps:8, portions:1, difficulte:"Facile",
     prix:3, cout:3.91, nutriScore:"C", cuisine:"new-yorkaise",
     micros:{ fer:1.19, magnesium:45.85, calcium:281.63, zinc:1.68, potassium:450.2, vitC:9.6, vitD:3.07, vitB12:3.7, omega3:1.51 },
-    img:IMG.saumon, imgQuery:"Bagel saumon fumé fromage frais",
+    img:IMG.saumon, imgQuery:"bagel salmon cheese",
     desc:"Le bagel recharge le glycogène, le saumon fumé apporte protéines et oméga-3 : une récupération rapide et savoureuse, prête en quelques minutes.",
     astuce:"Choisissez un saumon fumé de qualité, peu salé, et ajoutez beaucoup d'aneth frais pour la fraîcheur.",
     ingredients:[
@@ -6997,7 +6997,7 @@ export const RECIPES_500 = [
     temps:12, portions:2, difficulte:"Facile",
     prix:3, cout:2.75, nutriScore:"B", cuisine:"méditerranéenne",
     micros:{ fer:1.41, magnesium:35.21, calcium:66.38, zinc:0.74, potassium:338.93, vitC:52.55, vitB12:0.04, omega3:0.81 },
-    img:IMG.houmous, imgQuery:"Wrap récupération dinde",
+    img:IMG.houmous, imgQuery:"wrap turkey",
     desc:"Tortilla et houmous rechargent le glycogène, la dinde très maigre couvre les protéines : un wrap de récupération équilibré et rapide.",
     astuce:"Disposez les crudités en bande au centre et roulez bien serré : le wrap se tient et se transporte facilement.",
     ingredients:[
@@ -7022,7 +7022,7 @@ export const RECIPES_500 = [
     temps:30, portions:2, difficulte:"Facile",
     prix:3, cout:3.23, nutriScore:"B", cuisine:"philippine",
     micros:{ fer:5.03, magnesium:115.25, calcium:137.25, zinc:3.55, potassium:1112.53, vitC:42.38, omega3:0.18 },
-    img:IMG.miso, imgQuery:"Tinola",
+    img:IMG.miso, imgQuery:"tinola",
     desc:"Beaucoup de poulet maigre dans un bouillon parfumé au gingembre : 44 g de protéines pour seulement 260 kcal, idéal en sèche.",
     astuce:"Faites bien revenir le gingembre au début : c'est lui qui donne à la tinola son parfum chaleureux et réconfortant.",
     ingredients:[
@@ -7048,7 +7048,7 @@ export const RECIPES_500 = [
     temps:16, portions:2, difficulte:"Facile",
     prix:3, cout:3.71, nutriScore:"B", cuisine:"méditerranéenne",
     micros:{ fer:3.33, magnesium:149.12, calcium:178.4, zinc:2.94, potassium:1217.1, vitC:28.73, vitD:0.72, vitB12:6.3, omega3:0.94 },
-    img:IMG.gambas, imgQuery:"Salade calamars grillés",
+    img:IMG.gambas, imgQuery:"salad squid grilled",
     desc:"Les calamars sont très protéinés et maigres ; grillés et servis en salade fraîche, ils font un repas léger et raffiné.",
     astuce:"Les calamars se cuisent très vite ou très longtemps : ici, 2–3 minutes à feu vif pour qu'ils restent tendres.",
     ingredients:[
@@ -7073,7 +7073,7 @@ export const RECIPES_500 = [
     temps:35, portions:4, difficulte:"Facile",
     prix:3, cout:3.16, nutriScore:"B", cuisine:"tex-mex",
     micros:{ fer:1.56, magnesium:63.33, calcium:100.81, zinc:2.12, potassium:759.41, vitC:31.64, omega3:0.03 },
-    img:IMG.wrapV, imgQuery:"Fajitas poulet four",
+    img:IMG.wrapV, imgQuery:"fajitas chicken baked",
     desc:"Poulet maigre, légumes et tortillas réunissent protéines et glucides en quantité : un repas convivial calibré pour la prise de masse.",
     astuce:"Tout cuit sur une seule plaque : les sucs des poivrons et du poulet se mélangent et concentrent les saveurs.",
     ingredients:[
@@ -7099,7 +7099,7 @@ export const RECIPES_500 = [
     temps:37, portions:2, difficulte:"Moyen",
     prix:2, cout:2.48, nutriScore:"C", cuisine:"chinoise",
     micros:{ fer:2.18, magnesium:74.57, calcium:95.4, zinc:2.73, potassium:565.62, vitC:1.21, vitD:0.45, vitB12:0.24, omega3:0.56 },
-    img:IMG.poulet, imgQuery:"Lemon chicken croustillant four riz",
+    img:IMG.poulet, imgQuery:"lemon chicken croustillant baked",
     desc:"Poulet pané au four (sans friture) et riz : un lemon chicken gourmand riche en protéines et glucides, parfait pour la masse propre.",
     astuce:"Faites dorer le panko à sec avant de paner : le poulet ressort croustillant même cuit au four.",
     ingredients:[
@@ -7125,7 +7125,7 @@ export const RECIPES_500 = [
     temps:45, portions:4, difficulte:"Facile",
     prix:2, cout:1.58, nutriScore:"B", cuisine:"turque",
     micros:{ fer:3.93, magnesium:126.83, calcium:159.53, zinc:2.63, potassium:1258.32, vitC:20.32, omega3:0.24 },
-    img:IMG.poivron, imgQuery:"Imam bayildi pois chiches",
+    img:IMG.poivron, imgQuery:"imam bayildi chickpea",
     desc:"Les pois chiches enrichissent ce classique turc en protéines végétales et fibres ; l'aubergine fondante en fait un plat vegan réconfortant, chaud ou froid.",
     astuce:"Imam bayildi (« l'imam s'évanouit ») se mange tiède ou froid : laissez les saveurs se développer, c'est encore meilleur le lendemain.",
     ingredients:[
@@ -7151,7 +7151,7 @@ export const RECIPES_500 = [
     temps:28, portions:4, difficulte:"Facile",
     prix:1, cout:0.96, nutriScore:"C", cuisine:"tunisienne",
     micros:{ fer:5.7, magnesium:112.81, calcium:184.54, zinc:2.42, potassium:587.2, vitC:7.64, vitD:0.03, omega3:0.23 },
-    img:IMG.miso, imgQuery:"Lablabi",
+    img:IMG.miso, imgQuery:"lablabi",
     desc:"Les pois chiches sont riches en protéines végétales et fibres ; cette soupe tunisienne épicée et économique est très rassasiante.",
     astuce:"Le pain rassis au fond du bol s'imbibe de bouillon : c'est la base traditionnelle et réconfortante du lablabi.",
     ingredients:[
@@ -7177,7 +7177,7 @@ export const RECIPES_500 = [
     temps:30, portions:2, difficulte:"Facile",
     prix:3, cout:3.77, nutriScore:"A", cuisine:"française",
     micros:{ fer:5.23, magnesium:130.53, calcium:155.89, zinc:3.37, potassium:1403.15, vitC:18.1, vitD:3.36, vitB12:8.0, omega3:0.02 },
-    img:IMG.truite, imgQuery:"Truite rôtie",
+    img:IMG.truite, imgQuery:"trout roasted",
     desc:"La truite est riche en oméga-3 anti-inflammatoires, les lentilles en fibres et protéines végétales : une assiette complète et équilibrée.",
     astuce:"Assaisonnez les lentilles encore tièdes : elles absorbent mieux la vinaigrette et l'échalote.",
     ingredients:[
@@ -7202,7 +7202,7 @@ export const RECIPES_500 = [
     temps:32, portions:4, difficulte:"Facile",
     prix:2, cout:2.13, nutriScore:"B", cuisine:"indienne",
     micros:{ fer:10.05, magnesium:179.76, calcium:295.7, zinc:3.36, potassium:1744.37, vitC:57.85, omega3:0.94 },
-    img:IMG.curry, imgQuery:"Curry doré chou-fleur",
+    img:IMG.curry, imgQuery:"curry cauliflower",
     desc:"Curcuma et gingembre anti-inflammatoires, chou-fleur et pois chiches riches en fibres et protéines végétales : un curry doré sain et nourrissant.",
     astuce:"Une pincée de poivre noir avec le curcuma en booste l'absorption ; ajoutez les épinards en toute fin.",
     ingredients:[
@@ -7228,7 +7228,7 @@ export const RECIPES_500 = [
     temps:33, portions:2, difficulte:"Facile",
     prix:3, cout:2.91, nutriScore:"B", cuisine:"portugaise",
     micros:{ fer:1.06, magnesium:15.44, calcium:36.34, zinc:0.67, potassium:680.1, vitC:33.59, omega3:0.13 },
-    img:IMG.saladeQ, imgQuery:"Piri piri chicken grillé salade",
+    img:IMG.saladeQ, imgQuery:"piri chicken grilled salad",
     desc:"Beaucoup de poulet maigre relevé d'une marinade épicée : un plat très protéiné et savoureux, parfait en sèche avec une portion mesurée de pommes de terre.",
     astuce:"Arrosez régulièrement le poulet de marinade pendant la cuisson : il reste juteux et bien parfumé.",
     ingredients:[
@@ -7253,7 +7253,7 @@ export const RECIPES_500 = [
     temps:28, portions:2, difficulte:"Facile",
     prix:3, cout:5.27, nutriScore:"A", cuisine:"italienne",
     micros:{ fer:3.86, magnesium:121.3, calcium:263.11, zinc:2.44, potassium:1749.25, vitC:271.55, vitD:2.82, vitB12:2.97, omega3:0.46 },
-    img:IMG.cabillaud, imgQuery:"Cabillaud croûte parmesan-herbes brocoli rôti",
+    img:IMG.cabillaud, imgQuery:"cod broccoli roasted",
     desc:"Cabillaud très maigre et croûte légère au parmesan : 50 g de protéines pour peu de glucides, avec le brocoli pour les fibres.",
     astuce:"Pressez bien la croûte sur le poisson et terminez sous le gril 1 min pour qu'elle dore parfaitement.",
     ingredients:[
@@ -7278,7 +7278,7 @@ export const RECIPES_500 = [
     temps:20, portions:2, difficulte:"Facile",
     prix:2, cout:1.93, nutriScore:"C", cuisine:"turque",
     micros:{ fer:0.94, magnesium:39.44, calcium:41.96, zinc:0.67, potassium:791.35, vitC:54.08, vitD:0.05, vitB12:0.04, omega3:0.09 },
-    img:IMG.omelette, imgQuery:"Menemen",
+    img:IMG.omelette, imgQuery:"menemen",
     desc:"Œufs et légumes compotés forment un petit-déjeuner salé protéiné ; plus fondant et stiré que la shakshuka, le menemen se prépare en 20 minutes.",
     astuce:"Gardez le menemen baveux : coupez le feu quand les œufs sont encore crémeux, ils finissent de cuire dans la poêle chaude.",
     ingredients:[
@@ -7304,7 +7304,7 @@ export const RECIPES_500 = [
     temps:24, portions:2, difficulte:"Moyen",
     prix:2, cout:1.92, nutriScore:"B", cuisine:"japonaise",
     micros:{ fer:1.55, magnesium:60.96, calcium:96.21, zinc:1.02, potassium:439.58, vitC:70.12, vitD:0.15, vitB12:0.17, omega3:0.05 },
-    img:IMG.pancakes, imgQuery:"Pancakes japonais soufflés protéinés",
+    img:IMG.pancakes, imgQuery:"pancakes japonais",
     desc:"Les blancs montés rendent ces pancakes ultra aériens, la protéine et les œufs en font un petit-déjeuner riche en protéines sans excès de sucre.",
     astuce:"Cuisez à feu doux et à couvert : la vapeur fait gonfler les pancakes en hauteur et les garde moelleux.",
     ingredients:[
@@ -7330,7 +7330,7 @@ export const RECIPES_500 = [
     temps:45, portions:4, difficulte:"Moyen",
     prix:2, cout:2.71, nutriScore:"C", cuisine:"italienne",
     micros:{ fer:4.46, magnesium:113.68, calcium:546.32, zinc:2.98, potassium:1827.0, vitC:16.17, vitD:0.2, vitB12:1.54, omega3:0.2 },
-    img:IMG.bowl, imgQuery:"Melanzane alla parmigiana",
+    img:IMG.bowl, imgQuery:"melanzane alla parmigiana",
     desc:"En grillant l'aubergine au lieu de la frire et en dosant le fromage, on garde un gratin réconfortant beaucoup plus léger et tout aussi savoureux.",
     astuce:"Grillez bien l'aubergine pour évacuer son eau : le gratin se tient au lieu de rendre du jus.",
     ingredients:[
@@ -7356,7 +7356,7 @@ export const RECIPES_500 = [
     temps:35, portions:4, difficulte:"Moyen",
     prix:2, cout:2.68, nutriScore:"C", cuisine:"péruvienne",
     micros:{ fer:2.01, magnesium:87.29, calcium:171.59, zinc:3.25, potassium:723.95, vitC:0.88, vitB12:0.39, omega3:0.41 },
-    img:IMG.poulet, imgQuery:"Aji gallina riz",
+    img:IMG.poulet, imgQuery:"gallina rice",
     desc:"Le lait évaporé écrémé remplace la crème : on garde l'onctuosité de l'aji de gallina avec beaucoup de poulet maigre et moins de lipides.",
     astuce:"L'aji amarillo donne sa couleur jaune et son parfum fruité légèrement piquant, signature de la cuisine péruvienne.",
     ingredients:[
@@ -7382,7 +7382,7 @@ export const RECIPES_500 = [
     temps:45, portions:4, difficulte:"Moyen",
     prix:3, cout:4.74, nutriScore:"B", cuisine:"française",
     micros:{ fer:5.69, magnesium:76.29, calcium:115.54, zinc:3.8, potassium:1252.52, vitC:15.84, vitD:0.23, vitB12:0.85, omega3:0.49 },
-    img:IMG.poulet, imgQuery:"Coq vin",
+    img:IMG.poulet, imgQuery:"healthy food plate",
     desc:"En retirant la peau et en utilisant des lardons de dinde, on garde un coq au vin riche et savoureux mais beaucoup plus maigre et très protéiné.",
     astuce:"Laissez le vin réduire et l'alcool s'évaporer avant d'ajouter le bouillon : la sauce gagne en profondeur et en rondeur.",
     ingredients:[
@@ -7408,7 +7408,7 @@ export const RECIPES_500 = [
     temps:45, portions:4, difficulte:"Moyen",
     prix:2, cout:1.71, nutriScore:"B", cuisine:"britannique",
     micros:{ fer:5.95, magnesium:77.11, calcium:93.01, zinc:0.93, potassium:1585.38, vitC:10.64, vitD:0.02, vitB12:2.13, omega3:0.23 },
-    img:IMG.oeufs, imgQuery:"Cottage pie",
+    img:IMG.oeufs, imgQuery:"cottage",
     desc:"Une purée mi-chou-fleur réduit les glucides tout en gardant le moelleux ; le bœuf maigre fait un gratin très protéiné et réconfortant.",
     astuce:"Rayez la purée à la fourchette avant d'enfourner : les pointes dorent et croustillent au four.",
     ingredients:[
@@ -7433,7 +7433,7 @@ export const RECIPES_500 = [
     temps:10, portions:4, difficulte:"Facile",
     prix:2, cout:1.55, nutriScore:"B", cuisine:"snack healthy",
     micros:{ fer:1.12, magnesium:31.33, calcium:252.94, zinc:0.48, potassium:241.51, vitC:52.42, omega3:0.1 },
-    img:IMG.glace, imgQuery:"Frozen yogurt bark protéiné fruits",
+    img:IMG.glace, imgQuery:"frozen yogurt bark fruits",
     desc:"Le yaourt grec enrichi en protéine fait une 'écorce' glacée très protéinée et peu grasse : une alternative saine à la glace.",
     astuce:"Étalez une couche fine et régulière : elle se casse en jolis morceaux et fond agréablement en bouche.",
     ingredients:[
@@ -7458,7 +7458,7 @@ export const RECIPES_500 = [
     temps:5, portions:1, difficulte:"Facile",
     prix:2, cout:1.59, nutriScore:"B", cuisine:"snack moderne",
     micros:{ fer:0.81, magnesium:44.41, calcium:306.25, zinc:1.37, potassium:349.98, vitC:0.16, vitD:3.0, vitB12:0.8, omega3:0.05 },
-    img:IMG.yaourt, imgQuery:"Cottage cheese",
+    img:IMG.yaourt, imgQuery:"cottage cheese",
     desc:"Le cottage cheese est l'une des collations les plus protéinées qui soient ; avec la pêche et les amandes, c'est une pause gourmande et rassasiante en 5 minutes.",
     astuce:"Hors saison, remplacez la pêche fraîche par de la pêche surgelée décongelée ou des fruits rouges.",
     ingredients:[
@@ -7482,7 +7482,7 @@ export const RECIPES_500 = [
     temps:23, portions:2, difficulte:"Facile",
     prix:3, cout:2.83, nutriScore:"B", cuisine:"italienne",
     micros:{ fer:7.62, magnesium:197.11, calcium:135.76, zinc:3.23, potassium:1764.17, vitC:9.83, vitD:9.36, vitB12:4.55, omega3:1.83 },
-    img:IMG.thon, imgQuery:"Pâtes complètes thon",
+    img:IMG.thon, imgQuery:"pasta tuna",
     desc:"Pâtes complètes pour recharger le glycogène et thon très maigre pour les protéines : un plat de récupération simple, économique et efficace.",
     astuce:"Gardez un peu d'eau de cuisson des pâtes : elle lie la sauce et l'enrobe parfaitement.",
     ingredients:[
@@ -7507,7 +7507,7 @@ export const RECIPES_500 = [
     temps:8, portions:1, difficulte:"Facile",
     prix:2, cout:1.95, nutriScore:"A", cuisine:"américaine",
     micros:{ fer:1.08, magnesium:23.17, calcium:54.1, zinc:0.59, potassium:270.93, vitC:8.23, vitD:0.09, vitB12:0.04, omega3:0.05 },
-    img:IMG.wrapV, imgQuery:"Sandwich récupération poulet-avocat pain complet",
+    img:IMG.wrapV, imgQuery:"sandwich poulet-avocat bread",
     desc:"Pain complet pour recharger le glycogène, poulet maigre pour les protéines, avocat pour de bons lipides : une récupération équilibrée prête en quelques minutes.",
     astuce:"Préparez le poulet à l'avance (par exemple en cuisant un grand lot) pour assembler ce sandwich en un instant après la séance.",
     ingredients:[
@@ -7532,7 +7532,7 @@ export const RECIPES_500 = [
     temps:32, portions:2, difficulte:"Moyen",
     prix:3, cout:4.42, nutriScore:"B", cuisine:"chinoise",
     micros:{ fer:5.43, magnesium:92.31, calcium:190.07, zinc:3.36, potassium:873.92, vitC:36.15, vitB12:1.01, omega3:0.07 },
-    img:IMG.crevettes, imgQuery:"Wonton soup",
+    img:IMG.crevettes, imgQuery:"wonton soup",
     desc:"Un grand bol de soupe avec des raviolis de crevettes maigres : beaucoup de protéines et de volume pour peu de calories.",
     astuce:"Humidifiez les bords des feuilles avant de les sceller : les wontons restent fermés à la cuisson.",
     ingredients:[
@@ -7558,7 +7558,7 @@ export const RECIPES_500 = [
     temps:17, portions:2, difficulte:"Facile",
     prix:3, cout:6.33, nutriScore:"B", cuisine:"française",
     micros:{ fer:2.47, magnesium:121.0, calcium:147.97, zinc:3.4, potassium:1508.32, vitC:72.0, vitB12:3.6, omega3:0.32 },
-    img:IMG.gambas, imgQuery:"Salade Saint-Jacques poêlées",
+    img:IMG.gambas, imgQuery:"salad scallops",
     desc:"Les Saint-Jacques sont très protéinées et quasi sans gras ; fenouil et agrumes apportent fraîcheur et antioxydants pour une salade légère et raffinée.",
     astuce:"Séchez bien les Saint-Jacques avant de les saisir à feu vif : elles dorent au lieu de bouillir.",
     ingredients:[
@@ -7583,7 +7583,7 @@ export const RECIPES_500 = [
     temps:37, portions:2, difficulte:"Moyen",
     prix:2, cout:2.56, nutriScore:"B", cuisine:"japonaise",
     micros:{ fer:2.07, magnesium:89.98, calcium:72.78, zinc:2.63, potassium:716.51, vitC:1.34, vitD:0.21, vitB12:0.21, omega3:0.02 },
-    img:IMG.oeufs, imgQuery:"Katsudon",
+    img:IMG.oeufs, imgQuery:"katsudon",
     desc:"Escalope panée au four (sans friture), œuf et riz : un katsudon généreux riche en protéines et glucides, parfait pour la masse propre.",
     astuce:"Versez les œufs sur l'escalope et coupez le feu aussitôt couvert : ils restent moelleux et lient le tout.",
     ingredients:[
@@ -7609,7 +7609,7 @@ export const RECIPES_500 = [
     temps:37, portions:2, difficulte:"Moyen",
     prix:3, cout:3.85, nutriScore:"B", cuisine:"italienne",
     micros:{ fer:5.05, magnesium:108.17, calcium:255.97, zinc:4.31, potassium:1219.12, vitC:14.41, vitB12:0.42, omega3:0.14 },
-    img:IMG.risotto, imgQuery:"Risotto crémeux poulet champignons",
+    img:IMG.risotto, imgQuery:"risotto chicken mushrooms",
     desc:"Le riz arborio recharge les glucides, le poulet et le parmesan couvrent les protéines : un risotto crémeux et complet pour la masse.",
     astuce:"Ajoutez le bouillon chaud progressivement sans cesser de remuer : c'est l'amidon libéré qui rend le risotto crémeux, sans crème.",
     ingredients:[
@@ -7635,7 +7635,7 @@ export const RECIPES_500 = [
     temps:37, portions:4, difficulte:"Facile",
     prix:1, cout:1.01, nutriScore:"B", cuisine:"indienne",
     micros:{ fer:3.11, magnesium:111.35, calcium:187.13, zinc:2.58, potassium:720.38, vitC:16.2, omega3:0.19 },
-    img:IMG.curry, imgQuery:"Chole",
+    img:IMG.curry, imgQuery:"chole",
     desc:"Les pois chiches sont riches en protéines végétales et fibres ; ce curry du nord de l'Inde, parfumé et acidulé, est nourrissant et rassasiant.",
     astuce:"L'amchoor (mangue verte séchée) apporte l'acidité caractéristique du chole : à défaut, un bon trait de citron en fin de cuisson.",
     ingredients:[
@@ -7660,7 +7660,7 @@ export const RECIPES_500 = [
     temps:40, portions:4, difficulte:"Facile",
     prix:1, cout:1.42, nutriScore:"C", cuisine:"allemande",
     micros:{ fer:5.68, magnesium:124.89, calcium:143.11, zinc:2.6, potassium:1350.81, vitC:21.07, omega3:0.1 },
-    img:IMG.dahl, imgQuery:"Linsen eintopf",
+    img:IMG.dahl, imgQuery:"linsen eintopf",
     desc:"Lentilles et pommes de terre composent un ragoût vegan très rassasiant ; le paprika fumé apporte la profondeur de la version traditionnelle sans saucisse.",
     astuce:"Une pointe de vinaigre en fin de cuisson réveille tout le ragoût et équilibre la douceur des légumes.",
     ingredients:[
@@ -7686,7 +7686,7 @@ export const RECIPES_500 = [
     temps:30, portions:2, difficulte:"Facile",
     prix:2, cout:1.8, nutriScore:"B", cuisine:"portugaise",
     micros:{ fer:3.92, magnesium:74.98, calcium:455.45, zinc:2.55, potassium:954.17, vitC:46.96, vitD:8.32, vitB12:14.96, omega3:2.08 },
-    img:IMG.truite, imgQuery:"Sardines four",
+    img:IMG.truite, imgQuery:"sardines baked",
     desc:"Les sardines sont une mine d'oméga-3 anti-inflammatoires ; poivrons et tomates apportent des antioxydants, pour un plat méditerranéen sain et savoureux.",
     astuce:"Précuisez les légumes avant d'ajouter les sardines : elles cuisent vite et restent moelleuses sans dessécher.",
     ingredients:[
@@ -7711,7 +7711,7 @@ export const RECIPES_500 = [
     temps:27, portions:2, difficulte:"Facile",
     prix:2, cout:1.93, nutriScore:"B", cuisine:"japonaise",
     micros:{ fer:17.89, magnesium:401.18, calcium:446.45, zinc:5.45, potassium:2380.74, vitC:216.92, vitB12:0.04, omega3:1.75 },
-    img:IMG.miso, imgQuery:"Bowl tofu",
+    img:IMG.miso, imgQuery:"bowl tofu",
     desc:"Gingembre anti-inflammatoire, brocoli riche en antioxydants, tofu et edamame très protéinés : un bol végétal complet et équilibré.",
     astuce:"Ne faites pas bouillir le miso : ajoutez-le hors du feu pour préserver ses ferments et son parfum.",
     ingredients:[
@@ -7737,7 +7737,7 @@ export const RECIPES_500 = [
     temps:27, portions:2, difficulte:"Facile",
     prix:2, cout:2.46, nutriScore:"B", cuisine:"moyen-orientale",
     micros:{ fer:5.32, magnesium:83.11, calcium:200.86, zinc:6.11, potassium:964.67, vitC:99.56, vitD:0.72, vitB12:3.91, omega3:0.18 },
-    img:IMG.yaourt, imgQuery:"Brochettes d'agneau maigre courgettes",
+    img:IMG.yaourt, imgQuery:"skewers lamb zucchini",
     desc:"Le gigot maigre est très protéiné ; associé à des légumes grillés et à un yaourt frais, il fait un plat riche en protéines et pauvre en glucides.",
     astuce:"Choisissez un morceau maigre (gigot) et ne le cuisez pas trop : l'agneau reste tendre et rosé.",
     ingredients:[
@@ -7762,7 +7762,7 @@ export const RECIPES_500 = [
     temps:37, portions:2, difficulte:"Moyen",
     prix:3, cout:3.46, nutriScore:"B", cuisine:"italienne",
     micros:{ fer:4.13, magnesium:102.11, calcium:279.12, zinc:3.22, potassium:1209.15, vitC:40.97, vitD:0.1, vitB12:0.17, omega3:0.27 },
-    img:IMG.poivron, imgQuery:"Blanc poulet farci épinards-ricotta salade",
+    img:IMG.poivron, imgQuery:"chicken farci epinards-ricotta salad",
     desc:"Le poulet offre une base très protéinée, la farce épinards-ricotta du moelleux et du goût pour très peu de glucides : idéal en sèche.",
     astuce:"Fixez l'ouverture avec un pique en bois avant la cuisson : la farce reste à l'intérieur.",
     ingredients:[
@@ -7788,7 +7788,7 @@ export const RECIPES_500 = [
     temps:20, portions:2, difficulte:"Moyen",
     prix:2, cout:1.68, nutriScore:"B", cuisine:"américaine",
     micros:{ fer:1.32, magnesium:26.96, calcium:49.55, zinc:1.35, potassium:344.58, vitC:11.88, vitD:0.53, vitB12:0.54, omega3:0.23 },
-    img:IMG.oeufs, imgQuery:"ufs bénédicte allégés",
+    img:IMG.oeufs, imgQuery:"eggs benedicte",
     desc:"Une hollandaise au yaourt remplace le beurre : on garde le plaisir des œufs bénédicte avec beaucoup de protéines et bien moins de lipides.",
     astuce:"Montez la sauce au yaourt sur feu très doux sans la faire bouillir : elle reste lisse et nappante.",
     ingredients:[
@@ -7813,7 +7813,7 @@ export const RECIPES_500 = [
     temps:20, portions:2, difficulte:"Facile",
     prix:2, cout:2.13, nutriScore:"C", cuisine:"petit-déjeuner moderne",
     micros:{ fer:1.46, magnesium:58.11, calcium:353.03, zinc:1.77, potassium:372.97, vitC:72.82, vitD:0.22, vitB12:0.36, omega3:0.18 },
-    img:IMG.pancakes, imgQuery:"Pancakes ricotta-citron fruits rouges",
+    img:IMG.pancakes, imgQuery:"pancakes ricotta-citron fruits",
     desc:"La ricotta et les œufs rendent ces pancakes à la fois moelleux et riches en protéines, sans excès de sucre.",
     astuce:"Incorporez délicatement les blancs montés à part pour des pancakes encore plus aériens.",
     ingredients:[
@@ -7839,7 +7839,7 @@ export const RECIPES_500 = [
     temps:55, portions:4, difficulte:"Facile",
     prix:2, cout:1.91, nutriScore:"C", cuisine:"grecque",
     micros:{ fer:2.12, magnesium:61.08, calcium:147.53, zinc:1.43, potassium:912.14, vitC:71.0, vitB12:0.21, omega3:0.18 },
-    img:IMG.poivron, imgQuery:"Gemista",
+    img:IMG.poivron, imgQuery:"gemista",
     desc:"Des légumes gorgés d'antioxydants farcis d'un riz parfumé aux herbes : un plat grec réconfortant, savoureux chaud ou froid.",
     astuce:"Versez un peu d'eau au fond du plat et arrosez les légumes en cours de cuisson : ils restent fondants et juteux.",
     ingredients:[
@@ -7865,7 +7865,7 @@ export const RECIPES_500 = [
     temps:20, portions:2, difficulte:"Facile",
     prix:2, cout:2.46, nutriScore:"B", cuisine:"méditerranéenne",
     micros:{ fer:3.85, magnesium:99.21, calcium:145.89, zinc:2.2, potassium:762.58, vitC:17.36, omega3:0.02 },
-    img:IMG.dahl, imgQuery:"Salade lentilles",
+    img:IMG.dahl, imgQuery:"salad lentils",
     desc:"Lentilles et halloumi se complètent en protéines, la grenade apporte fraîcheur et antioxydants : une salade-repas méditerranéenne complète.",
     astuce:"Grillez le halloumi à sec dans une poêle bien chaude : il dore et reste fondant sans matière grasse ajoutée.",
     ingredients:[
@@ -7916,7 +7916,7 @@ export const RECIPES_500 = [
     temps:50, portions:4, difficulte:"Moyen",
     prix:2, cout:1.52, nutriScore:"C", cuisine:"indonésienne",
     micros:{ fer:8.54, magnesium:98.68, calcium:53.55, zinc:1.04, potassium:895.72, vitC:1.1, vitB12:2.24, omega3:0.05 },
-    img:IMG.oeufs, imgQuery:"Rendang",
+    img:IMG.oeufs, imgQuery:"rendang",
     desc:"En réduisant le lait de coco et en choisissant un bœuf maigre, on garde un rendang intensément parfumé mais bien plus léger et très protéiné.",
     astuce:"Le rendang se cuit jusqu'à ce que la sauce caramélise et enrobe la viande : c'est ce qui développe ses arômes profonds.",
     ingredients:[
@@ -7942,7 +7942,7 @@ export const RECIPES_500 = [
     temps:8, portions:2, difficulte:"Facile",
     prix:1, cout:1.43, nutriScore:"B", cuisine:"grecque",
     micros:{ fer:0.78, magnesium:24.7, calcium:264.45, zinc:0.81, potassium:446.82, vitC:72.26, vitB12:0.21, omega3:0.13 },
-    img:IMG.yaourt, imgQuery:"Trempette feta-yaourt fouettée herbes crudités",
+    img:IMG.yaourt, imgQuery:"trempette feta-yaourt herbs raw",
     desc:"La feta fouettée au yaourt grec donne une trempette crémeuse et très protéinée pour peu de calories, parfaite avec des crudités croquantes.",
     astuce:"Mixez bien la feta avec le yaourt pour une texture mousseuse de 'whipped feta', à tartiner ou à tremper.",
     ingredients:[
@@ -7966,7 +7966,7 @@ export const RECIPES_500 = [
     temps:5, portions:1, difficulte:"Facile",
     prix:2, cout:1.68, nutriScore:"B", cuisine:"boisson healthy",
     micros:{ fer:3.07, magnesium:106.49, calcium:346.18, zinc:2.05, potassium:941.55, vitC:65.28, vitD:0.54, vitB12:0.72, omega3:1.07 },
-    img:IMG.shakeP, imgQuery:"Smoothie vert protéiné",
+    img:IMG.shakeP, imgQuery:"smoothie",
     desc:"Les épinards passent inaperçus mais ajoutent micronutriments et fibres ; ananas et banane sucrent naturellement, la protéine rassasie.",
     astuce:"Mixez d'abord les épinards avec le lait pour une texture parfaitement lisse, sans morceaux.",
     ingredients:[
@@ -7991,7 +7991,7 @@ export const RECIPES_500 = [
     temps:32, portions:2, difficulte:"Facile",
     prix:2, cout:2.67, nutriScore:"A", cuisine:"tex-mex",
     micros:{ fer:6.75, magnesium:203.1, calcium:197.57, zinc:4.21, potassium:1670.4, vitC:41.6, omega3:0.11 },
-    img:IMG.poulet, imgQuery:"Bol récupération patate douce",
+    img:IMG.poulet, imgQuery:"bowl sweet potato",
     desc:"Patate douce, maïs et haricots rechargent fortement le glycogène, le poulet maigre couvre les protéines : un bol de récupération complet et coloré.",
     astuce:"Rôtissez la patate douce jusqu'à caramélisation des bords : elle gagne en goût et reste fondante au cœur.",
     ingredients:[
@@ -8017,7 +8017,7 @@ export const RECIPES_500 = [
     temps:5, portions:1, difficulte:"Facile",
     prix:2, cout:1.76, nutriScore:"B", cuisine:"indienne",
     micros:{ fer:1.0, magnesium:45.83, calcium:432.67, zinc:1.03, potassium:498.76, vitC:31.85, vitD:0.27, vitB12:0.36, omega3:0.15 },
-    img:IMG.smoothie, imgQuery:"Lassi protéiné mangue",
+    img:IMG.smoothie, imgQuery:"lassi mango",
     desc:"Le yaourt et la protéine couvrent les besoins en protéines, la mangue recharge les glucides : un lassi de récupération onctueux et rafraîchissant.",
     astuce:"Une pointe de cardamome transforme ce lassi en boisson parfumée digne d'un restaurant indien.",
     ingredients:[
@@ -8042,7 +8042,7 @@ export const RECIPES_500 = [
     temps:30, portions:2, difficulte:"Facile",
     prix:2, cout:2.69, nutriScore:"A", cuisine:"mexicaine",
     micros:{ fer:2.51, magnesium:91.05, calcium:192.62, zinc:2.96, potassium:1089.6, vitC:14.22, vitD:0.04, vitB12:0.2, omega3:0.07 },
-    img:IMG.miso, imgQuery:"Sopa tortilla",
+    img:IMG.miso, imgQuery:"sopa tortilla",
     desc:"Beaucoup de poulet maigre dans un bouillon de tomate épicé : une grande soupe rassasiante et peu calorique, juste relevée par quelques garnitures.",
     astuce:"Croustillez les tortillas au four plutôt que de les frire : elles apportent du croquant sans gras.",
     ingredients:[
@@ -8068,7 +8068,7 @@ export const RECIPES_500 = [
     temps:20, portions:2, difficulte:"Facile",
     prix:3, cout:3.15, nutriScore:"B", cuisine:"méditerranéenne",
     micros:{ fer:2.33, magnesium:95.13, calcium:186.2, zinc:2.57, potassium:886.03, vitC:18.64, vitB12:0.16, omega3:0.06 },
-    img:IMG.poulet, imgQuery:"Salade poulet grillé",
+    img:IMG.poulet, imgQuery:"salad chicken grilled",
     desc:"Le contraste pastèque-feta-menthe rafraîchit une salade très protéinée et peu calorique, parfaite en été et en sèche.",
     astuce:"Salez légèrement la pastèque : cela exalte son goût et fait ressortir le salé de la feta.",
     ingredients:[
@@ -8093,7 +8093,7 @@ export const RECIPES_500 = [
     temps:37, portions:2, difficulte:"Moyen",
     prix:2, cout:2.69, nutriScore:"C", cuisine:"chinoise",
     micros:{ fer:1.97, magnesium:79.79, calcium:74.59, zinc:2.71, potassium:749.25, vitC:87.3, vitD:0.19, vitB12:0.2, omega3:0.07 },
-    img:IMG.poulet, imgQuery:"Sweet sour chicken four riz",
+    img:IMG.poulet, imgQuery:"sweet sour chicken baked",
     desc:"Poulet maigre cuit au four (sans friture) et riz : un aigre-doux gourmand riche en protéines et glucides pour la masse propre.",
     astuce:"Cuire le poulet au four sur grille permet d'obtenir le croustillant de l'aigre-doux avec une fraction des matières grasses.",
     ingredients:[
@@ -8119,7 +8119,7 @@ export const RECIPES_500 = [
     temps:35, portions:2, difficulte:"Moyen",
     prix:3, cout:2.75, nutriScore:"C", cuisine:"thaïlandaise",
     micros:{ fer:9.67, magnesium:163.23, calcium:198.15, zinc:3.59, potassium:1022.92, vitC:10.2, omega3:0.11 },
-    img:IMG.curry, imgQuery:"Khao soi poulet",
+    img:IMG.curry, imgQuery:"khao chicken",
     desc:"Nouilles et poulet apportent glucides et protéines, le curry coco un maximum de saveur : un plat thaï complet et réconfortant pour la masse.",
     astuce:"Réservez quelques nouilles croustillantes (frites à part) pour le dessus : c'est la signature texturale du khao soi.",
     ingredients:[
@@ -8145,7 +8145,7 @@ export const RECIPES_500 = [
     temps:45, portions:4, difficulte:"Moyen",
     prix:3, cout:2.77, nutriScore:"B", cuisine:"indienne",
     micros:{ fer:5.31, magnesium:226.13, calcium:165.29, zinc:4.36, potassium:1049.18, vitC:11.81, omega3:0.55 },
-    img:IMG.bowl, imgQuery:"Malai kofta",
+    img:IMG.bowl, imgQuery:"malai kofta",
     desc:"Le tofu enrichit les boulettes en protéines, et les cuire au four allège fortement ce classique indien d'ordinaire frit et très riche.",
     astuce:"Ajoutez les boulettes dans la sauce seulement au moment de servir : elles gardent leur tenue au lieu de se défaire.",
     ingredients:[
@@ -8173,7 +8173,7 @@ export const RECIPES_500 = [
     temps:40, portions:4, difficulte:"Facile",
     prix:1, cout:0.94, nutriScore:"B", cuisine:"indienne",
     micros:{ fer:6.84, magnesium:96.7, calcium:119.44, zinc:3.2, potassium:1315.42, vitC:32.25, omega3:0.23 },
-    img:IMG.dahl, imgQuery:"Dal pois cassés curcuma",
+    img:IMG.dahl, imgQuery:"dal split peas turmeric",
     desc:"Les pois cassés sont riches en protéines végétales et fibres ; ce dal doré au curcuma est nourrissant, économique et réconfortant.",
     astuce:"Le tempérage (tarka) versé sur le dal en fin de cuisson libère tout le parfum des épices grillées.",
     ingredients:[
@@ -8198,7 +8198,7 @@ export const RECIPES_500 = [
     temps:15, portions:2, difficulte:"Facile",
     prix:2, cout:2.58, nutriScore:"C", cuisine:"scandinave",
     micros:{ fer:2.76, magnesium:56.06, calcium:162.99, zinc:1.35, potassium:804.25, vitC:13.67, vitD:15.84, vitB12:6.12, omega3:2.07 },
-    img:IMG.truite, imgQuery:"Salade hareng mariné",
+    img:IMG.truite, imgQuery:"salad herring",
     desc:"Le hareng est exceptionnellement riche en oméga-3 anti-inflammatoires ; associé à la pomme de terre et à une sauce légère au yaourt, il fait une salade nordique complète.",
     astuce:"Mélangez les pommes de terre encore tièdes : elles absorbent mieux la sauce et l'aneth.",
     ingredients:[
@@ -8223,7 +8223,7 @@ export const RECIPES_500 = [
     temps:34, portions:2, difficulte:"Facile",
     prix:1, cout:1.39, nutriScore:"B", cuisine:"californienne",
     micros:{ fer:5.52, magnesium:120.1, calcium:289.63, zinc:2.33, potassium:1113.82, vitC:142.4, omega3:0.44 },
-    img:IMG.bowl, imgQuery:"Bowl patate douce",
+    img:IMG.bowl, imgQuery:"bowl sweet potato",
     desc:"Curcuma anti-inflammatoire, kale et patate douce riches en antioxydants, pois chiches pour les protéines et fibres : un bowl végétal complet et sain.",
     astuce:"Une pincée de poivre noir dans la sauce au curcuma en booste l'absorption.",
     ingredients:[
@@ -8249,7 +8249,7 @@ export const RECIPES_500 = [
     temps:24, portions:2, difficulte:"Facile",
     prix:3, cout:4.64, nutriScore:"B", cuisine:"italienne",
     micros:{ fer:6.82, magnesium:131.9, calcium:192.22, zinc:3.64, potassium:1339.14, vitC:65.09, vitD:0.12, vitB12:0.07, omega3:0.36 },
-    img:IMG.poulet, imgQuery:"Saltimbocca poulet",
+    img:IMG.poulet, imgQuery:"saltimbocca chicken",
     desc:"Le poulet offre une base très protéinée, le jambon cru et la sauge tout le goût pour très peu de glucides : idéal en sèche.",
     astuce:"Saisissez d'abord le côté jambon : il devient croustillant et parfume la viande.",
     ingredients:[
@@ -8274,7 +8274,7 @@ export const RECIPES_500 = [
     temps:16, portions:2, difficulte:"Facile",
     prix:3, cout:4.32, nutriScore:"B", cuisine:"japonaise",
     micros:{ fer:4.43, magnesium:92.86, calcium:112.0, zinc:1.48, potassium:844.87, vitC:3.44, vitD:14.04, vitB12:6.82, omega3:2.62 },
-    img:IMG.thon, imgQuery:"Steak thon mi-cuit sésame haricots",
+    img:IMG.thon, imgQuery:"steak tuna sesame beans",
     desc:"Le thon frais est l'une des sources de protéines les plus maigres : 56 g de protéines pour 410 kcal, idéal en sèche.",
     astuce:"Saisissez le thon très brièvement à feu vif : trop cuit, il devient sec ; rosé à cœur, il reste fondant.",
     ingredients:[
@@ -8299,7 +8299,7 @@ export const RECIPES_500 = [
     temps:22, portions:2, difficulte:"Facile",
     prix:1, cout:1.31, nutriScore:"C", cuisine:"française",
     micros:{ fer:1.31, magnesium:42.38, calcium:210.83, zinc:2.48, potassium:460.84, vitC:6.82, vitD:0.45, vitB12:0.49, omega3:0.13 },
-    img:IMG.oats, imgQuery:"Croque-madame",
+    img:IMG.oats, imgQuery:"croque-madame",
     desc:"Une béchamel légère au lait et peu de fromage gardent un croque-madame réconfortant mais bien plus raisonnable, riche en protéines.",
     astuce:"Une béchamel au lait épaissie d'un peu de farine remplace avantageusement la version au beurre, sans rien perdre du crémeux.",
     ingredients:[
@@ -8325,7 +8325,7 @@ export const RECIPES_500 = [
     temps:13, portions:2, difficulte:"Facile",
     prix:2, cout:1.87, nutriScore:"B", cuisine:"petit-déjeuner moderne",
     micros:{ fer:3.96, magnesium:133.98, calcium:129.4, zinc:2.42, potassium:630.22, vitC:20.33, vitD:0.02, vitB12:0.12, omega3:0.23 },
-    img:IMG.oeufs, imgQuery:"Bol petit-déjeuner quinoa",
+    img:IMG.oeufs, imgQuery:"bowl quinoa",
     desc:"Le quinoa apporte des glucides complets et des protéines végétales, l'œuf et la feta complètent les protéines : un petit-déjeuner salé rassasiant et rapide.",
     astuce:"Préparez le quinoa à l'avance (en lot) pour assembler ce bol en quelques minutes le matin.",
     ingredients:[
@@ -8351,7 +8351,7 @@ export const RECIPES_500 = [
     temps:25, portions:2, difficulte:"Facile",
     prix:2, cout:2.25, nutriScore:"B", cuisine:"vietnamienne",
     micros:{ fer:1.91, magnesium:60.2, calcium:64.68, zinc:1.76, potassium:537.22, vitC:2.9, vitB12:0.05, omega3:0.58 },
-    img:IMG.wrapV, imgQuery:"Bánh poulet",
+    img:IMG.wrapV, imgQuery:"banh chicken",
     desc:"Pain pour les glucides, poulet maigre pour les protéines, légumes marinés pour la fraîcheur : un sandwich complet et léger.",
     astuce:"Les pickles de carotte-daïkon (vinaigre, sucre, sel) sont l'âme du bánh mì : préparez-les à l'avance.",
     ingredients:[
@@ -8377,7 +8377,7 @@ export const RECIPES_500 = [
     temps:40, portions:4, difficulte:"Facile",
     prix:3, cout:3.45, nutriScore:"B", cuisine:"grecque",
     micros:{ fer:4.29, magnesium:124.88, calcium:211.8, zinc:3.49, potassium:1533.37, vitC:9.2, vitD:0.18, vitB12:0.17, omega3:0.42 },
-    img:IMG.poulet, imgQuery:"Youvetsi poulet",
+    img:IMG.poulet, imgQuery:"youvetsi chicken",
     desc:"Poulet maigre et orzo dans une sauce tomate parfumée à la cannelle : un plat grec complet, riche en protéines et glucides.",
     astuce:"Une pincée de cannelle dans la sauce tomate apporte la note chaude et douce typique du youvetsi.",
     ingredients:[
@@ -8403,7 +8403,7 @@ export const RECIPES_500 = [
     temps:45, portions:4, difficulte:"Moyen",
     prix:3, cout:5.26, nutriScore:"B", cuisine:"française",
     micros:{ fer:5.39, magnesium:85.09, calcium:134.73, zinc:4.11, potassium:1305.86, vitC:16.88, vitD:0.04, vitB12:5.89, omega3:0.72 },
-    img:IMG.poulet, imgQuery:"Lapin moutarde",
+    img:IMG.poulet, imgQuery:"lapin moutarde",
     desc:"Le lapin est une viande très maigre et très protéinée ; mijoté à la moutarde, il fait un dîner raffiné et léger.",
     astuce:"Ajoutez la moutarde en deux fois (à la cuisson puis en fin) : une partie parfume, l'autre garde son piquant.",
     ingredients:[
@@ -8428,7 +8428,7 @@ export const RECIPES_500 = [
     temps:55, portions:4, difficulte:"Moyen",
     prix:3, cout:2.86, nutriScore:"C", cuisine:"polonaise",
     micros:{ fer:5.43, magnesium:72.15, calcium:84.07, zinc:0.57, potassium:1432.0, vitC:11.57, vitB12:1.98, omega3:0.07 },
-    img:IMG.oeufs, imgQuery:"Golabki allégés",
+    img:IMG.oeufs, imgQuery:"golabki",
     desc:"Bœuf maigre et riz enveloppés dans du chou et mijotés à la tomate : un plat polonais réconfortant, protéiné et complet.",
     astuce:"Retirez la côte épaisse des feuilles de chou avant de rouler : elles s'enroulent plus facilement et restent tendres.",
     ingredients:[
@@ -8454,7 +8454,7 @@ export const RECIPES_500 = [
     temps:13, portions:2, difficulte:"Facile",
     prix:1, cout:0.93, nutriScore:"B", cuisine:"dessert healthy",
     micros:{ fer:1.05, magnesium:49.73, calcium:267.4, zinc:1.37, potassium:541.91, vitC:2.66, vitD:0.54, vitB12:0.72, omega3:0.08 },
-    img:IMG.mousse, imgQuery:"Pudding protéiné vanille flan",
+    img:IMG.mousse, imgQuery:"pudding vanilla flan",
     desc:"Un flan crémeux très riche en protéines et pauvre en lipides, sans sucre ajouté : la collation-dessert parfaite pour combler une envie de sucré.",
     astuce:"Incorporez la protéine hors du feu et fouettez bien : à ébullition, elle deviendrait granuleuse.",
     ingredients:[
@@ -8479,7 +8479,7 @@ export const RECIPES_500 = [
     temps:40, portions:2, difficulte:"Facile",
     prix:1, cout:1.35, nutriScore:"C", cuisine:"snack healthy",
     micros:{ fer:1.04, magnesium:51.6, calcium:525.85, zinc:2.88, potassium:310.15, vitC:6.33, vitD:0.23, vitB12:1.09, omega3:0.13 },
-    img:IMG.energy, imgQuery:"Crackers graines fromage frais herbes",
+    img:IMG.energy, imgQuery:"crackers cheese herbs",
     desc:"Des crackers de graines maison, riches en bons lipides et fibres, avec un fromage frais protéiné : une collation croquante et rassasiante, sans additifs.",
     astuce:"Étalez la pâte le plus finement possible : plus c'est fin, plus les crackers sont croustillants.",
     ingredients:[
@@ -8504,7 +8504,7 @@ export const RECIPES_500 = [
     temps:24, portions:2, difficulte:"Facile",
     prix:3, cout:3.23, nutriScore:"B", cuisine:"hawaïenne",
     micros:{ fer:14.96, magnesium:318.66, calcium:451.0, zinc:5.47, potassium:1859.47, vitC:55.63, vitB12:0.05, omega3:0.84 },
-    img:IMG.poulet, imgQuery:"Bowl hawaïen riz",
+    img:IMG.poulet, imgQuery:"bowl hawaien rice",
     desc:"Riz et ananas rechargent le glycogène, le poulet maigre et l'edamame couvrent les protéines : un bowl de récupération coloré et peu gras.",
     astuce:"Grillez l'ananas jusqu'à caramélisation : sa douceur acidulée équilibre parfaitement le teriyaki salé.",
     ingredients:[
@@ -8530,7 +8530,7 @@ export const RECIPES_500 = [
     temps:22, portions:2, difficulte:"Facile",
     prix:3, cout:6.05, nutriScore:"B", cuisine:"chinoise",
     micros:{ fer:6.19, magnesium:116.97, calcium:206.38, zinc:5.29, potassium:779.21, vitC:38.34, vitD:0.02, vitB12:1.58, omega3:0.03 },
-    img:IMG.oeufs, imgQuery:"Riz sauté récupération crevettes",
+    img:IMG.oeufs, imgQuery:"rice shrimp",
     desc:"Riz pour recharger le glycogène, crevettes très maigres et œuf pour les protéines : un riz sauté de récupération complet et savoureux.",
     astuce:"Utilisez du riz froid de la veille : ses grains restent détachés et sautent sans coller.",
     ingredients:[
@@ -8556,7 +8556,7 @@ export const RECIPES_500 = [
     temps:12, portions:2, difficulte:"Facile",
     prix:3, cout:4.66, nutriScore:"B", cuisine:"nordique",
     micros:{ fer:2.29, magnesium:92.26, calcium:152.59, zinc:1.33, potassium:1325.65, vitC:20.83, vitD:6.24, vitB12:3.84, omega3:2.13 },
-    img:IMG.truite, imgQuery:"Salade truite fumée",
+    img:IMG.truite, imgQuery:"salad trout",
     desc:"La truite fumée est très protéinée et riche en oméga-3 ; fenouil et pomme apportent fraîcheur et croquant pour une salade légère et raffinée.",
     astuce:"Tranchez le fenouil très finement à la mandoline : il reste croquant et son anis se marie au fumé de la truite.",
     ingredients:[
@@ -8582,7 +8582,7 @@ export const RECIPES_500 = [
     temps:12, portions:2, difficulte:"Facile",
     prix:3, cout:4.02, nutriScore:"B", cuisine:"espagnole",
     micros:{ fer:5.2, magnesium:136.2, calcium:446.64, zinc:3.24, potassium:937.15, vitC:38.44, vitB12:2.46, omega3:0.64 },
-    img:IMG.crevettes, imgQuery:"Gaspacho vert crevettes",
+    img:IMG.crevettes, imgQuery:"gazpacho shrimp",
     desc:"Un gaspacho vert frais et léger surmonté de crevettes très protéinées : beaucoup de satiété pour moins de 300 kcal.",
     astuce:"Servez bien glacé : le gaspacho vert est encore plus rafraîchissant et ses saveurs plus nettes.",
     ingredients:[
@@ -8608,7 +8608,7 @@ export const RECIPES_500 = [
     temps:27, portions:2, difficulte:"Moyen",
     prix:3, cout:3.2, nutriScore:"B", cuisine:"thaïlandaise",
     micros:{ fer:4.39, magnesium:104.55, calcium:162.22, zinc:4.26, potassium:901.77, vitC:20.06, vitD:0.31, vitB12:0.9, omega3:0.55 },
-    img:IMG.crevettes, imgQuery:"Pad thaï poulet crevettes",
+    img:IMG.crevettes, imgQuery:"thai chicken shrimp",
     desc:"Nouilles de riz, poulet, crevettes et œuf réunissent glucides et protéines en quantité : le pad thaï, grand classique, calibré pour la masse propre.",
     astuce:"Préparez tout à l'avance et faites sauter à feu très vif : le pad thaï se cuisine vite et n'attend pas.",
     ingredients:[
@@ -8635,7 +8635,7 @@ export const RECIPES_500 = [
     temps:24, portions:2, difficulte:"Facile",
     prix:2, cout:2.32, nutriScore:"C", cuisine:"chinoise",
     micros:{ fer:5.05, magnesium:58.05, calcium:87.04, zinc:0.8, potassium:729.04, vitC:2.45, vitD:0.22, vitB12:2.34, omega3:0.44 },
-    img:IMG.poulet, imgQuery:"Mongolian beef riz",
+    img:IMG.poulet, imgQuery:"mongolian beef rice",
     desc:"Bœuf maigre riche en protéines et riz pour l'énergie : un sauté chinois savoureux, parfait pour soutenir la prise de masse.",
     astuce:"Le voile de fécule sur le bœuf le rend tendre et permet à la sauce de bien l'enrober et de briller.",
     ingredients:[
@@ -8660,7 +8660,7 @@ export const RECIPES_500 = [
     temps:27, portions:2, difficulte:"Facile",
     prix:2, cout:2.35, nutriScore:"B", cuisine:"indonésienne",
     micros:{ fer:3.17, magnesium:117.14, calcium:180.91, zinc:2.45, potassium:951.96, vitC:153.8, vitB12:0.06, omega3:0.33 },
-    img:IMG.tofuC, imgQuery:"Tempeh mariné grillé",
+    img:IMG.tofuC, imgQuery:"tempeh grilled",
     desc:"Le tempeh est l'une des sources de protéines végétales les plus complètes et rassasiantes ; mariné et grillé, il fait un plat vegan riche en protéines.",
     astuce:"Faites mariner le tempeh au moins 20 min, voire cuisez-le brièvement à la vapeur avant : il s'imprègne mieux et perd toute amertume.",
     ingredients:[
@@ -8685,7 +8685,7 @@ export const RECIPES_500 = [
     temps:43, portions:4, difficulte:"Facile",
     prix:2, cout:2.69, nutriScore:"B", cuisine:"toscane",
     micros:{ fer:4.06, magnesium:111.28, calcium:235.88, zinc:1.51, potassium:1263.35, vitC:66.52, vitD:0.05, omega3:0.2 },
-    img:IMG.miso, imgQuery:"Ribollita",
+    img:IMG.miso, imgQuery:"ribollita",
     desc:"Haricots, légumes et pain composent une soupe toscane très rassasiante, riche en fibres et protéines végétales, encore meilleure réchauffée.",
     astuce:"La ribollita ('rebouillie') se bonifie le lendemain : le pain fond dans le bouillon et la rend onctueuse.",
     ingredients:[
@@ -8711,7 +8711,7 @@ export const RECIPES_500 = [
     temps:22, portions:2, difficulte:"Facile",
     prix:2, cout:1.92, nutriScore:"A", cuisine:"méditerranéenne",
     micros:{ fer:5.15, magnesium:120.69, calcium:130.92, zinc:2.58, potassium:1097.2, vitC:16.37, vitD:6.44, vitB12:4.9, omega3:2.7 },
-    img:IMG.truite, imgQuery:"Maquereau grillé",
+    img:IMG.truite, imgQuery:"mackerel grilled",
     desc:"Le maquereau est très riche en oméga-3 anti-inflammatoires ; les lentilles apportent fibres et protéines, la salsa verde des herbes fraîches.",
     astuce:"Grillez le maquereau côté peau jusqu'à ce qu'elle soit croustillante : elle protège la chair et la garde moelleuse.",
     ingredients:[
@@ -8736,7 +8736,7 @@ export const RECIPES_500 = [
     temps:24, portions:2, difficulte:"Facile",
     prix:3, cout:3.58, nutriScore:"B", cuisine:"californienne",
     micros:{ fer:5.14, magnesium:181.02, calcium:158.56, zinc:2.81, potassium:1163.1, vitC:29.88, vitD:3.69, vitB12:3.95, omega3:2.02 },
-    img:IMG.saumon, imgQuery:"Salade tiède saumon",
+    img:IMG.saumon, imgQuery:"salad salmon",
     desc:"Saumon riche en oméga-3, quinoa complet et grenade gorgée d'antioxydants : une salade tiède aux multiples bénéfices anti-inflammatoires.",
     astuce:"Servez le quinoa tiède plutôt que froid : il est plus moelleux et marie mieux les saveurs.",
     ingredients:[
@@ -8761,7 +8761,7 @@ export const RECIPES_500 = [
     temps:20, portions:2, difficulte:"Facile",
     prix:3, cout:6.34, nutriScore:"A", cuisine:"française",
     micros:{ fer:4.0, magnesium:128.16, calcium:187.88, zinc:2.14, potassium:1815.97, vitC:271.21, vitD:1.65, vitB12:4.2, omega3:0.32 },
-    img:IMG.bowl, imgQuery:"Sole grillée citron",
+    img:IMG.bowl, imgQuery:"sole grilled lemon",
     desc:"La sole est un poisson très maigre et délicat, très riche en protéines : 44 g pour 325 kcal, idéal en sèche.",
     astuce:"La sole cuit en quelques minutes : surveillez-la, elle devient sèche si on la pousse trop.",
     ingredients:[
@@ -8785,7 +8785,7 @@ export const RECIPES_500 = [
     temps:27, portions:2, difficulte:"Facile",
     prix:3, cout:3.19, nutriScore:"B", cuisine:"indienne",
     micros:{ fer:1.82, magnesium:61.98, calcium:91.66, zinc:2.16, potassium:682.45, vitC:10.92, omega3:0.03 },
-    img:IMG.poulet, imgQuery:"Brochettes poulet tikka raita",
+    img:IMG.poulet, imgQuery:"skewers chicken tikka raita",
     desc:"Le poulet mariné au yaourt est très protéiné et tendre ; avec un raita frais, c'est un plat à 54 g de protéines pour peu de glucides.",
     astuce:"La marinade au yaourt attendrit le poulet : laissez-la agir au moins 1 h, idéalement une nuit.",
     ingredients:[
@@ -8810,7 +8810,7 @@ export const RECIPES_500 = [
     temps:18, portions:2, difficulte:"Moyen",
     prix:1, cout:1.22, nutriScore:"C", cuisine:"japonaise",
     micros:{ fer:1.59, magnesium:33.67, calcium:37.15, zinc:0.61, potassium:126.7, vitC:2.29, vitD:0.07, vitB12:1.54, omega3:0.02 },
-    img:IMG.omelette, imgQuery:"Tamagoyaki riz",
+    img:IMG.omelette, imgQuery:"tamagoyaki rice",
     desc:"L'omelette roulée et le riz forment un petit-déjeuner salé équilibré à la japonaise, riche en protéines grâce aux œufs.",
     astuce:"Roulez chaque couche d'œuf vers vous avant d'en verser une nouvelle : c'est ce qui donne au tamagoyaki ses jolies strates.",
     ingredients:[
@@ -8835,7 +8835,7 @@ export const RECIPES_500 = [
     temps:18, portions:2, difficulte:"Facile",
     prix:2, cout:1.94, nutriScore:"B", cuisine:"tex-mex",
     micros:{ fer:1.2, magnesium:43.57, calcium:200.95, zinc:1.09, potassium:384.81, vitC:38.58, vitD:0.1, vitB12:0.3, omega3:0.11 },
-    img:IMG.oeufs, imgQuery:"Burrito petit-déjeuner",
+    img:IMG.oeufs, imgQuery:"burrito",
     desc:"Œufs et haricots noirs apportent protéines et fibres, la tortilla les glucides : un petit-déjeuner salé complet qui tient toute la matinée.",
     astuce:"Saisissez le burrito roulé dans une poêle sèche pour le sceller et le rendre croustillant sans gras ajouté.",
     ingredients:[
@@ -8861,7 +8861,7 @@ export const RECIPES_500 = [
     temps:27, portions:2, difficulte:"Facile",
     prix:2, cout:1.7, nutriScore:"C", cuisine:"vietnamienne",
     micros:{ fer:0.84, magnesium:58.24, calcium:42.84, zinc:2.86, potassium:938.51, vitC:16.85, vitB12:0.67, omega3:0.08 },
-    img:IMG.boeuf, imgQuery:"Cơm tấm (riz brisé & porc grillé à la ci",
+    img:IMG.boeuf, imgQuery:"rice brise pork grilled",
     desc:"Porc maigre grillé et riz : un déjeuner vietnamien complet et savoureux, riche en protéines et glucides, équilibré par les crudités.",
     astuce:"Faites bien caraméliser le porc au gril : le contraste avec le riz nature et les pickles acidulés fait tout le plat.",
     ingredients:[
@@ -8886,7 +8886,7 @@ export const RECIPES_500 = [
     temps:27, portions:2, difficulte:"Facile",
     prix:3, cout:3.1, nutriScore:"B", cuisine:"levantine",
     micros:null,
-    img:IMG.poulet, imgQuery:"Salade freekeh",
+    img:IMG.poulet, imgQuery:"salad freekeh",
     desc:"Le freekeh (blé vert grillé) est riche en fibres et protéines végétales ; avec le poulet et la grenade, c'est une salade-repas complète et originale.",
     astuce:"Le freekeh a un délicieux goût fumé : il se marie parfaitement aux herbes fraîches et à l'acidité de la grenade.",
     ingredients:[
@@ -8911,7 +8911,7 @@ export const RECIPES_500 = [
     temps:34, portions:4, difficulte:"Facile",
     prix:2, cout:2.37, nutriScore:"B", cuisine:"espagnole",
     micros:{ fer:2.14, magnesium:28.85, calcium:34.66, zinc:0.53, potassium:458.32, vitC:30.36, omega3:0.09 },
-    img:IMG.poulet, imgQuery:"Pollo ajillo",
+    img:IMG.poulet, imgQuery:"pollo ajillo",
     desc:"Beaucoup de poulet maigre et d'ail, peu de glucides : un dîner espagnol simple, parfumé et très protéiné.",
     astuce:"Dorez l'ail doucement sans le brûler : il infuse l'huile et parfume tout le plat.",
     ingredients:[
@@ -8936,7 +8936,7 @@ export const RECIPES_500 = [
     temps:45, portions:4, difficulte:"Moyen",
     prix:2, cout:2.08, nutriScore:"C", cuisine:"philippine",
     micros:{ fer:5.19, magnesium:70.01, calcium:87.01, zinc:0.58, potassium:960.65, vitC:28.4, vitB12:2.1, omega3:0.53 },
-    img:IMG.poulet, imgQuery:"Kare-kare",
+    img:IMG.poulet, imgQuery:"kare-kare",
     desc:"En dosant le beurre de cacahuète et en choisissant un bœuf maigre, on garde un kare-kare onctueux et savoureux mais bien plus léger et très protéiné.",
     astuce:"Le rocou (annatto) donne sa couleur orangée caractéristique : à défaut, une pointe de paprika doux.",
     ingredients:[
@@ -8961,7 +8961,7 @@ export const RECIPES_500 = [
     temps:5, portions:1, difficulte:"Facile",
     prix:2, cout:1.64, nutriScore:"B", cuisine:"boisson healthy",
     micros:{ fer:7.43, magnesium:415.1, calcium:466.0, zinc:2.64, potassium:3618.78, vitC:2.72, vitD:0.54, vitB12:0.72, omega3:0.09 },
-    img:IMG.latteO, imgQuery:"Proffee",
+    img:IMG.latteO, imgQuery:"healthy food plate",
     desc:"Un café glacé enrichi en protéine : 31 g de protéines pour 220 kcal, parfait en collation énergisante (ou après un entraînement matinal).",
     astuce:"Mélangez bien la protéine au shaker avant d'ajouter les glaçons pour une texture parfaitement lisse, sans grumeaux.",
     ingredients:[
@@ -8985,7 +8985,7 @@ export const RECIPES_500 = [
     temps:17, portions:4, difficulte:"Facile",
     prix:1, cout:0.84, nutriScore:"C", cuisine:"japonaise",
     micros:null,
-    img:IMG.oeufs, imgQuery:"ufs marinés ramen",
+    img:IMG.oeufs, imgQuery:"eggs ramen",
     desc:"Deux œufs mollets marinés font une collation salée très protéinée et pratique, à préparer en lot à l'avance.",
     astuce:"Pour un jaune parfaitement coulant, comptez 6 min 30 de cuisson puis un bain d'eau glacée avant de mariner.",
     ingredients:[
@@ -9009,7 +9009,7 @@ export const RECIPES_500 = [
     temps:30, portions:2, difficulte:"Facile",
     prix:2, cout:2.69, nutriScore:"A", cuisine:"moderne",
     micros:{ fer:6.19, magnesium:157.96, calcium:134.08, zinc:2.51, potassium:1593.51, vitC:43.01, vitD:7.82, vitB12:3.8, omega3:1.49 },
-    img:IMG.oeufs, imgQuery:"Bol patate douce écrasée",
+    img:IMG.oeufs, imgQuery:"bowl sweet potato",
     desc:"La patate douce recharge le glycogène avec des glucides de qualité, thon et œuf couvrent les protéines : un bol de récupération complet et coloré.",
     astuce:"Écrasez la patate douce avec un peu de citron vert et de paprika fumé : la purée devient parfumée et vivante.",
     ingredients:[
@@ -9035,7 +9035,7 @@ export const RECIPES_500 = [
     temps:25, portions:2, difficulte:"Facile",
     prix:2, cout:1.5, nutriScore:"C", cuisine:"boisson de récupération",
     micros:{ fer:5.22, magnesium:112.31, calcium:190.79, zinc:2.38, potassium:815.5, vitC:27.57, vitD:0.27, vitB12:0.36, omega3:0.09 },
-    img:IMG.energy, imgQuery:"Riz lait coco-mangue protéiné",
+    img:IMG.energy, imgQuery:"rice milk coco-mangue",
     desc:"Riz et mangue rechargent le glycogène, la protéine relance la récupération : un riz au lait gourmand façon dessert, parfait après l'effort.",
     astuce:"Incorporez la protéine hors du feu pour qu'elle reste crémeuse ; la cardamome apporte une note exotique.",
     ingredients:[
@@ -9061,7 +9061,7 @@ export const RECIPES_500 = [
     temps:27, portions:2, difficulte:"Facile",
     prix:2, cout:1.74, nutriScore:"A", cuisine:"méditerranéenne",
     micros:{ fer:5.86, magnesium:98.75, calcium:220.47, zinc:1.97, potassium:1212.87, vitC:104.83, vitD:2.86, vitB12:1.8, omega3:0.46 },
-    img:IMG.cabillaud, imgQuery:"Brochettes lotte courgettes grillées",
+    img:IMG.cabillaud, imgQuery:"skewers lotte zucchini grilled",
     desc:"La lotte est un poisson très maigre et ferme, idéal en brochettes ; assaisonnée aux herbes et au citron, elle est riche en protéines et pauvre en calories et en sel.",
     astuce:"La lotte tient parfaitement sur la brochette et ne se défait pas : parfaite pour le gril.",
     ingredients:[
@@ -9086,7 +9086,7 @@ export const RECIPES_500 = [
     temps:20, portions:2, difficulte:"Facile",
     prix:1, cout:1.43, nutriScore:"A", cuisine:"française",
     micros:{ fer:2.22, magnesium:95.9, calcium:127.9, zinc:2.91, potassium:1453.83, vitC:17.72, vitB12:0.57, omega3:0.11 },
-    img:IMG.saladeQ, imgQuery:"Salade chevreuil poêlé",
+    img:IMG.saladeQ, imgQuery:"salad chevreuil poele",
     desc:"Le chevreuil est l'une des viandes les plus maigres et protéinées ; en salade avec betterave et noisettes, c'est un plat raffiné, léger et sans sel ajouté.",
     astuce:"Le gibier se cuit rosé et se repose comme un bon steak : trop cuit, il durcit.",
     ingredients:[
@@ -9111,7 +9111,7 @@ export const RECIPES_500 = [
     temps:50, portions:4, difficulte:"Moyen",
     prix:2, cout:2.33, nutriScore:"B", cuisine:"française",
     micros:{ fer:10.27, magnesium:117.66, calcium:170.27, zinc:9.41, potassium:1391.88, vitC:17.46, vitD:0.15, vitB12:4.17, omega3:0.02 },
-    img:IMG.risotto, imgQuery:"Navarin d'agneau légumes orge perlé",
+    img:IMG.risotto, imgQuery:"navarin lamb vegetables orge",
     desc:"L'orge perlé apporte des glucides complets et beaucoup de fibres, l'agneau les protéines : un ragoût nourrissant et riche en fibres pour la masse.",
     astuce:"L'orge perlé absorbe le bouillon et l'épaissit, comme un risotto rustique — inutile d'ajouter du sel.",
     ingredients:[
@@ -9137,7 +9137,7 @@ export const RECIPES_500 = [
     temps:34, portions:4, difficulte:"Facile",
     prix:2, cout:2.55, nutriScore:"B", cuisine:"indonésienne",
     micros:{ fer:8.62, magnesium:178.23, calcium:264.49, zinc:3.12, potassium:1445.15, vitC:57.8, vitB12:0.06, omega3:0.43 },
-    img:IMG.curry, imgQuery:"Curry tempeh patate douce",
+    img:IMG.curry, imgQuery:"curry tempeh sweet potato",
     desc:"Le tempeh est une protéine végétale complète et rassasiante ; avec le riz complet et la patate douce, ce curry est riche en glucides et en fibres pour la masse propre.",
     astuce:"Faites cuire brièvement le tempeh à la vapeur avant de le dorer : il perd toute amertume et absorbe mieux le curry.",
     ingredients:[
@@ -9163,7 +9163,7 @@ export const RECIPES_500 = [
     temps:24, portions:2, difficulte:"Facile",
     prix:3, cout:2.91, nutriScore:"B", cuisine:"mexicaine",
     micros:{ fer:4.58, magnesium:111.05, calcium:220.83, zinc:1.89, potassium:741.3, vitC:21.39, vitB12:0.02, omega3:0.27 },
-    img:IMG.wrapV, imgQuery:"Tacos tempeh croustillant",
+    img:IMG.wrapV, imgQuery:"tacos tempeh croustillant",
     desc:"Tempeh et haricots noirs cumulent protéines végétales et fibres (14 g !) ; un plat vegan très rassasiant et naturellement peu salé.",
     astuce:"Le paprika fumé donne au tempeh un goût de chorizo végétal, sans le sel de la charcuterie.",
     ingredients:[
@@ -9189,7 +9189,7 @@ export const RECIPES_500 = [
     temps:40, portions:4, difficulte:"Moyen",
     prix:2, cout:2.5, nutriScore:"B", cuisine:"italienne",
     micros:null,
-    img:IMG.poulet, imgQuery:"Farrotto champignons",
+    img:IMG.poulet, imgQuery:"farrotto mushrooms",
     desc:"Le farro (blé complet) et les pois chiches font un 'risotto' végétal riche en fibres et protéines ; la levure maltée remplace le parmesan sans apporter de sel.",
     astuce:"Le farro garde une mâche agréable : inutile de le cuire à mort, il doit rester légèrement ferme.",
     ingredients:[
@@ -9215,7 +9215,7 @@ export const RECIPES_500 = [
     temps:32, portions:2, difficulte:"Facile",
     prix:2, cout:1.55, nutriScore:"A", cuisine:"méditerranéenne",
     micros:{ fer:7.1, magnesium:95.25, calcium:196.62, zinc:1.99, potassium:1229.65, vitC:10.39, vitD:1.39, vitB12:3.74, omega3:1.29 },
-    img:IMG.cabillaud, imgQuery:"Bar papillote",
+    img:IMG.cabillaud, imgQuery:"baked parchment",
     desc:"Le bar est un poisson blanc maigre et fin ; en papillote avec fenouil et tomate, c'est un plat anti-inflammatoire savoureux qui n'a besoin d'aucun sel.",
     astuce:"La cuisson en papillote concentre les arômes du citron et des herbes : le poisson ressort parfumé et moelleux.",
     ingredients:[
@@ -9240,7 +9240,7 @@ export const RECIPES_500 = [
     temps:27, portions:2, difficulte:"Facile",
     prix:3, cout:4.28, nutriScore:"B", cuisine:"californienne",
     micros:{ fer:5.57, magnesium:415.99, calcium:125.74, zinc:4.5, potassium:1494.61, vitC:24.01, vitD:3.69, vitB12:3.95, omega3:2.03 },
-    img:IMG.saumon, imgQuery:"Bowl sarrasin",
+    img:IMG.saumon, imgQuery:"bowl buckwheat",
     desc:"Saumon riche en oméga-3, sarrasin (pseudo-céréale complète sans gluten) pour les fibres, avocat et graines pour les bons lipides : un bowl anti-inflammatoire complet.",
     astuce:"Le sarrasin a un goût de noisette torréfiée : rincez-le et ne le sur-cuisez pas pour garder du grain.",
     ingredients:[
@@ -9266,7 +9266,7 @@ export const RECIPES_500 = [
     temps:27, portions:2, difficulte:"Moyen",
     prix:3, cout:4.42, nutriScore:"A", cuisine:"française",
     micros:{ fer:5.29, magnesium:18.84, calcium:103.55, zinc:0.37, potassium:171.53, vitC:54.08, omega3:0.02 },
-    img:IMG.dinde, imgQuery:"Magret canard grillé",
+    img:IMG.dinde, imgQuery:"magret duck grilled",
     desc:"En retirant l'excès de gras, le magret devient une viande très protéinée ; la sauce aux fruits rouges sans sucre remplace les sauces salées du commerce.",
     astuce:"Faites fondre le gras du magret à feu doux côté peau puis jetez-le : la viande reste savoureuse mais bien plus maigre.",
     ingredients:[
@@ -9291,7 +9291,7 @@ export const RECIPES_500 = [
     temps:27, portions:2, difficulte:"Facile",
     prix:2, cout:1.76, nutriScore:"A", cuisine:"française",
     micros:{ fer:5.6, magnesium:84.6, calcium:153.71, zinc:3.11, potassium:1394.97, vitC:28.23, vitB12:0.68, omega3:0.16 },
-    img:IMG.saladeQ, imgQuery:"Brochettes pintade citron thym",
+    img:IMG.saladeQ, imgQuery:"skewers pintade lemon thym",
     desc:"La pintade est une volaille fine et très maigre ; en brochettes marinées aux herbes, elle offre 43 g de protéines pour 280 kcal, sans sel ajouté.",
     astuce:"La pintade est plus maigre que le poulet : ne la sur-cuisez pas et gardez la marinade citronnée pour la garder juteuse.",
     ingredients:[
@@ -9315,7 +9315,7 @@ export const RECIPES_500 = [
     temps:13, portions:2, difficulte:"Facile",
     prix:1, cout:1.15, nutriScore:"B", cuisine:"petit-déjeuner moderne",
     micros:{ fer:3.84, magnesium:150.44, calcium:351.29, zinc:3.38, potassium:723.94, vitC:2.89, vitD:0.54, vitB12:0.72, omega3:2.08 },
-    img:IMG.porridge, imgQuery:"Porridge avoine-lin",
+    img:IMG.porridge, imgQuery:"porridge avoine-lin",
     desc:"Avoine et graines de lin apportent des fibres solubles (9 g), la protéine et le lait couvrent les protéines : un petit-déjeuner rassasiant et sans sel.",
     astuce:"Les graines de lin moulues (et non entières) libèrent leurs oméga-3 et leurs fibres, et épaississent joliment le porridge.",
     ingredients:[
@@ -9341,7 +9341,7 @@ export const RECIPES_500 = [
     temps:13, portions:2, difficulte:"Facile",
     prix:1, cout:1.22, nutriScore:"B", cuisine:"petit-déjeuner moderne",
     micros:{ fer:0.15, magnesium:6.44, calcium:8.32, zinc:0.07, potassium:134.84, vitC:4.84, vitD:0.02, vitB12:0.01 },
-    img:IMG.oeufs, imgQuery:"Tartine complète",
+    img:IMG.oeufs, imgQuery:"toast",
     desc:"Le pain complet aux graines et l'avocat font le plein de fibres et de bons lipides, l'œuf apporte les protéines : un petit-déjeuner salé rassasiant.",
     astuce:"Un pain complet dense et bien pourvu en graines rassasie beaucoup plus longtemps qu'un pain blanc.",
     ingredients:[
@@ -9366,7 +9366,7 @@ export const RECIPES_500 = [
     temps:35, portions:2, difficulte:"Facile",
     prix:3, cout:2.99, nutriScore:"A", cuisine:"méditerranéenne",
     micros:{ fer:10.24, magnesium:323.48, calcium:210.88, zinc:7.16, potassium:1764.98, vitC:50.72, omega3:0.19 },
-    img:IMG.risotto, imgQuery:"Salade d'épeautre",
+    img:IMG.risotto, imgQuery:"salad epeautre",
     desc:"L'épeautre complet et la courge apportent glucides lents et fibres (10 g), le poulet les protéines : une salade-repas complète et rassasiante.",
     astuce:"Rôtissez la courge jusqu'aux bords caramélisés : sa douceur contraste avec la mâche de l'épeautre.",
     ingredients:[
@@ -9392,7 +9392,7 @@ export const RECIPES_500 = [
     temps:20, portions:2, difficulte:"Facile",
     prix:2, cout:2.23, nutriScore:"B", cuisine:"méditerranéenne",
     micros:{ fer:4.3, magnesium:81.68, calcium:151.25, zinc:1.55, potassium:636.45, vitC:20.93, vitB12:0.02, omega3:0.85 },
-    img:IMG.houmous, imgQuery:"Wrap complet tempeh grillé",
+    img:IMG.houmous, imgQuery:"wrap tempeh grilled",
     desc:"Tortilla complète, tempeh et houmous cumulent protéines végétales et fibres (12 g) ; un wrap végétal complet et peu salé.",
     astuce:"Faites bien colorer le tempeh au gril : il devient croustillant et se tient parfaitement dans le wrap.",
     ingredients:[
@@ -9417,7 +9417,7 @@ export const RECIPES_500 = [
     temps:50, portions:4, difficulte:"Moyen",
     prix:3, cout:3.48, nutriScore:"A", cuisine:"française",
     micros:{ fer:7.29, magnesium:101.3, calcium:173.58, zinc:4.42, potassium:1631.99, vitC:20.05, vitB12:5.8, omega3:0.58 },
-    img:IMG.poulet, imgQuery:"Lapin pruneaux légumes racines",
+    img:IMG.poulet, imgQuery:"lapin pruneaux vegetables",
     desc:"Le lapin est une viande très maigre et protéinée ; les pruneaux et les légumes racines apportent douceur et fibres, sans besoin de sel.",
     astuce:"Les pruneaux fondent dans la sauce et l'enrichissent d'une douceur naturelle qui remplace tout assaisonnement salé.",
     ingredients:[
@@ -9442,7 +9442,7 @@ export const RECIPES_500 = [
     temps:50, portions:4, difficulte:"Moyen",
     prix:2, cout:1.62, nutriScore:"B", cuisine:"marocaine",
     micros:{ fer:4.31, magnesium:106.25, calcium:159.09, zinc:7.72, potassium:1304.56, vitC:10.97, vitD:0.13, vitB12:3.61, omega3:0.12 },
-    img:IMG.boeuf, imgQuery:"Tagine d'agneau",
+    img:IMG.boeuf, imgQuery:"tagine lamb",
     desc:"Les épices parfument sans sel, les pois chiches et abricots apportent fibres (11 g) et douceur, l'agneau les protéines : un tagine complet et équilibré.",
     astuce:"Le ras el hanout et la cannelle suffisent à donner toute la profondeur : goûtez avant d'envisager le moindre sel.",
     ingredients:[
@@ -9468,7 +9468,7 @@ export const RECIPES_500 = [
     temps:5, portions:1, difficulte:"Facile",
     prix:2, cout:2.38, nutriScore:"B", cuisine:"boisson healthy",
     micros:{ fer:3.4, magnesium:138.7, calcium:356.59, zinc:3.06, potassium:824.2, vitC:14.42, vitD:0.54, vitB12:0.72, omega3:1.9 },
-    img:IMG.chiapot, imgQuery:"Smoothie protéiné myrtille",
+    img:IMG.chiapot, imgQuery:"smoothie myrtille",
     desc:"Avoine, chia et myrtilles apportent fibres (8 g) et antioxydants, la protéine rassasie : une boisson-collation complète et sans sel.",
     astuce:"Laissez reposer quelques minutes après mixage : le chia gonfle et donne une texture crémeuse type milkshake.",
     ingredients:[
@@ -9493,7 +9493,7 @@ export const RECIPES_500 = [
     temps:15, portions:8, difficulte:"Facile",
     prix:1, cout:0.29, nutriScore:"B", cuisine:"snack healthy",
     micros:{ fer:1.17, magnesium:58.6, calcium:65.78, zinc:0.97, potassium:200.09, vitC:0.06, omega3:0.02 },
-    img:IMG.energy, imgQuery:"Barres avoine-figue-amande cuisson",
+    img:IMG.energy, imgQuery:"bars avoine-figue-amande cuisson",
     desc:"Les figues séchées et l'avoine font des barres naturellement riches en fibres (5 g), sans sucre raffiné ni sel : idéales avant l'effort.",
     astuce:"Les figues, riches en fibres et en pectine, lient les barres sans qu'on ait besoin de cuisson ni de sucre ajouté.",
     ingredients:[
@@ -9519,7 +9519,7 @@ export const RECIPES_500 = [
     temps:34, portions:2, difficulte:"Facile",
     prix:3, cout:2.77, nutriScore:"A", cuisine:"méditerranéenne",
     micros:{ fer:4.82, magnesium:177.97, calcium:93.03, zinc:4.36, potassium:1170.1, vitC:74.59, omega3:0.15 },
-    img:IMG.dahl, imgQuery:"Bowl récupération quinoa-lentilles",
+    img:IMG.dahl, imgQuery:"bowl",
     desc:"Quinoa et lentilles rechargent le glycogène tout en apportant beaucoup de fibres (12 g), le poulet couvre les protéines : un bol de récupération complet.",
     astuce:"Le duo quinoa + lentilles double les fibres et les protéines végétales par rapport à un simple riz.",
     ingredients:[
@@ -9545,7 +9545,7 @@ export const RECIPES_500 = [
     temps:5, portions:1, difficulte:"Facile",
     prix:1, cout:1.48, nutriScore:"B", cuisine:"boisson de récupération",
     micros:{ fer:2.72, magnesium:126.56, calcium:295.72, zinc:2.91, potassium:788.63, vitC:2.69, vitD:0.54, vitB12:0.72, omega3:0.13 },
-    img:IMG.shakeP, imgQuery:"Shake récupération banane",
+    img:IMG.shakeP, imgQuery:"shake banana",
     desc:"Avoine et banane rechargent le glycogène et apportent des fibres, la protéine et le beurre de cacahuète soutiennent la récupération musculaire.",
     astuce:"Une banane bien mûre sucre naturellement le shake : aucun sucre ajouté nécessaire.",
     ingredients:[
@@ -9569,7 +9569,7 @@ export const RECIPES_500 = [
     temps:25, portions:2, difficulte:"Facile",
     prix:2, cout:2.55, nutriScore:"A", cuisine:"française",
     micros:{ fer:4.59, magnesium:106.2, calcium:163.97, zinc:3.42, potassium:1503.8, vitC:37.0, vitD:1.25, vitB12:1.02, omega3:0.31 },
-    img:IMG.poivron, imgQuery:"Poêlée dinde courgettes",
+    img:IMG.poivron, imgQuery:"turkey zucchini",
     desc:"Moins de 300 kcal par assiette pour 36 g de protéines : la dinde maigre préserve le muscle pendant la sèche tandis que le volume de légumes cale durablement.",
     astuce:"Ajoutez la sauce moutarde-fromage blanc hors du feu uniquement : elle reste crémeuse sans trancher.",
     ingredients:[
@@ -9599,7 +9599,7 @@ export const RECIPES_500 = [
     temps:40, portions:2, difficulte:"Moyen",
     prix:3, cout:4.45, nutriScore:"A", cuisine:"espagnole",
     micros:{ fer:17.82, magnesium:127.02, calcium:257.09, zinc:6.18, potassium:1785.72, vitC:51.1, vitB12:54.0, omega3:0.74 },
-    img:IMG.gambas, imgQuery:"Salade poulpe grillé galicienne",
+    img:IMG.gambas, imgQuery:"salad poulpe grilled galicienne",
     desc:"Le poulpe est l'une des protéines les plus maigres qui soient (1-2% de lipides) : profil idéal en sèche, avec la portion de féculents contrôlée pour l'énergie.",
     astuce:"Passez le poulpe déjà cuit sous le gril très chaud sans le déplacer : il caramélise sans durcir.",
     ingredients:[
@@ -9628,7 +9628,7 @@ export const RECIPES_500 = [
     temps:25, portions:2, difficulte:"Facile",
     prix:3, cout:3.1, nutriScore:"B", cuisine:"italienne",
     micros:{ fer:6.76, magnesium:82.13, calcium:291.71, zinc:1.57, potassium:662.22, vitC:2.27, vitD:8.68, vitB12:4.34, omega3:1.68 },
-    img:IMG.thon, imgQuery:"Rouleaux courgette thon",
+    img:IMG.thon, imgQuery:"rouleaux zucchini tuna",
     desc:"Sans féculents et bourré de protéines (thon + ricotta), ce plat froid reste sous 300 kcal tout en donnant une vraie sensation de repas structuré.",
     astuce:"Salez légèrement les lanières de courgette 10 min avant de les griller : elles s'assouplissent et se roulent sans casser.",
     ingredients:[
@@ -9656,7 +9656,7 @@ export const RECIPES_500 = [
     temps:35, portions:2, difficulte:"Moyen",
     prix:3, cout:3.7, nutriScore:"A", cuisine:"vietnamienne",
     micros:{ fer:2.58, magnesium:102.67, calcium:107.12, zinc:2.81, potassium:1046.04, vitC:57.8, vitB12:0.53, omega3:0.03 },
-    img:IMG.cabillaud, imgQuery:"Canh chua poisson",
+    img:IMG.cabillaud, imgQuery:"canh chua fish",
     desc:"L'équilibre aigre-doux du tamarin et de l'ananas donne une soupe ultra-savoureuse à moins de 230 kcal : le bouillon chaud ralentit la prise alimentaire et amplifie la satiété.",
     astuce:"Ne faites jamais bouillir le cabillaud : un simple frémissement le garde nacré et fondant.",
     ingredients:[
@@ -9688,7 +9688,7 @@ export const RECIPES_500 = [
     temps:22, portions:2, difficulte:"Facile",
     prix:3, cout:2.8, nutriScore:"A", cuisine:"française",
     micros:{ fer:1.96, magnesium:41.73, calcium:28.79, zinc:0.64, potassium:457.22, vitC:3.04, vitD:7.83, vitB12:3.81, omega3:1.53 },
-    img:IMG.oeufs, imgQuery:"Salade haricots verts",
+    img:IMG.oeufs, imgQuery:"salad green beans",
     desc:"Le trio haricots verts + thon + œufs coche satiété, protéines complètes et micronutriments pour environ 290 kcal : parfait dîner de sèche à préparer en 20 minutes.",
     astuce:"Plongez les œufs dans l'eau glacée dès la fin de cuisson : l'écalage devient facile et le jaune reste crémeux.",
     ingredients:[
@@ -9716,7 +9716,7 @@ export const RECIPES_500 = [
     temps:22, portions:2, difficulte:"Facile",
     prix:3, cout:3.4, nutriScore:"A", cuisine:"méditerranéenne",
     micros:{ fer:7.96, magnesium:142.17, calcium:221.66, zinc:1.68, potassium:1157.63, vitC:31.0, vitB12:4.5, omega3:0.26 },
-    img:IMG.cabillaud, imgQuery:"Colin vapeur",
+    img:IMG.cabillaud, imgQuery:"pollock vapeur",
     desc:"À peine 230 kcal par portion : la vapeur préserve le moelleux du colin et la sauce vierge crue apporte le goût sans alourdir le bilan lipidique.",
     astuce:"Préparez la sauce vierge 30 min à l'avance : les saveurs infusent et la tomate rend un jus délicieux.",
     ingredients:[
@@ -9744,7 +9744,7 @@ export const RECIPES_500 = [
     temps:27, portions:2, difficulte:"Facile",
     prix:3, cout:3.15, nutriScore:"A", cuisine:"californienne",
     micros:{ fer:2.59, magnesium:84.28, calcium:230.82, zinc:2.2, potassium:679.39, vitC:109.0, omega3:0.4 },
-    img:IMG.yaourt, imgQuery:"Poulet grillé",
+    img:IMG.yaourt, imgQuery:"chicken grilled",
     desc:"Le kale massé apporte un volume de fibres exceptionnel et la vinaigrette au yaourt remplace 80% des lipides d'une vinaigrette classique : 330 kcal pour 38 g de protéines.",
     astuce:"Massez vraiment le kale à pleines mains : les fibres s'assouplissent et il devient aussi agréable qu'une jeune pousse.",
     ingredients:[
@@ -9774,7 +9774,7 @@ export const RECIPES_500 = [
     temps:30, portions:2, difficulte:"Moyen",
     prix:3, cout:3.6, nutriScore:"B", cuisine:"japonaise",
     micros:{ fer:4.15, magnesium:106.37, calcium:238.14, zinc:3.52, potassium:851.49, vitC:15.78, vitD:0.07, vitB12:1.03, omega3:0.21 },
-    img:IMG.crevettes, imgQuery:"Okonomiyaki chou crevettes",
+    img:IMG.crevettes, imgQuery:"okonomiyaki cabbage shrimp",
     desc:"La version classique dépasse 700 kcal ; ici le chou remplace l'essentiel de la farine et le yaourt la mayonnaise : on garde l'expérience street-food pour 335 kcal.",
     astuce:"Laissez reposer la pâte 5 min : la farine s'hydrate et la galette se tient parfaitement au retournement.",
     ingredients:[
@@ -9805,7 +9805,7 @@ export const RECIPES_500 = [
     temps:15, portions:2, difficulte:"Facile",
     prix:3, cout:3.05, nutriScore:"B", cuisine:"nordique",
     micros:{ fer:1.48, magnesium:51.3, calcium:142.41, zinc:1.72, potassium:755.9, vitC:39.09, vitB12:0.9, omega3:0.08 },
-    img:IMG.yaourt, imgQuery:"Salade nordique dinde fumée",
+    img:IMG.yaourt, imgQuery:"salad nordique turkey",
     desc:"Moins de 240 kcal pour 33 g de protéines grâce au duo dinde fumée + skyr : la densité protéique record (13 g/100 kcal) protège la masse maigre en plein déficit.",
     astuce:"Salez légèrement le concombre 10 min puis épongez-le : la salade ne rendra pas d'eau.",
     ingredients:[
@@ -9834,7 +9834,7 @@ export const RECIPES_500 = [
     temps:18, portions:2, difficulte:"Facile",
     prix:3, cout:4.2, nutriScore:"A", cuisine:"italienne",
     micros:{ fer:7.71, magnesium:140.63, calcium:279.03, zinc:5.38, potassium:1347.23, vitC:52.58, vitB12:1.6, omega3:0.3 },
-    img:IMG.crevettes, imgQuery:"Courgetti crevettes",
+    img:IMG.crevettes, imgQuery:"courgetti shrimp",
     desc:"On garde toute la gourmandise d'un plat de pâtes à l'ail et aux crevettes en divisant les calories par trois : 250 kcal la portion généreuse.",
     astuce:"Ne salez les courgetti qu'en fin de cuisson et servez immédiatement : ils restent croquants sans rendre d'eau.",
     ingredients:[
@@ -9862,7 +9862,7 @@ export const RECIPES_500 = [
     temps:23, portions:2, difficulte:"Facile",
     prix:3, cout:3.9, nutriScore:"B", cuisine:"thaïlandaise",
     micros:{ fer:6.61, magnesium:70.24, calcium:98.36, zinc:10.06, potassium:784.85, vitC:8.11, vitB12:4.37, omega3:0.04 },
-    img:IMG.oeufs, imgQuery:"Yam neua",
+    img:IMG.oeufs, imgQuery:"neua",
     desc:"La sauce thaïe citron-nuoc-mâm assaisonne sans aucune matière grasse ajoutée : 260 kcal pour un plat de bœuf explosif en saveurs, idéal en fin de sèche.",
     astuce:"Mélangez le bœuf encore chaud à la sauce : il absorbe l'assaisonnement en refroidissant.",
     ingredients:[
@@ -9893,7 +9893,7 @@ export const RECIPES_500 = [
     temps:25, portions:2, difficulte:"Facile",
     prix:3, cout:3.2, nutriScore:"A", cuisine:"espagnole",
     micros:{ fer:3.61, magnesium:60.12, calcium:65.53, zinc:2.15, potassium:656.69, vitC:9.42, vitD:0.23, vitB12:0.58, omega3:0.4 },
-    img:IMG.poulet, imgQuery:"Aiguillettes poulet paprika fumé",
+    img:IMG.poulet, imgQuery:"chicken paprika",
     desc:"Les poivrons apportent volume, fibres et une charge de vitamine C qui soutient la récupération, le tout pour à peine 290 kcal et 36 g de protéines.",
     astuce:"Le trait de vinaigre de Xérès en fin de cuisson réveille les poivrons confits : c'est lui qui fait le plat.",
     ingredients:[
@@ -9922,7 +9922,7 @@ export const RECIPES_500 = [
     temps:22, portions:2, difficulte:"Facile",
     prix:3, cout:3.8, nutriScore:"A", cuisine:"péruvienne",
     micros:{ fer:4.08, magnesium:117.25, calcium:367.78, zinc:2.83, potassium:549.56, vitC:6.45, vitB12:2.13, omega3:0.44 },
-    img:IMG.crevettes, imgQuery:"Ceviche crevettes",
+    img:IMG.crevettes, imgQuery:"ceviche shrimp",
     desc:"Zéro cuisson, 250 kcal : les crevettes offrent une protéine quasi pure et le demi-avocat suffit à donner l'onctuosité sans faire exploser les lipides.",
     astuce:"Ajoutez une pincée de zeste de citron vert dans la marinade : l'acidité gagne en parfum sans agressivité.",
     ingredients:[
@@ -9951,7 +9951,7 @@ export const RECIPES_500 = [
     temps:30, portions:2, difficulte:"Facile",
     prix:2, cout:2.65, nutriScore:"A", cuisine:"française",
     micros:{ fer:2.32, magnesium:98.16, calcium:263.81, zinc:3.01, potassium:1164.22, vitC:55.01, vitD:0.09, vitB12:0.41, omega3:0.24 },
-    img:IMG.miso, imgQuery:"Soupe repas courgette fromage frais",
+    img:IMG.miso, imgQuery:"soup repas zucchini cheese",
     desc:"Le fromage frais allégé mixé donne l'onctuosité d'un velouté à la crème pour trois fois moins de lipides ; le poulet poché dans le bouillon transforme la soupe en vrai repas.",
     astuce:"Torréfiez les graines de courge à sec 2 min : le croquant fait toute la différence dans un velouté.",
     ingredients:[
@@ -9980,7 +9980,7 @@ export const RECIPES_500 = [
     temps:50, portions:4, difficulte:"Facile",
     prix:3, cout:2.95, nutriScore:"B", cuisine:"italienne",
     micros:{ fer:5.37, magnesium:72.52, calcium:164.89, zinc:1.38, potassium:1178.32, vitC:29.15, vitB12:2.01, omega3:0.1 },
-    img:IMG.oeufs, imgQuery:"Spaghetti bolognaise",
+    img:IMG.oeufs, imgQuery:"spaghetti bolognaise",
     desc:"575 kcal par assiette avec un ratio protéines/glucides taillé pour la construction musculaire ; les lentilles fondues dans la sauce ajoutent fibres et protéines végétales invisibles.",
     astuce:"Laissez la sauce mijoter à découvert les 5 dernières minutes : elle se concentre et nappe mieux les pâtes.",
     ingredients:[
@@ -10012,7 +10012,7 @@ export const RECIPES_500 = [
     temps:45, portions:2, difficulte:"Facile",
     prix:3, cout:4.45, nutriScore:"B", cuisine:"marocaine",
     micros:{ fer:3.99, magnesium:123.01, calcium:115.3, zinc:5.39, potassium:1170.28, vitC:1.15, vitB12:1.22, omega3:0.17 },
-    img:IMG.gambas, imgQuery:"Poulet rôti miel abricots",
+    img:IMG.gambas, imgQuery:"chicken roasted honey abricots",
     desc:"660 kcal denses et digestes : le sucré des abricots et du miel recharge le glycogène tandis que les hauts de cuisse apportent plus de fer et de saveur que le blanc.",
     astuce:"Faites réduire le jus de cuisson 3 min à feu vif en fin de cuisson : il doit napper la cuillère comme un sirop léger.",
     ingredients:[
@@ -10043,7 +10043,7 @@ export const RECIPES_500 = [
     temps:35, portions:2, difficulte:"Facile",
     prix:3, cout:4.3, nutriScore:"B", cuisine:"japonaise",
     micros:{ fer:15.52, magnesium:289.62, calcium:249.98, zinc:6.67, potassium:2009.84, vitC:4.62, vitB12:1.16, omega3:1.06 },
-    img:IMG.poulet, imgQuery:"Brochettes yakitori poulet",
+    img:IMG.poulet, imgQuery:"skewers yakitori chicken",
     desc:"610 kcal construites autour d'un riz généreux et d'un poulet juteux ; les edamame ajoutent 8 g de protéines végétales et des fibres qui manquent souvent en prise de masse.",
     astuce:"Laquez en fin de cuisson seulement : le sucre de la tare brûle vite et deviendrait amer.",
     ingredients:[
@@ -10072,7 +10072,7 @@ export const RECIPES_500 = [
     temps:55, portions:4, difficulte:"Facile",
     prix:3, cout:2.85, nutriScore:"B", cuisine:"tex-mex",
     micros:{ fer:9.66, magnesium:122.12, calcium:199.28, zinc:1.93, potassium:1571.5, vitC:31.97, vitD:0.03, vitB12:2.1, omega3:0.23 },
-    img:IMG.oeufs, imgQuery:"Chili con carne maigre",
+    img:IMG.oeufs, imgQuery:"chili carne",
     desc:"630 kcal par portion à moins de 3 € : le duo bœuf + haricots rouges délivre 48 g de protéines et 12 g de fibres, rare à ce niveau calorique.",
     astuce:"La pointe de cacao non sucré arrondit le piment et donne au chili une profondeur de 3 heures de mijotage.",
     ingredients:[
@@ -10106,7 +10106,7 @@ export const RECIPES_500 = [
     temps:60, portions:4, difficulte:"Moyen",
     prix:3, cout:3.65, nutriScore:"B", cuisine:"marocaine",
     micros:{ fer:3.13, magnesium:108.91, calcium:98.69, zinc:6.18, potassium:686.85, vitC:1.22, vitB12:0.76, omega3:0.17 },
-    img:IMG.poulet, imgQuery:"Couscous poulet merguez volaille légumes",
+    img:IMG.poulet, imgQuery:"couscous chicken merguez volaille",
     desc:"637 kcal complètes avec trois sources de protéines (poulet, merguez de volaille, pois chiches) : la version volaille des merguez divise les graisses saturées par deux.",
     astuce:"Arrosez la semoule de deux louches de bouillon 5 min avant de servir : elle gonfle une seconde fois et devient aérienne.",
     ingredients:[
@@ -10139,7 +10139,7 @@ export const RECIPES_500 = [
     temps:45, portions:4, difficulte:"Facile",
     prix:2, cout:2.55, nutriScore:"B", cuisine:"française",
     micros:{ fer:3.2, magnesium:108.97, calcium:412.3, zinc:2.73, potassium:1083.37, vitC:109.26, vitD:7.86, vitB12:4.58, omega3:1.51 },
-    img:IMG.thon, imgQuery:"Gratin pâtes thon",
+    img:IMG.thon, imgQuery:"gratin pasta tuna",
     desc:"580 kcal et 43 g de protéines dans un plat doudou : le thon au naturel muscle la béchamel sans un gramme de gras superflu, le brocoli assure fibres et micronutriments.",
     astuce:"Sous-cuisez franchement les pâtes de 2 minutes : elles finissent de cuire au four en absorbant la béchamel.",
     ingredients:[
@@ -10169,7 +10169,7 @@ export const RECIPES_500 = [
     temps:50, portions:4, difficulte:"Moyen",
     prix:3, cout:2.98, nutriScore:"B", cuisine:"latino-américaine",
     micros:{ fer:5.27, magnesium:96.89, calcium:89.31, zinc:4.4, potassium:895.95, vitC:9.16, vitB12:1.07, omega3:0.12 },
-    img:IMG.poulet, imgQuery:"Arroz con pollo",
+    img:IMG.poulet, imgQuery:"arroz pollo",
     desc:"630 kcal où le riz cuit dans le jus de poulet safrané : glucides chargés en saveur, cuisses juteuses riches en fer et zinc, minéraux clés de la construction musculaire.",
     astuce:"Ne remuez plus le riz après l'ajout du bouillon : il cuit en absorption et développe une légère croûte dorée au fond, la meilleure partie du plat.",
     ingredients:[
@@ -10234,7 +10234,7 @@ export const RECIPES_500 = [
     temps:45, portions:2, difficulte:"Moyen",
     prix:3, cout:4.85, nutriScore:"B", cuisine:"indienne",
     micros:{ fer:3.18, magnesium:101.8, calcium:184.4, zinc:3.04, potassium:1166.33, vitC:24.74, vitD:0.05, vitB12:0.12, omega3:0.09 },
-    img:IMG.yaourt, imgQuery:"Butter chicken yaourt riz basmati",
+    img:IMG.yaourt, imgQuery:"butter chicken yogurt rice",
     desc:"650 kcal avec 52 g de protéines : la marinade au yaourt attendrit le poulet et la sauce garde le goût beurré du classique avec trois fois moins de matières grasses.",
     astuce:"Grillez le poulet mariné presque jusqu'à carbonisation légère des arêtes : ce goût fumé imite le tandoor.",
     ingredients:[
@@ -10267,7 +10267,7 @@ export const RECIPES_500 = [
     temps:30, portions:2, difficulte:"Facile",
     prix:3, cout:5.2, nutriScore:"B", cuisine:"moyen-orientale",
     micros:{ fer:8.1, magnesium:65.57, calcium:173.84, zinc:12.56, potassium:839.61, vitC:10.24, vitB12:5.46, omega3:0.13 },
-    img:IMG.oeufs, imgQuery:"Shawarma bowl",
+    img:IMG.oeufs, imgQuery:"shawarma bowl",
     desc:"631 kcal calibrées comme un kebab-assiette mais avec un bœuf maigre tracé et une sauce blanche au yaourt : le plaisir street-food au service du muscle.",
     astuce:"Étalez le bœuf en une seule couche dans la poêle brûlante et ne le touchez pas 90 secondes : c'est le secret de la croûte d'épices.",
     ingredients:[
@@ -10301,7 +10301,7 @@ export const RECIPES_500 = [
     temps:50, portions:2, difficulte:"Moyen",
     prix:3, cout:4.65, nutriScore:"B", cuisine:"turque",
     micros:{ fer:5.29, magnesium:117.38, calcium:206.99, zinc:3.2, potassium:1351.39, vitC:40.76, vitD:0.19, vitB12:1.2, omega3:0.11 },
-    img:IMG.wrapV, imgQuery:"Kebab dinde grillée",
+    img:IMG.wrapV, imgQuery:"kebab turkey grilled",
     desc:"636 kcal pour un kebab-frites complet : dinde ultra-maigre, frites de patate douce au four et sauce au yaourt — le cheat meal qui n'en est pas un.",
     astuce:"Passez les pitas 30 secondes sur la flamme ou le grille-pain avant de les garnir : ils redeviennent souples et parfumés.",
     ingredients:[
@@ -10334,7 +10334,7 @@ export const RECIPES_500 = [
     temps:45, portions:2, difficulte:"Moyen",
     prix:3, cout:4.4, nutriScore:"B", cuisine:"japonaise",
     micros:{ fer:4.68, magnesium:127.92, calcium:112.92, zinc:3.29, potassium:1065.14, vitC:24.93, vitD:0.02, vitB12:0.22, omega3:0.21 },
-    img:IMG.oeufs, imgQuery:"Ramen poulet",
+    img:IMG.oeufs, imgQuery:"ramen chicken",
     desc:"631 kcal réconfortantes : poulet poché, œuf mollet et miso totalisent 50 g de protéines, et le grand volume de bouillon chaud cale sans peser à l'entraînement du soir.",
     astuce:"Pochez le poulet à frémissement très doux et laissez-le reposer 5 min dans le bouillon coupé : il reste juteux comme un poulet de ramen-ya.",
     ingredients:[
@@ -10366,7 +10366,7 @@ export const RECIPES_500 = [
     temps:205, portions:4, difficulte:"Difficile",
     prix:3, cout:4.2, nutriScore:"B", cuisine:"mexicaine",
     micros:{ fer:6.98, magnesium:78.54, calcium:229.02, zinc:12.18, potassium:828.18, vitC:2.89, vitD:0.32, vitB12:6.23, omega3:0.09 },
-    img:IMG.oeufs, imgQuery:"Tacos effiloché birria",
+    img:IMG.oeufs, imgQuery:"tacos effiloche birria",
     desc:"644 kcal de pur réconfort mexicain : le paleron mijoté délivre collagène et 54 g de protéines, et le dégraissage du consommé retire l'essentiel des graisses saturées du plat original.",
     astuce:"Réfrigérez le bouillon 20 min avant de servir : le gras fige en surface et se retire à la cuillère en 10 secondes.",
     ingredients:[
@@ -10400,7 +10400,7 @@ export const RECIPES_500 = [
     temps:35, portions:2, difficulte:"Facile",
     prix:3, cout:4.8, nutriScore:"B", cuisine:"grecque",
     micros:{ fer:6.26, magnesium:152.88, calcium:405.14, zinc:5.05, potassium:1111.25, vitC:31.09, vitD:0.27, vitB12:0.79, omega3:0.33 },
-    img:IMG.poulet, imgQuery:"Orzo crémeux poulet",
+    img:IMG.poulet, imgQuery:"orzo chicken",
     desc:"654 kcal onctueuses en une seule casserole : l'amidon de l'orzo lie la sauce sans crème et le duo parmesan-yaourt monte le plat à 53 g de protéines.",
     astuce:"Gardez le one-pot légèrement plus liquide que souhaité à l'extinction du feu : l'orzo continue de boire pendant le dressage.",
     ingredients:[
@@ -10431,7 +10431,7 @@ export const RECIPES_500 = [
     temps:45, portions:4, difficulte:"Facile",
     prix:2, cout:1.73, nutriScore:"A", cuisine:"italienne",
     micros:{ fer:2.8, magnesium:88.12, calcium:83.93, zinc:2.14, potassium:1231.32, vitC:33.03, vitD:0.23, vitB12:0.02, omega3:0.06 },
-    img:IMG.dahl, imgQuery:"Spaghetti complets bolognaise lentilles champignons",
+    img:IMG.dahl, imgQuery:"spaghetti bolognaise lentils mushrooms",
     desc:"Les champignons dorés apportent l'umami de la viande et les lentilles 25 g de protéines végétales : une bolognaise crédible à moins de 1,20 € la portion.",
     astuce:"Faites dorer les champignons hachés à sec et sans remuer : l'eau s'évapore et les sucs caramélisent comme une viande hachée.",
     ingredients:[
@@ -10464,7 +10464,7 @@ export const RECIPES_500 = [
     temps:55, portions:4, difficulte:"Facile",
     prix:2, cout:2.05, nutriScore:"A", cuisine:"marocaine",
     micros:{ fer:3.8, magnesium:99.43, calcium:163.39, zinc:3.22, potassium:883.15, vitC:33.97, omega3:0.19 },
-    img:IMG.poulet, imgQuery:"Couscous vegan sept légumes pois",
+    img:IMG.poulet, imgQuery:"couscous vegan sept vegetables",
     desc:"Céréale + légumineuse = profil d'acides aminés complet ; 15 g de fibres et sept légumes en font l'un des plats les plus denses en micronutriments du catalogue.",
     astuce:"Prélevez une louche de bouillon, mélangez-la à la harissa et servez cette sauce piquante à part : chacun dose son feu.",
     ingredients:[
@@ -10499,7 +10499,7 @@ export const RECIPES_500 = [
     temps:45, portions:4, difficulte:"Facile",
     prix:2, cout:1.77, nutriScore:"A", cuisine:"japonaise",
     micros:{ fer:3.75, magnesium:89.18, calcium:122.76, zinc:2.73, potassium:641.55, vitC:16.56, omega3:0.21 },
-    img:IMG.curry, imgQuery:"Curry japonais légumes pois chiches",
+    img:IMG.curry, imgQuery:"curry japonais vegetables chickpea",
     desc:"La pomme râpée apporte la douceur signature du curry japonais ; avec riz, pommes de terre et pois chiches, c'est le plat parfait des grosses journées d'entraînement.",
     astuce:"Laissez le curry reposer 10 min avant de servir : le roux épaissit et la sauce devient nappante comme au Japon.",
     ingredients:[
@@ -10533,7 +10533,7 @@ export const RECIPES_500 = [
     temps:35, portions:2, difficulte:"Facile",
     prix:3, cout:3.65, nutriScore:"A", cuisine:"tex-mex",
     micros:{ fer:7.5, magnesium:224.78, calcium:285.8, zinc:3.04, potassium:745.16, vitC:11.35, omega3:0.94 },
-    img:IMG.buddha, imgQuery:"Burrito bowl vegan",
+    img:IMG.buddha, imgQuery:"burrito bowl vegan",
     desc:"570 kcal végétales avec 30 g de protéines : le tofu émietté grillé aux épices remplace la viande hachée au gramme près, et le trio riz-haricots-maïs complète les acides aminés.",
     astuce:"Pressez le tofu 10 min sous un poids avant cuisson : il absorbe les épices et croustille au lieu de bouillir.",
     ingredients:[
@@ -10566,7 +10566,7 @@ export const RECIPES_500 = [
     temps:30, portions:2, difficulte:"Facile",
     prix:3, cout:4.05, nutriScore:"A", cuisine:"japonaise",
     micros:{ fer:4.68, magnesium:153.53, calcium:253.79, zinc:2.96, potassium:1072.89, vitC:133.15, vitB12:0.19, omega3:0.42 },
-    img:IMG.pates, imgQuery:"Nouilles soba tempeh laqué sésame",
+    img:IMG.pates, imgQuery:"noodles soba tempeh sesame",
     desc:"Le tempeh apporte des protéines fermentées très digestes et les soba au sarrasin un index glycémique modéré : un plat végétal qui coche performance et confort digestif.",
     astuce:"Rincez toujours les soba à l'eau froide après cuisson puis réchauffez-les 30 secondes dans la poêle : elles ne collent jamais.",
     ingredients:[
@@ -10598,7 +10598,7 @@ export const RECIPES_500 = [
     temps:60, portions:4, difficulte:"Facile",
     prix:2, cout:1.6, nutriScore:"A", cuisine:"française",
     micros:{ fer:4.92, magnesium:74.46, calcium:97.17, zinc:3.16, potassium:1503.04, vitC:56.0, vitB12:0.03, omega3:0.29 },
-    img:IMG.dahl, imgQuery:"Hachis parmentier vegan lentilles purée",
+    img:IMG.dahl, imgQuery:"hachis parmentier vegan lentils",
     desc:"Le grand classique familial en version végétale : lentilles riches en fer (mieux absorbé grâce à la vitamine C de la tomate) et purée à l'huile d'olive sans beurre ni crème.",
     astuce:"Striez la purée à la fourchette avant d'enfourner : les crêtes dorent et croustillent comme un vrai parmentier.",
     ingredients:[
@@ -10631,7 +10631,7 @@ export const RECIPES_500 = [
     temps:45, portions:2, difficulte:"Facile",
     prix:3, cout:3.9, nutriScore:"B", cuisine:"italienne",
     micros:{ fer:6.1, magnesium:176.45, calcium:384.19, zinc:5.1, potassium:1347.25, vitC:11.01, vitB12:0.03, omega3:0.26 },
-    img:IMG.poulet, imgQuery:"Gnocchis",
+    img:IMG.poulet, imgQuery:"gnocchi",
     desc:"La crème potimarron-cajou mixée remplace crème et fromage avec un profil lipidique insaturé ; les pois chiches rôtis ajoutent protéines et croquant.",
     astuce:"Trempez les cajous 15 min dans l'eau bouillante avant de mixer : la sauce devient lisse comme une crème sans blender haute puissance.",
     ingredients:[
@@ -10662,7 +10662,7 @@ export const RECIPES_500 = [
     temps:40, portions:2, difficulte:"Facile",
     prix:3, cout:3.6, nutriScore:"A", cuisine:"indienne",
     micros:{ fer:14.59, magnesium:299.74, calcium:466.33, zinc:4.5, potassium:1627.08, vitC:105.08, omega3:1.42 },
-    img:IMG.tofuC, imgQuery:"Palak tofu",
+    img:IMG.tofuC, imgQuery:"palak tofu",
     desc:"Une montagne d'épinards (fer, folates, magnésium) dans une sauce crémeuse végétale : le tofu remplace le paneer avec moitié moins de graisses saturées.",
     astuce:"Mixez seulement la moitié des épinards : le contraste entre la crème verte et les feuilles entières fait la texture du plat.",
     ingredients:[
@@ -10695,7 +10695,7 @@ export const RECIPES_500 = [
     temps:35, portions:2, difficulte:"Facile",
     prix:3, cout:4.2, nutriScore:"A", cuisine:"hawaïenne",
     micros:{ fer:17.39, magnesium:387.07, calcium:396.68, zinc:5.44, potassium:1820.29, vitC:12.35, omega3:1.79 },
-    img:IMG.poke, imgQuery:"Poke bowl vegan tofu mariné",
+    img:IMG.poke, imgQuery:"poke bowl vegan tofu",
     desc:"Le duo tofu + edamame fournit 28 g de protéines de soja complètes ; la mangue et les crudités chargent le bowl en vitamines sans le moindre produit animal.",
     astuce:"Caramélisez le tofu mariné à feu vif sans remuer pendant 2 min par face : les sucres de la marinade créent une croûte laquée.",
     ingredients:[
@@ -10728,7 +10728,7 @@ export const RECIPES_500 = [
     temps:40, portions:2, difficulte:"Moyen",
     prix:3, cout:3.95, nutriScore:"B", cuisine:"japonaise",
     micros:{ fer:6.64, magnesium:318.42, calcium:179.67, zinc:10.52, potassium:2109.94, vitC:6.84, vitD:3.9, vitB12:0.18, omega3:0.78 },
-    img:IMG.miso, imgQuery:"Ramen vegan miso-champignons",
+    img:IMG.miso, imgQuery:"ramen vegan miso-champignons",
     desc:"Les shiitakés et le kombu concentrent le glutamate naturel : un bouillon aussi profond qu'un tonkotsu sans un gramme de produit animal, avec 27 g de protéines de soja.",
     astuce:"Ne faites jamais bouillir le miso : ajoutez-le hors du feu à travers une passoire fine pour préserver ses arômes et ses ferments.",
     ingredients:[
@@ -10761,7 +10761,7 @@ export const RECIPES_500 = [
     temps:50, portions:4, difficulte:"Facile",
     prix:2, cout:1.9, nutriScore:"A", cuisine:"brésilienne",
     micros:{ fer:5.52, magnesium:144.17, calcium:269.99, zinc:2.45, potassium:909.09, vitC:75.08, omega3:0.55 },
-    img:IMG.poulet, imgQuery:"Feijoada vegan haricots noirs",
+    img:IMG.poulet, imgQuery:"feijoada vegan black beans",
     desc:"Tradition brésilienne : l'orange servie avec la feijoada apporte la vitamine C qui multiplie l'absorption du fer des haricots noirs — un détail de nutritionniste intégré au plat.",
     astuce:"Le tofu fumé et le paprika fumé remplacent la charcuterie : ajoutez-les en début de cuisson pour que le goût fumé infuse tout le ragoût.",
     ingredients:[
@@ -10794,7 +10794,7 @@ export const RECIPES_500 = [
     temps:50, portions:2, difficulte:"Facile",
     prix:3, cout:3.4, nutriScore:"A", cuisine:"marocaine",
     micros:{ fer:5.89, magnesium:205.88, calcium:302.51, zinc:4.52, potassium:1666.5, vitC:64.99, vitB12:0.02, omega3:0.24 },
-    img:IMG.poulet, imgQuery:"Tajine patate douce",
+    img:IMG.poulet, imgQuery:"tagine sweet potato",
     desc:"Un concentré de fibres (17 g) et de glucides complexes à index glycémique modéré grâce aux légumineuses ; le citron confit et les olives signent le goût sans excès de matières grasses.",
     astuce:"Torréfiez les amandes à sec 3 min et concassez-les grossièrement : le croquant transforme le mijoté.",
     ingredients:[
@@ -10827,7 +10827,7 @@ export const RECIPES_500 = [
     temps:55, portions:2, difficulte:"Moyen",
     prix:3, cout:2.95, nutriScore:"A", cuisine:"américaine revisitée",
     micros:{ fer:5.89, magnesium:150.43, calcium:207.92, zinc:3.17, potassium:960.55, vitC:21.02, omega3:0.2 },
-    img:IMG.poulet, imgQuery:"Burgers pois chiches patate douce",
+    img:IMG.poulet, imgQuery:"burgers chickpea sweet potato",
     desc:"Un vrai burger qui tient en main : l'avoine lie le steak sans œuf, et le combo pois chiches + patate douce + tahini délivre fibres, protéines et bons lipides.",
     astuce:"Le passage au frais 10 min avant cuisson est indispensable : les steaks se raffermissent et ne s'effritent pas au retournement.",
     ingredients:[
@@ -10860,7 +10860,7 @@ export const RECIPES_500 = [
     temps:45, portions:2, difficulte:"Facile",
     prix:3, cout:4.15, nutriScore:"B", cuisine:"thaïlandaise",
     micros:{ fer:15.0, magnesium:329.28, calcium:340.93, zinc:6.01, potassium:1666.32, vitC:40.44, omega3:1.13 },
-    img:IMG.tofuC, imgQuery:"Massaman vegan tofu pommes terre",
+    img:IMG.tofuC, imgQuery:"massaman vegan tofu potatoes",
     desc:"Le massaman est le plus doux des currys thaïs : ici le lait de coco léger et le tofu maintiennent l'onctuosité en divisant les graisses saturées par deux face à la version classique.",
     astuce:"Vérifiez que la pâte massaman est bien végétalienne (sans pâte de crevette), ou préparez-la maison : c'est le seul piège de la recette.",
     ingredients:[
@@ -10892,7 +10892,7 @@ export const RECIPES_500 = [
     temps:30, portions:2, difficulte:"Facile",
     prix:3, cout:3.95, nutriScore:"A", cuisine:"méditerranéenne",
     micros:{ fer:7.63, magnesium:164.59, calcium:741.77, zinc:5.2, potassium:1392.3, vitC:12.21, vitD:15.12, vitB12:27.2, omega3:3.91 },
-    img:IMG.truite, imgQuery:"Sardines fraîches poêlées",
+    img:IMG.truite, imgQuery:"sardines",
     desc:"La sardine est la championne oméga-3/prix : plus de 1,5 g d'EPA-DHA par portion, associée au lycopène de la tomate cuite, deux des composés anti-inflammatoires les mieux documentés.",
     astuce:"Farinez très légèrement la peau des sardines avant de les poêler : elle croustille et ne colle pas.",
     ingredients:[
@@ -10921,7 +10921,7 @@ export const RECIPES_500 = [
     temps:12, portions:2, difficulte:"Facile",
     prix:3, cout:4.3, nutriScore:"A", cuisine:"nordique",
     micros:{ fer:3.62, magnesium:78.4, calcium:107.39, zinc:1.33, potassium:848.92, vitC:33.66, vitD:4.68, vitB12:2.88, omega3:1.31 },
-    img:IMG.truite, imgQuery:"Salade d'épinards",
+    img:IMG.truite, imgQuery:"salad spinach",
     desc:"La truite fumée apporte les oméga-3 marins, l'huile de colza les oméga-3 végétaux (ALA) et l'avocat la vitamine E antioxydante : un trio anti-inflammatoire complet sans cuisson.",
     astuce:"Torréfiez les graines de courge 2 min à sec jusqu'aux premiers craquements : elles libèrent leur goût de noisette.",
     ingredients:[
@@ -10952,7 +10952,7 @@ export const RECIPES_500 = [
     temps:45, portions:2, difficulte:"Facile",
     prix:3, cout:3.35, nutriScore:"A", cuisine:"moderne",
     micros:{ fer:5.1, magnesium:108.13, calcium:249.26, zinc:2.28, potassium:759.3, vitC:58.26, omega3:0.91 },
-    img:IMG.buddha, imgQuery:"Buddha bowl doré",
+    img:IMG.buddha, imgQuery:"buddha bowl",
     desc:"Le poivre noir multiplie par 20 l'absorption de la curcumine du curcuma ; betterave, carotte et kale ajoutent bétalaïnes et caroténoïdes, les pigments anti-inflammatoires par excellence.",
     astuce:"Mélangez toujours curcuma et poivre noir dans un corps gras (ici le houmous) : c'est la formule d'absorption optimale de la curcumine.",
     ingredients:[
@@ -10984,7 +10984,7 @@ export const RECIPES_500 = [
     temps:35, portions:2, difficulte:"Facile",
     prix:2, cout:2.45, nutriScore:"A", cuisine:"moderne",
     micros:{ fer:8.46, magnesium:158.08, calcium:141.66, zinc:3.12, potassium:1423.1, vitC:34.26, omega3:0.09 },
-    img:IMG.miso, imgQuery:"Velouté patate douce",
+    img:IMG.miso, imgQuery:"sweet potato",
     desc:"Le gingembre frais contient des gingérols aux effets anti-inflammatoires démontrés sur les douleurs musculaires post-effort ; les lentilles corail mixées enrichissent la soupe en protéines sans changer sa texture.",
     astuce:"Râpez le gingembre avec sa peau bien lavée : c'est sous la peau que la concentration en gingérols est maximale.",
     ingredients:[
@@ -11016,7 +11016,7 @@ export const RECIPES_500 = [
     temps:40, portions:2, difficulte:"Facile",
     prix:3, cout:3.6, nutriScore:"A", cuisine:"française",
     micros:{ fer:3.52, magnesium:37.0, calcium:116.25, zinc:1.5, potassium:1082.96, vitC:57.96, vitD:0.06, vitB12:0.05, omega3:0.4 },
-    img:IMG.truite, imgQuery:"Maquereau four",
+    img:IMG.truite, imgQuery:"mackerel baked",
     desc:"Le maquereau rivalise avec le saumon en oméga-3 pour un tiers du prix ; la cuisson au four entier protège ses acides gras fragiles de l'oxydation.",
     astuce:"Entaillez la peau en 3 endroits avant cuisson : le maquereau cuit uniformément et la peau croustille sans éclater.",
     ingredients:[
@@ -11046,7 +11046,7 @@ export const RECIPES_500 = [
     temps:25, portions:2, difficulte:"Moyen",
     prix:3, cout:5.4, nutriScore:"B", cuisine:"fusion nordique",
     micros:{ fer:2.31, magnesium:150.17, calcium:59.87, zinc:1.74, potassium:755.04, vitC:4.7, vitD:5.17, vitB12:5.53, omega3:2.62 },
-    img:IMG.saumon, imgQuery:"Tartare saumon avocat",
+    img:IMG.saumon, imgQuery:"tartare salmon avocado",
     desc:"Le saumon cru conserve 100% de ses oméga-3 (aucune perte de cuisson) ; le sarrasin apporte la rutine, un flavonoïde qui soutient la microcirculation, et un croquant addictif.",
     astuce:"Placez le saumon 15 min au congélateur avant de le tailler : les dés seront nets et le tartare bien froid.",
     ingredients:[
@@ -11076,7 +11076,7 @@ export const RECIPES_500 = [
     temps:45, portions:2, difficulte:"Facile",
     prix:3, cout:2.8, nutriScore:"A", cuisine:"indienne",
     micros:{ fer:15.2, magnesium:234.62, calcium:241.4, zinc:5.26, potassium:2264.1, vitC:84.34, omega3:0.32 },
-    img:IMG.dahl, imgQuery:"Curry lentilles corail",
+    img:IMG.dahl, imgQuery:"curry lentils corail",
     desc:"Curcuma + poivre + corps gras + légumes orange et verts : c'est littéralement l'assiette anti-inflammatoire modèle, avec 23 g de protéines végétales et 13 g de fibres.",
     astuce:"Faites toujours revenir les épices dans l'huile chaude avant d'ajouter les liquides : leurs composés actifs sont liposolubles.",
     ingredients:[
@@ -11110,7 +11110,7 @@ export const RECIPES_500 = [
     temps:25, portions:2, difficulte:"Facile",
     prix:3, cout:4.6, nutriScore:"A", cuisine:"chinoise",
     micros:{ fer:7.09, magnesium:164.12, calcium:219.45, zinc:5.96, potassium:1245.35, vitC:186.15, vitB12:1.5, omega3:0.06 },
-    img:IMG.crevettes, imgQuery:"Wok crevettes",
+    img:IMG.crevettes, imgQuery:"shrimp",
     desc:"La cuisson wok ultra-courte préserve le sulforaphane du brocoli, composé anti-inflammatoire détruit par les cuissons longues ; gingembre et cajous complètent le profil protecteur.",
     astuce:"Coupez le brocoli en très petites fleurettes et gardez les tiges pelées en biseaux : tout cuit en 3 minutes sans blanchiment préalable.",
     ingredients:[
@@ -11142,7 +11142,7 @@ export const RECIPES_500 = [
     temps:25, portions:2, difficulte:"Facile",
     prix:3, cout:3.7, nutriScore:"A", cuisine:"californienne",
     micros:{ fer:2.49, magnesium:85.44, calcium:172.06, zinc:2.18, potassium:681.36, vitC:102.03, omega3:0.36 },
-    img:IMG.poulet, imgQuery:"Salade kale",
+    img:IMG.poulet, imgQuery:"salad kale",
     desc:"La vitamine C des oranges décuple l'absorption du fer du kale ; les flavonoïdes d'agrumes (hespéridine) et la vitamine E des amandes renforcent le bouclier antioxydant.",
     astuce:"Levez les suprêmes d'orange au-dessus du saladier pour récupérer le jus : il devient la base de la vinaigrette.",
     ingredients:[
@@ -11172,7 +11172,7 @@ export const RECIPES_500 = [
     temps:25, portions:2, difficulte:"Facile",
     prix:3, cout:4.7, nutriScore:"A", cuisine:"française",
     micros:{ fer:4.31, magnesium:100.64, calcium:87.14, zinc:2.27, potassium:1067.7, vitC:7.96, vitD:3.36, vitB12:8.0, omega3:0.15 },
-    img:IMG.truite, imgQuery:"Truite amandes",
+    img:IMG.truite, imgQuery:"trout almonds",
     desc:"La truite d'élevage française est l'un des poissons les moins contaminés et reste riche en oméga-3 ; la portion d'amandes est calibrée pour la vitamine E sans excès calorique.",
     astuce:"Le beurre doit être noisette (mousseux et odorant) avant d'y jeter les amandes : 30 secondes de trop et il brûle.",
     ingredients:[
@@ -11200,7 +11200,7 @@ export const RECIPES_500 = [
     temps:50, portions:2, difficulte:"Facile",
     prix:3, cout:3.15, nutriScore:"A", cuisine:"fusion indienne",
     micros:{ fer:10.47, magnesium:179.66, calcium:292.57, zinc:3.79, potassium:1905.75, vitC:134.8, omega3:0.4 },
-    img:IMG.dahl, imgQuery:"Dahl lentilles beluga",
+    img:IMG.dahl, imgQuery:"dal lentils beluga",
     desc:"Les lentilles beluga doivent leur couleur noire aux anthocyanes, les mêmes antioxydants que les myrtilles ; associées au bêta-carotène de la courge, l'assiette couvre un large spectre protecteur.",
     astuce:"Surveillez le kale au four comme le lait sur le feu : entre croustillant parfait et brûlé, il y a 60 secondes.",
     ingredients:[
@@ -11232,7 +11232,7 @@ export const RECIPES_500 = [
     temps:35, portions:2, difficulte:"Moyen",
     prix:3, cout:3.45, nutriScore:"B", cuisine:"italienne",
     micros:{ fer:3.79, magnesium:112.79, calcium:333.73, zinc:3.31, potassium:801.06, vitC:0.45, vitD:6.8, vitB12:12.24, omega3:1.76 },
-    img:IMG.truite, imgQuery:"Pasta con sarde",
+    img:IMG.truite, imgQuery:"pasta sarde",
     desc:"Cette recette du 9ème siècle est un manuel d'anti-inflammation : sardines (oméga-3), fenouil (anéthol), raisins (polyphénols) et blé complet — la tradition avait tout compris.",
     astuce:"La chapelure grillée à sec remplace le parmesan en Sicile : ne la mélangez qu'au moment de servir pour garder le croquant.",
     ingredients:[
@@ -11263,7 +11263,7 @@ export const RECIPES_500 = [
     temps:30, portions:2, difficulte:"Facile",
     prix:3, cout:5.6, nutriScore:"A", cuisine:"moderne",
     micros:{ fer:3.36, magnesium:127.68, calcium:133.34, zinc:2.0, potassium:1292.4, vitC:165.5, vitD:5.17, vitB12:5.53, omega3:2.63 },
-    img:IMG.saumon, imgQuery:"Bol quinoa",
+    img:IMG.saumon, imgQuery:"bowl quinoa",
     desc:"L'assiette de référence du sportif inflammé : EPA/DHA du saumon, sulforaphane du brocoli al dente, protéines complètes du quinoa et calcium du tahini.",
     astuce:"Arrêtez la cuisson du saumon quand le centre est encore légèrement translucide : il finit de cuire hors du feu et reste moelleux.",
     ingredients:[
@@ -11293,7 +11293,7 @@ export const RECIPES_500 = [
     temps:45, portions:2, difficulte:"Facile",
     prix:3, cout:3.4, nutriScore:"A", cuisine:"moyen-orientale",
     micros:{ fer:6.22, magnesium:141.66, calcium:297.42, zinc:2.63, potassium:1377.4, vitC:45.02, omega3:0.47 },
-    img:IMG.yaourt, imgQuery:"Salade tiède patate douce rôtie",
+    img:IMG.yaourt, imgQuery:"salad sweet potato roasted",
     desc:"Les punicalagines de la grenade comptent parmi les polyphénols les plus puissants connus ; le yaourt au curcuma-poivre en base d'assiette transforme un accompagnement en plat signature.",
     astuce:"Roulez la demi-grenade sous la paume avant de la frapper au dos d'une cuillère : les graines tombent sans jus perdu.",
     ingredients:[
@@ -11325,7 +11325,7 @@ export const RECIPES_500 = [
     temps:25, portions:2, difficulte:"Facile",
     prix:3, cout:5.3, nutriScore:"B", cuisine:"française",
     micros:{ fer:7.28, magnesium:61.1, calcium:74.91, zinc:11.89, potassium:774.5, vitC:1.9, vitB12:5.3, omega3:0.41 },
-    img:IMG.boeuf, imgQuery:"Bavette grillée",
+    img:IMG.boeuf, imgQuery:"bavette grilled",
     desc:"42 g de protéines et une charge exceptionnelle de fer, zinc, créatine et B12 : la bavette est l'une des pièces les plus maigres et les plus abordables du bœuf.",
     astuce:"Le repos sous aluminium est aussi important que la cuisson : 5 minutes pour que les jus se redistribuent au lieu de finir dans la planche.",
     ingredients:[
@@ -11353,7 +11353,7 @@ export const RECIPES_500 = [
     temps:25, portions:2, difficulte:"Facile",
     prix:3, cout:5.45, nutriScore:"A", cuisine:"française",
     micros:{ fer:8.13, magnesium:183.45, calcium:348.84, zinc:2.49, potassium:1646.92, vitC:83.91, vitB12:5.4, omega3:0.72 },
-    img:IMG.yaourt, imgQuery:"Dos lieu jaune rôti",
+    img:IMG.yaourt, imgQuery:"lieu jaune roasted",
     desc:"Le lieu jaune frôle les 0% de matières grasses : avec la sauce au yaourt grec, l'assiette atteint 42 g de protéines pour moins de 300 kcal — la définition même de la haute densité protéique.",
     astuce:"Sortez le poisson du four quand la chair se détache à peine en feuillets : une minute de trop et le lieu devient sec.",
     ingredients:[
@@ -11382,7 +11382,7 @@ export const RECIPES_500 = [
     temps:32, portions:2, difficulte:"Facile",
     prix:3, cout:3.9, nutriScore:"A", cuisine:"libanaise",
     micros:{ fer:5.7, magnesium:94.32, calcium:161.14, zinc:2.78, potassium:1020.6, vitC:11.0, omega3:0.21 },
-    img:IMG.poulet, imgQuery:"Chich taouk",
+    img:IMG.poulet, imgQuery:"chich taouk",
     desc:"La marinade au yaourt attendrit les fibres du blanc de poulet par action enzymatique : résultat, 47 g de protéines juteuses même avec la découpe la plus maigre du poulet.",
     astuce:"Serrez les cubes de poulet les uns contre les autres sur la brochette : ils se protègent mutuellement du dessèchement.",
     ingredients:[
@@ -11416,7 +11416,7 @@ export const RECIPES_500 = [
     temps:15, portions:2, difficulte:"Facile",
     prix:3, cout:3.7, nutriScore:"B", cuisine:"française",
     micros:{ fer:3.61, magnesium:91.36, calcium:322.16, zinc:2.19, potassium:585.0, vitC:20.43, vitD:0.35, vitB12:1.8, omega3:0.48 },
-    img:IMG.omelette, imgQuery:"Omelette crevettes",
+    img:IMG.omelette, imgQuery:"omelette shrimp",
     desc:"L'omelette la plus protéinée du catalogue : le renfort de blancs d'œufs et de crevettes porte l'assiette à 41 g de protéines pour un temps de préparation record.",
     astuce:"Le fromage blanc battu avec les œufs garde l'omelette moelleuse même légèrement trop cuite : le filet de sécurité du cuisinier pressé.",
     ingredients:[
@@ -11444,7 +11444,7 @@ export const RECIPES_500 = [
     temps:20, portions:2, difficulte:"Moyen",
     prix:3, cout:5.9, nutriScore:"A", cuisine:"japonaise",
     micros:{ fer:10.27, magnesium:71.61, calcium:93.27, zinc:3.07, potassium:696.23, vitC:9.77, vitD:1.7, vitB12:14.35, omega3:0.09 },
-    img:IMG.oeufs, imgQuery:"Tataki mi-cuit sésame",
+    img:IMG.oeufs, imgQuery:"tataki sesame",
     desc:"La cuisson tataki (saisie éclair puis cœur cru) préserve l'intégralité des protéines, du fer et des vitamines B du bœuf : 39 g de protéines pour à peine 310 kcal.",
     astuce:"Le passage dans l'eau glacée stoppe net la cuisson : c'est lui qui garantit le dégradé rosé signature du tataki.",
     ingredients:[
@@ -11474,7 +11474,7 @@ export const RECIPES_500 = [
     temps:20, portions:2, difficulte:"Facile",
     prix:3, cout:6.2, nutriScore:"A", cuisine:"sicilienne",
     micros:{ fer:5.0, magnesium:109.37, calcium:145.87, zinc:1.97, potassium:1183.9, vitC:16.34, vitD:22.5, vitB12:4.43, omega3:1.52 },
-    img:IMG.bowl, imgQuery:"Espadon grillé",
+    img:IMG.bowl, imgQuery:"espadon grilled",
     desc:"L'espadon est le steak de la mer : texture charnue, 42 g de protéines et une satiété comparable à la viande rouge avec un profil lipidique marin.",
     astuce:"L'espadon sèche vite : 3 minutes par face maximum, et servez immédiatement — la salsa juteuse compense toute surcuisson légère.",
     ingredients:[
@@ -11504,7 +11504,7 @@ export const RECIPES_500 = [
     temps:27, portions:2, difficulte:"Facile",
     prix:3, cout:4.3, nutriScore:"A", cuisine:"moyen-orientale",
     micros:null,
-    img:IMG.yaourt, imgQuery:"Poulet grillé harissa",
+    img:IMG.yaourt, imgQuery:"chicken grilled harissa",
     desc:"Le labneh, yaourt égoutté du Levant, concentre les protéines laitières : en base d'assiette il ajoute 10 g de protéines et le contraste frais qui équilibre le feu de la harissa.",
     astuce:"Étalez le labneh à la cuillère en créant des vagues : elles retiennent l'huile d'olive et le za'atar comme de petites poches à saveurs.",
     ingredients:[
@@ -11534,7 +11534,7 @@ export const RECIPES_500 = [
     temps:40, portions:2, difficulte:"Moyen",
     prix:3, cout:7.4, nutriScore:"B", cuisine:"française",
     micros:{ fer:5.56, magnesium:64.96, calcium:195.57, zinc:6.78, potassium:1089.8, vitC:23.6, vitB12:2.94, omega3:0.14 },
-    img:IMG.oeufs, imgQuery:"Filet poivre vert",
+    img:IMG.oeufs, imgQuery:"fillet poivre",
     desc:"Le filet est la pièce la plus maigre du bœuf (moins de 5% de lipides) ; le yaourt remplace la crème de la sauce au poivre classique, économisant 15 g de lipides par assiette.",
     astuce:"Écrasez quelques grains de poivre vert du plat de la lame avant de les ajouter : la sauce gagne en parfum sans devenir brûlante.",
     ingredients:[
@@ -11564,7 +11564,7 @@ export const RECIPES_500 = [
     temps:20, portions:2, difficulte:"Facile",
     prix:3, cout:4.9, nutriScore:"A", cuisine:"méditerranéenne",
     micros:{ fer:10.82, magnesium:180.05, calcium:431.37, zinc:6.17, potassium:1436.01, vitC:17.54, vitB12:1.6, omega3:0.75 },
-    img:IMG.crevettes, imgQuery:"Crevettes sautées ail-citron",
+    img:IMG.crevettes, imgQuery:"shrimp ail-citron",
     desc:"Crevettes (protéine quasi pure) + haricots blancs (protéines et fibres) : 42 g de protéines totales et l'effet satiétogène des légumineuses, en 20 minutes départ frigo.",
     astuce:"Écrasez une petite poignée de haricots à la cuillère pendant le réchauffage : ils lient le jus de cuisson en sauce crémeuse naturelle.",
     ingredients:[
@@ -11593,7 +11593,7 @@ export const RECIPES_500 = [
     temps:30, portions:2, difficulte:"Facile",
     prix:3, cout:5.45, nutriScore:"B", cuisine:"chinoise",
     micros:{ fer:5.4, magnesium:59.16, calcium:59.32, zinc:6.72, potassium:745.9, vitC:0.69, vitD:0.9, vitB12:2.74, omega3:0.12 },
-    img:IMG.oeufs, imgQuery:"Brochettes marinées soja-gingembre pak choï",
+    img:IMG.oeufs, imgQuery:"skewers soja-gingembre choi",
     desc:"38 à 40 g de protéines et moins de 10 g de glucides : l'assiette type des phases de définition stricte, sans sacrifier la saveur grâce à la marinade laquée.",
     astuce:"Portez la marinade restante à ébullition 1 min et servez-la en sauce : rien ne se perd et c'est parfaitement sûr.",
     ingredients:[
@@ -11624,7 +11624,7 @@ export const RECIPES_500 = [
     temps:21, portions:2, difficulte:"Moyen",
     prix:3, cout:6.8, nutriScore:"A", cuisine:"provençale",
     micros:{ fer:2.72, magnesium:18.63, calcium:92.87, zinc:0.28, potassium:138.38, vitC:7.06, vitD:0.02, vitB12:0.21, omega3:0.09 },
-    img:IMG.poulet, imgQuery:"Rougets poêlés",
+    img:IMG.poulet, imgQuery:"rougets",
     desc:"Le rouget offre une chair fine très protéinée et la tapenade, dosée en condiment plutôt qu'en tartinade, apporte les polyphénols de l'olive sans faire déraper les lipides.",
     astuce:"Poêlez les rougets côté peau à 90% de la cuisson en pressant 10 secondes à la spatule : la peau croustille et la chair reste nacrée.",
     ingredients:[
@@ -11653,7 +11653,7 @@ export const RECIPES_500 = [
     temps:40, portions:2, difficulte:"Moyen",
     prix:3, cout:7.6, nutriScore:"A", cuisine:"française",
     micros:{ fer:7.23, magnesium:60.45, calcium:266.72, zinc:1.5, potassium:1414.98, vitC:12.59, vitD:0.38, vitB12:0.19, omega3:0.15 },
-    img:IMG.boeuf, imgQuery:"Filet mignon veau poêlé",
+    img:IMG.boeuf, imgQuery:"fillet mignon veal poele",
     desc:"Le veau est la viande jeune par excellence : très maigre, tendre et riche en protéines de haute valeur biologique ; la purée de céleri divise les glucides d'une purée classique par trois.",
     astuce:"Le veau se sert rosé à cœur (58-60°C) : au-delà, il perd son jus et sa tendreté légendaire.",
     ingredients:[
@@ -11683,7 +11683,7 @@ export const RECIPES_500 = [
     temps:25, portions:2, difficulte:"Moyen",
     prix:3, cout:6.95, nutriScore:"A", cuisine:"fusion asiatique",
     micros:{ fer:3.82, magnesium:82.78, calcium:84.58, zinc:1.24, potassium:793.43, vitC:4.33, vitD:12.48, vitB12:6.06, omega3:2.32 },
-    img:IMG.thon, imgQuery:"Tartare thon l'asiatique",
+    img:IMG.thon, imgQuery:"tartare tuna asiatique",
     desc:"Le thon cru livre 40 g de protéines sans aucune perte de cuisson ni matière grasse ajoutée ; les chips de brick au four remplacent les wontons frits pour 5 fois moins de lipides.",
     astuce:"Assaisonnez le tartare au tout dernier moment : l'acidité du citron vert 'cuit' le thon en quelques minutes et changerait sa texture.",
     ingredients:[
@@ -11714,7 +11714,7 @@ export const RECIPES_500 = [
     temps:32, portions:2, difficulte:"Facile",
     prix:3, cout:4.1, nutriScore:"A", cuisine:"turque",
     micros:{ fer:7.55, magnesium:158.19, calcium:221.38, zinc:6.27, potassium:1082.89, vitC:10.28, vitD:0.41, vitB12:3.25, omega3:0.34 },
-    img:IMG.yaourt, imgQuery:"Keftas dinde herbes",
+    img:IMG.yaourt, imgQuery:"keftas turkey herbs",
     desc:"La dinde hachée maison affiche moitié moins de lipides qu'une chair à kefta classique : 50 g de protéines par assiette avec la fraîcheur de la sauce cacık turque.",
     astuce:"Pressez fermement l'oignon râpé dans votre poing avant de l'incorporer : son jus détremperait les keftas à la cuisson.",
     ingredients:[
@@ -11746,7 +11746,7 @@ export const RECIPES_500 = [
     temps:25, portions:2, difficulte:"Facile",
     prix:2, cout:2.45, nutriScore:"B", cuisine:"nordique",
     micros:{ fer:2.64, magnesium:129.59, calcium:275.97, zinc:2.27, potassium:674.21, vitC:88.14, vitB12:0.6, omega3:0.07 },
-    img:IMG.granola, imgQuery:"Bowl skyr",
+    img:IMG.granola, imgQuery:"bowl skyr",
     desc:"Le skyr apporte 20 g de protéines à lui seul et le granola de sarrasin maison contient 4 fois moins de sucre qu'un granola du commerce, avec la rutine antioxydante du sarrasin en bonus.",
     astuce:"Préparez un triple volume de granola : il se conserve 3 semaines en bocal hermétique et transforme tous vos petits-déjeuners.",
     ingredients:[
@@ -11775,7 +11775,7 @@ export const RECIPES_500 = [
     temps:18, portions:2, difficulte:"Facile",
     prix:2, cout:2.3, nutriScore:"B", cuisine:"petit-déjeuner moderne",
     micros:{ fer:3.69, magnesium:55.65, calcium:224.12, zinc:1.43, potassium:507.04, vitC:31.71, vitD:0.12, vitB12:0.17, omega3:0.28 },
-    img:IMG.oeufs, imgQuery:"Toast levain",
+    img:IMG.oeufs, imgQuery:"toast levain",
     desc:"Le pain au levain a un index glycémique plus bas que la baguette grâce à la fermentation lactique : l'énergie se libère progressivement, sans fringale de 11 heures.",
     astuce:"Écalez les œufs mollets sous un filet d'eau froide en commençant par le côté le plus rond : la poche d'air facilite le démarrage.",
     ingredients:[
@@ -11803,7 +11803,7 @@ export const RECIPES_500 = [
     temps:10, portions:2, difficulte:"Facile",
     prix:2, cout:1.6, nutriScore:"B", cuisine:"petit-déjeuner moderne",
     micros:{ fer:3.14, magnesium:135.43, calcium:350.36, zinc:3.02, potassium:742.59, vitC:2.7, vitB12:0.68, omega3:1.76 },
-    img:IMG.bircher, imgQuery:"Overnight oats carrot cake",
+    img:IMG.bircher, imgQuery:"overnight oats carrot cake",
     desc:"La carotte râpée disparaît dans l'avoine en apportant bêta-carotène et fibres : le goût carrot cake sans la pâtisserie, prêt en ouvrant le frigo.",
     astuce:"Râpez la carotte le plus finement possible (microplane) : elle fond dans la texture et libère sa douceur naturelle.",
     ingredients:[
@@ -11833,7 +11833,7 @@ export const RECIPES_500 = [
     temps:5, portions:2, difficulte:"Facile",
     prix:2, cout:1.9, nutriScore:"B", cuisine:"petit-déjeuner moderne",
     micros:{ fer:2.56, magnesium:49.86, calcium:322.16, zinc:1.48, potassium:348.3, vitC:11.99, vitD:2.92, vitB12:1.15, omega3:0.97 },
-    img:IMG.granola, imgQuery:"Bowl fromage blanc",
+    img:IMG.granola, imgQuery:"bowl fromage blanc",
     desc:"Deux kiwis couvrent 100% des besoins quotidiens en vitamine C : associés aux 20 g de protéines du fromage blanc, ce bol de 5 minutes soutient immunité et récupération.",
     astuce:"Choisissez des kiwis souples au toucher : un kiwi ferme est acide, un kiwi mûr est un bonbon.",
     ingredients:[
@@ -11860,7 +11860,7 @@ export const RECIPES_500 = [
     temps:16, portions:2, difficulte:"Moyen",
     prix:2, cout:2.1, nutriScore:"B", cuisine:"turque",
     micros:{ fer:1.15, magnesium:13.16, calcium:196.56, zinc:0.39, potassium:126.52, vitC:2.85, vitD:0.04, vitB12:0.03, omega3:0.11 },
-    img:IMG.oeufs, imgQuery:"Çılbır : œufs pochés à la turque sur yao",
+    img:IMG.oeufs, imgQuery:"eggs turque",
     desc:"Le yaourt à l'ail en guise d'assiette est un réflexe de nutritionniste avant l'heure : il ajoute 12 g de protéines là où d'autres cuisines mettent des féculents.",
     astuce:"Créez un tourbillon dans l'eau frémissante avant d'y glisser l'œuf : le blanc s'enroule autour du jaune en poche parfaite.",
     ingredients:[
@@ -11888,7 +11888,7 @@ export const RECIPES_500 = [
     temps:18, portions:2, difficulte:"Facile",
     prix:2, cout:1.8, nutriScore:"B", cuisine:"petit-déjeuner moderne",
     micros:{ fer:2.0, magnesium:72.45, calcium:148.81, zinc:1.82, potassium:307.49, vitC:4.96, vitD:0.04, vitB12:0.33, omega3:0.06 },
-    img:IMG.pancakes, imgQuery:"Pancakes ingrédients banane- ufs-avoine skyr",
+    img:IMG.pancakes, imgQuery:"pancakes ingredients banana ufs-avoine",
     desc:"Zéro sucre ajouté : la banane mûre sucre la pâte et l'avoine mixée remplace la farine blanche, pour un petit-déjeuner qui tient jusqu'au déjeuner sans pic glycémique brutal.",
     astuce:"Utilisez des bananes tigrées de taches brunes : leur amidon converti en sucres fait toute la douceur de la recette.",
     ingredients:[
@@ -11916,7 +11916,7 @@ export const RECIPES_500 = [
     temps:18, portions:2, difficulte:"Facile",
     prix:2, cout:2.35, nutriScore:"B", cuisine:"italienne",
     micros:{ fer:2.61, magnesium:39.03, calcium:330.2, zinc:1.72, potassium:235.07, vitC:0.75, vitD:0.18, vitB12:0.31, omega3:0.64 },
-    img:IMG.toast, imgQuery:"Toast ricotta fouettée",
+    img:IMG.toast, imgQuery:"toast ricotta",
     desc:"Fouetter la ricotta double son volume et sa gourmandise perçue : on tartine plus épais avec moins de calories qu'un beurre, et 17 g de protéines en prime.",
     astuce:"Rôtissez les poires face coupée contre la poêle sans les toucher 4 min : la caramélisation naturelle remplace la moitié du miel.",
     ingredients:[
@@ -11944,7 +11944,7 @@ export const RECIPES_500 = [
     temps:18, portions:2, difficulte:"Facile",
     prix:2, cout:2.7, nutriScore:"B", cuisine:"américaine revisitée",
     micros:{ fer:2.43, magnesium:21.37, calcium:198.98, zinc:1.5, potassium:176.76, vitC:8.3, vitD:0.86, vitB12:0.88, omega3:0.1 },
-    img:IMG.oeufs, imgQuery:"Muffin anglais garni",
+    img:IMG.oeufs, imgQuery:"muffin anglais garni",
     desc:"Toute l'expérience du breakfast sandwich avec 30 g de protéines : le bacon de dinde divise les graisses saturées par deux et l'œuf entier reste le meilleur rapport nutriments/prix du matin.",
     astuce:"Posez le cheddar sur le muffin sortant du grille-pain, pas sur l'œuf : la chaleur résiduelle le fond parfaitement sans le rendre huileux.",
     ingredients:[
@@ -11972,7 +11972,7 @@ export const RECIPES_500 = [
     temps:5, portions:2, difficulte:"Facile",
     prix:2, cout:1.7, nutriScore:"B", cuisine:"petit-déjeuner moderne",
     micros:{ fer:2.17, magnesium:88.58, calcium:377.84, zinc:1.97, potassium:380.8, vitC:2.06, vitB12:0.47, omega3:1.34 },
-    img:IMG.yaourt, imgQuery:"Smoothie petit-déjeuner pomme-cannelle-avoine yaourt grec",
+    img:IMG.yaourt, imgQuery:"smoothie pomme-cannelle-avoine yogurt grec",
     desc:"Le fruit entier mixé (et non pressé) garde 100% de ses fibres : ce smoothie rassasie comme un bol de porridge et se boit dans les transports les matins pressés.",
     astuce:"Gardez la peau des pommes : c'est là que se concentrent la quercétine et la moitié des fibres.",
     ingredients:[
@@ -12000,7 +12000,7 @@ export const RECIPES_500 = [
     temps:35, portions:2, difficulte:"Facile",
     prix:2, cout:2.45, nutriScore:"B", cuisine:"italienne",
     micros:{ fer:1.24, magnesium:45.66, calcium:274.73, zinc:1.57, potassium:673.35, vitC:137.62, vitD:0.21, vitB12:0.38, omega3:0.09 },
-    img:IMG.omelette, imgQuery:"Frittata four brocoli",
+    img:IMG.omelette, imgQuery:"frittata baked broccoli",
     desc:"Une frittata cuite le dimanche donne des petits-déjeuners protéinés prêts en 30 secondes toute la semaine : froide ou réchauffée, elle garde 28 g de protéines par part.",
     astuce:"Égouttez le brocoli blanchi sur un torchon en pressant légèrement : l'eau résiduelle est l'ennemie d'une frittata qui se tient.",
     ingredients:[
@@ -12029,7 +12029,7 @@ export const RECIPES_500 = [
     temps:15, portions:2, difficulte:"Facile",
     prix:2, cout:1.85, nutriScore:"B", cuisine:"moyen-orientale",
     micros:{ fer:1.17, magnesium:66.59, calcium:394.75, zinc:2.53, potassium:904.83, vitC:3.83, vitD:0.75, vitB12:1.15, omega3:0.06 },
-    img:IMG.porridge, imgQuery:"Porridge semoule fine fleur d'oranger",
+    img:IMG.porridge, imgQuery:"porridge semolina fine fleur",
     desc:"La semoule de blé cuit en 5 minutes contre 10 pour l'avoine et sa texture crème-dessert change du porridge quotidien ; le fromage blanc ajouté hors du feu remonte les protéines à 20 g.",
     astuce:"Versez la semoule en pluie fine en fouettant sans vous arrêter : c'est la seule règle contre les grumeaux.",
     ingredients:[
@@ -12057,7 +12057,7 @@ export const RECIPES_500 = [
     temps:13, portions:2, difficulte:"Facile",
     prix:3, cout:2.8, nutriScore:"B", cuisine:"grecque",
     micros:{ fer:0.71, magnesium:36.17, calcium:299.61, zinc:0.57, potassium:85.37, vitC:0.23, omega3:1.63 },
-    img:IMG.chiapot, imgQuery:"Yaourt grec",
+    img:IMG.chiapot, imgQuery:"yogurt grec",
     desc:"Le contraste figues chaudes caramélisées / yaourt froid transforme trois ingrédients en dessert de restaurant, avec 22 g de protéines et les oméga-3 végétaux des noix et du chia.",
     astuce:"Rôtissez les figues sans les retourner : la face coupée caramélise, le dessus reste frais — deux textures dans un fruit.",
     ingredients:[
@@ -12084,7 +12084,7 @@ export const RECIPES_500 = [
     temps:18, portions:2, difficulte:"Facile",
     prix:2, cout:2.15, nutriScore:"A", cuisine:"petit-déjeuner moderne",
     micros:{ fer:5.72, magnesium:197.06, calcium:192.71, zinc:3.67, potassium:977.3, vitC:7.34, vitD:0.3, vitB12:0.03, omega3:0.92 },
-    img:IMG.omelette, imgQuery:"Tofu brouillé curcuma",
+    img:IMG.omelette, imgQuery:"tofu brouille turmeric",
     desc:"Le tofu émietté au kala namak (sel soufré indien) reproduit le goût des œufs brouillés avec zéro cholestérol et 26 g de protéines de soja complètes.",
     astuce:"Ajoutez le kala namak uniquement hors du feu : ses composés soufrés, responsables du goût d'œuf, s'évaporent à la cuisson.",
     ingredients:[
@@ -12114,7 +12114,7 @@ export const RECIPES_500 = [
     temps:40, portions:8, difficulte:"Facile",
     prix:1, cout:0.78, nutriScore:"B", cuisine:"petit-déjeuner moderne",
     micros:{ fer:2.12, magnesium:88.97, calcium:58.17, zinc:1.73, potassium:349.5, vitC:2.99, omega3:0.85 },
-    img:IMG.energy, imgQuery:"Barres petit-déjeuner avoine",
+    img:IMG.energy, imgQuery:"bars oatmeal",
     desc:"Huit petits-déjeuners portables pour 1 € pièce : l'avoine et le lin apportent fibres solubles et oméga-3 végétaux, la pomme et la compote remplacent l'essentiel du sucre.",
     astuce:"Attendez le refroidissement complet (idéalement 1 h au frais) avant de couper : les barres se raffermissent et se tiennent parfaitement.",
     ingredients:[
@@ -12144,7 +12144,7 @@ export const RECIPES_500 = [
     temps:30, portions:2, difficulte:"Facile",
     prix:3, cout:4.15, nutriScore:"B", cuisine:"italienne",
     micros:{ fer:15.69, magnesium:233.36, calcium:511.2, zinc:4.57, potassium:1673.65, vitC:11.8, vitB12:0.26, omega3:0.15 },
-    img:IMG.pates, imgQuery:"Salade pâtes complètes poulet",
+    img:IMG.pates, imgQuery:"salad pasta chicken",
     desc:"Le pesto monté au yaourt grec plutôt qu'à l'huile pure garde tout le parfum du basilic en divisant les lipides par deux — la salade de pâtes parfaite à emporter au travail.",
     astuce:"Rincez les pâtes 10 secondes seulement : assez pour stopper la cuisson, pas assez pour retirer tout l'amidon qui lie la sauce.",
     ingredients:[
@@ -12175,7 +12175,7 @@ export const RECIPES_500 = [
     temps:30, portions:2, difficulte:"Facile",
     prix:3, cout:3.4, nutriScore:"B", cuisine:"française",
     micros:{ fer:8.61, magnesium:97.99, calcium:170.7, zinc:1.97, potassium:668.6, vitC:1.66, vitD:7.83, vitB12:3.81, omega3:1.56 },
-    img:IMG.oeufs, imgQuery:"Salade riz niçoise",
+    img:IMG.oeufs, imgQuery:"salad rice nicoise",
     desc:"La salade de riz bien construite bat le sandwich sur tous les plans : 35 g de protéines, un riz refroidi dont une partie de l'amidon devient résistant (index glycémique abaissé) et zéro coup de pompe à 15 h.",
     astuce:"Assaisonnez le riz encore tiède avec la moitié de la vinaigrette : il absorbe les saveurs en refroidissant.",
     ingredients:[
@@ -12206,7 +12206,7 @@ export const RECIPES_500 = [
     temps:22, portions:2, difficulte:"Facile",
     prix:3, cout:3.2, nutriScore:"B", cuisine:"française revisitée",
     micros:{ fer:3.08, magnesium:71.4, calcium:268.11, zinc:2.13, potassium:756.6, vitC:4.09, vitD:8.82, vitB12:4.21, omega3:1.58 },
-    img:IMG.yaourt, imgQuery:"Croque thon",
+    img:IMG.yaourt, imgQuery:"croque tuna",
     desc:"Le cottage cheese remplace la béchamel du croque classique : même onctuosité fondante à la découpe, 38 g de protéines et trois fois moins de lipides.",
     astuce:"Passez les croques 1 min sous le gril en fin de cuisson : le cheddar bulle et dore comme chez le bistrotier.",
     ingredients:[
@@ -12237,7 +12237,7 @@ export const RECIPES_500 = [
     temps:40, portions:2, difficulte:"Moyen",
     prix:3, cout:3.45, nutriScore:"B", cuisine:"japonaise",
     micros:{ fer:3.0, magnesium:85.05, calcium:91.7, zinc:2.82, potassium:598.31, vitC:0.9, omega3:0.02 },
-    img:IMG.wrapV, imgQuery:"Onigirazu poulet teriyaki",
+    img:IMG.wrapV, imgQuery:"onigirazu chicken teriyaki",
     desc:"L'onigirazu est le sandwich qui ne s'écrase pas : le riz vinaigré se conserve mieux que le pain garni, et la découpe révèle des couches nettes qui donnent envie de bien manger.",
     astuce:"Serrez fermement l'onigirazu dans le film alimentaire 5 min avant la découpe : le nori s'assouplit et soude l'ensemble.",
     ingredients:[
@@ -12268,7 +12268,7 @@ export const RECIPES_500 = [
     temps:28, portions:2, difficulte:"Facile",
     prix:3, cout:4.35, nutriScore:"B", cuisine:"vietnamienne",
     micros:{ fer:6.21, magnesium:81.57, calcium:118.5, zinc:1.47, potassium:1004.27, vitC:6.24, vitD:0.07, vitB12:2.1, omega3:0.04 },
-    img:IMG.oeufs, imgQuery:"bun sauté citronnelle",
+    img:IMG.oeufs, imgQuery:"citronnelle",
     desc:"Le bo bun coche toutes les cases du déjeuner idéal : chaud-froid, croquant-fondant, 38 g de protéines et une sauce sans matière grasse qui parfume tout le bol.",
     astuce:"Hachez uniquement le cœur tendre de la citronnelle (les 8 premiers centimètres) : le reste parfume mais ne se mâche pas.",
     ingredients:[
@@ -12301,7 +12301,7 @@ export const RECIPES_500 = [
     temps:22, portions:2, difficulte:"Facile",
     prix:3, cout:3.05, nutriScore:"A", cuisine:"espagnole",
     micros:{ fer:6.42, magnesium:134.84, calcium:187.62, zinc:2.76, potassium:1079.95, vitC:34.5, vitD:7.05, vitB12:3.44, omega3:1.59 },
-    img:IMG.oeufs, imgQuery:"Salade espagnole pois chiches",
+    img:IMG.oeufs, imgQuery:"salad espagnole chickpea",
     desc:"100% placards et frigo de base : en 12 minutes, 37 g de protéines de trois sources différentes et 10 g de fibres — la preuve qu'un excellent déjeuner ne demande ni courses ni cuisine.",
     astuce:"Le vinaigre de Xérès est l'âme de cette salade : à défaut, mélangez vinaigre de vin rouge et une goutte de balsamique.",
     ingredients:[
@@ -12331,7 +12331,7 @@ export const RECIPES_500 = [
     temps:24, portions:2, difficulte:"Facile",
     prix:3, cout:2.95, nutriScore:"B", cuisine:"française",
     micros:{ fer:6.88, magnesium:69.89, calcium:138.18, zinc:0.89, potassium:541.14, vitC:2.1, vitD:7.04, vitB12:3.43, omega3:1.35 },
-    img:IMG.oeufs, imgQuery:"Pan bagnat thon",
+    img:IMG.oeufs, imgQuery:"bagnat tuna",
     desc:"Le vrai pan bagnat se bonifie pressé : les sucs de tomate et l'huile imbibent la mie, et le sandwich préparé le matin est meilleur à midi — l'anti-sandwich triangle par excellence.",
     astuce:"Retirez un tiers de la mie avant de garnir : le pain absorbe les jus sans devenir pâteux et le sandwich tient en main.",
     ingredients:[
@@ -12362,7 +12362,7 @@ export const RECIPES_500 = [
     temps:30, portions:2, difficulte:"Moyen",
     prix:3, cout:3.35, nutriScore:"B", cuisine:"japonaise",
     micros:{ fer:4.26, magnesium:107.28, calcium:178.99, zinc:2.52, potassium:785.72, vitC:6.32, vitD:0.07, vitB12:0.69, omega3:0.58 },
-    img:IMG.poulet, imgQuery:"Katsu sando",
+    img:IMG.poulet, imgQuery:"katsu sando",
     desc:"Le panko huilé puis passé au four croustille comme une friture pour 4 fois moins de matières grasses : le sando croustillant-moelleux culte de Tokyo, compatible avec vos objectifs.",
     astuce:"Mélangez le panko avec l'huile avant de paner (et non après) : chaque miette dore uniformément au four sans friture.",
     ingredients:[
@@ -12393,7 +12393,7 @@ export const RECIPES_500 = [
     temps:27, portions:2, difficulte:"Facile",
     prix:3, cout:3.95, nutriScore:"A", cuisine:"française",
     micros:{ fer:1.53, magnesium:60.71, calcium:47.91, zinc:1.9, potassium:543.04, vitC:1.21, vitD:0.02, vitB12:0.01, omega3:0.57 },
-    img:IMG.poulet, imgQuery:"Salade périgourdine",
+    img:IMG.poulet, imgQuery:"salad perigourdine",
     desc:"L'esprit périgourdin (noix, huile de noix, œuf) sans les gésiers confits ni les lardons : 40 g de protéines et les oméga-3 végétaux de la noix, emblème nutritionnel du Périgord.",
     astuce:"L'huile de noix ne se cuit jamais et se garde au frigo : quelques millilitres dans la vinaigrette suffisent à signer la salade.",
     ingredients:[
@@ -12424,7 +12424,7 @@ export const RECIPES_500 = [
     temps:20, portions:2, difficulte:"Facile",
     prix:3, cout:3.15, nutriScore:"B", cuisine:"italienne",
     micros:{ fer:1.71, magnesium:53.43, calcium:107.98, zinc:1.71, potassium:488.24, vitC:4.73, vitB12:0.03, omega3:0.06 },
-    img:IMG.poulet, imgQuery:"Piadina poulet",
+    img:IMG.poulet, imgQuery:"piadina chicken",
     desc:"La piadina pliée-grillée transforme un wrap banal en sandwich chaud fondant-croustillant : 40 g de protéines et un vrai moment de plaisir italien à moins de 500 kcal.",
     astuce:"Grillez la piadina garnie sous une assiette lourde posée dessus : le pressage soude la galette et fait fondre le fromage à cœur.",
     ingredients:[
@@ -12453,7 +12453,7 @@ export const RECIPES_500 = [
     temps:35, portions:2, difficulte:"Facile",
     prix:3, cout:3.8, nutriScore:"A", cuisine:"nordique",
     micros:{ fer:5.11, magnesium:90.97, calcium:119.02, zinc:2.76, potassium:949.84, vitC:6.06, vitD:2.58, vitB12:2.77, omega3:1.52 },
-    img:IMG.saumon, imgQuery:"Salade lentilles vertes",
+    img:IMG.saumon, imgQuery:"salad lentils",
     desc:"Les lentilles tièdes absorbent la sauce yaourt-aneth et la pomme verte tranche le gras du saumon fumé : une salade nordique qui tient au corps sans lourdeur, riche en fer et en fibres.",
     astuce:"Ne salez jamais l'eau de cuisson des lentilles : le sel durcit leur peau — assaisonnez après cuisson seulement.",
     ingredients:[
@@ -12483,7 +12483,7 @@ export const RECIPES_500 = [
     temps:21, portions:2, difficulte:"Facile",
     prix:3, cout:3.55, nutriScore:"B", cuisine:"américaine revisitée",
     micros:{ fer:3.24, magnesium:84.4, calcium:216.91, zinc:2.46, potassium:695.0, vitC:33.58, vitD:0.53, vitB12:1.11, omega3:0.19 },
-    img:IMG.yaourt, imgQuery:"Club sandwich dinde",
+    img:IMG.yaourt, imgQuery:"club sandwich turkey",
     desc:"La sauce yaourt-moutarde remplace la mayonnaise (économie : 20 g de lipides) et le duo dinde rôtie + bacon de dinde maintient l'esprit club avec 35 g de protéines.",
     astuce:"Toastez le pain juste avant le montage et laissez-le tiédir 1 min : brûlant, il ramollit à la vapeur ; froid, il s'effrite à la coupe.",
     ingredients:[
@@ -12513,7 +12513,7 @@ export const RECIPES_500 = [
     temps:25, portions:2, difficulte:"Facile",
     prix:3, cout:3.7, nutriScore:"B", cuisine:"coréenne",
     micros:{ fer:2.07, magnesium:67.78, calcium:91.16, zinc:1.94, potassium:501.95, vitC:10.18, vitD:0.02, vitB12:0.16, omega3:0.11 },
-    img:IMG.pates, imgQuery:"Bibim guksu",
+    img:IMG.pates, imgQuery:"bibim guksu",
     desc:"Le rinçage glacé des nouilles crée la texture élastique signature et en abaisse l'index glycémique ; la sauce gochujang pique juste assez pour ralentir le rythme du repas — un allié satiété inattendu.",
     astuce:"Frottez les nouilles entre vos mains sous l'eau glacée 30 secondes : l'amidon de surface part et elles deviennent élastiques comme à Séoul.",
     ingredients:[
@@ -12545,7 +12545,7 @@ export const RECIPES_500 = [
     temps:10, portions:2, difficulte:"Facile",
     prix:3, cout:3.9, nutriScore:"B", cuisine:"nordique",
     micros:{ fer:1.16, magnesium:48.52, calcium:305.77, zinc:1.65, potassium:458.81, vitC:8.3, vitD:3.07, vitB12:3.71, omega3:1.51 },
-    img:IMG.saumon, imgQuery:"Wrap complet saumon fumé",
+    img:IMG.saumon, imgQuery:"wrap salmon",
     desc:"Le saumon fumé livre ses oméga-3 sans aucune cuisson et le fromage frais aux agrumes remplace le beurre : un déjeuner nordique complet monté en moins de 10 minutes.",
     astuce:"Roulez la tortilla dans du papier cuisson en serrant comme un maki : elle se tient à la découpe et se transporte impeccablement.",
     ingredients:[
@@ -12575,7 +12575,7 @@ export const RECIPES_500 = [
     temps:50, portions:2, difficulte:"Facile",
     prix:3, cout:4.1, nutriScore:"A", cuisine:"française",
     micros:{ fer:2.59, magnesium:91.51, calcium:42.46, zinc:4.13, potassium:1552.64, vitC:28.16, vitD:0.45, vitB12:1.22, omega3:0.13 },
-    img:IMG.poulet, imgQuery:"Poulet chasseur",
+    img:IMG.poulet, imgQuery:"chicken chasseur",
     desc:"Un dîner mijoté qui n'endort pas : 44 g de protéines, une sauce tomate-champignons sans crème et l'estragon qui donne le goût bistrot sans un gramme superflu.",
     astuce:"Ajoutez l'estragon en deux temps : la moitié en cuisson pour le fond, la moitié au service pour le parfum frais.",
     ingredients:[
@@ -12606,7 +12606,7 @@ export const RECIPES_500 = [
     temps:27, portions:2, difficulte:"Facile",
     prix:3, cout:4.7, nutriScore:"B", cuisine:"thaïlandaise",
     micros:{ fer:19.04, magnesium:246.41, calcium:398.09, zinc:7.24, potassium:1246.35, vitC:46.7, vitB12:1.6, omega3:0.08 },
-    img:IMG.crevettes, imgQuery:"Curry vert crevettes",
+    img:IMG.crevettes, imgQuery:"curry shrimp",
     desc:"Le soir, mieux vaut un curry aux crevettes qu'à la viande rouge : digestion rapide, 36 g de protéines et le lait de coco léger qui garde l'onctuosité sous contrôle.",
     astuce:"Faites frire la pâte de curry dans la crème de coco (le haut de la boîte) avant tout liquide : c'est là que les arômes se libèrent.",
     ingredients:[
@@ -12637,7 +12637,7 @@ export const RECIPES_500 = [
     temps:32, portions:2, difficulte:"Facile",
     prix:3, cout:4.55, nutriScore:"A", cuisine:"méditerranéenne",
     micros:{ fer:7.71, magnesium:108.59, calcium:187.58, zinc:1.57, potassium:921.59, vitC:40.59, omega3:0.27 },
-    img:IMG.cabillaud, imgQuery:"Filet merlu rôti",
+    img:IMG.cabillaud, imgQuery:"fillet merlu roasted",
     desc:"Le merlu est le poisson du soir idéal : chair légère, digestion facile, et la sauce vierge crue apporte vitamine C et fraîcheur sans cuisson des matières grasses.",
     astuce:"Sortez le merlu du four dès que la chair se détache en feuillets nacrés : sa finesse ne pardonne pas la surcuisson.",
     ingredients:[
@@ -12666,7 +12666,7 @@ export const RECIPES_500 = [
     temps:70, portions:4, difficulte:"Moyen",
     prix:3, cout:2.98, nutriScore:"B", cuisine:"grecque",
     micros:{ fer:1.99, magnesium:50.06, calcium:248.55, zinc:3.68, potassium:909.36, vitC:32.18, vitD:0.26, vitB12:2.3, omega3:0.25 },
-    img:IMG.yaourt, imgQuery:"Moussaka dinde yaourt gratiné",
+    img:IMG.yaourt, imgQuery:"moussaka turkey yogurt gratine",
     desc:"La moussaka traditionnelle dépasse 700 kcal la part : aubergines rôties au lieu de frites et béchamel de yaourt font tomber l'addition à 450 kcal sans trahir le plat.",
     astuce:"Salez les tranches d'aubergine 15 min puis épongez-les avant rôtissage : elles absorbent deux fois moins d'huile.",
     ingredients:[
@@ -12699,7 +12699,7 @@ export const RECIPES_500 = [
     temps:35, portions:2, difficulte:"Facile",
     prix:3, cout:4.2, nutriScore:"B", cuisine:"cubaine",
     micros:{ fer:8.3, magnesium:84.74, calcium:109.47, zinc:1.22, potassium:1281.43, vitC:29.82, vitB12:2.46, omega3:0.07 },
-    img:IMG.oeufs, imgQuery:"Picadillo cubain maigre",
+    img:IMG.oeufs, imgQuery:"picadillo cubain",
     desc:"Le contraste olives salées / raisins sucrés rend ce haché mijoté addictif sans aucune sauce grasse : 42 g de protéines et un dîner familial prêt en 35 minutes.",
     astuce:"Mijotez à découvert les 5 dernières minutes : le jus se concentre et enrobe la viande au lieu de détremper le riz.",
     ingredients:[
@@ -12732,7 +12732,7 @@ export const RECIPES_500 = [
     temps:55, portions:2, difficulte:"Moyen",
     prix:3, cout:5.6, nutriScore:"A", cuisine:"grecque",
     micros:{ fer:4.32, magnesium:30.24, calcium:96.8, zinc:1.52, potassium:1116.02, vitC:57.13, vitD:0.04, vitB12:0.03, omega3:0.42 },
-    img:IMG.cabillaud, imgQuery:"Dorade grillée grecque",
+    img:IMG.cabillaud, imgQuery:"sea bream grilled grecque",
     desc:"Le poisson entier reste plus juteux que le filet et coûte moins cher au kilo ; les pommes de terre cuites dans le jus citron-origan absorbent tous les sucs — la Grèce dans l'assiette à 5,5 €.",
     astuce:"Les pommes de terre doivent être aux trois quarts cuites avant de poser le poisson : chaque élément finit en même temps.",
     ingredients:[
@@ -12761,7 +12761,7 @@ export const RECIPES_500 = [
     temps:55, portions:2, difficulte:"Facile",
     prix:3, cout:4.9, nutriScore:"B", cuisine:"américaine revisitée",
     micros:{ fer:5.18, magnesium:105.02, calcium:112.17, zinc:5.14, potassium:1087.69, vitC:14.06, vitB12:1.39, omega3:0.26 },
-    img:IMG.poulet, imgQuery:"Poulet Marbella",
+    img:IMG.poulet, imgQuery:"chicken marbella",
     desc:"Le Marbella est le dîner d'invités sans stress : tout marine, tout rôtit dans un seul plat, et l'équilibre pruneaux-olives-câpres transforme un simple poulet en événement.",
     astuce:"Préparez la marinade le matin : le soir, il ne reste qu'à enfourner — et le poulet n'en sera que meilleur.",
     ingredients:[
@@ -12793,7 +12793,7 @@ export const RECIPES_500 = [
     temps:45, portions:2, difficulte:"Moyen",
     prix:3, cout:3.45, nutriScore:"B", cuisine:"chinoise",
     micros:{ fer:7.34, magnesium:259.88, calcium:311.97, zinc:4.1, potassium:1060.33, vitC:160.02, omega3:1.03 },
-    img:IMG.tofuC, imgQuery:"Tofu général Tao four riz",
+    img:IMG.tofuC, imgQuery:"tofu general baked rice",
     desc:"La friture du général Tao est remplacée par fécule + four à 220°C : le tofu croustille vraiment, la sauce laque, et le dîner végétal atteint 27 g de protéines.",
     astuce:"Enrobez le tofu de sauce au tout dernier moment, dans la casserole hors du feu : la croûte reste croustillante sous la laque.",
     ingredients:[
@@ -12826,7 +12826,7 @@ export const RECIPES_500 = [
     temps:45, portions:2, difficulte:"Facile",
     prix:3, cout:4.3, nutriScore:"A", cuisine:"belge",
     micros:{ fer:3.73, magnesium:77.28, calcium:176.85, zinc:3.41, potassium:1347.78, vitC:39.24, vitD:0.61, vitB12:0.37, omega3:0.25 },
-    img:IMG.poulet, imgQuery:"Waterzooi poulet petits légumes",
+    img:IMG.poulet, imgQuery:"waterzooi chicken vegetables",
     desc:"Le waterzooi prouve qu'un plat crémeux peut rester léger : la liaison jaune-fromage blanc remplace la crème épaisse et le poulet poché délivre 47 g de protéines fondantes.",
     astuce:"Liez toujours hors du feu et sans jamais rebouillir : le jaune d'œuf cuit à 68°C, au-delà la sauce tranche.",
     ingredients:[
@@ -12858,7 +12858,7 @@ export const RECIPES_500 = [
     temps:45, portions:2, difficulte:"Facile",
     prix:3, cout:3.35, nutriScore:"B", cuisine:"française",
     micros:{ fer:9.17, magnesium:116.99, calcium:118.67, zinc:3.44, potassium:1096.13, vitC:7.74, omega3:0.34 },
-    img:IMG.dahl, imgQuery:"Ragoût lentilles vertes saucisse volaille",
+    img:IMG.dahl, imgQuery:"stew lentils saucisse volaille",
     desc:"Tout le réconfort du petit salé aux lentilles avec trois fois moins de gras : la saucisse de volaille fumée donne le goût, les lentilles le fer, les fibres et la satiété du soir.",
     astuce:"Le clou de girofle piqué dans l'oignon est l'assaisonnement secret des lentilles à la française : un seul suffit, retirez-le au service.",
     ingredients:[
@@ -12890,7 +12890,7 @@ export const RECIPES_500 = [
     temps:80, portions:2, difficulte:"Moyen",
     prix:3, cout:4.95, nutriScore:"A", cuisine:"italienne",
     micros:{ fer:4.9, magnesium:105.19, calcium:101.78, zinc:3.85, potassium:1393.23, vitC:39.85, vitB12:0.95, omega3:0.2 },
-    img:IMG.dinde, imgQuery:"Osso buco dinde gremolata",
+    img:IMG.dinde, imgQuery:"osso buco turkey gremolata",
     desc:"L'osso buco de dinde mijote comme le veau pour moitié prix et moitié gras ; la gremolata crue ajoutée au service réveille tout le plat — le geste italien qui change un ragoût en grande cuisine.",
     astuce:"Ne faites la gremolata qu'à la dernière minute : zeste, ail et persil hachés ensemble perdent leur électricité en 15 minutes.",
     ingredients:[
@@ -12924,7 +12924,7 @@ export const RECIPES_500 = [
     temps:25, portions:2, difficulte:"Facile",
     prix:3, cout:4.45, nutriScore:"A", cuisine:"française",
     micros:{ fer:10.51, magnesium:180.62, calcium:273.72, zinc:2.9, potassium:1951.54, vitC:84.2, vitD:2.54, vitB12:2.38, omega3:0.91 },
-    img:IMG.cabillaud, imgQuery:"Poisson bordelaise four",
+    img:IMG.cabillaud, imgQuery:"fish bordelaise baked",
     desc:"La bordelaise du poissonnier sans le beurre industriel : chapelure maison à l'huile d'olive, cuisson vapeur du poisson sous sa croûte — croustillant dessus, nacré dessous, 320 kcal.",
     astuce:"Tassez légèrement la chapelure sur le poisson humide de vin blanc : elle se soude au filet et ne glisse pas à la découpe.",
     ingredients:[
@@ -12954,7 +12954,7 @@ export const RECIPES_500 = [
     temps:50, portions:2, difficulte:"Moyen",
     prix:3, cout:4.65, nutriScore:"B", cuisine:"suisse",
     micros:{ fer:4.9, magnesium:90.62, calcium:163.42, zinc:4.11, potassium:2034.41, vitC:55.76, vitD:0.52, vitB12:0.15, omega3:0.39 },
-    img:IMG.poulet, imgQuery:"Émincé poulet zurichoise",
+    img:IMG.poulet, imgQuery:"emince chicken zurichoise",
     desc:"Le duo crème légère + yaourt grec reproduit la sauce zurichoise pour un tiers des lipides, et le rösti passe au four : la Suisse gourmande à 580 kcal au lieu de 900.",
     astuce:"Pressez les pommes de terre râpées dans un torchon jusqu'à la dernière goutte : c'est l'humidité qui empêche un rösti de croustiller.",
     ingredients:[
@@ -12986,7 +12986,7 @@ export const RECIPES_500 = [
     temps:55, portions:2, difficulte:"Facile",
     prix:3, cout:5.3, nutriScore:"A", cuisine:"portugaise",
     micros:{ fer:5.49, magnesium:102.95, calcium:152.18, zinc:3.69, potassium:1413.25, vitC:41.46, vitD:2.38, vitB12:17.36, omega3:1.06 },
-    img:IMG.cabillaud, imgQuery:"Caldeirada",
+    img:IMG.cabillaud, imgQuery:"caldeirada",
     desc:"La caldeirada cuit en couches sans jamais remuer : les pommes de terre confisent dans le jus de tomate-vin blanc et le poisson vapeur au-dessus reste intact — 37 g de protéines marines en un seul geste.",
     astuce:"Résistez à l'envie de remuer : secouez la cocotte par le manche pour décoller le fond, comme les pêcheurs portugais.",
     ingredients:[
@@ -13018,7 +13018,7 @@ export const RECIPES_500 = [
     temps:45, portions:4, difficulte:"Facile",
     prix:1, cout:1.15, nutriScore:"B", cuisine:"française",
     micros:{ fer:0.5, magnesium:42.53, calcium:131.67, zinc:0.76, potassium:367.25, vitC:4.14, vitD:0.01, vitB12:0.35, omega3:0.01 },
-    img:IMG.yaourt, imgQuery:"Clafoutis cerises skyr",
+    img:IMG.yaourt, imgQuery:"clafoutis skyr",
     desc:"Le skyr remplace la crème du clafoutis limousin : la texture flan est intacte, les protéines triplent et chaque part reste sous 200 kcal — la collation sucrée qui a tout bon.",
     astuce:"Ne dénoyautez pas toutes les cerises si vous aimez la tradition : le noyau diffuse un léger goût d'amande à la cuisson.",
     ingredients:[
@@ -13047,7 +13047,7 @@ export const RECIPES_500 = [
     temps:10, portions:2, difficulte:"Facile",
     prix:2, cout:2.1, nutriScore:"A", cuisine:"californienne",
     micros:{ fer:1.49, magnesium:29.38, calcium:60.45, zinc:0.47, potassium:364.6, vitC:3.74, vitD:6.24, vitB12:3.03, omega3:1.16 },
-    img:IMG.yaourt, imgQuery:"Wraps laitue thon",
+    img:IMG.yaourt, imgQuery:"wraps laitue tuna",
     desc:"La feuille de laitue remplace pain et tortilla : le croquant est là, les glucides quasi absents, et le duo thon-yaourt délivre 22 g de protéines en collation de sèche parfaite.",
     astuce:"Superposez deux feuilles de laitue par wrap : le double épaisseur ne perce pas et garde le croquant jusqu'à la dernière bouchée.",
     ingredients:[
@@ -13076,7 +13076,7 @@ export const RECIPES_500 = [
     temps:10, portions:6, difficulte:"Facile",
     prix:1, cout:0.72, nutriScore:"B", cuisine:"petit-déjeuner moderne",
     micros:{ fer:1.44, magnesium:67.99, calcium:33.92, zinc:1.28, potassium:334.0, vitC:0.95, omega3:0.32 },
-    img:IMG.energy, imgQuery:"Energy balls citron-coco-cajou",
+    img:IMG.energy, imgQuery:"energy balls citron-coco-cajou",
     desc:"Deux boules calent la fringale de 17 h avec des sucres naturels enrobés de fibres et de bons lipides : la glycémie monte en pente douce, pas en pic comme avec une barre industrielle.",
     astuce:"Si la pâte s'effrite, ajoutez une datte ; si elle colle trop, une cuillère d'avoine — la texture parfaite se règle en 10 secondes.",
     ingredients:[
@@ -13103,7 +13103,7 @@ export const RECIPES_500 = [
     temps:25, portions:2, difficulte:"Facile",
     prix:2, cout:1.55, nutriScore:"B", cuisine:"californienne",
     micros:{ fer:2.12, magnesium:45.28, calcium:290.49, zinc:1.36, potassium:479.8, vitC:145.01, vitB12:0.28, omega3:0.46 },
-    img:IMG.energy, imgQuery:"Chips kale parmesan paprika",
+    img:IMG.energy, imgQuery:"chips kale parmesan paprika",
     desc:"Un saladier entier de chips pour 140 kcal : le kale déshydraté concentre vitamine K, lutéine et calcium là où une poignée de chips classiques apporte 300 kcal de friture.",
     astuce:"Séchez le kale à l'essoreuse puis au torchon : une seule goutte d'eau et les feuilles cuisent vapeur au lieu de croustiller.",
     ingredients:[
@@ -13129,7 +13129,7 @@ export const RECIPES_500 = [
     temps:10, portions:2, difficulte:"Facile",
     prix:2, cout:2.45, nutriScore:"B", cuisine:"nordique",
     micros:{ fer:0.66, magnesium:30.8, calcium:325.71, zinc:1.7, potassium:268.53, vitC:4.03, vitD:1.99, vitB12:2.66, omega3:0.98 },
-    img:IMG.toast, imgQuery:"Toasts concombre fromage frais",
+    img:IMG.toast, imgQuery:"toasts cucumber cheese",
     desc:"Le concombre remplace le blini : l'eau et le croquant du légume contre les 25 g de glucides raffinés du toast, avec 18 g de protéines pour moins de 180 kcal.",
     astuce:"Taillez les rondelles en biseau : la surface ovale porte deux fois plus de garniture et fait son effet à l'apéritif.",
     ingredients:[
@@ -13156,7 +13156,7 @@ export const RECIPES_500 = [
     temps:40, portions:6, difficulte:"Facile",
     prix:1, cout:0.8, nutriScore:"B", cuisine:"grecque",
     micros:{ fer:0.75, magnesium:43.44, calcium:90.1, zinc:0.8, potassium:204.7, vitC:7.67, vitD:0.01, vitB12:0.1, omega3:0.1 },
-    img:IMG.infusion, imgQuery:"Muffins salés courgette-feta-menthe",
+    img:IMG.infusion, imgQuery:"muffins courgette-feta-menthe",
     desc:"Deux muffins font une collation salée complète à 220 kcal : ceux qui n'aiment pas le sucré entre les repas ont enfin leur meal prep de la semaine.",
     astuce:"La courgette doit être pressée jusqu'à la dernière goutte : c'est la différence entre un muffin moelleux et une éponge détrempée.",
     ingredients:[
@@ -13186,7 +13186,7 @@ export const RECIPES_500 = [
     temps:11, portions:2, difficulte:"Facile",
     prix:1, cout:0.55, nutriScore:"B", cuisine:"américaine revisitée",
     micros:{ fer:1.64, magnesium:45.17, calcium:23.93, zinc:1.15, potassium:231.2, vitC:0.01, vitB12:0.02, omega3:0.05 },
-    img:IMG.energy, imgQuery:"Pop-corn paprika fumé levure maltée",
+    img:IMG.energy, imgQuery:"pop-corn paprika levure",
     desc:"Le pop-corn nature est une céréale complète : un saladier entier pour 190 kcal, des fibres, et la levure maltée qui ajoute un goût fromagé plus des vitamines B — tout l'inverse du pop-corn de cinéma.",
     astuce:"Assaisonnez toujours hors du feu, couvercle fermé, en secouant fort : la vapeur résiduelle colle les épices aux grains.",
     ingredients:[
@@ -13211,7 +13211,7 @@ export const RECIPES_500 = [
     temps:12, portions:2, difficulte:"Facile",
     prix:2, cout:1.8, nutriScore:"A", cuisine:"italienne",
     micros:{ fer:3.11, magnesium:54.24, calcium:201.29, zinc:1.09, potassium:430.57, vitC:1.12, omega3:0.61 },
-    img:IMG.houmous, imgQuery:"Dip haricots blancs romarin bâtonnets",
+    img:IMG.houmous, imgQuery:"beans romarin batonnets",
     desc:"Les haricots blancs se mixent plus crémeux que les pois chiches sans tahini : 13 g de protéines végétales, 10 g de fibres et une infusion romarin qui signe le dip en 2 minutes.",
     astuce:"L'huile tiède infusée au romarin fait toute la différence : à froid, l'herbe reste muette ; chauffée 2 minutes, elle parfume tout le bol.",
     ingredients:[
@@ -13241,7 +13241,7 @@ export const RECIPES_500 = [
     temps:20, portions:6, difficulte:"Facile",
     prix:1, cout:0.68, nutriScore:"B", cuisine:"petit-déjeuner moderne",
     micros:{ fer:1.25, magnesium:55.69, calcium:29.1, zinc:0.74, potassium:353.77, vitC:0.9, vitB12:0.04, omega3:0.01 },
-    img:IMG.energy, imgQuery:"Bouchées dattes-cacahuète-chocolat barre gourmande",
+    img:IMG.energy, imgQuery:"dattes-cacahuete-chocolat barre gourmande",
     desc:"Caramel (datte), cacahuète et chocolat : le trio de la barre industrielle culte, mais en version fruits entiers avec fibres, magnésium et zéro sirop de glucose.",
     astuce:"Trempez seulement la moitié de la bouchée dans le chocolat : l'effet visuel est maximal et le chocolat dosé pile où il compte.",
     ingredients:[
@@ -13266,7 +13266,7 @@ export const RECIPES_500 = [
     temps:22, portions:2, difficulte:"Facile",
     prix:2, cout:1.95, nutriScore:"B", cuisine:"mexicaine",
     micros:{ fer:2.75, magnesium:33.9, calcium:61.4, zinc:0.69, potassium:285.64, vitC:1.87, vitB12:0.01, omega3:0.03 },
-    img:IMG.houmous, imgQuery:"Tortilla chips four guacamole petits",
+    img:IMG.houmous, imgQuery:"tortilla chips baked guacamole",
     desc:"Les petits pois allongent le guacamole en divisant les calories par deux : personne ne les détecte, la couleur devient éclatante et l'apéritif tient dans un plan de sèche.",
     astuce:"Les chips continuent de croustiller en refroidissant : sortez-les blondes, pas brunes — elles finissent de sécher sur la grille.",
     ingredients:[
@@ -13297,7 +13297,7 @@ export const RECIPES_500 = [
     temps:22, portions:2, difficulte:"Facile",
     prix:1, cout:1.45, nutriScore:"B", cuisine:"française",
     micros:{ fer:1.11, magnesium:46.1, calcium:223.36, zinc:1.48, potassium:284.4, vitC:0.18, vitD:2.25, vitB12:0.6, omega3:0.07 },
-    img:IMG.yaourt, imgQuery:"Verrines fromage blanc",
+    img:IMG.yaourt, imgQuery:"fromage blanc",
     desc:"La verrine de brasserie sans pâte ni crème : 15 g de protéines par pot, une compote sans sucre ajouté et le crumble poêlé qui donne le croquant d'un vrai dessert pour 260 kcal.",
     astuce:"Ajoutez le crumble uniquement au moment de servir : monté d'avance, il ramollit dans l'humidité de la verrine en 2 heures.",
     ingredients:[
@@ -13325,7 +13325,7 @@ export const RECIPES_500 = [
     temps:195, portions:4, difficulte:"Moyen",
     prix:2, cout:1.8, nutriScore:"A", cuisine:"américaine revisitée",
     micros:{ fer:1.75, magnesium:46.79, calcium:27.72, zinc:1.71, potassium:399.56, vitC:0.18, vitD:0.16, vitB12:0.79, omega3:0.08 },
-    img:IMG.dinde, imgQuery:"Jerky dinde paprika fumé",
+    img:IMG.dinde, imgQuery:"jerky turkey paprika",
     desc:"30 g de jerky = 28 g de protéines pour à peine 150 kcal : la collation de sèche par excellence, sans les nitrites ni le sucre des versions industrielles, et 3 semaines de conservation en bocal.",
     astuce:"Congelez la viande 30 minutes avant la découpe : mi-ferme, elle se tranche en lanières régulières impossibles à obtenir autrement.",
     ingredients:[
@@ -13353,7 +13353,7 @@ export const RECIPES_500 = [
     temps:10, portions:2, difficulte:"Facile",
     prix:2, cout:2.2, nutriScore:"B", cuisine:"italienne",
     micros:null,
-    img:IMG.energy, imgQuery:"Brochettes caprese",
+    img:IMG.energy, imgQuery:"skewers caprese",
     desc:"La caprese en piques contrôle naturellement les portions : 15 g de protéines, le lycopène de la tomate et un apéritif qui remplace chips et charcuterie pour 200 kcal.",
     astuce:"Pliez chaque feuille de basilic en deux avant de piquer : elle libère ses huiles essentielles et ne noircit pas.",
     ingredients:[
@@ -13380,7 +13380,7 @@ export const RECIPES_500 = [
     temps:55, portions:6, difficulte:"Facile",
     prix:1, cout:1.05, nutriScore:"B", cuisine:"française",
     micros:{ fer:1.84, magnesium:62.69, calcium:131.8, zinc:1.1, potassium:472.66, vitC:6.56, vitD:2.64, vitB12:1.38, omega3:0.56 },
-    img:IMG.moelleux, imgQuery:"Cake salé thon",
+    img:IMG.moelleux, imgQuery:"cake sale tuna",
     desc:"Une tranche = 17 g de protéines : le yaourt grec remplace la moitié de l'huile du cake apéro classique et le thon en fait une vraie collation, pas juste un grignotage.",
     astuce:"Laissez le cake refroidir complètement avant la première tranche : brûlant, il s'émiette ; froid, il se coupe net et se congèle en tranches.",
     ingredients:[
@@ -13411,7 +13411,7 @@ export const RECIPES_500 = [
     temps:22, portions:2, difficulte:"Facile",
     prix:3, cout:4.45, nutriScore:"B", cuisine:"thaïlandaise",
     micros:{ fer:7.02, magnesium:138.54, calcium:205.45, zinc:5.36, potassium:905.34, vitC:47.4, vitD:0.01, vitB12:1.56, omega3:0.04 },
-    img:IMG.crevettes, imgQuery:"Bol riz sauté crevettes",
+    img:IMG.crevettes, imgQuery:"bowl rice shrimp",
     desc:"L'ananas apporte les sucres rapides de la fenêtre post-entraînement plus la bromélaïne, enzyme qui facilite la digestion des 38 g de protéines du bol — le combo récupération par excellence.",
     astuce:"Utilisez impérativement du riz cuit refroidi (idéalement de la veille) : le riz chaud fraîchement cuit colle et s'écrase au wok.",
     ingredients:[
@@ -13442,7 +13442,7 @@ export const RECIPES_500 = [
     temps:5, portions:2, difficulte:"Facile",
     prix:2, cout:2.05, nutriScore:"B", cuisine:"petit-déjeuner moderne",
     micros:{ fer:0.86, magnesium:37.07, calcium:178.3, zinc:0.34, potassium:363.85, vitC:63.53, omega3:0.05 },
-    img:IMG.yaourt, imgQuery:"Smoothie pastèque-fraise",
+    img:IMG.yaourt, imgQuery:"smoothie pasteque-fraise",
     desc:"La pastèque est à 92% d'eau riche en potassium et la pointe de sel remplace la boisson d'effort : réhydratation, glucides rapides et 12 g de protéines dans le même verre post-séance.",
     astuce:"La pincée de sel n'est pas une coquille : elle compense le sodium perdu dans la sueur et exhausse le sucré des fruits.",
     ingredients:[
@@ -13470,7 +13470,7 @@ export const RECIPES_500 = [
     temps:40, portions:2, difficulte:"Moyen",
     prix:3, cout:3.4, nutriScore:"A", cuisine:"japonaise",
     micros:{ fer:14.5, magnesium:266.55, calcium:257.7, zinc:4.06, potassium:1804.72, vitC:6.15, vitD:3.32, vitB12:3.56, omega3:2.63 },
-    img:IMG.saumon, imgQuery:"Onigiri saumon-sésame edamame sel",
+    img:IMG.saumon, imgQuery:"onigiri saumon-sesame edamame",
     desc:"L'onigiri est la collation post-training des sportifs japonais depuis toujours : riz compact facile à digérer, saumon riche en oméga-3 anti-inflammatoires et format qui tient dans le sac de sport.",
     astuce:"Mouillez et salez vos paumes avant chaque triangle : le riz ne colle pas aux mains et le sel assaisonne la surface exactement comme au Japon.",
     ingredients:[
@@ -13499,7 +13499,7 @@ export const RECIPES_500 = [
     temps:30, portions:2, difficulte:"Facile",
     prix:3, cout:3.95, nutriScore:"A", cuisine:"marocaine",
     micros:{ fer:2.56, magnesium:86.61, calcium:64.25, zinc:3.48, potassium:718.07, vitC:1.14, omega3:0.07 },
-    img:IMG.gambas, imgQuery:"Bol semoule",
+    img:IMG.gambas, imgQuery:"bowl semolina",
     desc:"45 g de protéines et 66 g de glucides : le ratio 1:1,5 idéal dans les 2 heures post-entraînement, avec les sucres naturels des raisins et des légumes rôtis pour recharger le glycogène.",
     astuce:"Égrainez la semoule à la fourchette puis aux doigts huilés : chaque grain se détache et le bol gagne en légèreté.",
     ingredients:[
@@ -13531,7 +13531,7 @@ export const RECIPES_500 = [
     temps:5, portions:2, difficulte:"Facile",
     prix:2, cout:1.9, nutriScore:"A", cuisine:"nordique",
     micros:{ fer:1.45, magnesium:46.16, calcium:226.74, zinc:1.06, potassium:664.01, vitC:89.19, vitB12:0.5 },
-    img:IMG.yaourt, imgQuery:"Smoothie betterave",
+    img:IMG.yaourt, imgQuery:"smoothie beetroot",
     desc:"Les nitrates de la betterave améliorent le flux sanguin et les anthocyanes des fruits rouges réduisent les courbatures : la science de la récupération dans un verre à 20 g de protéines.",
     astuce:"Utilisez la betterave sous vide nature (pas au vinaigre) : sa douceur terreuse se marie aux fruits rouges sans acidité parasite.",
     ingredients:[
@@ -13559,7 +13559,7 @@ export const RECIPES_500 = [
     temps:13, portions:2, difficulte:"Facile",
     prix:2, cout:1.6, nutriScore:"B", cuisine:"petit-déjeuner moderne",
     micros:{ fer:3.66, magnesium:134.42, calcium:282.29, zinc:2.31, potassium:828.99, vitC:3.45, vitD:0.16, vitB12:0.85, omega3:0.03 },
-    img:IMG.energy, imgQuery:"Crème riz cacao-banane",
+    img:IMG.energy, imgQuery:"creme rice cacao-banane",
     desc:"La crème de riz est le glucide fétiche des salles de musculation : digestion ultra-rapide, zéro ballonnement et 72 g de glucides pour restaurer le glycogène — ici en version dessert chocolat-cacahuète.",
     astuce:"Fouettez sans interruption les 2 premières minutes : la farine de riz épaissit d'un coup et fait des grumeaux à la moindre inattention.",
     ingredients:[
@@ -13587,7 +13587,7 @@ export const RECIPES_500 = [
     temps:25, portions:2, difficulte:"Facile",
     prix:3, cout:3.55, nutriScore:"A", cuisine:"italienne",
     micros:{ fer:6.36, magnesium:109.43, calcium:335.68, zinc:3.05, potassium:958.98, vitC:13.95, vitD:1.12, vitB12:0.51, omega3:0.08 },
-    img:IMG.yaourt, imgQuery:"Pâtes poulet",
+    img:IMG.yaourt, imgQuery:"pasta chicken",
     desc:"Le cottage mixé à la tomate donne une sauce crémeuse digne d'une vodka-pasta pour 4 fois moins de lipides : 48 g de protéines et la fenêtre anabolique servie al dente.",
     astuce:"Mixez la sauce hors du feu et ne la faites plus bouillir ensuite : le cottage resterait velouté au lieu de granuler.",
     ingredients:[
@@ -13617,7 +13617,7 @@ export const RECIPES_500 = [
     temps:15, portions:2, difficulte:"Facile",
     prix:2, cout:1.55, nutriScore:"B", cuisine:"française",
     micros:{ fer:0.88, magnesium:65.65, calcium:423.01, zinc:2.47, potassium:635.63, vitC:3.88, vitD:1.12, vitB12:1.25, omega3:0.03 },
-    img:IMG.gambas, imgQuery:"Semoule lait protéinée vanille-cannelle poire",
+    img:IMG.gambas, imgQuery:"semolina milk vanille-cannelle poire",
     desc:"La semoule au lait de l'enfance convertie en outil de récupération : le fromage blanc ajouté hors du feu porte les protéines à 22 g et les glucides du blé rechargent le muscle en douceur.",
     astuce:"Incorporez le fromage blanc seulement hors du feu : il garde ses protéines natives et apporte une fraîcheur crémeuse au dessert chaud.",
     ingredients:[
@@ -13645,7 +13645,7 @@ export const RECIPES_500 = [
     temps:20, portions:2, difficulte:"Facile",
     prix:3, cout:4.6, nutriScore:"B", cuisine:"japonaise",
     micros:{ fer:4.62, magnesium:52.65, calcium:56.01, zinc:5.64, potassium:630.02, vitC:0.48, vitD:0.75, vitB12:2.28, omega3:0.1 },
-    img:IMG.oeufs, imgQuery:"Nouilles udon sautées pak choï",
+    img:IMG.oeufs, imgQuery:"noodles udon choi",
     desc:"Les udon épaisses délivrent des glucides moelleux faciles à manger même sans appétit post-effort, et le bœuf saisi apporte 42 g de protéines avec fer et créatine pour la reconstruction.",
     astuce:"Passez les udon précuites 30 secondes sous l'eau chaude en les démêlant aux doigts : elles se séparent sans casser au wok.",
     ingredients:[
@@ -13677,7 +13677,7 @@ export const RECIPES_500 = [
     temps:18, portions:2, difficulte:"Facile",
     prix:2, cout:2.7, nutriScore:"B", cuisine:"nordique",
     micros:{ fer:3.76, magnesium:105.67, calcium:286.14, zinc:2.26, potassium:831.02, vitC:5.17, vitD:0.11, vitB12:0.7, omega3:0.05 },
-    img:IMG.granola, imgQuery:"Bol skyr",
+    img:IMG.granola, imgQuery:"bowl skyr",
     desc:"Le jus de cerise acide est documenté pour réduire les douleurs musculaires post-effort : ici en fruits rôtis entiers sur 28 g de protéines de skyr — le dessert qui travaille pour vous.",
     astuce:"Rôtissez les cerises sans les remuer les 3 premières minutes : elles caramélisent au lieu de rendre leur jus.",
     ingredients:[
@@ -13705,7 +13705,7 @@ export const RECIPES_500 = [
     temps:18, portions:2, difficulte:"Facile",
     prix:3, cout:3.2, nutriScore:"A", cuisine:"marocaine",
     micros:{ fer:5.64, magnesium:129.2, calcium:166.71, zinc:4.38, potassium:844.94, vitC:1.66, omega3:0.15 },
-    img:IMG.poulet, imgQuery:"Couscous poulet",
+    img:IMG.poulet, imgQuery:"couscous chicken",
     desc:"Poulet + pois chiches : la double source de protéines (44 g) avec les glucides de la semoule prêts en 15 minutes — le repas post-séance quand la faim n'attend pas.",
     astuce:"Le bouillon à la place de l'eau est le seul secret d'une semoule qui a du goût : ne la gonflez jamais à l'eau plate.",
     ingredients:[
@@ -13736,7 +13736,7 @@ export const RECIPES_500 = [
     temps:24, portions:2, difficulte:"Facile",
     prix:3, cout:3.3, nutriScore:"A", cuisine:"petit-déjeuner moderne",
     micros:null,
-    img:IMG.yaourt, imgQuery:"Salade pâtes récup'",
+    img:IMG.yaourt, imgQuery:"salad pasta recup",
     desc:"Préparée avant la séance et mangée dans les 30 minutes après : les pâtes froides gagnent de l'amidon résistant, la sauce yaourt reste stable hors frigo une heure, et les 46 g de protéines tombent au bon moment.",
     astuce:"Ne rincez les pâtes que 10 secondes et huilez-les légèrement : elles refroidissent sans coller ni perdre leur surface accrocheuse.",
     ingredients:[
@@ -13766,7 +13766,7 @@ export const RECIPES_500 = [
     temps:37, portions:6, difficulte:"Facile",
     prix:1, cout:0.78, nutriScore:"B", cuisine:"petit-déjeuner moderne",
     micros:{ fer:3.13, magnesium:75.76, calcium:43.6, zinc:1.31, potassium:451.42, vitC:8.13, vitD:0.1, vitB12:0.01, omega3:0.03 },
-    img:IMG.moelleux, imgQuery:"Muffins récupération patate douce-cacao",
+    img:IMG.moelleux, imgQuery:"muffins sweet potato cocoa",
     desc:"La patate douce remplace farine et beurre : ses glucides rechargent le glycogène pendant que les œufs et la cacahuète réparent — deux muffins au fond du sac valent tous les shakers oubliés.",
     astuce:"Utilisez de la patate douce rôtie au four plutôt que bouillie : sa chair concentrée sucre naturellement et évite la pâte détrempée.",
     ingredients:[
@@ -13796,7 +13796,7 @@ export const RECIPES_500 = [
     temps:55, portions:2, difficulte:"Facile",
     prix:3, cout:3.65, nutriScore:"B", cuisine:"américaine revisitée",
     micros:{ fer:3.67, magnesium:63.56, calcium:164.38, zinc:3.3, potassium:1742.03, vitC:68.27, vitD:0.04, vitB12:0.01, omega3:0.47 },
-    img:IMG.poulet, imgQuery:"Pommes terre rôties",
+    img:IMG.poulet, imgQuery:"potatoes terre",
     desc:"Le cheat meal qui n'en est pas un : sauce BBQ maison sans sirop de glucose, poulet effiloché maigre et coleslaw au yaourt — 46 g de protéines et le goût du diner américain pour clôturer la semaine d'entraînement.",
     astuce:"Effilochez le poulet encore chaud : les fibres se séparent sans effort et boivent deux fois plus de sauce BBQ.",
     ingredients:[
