@@ -1,0 +1,51 @@
+# ─── .github/workflows/fetch-photos.yml ──────────────────────────────────────
+# Résout les vraies photos des recettes via Pexels et les fige dans
+# src/data/photoManifest.json, qui est ensuite commité dans le dépôt.
+#
+# Déclenchement :
+#  - manuel : onglet "Actions" du repo → "Photos des recettes (Pexels)" →
+#    bouton "Run workflow". C'est le seul geste à faire.
+#  - automatique : tourne aussi tout seul toutes les heures, pour rattraper le
+#    reste sans que tu aies besoin de recliquer (549 recettes > 200 req/h
+#    autorisées par Pexels, donc il faut plusieurs passages).
+#    Une fois toutes les photos résolues, chaque passage horaire se termine en
+#    quelques secondes sans rien faire — aucun coût, tu peux laisser tourner.
+#
+# La clé Pexels est un SECRET GitHub (Settings → Secrets and variables →
+# Actions → New repository secret → PEXELS_API_KEY). Elle n'est jamais
+# exposée au navigateur, jamais posée sur Vercel, jamais visible dans les logs.
+
+name: Photos des recettes (Pexels)
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    - cron: "17 * * * *"   # toutes les heures à :17 (décalé pour éviter l'affluence)
+
+permissions:
+  contents: write
+
+jobs:
+  fetch-photos:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Récupérer le dépôt
+        uses: actions/checkout@v4
+
+      - name: Installer Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Résoudre un lot de photos
+        env:
+          PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+        run: node scripts/fetch-photos.mjs
+
+      - name: Commiter le fichier s'il a changé
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add src/data/photoManifest.json
+          git diff --cached --quiet || git commit -m "photos: mise à jour automatique (Pexels)"
+          git push
