@@ -1132,10 +1132,64 @@ const RECIPES_BASE = [
 
 // ─── CATALOGUE COMPLET ────────────────────────────────────────────────────────
 // 49 recettes signature + 500 recettes du catalogue master = 549 recettes.
-// Les 49 recettes historiques n'ont pas de données de coût ni de micronutriments :
-// on leur ajoute au moins leur filtre d'objectif, pour qu'elles restent trouvables
-// dans les mêmes filtres que les autres. Les blocs prix / micros se masquent
-// tout seuls quand la donnée est absente.
+
+// Données calculées pour les 49 recettes historiques (leur source ne contenait
+// ni coût ni micronutriments) :
+//  · micros → table ANSES-CIQUAL, comme les 500 autres. null si couverture < 85 %.
+//  · cout   → ESTIMÉ : prix au gramme appris par régression non-négative sur les 500
+//    coûts réels du catalogue. Erreur médiane ~28 % → toujours affiché avec « ≈ ».
+const LEGACY_DATA = {
+  1: { cout:1.69, coutEstime:true, micros:{ fer:5.63, magnesium:144.0, calcium:117.78, zinc:2.71, potassium:489.21, vitC:0.28, omega3:0.05 } },
+  2: { cout:2.63, coutEstime:true, micros:{ fer:3.52, magnesium:61.9, calcium:429.95, zinc:1.75, potassium:584.85, vitC:90.07, vitD:0.42, vitB12:1.43, omega3:0.12 } },
+  3: { cout:1.48, coutEstime:true, micros:{ fer:2.93, magnesium:72.67, calcium:234.76, zinc:2.52, potassium:302.55, vitC:2.91, vitD:1.13, vitB12:0.97, omega3:0.21 } },
+  4: { cout:2.8, coutEstime:true, micros:null },
+  5: { cout:2.25, coutEstime:true, micros:{ fer:7.59, magnesium:125.7, calcium:347.04, zinc:2.94, potassium:1051.28, vitC:119.36, vitD:2.07, vitB12:1.73, omega3:0.23 } },
+  6: { cout:2.05, coutEstime:true, micros:{ fer:9.93, magnesium:254.7, calcium:327.43, zinc:3.64, potassium:766.45, vitC:17.95, omega3:8.15 } },
+  7: { cout:1.63, coutEstime:true, micros:{ fer:3.3, magnesium:101.64, calcium:111.41, zinc:2.44, potassium:665.1, vitC:1.1, vitD:1.03, vitB12:0.8, omega3:0.34 } },
+  8: { cout:2.64, coutEstime:true, micros:{ fer:32.11, magnesium:113.62, calcium:512.04, zinc:4.04, potassium:1159.53, vitC:130.08, vitB12:0.52, omega3:0.12 } },
+  9: { cout:3.16, coutEstime:true, micros:{ fer:11.12, magnesium:231.16, calcium:234.16, zinc:3.1, potassium:1772.03, vitC:11.04, vitD:4.43, vitB12:4.79, omega3:3.02 } },
+  10: { cout:1.89, coutEstime:true, micros:{ fer:4.26, magnesium:159.8, calcium:241.47, zinc:2.6, potassium:1151.1, vitC:124.37, omega3:0.31 } },
+  11: { cout:1.22, coutEstime:true, micros:{ fer:2.8, magnesium:87.89, calcium:146.22, zinc:1.92, potassium:600.25, vitC:10.39, omega3:0.08 } },
+  12: { cout:1.93, coutEstime:true, micros:{ fer:6.9, magnesium:110.88, calcium:146.69, zinc:1.68, potassium:1481.55, vitC:48.23, vitB12:0.19, omega3:0.33 } },
+  13: { cout:2.06, coutEstime:true, micros:{ fer:2.88, magnesium:60.24, calcium:149.2, zinc:1.43, potassium:982.05, vitC:200.08, vitD:2.21, vitB12:2.37, omega3:1.12 } },
+  14: { cout:2.76, coutEstime:true, micros:{ fer:6.52, magnesium:126.21, calcium:159.84, zinc:2.32, potassium:1769.62, vitC:49.11, vitD:1.97, vitB12:1.85, omega3:0.57 } },
+  15: { cout:1.26, coutEstime:true, micros:{ fer:9.07, magnesium:113.38, calcium:88.4, zinc:3.51, potassium:1115.0, vitC:26.15, omega3:0.15 } },
+  16: { cout:2.36, coutEstime:true, micros:{ fer:3.27, magnesium:165.6, calcium:119.88, zinc:4.95, potassium:1072.0, vitC:5.87, vitD:1.75, omega3:0.45 } },
+  17: { cout:2.37, coutEstime:true, micros:{ fer:5.56, magnesium:113.98, calcium:192.5, zinc:1.68, potassium:998.73, vitC:16.0, vitD:10.92, vitB12:5.31, omega3:2.09 } },
+  18: { cout:1.94, coutEstime:true, micros:{ fer:9.34, magnesium:210.57, calcium:332.09, zinc:3.3, potassium:1224.67, vitC:35.57, omega3:0.15 } },
+  19: { cout:2.49, coutEstime:true, micros:{ fer:1.39, magnesium:70.7, calcium:68.12, zinc:1.02, potassium:645.6, vitC:32.12, omega3:0.05 } },
+  20: { cout:0.43, coutEstime:true, micros:{ fer:2.5, magnesium:51.61, calcium:30.45, zinc:0.68, potassium:390.3, vitC:0.6, vitD:0.1, omega3:0.01 } },
+  21: { cout:1.0, coutEstime:true, micros:{ fer:1.47, magnesium:54.52, calcium:89.07, zinc:1.26, potassium:486.25, vitC:17.88, vitD:0.01, omega3:0.06 } },
+  22: { cout:1.56, coutEstime:true, micros:{ fer:2.12, magnesium:38.82, calcium:84.69, zinc:1.33, potassium:501.4, vitC:22.87, vitD:1.03, vitB12:0.8, omega3:0.2 } },
+  23: { cout:2.14, coutEstime:true, micros:{ fer:1.27, magnesium:42.48, calcium:302.25, zinc:1.24, potassium:530.51, vitC:69.64, vitB12:0.8, omega3:0.0 } },
+  24: { cout:1.06, coutEstime:true, micros:{ fer:2.7, magnesium:71.35, calcium:100.38, zinc:1.73, potassium:452.72, vitC:4.39, vitD:1.03, vitB12:0.8, omega3:0.13 } },
+  25: { cout:2.39, coutEstime:true, micros:{ fer:15.33, magnesium:166.8, calcium:389.4, zinc:4.02, potassium:2015.75, vitC:68.84, vitD:3.1, vitB12:2.39, omega3:1.01 } },
+  26: { cout:2.3, coutEstime:true, micros:{ fer:2.94, magnesium:127.16, calcium:110.85, zinc:2.32, potassium:435.01, vitC:6.64, omega3:0.05 } },
+  27: { cout:1.77, coutEstime:true, micros:{ fer:2.7, magnesium:136.77, calcium:199.12, zinc:2.44, potassium:690.7, vitC:5.48, vitD:1.28, vitB12:1.12, omega3:0.11 } },
+  28: { cout:1.78, coutEstime:true, micros:{ fer:1.2, magnesium:52.72, calcium:269.81, zinc:1.23, potassium:368.71, vitC:0.34, vitD:0.12, vitB12:0.2, omega3:0.11 } },
+  29: { cout:2.68, coutEstime:true, micros:{ fer:15.01, magnesium:231.16, calcium:303.69, zinc:6.11, potassium:1910.0, vitC:51.75, vitB12:1.2, omega3:0.62 } },
+  30: { cout:2.35, coutEstime:true, micros:{ fer:5.0, magnesium:76.81, calcium:90.27, zinc:0.84, potassium:1098.6, vitC:132.5, vitB12:1.85, omega3:0.05 } },
+  31: { cout:2.09, coutEstime:true, micros:{ fer:12.61, magnesium:212.22, calcium:344.56, zinc:4.5, potassium:1872.4, vitC:38.54, vitD:0.3, vitB12:0.4, omega3:0.54 } },
+  32: { cout:1.08, coutEstime:true, micros:{ fer:0.62, magnesium:24.0, calcium:43.42, zinc:0.44, potassium:610.86, vitC:18.95, omega3:0.29 } },
+  33: { cout:1.78, coutEstime:true, micros:{ fer:4.47, magnesium:114.89, calcium:135.61, zinc:2.79, potassium:1032.0, vitC:10.09, omega3:1.06 } },
+  34: { cout:0.86, coutEstime:true, micros:{ fer:1.26, magnesium:61.33, calcium:203.78, zinc:1.73, potassium:246.45, vitC:4.5, vitB12:0.4, omega3:0.15 } },
+  35: { cout:1.74, coutEstime:true, micros:{ fer:3.48, magnesium:86.35, calcium:149.12, zinc:1.71, potassium:668.3, vitC:54.08, vitB12:0.16, omega3:0.13 } },
+  36: { cout:2.11, coutEstime:true, micros:{ fer:2.14, magnesium:62.45, calcium:114.02, zinc:2.26, potassium:897.35, vitC:17.5, vitD:0.2, vitB12:0.91, omega3:0.36 } },
+  37: { cout:1.62, coutEstime:true, micros:{ fer:7.12, magnesium:136.47, calcium:144.75, zinc:2.7, potassium:1162.75, vitC:82.81, omega3:0.21 } },
+  38: { cout:3.48, coutEstime:true, micros:{ fer:2.51, magnesium:70.65, calcium:153.82, zinc:3.05, potassium:1689.75, vitC:55.59, vitB12:0.53, omega3:0.08 } },
+  39: { cout:0.48, coutEstime:true, micros:{ fer:3.17, magnesium:133.85, calcium:131.68, zinc:1.71, potassium:284.23, vitC:1.06, omega3:0.56 } },
+  40: { cout:3.45, coutEstime:true, micros:{ fer:5.05, magnesium:98.71, calcium:459.7, zinc:5.41, potassium:630.31, vitC:15.5, vitD:3.54, vitB12:11.28, omega3:0.45 } },
+  41: { cout:0.26, coutEstime:true, micros:{ fer:0.97, magnesium:42.89, calcium:39.41, zinc:0.78, potassium:261.46, vitC:0.55, omega3:0.02 } },
+  42: { cout:0.67, coutEstime:true, micros:{ fer:3.84, magnesium:52.55, calcium:61.41, zinc:0.9, potassium:361.82, vitC:2.08, vitD:0.48, vitB12:0.31, omega3:0.06 } },
+  43: { cout:1.13, coutEstime:true, micros:{ fer:7.55, magnesium:94.72, calcium:46.18, zinc:1.45, potassium:925.83, vitD:0.41, omega3:0.11 } },
+  44: { cout:0.93, coutEstime:true, micros:{ fer:1.96, magnesium:122.42, calcium:67.2, zinc:2.5, potassium:467.76, vitC:15.5, omega3:0.03 } },
+  45: { cout:1.5, coutEstime:true, micros:{ fer:1.11, magnesium:51.7, calcium:16.63, zinc:0.38, potassium:524.67, vitC:21.35, omega3:0.0 } },
+  46: { cout:1.86, coutEstime:true, micros:{ fer:3.33, magnesium:47.56, calcium:55.4, zinc:0.67, potassium:381.32, vitC:0.11, omega3:0.0 } },
+  47: { cout:3.2, coutEstime:true, micros:{ fer:4.98, magnesium:163.25, calcium:357.91, zinc:3.09, potassium:1355.6, vitC:12.34, vitD:0.14, vitB12:0.95, omega3:0.09 } },
+  48: { cout:2.35, coutEstime:true, micros:{ fer:2.76, magnesium:67.35, calcium:108.36, zinc:0.91, potassium:859.2, vitC:42.3, omega3:0.13 } },
+  49: { cout:1.49, coutEstime:true, micros:null },
+};
+
 const OBJ_FILTRE = {
   "Prise de masse": "prise_de_masse",
   "Perte de poids": "perte_de_poids",
@@ -1144,12 +1198,20 @@ const OBJ_FILTRE = {
   "Santé":          "maintien",
 };
 
+// Seuils de prix, communs aux 549 recettes
+export const prixTier = (c) => (c == null ? null : c < 1.50 ? 1 : c < 2.75 ? 2 : 3);
+
 const BASE_NORMALISEE = RECIPES_BASE.map(r => {
+  const d = LEGACY_DATA[r.id] || {};
   const t = new Set(r.tags);
   t.add(OBJ_FILTRE[r.objectif] || "maintien");
   if (r.prot >= 30) t.add("proteine");
-  t.delete("sante");                       // « Santé » n'est plus un filtre
-  return { ...r, tags: [...t] };
+  if ((d.micros?.fer ?? 0) && r.fibres >= 8) t.add("fibres");
+  t.delete("sante");
+  const prix = prixTier(d.cout);
+  if (prix === 1) t.add("petit_budget");
+  return { ...r, tags:[...t], cout:d.cout ?? null, coutEstime:!!d.coutEstime,
+           prix, micros:d.micros ?? null };
 });
 
 export const RECIPES = [...BASE_NORMALISEE, ...RECIPES_500];
@@ -1201,6 +1263,12 @@ export const FILTRES = FILTRE_GROUPES.flatMap(g => g.items);
 // 1 = € (moins de 1,50 €/portion) · 2 = €€ (1,50 à 2,75 €) · 3 = €€€ (au-delà)
 export const PRIX_LABEL  = { 1:"€", 2:"€€", 3:"€€€" };
 export const PRIX_TEXTE  = { 1:"Petit budget", 2:"Moyen", 3:"Élevé" };
+
+// « 2,45 € » — et « ≈ 1,70 € » quand le coût est estimé (49 recettes historiques,
+// dont la source ne contenait aucun prix).
+export const prixEuros = (r) =>
+  r.cout == null ? null
+    : `${r.coutEstime ? "≈ " : ""}${r.cout.toFixed(2).replace(".", ",")} €`;
 
 // ─── MICRONUTRIMENTS ──────────────────────────────────────────────────────────
 // Calculés depuis la table officielle ANSES-CIQUAL, par portion.
