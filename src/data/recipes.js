@@ -1132,7 +1132,27 @@ const RECIPES_BASE = [
 
 // ─── CATALOGUE COMPLET ────────────────────────────────────────────────────────
 // 49 recettes signature + 500 recettes du catalogue master = 549 recettes.
-export const RECIPES = [...RECIPES_BASE, ...RECIPES_500];
+// Les 49 recettes historiques n'ont pas de données de coût ni de micronutriments :
+// on leur ajoute au moins leur filtre d'objectif, pour qu'elles restent trouvables
+// dans les mêmes filtres que les autres. Les blocs prix / micros se masquent
+// tout seuls quand la donnée est absente.
+const OBJ_FILTRE = {
+  "Prise de masse": "prise_de_masse",
+  "Perte de poids": "perte_de_poids",
+  "Recomposition":  "maintien",
+  "Performance":    "maintien",
+  "Santé":          "maintien",
+};
+
+const BASE_NORMALISEE = RECIPES_BASE.map(r => {
+  const t = new Set(r.tags);
+  t.add(OBJ_FILTRE[r.objectif] || "maintien");
+  if (r.prot >= 30) t.add("proteine");
+  t.delete("sante");                       // « Santé » n'est plus un filtre
+  return { ...r, tags: [...t] };
+});
+
+export const RECIPES = [...BASE_NORMALISEE, ...RECIPES_500];
 
 // ─── SECTIONS PAR REPAS ───────────────────────────────────────────────────────
 export const REPAS = [
@@ -1144,15 +1164,57 @@ export const REPAS = [
   { id:"boisson", label:"Boissons & shakes" },
 ];
 
-// ─── FILTRES THÉMATIQUES ──────────────────────────────────────────────────────
-export const FILTRES = [
-  { id:"all",               l:"Tous",          type:"all" },
-  { id:"proteine",          l:"Protéiné",      type:"tag" },
-  { id:"anti_inflammatoire",l:"Anti-inflam.",  type:"tag" },
-  { id:"vegan",             l:"Vegan",         type:"tag" },
-  { id:"vegetarien",        l:"Végétarien",    type:"tag" },
-  { id:"sante",             l:"Santé",         type:"tag" },
-  { id:"rapide",            l:"Rapide",        type:"tag" },
+// ─── FILTRES ──────────────────────────────────────────────────────────────────
+// Multi-sélection : les filtres actifs se cumulent (ET logique).
+// Ex. « Perte de poids » + « Sans lactose » + « Rapide ».
+export const FILTRE_GROUPES = [
+  { g:"Objectif", items:[
+    { id:"perte_de_poids",     l:"Perte de poids" },
+    { id:"prise_de_masse",     l:"Prise de masse" },
+    { id:"maintien",           l:"Maintien" },
+  ]},
+  { g:"Nutrition", items:[
+    { id:"proteine",           l:"Riche en protéines" },
+    { id:"fibres",             l:"Riche en fibres" },
+  ]},
+  { g:"Régime", items:[
+    { id:"vegan",              l:"Vegan" },
+    { id:"vegetarien",         l:"Végétarien" },
+    { id:"sans_lactose",       l:"Sans lactose" },
+    { id:"sans_gluten",        l:"Sans gluten" },
+  ]},
+  { g:"Santé", items:[
+    { id:"anti_inflammatoire", l:"Anti-inflammatoire" },
+    { id:"microbiote",         l:"Microbiote" },
+    { id:"sii",                l:"Intestin irritable" },
+  ]},
+  { g:"Pratique", items:[
+    { id:"rapide",             l:"Rapide" },
+    { id:"petit_budget",       l:"Petit budget" },
+  ]},
+];
+
+// liste à plat (recherche du libellé d'un filtre)
+export const FILTRES = FILTRE_GROUPES.flatMap(g => g.items);
+
+// ─── PRIX ─────────────────────────────────────────────────────────────────────
+// 1 = € (moins de 1,50 €/portion) · 2 = €€ (1,50 à 2,75 €) · 3 = €€€ (au-delà)
+export const PRIX_LABEL  = { 1:"€", 2:"€€", 3:"€€€" };
+export const PRIX_TEXTE  = { 1:"Petit budget", 2:"Moyen", 3:"Élevé" };
+
+// ─── MICRONUTRIMENTS ──────────────────────────────────────────────────────────
+// Calculés depuis la table officielle ANSES-CIQUAL, par portion.
+// « ar » = apport de référence (Règlement UE 1169/2011) → permet le % affiché.
+export const MICROS = [
+  { id:"fer",       l:"Fer",         u:"mg", ar:14   },
+  { id:"magnesium", l:"Magnésium",   u:"mg", ar:375  },
+  { id:"calcium",   l:"Calcium",     u:"mg", ar:800  },
+  { id:"zinc",      l:"Zinc",        u:"mg", ar:10   },
+  { id:"potassium", l:"Potassium",   u:"mg", ar:2000 },
+  { id:"vitC",      l:"Vitamine C",  u:"mg", ar:80   },
+  { id:"vitD",      l:"Vitamine D",  u:"µg", ar:5    },
+  { id:"vitB12",    l:"Vitamine B12",u:"µg", ar:2.5  },
+  { id:"omega3",    l:"Oméga-3",     u:"g",  ar:2    },
 ];
 
 // ─── BADGE AUTO ───────────────────────────────────────────────────────────────
