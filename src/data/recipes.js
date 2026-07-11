@@ -4,6 +4,8 @@
 // tags   : "vegan" | "vegetarien" | "anti_inflammatoire" | "sante" | "proteine" | "rapide"
 // objectif : "Prise de masse" | "Perte de poids" | "Recomposition" | "Performance" | "Santé"
 
+import { RECIPES_500 } from "./recipesCatalog.js";
+
 // ─── Photos Unsplash — licence gratuite, usage commercial autorisé ────────────
 const IMG = {
   oats:      "https://images.unsplash.com/photo-1587314168485-3236d6710814?w=600&q=80",
@@ -60,7 +62,7 @@ const IMG = {
   infusion:  "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=600&q=80",
 };
 
-export const RECIPES = [
+const RECIPES_BASE = [
   // ══ PETIT-DÉJEUNER ══════════════════════════════════════════════════════════
   {
     id:1, nom:"Porridge doré avoine, curcuma & amande", repas:"pdej",
@@ -1127,6 +1129,10 @@ export const RECIPES = [
     variantes:"Ajoutez des fruits rouges. Variez avec du thé vert à la place de l'hibiscus.",
   },
 ];
+
+// ─── CATALOGUE COMPLET ────────────────────────────────────────────────────────
+// 49 recettes signature + 500 recettes du catalogue master = 549 recettes.
+export const RECIPES = [...RECIPES_BASE, ...RECIPES_500];
 
 // ─── SECTIONS PAR REPAS ───────────────────────────────────────────────────────
 export const REPAS = [
