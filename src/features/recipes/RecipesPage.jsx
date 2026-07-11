@@ -1,12 +1,14 @@
 import { useState } from "react";
-import { RECIPES, REPAS, FILTRES, recipeBadge } from "../../data/recipes.js";
+import { RECIPES, REPAS, FILTRE_GROUPES, recipeBadge, PRIX_LABEL } from "../../data/recipes.js";
 import RecipeDetail from "./RecipeDetail.jsx";
+import { useRecipePhoto } from "./useRecipePhoto.js";
 import { C, FONT, SERIF } from "../../data/constants.js";
 
 
 // ─── Carte recette ────────────────────────────────────────────────────────────
 function RecipeCard({ r, liked, onLike, onOpen }) {
   const badge = recipeBadge(r);
+  const photo = useRecipePhoto(r.imgQuery, r.img);
   return (
     <div onClick={() => onOpen(r)} className="tap" style={{
       background:C.s1, border:"1px solid rgba(0,0,0,0.05)",
@@ -16,9 +18,10 @@ function RecipeCard({ r, liked, onLike, onOpen }) {
     }}>
       <div style={{ position:"relative", height:110, background:C.s2, flexShrink:0 }}>
         <img
-          src={r.img} alt={r.nom} loading="lazy"
+          src={photo} alt={r.nom} loading="lazy"
           style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }}
-          onError={e => { e.target.style.display="none"; }}
+          onError={e => { if (e.target.src !== r.img) e.target.src = r.img;
+                          else e.target.style.display="none"; }}
         />
         <div style={{ position:"absolute", inset:0,
           background:"linear-gradient(to top,rgba(11,18,32,0.65) 0%,transparent 55%)" }}/>
@@ -47,6 +50,10 @@ function RecipeCard({ r, liked, onLike, onOpen }) {
         <div style={{ display:"flex", alignItems:"center", gap:8, marginTop:"auto" }}>
           <span style={{ fontSize:11, color:C.mid,
             fontFamily:FONT }}>{r.kcal} kcal</span>
+          {r.prix && (
+            <span style={{ fontSize:11, fontWeight:600, color:C.dim,
+              fontFamily:FONT }}>{PRIX_LABEL[r.prix]}</span>
+          )}
           <span style={{ padding:"2px 8px", borderRadius:5, fontSize:10,
             fontWeight:700, fontFamily:FONT, letterSpacing:0.2,
             background: badge.c,
@@ -65,7 +72,7 @@ export default function Recipes(props) {
   const setPaywall = props?.setPaywall;
   const repas    = props?.repas;
   const setRepas = props?.setRepas;
-  const [filtre,   setFiltre]   = useState("all");
+  const [filtres,  setFiltres]  = useState([]);   // multi-sélection (ET logique)
   const [search,   setSearch]   = useState("");
   const [liked,    setLiked]    = useState({});
   const [selected, setSelected] = useState(null);
@@ -102,7 +109,7 @@ export default function Recipes(props) {
   // ── Filtrage ──
   const searchLower = search.toLowerCase();
   const matchSearch = (r) => !searchLower || r.nom.toLowerCase().includes(searchLower);
-  const matchFiltre = (r) => filtre === "all" || r.tags.includes(filtre);
+  const matchFiltre = (r) => filtres.every(f => r.tags.includes(f));
   const matchFav    = (r) => !showFavs || !!liked[r.id];
   let visible = RECIPES.filter(r => matchSearch(r) && matchFiltre(r) && matchFav(r));
 
@@ -124,7 +131,7 @@ export default function Recipes(props) {
     recettes: visible.filter(r => r.repas === rep.id),
   })).filter(s => s.recettes.length > 0);
 
-  const showFeatured = filtre === "all" && !search && !showFavs && sortBy === "default";
+  const showFeatured = filtres.length === 0 && !search && !showFavs && sortBy === "default";
 
   return (
     <div className="anim" style={{ padding:"0 20px 32px" }}>
@@ -256,21 +263,42 @@ export default function Recipes(props) {
         </div>
       </div>
 
-      {/* ── Filtres thématiques ── */}
-      <div style={{ display:"flex", gap:8, overflowX:"auto",
-        paddingBottom:4, marginBottom:20, scrollbarWidth:"none" }}>
-        {FILTRES.map(f => {
-          const on = filtre === f.id;
-          return (
-            <button key={f.id} onClick={() => setFiltre(f.id)} className="tap" style={{
-              padding:"8px 16px", borderRadius:20, whiteSpace:"nowrap",
-              background: on ? C.accent : "rgba(0,0,0,0.05)",
-              border:`1px solid ${on ? C.accent : "rgba(0,0,0,0.05)"}`,
-              color: on ? "#FFF" : C.mid,
-              fontSize:13, fontWeight:600, fontFamily:FONT, cursor:"pointer",
-            }}>{f.l}</button>
-          );
-        })}
+      {/* ── Filtres ── */}
+      <div style={{ marginBottom:20 }}>
+        {FILTRE_GROUPES.map(grp => (
+          <div key={grp.g} style={{ marginBottom:10 }}>
+            <div style={{ fontSize:10, fontWeight:600, letterSpacing:"0.1em",
+              textTransform:"uppercase", color:C.dim, fontFamily:FONT,
+              marginBottom:6 }}>{grp.g}</div>
+            <div style={{ display:"flex", gap:8, overflowX:"auto",
+              paddingBottom:4, scrollbarWidth:"none" }}>
+              {grp.items.map(f => {
+                const on = filtres.includes(f.id);
+                return (
+                  <button key={f.id} className="tap"
+                    onClick={() => setFiltres(p =>
+                      p.includes(f.id) ? p.filter(x => x !== f.id) : [...p, f.id])}
+                    style={{
+                      padding:"8px 16px", borderRadius:20, whiteSpace:"nowrap",
+                      background: on ? C.accent : "rgba(0,0,0,0.05)",
+                      border:`1px solid ${on ? C.accent : "rgba(0,0,0,0.05)"}`,
+                      color: on ? "#FFF" : C.mid,
+                      fontSize:13, fontWeight:600, fontFamily:FONT, cursor:"pointer",
+                    }}>{f.l}</button>
+                );
+              })}
+            </div>
+          </div>
+        ))}
+
+        {filtres.length > 0 && (
+          <button className="tap" onClick={() => setFiltres([])} style={{
+            marginTop:2, padding:"6px 0", background:"none", border:"none",
+            color:C.accent, fontSize:12, fontWeight:600, fontFamily:FONT,
+            cursor:"pointer" }}>
+            Effacer les filtres ({filtres.length})
+          </button>
+        )}
       </div>
 
       {/* ── À la une ── */}

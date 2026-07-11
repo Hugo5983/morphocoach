@@ -1,13 +1,11 @@
 import { useState, useMemo } from "react";
-import { REPAS } from "../../data/recipes.js";
+import { REPAS, MICROS, PRIX_LABEL, PRIX_TEXTE, FILTRES } from "../../data/recipes.js";
+import { useRecipePhoto } from "./useRecipePhoto.js";
 import { C, DARK, FONT, SERIF } from "../../data/constants.js";
 import { useSwipeBack } from "../../hooks/useSwipeBack.js";
 
 
-const TAG_LABELS = {
-  vegan:"Vegan", vegetarien:"Végétarien", anti_inflammatoire:"Anti-inflammatoire",
-  sante:"Santé", proteine:"Protéiné", rapide:"Rapide",
-};
+const TAG_LABELS = Object.fromEntries(FILTRES.map(f => [f.id, f.l]));
 
 // ─── Fonctions d'arrondi intelligent des ingrédients ─────────────────────────
 function scaleQte(qte, ratio) {
@@ -54,6 +52,7 @@ export default function RecipeDetail({ recipe, onBack, liked, onLike, push, repa
   const target = targetKcal ?? base;
   const ratio  = target / base;
   const repasLabel = REPAS.find(x => x.id === r.repas)?.label || "";
+  const photo = useRecipePhoto(r.imgQuery, r.img);
 
   const macros = useMemo(() => ({
     prot: Math.round(r.prot * ratio),
@@ -82,9 +81,10 @@ export default function RecipeDetail({ recipe, onBack, liked, onLike, push, repa
       {/* ── Hero ── */}
       <div style={{ position:"relative", height:240, background:C.s2 }}>
         <img
-          src={r.img} alt={r.nom} loading="lazy"
+          src={photo} alt={r.nom} loading="lazy"
           style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }}
-          onError={e => { e.target.style.display="none"; }}
+          onError={e => { if (e.target.src !== r.img) e.target.src = r.img;
+                          else e.target.style.display="none"; }}
         />
         <div style={{ position:"absolute", inset:0,
           background:"linear-gradient(to bottom,rgba(11,18,32,0.5) 0%,transparent 30%,rgba(11,18,32,0.97) 100%)" }}/>
@@ -148,6 +148,7 @@ export default function RecipeDetail({ recipe, onBack, liked, onLike, push, repa
             { l:"Calories", v:target, u:"" },
             { l:"Temps",    v:r.temps, u:" min" },
             { l:"Portions", v:r.portions, u:"" },
+            ...(r.prix ? [{ l:"Budget", v:PRIX_LABEL[r.prix], u:"" }] : []),
           ].map(s => (
             <div key={s.l} style={{ flex:1, background:C.s1,
               border:"1px solid rgba(0,0,0,0.05)", borderRadius:12,
@@ -255,6 +256,65 @@ export default function RecipeDetail({ recipe, onBack, liked, onLike, push, repa
             </button>
           )}
         </div>
+
+        {/* ── Micronutriments (par portion) ── */}
+        {r.micros && (
+          <div style={{ background:C.s1, border:"1px solid rgba(0,0,0,0.05)",
+            borderRadius:16, padding:16, marginBottom:16 }}>
+            <div style={{ fontSize:10, fontWeight:600, letterSpacing:"0.1em",
+              textTransform:"uppercase", color:C.dim, fontFamily:FONT,
+              marginBottom:12 }}>
+              Micronutriments · par portion
+            </div>
+
+            <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:10 }}>
+              {MICROS.filter(m => r.micros[m.id] > 0).map(m => {
+                const v   = r.micros[m.id];
+                const pct = Math.min(100, Math.round((v / m.ar) * 100));
+                return (
+                  <div key={m.id}>
+                    <div style={{ fontSize:11, color:C.mid, fontFamily:FONT,
+                      marginBottom:3 }}>{m.l}</div>
+                    <div style={{ fontFamily:SERIF, fontSize:16, color:C.text,
+                      lineHeight:1.1 }}>
+                      {v < 10 ? v.toFixed(1) : Math.round(v)}
+                      <span style={{ fontSize:10, color:C.mid,
+                        fontFamily:FONT, marginLeft:2 }}>{m.u}</span>
+                    </div>
+                    {/* part de l'apport de référence quotidien */}
+                    <div style={{ marginTop:5, height:3, borderRadius:2,
+                      background:"rgba(0,0,0,0.06)", overflow:"hidden" }}>
+                      <div style={{ width:`${pct}%`, height:"100%",
+                        background: pct >= 30 ? "#34D399" : C.accent,
+                        borderRadius:2 }}/>
+                    </div>
+                    <div style={{ fontSize:9, color:C.dim, fontFamily:FONT,
+                      marginTop:3 }}>{pct}% AR</div>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div style={{ fontSize:10, color:C.dim, fontFamily:FONT,
+              marginTop:12, lineHeight:1.5 }}>
+              Estimations calculées depuis la table de composition ANSES-CIQUAL.
+              AR = apport de référence quotidien.
+            </div>
+          </div>
+        )}
+
+        {/* ── Astuce du chef ── */}
+        {r.astuce && (
+          <div style={{ background:"rgba(59,130,246,0.06)",
+            border:"1px solid rgba(59,130,246,0.15)", borderRadius:16,
+            padding:16, marginBottom:16 }}>
+            <div style={{ fontSize:10, fontWeight:600, letterSpacing:"0.1em",
+              textTransform:"uppercase", color:C.accent, fontFamily:FONT,
+              marginBottom:6 }}>Astuce du chef</div>
+            <div style={{ fontSize:13, color:C.mid, lineHeight:1.6,
+              fontFamily:FONT }}>{r.astuce}</div>
+          </div>
+        )}
 
         {/* Description */}
         <div style={{ fontSize:13, color:"${C.mid}",
