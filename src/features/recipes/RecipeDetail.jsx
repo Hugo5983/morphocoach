@@ -52,7 +52,7 @@ export default function RecipeDetail({ recipe, onBack, liked, onLike, push, repa
   const target = targetKcal ?? base;
   const ratio  = target / base;
   const repasLabel = REPAS.find(x => x.id === r.repas)?.label || "";
-  const { src:photo, author:photoAuteur, ref:photoRef } = useRecipePhoto(r.imgQuery, r.img);
+  const { src:photo, author:photoAuteur } = useRecipePhoto(r.id, r.img);
 
   const macros = useMemo(() => ({
     prot: Math.round(r.prot * ratio),
@@ -87,7 +87,6 @@ export default function RecipeDetail({ recipe, onBack, liked, onLike, push, repa
       {/* ── Hero ── */}
       <div style={{ position:"relative", height:240, background:C.s2 }}>
         <img
-          ref={photoRef}
           src={photo} alt={r.nom} loading="lazy"
           style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }}
           onError={e => { if (e.target.src !== r.img) e.target.src = r.img;

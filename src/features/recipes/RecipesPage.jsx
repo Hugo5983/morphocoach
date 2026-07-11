@@ -8,7 +8,7 @@ import { C, FONT, SERIF } from "../../data/constants.js";
 // ─── Carte recette ────────────────────────────────────────────────────────────
 function RecipeCard({ r, liked, onLike, onOpen }) {
   const badge = recipeBadge(r);
-  const { src:photo, ref:photoRef } = useRecipePhoto(r.imgQuery, r.img);
+  const { src:photo } = useRecipePhoto(r.id, r.img);
   return (
     <div onClick={() => onOpen(r)} className="tap" style={{
       background:C.s1, border:"1px solid rgba(0,0,0,0.05)",
@@ -18,7 +18,6 @@ function RecipeCard({ r, liked, onLike, onOpen }) {
     }}>
       <div style={{ position:"relative", height:110, background:C.s2, flexShrink:0 }}>
         <img
-          ref={photoRef}
           src={photo} alt={r.nom} loading="lazy"
           style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }}
           onError={e => { if (e.target.src !== r.img) e.target.src = r.img;
