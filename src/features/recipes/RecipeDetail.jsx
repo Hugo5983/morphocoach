@@ -5,7 +5,7 @@ import { useSwipeBack } from "../../hooks/useSwipeBack.js";
 
 
 const TAG_LABELS = {
-  vegan:"Vegan", anti_inflammatoire:"Anti-inflammatoire",
+  vegan:"Vegan", vegetarien:"Végétarien", anti_inflammatoire:"Anti-inflammatoire",
   sante:"Santé", proteine:"Protéiné", rapide:"Rapide",
 };
 
