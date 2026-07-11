@@ -1,4 +1,6 @@
 // ─── PHOTOS DE RECETTES ──────────────────────────────────────────────────────
+// Les requêtes (champ imgQuery) sont en ANGLAIS : les fichiers de Commons sont
+// nommés en anglais — chercher « saumon rôti » n'y trouve rien, « roasted salmon » si.
 // Source : Wikimedia Commons. Gratuit, SANS clé d'API, sans quota, CORS ouvert
 // (origin=*). Aucune fonction serverless : l'appel part directement du navigateur.
 //
@@ -46,7 +48,7 @@ function acceptable(page, query) {
 
   const titre = sansAccent(page.title || "");
   // au moins un mot significatif du plat doit figurer dans le nom du fichier
-  const mots = sansAccent(query).split(/[^a-z]+/).filter(m => m.length >= 4);
+  const mots = sansAccent(query).split(/[^a-z]+/).filter(m => m.length >= 3);
   if (!mots.length) return false;
   return mots.some(m => titre.includes(m));
 }

@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { REPAS, MICROS, PRIX_LABEL, PRIX_TEXTE, FILTRES, prixEuros } from "../../data/recipes.js";
+import { REPAS, MICROS, PRIX_LABEL, PRIX_TEXTE, FILTRES } from "../../data/recipes.js";
 import { useRecipePhoto } from "./useRecipePhoto.js";
 import { C, DARK, FONT, SERIF } from "../../data/constants.js";
 import { useSwipeBack } from "../../hooks/useSwipeBack.js";
@@ -61,6 +61,12 @@ export default function RecipeDetail({ recipe, onBack, liked, onLike, push, repa
   }), [ratio, r]);
 
   const diff = target - base;
+
+  // Le curseur calories redimensionne les quantités → le coût et les
+  // micronutriments par portion suivent le même ratio que les macros.
+  const coutAjuste = r.cout != null ? r.cout * ratio : null;
+  const prixAff = coutAjuste == null ? null
+    : `${r.coutEstime ? "≈ " : ""}${coutAjuste.toFixed(2).replace(".", ",")} €`;
   const diffLabel = Math.abs(diff) < 3 ? "Base" : (diff > 0 ? `+${Math.round(diff)} kcal` : `${Math.round(diff)} kcal`);
   const diffColor = Math.abs(diff) < 3
     ? "${C.dim}"
@@ -156,7 +162,7 @@ export default function RecipeDetail({ recipe, onBack, liked, onLike, push, repa
             { l:"Calories", v:target, u:"" },
             { l:"Temps",    v:r.temps, u:" min" },
             { l:"Portions", v:r.portions, u:"" },
-            ...(prixEuros(r) ? [{ l:"Budget", v:prixEuros(r), u:"" }] : []),
+            ...(prixAff ? [{ l:"Budget", v:prixAff, u:"" }] : []),
           ].map(s => (
             <div key={s.l} style={{ flex:1, background:C.s1,
               border:"1px solid rgba(0,0,0,0.05)", borderRadius:12,
@@ -266,13 +272,13 @@ export default function RecipeDetail({ recipe, onBack, liked, onLike, push, repa
         </div>
 
         {/* ── Détail du budget ── */}
-        {prixEuros(r) && (
+        {prixAff && (
           <div style={{ display:"flex", alignItems:"center", gap:8,
             marginBottom:16, paddingLeft:2 }}>
             <span style={{ fontSize:13, fontWeight:700, color:C.accent,
               fontFamily:FONT }}>{PRIX_LABEL[r.prix]}</span>
             <span style={{ fontSize:12, color:C.mid, fontFamily:FONT }}>
-              {PRIX_TEXTE[r.prix]} · {prixEuros(r)} par portion
+              {PRIX_TEXTE[r.prix]} · {prixAff} par portion
               {r.coutEstime && " (estimé)"}
             </span>
           </div>
@@ -290,7 +296,7 @@ export default function RecipeDetail({ recipe, onBack, liked, onLike, push, repa
 
             <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:10 }}>
               {MICROS.filter(m => r.micros[m.id] > 0).map(m => {
-                const v   = r.micros[m.id];
+                const v   = r.micros[m.id] * ratio;
                 const pct = Math.min(100, Math.round((v / m.ar) * 100));
                 return (
                   <div key={m.id}>
