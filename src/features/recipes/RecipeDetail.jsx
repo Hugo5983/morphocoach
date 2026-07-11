@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { REPAS, MICROS, PRIX_LABEL, PRIX_TEXTE, FILTRES } from "../../data/recipes.js";
+import { REPAS, MICROS, PRIX_LABEL, PRIX_TEXTE, FILTRES, prixEuros } from "../../data/recipes.js";
 import { useRecipePhoto } from "./useRecipePhoto.js";
 import { C, DARK, FONT, SERIF } from "../../data/constants.js";
 import { useSwipeBack } from "../../hooks/useSwipeBack.js";
@@ -52,7 +52,7 @@ export default function RecipeDetail({ recipe, onBack, liked, onLike, push, repa
   const target = targetKcal ?? base;
   const ratio  = target / base;
   const repasLabel = REPAS.find(x => x.id === r.repas)?.label || "";
-  const photo = useRecipePhoto(r.imgQuery, r.img);
+  const { src:photo, author:photoAuteur, ref:photoRef } = useRecipePhoto(r.imgQuery, r.img);
 
   const macros = useMemo(() => ({
     prot: Math.round(r.prot * ratio),
@@ -81,6 +81,7 @@ export default function RecipeDetail({ recipe, onBack, liked, onLike, push, repa
       {/* ── Hero ── */}
       <div style={{ position:"relative", height:240, background:C.s2 }}>
         <img
+          ref={photoRef}
           src={photo} alt={r.nom} loading="lazy"
           style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }}
           onError={e => { if (e.target.src !== r.img) e.target.src = r.img;
@@ -88,6 +89,13 @@ export default function RecipeDetail({ recipe, onBack, liked, onLike, push, repa
         />
         <div style={{ position:"absolute", inset:0,
           background:"linear-gradient(to bottom,rgba(11,18,32,0.5) 0%,transparent 30%,rgba(11,18,32,0.97) 100%)" }}/>
+
+        {photoAuteur && (
+          <div style={{ position:"absolute", bottom:6, right:10, fontSize:9,
+            color:"rgba(255,255,255,0.45)", fontFamily:FONT }}>
+            Photo · {photoAuteur}
+          </div>
+        )}
 
         {/* Boutons haut */}
         <div style={{ position:"absolute", top:16, left:16, right:16,
@@ -148,7 +156,7 @@ export default function RecipeDetail({ recipe, onBack, liked, onLike, push, repa
             { l:"Calories", v:target, u:"" },
             { l:"Temps",    v:r.temps, u:" min" },
             { l:"Portions", v:r.portions, u:"" },
-            ...(r.prix ? [{ l:"Budget", v:PRIX_LABEL[r.prix], u:"" }] : []),
+            ...(prixEuros(r) ? [{ l:"Budget", v:prixEuros(r), u:"" }] : []),
           ].map(s => (
             <div key={s.l} style={{ flex:1, background:C.s1,
               border:"1px solid rgba(0,0,0,0.05)", borderRadius:12,
@@ -256,6 +264,19 @@ export default function RecipeDetail({ recipe, onBack, liked, onLike, push, repa
             </button>
           )}
         </div>
+
+        {/* ── Détail du budget ── */}
+        {prixEuros(r) && (
+          <div style={{ display:"flex", alignItems:"center", gap:8,
+            marginBottom:16, paddingLeft:2 }}>
+            <span style={{ fontSize:13, fontWeight:700, color:C.accent,
+              fontFamily:FONT }}>{PRIX_LABEL[r.prix]}</span>
+            <span style={{ fontSize:12, color:C.mid, fontFamily:FONT }}>
+              {PRIX_TEXTE[r.prix]} · {prixEuros(r)} par portion
+              {r.coutEstime && " (estimé)"}
+            </span>
+          </div>
+        )}
 
         {/* ── Micronutriments (par portion) ── */}
         {r.micros && (

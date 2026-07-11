@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { RECIPES, REPAS, FILTRE_GROUPES, recipeBadge, PRIX_LABEL } from "../../data/recipes.js";
+import { useState, useRef, useEffect } from "react";
+import { RECIPES, REPAS, FILTRE_GROUPES, FILTRES, recipeBadge, prixEuros } from "../../data/recipes.js";
 import RecipeDetail from "./RecipeDetail.jsx";
 import { useRecipePhoto } from "./useRecipePhoto.js";
 import { C, FONT, SERIF } from "../../data/constants.js";
@@ -8,7 +8,7 @@ import { C, FONT, SERIF } from "../../data/constants.js";
 // ─── Carte recette ────────────────────────────────────────────────────────────
 function RecipeCard({ r, liked, onLike, onOpen }) {
   const badge = recipeBadge(r);
-  const photo = useRecipePhoto(r.imgQuery, r.img);
+  const { src:photo, ref:photoRef } = useRecipePhoto(r.imgQuery, r.img);
   return (
     <div onClick={() => onOpen(r)} className="tap" style={{
       background:C.s1, border:"1px solid rgba(0,0,0,0.05)",
@@ -18,6 +18,7 @@ function RecipeCard({ r, liked, onLike, onOpen }) {
     }}>
       <div style={{ position:"relative", height:110, background:C.s2, flexShrink:0 }}>
         <img
+          ref={photoRef}
           src={photo} alt={r.nom} loading="lazy"
           style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }}
           onError={e => { if (e.target.src !== r.img) e.target.src = r.img;
@@ -50,9 +51,9 @@ function RecipeCard({ r, liked, onLike, onOpen }) {
         <div style={{ display:"flex", alignItems:"center", gap:8, marginTop:"auto" }}>
           <span style={{ fontSize:11, color:C.mid,
             fontFamily:FONT }}>{r.kcal} kcal</span>
-          {r.prix && (
+          {prixEuros(r) && (
             <span style={{ fontSize:11, fontWeight:600, color:C.dim,
-              fontFamily:FONT }}>{PRIX_LABEL[r.prix]}</span>
+              fontFamily:FONT }}>{prixEuros(r)}</span>
           )}
           <span style={{ padding:"2px 8px", borderRadius:5, fontSize:10,
             fontWeight:700, fontFamily:FONT, letterSpacing:0.2,
@@ -73,6 +74,18 @@ export default function Recipes(props) {
   const repas    = props?.repas;
   const setRepas = props?.setRepas;
   const [filtres,  setFiltres]  = useState([]);   // multi-sélection (ET logique)
+  const [menuOuvert, setMenuOuvert] = useState(false);
+  const menuRef = useRef(null);
+
+  // fermeture du menu au clic à l'extérieur
+  useEffect(() => {
+    if (!menuOuvert) return;
+    const clic = e => { if (menuRef.current && !menuRef.current.contains(e.target)) setMenuOuvert(false); };
+    document.addEventListener("mousedown", clic);
+    document.addEventListener("touchstart", clic);
+    return () => { document.removeEventListener("mousedown", clic);
+                   document.removeEventListener("touchstart", clic); };
+  }, [menuOuvert]);
   const [search,   setSearch]   = useState("");
   const [liked,    setLiked]    = useState({});
   const [selected, setSelected] = useState(null);
@@ -263,41 +276,89 @@ export default function Recipes(props) {
         </div>
       </div>
 
-      {/* ── Filtres ── */}
-      <div style={{ marginBottom:20 }}>
-        {FILTRE_GROUPES.map(grp => (
-          <div key={grp.g} style={{ marginBottom:10 }}>
-            <div style={{ fontSize:10, fontWeight:600, letterSpacing:"0.1em",
-              textTransform:"uppercase", color:C.dim, fontFamily:FONT,
-              marginBottom:6 }}>{grp.g}</div>
-            <div style={{ display:"flex", gap:8, overflowX:"auto",
-              paddingBottom:4, scrollbarWidth:"none" }}>
-              {grp.items.map(f => {
-                const on = filtres.includes(f.id);
-                return (
-                  <button key={f.id} className="tap"
-                    onClick={() => setFiltres(p =>
-                      p.includes(f.id) ? p.filter(x => x !== f.id) : [...p, f.id])}
-                    style={{
-                      padding:"8px 16px", borderRadius:20, whiteSpace:"nowrap",
-                      background: on ? C.accent : "rgba(0,0,0,0.05)",
-                      border:`1px solid ${on ? C.accent : "rgba(0,0,0,0.05)"}`,
-                      color: on ? "#FFF" : C.mid,
-                      fontSize:13, fontWeight:600, fontFamily:FONT, cursor:"pointer",
-                    }}>{f.l}</button>
-                );
-              })}
+      {/* ── Filtres (menu déroulant) ── */}
+      <div ref={menuRef} style={{ position:"relative", marginBottom:20 }}>
+        <button className="tap" onClick={() => setMenuOuvert(o => !o)} style={{
+          display:"flex", alignItems:"center", justifyContent:"space-between",
+          width:"100%", padding:"12px 16px", borderRadius:14,
+          background: filtres.length ? "rgba(59,130,246,0.08)" : C.s1,
+          border:`1px solid ${filtres.length ? "rgba(59,130,246,0.3)" : "rgba(0,0,0,0.05)"}`,
+          color:C.text, fontSize:14, fontWeight:600, fontFamily:FONT,
+          cursor:"pointer" }}>
+          <span style={{ display:"flex", alignItems:"center", gap:8 }}>
+            Filtres
+            {filtres.length > 0 && (
+              <span style={{ display:"inline-flex", alignItems:"center",
+                justifyContent:"center", minWidth:20, height:20, padding:"0 6px",
+                borderRadius:10, background:C.accent, color:"#FFF",
+                fontSize:11, fontWeight:700 }}>{filtres.length}</span>
+            )}
+          </span>
+          <span style={{ color:C.mid, fontSize:12,
+            transform:menuOuvert ? "rotate(180deg)" : "none",
+            transition:"transform .2s" }}>▾</span>
+        </button>
+
+        {/* résumé des filtres actifs, menu fermé */}
+        {!menuOuvert && filtres.length > 0 && (
+          <div style={{ display:"flex", flexWrap:"wrap", gap:6, marginTop:8 }}>
+            {filtres.map(id => (
+              <button key={id} className="tap"
+                onClick={() => setFiltres(p => p.filter(x => x !== id))}
+                style={{ padding:"5px 10px", borderRadius:14, background:C.accent,
+                  border:"none", color:"#FFF", fontSize:12, fontWeight:600,
+                  fontFamily:FONT, cursor:"pointer" }}>
+                {FILTRES.find(f => f.id === id)?.l} ✕
+              </button>
+            ))}
+          </div>
+        )}
+
+        {menuOuvert && (
+          <div style={{ position:"absolute", top:"calc(100% + 8px)", left:0, right:0,
+            zIndex:40, background:C.s1, border:"1px solid rgba(0,0,0,0.08)",
+            borderRadius:16, padding:16, maxHeight:380, overflowY:"auto",
+            boxShadow:"0 12px 32px rgba(11,18,32,0.14)" }}>
+
+            {FILTRE_GROUPES.map(grp => (
+              <div key={grp.g} style={{ marginBottom:14 }}>
+                <div style={{ fontSize:10, fontWeight:600, letterSpacing:"0.1em",
+                  textTransform:"uppercase", color:C.dim, fontFamily:FONT,
+                  marginBottom:8 }}>{grp.g}</div>
+                <div style={{ display:"flex", flexWrap:"wrap", gap:8 }}>
+                  {grp.items.map(f => {
+                    const on = filtres.includes(f.id);
+                    return (
+                      <button key={f.id} className="tap"
+                        onClick={() => setFiltres(p =>
+                          p.includes(f.id) ? p.filter(x => x !== f.id) : [...p, f.id])}
+                        style={{
+                          padding:"8px 14px", borderRadius:20, whiteSpace:"nowrap",
+                          background: on ? C.accent : "rgba(0,0,0,0.05)",
+                          border:`1px solid ${on ? C.accent : "rgba(0,0,0,0.05)"}`,
+                          color: on ? "#FFF" : C.mid,
+                          fontSize:13, fontWeight:600, fontFamily:FONT,
+                          cursor:"pointer" }}>{f.l}</button>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+
+            <div style={{ display:"flex", gap:8, paddingTop:4,
+              borderTop:"1px solid rgba(0,0,0,0.05)" }}>
+              <button className="tap" onClick={() => setFiltres([])} style={{
+                flex:1, padding:"10px", borderRadius:12, background:"rgba(0,0,0,0.05)",
+                border:"none", color:C.mid, fontSize:13, fontWeight:600,
+                fontFamily:FONT, cursor:"pointer" }}>Tout effacer</button>
+              <button className="tap" onClick={() => setMenuOuvert(false)} style={{
+                flex:1, padding:"10px", borderRadius:12, background:C.accent,
+                border:"none", color:"#FFF", fontSize:13, fontWeight:600,
+                fontFamily:FONT, cursor:"pointer" }}>
+                Voir {visible.length} recette{visible.length > 1 ? "s" : ""}
+              </button>
             </div>
           </div>
-        ))}
-
-        {filtres.length > 0 && (
-          <button className="tap" onClick={() => setFiltres([])} style={{
-            marginTop:2, padding:"6px 0", background:"none", border:"none",
-            color:C.accent, fontSize:12, fontWeight:600, fontFamily:FONT,
-            cursor:"pointer" }}>
-            Effacer les filtres ({filtres.length})
-          </button>
         )}
       </div>
 
