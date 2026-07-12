@@ -68,7 +68,7 @@ const RECIPES_BASE = [
     id:1, nom:"Porridge doré avoine, curcuma & amande", repas:"pdej",
     tags:["vegetarien","anti_inflammatoire","sante"], objectif:"Santé",
     kcal:392, prot:19, gluc:48, lip:14, temps:12, portions:1, difficulte:"Facile",
-    img:IMG.porridge,
+    img:IMG.porridge, imgQuery:"porridge oatmeal",
     desc:"Un porridge crémeux infusé au curcuma et au lait d'amande, relevé d'une pointe de cardamome. Réconfortant, anti-inflammatoire et tenant jusqu'au déjeuner.",
     ingredients:[
       { nom:"Flocons d'avoine complets", qte:"50 g" },
@@ -90,7 +90,7 @@ const RECIPES_BASE = [
     id:2, nom:"Skyr, granola maison & fruits rouges", repas:"pdej",
     tags:["vegetarien","proteine","rapide"], objectif:"Recomposition",
     kcal:318, prot:27, gluc:34, lip:9, temps:6, portions:1, difficulte:"Facile",
-    img:IMG.yaourt,
+    img:IMG.yaourt, imgQuery:"skyr yogurt granola berries",
     desc:"Le skyr islandais, ultra-protéiné et velouté, sublimé par un granola maison à peine sucré et une cascade de fruits rouges. Frais et rassasiant.",
     ingredients:[
       { nom:"Skyr nature", qte:"200 g" },
@@ -111,7 +111,7 @@ const RECIPES_BASE = [
     id:3, nom:"Pancakes moelleux avoine, ricotta & myrtilles", repas:"pdej",
     tags:["vegetarien","proteine"], objectif:"Prise de masse",
     kcal:436, prot:29, gluc:44, lip:15, temps:18, portions:2, difficulte:"Moyen",
-    img:IMG.pancakes,
+    img:IMG.pancakes, imgQuery:"pancakes oatmeal",
     desc:"Des pancakes aériens à la ricotta, dorés à la poêle et constellés de myrtilles fondantes. Une prise de masse propre et gourmande.",
     ingredients:[
       { nom:"Flocons d'avoine mixés", qte:"80 g" },
@@ -133,7 +133,7 @@ const RECIPES_BASE = [
     id:4, nom:"Smoothie bowl mangue, açaï & graines", repas:"pdej",
     tags:["vegan","anti_inflammatoire","sante"], objectif:"Performance",
     kcal:358, prot:13, gluc:56, lip:11, temps:10, portions:1, difficulte:"Facile",
-    img:IMG.smoothieB,
+    img:IMG.smoothieB, imgQuery:"smoothie bowl mango",
     desc:"Un smoothie bowl vibrant açaï-mangue, riche en antioxydants, garni de graines et de fruits frais. L'énergie naturelle d'un vrai coup d'éclat matinal.",
     ingredients:[
       { nom:"Purée d'açaï congelée", qte:"100 g" },
@@ -154,7 +154,7 @@ const RECIPES_BASE = [
     id:5, nom:"Shakshuka œufs pochés, tomates & feta", repas:"pdej",
     tags:["vegetarien","proteine","sante"], objectif:"Recomposition",
     kcal:344, prot:23, gluc:18, lip:21, temps:25, portions:2, difficulte:"Moyen",
-    img:IMG.shaksh,
+    img:IMG.shaksh, imgQuery:"shakshuka eggs",
     desc:"Un classique méditerranéen : œufs pochés dans une sauce tomate mijotée au cumin et au paprika fumé, parsemée de feta et de coriandre. Généreux et plein de caractère.",
     ingredients:[
       { nom:"Œuf entier", qte:"4 pièces" },
@@ -176,7 +176,7 @@ const RECIPES_BASE = [
     id:6, nom:"Pudding de chia, lait de coco & fruit de la passion", repas:"pdej",
     tags:["vegan","anti_inflammatoire","sante","rapide"], objectif:"Santé",
     kcal:286, prot:11, gluc:30, lip:15, temps:8, portions:1, difficulte:"Facile",
-    img:IMG.chiapot,
+    img:IMG.chiapot, imgQuery:"chia pudding coconut",
     desc:"Un pudding de chia onctueux au lait de coco, couronné de fruit de la passion acidulé. Préparé la veille, riche en oméga-3 et en fibres.",
     ingredients:[
       { nom:"Graines de chia", qte:"3 c. à s." },
@@ -199,7 +199,7 @@ const RECIPES_BASE = [
     id:7, nom:"Bowl quinoa, avocat & œuf poché", repas:"dej",
     tags:["vegetarien","proteine","sante"], objectif:"Recomposition",
     kcal:487, prot:31, gluc:44, lip:23, temps:25, portions:2, difficulte:"Facile",
-    img:IMG.bowl,
+    img:IMG.bowl, imgQuery:"bowl quinoa",
     desc:"Un bowl équilibré et coloré : quinoa nacré, avocat crémeux, pois chiches rôtis et œuf poché coulant. Le repas signature, complet et rassasiant.",
     ingredients:[
       { nom:"Quinoa cuit", qte:"150 g" },
@@ -221,7 +221,7 @@ const RECIPES_BASE = [
     id:8, nom:"Poulet rôti au citron, riz complet & légumes", repas:"dej",
     tags:["proteine","sante"], objectif:"Prise de masse",
     kcal:548, prot:46, gluc:50, lip:16, temps:35, portions:2, difficulte:"Moyen",
-    img:IMG.poulet,
+    img:IMG.poulet, imgQuery:"chicken roasted lemon",
     desc:"Filet de poulet mariné au citron et au thym, accompagné de riz complet et de légumes rôtis au four. Le repas de référence pour la récupération musculaire.",
     ingredients:[
       { nom:"Filet de poulet fermier", qte:"260 g" },
@@ -243,7 +243,7 @@ const RECIPES_BASE = [
     id:9, nom:"Poke bowl saumon, edamame & sésame", repas:"dej",
     tags:["proteine","anti_inflammatoire","sante"], objectif:"Performance",
     kcal:472, prot:35, gluc:42, lip:18, temps:20, portions:1, difficulte:"Facile",
-    img:IMG.poke,
+    img:IMG.poke, imgQuery:"poke bowl salmon",
     desc:"Saumon cru mariné soja-sésame, riz vinaigré, edamame et concombre croquant. Frais, riche en oméga-3 et en protéines de haute qualité.",
     ingredients:[
       { nom:"Saumon cru qualité sashimi", qte:"120 g" },
@@ -265,7 +265,7 @@ const RECIPES_BASE = [
     id:10, nom:"Buddha bowl patate douce, kale & tahini", repas:"dej",
     tags:["vegan","anti_inflammatoire","sante"], objectif:"Santé",
     kcal:438, prot:17, gluc:56, lip:17, temps:30, portions:1, difficulte:"Facile",
-    img:IMG.buddha,
+    img:IMG.buddha, imgQuery:"buddha bowl sweet potato",
     desc:"Patate douce rôtie, kale massé, pois chiches croustillants et sauce tahini citronnée. Un bowl végétal vibrant, riche en fibres et en micronutriments.",
     ingredients:[
       { nom:"Patate douce", qte:"180 g" },
@@ -287,7 +287,7 @@ const RECIPES_BASE = [
     id:11, nom:"Salade de lentilles, betterave & chèvre frais", repas:"dej",
     tags:["vegetarien","anti_inflammatoire","sante"], objectif:"Perte de poids",
     kcal:382, prot:21, gluc:40, lip:15, temps:20, portions:2, difficulte:"Facile",
-    img:IMG.saladeQ,
+    img:IMG.saladeQ, imgQuery:"salad lentils",
     desc:"Lentilles vertes du Puy, betterave rôtie et chèvre frais sur un lit de roquette, vinaigrette à la moutarde ancienne. Une salade nourrissante et faible en calories.",
     ingredients:[
       { nom:"Lentilles vertes cuites", qte:"200 g" },
@@ -309,7 +309,7 @@ const RECIPES_BASE = [
     id:12, nom:"Fattouche revisité, poulet grillé & sumac", repas:"dej",
     tags:["proteine","sante"], objectif:"Perte de poids",
     kcal:396, prot:38, gluc:24, lip:16, temps:25, portions:2, difficulte:"Moyen",
-    img:IMG.fattouche,
+    img:IMG.fattouche, imgQuery:"fattoush salad grilled chicken",
     desc:"Une salade libanaise croquante au sumac acidulé, agrémentée de poulet grillé. Très rassasiante, faible en glucides, idéale pour une perte de poids sans frustration.",
     ingredients:[
       { nom:"Filet de poulet", qte:"220 g" },
@@ -333,7 +333,7 @@ const RECIPES_BASE = [
     id:13, nom:"Saumon rôti, brocoli & émulsion citron-aneth", repas:"din",
     tags:["proteine","anti_inflammatoire","sante"], objectif:"Recomposition",
     kcal:418, prot:37, gluc:14, lip:25, temps:25, portions:2, difficulte:"Facile",
-    img:IMG.saumon,
+    img:IMG.saumon, imgQuery:"salmon roasted",
     desc:"Pavé de saumon rôti à cœur fondant, brocoli vapeur croquant et émulsion légère citron-aneth. Un dîner léger et anti-inflammatoire, riche en oméga-3.",
     ingredients:[
       { nom:"Pavé de saumon", qte:"2 pièces" },
@@ -355,7 +355,7 @@ const RECIPES_BASE = [
     id:14, nom:"Cabillaud nacré, écrasé de panais & herbes", repas:"din",
     tags:["proteine","sante"], objectif:"Perte de poids",
     kcal:336, prot:39, gluc:22, lip:10, temps:30, portions:2, difficulte:"Moyen",
-    img:IMG.cabillaud,
+    img:IMG.cabillaud, imgQuery:"cod fillet parsnip puree",
     desc:"Dos de cabillaud poché à basse température, écrasé de panais vanillé et huile d'herbes fraîches. Un dîner raffiné, protéiné et léger.",
     ingredients:[
       { nom:"Dos de cabillaud", qte:"280 g" },
@@ -377,7 +377,7 @@ const RECIPES_BASE = [
     id:15, nom:"Dahl de lentilles corail, lait de coco & épinards", repas:"din",
     tags:["vegan","anti_inflammatoire","sante"], objectif:"Santé",
     kcal:388, prot:18, gluc:48, lip:14, temps:30, portions:3, difficulte:"Facile",
-    img:IMG.dahl,
+    img:IMG.dahl, imgQuery:"dal lentils",
     desc:"Un dahl onctueux de lentilles corail mijotées au lait de coco, curcuma et gingembre, fondu d'épinards frais. Réconfortant, digeste et profondément anti-inflammatoire.",
     ingredients:[
       { nom:"Lentilles corail", qte:"200 g" },
@@ -399,7 +399,7 @@ const RECIPES_BASE = [
     id:16, nom:"Soupe miso, tofu grillé & shiitakes", repas:"din",
     tags:["vegan","anti_inflammatoire","sante","rapide"], objectif:"Perte de poids",
     kcal:212, prot:16, gluc:18, lip:9, temps:18, portions:2, difficulte:"Facile",
-    img:IMG.miso,
+    img:IMG.miso, imgQuery:"miso soup tofu",
     desc:"Un bouillon dashi délicat parfumé au miso, tofu grillé et shiitakes umami. Léger, digeste et profondément réconfortant — parfait en fin de journée.",
     ingredients:[
       { nom:"Bouillon dashi", qte:"600 ml" },
@@ -421,7 +421,7 @@ const RECIPES_BASE = [
     id:17, nom:"Steak de thon mi-cuit, sésame & légumes croquants", repas:"din",
     tags:["proteine","anti_inflammatoire"], objectif:"Recomposition",
     kcal:362, prot:42, gluc:16, lip:15, temps:20, portions:2, difficulte:"Moyen",
-    img:IMG.thon,
+    img:IMG.thon, imgQuery:"steak tuna",
     desc:"Thon rouge saisi en croûte de sésame, juste mi-cuit, accompagné d'asperges et de tomates cerises poêlées. Une protéine d'exception, riche et fondante.",
     ingredients:[
       { nom:"Steak de thon rouge", qte:"280 g" },
@@ -443,7 +443,7 @@ const RECIPES_BASE = [
     id:18, nom:"Curry de pois chiches, courge & lait de coco", repas:"din",
     tags:["vegan","anti_inflammatoire","sante"], objectif:"Santé",
     kcal:404, prot:16, gluc:52, lip:16, temps:35, portions:3, difficulte:"Facile",
-    img:IMG.curry,
+    img:IMG.curry, imgQuery:"curry chickpea",
     desc:"Un curry doux et parfumé de pois chiches et de courge butternut mijotés au lait de coco et aux épices douces. Généreux, végétal et nourrissant.",
     ingredients:[
       { nom:"Pois chiches cuits", qte:"400 g" },
@@ -467,7 +467,7 @@ const RECIPES_BASE = [
     id:19, nom:"Smoothie mangue, gingembre & protéine", repas:"col",
     tags:["proteine","anti_inflammatoire","rapide"], objectif:"Performance",
     kcal:234, prot:24, gluc:28, lip:4, temps:5, portions:1, difficulte:"Facile",
-    img:IMG.smoothie,
+    img:IMG.smoothie, imgQuery:"mango smoothie ginger",
     desc:"Un smoothie rafraîchissant mangue-gingembre, enrichi en protéines. La collation post-entraînement idéale : digeste, anti-inflammatoire et énergisante.",
     ingredients:[
       { nom:"Mangue congelée", qte:"120 g" },
@@ -488,7 +488,7 @@ const RECIPES_BASE = [
     id:20, nom:"Energy balls dattes, cacao cru & noisettes", repas:"col",
     tags:["vegan","rapide"], objectif:"Performance",
     kcal:158, prot:5, gluc:18, lip:9, temps:15, portions:8, difficulte:"Facile",
-    img:IMG.energy,
+    img:IMG.energy, imgQuery:"energy balls",
     desc:"De petites bouchées énergétiques aux dattes Medjool, cacao cru et noisettes torréfiées. Sans sucre ajouté, parfaites avant l'effort.",
     ingredients:[
       { nom:"Dattes Medjool dénoyautées", qte:"160 g" },
@@ -509,7 +509,7 @@ const RECIPES_BASE = [
     id:21, nom:"Houmous de betterave & crudités croquantes", repas:"col",
     tags:["vegan","anti_inflammatoire","sante"], objectif:"Perte de poids",
     kcal:196, prot:9, gluc:22, lip:9, temps:12, portions:2, difficulte:"Facile",
-    img:IMG.houmous,
+    img:IMG.houmous, imgQuery:"hummus beetroot raw vegetables",
     desc:"Un houmous rose vif à la betterave, velouté et acidulé, servi avec des crudités fraîches. Une collation faible en calories, riche en fibres et antioxydants.",
     ingredients:[
       { nom:"Pois chiches cuits", qte:"150 g" },
@@ -530,7 +530,7 @@ const RECIPES_BASE = [
     id:22, nom:"Toast avocat, œuf poché & graines", repas:"col",
     tags:["vegetarien","proteine","rapide"], objectif:"Recomposition",
     kcal:312, prot:16, gluc:24, lip:18, temps:10, portions:1, difficulte:"Facile",
-    img:IMG.toast,
+    img:IMG.toast, imgQuery:"toast avocado",
     desc:"Pain complet grillé, avocat écrasé au citron, œuf poché coulant et mélange de graines. Une collation équilibrée et rassasiante en un instant.",
     ingredients:[
       { nom:"Pain complet au levain", qte:"1 tranche" },
@@ -551,7 +551,7 @@ const RECIPES_BASE = [
     id:23, nom:"Skyr glacé, fruits rouges & éclats de cacao", repas:"col",
     tags:["vegetarien","proteine","rapide"], objectif:"Recomposition",
     kcal:188, prot:22, gluc:20, lip:4, temps:5, portions:1, difficulte:"Facile",
-    img:IMG.yaourt,
+    img:IMG.yaourt, imgQuery:"skyr ice cream",
     desc:"Un skyr fouetté glacé, parfumé à la vanille, garni de fruits rouges et d'éclats de cacao cru. Le dessert protéiné qui satisfait l'envie de sucré sans excès.",
     ingredients:[
       { nom:"Skyr nature", qte:"200 g" },
@@ -572,7 +572,7 @@ const RECIPES_BASE = [
     id:24, nom:"Pancakes protéinés banane & cannelle", repas:"col",
     tags:["vegetarien","proteine"], objectif:"Prise de masse",
     kcal:328, prot:26, gluc:38, lip:8, temps:15, portions:2, difficulte:"Facile",
-    img:IMG.pancakes,
+    img:IMG.pancakes, imgQuery:"pancakes banana cinnamon",
     desc:"Des mini-pancakes moelleux à la banane et à la cannelle, riches en protéines. Une collation gourmande qui soutient la prise de masse propre.",
     ingredients:[
       { nom:"Banane mûre", qte:"1 pièce" },
@@ -594,7 +594,7 @@ const RECIPES_BASE = [
     id:25, nom:"Omelette aux herbes, épinards & avocat", repas:"pdej",
     tags:["vegetarien","proteine","sante","rapide"], objectif:"Perte de poids",
     kcal:328, prot:24, gluc:8, lip:23, temps:12, portions:1, difficulte:"Facile",
-    img:IMG.omelette,
+    img:IMG.omelette, imgQuery:"omelette herbs",
     desc:"Une omelette baveuse parsemée d'herbes fraîches, épinards fondus et lamelles d'avocat. Très protéinée, faible en glucides, parfaite pour une perte de poids.",
     ingredients:[
       { nom:"Œuf entier", qte:"3 pièces" },
@@ -615,7 +615,7 @@ const RECIPES_BASE = [
     id:26, nom:"Bircher muesli pomme, noix & cannelle", repas:"pdej",
     tags:["vegetarien","sante"], objectif:"Santé",
     kcal:374, prot:14, gluc:52, lip:13, temps:8, portions:1, difficulte:"Facile",
-    img:IMG.bircher,
+    img:IMG.bircher, imgQuery:"bircher muesli apple",
     desc:"Le muesli suisse original : flocons d'avoine trempés, pomme râpée, noix et cannelle. Préparé la veille, doux et naturellement énergisant.",
     ingredients:[
       { nom:"Flocons d'avoine", qte:"50 g" },
@@ -636,7 +636,7 @@ const RECIPES_BASE = [
     id:27, nom:"Crêpes protéinées sarrasin & beurre d'amande", repas:"pdej",
     tags:["vegetarien","proteine"], objectif:"Prise de masse",
     kcal:452, prot:28, gluc:48, lip:17, temps:20, portions:2, difficulte:"Moyen",
-    img:IMG.crepes,
+    img:IMG.crepes, imgQuery:"crepes buckwheat",
     desc:"Des crêpes fines au sarrasin, naturellement sans gluten, nappées de beurre d'amande et de fruits. Une prise de masse propre et savoureuse.",
     ingredients:[
       { nom:"Farine de sarrasin", qte:"80 g" },
@@ -657,7 +657,7 @@ const RECIPES_BASE = [
     id:28, nom:"Tartine ricotta, figue & miel", repas:"pdej",
     tags:["vegetarien","rapide"], objectif:"Santé",
     kcal:296, prot:13, gluc:38, lip:11, temps:7, portions:1, difficulte:"Facile",
-    img:IMG.tartine,
+    img:IMG.tartine, imgQuery:"toast ricotta",
     desc:"Pain au levain grillé, ricotta crémeuse, figues fraîches et filet de miel. Une tartine élégante, équilibrée et prête en un instant.",
     ingredients:[
       { nom:"Pain au levain", qte:"1 tranche" },
@@ -680,7 +680,7 @@ const RECIPES_BASE = [
     id:29, nom:"Crevettes sautées à l'ail, courgette & quinoa", repas:"dej",
     tags:["proteine","sante","rapide"], objectif:"Recomposition",
     kcal:418, prot:36, gluc:38, lip:13, temps:20, portions:2, difficulte:"Facile",
-    img:IMG.crevettes,
+    img:IMG.crevettes, imgQuery:"garlic shrimp zucchini quinoa",
     desc:"Crevettes sautées à l'ail et au persil sur un lit de quinoa et de courgettes poêlées. Léger, riche en protéines maigres, prêt en vingt minutes.",
     ingredients:[
       { nom:"Crevettes décortiquées", qte:"240 g" },
@@ -702,7 +702,7 @@ const RECIPES_BASE = [
     id:30, nom:"Émincé de bœuf, brocoli & sauce soja-sésame", repas:"dej",
     tags:["proteine"], objectif:"Prise de masse",
     kcal:512, prot:44, gluc:36, lip:22, temps:25, portions:2, difficulte:"Moyen",
-    img:IMG.boeuf,
+    img:IMG.boeuf, imgQuery:"beef stir fry broccoli",
     desc:"Un wok d'émincé de bœuf maigre saisi à feu vif, brocoli croquant et sauce soja-sésame. Riche en fer et en protéines, idéal pour la prise de masse.",
     ingredients:[
       { nom:"Bœuf maigre émincé", qte:"260 g" },
@@ -724,7 +724,7 @@ const RECIPES_BASE = [
     id:31, nom:"Risotto d'orge perlé, champignons & parmesan", repas:"dej",
     tags:["vegetarien","sante"], objectif:"Recomposition",
     kcal:444, prot:18, gluc:58, lip:14, temps:35, portions:2, difficulte:"Moyen",
-    img:IMG.risotto,
+    img:IMG.risotto, imgQuery:"barley risotto mushrooms",
     desc:"Un risotto revisité à l'orge perlé, plus riche en fibres que le riz, crémeux de champignons et de parmesan. Réconfortant et nutritif.",
     ingredients:[
       { nom:"Orge perlé", qte:"140 g" },
@@ -746,7 +746,7 @@ const RECIPES_BASE = [
     id:32, nom:"Taboulé de chou-fleur, herbes & grenade", repas:"dej",
     tags:["vegan","anti_inflammatoire","sante","rapide"], objectif:"Perte de poids",
     kcal:268, prot:10, gluc:32, lip:12, temps:15, portions:2, difficulte:"Facile",
-    img:IMG.taboule,
+    img:IMG.taboule, imgQuery:"tabbouleh cauliflower",
     desc:"Un taboulé sans semoule : chou-fleur mixé en semoule, profusion d'herbes fraîches et éclats de grenade. Très faible en calories, ultra-frais.",
     ingredients:[
       { nom:"Chou-fleur", qte:"300 g" },
@@ -767,7 +767,7 @@ const RECIPES_BASE = [
     id:33, nom:"Wrap végétarien houmous, falafel & crudités", repas:"dej",
     tags:["vegetarien","sante"], objectif:"Santé",
     kcal:436, prot:18, gluc:52, lip:18, temps:20, portions:1, difficulte:"Facile",
-    img:IMG.wrapV,
+    img:IMG.wrapV, imgQuery:"wrap hummus",
     desc:"Une galette complète garnie de houmous onctueux, falafels croustillants et crudités fraîches. Un déjeuner végétarien généreux et savoureux.",
     ingredients:[
       { nom:"Tortilla complète", qte:"1 pièce" },
@@ -790,7 +790,7 @@ const RECIPES_BASE = [
     id:34, nom:"Pâtes complètes, pesto de roquette & pignons", repas:"din",
     tags:["vegetarien"], objectif:"Prise de masse",
     kcal:496, prot:19, gluc:64, lip:19, temps:20, portions:2, difficulte:"Facile",
-    img:IMG.pates,
+    img:IMG.pates, imgQuery:"wholewheat pasta pesto",
     desc:"Des pâtes complètes nappées d'un pesto maison de roquette et pignons torréfiés. Riche en glucides intelligents, parfait après une grosse séance.",
     ingredients:[
       { nom:"Pâtes complètes", qte:"160 g" },
@@ -812,7 +812,7 @@ const RECIPES_BASE = [
     id:35, nom:"Poivrons farcis quinoa, légumes & feta", repas:"din",
     tags:["vegetarien","sante"], objectif:"Recomposition",
     kcal:368, prot:17, gluc:42, lip:15, temps:40, portions:2, difficulte:"Moyen",
-    img:IMG.poivron,
+    img:IMG.poivron, imgQuery:"bell peppers quinoa",
     desc:"Des poivrons fondants farcis d'un mélange de quinoa, légumes et feta, gratinés au four. Coloré, complet et plein de saveurs méditerranéennes.",
     ingredients:[
       { nom:"Poivrons", qte:"2 pièces" },
@@ -833,7 +833,7 @@ const RECIPES_BASE = [
     id:36, nom:"Escalope de dinde, purée de chou-fleur & herbes", repas:"din",
     tags:["proteine","sante"], objectif:"Perte de poids",
     kcal:322, prot:42, gluc:14, lip:11, temps:25, portions:2, difficulte:"Facile",
-    img:IMG.dinde,
+    img:IMG.dinde, imgQuery:"cutlet turkey",
     desc:"Une escalope de dinde dorée accompagnée d'une purée de chou-fleur légère aux herbes. Très protéiné, faible en glucides, idéal le soir.",
     ingredients:[
       { nom:"Escalope de dinde", qte:"260 g" },
@@ -854,7 +854,7 @@ const RECIPES_BASE = [
     id:37, nom:"Chili végétal haricots rouges & maïs", repas:"din",
     tags:["vegan","sante"], objectif:"Santé",
     kcal:386, prot:19, gluc:56, lip:9, temps:35, portions:3, difficulte:"Facile",
-    img:IMG.chili,
+    img:IMG.chili, imgQuery:"chili beans",
     desc:"Un chili végétal généreux de haricots rouges, maïs et tomates épicées au cumin. Riche en fibres et en protéines végétales, réconfortant.",
     ingredients:[
       { nom:"Haricots rouges cuits", qte:"400 g" },
@@ -876,7 +876,7 @@ const RECIPES_BASE = [
     id:38, nom:"Truite au four, fenouil rôti & citron", repas:"din",
     tags:["proteine","anti_inflammatoire","sante"], objectif:"Recomposition",
     kcal:392, prot:38, gluc:16, lip:21, temps:30, portions:2, difficulte:"Facile",
-    img:IMG.truite,
+    img:IMG.truite, imgQuery:"trout baked",
     desc:"Un filet de truite rôti au four sur un lit de fenouil confit et de citron. Délicat, riche en oméga-3, parfaitement équilibré.",
     ingredients:[
       { nom:"Filet de truite", qte:"280 g" },
@@ -899,7 +899,7 @@ const RECIPES_BASE = [
     id:39, nom:"Tofu mariné croustillant & sauce cacahuète", repas:"col",
     tags:["vegan","proteine"], objectif:"Performance",
     kcal:264, prot:20, gluc:14, lip:16, temps:20, portions:2, difficulte:"Moyen",
-    img:IMG.tofuC,
+    img:IMG.tofuC, imgQuery:"tofu peanut",
     desc:"Des cubes de tofu marinés au soja, dorés jusqu'à être croustillants, servis avec une sauce cacahuète onctueuse. Une collation végétale ultra-protéinée.",
     ingredients:[
       { nom:"Tofu ferme", qte:"200 g" },
@@ -920,7 +920,7 @@ const RECIPES_BASE = [
     id:40, nom:"Bowl fromage blanc, granola & fruits frais", repas:"col",
     tags:["vegetarien","proteine","rapide"], objectif:"Recomposition",
     kcal:248, prot:22, gluc:30, lip:6, temps:5, portions:1, difficulte:"Facile",
-    img:IMG.bowlD,
+    img:IMG.bowlD, imgQuery:"cottage cheese bowl granola fruit",
     desc:"Un bol de fromage blanc battu, granola croquant et fruits de saison. Riche en protéines et en calcium, la collation parfaite à toute heure.",
     ingredients:[
       { nom:"Fromage blanc 0%", qte:"200 g" },
@@ -940,7 +940,7 @@ const RECIPES_BASE = [
     id:41, nom:"Barres énergétiques avoine, abricot & graines", repas:"col",
     tags:["vegetarien","rapide"], objectif:"Performance",
     kcal:186, prot:6, gluc:26, lip:7, temps:15, portions:8, difficulte:"Facile",
-    img:IMG.energy,
+    img:IMG.energy, imgQuery:"bars oatmeal",
     desc:"Des barres maison aux flocons d'avoine, abricots secs et graines. Sans sucre raffiné, idéales pour un coup de boost avant l'effort.",
     ingredients:[
       { nom:"Flocons d'avoine", qte:"120 g" },
@@ -963,7 +963,7 @@ const RECIPES_BASE = [
     id:42, nom:"Moelleux au chocolat noir & haricots noirs", repas:"dessert",
     tags:["vegetarien","sante"], objectif:"Recomposition",
     kcal:212, prot:9, gluc:24, lip:9, temps:30, portions:6, difficulte:"Moyen",
-    img:IMG.moelleux,
+    img:IMG.moelleux, imgQuery:"chocolate cake black beans",
     desc:"Un moelleux fondant au chocolat noir, secrètement enrichi de haricots noirs pour des fibres et des protéines. Intense en cacao, sans farine raffinée.",
     ingredients:[
       { nom:"Haricots noirs cuits", qte:"250 g" },
@@ -984,7 +984,7 @@ const RECIPES_BASE = [
     id:43, nom:"Mousse avocat-cacao & fleur de sel", repas:"dessert",
     tags:["vegan","anti_inflammatoire","rapide"], objectif:"Santé",
     kcal:198, prot:5, gluc:18, lip:13, temps:10, portions:2, difficulte:"Facile",
-    img:IMG.mousse,
+    img:IMG.mousse, imgQuery:"avocado chocolate mousse",
     desc:"Une mousse veloutée à l'avocat et au cacao cru, relevée d'une pointe de fleur de sel. Onctueuse, riche en bons lipides, sans produits laitiers.",
     ingredients:[
       { nom:"Avocat mûr", qte:"1 pièce" },
@@ -1005,7 +1005,7 @@ const RECIPES_BASE = [
     id:44, nom:"Cheesecake citron sans cuisson & noix de cajou", repas:"dessert",
     tags:["vegan","sante"], objectif:"Santé",
     kcal:268, prot:7, gluc:22, lip:18, temps:20, portions:6, difficulte:"Moyen",
-    img:IMG.cheesecake,
+    img:IMG.cheesecake, imgQuery:"cheesecake lemon walnuts",
     desc:"Un cheesecake cru à base de noix de cajou, acidulé au citron, sur une base de dattes et amandes. Crémeux et raffiné, sans cuisson ni produits laitiers.",
     ingredients:[
       { nom:"Noix de cajou trempées", qte:"200 g" },
@@ -1026,7 +1026,7 @@ const RECIPES_BASE = [
     id:45, nom:"Glace minute banane, mangue & coco", repas:"dessert",
     tags:["vegan","sante","rapide"], objectif:"Santé",
     kcal:164, prot:3, gluc:34, lip:4, temps:5, portions:2, difficulte:"Facile",
-    img:IMG.glace,
+    img:IMG.glace, imgQuery:"ice cream banana",
     desc:"Une glace instantanée de bananes et mangue congelées mixées, parfumée à la coco. Onctueuse comme une vraie glace, 100% fruit, sans sucre ajouté.",
     ingredients:[
       { nom:"Banane congelée", qte:"2 pièces" },
@@ -1048,7 +1048,7 @@ const RECIPES_BASE = [
     id:46, nom:"Latte doré curcuma & lait d'amande", repas:"boisson",
     tags:["vegan","anti_inflammatoire","rapide"], objectif:"Santé",
     kcal:118, prot:3, gluc:14, lip:6, temps:8, portions:1, difficulte:"Facile",
-    img:IMG.latteO,
+    img:IMG.latteO, imgQuery:"latte turmeric milk",
     desc:"Un golden latte réconfortant au curcuma, gingembre et lait d'amande. Puissamment anti-inflammatoire, parfait en fin de journée sans caféine.",
     ingredients:[
       { nom:"Lait d'amande", qte:"250 ml" },
@@ -1069,7 +1069,7 @@ const RECIPES_BASE = [
     id:47, nom:"Shake protéiné chocolat, banane & avoine", repas:"boisson",
     tags:["vegetarien","proteine","rapide"], objectif:"Prise de masse",
     kcal:342, prot:32, gluc:42, lip:6, temps:5, portions:1, difficulte:"Facile",
-    img:IMG.shakeP,
+    img:IMG.shakeP, imgQuery:"chocolate protein shake banana",
     desc:"Un shake gourmand et complet : protéine chocolat, banane et flocons d'avoine. La boisson de récupération idéale après une séance intense.",
     ingredients:[
       { nom:"Protéine chocolat", qte:"30 g" },
@@ -1090,7 +1090,7 @@ const RECIPES_BASE = [
     id:48, nom:"Green smoothie épinards, pomme & gingembre", repas:"boisson",
     tags:["vegan","anti_inflammatoire","sante","rapide"], objectif:"Performance",
     kcal:146, prot:5, gluc:28, lip:3, temps:5, portions:1, difficulte:"Facile",
-    img:IMG.greenJ,
+    img:IMG.greenJ, imgQuery:"smoothie spinach",
     desc:"Un smoothie vert vitalité aux épinards, pomme verte et gingembre. Détoxifiant, riche en micronutriments, un vrai shot d'énergie naturelle.",
     ingredients:[
       { nom:"Épinards frais", qte:"60 g" },
@@ -1111,7 +1111,7 @@ const RECIPES_BASE = [
     id:49, nom:"Infusion glacée hibiscus, menthe & citron", repas:"boisson",
     tags:["vegan","anti_inflammatoire","sante","rapide"], objectif:"Santé",
     kcal:32, prot:0, gluc:8, lip:0, temps:10, portions:2, difficulte:"Facile",
-    img:IMG.infusion,
+    img:IMG.infusion, imgQuery:"iced hibiscus tea mint lemon",
     desc:"Une infusion glacée d'hibiscus rubis, fraîche de menthe et de citron. Désaltérante, antioxydante, sans sucre — l'alternative parfaite aux sodas.",
     ingredients:[
       { nom:"Fleurs d'hibiscus séchées", qte:"2 c. à s." },
