@@ -6,9 +6,17 @@ import { C, FONT, SERIF } from "../../data/constants.js";
 
 
 // ─── Carte recette ────────────────────────────────────────────────────────────
+// Trois règles d'homogénéisation, pour que toutes les cartes s'alignent :
+//   1. photo en ratio 4/3 FIXE (avant : hauteur libre → images inégales)
+//   2. titre coupé net à 2 lignes (avant : un nom long étirait la carte)
+//   3. ligne du bas INSÉCABLE (avant : « 392 / kcal » et « ≈ 2,54 / € » se
+//      coupaient en deux et cassaient l'alignement des deux colonnes)
+// Le prix passe sur la photo : la ligne du bas n'a plus que kcal + badge, et
+// plus rien ne se marche dessus.
 function RecipeCard({ r, liked, onLike, onOpen }) {
   const badge = recipeBadge(r);
   const { src:photo } = useRecipePhoto(r.id, r.img);
+  const prix = prixEuros(r);
   return (
     <div onClick={() => onOpen(r)} className="tap" style={{
       background:C.s1, border:"1px solid rgba(0,0,0,0.05)",
@@ -16,7 +24,8 @@ function RecipeCard({ r, liked, onLike, onOpen }) {
       position:"relative", height:"100%",
       display:"flex", flexDirection:"column",
     }}>
-      <div style={{ position:"relative", height:110, background:C.s2, flexShrink:0 }}>
+      <div style={{ position:"relative", width:"100%", aspectRatio:"4 / 3",
+        background:C.s2, flexShrink:0 }}>
         <img
           src={photo} alt={r.nom} loading="lazy"
           style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }}
@@ -24,7 +33,19 @@ function RecipeCard({ r, liked, onLike, onOpen }) {
                           else e.target.style.display="none"; }}
         />
         <div style={{ position:"absolute", inset:0,
-          background:"linear-gradient(to top,rgba(11,18,32,0.65) 0%,transparent 55%)" }}/>
+          background:"linear-gradient(to top,rgba(11,18,32,0.55) 0%,transparent 45%)" }}/>
+
+        {/* prix, posé sur la photo */}
+        {prix && (
+          <div style={{ position:"absolute", left:8, bottom:8,
+            padding:"4px 8px", borderRadius:8,
+            background:"rgba(11,18,32,0.55)",
+            backdropFilter:"blur(6px)", WebkitBackdropFilter:"blur(6px)",
+            color:"#FFF", fontSize:11, fontWeight:700, fontFamily:FONT,
+            fontVariantNumeric:"tabular-nums", whiteSpace:"nowrap",
+            letterSpacing:0.1 }}>{prix}</div>
+        )}
+
         <button
           onClick={e => { e.stopPropagation(); onLike(r.id); }}
           aria-label={liked ? "Retirer des favoris" : "Ajouter aux favoris"}
@@ -44,21 +65,25 @@ function RecipeCard({ r, liked, onLike, onOpen }) {
           </svg>
         </button>
       </div>
-      <div style={{ padding:"12px 12px 12px", flex:1, display:"flex", flexDirection:"column" }}>
+
+      <div style={{ padding:"12px", flex:1, display:"flex", flexDirection:"column" }}>
+        {/* titre : 2 lignes maximum, hauteur réservée → cartes alignées */}
         <div style={{ fontSize:13, fontWeight:700, color:C.text,
-          lineHeight:1.3, marginBottom:8, fontFamily:FONT }}>{r.nom}</div>
-        <div style={{ display:"flex", alignItems:"center", gap:8, marginTop:"auto" }}>
-          <span style={{ fontSize:11, color:C.mid,
-            fontFamily:FONT }}>{r.kcal} kcal</span>
-          {prixEuros(r) && (
-            <span style={{ fontSize:11, fontWeight:600, color:C.dim,
-              fontFamily:FONT }}>{prixEuros(r)}</span>
-          )}
-          <span style={{ padding:"2px 8px", borderRadius:5, fontSize:10,
+          lineHeight:1.32, marginBottom:10, fontFamily:FONT,
+          display:"-webkit-box", WebkitLineClamp:2, WebkitBoxOrient:"vertical",
+          overflow:"hidden", minHeight:"2.64em" }}>{r.nom}</div>
+
+        {/* ligne du bas : insécable, kcal à gauche, badge à droite */}
+        <div style={{ display:"flex", alignItems:"center",
+          justifyContent:"space-between", gap:8, marginTop:"auto" }}>
+          <span style={{ fontSize:11, color:C.mid, fontFamily:FONT,
+            whiteSpace:"nowrap", fontVariantNumeric:"tabular-nums" }}>
+            {r.kcal} kcal
+          </span>
+          <span style={{ padding:"3px 8px", borderRadius:6, fontSize:10,
             fontWeight:700, fontFamily:FONT, letterSpacing:0.2,
-            background: badge.c,
-            border:`1px solid ${badge.c}`,
-            color: C.text }}>{badge.l}</span>
+            background: badge.c, border:`1px solid ${badge.c}`, color: C.text,
+            whiteSpace:"nowrap", flexShrink:0 }}>{badge.l}</span>
         </div>
       </div>
     </div>
