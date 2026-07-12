@@ -8,10 +8,12 @@
 
 import { useState, useRef } from "react";
 import {
-  buildPrompt, callGenerateAPI, parseAIResponse,
+  callGenerateProgramAPI, compressImage,
   buildProgramFromAI, buildCalendarFromProgram,
   summarizeProgramLoads, LOAD_MESSAGES,
 } from "../../services/aiService.js";
+import { buildDossierAthlete } from "../../services/coachBrainService.js";
+import { analyserMorpho, getFicheMorpho, ficheEstValide } from "../../services/morphoService.js";
 import {
   T, F, SER, MON, CARD, InjectCSS, OI,
   PoseCard, Stepper, NavBtns, FL, SelRow,
@@ -37,7 +39,11 @@ export default function AnalyseIA(props) {
   const fileRefDos    = useRef();
   const fileRefProfil = useRef();
 
-  // ── Génération IA (inchangée) ────────────────────────────────────────────
+  // ── Génération IA — flux serveur en 2 temps ──────────────────────────────
+  // 1) VISION (rare) : si photos fournies → /api/analyze-morpho → fiche stockée.
+  //    Sinon : réutilise la fiche morpho existante (le physique change lentement).
+  // 2) GÉNÉRATION : /api/generate-program reçoit form + dossier + fiche (PAS de photos).
+  //    Le prompt et la connaissance MorphoCoach vivent côté serveur.
   const lancerIA = async () => {
     setLoadIA(true);
     let mi = 0;
@@ -47,10 +53,26 @@ export default function AnalyseIA(props) {
       setLoadMsg(LOAD_MESSAGES[mi]);
     }, 2200);
     try {
-      const promptText = buildPrompt({ form, photos, cycles, corrigerFaibles });
-      const rawText    = await callGenerateAPI({ photos:[photos.face,photos.dos,photos.profil], promptText });
-      const parsed     = parseAIResponse(rawText);
-      const np         = buildProgramFromAI(parsed, { form, cycles });
+      // Couche 0 : dossier athlète depuis les données réelles du compte
+      const { dossier } = buildDossierAthlete({ form, prog, cycles, corrigerFaibles });
+
+      // Fiche morphologique : nouvelles photos → analyse vision ; sinon fiche stockée
+      let fiche = getFicheMorpho();
+      const rawPhotos = [photos.face, photos.dos, photos.profil].filter(Boolean);
+      if (rawPhotos.length > 0) {
+        setLoadMsg("📸 Analyse morphologique de tes photos…");
+        const compressed = [];
+        for (const p of rawPhotos) compressed.push(await compressImage(p, 800, 0.65));
+        fiche = await analyserMorpho(compressed, { sexe: form.sexe, age: form.age });
+      } else if (fiche && !ficheEstValide()) {
+        // Fiche ancienne (> 90 j) : on l'utilise quand même, mais on le signale
+        push?.("📸", "Fiche morpho ancienne", "Pense à refaire tes photos pour une analyse à jour.");
+      }
+
+      const { parsed, warnings } = await callGenerateProgramAPI({ form, dossier, ficheMorpho: fiche });
+      if (warnings?.length) console.warn("Avertissements génération:", warnings);
+
+      const np = buildProgramFromAI(parsed, { form, cycles });
       if (prog && setCycles) {
         setCycles(prev => [...prev, {
           ...prog, archiveDate: new Date().toLocaleDateString("fr-FR"),
