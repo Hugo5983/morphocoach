@@ -4,6 +4,7 @@
 
 import { useState, useRef, useCallback, useEffect } from "react";
 import { C, FONT, SERIF } from "../../data/constants.js";
+import { searchProducts } from "../../services/offSearch.js";
 
 const F   = FONT;
 const SF  = SERIF;
@@ -21,6 +22,8 @@ const RED = "#F87171";
 
 // Détecte si un aliment est exprimé pour 100 g (sinon : à l'unité/portion)
 const per100Test = (f) => /100\s*g/i.test((f && f.n) || "");
+
+const NUTRI_COLORS = { A:"#038141", B:"#85BB2F", C:"#FECB02", D:"#EE8100", E:"#E63E11" };
 
 // ─── Icônes ──────────────────────────────────────────────────────────────────
 function Ico({name,size=18,color="currentColor",stroke=1.6}){
@@ -49,6 +52,7 @@ const CSS = `
 @keyframes rsPop{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:none}}
 .rs-fade{animation:rsFadeUp .28s cubic-bezier(.22,1,.36,1) both}
 .rs-pop{animation:rsPop .22s cubic-bezier(.34,1.56,.64,1) both}
+@keyframes spin{to{transform:rotate(360deg)}}
 .rs-scroll::-webkit-scrollbar{width:0}
 .rs-scroll{scrollbar-width:none}
 `;
@@ -73,6 +77,24 @@ export default function RepasSheet({
 }) {
   const [search, setSearch] = useState("");
   const [manualCode, setManualCode] = useState("");
+
+  // ── Recherche produits du commerce (Open Food Facts) ───────────────────────
+  // Débouncée à 450 ms pour ne partir en réseau qu'une fois la frappe posée.
+  // Les résultats locaux (FOODS + mes aliments) restent instantanés au-dessus.
+  const [offResults, setOffResults] = useState([]);
+  const [offLoading, setOffLoading] = useState(false);
+  useEffect(() => {
+    const q = search.trim();
+    if (q.length < 3) { setOffResults([]); setOffLoading(false); return; }
+    setOffLoading(true);
+    const ctrl = new AbortController();
+    const t = setTimeout(() => {
+      searchProducts(q, ctrl.signal)
+        .then(r => { if (!ctrl.signal.aborted) { setOffResults(r); setOffLoading(false); } })
+        .catch(() => { if (!ctrl.signal.aborted) { setOffResults([]); setOffLoading(false); } });
+    }, 450);
+    return () => { clearTimeout(t); ctrl.abort(); };
+  }, [search]);
   const inputRef = useRef(null);
   const scrollRef = useRef(null);
 
@@ -307,7 +329,83 @@ export default function RepasSheet({
           </div>
         )}
 
-        {search && filtered.length === 0 && (
+        {/* ── Produits en magasin (Open Food Facts) ── */}
+        {search.trim().length >= 3 && (offLoading || offResults.length > 0) && (
+          <div style={{ marginBottom: 16 }}>
+            <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "1.2px",
+              textTransform: "uppercase", color: DIM, fontFamily: F,
+              marginBottom: 10, display:"flex", alignItems:"center", gap:8 }}>
+              Produits en magasin
+              {offLoading && (
+                <span style={{ width:10, height:10, borderRadius:"50%",
+                  border:`2px solid ${BD}`, borderTopColor:BL,
+                  animation:"spin .7s linear infinite", display:"inline-block" }}/>
+              )}
+            </div>
+
+            {offResults.map((item, i) => {
+              const alreadyAdded = items.some(x => x.n === item.n);
+              return (
+                <div key={item.code || i}
+                  onClick={() => { if (!alreadyAdded) pickFood(item); }}
+                  style={{ display: "flex", alignItems: "center", gap: 12,
+                    padding: "10px 12px",
+                    background: alreadyAdded
+                      ? "linear-gradient(135deg,rgba(52,211,153,0.05),transparent)"
+                      : S1,
+                    border: `1px solid ${alreadyAdded ? "rgba(52,211,153,0.25)" : BD}`,
+                    borderRadius: 16, marginBottom: 8,
+                    cursor: alreadyAdded ? "default" : "pointer" }}>
+
+                  {/* vignette produit */}
+                  <div style={{ width: 44, height: 44, borderRadius: 10, flexShrink: 0,
+                    background: S2, overflow: "hidden",
+                    display: "grid", placeItems: "center" }}>
+                    {item.img
+                      ? <img src={item.img} alt="" loading="lazy"
+                          style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                          onError={e => { e.target.style.display = "none"; }}/>
+                      : <Ico name="search" size={16} color={DIM} stroke={1.8}/>}
+                  </div>
+
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: TEXT,
+                      fontFamily: F, whiteSpace: "nowrap", overflow: "hidden",
+                      textOverflow: "ellipsis" }}>
+                      {item.n.replace(/\s*\(100\s*g\)/i, "")}
+                    </div>
+                    <div style={{ display: "flex", alignItems:"center", gap: 8, marginTop: 3 }}>
+                      {item.nutriscore && (
+                        <span style={{ fontSize: 9, fontWeight: 800, color: "#FFF",
+                          background: NUTRI_COLORS[item.nutriscore] || DIM,
+                          padding: "1px 6px", borderRadius: 4, letterSpacing: .5 }}>
+                          {item.nutriscore}
+                        </span>
+                      )}
+                      <span style={{ fontSize: 10, color: MID }}>{item.c} kcal/100 g</span>
+                      <span style={{ fontSize: 10, color: "#60A5FA" }}>P {item.p}g</span>
+                      <span style={{ fontSize: 10, color: "#22D3EE" }}>G {item.g}g</span>
+                      <span style={{ fontSize: 10, color: GRN }}>L {item.l}g</span>
+                    </div>
+                  </div>
+
+                  {alreadyAdded ? (
+                    <span style={{ fontSize: 11, fontWeight: 700, color: GRN, fontFamily: F }}>✓</span>
+                  ) : (
+                    <div style={{ width: 30, height: 30, borderRadius: 10, flexShrink: 0,
+                      background: `linear-gradient(135deg,${BL},${BLD})`,
+                      display: "grid", placeItems: "center",
+                      boxShadow: "0 4px 12px rgba(59,130,246,0.25)" }}>
+                      <Ico name="plus" size={14} stroke={2.5} color="#FFF"/>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {search && filtered.length === 0 && !offLoading && offResults.length === 0 && (
           <div style={{ textAlign: "center", padding: "32px 12px", color: MID,
             fontSize: 13, fontFamily: F }}>
             Aucun aliment trouvé pour « {search} »
