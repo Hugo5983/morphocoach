@@ -293,12 +293,19 @@ export default function RepasSheet({
         )}
 
         {/* Résultats de recherche */}
-        {search && filtered.length > 0 && (
+        {search.trim().length >= 1 && (filtered.length > 0 || offLoading || offResults.length > 0) && (
           <div className="rs-fade">
+            {/* UNE seule section : les aliments de base (instantanés) puis les
+                produits du commerce, sous le même titre. */}
             <div style={{ fontSize: 10, fontWeight:700, letterSpacing: "1.2px",
               textTransform: "uppercase", color: DIM, fontFamily: F,
-              marginBottom: 12 }}>
-              Résultats · {filtered.length}
+              marginBottom: 12, display:"flex", alignItems:"center", gap:8 }}>
+              Produits en magasin
+              {offLoading && (
+                <span style={{ width:10, height:10, borderRadius:"50%",
+                  border:`2px solid ${BD}`, borderTopColor:BL,
+                  animation:"spin .7s linear infinite", display:"inline-block" }}/>
+              )}
             </div>
             {filtered.slice(0, 15).map((item, i) => {
               const alreadyAdded = items.some(x => x.n === item.n);
@@ -335,23 +342,8 @@ export default function RepasSheet({
                 </div>
               );
             })}
-          </div>
-        )}
 
-        {/* ── Produits en magasin (Open Food Facts) ── */}
-        {search.trim().length >= 3 && (offLoading || offResults.length > 0) && (
-          <div style={{ marginBottom: 16 }}>
-            <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "1.2px",
-              textTransform: "uppercase", color: DIM, fontFamily: F,
-              marginBottom: 10, display:"flex", alignItems:"center", gap:8 }}>
-              Produits en magasin
-              {offLoading && (
-                <span style={{ width:10, height:10, borderRadius:"50%",
-                  border:`2px solid ${BD}`, borderTopColor:BL,
-                  animation:"spin .7s linear infinite", display:"inline-block" }}/>
-              )}
-            </div>
-
+            {/* produits du commerce (Open Food Facts), à la suite */}
             {offResults.map((item, i) => {
               const alreadyAdded = items.some(x => x.n === item.n);
               return (
