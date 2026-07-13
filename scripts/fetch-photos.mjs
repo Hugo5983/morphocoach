@@ -49,9 +49,27 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 // requête figure dans la description. Aucun candidat valable → pas de photo,
 // et l'app garde celle du catalogue (générique mais juste, plutôt que
 // précise mais fausse).
+// Règle « assiettes uniquement » : une photo n'est acceptée que si sa
+// description (1) contient un mot du plat, (2) contient un mot de contexte
+// CULINAIRE, et (3) ne contient AUCUN mot d'humain, d'animal vivant ou de
+// paysage. « Magret de canard » doit donner une assiette, jamais un canard
+// sur un étang.
+const FOOD_CTX = ["food","dish","plate","plated","meal","cuisine","served","serving",
+  "cooked","grilled","roasted","baked","fried","sauce","salad","soup","bowl","stew",
+  "breakfast","lunch","dinner","dessert","snack","gourmet","delicious","tasty",
+  "recipe","sliced","fillet","garnished","topped","homemade","table","cutlery","fork"];
+const BLOCK = ["woman","man","person","people","girl","boy","child","kid","portrait",
+  "smiling","standing","holding","sitting","face","hand","hands","chef","cook",
+  "farm","wildlife","animal","animals","bird","birds","swimming","flying","zoo",
+  "lake","pond","river","grass","meadow","tree","forest","sky","cute","pet","dog",
+  "cat","duckling","feather","feathers","alive","wild","nature","outdoors","herd",
+  "cow","pig","sheep","chicken coop","hen","rooster","aquarium","underwater"];
+
 function scorePhoto(photo, query) {
   const alt = (photo.alt || "").toLowerCase();
   if (!alt) return 0;
+  if (BLOCK.some(w => new RegExp("\\b" + w + "\\b").test(alt))) return 0;
+  if (!FOOD_CTX.some(w => alt.includes(w))) return 0;
   const mots = query.toLowerCase().split(/[^a-z]+/).filter(w => w.length >= 3);
   return mots.filter(w => alt.includes(w)).length;
 }
@@ -59,7 +77,7 @@ function scorePhoto(photo, query) {
 async function fetchPhoto(query) {
   const url =
     "https://api.pexels.com/v1/search" +
-    `?query=${encodeURIComponent(query)}&per_page=6&orientation=landscape`;
+    `?query=${encodeURIComponent(query + " food")}&per_page=8&orientation=landscape`;
   const r = await fetch(url, { headers: { Authorization: KEY } });
   if (r.status === 429) return { error: "quota_depasse" };
   if (!r.ok) return { error: `pexels_${r.status}` };
@@ -87,7 +105,7 @@ async function main() {
   const cible = RECIPES.filter(r => r.imgQuery);
   // v2 = choisi avec contrôle qualité (alt). Les entrées v1 (1er résultat brut)
   // sont re-résolues au fil des passages horaires, sans action manuelle.
-  const restant = cible.filter(r => FORCE || manifest[r.id]?.v !== 2);
+  const restant = cible.filter(r => FORCE || manifest[r.id]?.v !== 3);
 
   console.log(`${cible.length} recettes au total · ${cible.length - restant.length} déjà résolues · ${restant.length} restantes`);
 
@@ -105,10 +123,10 @@ async function main() {
     if (res.error === "quota_depasse") { quota = true; break; }
     if (res.url) {
       manifest[r.id] = { url: res.url, author: res.author, alt: res.alt,
-                         q: r.imgQuery, v: 2 };
+                         q: r.imgQuery, v: 3 };
       ok++;
     } else {
-      manifest[r.id] = { url: null, error: res.error, q: r.imgQuery, v: 2 };
+      manifest[r.id] = { url: null, error: res.error, q: r.imgQuery, v: 3 };
       echec++;
     }
     await sleep(DELAY_MS);
