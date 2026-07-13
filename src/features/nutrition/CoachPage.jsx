@@ -4,7 +4,6 @@
 // Limite gratuit : FREE_MSG_LIMIT questions/mois. PRO : illimité.
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import { questionsAleatoires } from "../../data/coachQuestions.js";
 import { C, DARK, FONT, SERIF } from "../../data/constants.js";
 import { useSwipeBack } from "../../hooks/useSwipeBack.js";
 
@@ -28,12 +27,13 @@ const AMB  = "#F59E0B";
 const RED  = "#F87171";
 
 // ─── Questions suggérées ──────────────────────────────────────────────────────
-// 2 questions nutrition personnalisées + 4 tirées du banc complet (toute la
-// base de connaissances : morphologie, exercices, récupération, etc.).
 const SUGGESTIONS = [
   "Quelles sont mes carences principales ?",
   "Que manger ce soir selon mes objectifs ?",
-  ...questionsAleatoires(4),
+  "Pourquoi mon score nutrition est faible ?",
+  "Repas idéal avant l'entraînement ?",
+  "Comment améliorer ma qualité alimentaire ?",
+  "Mes points forts en nutrition ?",
 ];
 
 // ─── Icônes ───────────────────────────────────────────────────────────────────
