@@ -103,6 +103,38 @@ export default function App() {
   const [repasLog, setRepasLog] = useStorage("repasLog", {});
   const [myFoods,  setMyFoods]  = useStorage("myFoods", []);
   const [eau,      setEau]      = useStorage("eau", 0);
+
+  // ── Nouvelle journée = page nutrition vierge ────────────────────────────────
+  // Le contenu du jour (repas + eau) est daté : au premier réveil de l'app un
+  // autre jour, il repart à zéro. Aucune perte : les totaux de la veille sont
+  // déjà archivés en direct dans repasLog (l'historique du bilan).
+  // Date LOCALE (pas UTC) : la remise à zéro se fait bien à minuit, heure de
+  // l'utilisateur. Le listener couvre le cas d'une app restée ouverte pendant
+  // le passage de minuit (retour au premier plan le lendemain).
+  const [repasJour, setRepasJour] = useStorage("repasJour", null);
+  useEffect(() => {
+    const localISO = () => {
+      const d = new Date();
+      d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+      return d.toISOString().split("T")[0];
+    };
+    const verifierJour = () => {
+      const auj = localISO();
+      setRepasJour(prev => {
+        if (prev === auj) return prev;
+        if (prev !== null) {              // null = première ouverture : rien à vider
+          setRepas({ matin: [], midi: [], soir: [], snack: [] });
+          setEau(0);
+        }
+        return auj;
+      });
+    };
+    verifierJour();
+    const onVisible = () => { if (!document.hidden) verifierJour(); };
+    document.addEventListener("visibilitychange", onVisible);
+    return () => document.removeEventListener("visibilitychange", onVisible);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const [scanRes,  setScanRes]  = useState(null);
 
   const [weightLog,    setWeightLog]    = useStorage("weightLog", []);
