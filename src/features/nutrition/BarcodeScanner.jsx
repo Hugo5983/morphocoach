@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { BrowserMultiFormatReader } from "@zxing/browser";
-import { NotFoundException } from "@zxing/library";
+import { NotFoundException, DecodeHintType, BarcodeFormat } from "@zxing/library";
 import { C, FONT } from "../../data/constants.js";
 
 
@@ -14,23 +14,50 @@ export default function BarcodeScanner({ onDetected, onClose }) {
 
   useEffect(() => {
     let controls = null;
-    const reader  = new BrowserMultiFormatReader();
+
+    // 1. FORMATS RESTREINTS : par défaut, ZXing essaie TOUS les formats (QR,
+    //    Aztec, PDF417…) à chaque image — lent, donc peu de tentatives par
+    //    seconde. Les produits alimentaires n'utilisent que EAN/UPC :
+    //    on ne cherche qu'eux, plus TRY_HARDER pour les codes un peu flous.
+    const hints = new Map();
+    hints.set(DecodeHintType.POSSIBLE_FORMATS, [
+      BarcodeFormat.EAN_13, BarcodeFormat.EAN_8,
+      BarcodeFormat.UPC_A,  BarcodeFormat.UPC_E,
+      BarcodeFormat.CODE_128,
+    ]);
+    hints.set(DecodeHintType.TRY_HARDER, true);
+    const reader = new BrowserMultiFormatReader(hints, { delayBetweenScanAttempts: 80 });
     readerRef.current = reader;
+
+    // 3. anti-doublon par ref : l'ancien `lastCode` (useState) restait figé à
+    //    "" dans la closure → une fois le code lu, onDetected partait en
+    //    BOUCLE plusieurs fois par seconde ("il cherche en permanence").
+    const dejaLu = { current: null };
 
     async function start() {
       try {
         setStatus("scanning");
-        controls = await reader.decodeFromVideoDevice(
-          undefined, // utilise la caméra arrière par défaut
+        // 2. HAUTE RÉSOLUTION : la définition par défaut (souvent 640×480 sur
+        //    iPhone) est trop faible pour lire les barres fines d'un EAN-13.
+        controls = await reader.decodeFromConstraints(
+          { audio: false,
+            video: { facingMode: "environment",
+                     width:  { ideal: 1920 },
+                     height: { ideal: 1080 } } },
           videoRef.current,
           (result, err) => {
             if (result) {
               const code = result.getText();
-              if (code === lastCode) return; // éviter les doublons rapides
+              if (dejaLu.current === code) return;
+              dejaLu.current = code;
               setLastCode(code);
               setFlash(true);
               setTimeout(() => setFlash(false), 300);
               setStatus("found");
+              // scan UNIQUE : on coupe la caméra dès la première lecture —
+              // c'est au parent de fermer ou de relancer
+              try { controls?.stop(); } catch {}
+              if (navigator.vibrate) navigator.vibrate(60);
               onDetected(code);
             }
             if (err && !(err instanceof NotFoundException)) {

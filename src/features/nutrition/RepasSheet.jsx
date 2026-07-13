@@ -101,7 +101,7 @@ export default function RepasSheet({
           setOffLoading(false);
         }})
         .catch(() => { if (!ctrl.signal.aborted) setOffLoading(false); });
-    }, 250);                             // 450 → 250 ms : départ plus tôt
+    }, 150);                             // départ quasi immédiat après la frappe
     return () => { clearTimeout(t); ctrl.abort(); };
   }, [search]);
   const inputRef = useRef(null);
