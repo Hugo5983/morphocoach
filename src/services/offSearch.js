@@ -42,9 +42,14 @@ const round1 = v => Math.round((v || 0) * 10) / 10;
  *  saisie par grammes dans RepasSheet (per100Test). */
 function normalize(p) {
   const n = p.nutriments || {};
-  const kcal = n["energy-kcal_100g"] ?? (n["energy_100g"] ? n["energy_100g"] / 4.184 : 0);
+  const prot = n.proteins_100g || 0, gluc = n.carbohydrates_100g || 0, lip = n.fat_100g || 0;
+  // kcal : champ direct, sinon kJ converti, sinon RECONSTITUÉ des macros
+  // (4P + 4G + 9L). Beaucoup de fiches OFF ont les macros sans l'énergie :
+  // les rejeter rendait introuvables des produits pourtant très courants.
+  let kcal = n["energy-kcal_100g"] ?? (n["energy_100g"] ? n["energy_100g"] / 4.184 : 0);
+  if (!kcal && (prot || gluc || lip)) kcal = 4 * prot + 4 * gluc + 9 * lip;
   const nom = (p.product_name_fr || p.product_name || "").trim();
-  if (!nom || !kcal) return null;                    // produit inexploitable
+  if (!nom || (!kcal && !prot && !gluc && !lip)) return null;   // vraiment vide
   const marque = (p.brands || "").split(",")[0].trim();
   return {
     n:   `${nom}${marque ? " — " + marque : ""} (100 g)`,
@@ -68,26 +73,58 @@ function normalize(p) {
 const FIELDS = "code,product_name,product_name_fr,brands,nutriscore_grade," +
                "image_front_small_url,image_small_url,nutriments";
 
-async function viaSearchALicious(q, signal) {
-  const url = "https://search.openfoodfacts.org/search" +
-    `?q=${encodeURIComponent(q)}&langs=fr&page_size=${PAGE}&fields=${FIELDS}`;
-  const r = await fetch(url, { signal });
-  if (!r.ok) throw new Error("sal_" + r.status);
-  const d = await r.json();
-  const hits = d?.hits || d?.products;
-  if (!Array.isArray(hits)) throw new Error("sal_shape");
-  return hits;
+// timeout individuel : un moteur qui ne répond pas en 6 s est abandonné
+// (les autres continuent la course)
+function avecTimeout(signal, ms = 6000) {
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), ms);
+  signal?.addEventListener?.("abort", () => { clearTimeout(t); ctrl.abort(); });
+  return { signal: ctrl.signal, fin: () => clearTimeout(t) };
 }
 
-async function viaLegacy(q, signal) {
-  const url = "https://fr.openfoodfacts.org/cgi/search.pl" +
-    `?search_terms=${encodeURIComponent(q)}&search_simple=1&action=process` +
-    `&json=1&page_size=${PAGE}&fields=${FIELDS}`;
-  const r = await fetch(url, { signal });
-  if (!r.ok) throw new Error("legacy_" + r.status);
-  const d = await r.json();
-  if (!Array.isArray(d?.products)) throw new Error("legacy_shape");
-  return d.products;
+async function viaSearchALicious(q, signal) {
+  // pas de `fields` ici : le paramètre pouvait tronquer les documents et
+  // vider les résultats — on prend la fiche complète, normalize() trie
+  const { signal: sg, fin } = avecTimeout(signal);
+  try {
+    const url = "https://search.openfoodfacts.org/search" +
+      `?q=${encodeURIComponent(q)}&langs=fr&page_size=${PAGE}`;
+    const r = await fetch(url, { signal: sg });
+    if (!r.ok) throw new Error("sal_" + r.status);
+    const d = await r.json();
+    const hits = d?.hits || d?.products;
+    if (!Array.isArray(hits)) throw new Error("sal_shape");
+    return hits;
+  } finally { fin(); }
+}
+
+function viaLegacyBase(host) {
+  return async function (q, signal) {
+    const { signal: sg, fin } = avecTimeout(signal);
+    try {
+      const url = `https://${host}/cgi/search.pl` +
+        `?search_terms=${encodeURIComponent(q)}&search_simple=1&action=process` +
+        `&json=1&page_size=${PAGE}&fields=${FIELDS}`;
+      const r = await fetch(url, { signal: sg });
+      if (!r.ok) throw new Error("legacy_" + r.status);
+      const d = await r.json();
+      if (!Array.isArray(d?.products)) throw new Error("legacy_shape");
+      return d.products;
+    } finally { fin(); }
+  };
+}
+const viaLegacyFr    = viaLegacyBase("fr.openfoodfacts.org");
+const viaLegacyWorld = viaLegacyBase("world.openfoodfacts.org");
+
+// code-barres tapé au clavier → accès DIRECT à la fiche (instantané et exact)
+async function viaBarcode(code, signal) {
+  const { signal: sg, fin } = avecTimeout(signal);
+  try {
+    const r = await fetch(`https://world.openfoodfacts.org/api/v0/product/${code}.json`, { signal: sg });
+    if (!r.ok) throw new Error("barcode_" + r.status);
+    const d = await r.json();
+    return d?.status === 1 && d.product ? [d.product] : [];
+  } finally { fin(); }
 }
 
 const inflight = new Map();
@@ -122,11 +159,13 @@ export async function searchProducts(query, signal) {
 
   if (inflight.has(q)) return inflight.get(q);
 
-  // Les DEUX endpoints partent en parallèle : le premier qui renvoie des
-  // résultats exploitables gagne. Avant, on attendait l'échec complet du
-  // moteur rapide avant de tenter l'ancien (lui-même lent) : dans le pire
-  // cas les latences s'ADDITIONNAIENT. Ici c'est toujours min(A, B).
-  const course = [viaSearchALicious(q, signal), viaLegacy(q, signal)]
+  // TROIS moteurs partent en parallèle : le premier qui renvoie des résultats
+  // exploitables gagne. Un code-barres tapé au clavier court-circuite tout
+  // (accès direct à la fiche, quasi instantané).
+  const moteurs = /^\d{8,14}$/.test(q)
+    ? [viaBarcode(q, signal)]
+    : [viaSearchALicious(q, signal), viaLegacyFr(q, signal), viaLegacyWorld(q, signal)];
+  const course = moteurs
     .map(pr => pr.then(brut => brut.map(normalize).filter(Boolean).slice(0, PAGE)));
 
   const p = new Promise(resolve => {
