@@ -4,13 +4,12 @@
 // Limite gratuit : FREE_MSG_LIMIT questions/mois. PRO : illimité.
 
 import { useState, useRef, useEffect, useCallback } from "react";
+import { questionsAleatoires } from "../../data/coachQuestions.js";
 import { C, DARK, FONT, SERIF } from "../../data/constants.js";
 import { useSwipeBack } from "../../hooks/useSwipeBack.js";
 
 // ─── Constantes ───────────────────────────────────────────────────────────────
 const FREE_MSG_LIMIT = 3;
-const MODEL          = "claude-sonnet-4-5";
-const MAX_TOKENS     = 1000;
 const STORAGE_KEY    = "morphocoach_coach_usage"; // { count, month }
 
 const BG   = C.bg;
@@ -29,13 +28,12 @@ const AMB  = "#F59E0B";
 const RED  = "#F87171";
 
 // ─── Questions suggérées ──────────────────────────────────────────────────────
+// 2 questions nutrition personnalisées + 4 tirées du banc complet (toute la
+// base de connaissances : morphologie, exercices, récupération, etc.).
 const SUGGESTIONS = [
   "Quelles sont mes carences principales ?",
   "Que manger ce soir selon mes objectifs ?",
-  "Pourquoi mon score nutrition est faible ?",
-  "Repas idéal avant l'entraînement ?",
-  "Comment améliorer ma qualité alimentaire ?",
-  "Mes points forts en nutrition ?",
+  ...questionsAleatoires(4),
 ];
 
 // ─── Icônes ───────────────────────────────────────────────────────────────────
@@ -72,39 +70,7 @@ function saveUsage(u) {
 }
 
 // ─── Construit le system prompt avec contexte nutrition ───────────────────────
-function buildSystemPrompt({ profil, obj, calObj, pObj, gObj, lObj, bilan }) {
-  const prenom = profil?.prenom || "l'utilisateur";
-  const objectif = obj?.l || "non défini";
-  const score = bilan?.score ?? "—";
-  const avgKcal = bilan?.avgKcal ? Math.round(bilan.avgKcal) : "—";
-  const nbLogged = bilan?.nbLogged ?? "—";
-  const totalDays = bilan?.totalDays ?? 14;
-  const pct = bilan?.pctKcal ?? 0;
-
-  return `Tu es le Coach Nutrition IA de MorphoCoach, un assistant spécialisé UNIQUEMENT en nutrition et alimentation sportive.
-
-PROFIL DE L'UTILISATEUR :
-- Prénom : ${prenom}
-- Objectif : ${objectif}
-- TDEE / Cible calorique : ${calObj || "—"} kcal/j
-- Cibles macros : Protéines ${pObj || "—"}g · Glucides ${gObj || "—"}g · Lipides ${lObj || "—"}g
-
-BILAN NUTRITION DES 14 DERNIERS JOURS :
-- Score de cohérence : ${score}/10
-- Calories moyennes : ${avgKcal} kcal/j (${pct}% de la cible)
-- Jours loggés : ${nbLogged}/${totalDays}
-- Protéines moy. : ${bilan?.avgProt ? Math.round(bilan.avgProt) : "—"}g/j (cible ${pObj || "—"}g)
-- Glucides moy. : ${bilan?.avgGluc ? Math.round(bilan.avgGluc) : "—"}g/j (cible ${gObj || "—"}g)
-- Lipides moy. : ${bilan?.avgLip ? Math.round(bilan.avgLip) : "—"}g/j (cible ${lObj || "—"}g)
-
-RÈGLES STRICTES :
-1. Tu réponds UNIQUEMENT sur la nutrition, l'alimentation, les macros, les micronutriments, les repas et les recettes.
-2. Si on te pose une question hors nutrition (entraînement, programme sportif, médecin, etc.), tu réponds poliment que tu es spécialisé en nutrition et tu rediriges vers la section appropriée de l'app.
-3. Tes réponses sont courtes, directes, personnalisées au profil ci-dessus.
-4. Tu utilises les données réelles du bilan pour contextualiser tes conseils.
-5. Jamais de prescription médicale. Jamais de régimes extrêmes.
-6. Ton ton : coach bienveillant, factuel, sans jugement.`;
-}
+// buildSystemPrompt : déplacé côté serveur (/api/coach-chat) — la connaissance ne vit plus dans le bundle client.
 
 // ═════════════════════════════════════════════════════════════════════════════
 // COMPOSANT PRINCIPAL
@@ -171,14 +137,19 @@ export default function CoachPage({
     try {
       abortRef.current = new AbortController();
 
-      const res = await fetch("/api/generate", {
+      // Le system prompt et la connaissance MorphoCoach sont construits CÔTÉ
+      // SERVEUR (/api/coach-chat) — on n'envoie que les données de contexte.
+      const res = await fetch("/api/coach-chat", {
         method:  "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          model:      MODEL,
-          max_tokens: MAX_TOKENS,
-          system:     buildSystemPrompt({ profil, obj, calObj, pObj, gObj, lObj, bilan }),
-          messages:   apiMessages,
+          messages: apiMessages,
+          contexte: {
+            prenom:  profil?.prenom,
+            objectif: obj?.l,
+            calObj, pObj, gObj, lObj,
+            bilan,
+          },
         }),
         signal: abortRef.current.signal,
       });
@@ -189,7 +160,7 @@ export default function CoachPage({
       }
 
       const data = await res.json();
-      const answer = data.content?.map(c => c.text || "").join("").trim()
+      const answer = (data.answer || "").trim()
         || "Je n'ai pas pu générer une réponse. Réessaie.";
 
       // Simule le streaming (l'API /api/generate ne stream pas — on affiche mot par mot)
