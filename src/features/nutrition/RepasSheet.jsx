@@ -4,7 +4,7 @@
 
 import { useState, useRef, useCallback, useEffect } from "react";
 import { C, FONT, SERIF } from "../../data/constants.js";
-import { searchProducts } from "../../services/offSearch.js";
+import { searchProducts, cachedForPrefix } from "../../services/offSearch.js";
 
 const F   = FONT;
 const SF  = SERIF;
@@ -86,13 +86,22 @@ export default function RepasSheet({
   useEffect(() => {
     const q = search.trim();
     if (q.length < 3) { setOffResults([]); setOffLoading(false); return; }
+
+    // affichage INSTANTANÉ de ce qu'on connaît déjà (cache du préfixe),
+    // le temps que la recherche fraîche arrive
+    const instant = cachedForPrefix(q);
+    if (instant.length) setOffResults(instant);
     setOffLoading(true);
+
     const ctrl = new AbortController();
     const t = setTimeout(() => {
       searchProducts(q, ctrl.signal)
-        .then(r => { if (!ctrl.signal.aborted) { setOffResults(r); setOffLoading(false); } })
-        .catch(() => { if (!ctrl.signal.aborted) { setOffResults([]); setOffLoading(false); } });
-    }, 450);
+        .then(r => { if (!ctrl.signal.aborted) {
+          if (r.length || !instant.length) setOffResults(r);
+          setOffLoading(false);
+        }})
+        .catch(() => { if (!ctrl.signal.aborted) setOffLoading(false); });
+    }, 250);                             // 450 → 250 ms : départ plus tôt
     return () => { clearTimeout(t); ctrl.abort(); };
   }, [search]);
   const inputRef = useRef(null);
