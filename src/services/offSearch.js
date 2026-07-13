@@ -92,6 +92,20 @@ async function viaLegacy(q, signal) {
 
 const inflight = new Map();
 
+/** Meilleurs résultats déjà en cache pour le plus long préfixe de la requête.
+ *  Permet d'afficher quelque chose INSTANTANÉMENT pendant que la recherche
+ *  fraîche arrive : « nutell » montre les résultats de « nutel » sans attendre. */
+export function cachedForPrefix(query) {
+  const q = (query || "").trim().toLowerCase();
+  if (q.length < 3) return [];
+  const cache = readCache();
+  for (let l = q.length; l >= 3; l--) {
+    const hit = cache[q.slice(0, l)];
+    if (hit && Date.now() - hit.t < TTL) return hit.r;
+  }
+  return [];
+}
+
 /**
  * Recherche des produits du commerce.
  * @param {string} query   texte tapé par l'utilisateur (≥ 3 caractères utiles)
@@ -108,22 +122,28 @@ export async function searchProducts(query, signal) {
 
   if (inflight.has(q)) return inflight.get(q);
 
-  const p = (async () => {
-    let brut = [];
-    try { brut = await viaSearchALicious(q, signal); }
-    catch (e) {
-      if (e?.name === "AbortError") return [];
-      try { brut = await viaLegacy(q, signal); }
-      catch (e2) { if (e2?.name === "AbortError") return []; brut = []; }
-    }
-    const res = brut.map(normalize).filter(Boolean).slice(0, PAGE);
+  // Les DEUX endpoints partent en parallèle : le premier qui renvoie des
+  // résultats exploitables gagne. Avant, on attendait l'échec complet du
+  // moteur rapide avant de tenter l'ancien (lui-même lent) : dans le pire
+  // cas les latences s'ADDITIONNAIENT. Ici c'est toujours min(A, B).
+  const course = [viaSearchALicious(q, signal), viaLegacy(q, signal)]
+    .map(pr => pr.then(brut => brut.map(normalize).filter(Boolean).slice(0, PAGE)));
+
+  const p = new Promise(resolve => {
+    let restants = course.length, fini = false;
+    const done = (res) => {
+      if (!fini && res && res.length) { fini = true; resolve(res); }
+      else if (--restants <= 0 && !fini) { fini = true; resolve([]); }
+    };
+    course.forEach(pr => pr.then(done, () => done(null)));
+  }).then(res => {
     if (res.length) {                    // on ne met en cache que les succès
       const c = readCache();
       c[q] = { r: res, t: Date.now() };
       writeCache(c);
     }
     return res;
-  })();
+  });
 
   inflight.set(q, p);
   p.finally(() => inflight.delete(q));
