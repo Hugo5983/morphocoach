@@ -42,19 +42,42 @@ function writeManifest(m) {
 }
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
+// ── CONTRÔLE QUALITÉ ──────────────────────────────────────────────────────────
+// Prendre aveuglément le 1er résultat Pexels donnait parfois des photos sans
+// rapport avec le plat. Pexels décrit chaque photo (champ `alt`) : on note
+// désormais 6 candidats et on EXIGE qu'au moins un mot significatif de la
+// requête figure dans la description. Aucun candidat valable → pas de photo,
+// et l'app garde celle du catalogue (générique mais juste, plutôt que
+// précise mais fausse).
+function scorePhoto(photo, query) {
+  const alt = (photo.alt || "").toLowerCase();
+  if (!alt) return 0;
+  const mots = query.toLowerCase().split(/[^a-z]+/).filter(w => w.length >= 3);
+  return mots.filter(w => alt.includes(w)).length;
+}
+
 async function fetchPhoto(query) {
   const url =
     "https://api.pexels.com/v1/search" +
-    `?query=${encodeURIComponent(query)}&per_page=3&orientation=landscape`;
+    `?query=${encodeURIComponent(query)}&per_page=6&orientation=landscape`;
   const r = await fetch(url, { headers: { Authorization: KEY } });
   if (r.status === 429) return { error: "quota_depasse" };
   if (!r.ok) return { error: `pexels_${r.status}` };
   const data = await r.json();
-  const photo = data?.photos?.[0];
-  if (!photo) return { error: "aucun_resultat" };
+  const candidats = (data?.photos || [])
+    .map(ph => ({ ph, score: scorePhoto(ph, query) }))
+    .filter(c => c.score >= 1)
+    .sort((a, b) => b.score - a.score);
+  if (!candidats.length) return { error: "aucun_resultat_pertinent" };
+  const photo = candidats[0].ph;
+  const brute = photo.src?.large || photo.src?.medium || photo.src?.original || null;
   return {
-    url: photo.src?.large || photo.src?.medium || photo.src?.original || null,
+    // URL SANS paramètres de taille : c'est l'app qui choisit la taille à
+    // l'affichage (petite pour les cartes, grande pour la fiche). Avant, on
+    // figeait w=940 → 300 Ko par carte, d'où la lenteur.
+    url: brute ? brute.split("?")[0] : null,
     author: photo.photographer || null,
+    alt: photo.alt || null,
     link: photo.url || null,
   };
 }
@@ -62,7 +85,9 @@ async function fetchPhoto(query) {
 async function main() {
   const manifest = readManifest();
   const cible = RECIPES.filter(r => r.imgQuery);
-  const restant = cible.filter(r => FORCE || !manifest[r.id]);
+  // v2 = choisi avec contrôle qualité (alt). Les entrées v1 (1er résultat brut)
+  // sont re-résolues au fil des passages horaires, sans action manuelle.
+  const restant = cible.filter(r => FORCE || manifest[r.id]?.v !== 2);
 
   console.log(`${cible.length} recettes au total · ${cible.length - restant.length} déjà résolues · ${restant.length} restantes`);
 
@@ -79,10 +104,11 @@ async function main() {
     const res = await fetchPhoto(r.imgQuery);
     if (res.error === "quota_depasse") { quota = true; break; }
     if (res.url) {
-      manifest[r.id] = { url: res.url, author: res.author, q: r.imgQuery };
+      manifest[r.id] = { url: res.url, author: res.author, alt: res.alt,
+                         q: r.imgQuery, v: 2 };
       ok++;
     } else {
-      manifest[r.id] = { url: null, error: res.error, q: r.imgQuery };
+      manifest[r.id] = { url: null, error: res.error, q: r.imgQuery, v: 2 };
       echec++;
     }
     await sleep(DELAY_MS);
