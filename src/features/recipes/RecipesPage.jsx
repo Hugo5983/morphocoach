@@ -116,6 +116,23 @@ export default function Recipes(props) {
   const [sortBy,   setSortBy]   = useState("default");  // default | temps | kcal | prot
   const [sortOpen, setSortOpen] = useState(false);
 
+  // ── Rendu incrémental (hooks AVANT le return anticipé de la vue détail :
+  //    règle React — même nombre de hooks à chaque rendu, sinon erreur #300) ──
+  const [nbVisible, setNbVisible] = useState(24);
+  const sentinelle = useRef(null);
+  useEffect(() => { setNbVisible(24); }, [search, filtres, showFavs, sortBy]);
+  useEffect(() => {
+    const el = sentinelle.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+    const obs = new IntersectionObserver(es => {
+      if (es.some(e => e.isIntersecting)) setNbVisible(n => n + 24);
+    }, { rootMargin: "600px" });        // recharge bien avant d'atteindre le bas
+    obs.observe(el);
+    return () => obs.disconnect();
+    // `selected` dans les dépendances : au retour de la vue détail, la
+    // sentinelle est un NOUVEL élément du DOM — il faut ré-observer.
+  }, [selected, search, filtres, showFavs, sortBy]);
+
   const toggleLike = (id) => setLiked(p => ({ ...p, [id]: !p[id] }));
 
   // Ouvrir une recette — PRO requis pour le détail complet
@@ -162,20 +179,6 @@ export default function Recipes(props) {
   const featured = RECIPES.find(r => r.id === 6);
 
   // Grouper par repas
-  // rendu incrémental — budget global de cartes montées à l'écran
-  const [nbVisible, setNbVisible] = useState(24);
-  const sentinelle = useRef(null);
-  useEffect(() => { setNbVisible(24); }, [search, filtres, showFavs, sortBy]);
-  useEffect(() => {
-    const el = sentinelle.current;
-    if (!el || typeof IntersectionObserver === "undefined") return;
-    const obs = new IntersectionObserver(es => {
-      if (es.some(e => e.isIntersecting)) setNbVisible(n => n + 24);
-    }, { rootMargin: "600px" });        // recharge bien avant d'atteindre le bas
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, [visible.length]);
-
   const sections = REPAS.map(rep => ({
     ...rep,
     recettes: visible.filter(r => r.repas === rep.id),
