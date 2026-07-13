@@ -15,7 +15,7 @@ import { C, FONT, SERIF } from "../../data/constants.js";
 // plus rien ne se marche dessus.
 function RecipeCard({ r, liked, onLike, onOpen }) {
   const badge = recipeBadge(r);
-  const { src:photo } = useRecipePhoto(r.id, r.img);
+  const { src:photo } = useRecipePhoto(r.id, r.img, "card");
   const prix = prixEuros(r);
   return (
     <div onClick={() => onOpen(r)} className="tap" style={{
@@ -27,7 +27,7 @@ function RecipeCard({ r, liked, onLike, onOpen }) {
       <div style={{ position:"relative", width:"100%", aspectRatio:"4 / 3",
         background:C.s2, flexShrink:0 }}>
         <img
-          src={photo} alt={r.nom} loading="lazy"
+          src={photo} alt={r.nom} loading="lazy" decoding="async"
           style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }}
           onError={e => { if (e.target.src !== r.img) e.target.src = r.img;
                           else e.target.style.display="none"; }}
