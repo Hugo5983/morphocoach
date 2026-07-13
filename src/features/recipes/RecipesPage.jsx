@@ -23,6 +23,7 @@ function RecipeCard({ r, liked, onLike, onOpen }) {
       borderRadius:16, overflow:"hidden", cursor:"pointer",
       position:"relative", height:"100%",
       display:"flex", flexDirection:"column",
+      contain:"layout paint",
     }}>
       <div style={{ position:"relative", width:"100%", aspectRatio:"4 / 3",
         background:C.s2, flexShrink:0 }}>
@@ -39,8 +40,7 @@ function RecipeCard({ r, liked, onLike, onOpen }) {
         {prix && (
           <div style={{ position:"absolute", left:8, bottom:8,
             padding:"4px 8px", borderRadius:8,
-            background:"rgba(11,18,32,0.55)",
-            backdropFilter:"blur(6px)", WebkitBackdropFilter:"blur(6px)",
+            background:"rgba(11,18,32,0.72)",
             color:"#FFF", fontSize:11, fontWeight:700, fontFamily:FONT,
             fontVariantNumeric:"tabular-nums", whiteSpace:"nowrap",
             letterSpacing:0.1 }}>{prix}</div>
@@ -51,8 +51,7 @@ function RecipeCard({ r, liked, onLike, onOpen }) {
           aria-label={liked ? "Retirer des favoris" : "Ajouter aux favoris"}
           style={{ position:"absolute", top:8, right:8,
             width:32, height:32, borderRadius:"50%",
-            background: liked ? "rgba(248,113,113,0.95)" : "rgba(255,255,255,0.85)",
-            backdropFilter:"blur(8px)", WebkitBackdropFilter:"blur(8px)",
+            background: liked ? "rgba(248,113,113,0.95)" : "rgba(255,255,255,0.92)",
             border: liked ? "1px solid rgba(248,113,113,0.65)" : "1px solid rgba(255,255,255,0.65)",
             boxShadow: liked ? "0 3px 10px rgba(248,113,113,0.5)" : "0 2px 8px rgba(11,18,32,0.18)",
             display:"grid", placeItems:"center", cursor:"pointer",
@@ -163,6 +162,20 @@ export default function Recipes(props) {
   const featured = RECIPES.find(r => r.id === 6);
 
   // Grouper par repas
+  // rendu incrémental — budget global de cartes montées à l'écran
+  const [nbVisible, setNbVisible] = useState(24);
+  const sentinelle = useRef(null);
+  useEffect(() => { setNbVisible(24); }, [search, filtres, showFavs, sortBy]);
+  useEffect(() => {
+    const el = sentinelle.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+    const obs = new IntersectionObserver(es => {
+      if (es.some(e => e.isIntersecting)) setNbVisible(n => n + 24);
+    }, { rootMargin: "600px" });        // recharge bien avant d'atteindre le bas
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [visible.length]);
+
   const sections = REPAS.map(rep => ({
     ...rep,
     recettes: visible.filter(r => r.repas === rep.id),
@@ -469,7 +482,12 @@ export default function Recipes(props) {
             : "Aucune recette trouvée"}
         </div>
       ) : (
-        sections.map(section => (
+        (() => { let budget = nbVisible; return sections.map(section => {
+          if (budget <= 0) return null;
+          const aAfficher = section.recettes.slice(0, budget);
+          budget -= aAfficher.length;
+          section = { ...section, total: section.recettes.length, recettes: aAfficher };
+          return (
           <div key={section.id} style={{ marginBottom:24 }}>
             <div style={{ display:"flex", justifyContent:"space-between",
               alignItems:"center", marginBottom:12 }}>
@@ -478,7 +496,7 @@ export default function Recipes(props) {
                   fontFamily:FONT }}>{section.label}</span>
                 <span style={{ fontSize:11, color:C.dim,
                   marginLeft:8, fontFamily:FONT }}>
-                  {section.recettes.length} recette{section.recettes.length > 1 ? "s" : ""}
+                  {section.total} recette{section.total > 1 ? "s" : ""}
                 </span>
               </div>
             </div>
@@ -489,8 +507,11 @@ export default function Recipes(props) {
               ))}
             </div>
           </div>
-        ))
+        );}); })()
       )}
+
+      {/* sentinelle : déclenche le chargement des 24 cartes suivantes */}
+      <div ref={sentinelle} style={{ height:1 }}/>
 
     </div>
   );
