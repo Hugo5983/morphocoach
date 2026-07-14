@@ -53,25 +53,33 @@ function fileToBase64(file) {
 
 // ─── Prompt IA ────────────────────────────────────────────────────────────────
 
-const ANALYSE_PROMPT = `Tu es un nutritionniste expert. Analyse cette photo d'assiette/repas et estime les macronutriments.
+const ANALYSE_PROMPT = `Tu es un nutritionniste expert en estimation visuelle des portions.
+
+MÉTHODE (dans cet ordre) :
+1. Identifie CHAQUE aliment visible séparément.
+2. Estime le poids de chacun en te servant des repères d'échelle visibles :
+   assiette standard = 26 cm, fourchette = 20 cm, cuillère à soupe = 15 g,
+   paume de main = ~100 g de viande, poing = ~150 g de féculents cuits.
+3. Donne les macros de CHAQUE aliment pour son poids estimé (pas pour 100 g).
 
 Réponds UNIQUEMENT avec un objet JSON valide, sans markdown ni backticks :
 {
-  "nom": "Nom du plat estimé (court, 2-4 mots)",
-  "description": "Description courte de ce que tu vois (1 phrase)",
-  "calories": 450,
-  "proteines": 35,
-  "glucides": 40,
-  "lipides": 15,
+  "nom": "Nom du plat (2-4 mots)",
+  "description": "Ce que tu vois, en 1 phrase",
+  "items": [
+    { "nom": "Riz basmati cuit", "grammes": 180, "calories": 234, "proteines": 5, "glucides": 50, "lipides": 1 },
+    { "nom": "Blanc de poulet grillé", "grammes": 140, "calories": 231, "proteines": 43, "glucides": 0, "lipides": 5 }
+  ],
   "fiabilite": "haute|moyenne|basse",
-  "note": "Explication courte sur la précision de l'estimation"
+  "note": "Ce qui limite la précision (ex : sauce non identifiable, aliments cachés)"
 }
 
 Règles :
-- Estime pour une portion normale visible dans l'image
-- Si tu ne vois pas clairement de nourriture, renvoie fiabilite: "basse"
-- Arrondis les valeurs à l'entier le plus proche
-- Sois conservateur dans tes estimations (mieux vaut sous-estimer que sur-estimer)`;
+- N'invente RIEN : uniquement ce qui est visible. Matières grasses de cuisson :
+  ajoute un item "Huile de cuisson (estimée)" ~10 g seulement si le plat brille.
+- fiabilite "basse" si l'échelle est incertaine ou des aliments sont cachés/mélangés.
+- Aucune nourriture visible → "items": [] et fiabilite "basse".
+- Nombres entiers uniquement.`;
 
 // ─── Icône ────────────────────────────────────────────────────────────────────
 function CameraIcon({ size = 20, color = "currentColor" }) {
@@ -183,7 +191,8 @@ export default function PhotoAnalyse({ onClose, onAdd, premium, setPaywall, push
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           model: "claude-sonnet-4-20250514",
-          max_tokens: 800,
+          max_tokens: 1000,
+          temperature: 0,
           messages: [{
             role: "user",
             content: [
@@ -207,9 +216,26 @@ export default function PhotoAnalyse({ onClose, onAdd, premium, setPaywall, push
       const clean = text.replace(/```json\n?|\n?```/g, "").trim();
       const parsed = JSON.parse(clean);
 
+      // Totaux recalculés en JS depuis les items : le modèle est bien meilleur
+      // pour identifier et peser chaque aliment que pour deviner un total —
+      // et l'arithmétique, c'est notre travail, pas le sien.
+      const items = Array.isArray(parsed.items) ? parsed.items.filter(i => i && i.grammes > 0) : [];
+      if (!items.length) {
+        setError("Aucun aliment identifiable sur la photo. Reprends-la de plus près, à la verticale.");
+        setStep("upload");
+        return;
+      }
+      const somme = k => items.reduce((t, i) => t + (Number(i[k]) || 0), 0);
+      parsed.items     = items;
+      parsed.calories  = somme("calories");
+      parsed.proteines = somme("proteines");
+      parsed.glucides  = somme("glucides");
+      parsed.lipides   = somme("lipides");
+
       // Incrémenter le compteur si pas premium
       if (!premium) incrementUsedCount();
 
+      setFacteur(1);
       setResult(parsed);
       setStep("result");
 
@@ -224,11 +250,11 @@ export default function PhotoAnalyse({ onClose, onAdd, premium, setPaywall, push
     if (!result) return;
     const r = /** @type {{nom:string,calories:number,proteines:number,glucides:number,lipides:number}} */ (result);
     const aliment = {
-      n: r.nom,
-      c: Math.round(r.calories),
-      p: Math.round(r.proteines),
-      g: Math.round(r.glucides),
-      l: Math.round(r.lipides),
+      n: facteur === 1 ? r.nom : `${r.nom} (portion ×${facteur.toFixed(2)})`,
+      c: Math.round(r.calories  * facteur),
+      p: Math.round(r.proteines * facteur),
+      g: Math.round(r.glucides  * facteur),
+      l: Math.round(r.lipides   * facteur),
     };
     onAdd(aliment, repasChoix);
     const repasLabel = MEALS.find(m => m.id === repasChoix)?.l || repasChoix;
@@ -483,10 +509,10 @@ export default function PhotoAnalyse({ onClose, onAdd, premium, setPaywall, push
               {/* Macros */}
               <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8, marginBottom: 12 }}>
                 {[
-                  { l: "Calories", v: res.calories, u: "kcal", c: "#F59E0B" },
-                  { l: "Protéines", v: res.proteines, u: "g", c: DARK.accent },
-                  { l: "Glucides",  v: res.glucides,  u: "g", c: "#22D3EE" },
-                  { l: "Lipides",   v: res.lipides,   u: "g", c: "#34D399" },
+                  { l: "Calories", v: res.calories * facteur, u: "kcal", c: "#F59E0B" },
+                  { l: "Protéines", v: res.proteines * facteur, u: "g", c: DARK.accent },
+                  { l: "Glucides",  v: res.glucides * facteur,  u: "g", c: "#22D3EE" },
+                  { l: "Lipides",   v: res.lipides * facteur,   u: "g", c: "#34D399" },
                 ].map(m => (
                   <div key={m.l} style={{
                     background: `${m.c}12`, border: `1px solid ${m.c}25`,
@@ -500,6 +526,46 @@ export default function PhotoAnalyse({ onClose, onAdd, premium, setPaywall, push
                     <div style={{ fontSize: 10, color: C.dim, fontFamily: FONT }}>{m.l}</div>
                   </div>
                 ))}
+              </div>
+
+              {/* Détail aliment par aliment : c'est là que se juge la fiabilité */}
+              {res.items?.length > 0 && (
+                <div style={{ marginBottom: 14 }}>
+                  {res.items.map((it, i) => (
+                    <div key={i} style={{ display: "flex", justifyContent: "space-between",
+                      alignItems: "center", padding: "7px 2px",
+                      borderBottom: i < res.items.length - 1 ? `1px solid ${C.bd}` : "none" }}>
+                      <span style={{ fontSize: 12.5, color: C.mid, fontFamily: FONT }}>
+                        {it.nom}
+                      </span>
+                      <span style={{ fontSize: 12, color: C.dim, fontFamily: FONT,
+                        fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap", marginLeft: 10 }}>
+                        {Math.round(it.grammes * facteur)} g · {Math.round(it.calories * facteur)} kcal
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Ajustement de portion : l'IA propose, TU décides */}
+              <div style={{ marginBottom: 4 }}>
+                <div style={{ display: "flex", justifyContent: "space-between",
+                  marginBottom: 6 }}>
+                  <span style={{ fontSize: 11, fontWeight: 600, color: C.mid, fontFamily: FONT }}>
+                    Ajuster la portion
+                  </span>
+                  <span style={{ fontSize: 11, fontWeight: 700, color: C.accent, fontFamily: FONT }}>
+                    ×{facteur.toFixed(2).replace(".", ",")}
+                  </span>
+                </div>
+                <input type="range" min="0.5" max="1.5" step="0.05"
+                  value={facteur}
+                  onChange={e => setFacteur(Number(e.target.value))}
+                  style={{ width: "100%", accentColor: C.accent }}/>
+                <div style={{ display: "flex", justifyContent: "space-between",
+                  fontSize: 10, color: C.dim, fontFamily: FONT }}>
+                  <span>Moitié</span><span>Comme estimé</span><span>×1,5</span>
+                </div>
               </div>
 
               {/* Note IA */}
