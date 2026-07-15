@@ -1,17 +1,17 @@
-import { C } from "../../data/constants.js";
+import { C } from"../../data/constants.js";
 /**
  * FocusMode.jsx
  * Portal vers document.body → couvre TOUT l'écran (header app + bottom nav compris).
  * Espacement généreux, safe-area iPhone, structure exacte de la maquette.
  */
 
-import { useState, useEffect, useRef, useCallback } from "react";
-import { createPortal }                 from "react-dom";
-import { addXP, XP }                   from "../../services/xpService.js";
+import { useState, useEffect, useRef, useCallback } from"react";
+import { createPortal }                 from"react-dom";
+import { addXP, XP }                   from"../../services/xpService.js";
 import {
   T, F, MON, NUM, GL, CSS, I,
   SetStage, RestStage, DoneStage,
-} from "./components/FocusModeStages.jsx";
+} from"./components/FocusModeStages.jsx";
 
 const REST_DEFAULT = 90;
 
@@ -56,7 +56,7 @@ export default function FocusMode({
   // Countdown repos
   const restRef = useRef(null);
   useEffect(() => {
-    if (phase !== 'rest') return;
+    if (phase !=='rest') return;
     restRef.current = setInterval(() => {
       setRest(r => {
         if (r <= 1) { clearInterval(restRef.current); setPhase('set'); return 0; }
@@ -90,8 +90,8 @@ export default function FocusMode({
     else {
       saveWorkoutLog();
       // ── +250 XP pour séance terminée ──
-      addXP(XP.SESSION_COMPLETE, 'SESSION_COMPLETE');
-      push?.("✅","Séance terminée !",`${exercices.length} exercice${exercices.length!==1?'s':''} complétés.`);
+      addXP(XP.SESSION_COMPLETE,'SESSION_COMPLETE');
+      push?.("","Séance terminée !",`${exercices.length} exercice${exercices.length!==1?'s':''} complétés.`);
       onClose();
     }
   }
@@ -106,8 +106,8 @@ export default function FocusMode({
     const existing = (() => { try { return JSON.parse(localStorage.getItem('morpho_workout_log')||'{}'); } catch{return{};} })();
     const totalVolume = workoutSetsRef.current.reduce((s,set) => s + set.kg * set.reps, 0);
     existing[dateKey] = {
-      seanceNom:   seance?.nom || 'Séance',
-      seanceId:    seance?.id  || '',
+      seanceNom:   seance?.nom ||'Séance',
+      seanceId:    seance?.id  ||'',
       sets:        workoutSetsRef.current,
       totalVolume,
       completedAt: new Date().toISOString(),
@@ -125,13 +125,13 @@ export default function FocusMode({
   }, [saveWorkoutLog, onClose]);
 
   const lastEntry    = ex?.historique?.[ex.historique.length - 1];
-  const lastSetLabel = lastEntry ? `Dernière ${lastEntry.poids}×${lastEntry.reps}` : null;
+  const lastSetLabel = lastEntry ?`Dernière ${lastEntry.poids}×${lastEntry.reps}` : null;
   const kgDelta      = lastEntry
     ? +(kg - parseFloat(lastEntry.poids || 0)).toFixed(1)
     : null;
   const restSecs     = parseInt(String(ex?.repos || REST_DEFAULT).replace(/\D/g,'')) || REST_DEFAULT;
   const coachMsg     = loggedSets.length > 0
-    ? `${loggedSets.length} séries bouclées. Beau travail, continue.`
+    ?`${loggedSets.length} séries bouclées. Beau travail, continue.`
     : null;
 
   const content = (
@@ -161,7 +161,7 @@ export default function FocusMode({
           <div style={{ textAlign:'center', flex:1, padding:'0 12px' }}>
             <div style={{ fontFamily:F, fontSize:20, fontWeight:700,
                           color:T.t1, letterSpacing:-0.5, lineHeight:1.2 }}>
-              {ex ? ex.nom : '—'}
+              {ex ? ex.nom :'—'}
             </div>
             <div style={{ display:'flex', alignItems:'center', justifyContent:'center',
                           gap:8, marginTop:8 }}>
@@ -189,7 +189,7 @@ export default function FocusMode({
                       gap:8, marginTop:20, paddingBottom:4 }}>
           {Array.from({ length:totalSets }).map((_,i) => {
             const isDone = i < loggedSets.length;
-            const isCur  = i === Math.min(setIdx, totalSets-1) && phase !== 'done';
+            const isCur  = i === Math.min(setIdx, totalSets-1) && phase !=='done';
             return (
               <span key={i} style={{
                 display:'block',
@@ -198,12 +198,12 @@ export default function FocusMode({
                 boxShadow:isCur?`0 0 10px ${T.acGlow}`:'none',
                 transition:'all .3s',
               }}/>
-            );
+);
           })}
         </div>
 
         {/* ── Barre d'actions rapides : Guide · Tip coach · Historique ── */}
-        {phase === 'set' && (
+        {phase ==='set' && (
           <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr',
                         gap:8, marginTop:16 }}>
             <button className="fm-tap" onClick={() => setShowGuide(true)}
@@ -229,7 +229,7 @@ export default function FocusMode({
                        display:'flex', flexDirection:'column', alignItems:'center',
                        gap:8, cursor:'pointer' }}>
               <span style={{ width:32, height:32, borderRadius:12,
-                             background:'rgba(245,158,11,0.12)', color:'#D97706',
+                             background:'rgba(245,158,11,0.12)', color:'#F59E0B',
                              display:'grid', placeItems:'center' }}>
                 <I n="bulb" sz={16} s={2}/>
               </span>
@@ -245,7 +245,7 @@ export default function FocusMode({
                        display:'flex', flexDirection:'column', alignItems:'center',
                        gap:8, cursor:'pointer' }}>
               <span style={{ width:32, height:32, borderRadius:12,
-                             background:'rgba(99,102,241,0.12)', color:'#6366F1',
+                             background:'rgba(60,91,255,0.12)', color:'#3C5BFF',
                              display:'grid', placeItems:'center' }}>
                 <I n="pulse" sz={16} s={2}/>
               </span>
@@ -254,17 +254,17 @@ export default function FocusMode({
               </span>
             </button>
           </div>
-        )}
+)}
 
         {/* ── Card Dernière séance ── */}
-        {phase === 'set' && (
+        {phase ==='set' && (
           <div style={{ marginTop:12, padding:'12px 16px',
                         background:T.surf, border:`1px solid ${T.bd}`,
                         boxShadow: C.shadow,
                         borderRadius:16,
                         display:'flex', alignItems:'center', gap:12 }}>
             <div style={{ width:36, height:36, borderRadius:12,
-                          background:'linear-gradient(135deg,#6366F1,#818CF8)',
+                          background:'linear-gradient(135deg,#3C5BFF,#9DB0FF)',
                           color:'#FFF', display:'grid', placeItems:'center',
                           flexShrink:0 }}>
               <I n="pulse" sz={16} s={2}/>
@@ -274,68 +274,68 @@ export default function FocusMode({
                             textTransform:'uppercase', letterSpacing:'0.1em',
                             fontWeight:600, marginBottom:2 }}>
                 {lastEntry
-                  ? `Dernière séance${lastEntry.date ? ' · '+lastEntry.date : ''}`
-                  : 'Dernière séance'}
+                  ?`Dernière séance${lastEntry.date ?' ·'+lastEntry.date :''}`
+                  :'Dernière séance'}
               </div>
               {lastEntry ? (
                 <div style={{ fontFamily:F, fontSize:14, color:T.t1, fontWeight:700 }}>
                   {lastEntry.poids} kg × {lastEntry.reps} reps
                 </div>
-              ) : (
+) : (
                 <div style={{ fontFamily:F, fontSize:13, color:T.t3, fontWeight:500 }}>
                   Pas encore enregistrée
                 </div>
-              )}
+)}
             </div>
             {lastEntry && kgDelta !== null && (
               <div style={{ fontFamily:MON, fontSize:11, fontWeight:700,
                             color: kgDelta >= 0 ? C.green : C.red,
                             background: kgDelta >= 0
-                              ? 'rgba(16,185,129,0.12)'
-                              : 'rgba(239,68,68,0.12)',
+                              ?'rgba(18,183,106,0.12)'
+                              :'rgba(229,72,77,0.12)',
                             padding:'4px 8px', borderRadius:8,
                             flexShrink:0, ...NUM }}>
-                {kgDelta > 0 ? '+' : ''}{kgDelta} {kgDelta >= 0 ? '↗' : '↘'}
+                {kgDelta > 0 ?'+' :''}{kgDelta} {kgDelta >= 0 ?'↗' :'↘'}
               </div>
-            )}
+)}
           </div>
-        )}
+)}
 
         {/* ── Bandeau Tip coach (toggle) ── */}
-        {phase === 'set' && showTip && (
+        {phase ==='set' && showTip && (
           <div style={{ marginTop:12, padding:'12px 12px',
                         background:'linear-gradient(135deg,rgba(254,243,199,0.65) 0%,rgba(254,249,232,0.65) 100%)',
                         border:'1px solid rgba(245,158,11,0.25)',
                         borderRadius:16,
                         display:'flex', alignItems:'flex-start', gap:12 }}>
             <div style={{ width:26, height:26, borderRadius:8,
-                          background:'linear-gradient(135deg,#F59E0B,#FBBF24)',
+                          background:'linear-gradient(135deg,#F59E0B,#F59E0B)',
                           color:'#FFF', display:'grid', placeItems:'center',
                           flexShrink:0 }}>
               <I n="spark" sz={13} s={2}/>
             </div>
             <div style={{ flex:1 }}>
-              <div style={{ fontFamily:MON, fontSize:10, color:'#B45309',
+              <div style={{ fontFamily:MON, fontSize:10, color:'#F59E0B',
                             textTransform:'uppercase', letterSpacing:'0.1em',
                             fontWeight:600, marginBottom:2 }}>
                 Tip du coach
               </div>
-              <div style={{ fontFamily:F, fontSize:13, color:'#6B4D14',
+              <div style={{ fontFamily:F, fontSize:13, color:'#F59E0B',
                             lineHeight:1.4 }}>
-                {ex?.tip || 'Garde la position de référence : omoplates serrées, gainage actif, amplitude contrôlée.'}
+                {ex?.tip ||'Garde la position de référence : omoplates serrées, gainage actif, amplitude contrôlée.'}
               </div>
             </div>
             <button onClick={() => setShowTip(false)}
-              style={{ background:'none', border:'none', color:'#B45309',
+              style={{ background:'none', border:'none', color:'#F59E0B',
                        padding:2, cursor:'pointer', display:'grid', placeItems:'center' }}>
               <I n="x" sz={14} s={2}/>
             </button>
           </div>
-        )}
+)}
       </div>
 
       {/* ── Stage — enfant direct du flex root ── */}
-      {(phase === 'set' || phase === 'flash') && (
+      {(phase ==='set' || phase ==='flash') && (
         <SetStage
           phase={phase}
           setNum={Math.min(setIdx+1, totalSets)}
@@ -346,8 +346,8 @@ export default function FocusMode({
           lastSetLabel={lastSetLabel}
           onValidate={validate}
         />
-      )}
-      {phase === 'rest' && (
+)}
+      {phase ==='rest' && (
         <RestStage
           rest={rest} total={restSecs}
           nextKg={kg} nextReps={reps}
@@ -355,21 +355,21 @@ export default function FocusMode({
           onSkip={() => { clearInterval(restRef.current); setPhase('set'); }}
           onAdd={s => setRest(r => r+s)}
         />
-      )}
-      {phase === 'done' && (
+)}
+      {phase ==='done' && (
         <DoneStage
           loggedSets={loggedSets}
           onNextExercise={nextExercise}
           coachMsg={coachMsg}
           premium={premium}
         />
-      )}
+)}
 
       {/* ── Modale Guide vidéo / instructions ── */}
       {showGuide && (
         <div onClick={() => setShowGuide(false)}
           style={{ position:'absolute', inset:0, zIndex:60,
-                   background:'rgba(15,25,35,0.5)',
+                   background:'rgba(16,19,24,0.5)',
                    backdropFilter:'blur(8px)', WebkitBackdropFilter:'blur(8px)',
                    display:'flex', alignItems:'flex-end', justifyContent:'center',
                    animation:'fm-fadeUp .25s ease both' }}>
@@ -399,17 +399,17 @@ export default function FocusMode({
               </div>
             </div>
             <div style={{ fontFamily:F, fontSize:13, color:T.t2, lineHeight:1.6 }}>
-              {ex?.instructions || ex?.tip || "Position de départ, contrôle excentrique, amplitude complète. Garde le gainage et respire."}
+              {ex?.instructions || ex?.tip ||"Position de départ, contrôle excentrique, amplitude complète. Garde le gainage et respire."}
             </div>
           </div>
         </div>
-      )}
+)}
 
       {/* ── Modale Historique ── */}
       {showHisto && (
         <div onClick={() => setShowHisto(false)}
           style={{ position:'absolute', inset:0, zIndex:60,
-                   background:'rgba(15,25,35,0.5)',
+                   background:'rgba(16,19,24,0.5)',
                    backdropFilter:'blur(8px)', WebkitBackdropFilter:'blur(8px)',
                    display:'flex', alignItems:'flex-end', justifyContent:'center',
                    animation:'fm-fadeUp .25s ease both' }}>
@@ -422,7 +422,7 @@ export default function FocusMode({
                      display:'flex', flexDirection:'column' }}>
             <div style={{ width:36, height:4, borderRadius:2, background:T.bdHi,
                           margin:'0 auto 20px' }}/>
-            <div style={{ fontFamily:F, fontSize:11, fontWeight:600, color:'#6366F1',
+            <div style={{ fontFamily:F, fontSize:11, fontWeight:600, color:'#3C5BFF',
                           letterSpacing:"0.1em", textTransform:'uppercase',
                           marginBottom:8 }}>
               Historique
@@ -438,7 +438,7 @@ export default function FocusMode({
                               textAlign:'center', padding:'32px 0' }}>
                   Pas encore d'historique sur cet exercice.
                 </div>
-              )}
+)}
               {(ex?.historique || []).slice().reverse().map((h, i) => (
                 <div key={i} style={{ display:'flex', alignItems:'center',
                                       justifyContent:'space-between',
@@ -454,7 +454,7 @@ export default function FocusMode({
                                     marginTop:2, letterSpacing:'0.04em' }}>
                         {h.date}
                       </div>
-                    )}
+)}
                   </div>
                   {h.rpe && (
                     <div style={{ fontFamily:MON, fontSize:11, fontWeight:600,
@@ -462,15 +462,15 @@ export default function FocusMode({
                                   padding:'4px 8px', borderRadius:8 }}>
                       RPE {h.rpe}
                     </div>
-                  )}
+)}
                 </div>
-              ))}
+))}
             </div>
           </div>
         </div>
-      )}
+)}
     </div>
-  );
+);
 
   // Portal → rendu directement dans document.body
   // Bypasse tout overflow:hidden ou transform des parents

@@ -6,25 +6,25 @@
 // photos tant que le physique n'a pas changé. La table observation→conséquence
 // vit côté serveur — le client ne fait que stocker le résultat.
 
-import { supabase } from "./supabase.js";
+import { supabase } from"./supabase.js";
 
-const FICHE_KEY = "morpho_fiche";
+const FICHE_KEY ="morpho_fiche";
 export const FICHE_VALIDITE_JOURS = 90; // au-delà, on suggère de nouvelles photos
 
 /** En-têtes d'authentification : joint le JWT Supabase si une session existe. */
 export async function authHeaders() {
-  const headers = { "Content-Type": "application/json" };
+  const headers = {"Content-Type":"application/json" };
   try {
     const { data } = await supabase.auth.getSession();
     const token = data?.session?.access_token;
-    if (token) headers["Authorization"] = `Bearer ${token}`;
+    if (token) headers["Authorization"] =`Bearer ${token}`;
   } catch { /* pas de session — mode transition */ }
   return headers;
 }
 
 /** @returns {object | null} fiche stockée, ou null */
 export function getFicheMorpho() {
-  try { return JSON.parse(localStorage.getItem(FICHE_KEY) || "null"); }
+  try { return JSON.parse(localStorage.getItem(FICHE_KEY) ||"null"); }
   catch { return null; }
 }
 
@@ -58,7 +58,7 @@ export async function analyserMorpho(photos, profil) {
   if (clean.length === 0) throw new Error("Aucune photo à analyser");
 
   const res = await fetch("/api/analyze-morpho", {
-    method: "POST",
+    method:"POST",
     headers: await authHeaders(),
     body: JSON.stringify({
       photos: clean.map(p => p.split(",")[1] || p),
@@ -66,7 +66,7 @@ export async function analyserMorpho(photos, profil) {
     }),
   });
   const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data.error || `Analyse morpho: erreur ${res.status}`);
+  if (!res.ok) throw new Error(data.error ||`Analyse morpho: erreur ${res.status}`);
   if (!data.fiche) throw new Error("Fiche morphologique absente de la réponse");
   saveFicheMorpho(data.fiche);
   return data.fiche;

@@ -15,12 +15,12 @@
 // d'appel réseau, et la base reste consultable pour les recherches récentes
 // même avec un réseau médiocre.
 
-const CACHE_KEY = "mc_off_search_v1";
+const CACHE_KEY ="mc_off_search_v1";
 const TTL = 24 * 3600 * 1000;
 const PAGE = 12;
 
 function readCache() {
-  try { return JSON.parse(localStorage.getItem(CACHE_KEY) || "{}"); } catch { return {}; }
+  try { return JSON.parse(localStorage.getItem(CACHE_KEY) ||"{}"); } catch { return {}; }
 }
 function writeCache(c) {
   try {
@@ -48,11 +48,11 @@ function normalize(p) {
   // les rejeter rendait introuvables des produits pourtant très courants.
   let kcal = n["energy-kcal_100g"] ?? (n["energy_100g"] ? n["energy_100g"] / 4.184 : 0);
   if (!kcal && (prot || gluc || lip)) kcal = 4 * prot + 4 * gluc + 9 * lip;
-  const nom = (p.product_name_fr || p.product_name || "").trim();
+  const nom = (p.product_name_fr || p.product_name ||"").trim();
   if (!nom || (!kcal && !prot && !gluc && !lip)) return null;   // vraiment vide
-  const marque = (p.brands || "").split(",")[0].trim();
+  const marque = (p.brands ||"").split(",")[0].trim();
   return {
-    n:   `${nom}${marque ? " — " + marque : ""} (100 g)`,
+    n:`${nom}${marque ?" —" + marque :""} (100 g)`,
     c:   Math.round(kcal),
     p:   round1(n.proteins_100g),
     g:   round1(n.carbohydrates_100g),
@@ -61,17 +61,17 @@ function normalize(p) {
     na:  Math.round((n.sodium_100g || 0) * 1000),
     su:  round1(n.sugars_100g),
     sa:  round1(n["saturated-fat_100g"]),
-    cat: "Magasin",
+    cat:"Magasin",
     // champs d'affichage
     brand:      marque || null,
-    nutriscore: /^[a-e]$/i.test(p.nutriscore_grade || "") ? p.nutriscore_grade.toUpperCase() : null,
+    nutriscore: /^[a-e]$/i.test(p.nutriscore_grade ||"") ? p.nutriscore_grade.toUpperCase() : null,
     img:        p.image_front_small_url || p.image_small_url || null,
     code:       p.code || null,
   };
 }
 
-const FIELDS = "code,product_name,product_name_fr,brands,nutriscore_grade," +
-               "image_front_small_url,image_small_url,nutriments";
+const FIELDS ="code,product_name,product_name_fr,brands,nutriscore_grade," +
+"image_front_small_url,image_small_url,nutriments";
 
 // timeout individuel : un moteur qui ne répond pas en 6 s est abandonné
 // (les autres continuent la course)
@@ -83,12 +83,12 @@ function avecTimeout(signal, ms = 6000) {
 }
 
 async function viaSearchALicious(q, signal) {
-  // pas de `fields` ici : le paramètre pouvait tronquer les documents et
+  // pas de`fields` ici : le paramètre pouvait tronquer les documents et
   // vider les résultats — on prend la fiche complète, normalize() trie
   const { signal: sg, fin } = avecTimeout(signal);
   try {
-    const url = "https://search.openfoodfacts.org/search" +
-      `?q=${encodeURIComponent(q)}&langs=fr&page_size=${PAGE}`;
+    const url ="https://search.openfoodfacts.org/search" +
+`?q=${encodeURIComponent(q)}&langs=fr&page_size=${PAGE}`;
     const r = await fetch(url, { signal: sg });
     if (!r.ok) throw new Error("sal_" + r.status);
     const d = await r.json();
@@ -102,9 +102,9 @@ function viaLegacyBase(host) {
   return async function (q, signal) {
     const { signal: sg, fin } = avecTimeout(signal);
     try {
-      const url = `https://${host}/cgi/search.pl` +
-        `?search_terms=${encodeURIComponent(q)}&search_simple=1&action=process` +
-        `&json=1&page_size=${PAGE}&fields=${FIELDS}`;
+      const url =`https://${host}/cgi/search.pl` +
+`?search_terms=${encodeURIComponent(q)}&search_simple=1&action=process` +
+`&json=1&page_size=${PAGE}&fields=${FIELDS}`;
       const r = await fetch(url, { signal: sg });
       if (!r.ok) throw new Error("legacy_" + r.status);
       const d = await r.json();
@@ -133,7 +133,7 @@ const inflight = new Map();
  *  Permet d'afficher quelque chose INSTANTANÉMENT pendant que la recherche
  *  fraîche arrive : « nutell » montre les résultats de « nutel » sans attendre. */
 export function cachedForPrefix(query) {
-  const q = (query || "").trim().toLowerCase();
+  const q = (query ||"").trim().toLowerCase();
   if (q.length < 3) return [];
   const cache = readCache();
   for (let l = q.length; l >= 3; l--) {
@@ -150,7 +150,7 @@ export function cachedForPrefix(query) {
  * @returns {Promise<Array>} produits normalisés (souvent vide, jamais d'exception)
  */
 export async function searchProducts(query, signal) {
-  const q = (query || "").trim().toLowerCase();
+  const q = (query ||"").trim().toLowerCase();
   if (q.length < 3) return [];
 
   const cache = readCache();

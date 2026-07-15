@@ -2,20 +2,20 @@
 // Historique des bilans bi-hebdomadaires archivés.
 // Liste consultable avec score lettre + graphique d'évolution sur les 6 derniers.
 
-import { useMemo, useEffect } from "react";
-import { useSwipeBack } from "../../hooks/useSwipeBack.js";
-import { C, FONT, SERIF, NUM } from "../../data/constants.js";
+import { useMemo, useEffect } from"react";
+import { useSwipeBack } from"../../hooks/useSwipeBack.js";
+import { C, FONT, SERIF, NUM } from"../../data/constants.js";
 
 const BG   = C.bg;
-const S1   = C.s1 || "#FFFFFF";
-const BD   = C.bd || "rgba(0,0,0,0.05)";
-const TEXT = C.text || "${C.text}";
-const MID  = C.mid || "${C.mid}";
-const DIM  = C.dim || "${C.dim}";
+const S1   = C.s1 ||"#FFFFFF";
+const BD   = C.bd ||"rgba(0,0,0,0.05)";
+const TEXT = C.text ||"${C.text}";
+const MID  = C.mid ||"${C.mid}";
+const DIM  = C.dim ||"${C.dim}";
 const BL   = C.accent || C.accent;
-const GRN  = "#34D399";
-const AMB  = "#F59E0B";
-const RED  = "#F87171";
+const GRN  ="#12B76A";
+const AMB  ="#F59E0B";
+const RED  ="#E5484D";
 
 function I({ name, size=16, color="currentColor", stroke=2 }) {
   const p = { width:size, height:size, viewBox:"0 0 24 24", fill:"none",
@@ -29,23 +29,23 @@ function I({ name, size=16, color="currentColor", stroke=2 }) {
 
 // ─── Helpers ──────────────────────────────────────────────────────────────
 function letterFromScore(score) {
-  if (score >= 85) return "A";
-  if (score >= 70) return "B";
-  if (score >= 55) return "C";
-  if (score >= 40) return "D";
-  return "E";
+  if (score >= 85) return"A";
+  if (score >= 70) return"B";
+  if (score >= 55) return"C";
+  if (score >= 40) return"D";
+  return"E";
 }
 function colorFromLetter(l) {
-  if (l === "A") return { fg:GRN,  bg:"rgba(52,211,153,0.12)",  bd:"rgba(52,211,153,0.25)" };
-  if (l === "B") return { fg:GRN,  bg:"rgba(52,211,153,0.08)",  bd:"rgba(52,211,153,0.25)" };
-  if (l === "C") return { fg:AMB,  bg:"rgba(245,158,11,0.12)",  bd:"rgba(245,158,11,0.25)" };
-  if (l === "D") return { fg:RED,  bg:"rgba(248,113,113,0.12)", bd:"rgba(248,113,113,0.25)" };
-  return            { fg:RED,  bg:"rgba(248,113,113,0.12)", bd:"rgba(248,113,113,0.25)" };
+  if (l ==="A") return { fg:GRN,  bg:"rgba(18,183,106,0.12)",  bd:"rgba(18,183,106,0.25)" };
+  if (l ==="B") return { fg:GRN,  bg:"rgba(18,183,106,0.08)",  bd:"rgba(18,183,106,0.25)" };
+  if (l ==="C") return { fg:AMB,  bg:"rgba(245,158,11,0.12)",  bd:"rgba(245,158,11,0.25)" };
+  if (l ==="D") return { fg:RED,  bg:"rgba(229,72,77,0.12)", bd:"rgba(229,72,77,0.25)" };
+  return            { fg:RED,  bg:"rgba(229,72,77,0.12)", bd:"rgba(229,72,77,0.25)" };
 }
 
 function formatPeriod(start, end) {
   const fmt = (d) => new Date(d).toLocaleDateString("fr-FR", { day:"numeric", month:"short" });
-  return `${fmt(start)} → ${fmt(end)}`;
+  return`${fmt(start)} → ${fmt(end)}`;
 }
 
 // ─── Composant principal ──────────────────────────────────────────────────
@@ -59,7 +59,7 @@ export default function BilanArchive({ onBack, bilans = [], onOpenBilan, current
   const sorted = useMemo(() =>
     [...bilans].sort((a, b) => new Date(b.endDate) - new Date(a.endDate)),
     [bilans]
-  );
+);
 
   // 6 derniers pour le graphique d'évolution
   const last6 = useMemo(() => sorted.slice(0, 6).reverse(), [sorted]);
@@ -117,7 +117,7 @@ export default function BilanArchive({ onBack, bilans = [], onOpenBilan, current
             <BilanCard bilan={currentBilan} onClick={() => onOpenBilan?.(currentBilan)} current/>
           </div>
         </>
-      )}
+)}
 
       {/* Historique */}
       {sorted.length > 0 ? (
@@ -131,10 +131,10 @@ export default function BilanArchive({ onBack, bilans = [], onOpenBilan, current
           <div style={{ padding:"0 16px" }}>
             {sorted.map(b => (
               <BilanCard key={b.id} bilan={b} onClick={() => onOpenBilan?.(b)}/>
-            ))}
+))}
           </div>
         </>
-      ) : (
+) : (
         <div style={{ margin:"20px 16px", padding:"24px 20px",
           background:S1, border:`1px solid ${BD}`, borderRadius:16,
           textAlign:"center" }}>
@@ -145,7 +145,7 @@ export default function BilanArchive({ onBack, bilans = [], onOpenBilan, current
             Ton premier bilan complet sera généré automatiquement dimanche prochain à 9h.
           </div>
         </div>
-      )}
+)}
 
       {/* Graphique d'évolution */}
       {last6.length >= 2 && (
@@ -161,15 +161,15 @@ export default function BilanArchive({ onBack, bilans = [], onOpenBilan, current
             <TrendChart bilans={last6}/>
             <div style={{ display:"flex", justifyContent:"space-between",
               paddingTop:16, marginTop:8, borderTop:"1px solid rgba(0,0,0,0.05)" }}>
-              <Stat icon={trend?.label || "→"} color={trend?.color || MID} label="Tendance"/>
+              <Stat icon={trend?.label ||"→"} color={trend?.color || MID} label="Tendance"/>
               <Stat letter={letterFromScore(avgScore)} label="Moyenne"/>
               <Stat letter={letterFromScore(bestScore)} label="Meilleur" highlight/>
             </div>
           </div>
         </>
-      )}
+)}
     </div>
-  );
+);
 }
 
 // ─── Carte bilan ─────────────────────────────────────────────────────────
@@ -180,8 +180,8 @@ function BilanCard({ bilan, onClick, current }) {
   return (
     <button onClick={onClick} style={{
       width:"100%", padding:"16px 16px",
-      background: current ? "rgba(59,130,246,0.05)" : S1,
-      border: `1px solid ${current ? "rgba(59,130,246,0.25)" : BD}`,
+      background: current ?"rgba(60,91,255,0.05)" : S1,
+      border:`1px solid ${current ?"rgba(60,91,255,0.25)" : BD}`,
       borderRadius:16, marginBottom:8,
       display:"flex", gap:12, alignItems:"center",
       cursor:"pointer", textAlign:"left",
@@ -196,24 +196,24 @@ function BilanCard({ bilan, onClick, current }) {
       <div style={{ flex:1, minWidth:0 }}>
         <div style={{ fontSize:13, fontWeight:700, color:TEXT, marginBottom:2, fontFamily:FONT }}>
           {formatPeriod(bilan.startDate, bilan.endDate)}
-          {current && " · en cours"}
+          {current &&" · en cours"}
         </div>
         <div style={{ fontSize:11, color:MID, fontFamily:FONT }}>
           {bilan.nbLogged} jour{bilan.nbLogged>1?"s":""} loggé{bilan.nbLogged>1?"s":""}
-          {bilan.avgKcal > 0 && ` · ${Math.round(bilan.avgKcal)} kcal/j moy.`}
+          {bilan.avgKcal > 0 &&` · ${Math.round(bilan.avgKcal)} kcal/j moy.`}
         </div>
       </div>
       {current ? (
-        <span style={{ padding:"2px 8px", background:"rgba(59,130,246,0.12)",
-          border:"1px solid rgba(59,130,246,0.35)", borderRadius:999,
+        <span style={{ padding:"2px 8px", background:"rgba(60,91,255,0.12)",
+          border:"1px solid rgba(60,91,255,0.35)", borderRadius:999,
           fontSize:10, fontWeight:700, color:C.blueLt, letterSpacing:"0.1em", fontFamily:FONT }}>
           EN COURS
         </span>
-      ) : (
+) : (
         <I name="chevR" size={16} color={MID}/>
-      )}
+)}
     </button>
-  );
+);
 }
 
 // ─── Graphique d'évolution ────────────────────────────────────────────────
@@ -222,14 +222,14 @@ function TrendChart({ bilans }) {
   if (bilans.length < 2) return null;
   const xs = bilans.map((_, i) => (W * (i + 0.5)) / bilans.length);
   const ys = bilans.map(b => H * (1 - b.healthScore / 100));
-  const path = xs.map((x, i) => `${i === 0 ? "M" : "L"}${x.toFixed(0)},${ys[i].toFixed(0)}`).join(" ");
+  const path = xs.map((x, i) =>`${i === 0 ?"M" :"L"}${x.toFixed(0)},${ys[i].toFixed(0)}`).join("");
 
   return (
     <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none"
       style={{ width:"100%", height:H, overflow:"visible" }}>
       {[22, 45, 68].map(y => (
         <line key={y} x1="0" y1={y} x2={W} y2={y} stroke="rgba(0,0,0,0.05)"/>
-      ))}
+))}
       <path d={path} fill="none" stroke="url(#trendG)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
       <defs>
         <linearGradient id="trendG" x1="0" y1="0" x2="1" y2="0">
@@ -246,10 +246,10 @@ function TrendChart({ bilans }) {
             <circle cx={xs[i]} cy={ys[i]} r="5" fill={col} stroke={BG} strokeWidth="2"/>
             <text x={xs[i]} y={H - 4} textAnchor="middle" fontSize="10" fontWeight="700" fill={col}>{l}</text>
           </g>
-        );
+);
       })}
     </svg>
-  );
+);
 }
 
 function Stat({ icon, letter, color, label, highlight }) {
@@ -266,5 +266,5 @@ function Stat({ icon, letter, color, label, highlight }) {
         {label}
       </div>
     </div>
-  );
+);
 }

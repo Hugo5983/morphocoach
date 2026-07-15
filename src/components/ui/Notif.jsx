@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { C, FONT } from "../../data/constants.js";
+import { useEffect } from"react";
+import { C, FONT } from"../../data/constants.js";
 
 export function Notif({ n, onClose }) {
   useEffect(() => {
@@ -16,31 +16,31 @@ export function Notif({ n, onClose }) {
           60%  { transform: translate(-50%, 6%);    opacity: 1; }
           100% { transform: translate(-50%, 0);     opacity: 1; }
         }
-      `}</style>
+`}</style>
       <div
         role="status"
         style={{
-          position: "fixed",
-          top: "max(14px, env(safe-area-inset-top, 14px))",
-          left: "50%",
-          transform: "translateX(-50%)",
+          position:"fixed",
+          top:"max(14px, env(safe-area-inset-top, 14px))",
+          left:"50%",
+          transform:"translateX(-50%)",
           zIndex: 500,
-          width: "calc(100vw - 32px)",
+          width:"calc(100vw - 32px)",
           maxWidth: 380,
-          animation: "notif-drop .42s cubic-bezier(.2,.9,.25,1) both",
-          pointerEvents: "auto",
+          animation:"notif-drop .42s cubic-bezier(.2,.9,.25,1) both",
+          pointerEvents:"auto",
         }}
       >
         <div
           style={{
-            background: "rgba(255,255,255,0.85)",
-            backdropFilter: "blur(20px) saturate(160%)",
-            WebkitBackdropFilter: "blur(20px) saturate(160%)",
-            border: `1px solid ${C.bdHi}`,
+            background:"rgba(255,255,255,0.85)",
+            backdropFilter:"blur(20px) saturate(160%)",
+            WebkitBackdropFilter:"blur(20px) saturate(160%)",
+            border:`1px solid ${C.bdHi}`,
             borderRadius: 20,
-            padding: "12px 16px 12px 16px",
-            display: "flex",
-            alignItems: "center",
+            padding:"12px 16px 12px 16px",
+            display:"flex",
+            alignItems:"center",
             gap: 12,
             boxShadow: C.shadow,
             fontFamily: FONT,
@@ -55,7 +55,7 @@ export function Notif({ n, onClose }) {
               <div style={{ fontSize: 11, color: C.mid, marginTop: 2, lineHeight: 1.4 }}>
                 {n.body}
               </div>
-            )}
+)}
           </div>
           <button
             onClick={onClose}
@@ -65,11 +65,11 @@ export function Notif({ n, onClose }) {
               height: 30,
               borderRadius: 12,
               flexShrink: 0,
-              background: "rgba(0,0,0,0.05)",
-              border: "none",
-              cursor: "pointer",
-              display: "grid",
-              placeItems: "center",
+              background:"rgba(0,0,0,0.05)",
+              border:"none",
+              cursor:"pointer",
+              display:"grid",
+              placeItems:"center",
               color: C.dim,
               padding: 0,
             }}
@@ -81,5 +81,5 @@ export function Notif({ n, onClose }) {
         </div>
       </div>
     </>
-  );
+);
 }

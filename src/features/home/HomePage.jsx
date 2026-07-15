@@ -4,14 +4,14 @@
 // Connecté aux données réelles via props + xpService.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { useState, useMemo } from "react";
-import { FONT } from "../../data/constants.js";
-import BadgesPage from "./BadgesPage.jsx";
-import { getBadgeStates } from "../../services/badgeService.js";
+import { useState, useMemo } from"react";
+import { FONT } from"../../data/constants.js";
+import BadgesPage from"./BadgesPage.jsx";
+import { getBadgeStates } from"../../services/badgeService.js";
 import {
   HeroCard, NutritionCard, PacksCard,
   BadgesCard, StreakCard, CoachIACard,
-} from "./components/HomeCards.jsx";
+} from"./components/HomeCards.jsx";
 
 export default function HomePage({
   profil,
@@ -40,7 +40,7 @@ export default function HomePage({
     <div style={{
       paddingBottom: 32,
       fontFamily: FONT,
-      WebkitFontSmoothing: "antialiased",
+      WebkitFontSmoothing:"antialiased",
     }}>
       {/* Entraînement du jour */}
       <HeroCard prog={prog} calSess={calSess} setTab={setTab} />
@@ -73,6 +73,6 @@ export default function HomePage({
       {/* Coach IA */}
       <CoachIACard />
     </div>
-  );
+);
 }
 

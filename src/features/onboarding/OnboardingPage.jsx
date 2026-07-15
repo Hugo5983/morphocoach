@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { C, FONT, SERIF, NUM as NUM_TOKEN } from "../../data/constants.js";
+import { useState } from"react";
+import { C, FONT, SERIF, NUM as NUM_TOKEN } from"../../data/constants.js";
 
 // ─── FONT TOKENS (from mockup) ──────────────────────────────────────────
 
@@ -27,14 +27,14 @@ function Icon({name,size=18,color='currentColor',stroke=1.6}){
 // ─── AMBIENT GLOWS ──────────────────────────────────────────────────────
 function Ambient({palette}){
   const pal={
-    cool:[{c:'rgba(77,139,255,0.18)',x:'20%',y:'15%',w:320,h:260,b:50},{c:'rgba(255,171,93,0.12)',x:'85%',y:'70%',w:280,h:240,b:50}],
-    warm:[{c:'rgba(255,171,93,0.18)',x:'50%',y:'0%',w:360,h:280,b:60},{c:'rgba(77,139,255,0.08)',x:'10%',y:'90%',w:300,h:260,b:50}],
-    deep:[{c:'rgba(182,157,255,0.18)',x:'50%',y:'15%',w:360,h:300,b:60},{c:'rgba(77,139,255,0.12)',x:'20%',y:'85%',w:280,h:240,b:50}],
-    data:[{c:'rgba(77,139,255,0.25)',x:'0%',y:'40%',w:320,h:280,b:60},{c:'rgba(255,171,93,0.05)',x:'100%',y:'60%',w:280,h:240,b:50}],
+    cool:[{c:'rgba(60,91,255,0.18)',x:'20%',y:'15%',w:320,h:260,b:50},{c:'rgba(60,91,255,0.12)',x:'85%',y:'70%',w:280,h:240,b:50}],
+    warm:[{c:'rgba(60,91,255,0.18)',x:'50%',y:'0%',w:360,h:280,b:60},{c:'rgba(60,91,255,0.08)',x:'10%',y:'90%',w:300,h:260,b:50}],
+    deep:[{c:'rgba(157,176,255,0.18)',x:'50%',y:'15%',w:360,h:300,b:60},{c:'rgba(60,91,255,0.12)',x:'20%',y:'85%',w:280,h:240,b:50}],
+    data:[{c:'rgba(60,91,255,0.25)',x:'0%',y:'40%',w:320,h:280,b:60},{c:'rgba(60,91,255,0.05)',x:'100%',y:'60%',w:280,h:240,b:50}],
   }[palette]||[];
   return <>{pal.map((g,i)=>(
     <div key={i} style={{position:'absolute',left:g.x,top:g.y,transform:'translate(-50%,-50%)',width:g.w,height:g.h,borderRadius:'50%',background:`radial-gradient(closest-side, ${g.c}, transparent 70%)`,filter:`blur(${g.b}px)`,pointerEvents:'none'}}/>
-  ))}</>;
+))}</>;
 }
 
 // ─── PROGRESS BAR ───────────────────────────────────────────────────────
@@ -45,12 +45,12 @@ function Progress({step,total}){
         const done=i<step, active=i===step-1;
         return(
           <div key={i} style={{flex:1,height:3,borderRadius:3,overflow:'hidden',background:'rgba(0,0,0,0.08)'}}>
-            <div style={{height:'100%',width:done?'100%':'0%',background:active?`linear-gradient(90deg, ${C.blue}, ${C.accent})`:`linear-gradient(90deg, ${C.blue}, #A07AE8)`,boxShadow:active?`0 0 8px ${C.accent}80`:'none',transition:'width .6s cubic-bezier(.4,0,.2,1)'}}/>
+            <div style={{height:'100%',width:done?'100%':'0%',background:active?`linear-gradient(90deg, ${C.blue}, ${C.accent})`:`linear-gradient(90deg, ${C.blue}, #3C5BFF)`,boxShadow:active?`0 0 8px ${C.accent}80`:'none',transition:'width .6s cubic-bezier(.4,0,.2,1)'}}/>
           </div>
-        );
+);
       })}
     </div>
-  );
+);
 }
 
 // ─── PRIMARY CTA (shimmer) ──────────────────────────────────────────────
@@ -61,7 +61,7 @@ function PrimaryCTA({label,icon='arrowR',onClick,disabled,variant='amber'}){
       width:'100%',padding:'16px 20px',borderRadius:20,
       background:disabled?C.s2:grad,
       color:disabled?C.dim:'#FFF',
-      border:disabled?`1px solid ${C.bd}`:'1px solid rgba(59,130,246,0.25)',
+      border:disabled?`1px solid ${C.bd}`:'1px solid rgba(60,91,255,0.25)',
       boxShadow:disabled?'none':`0 10px 24px ${C.accentDk}55, inset 0 1px 0 rgba(0,0,0,0.25)`,
       display:'flex',alignItems:'center',justifyContent:'center',gap:8,
       fontFamily:DISPLAY,fontSize:14,fontWeight:700,letterSpacing:0.2,
@@ -71,7 +71,7 @@ function PrimaryCTA({label,icon='arrowR',onClick,disabled,variant='amber'}){
       <span style={{position:'relative',zIndex:1}}>{label}</span>
       {icon&&<Icon name={icon} size={16} stroke={2.4} color={disabled?C.dim:'#FFF'}/>}
     </button>
-  );
+);
 }
 
 // ─── STEP HEADER ────────────────────────────────────────────────────────
@@ -84,7 +84,7 @@ function StepHeader({step,total,eyebrow,title,sub,onBack,onSkip}){
         </button>
         <div style={{display:'flex',alignItems:'center',gap:8}}>
           <svg width={16} height={16} viewBox="0 0 32 32">
-            <defs><linearGradient id="onbLogo" x1="0" y1="1" x2="1" y2="0"><stop offset="0%" stopColor={C.blue}/><stop offset="55%" stopColor="#A07AE8"/><stop offset="100%" stopColor={C.accent}/></linearGradient></defs>
+            <defs><linearGradient id="onbLogo" x1="0" y1="1" x2="1" y2="0"><stop offset="0%" stopColor={C.blue}/><stop offset="55%" stopColor="#3C5BFF"/><stop offset="100%" stopColor={C.accent}/></linearGradient></defs>
             <rect x="3" y="20" width="5" height="9" rx="1.5" fill="url(#onbLogo)" opacity=".75"/>
             <rect x="10" y="14" width="5" height="15" rx="1.5" fill="url(#onbLogo)" opacity=".88"/>
             <rect x="17" y="6" width="5" height="23" rx="1.5" fill="url(#onbLogo)"/>
@@ -94,7 +94,7 @@ function StepHeader({step,total,eyebrow,title,sub,onBack,onSkip}){
         </div>
         {onSkip?(
           <button onClick={onSkip} className="tap" style={{padding:'8px 12px',borderRadius:999,background:C.s1,border:`1px solid ${C.bd}`,color:C.mid,fontSize:10,fontWeight:700,letterSpacing:0.2,fontFamily:DISPLAY,cursor:'pointer'}}>PASSER</button>
-        ):<div style={{width:36}}/>}
+):<div style={{width:36}}/>}
       </div>
       <div style={{marginTop:16,padding:'0 20px'}}><Progress step={step} total={total}/></div>
       <div style={{padding:'24px 24px 0'}}>
@@ -103,7 +103,7 @@ function StepHeader({step,total,eyebrow,title,sub,onBack,onSkip}){
         {sub&&<div style={{fontSize:13,fontWeight:500,color:C.mid,marginTop:8,lineHeight:1.4}}>{sub}</div>}
       </div>
     </div>
-  );
+);
 }
 
 // ─── FIELD LABEL ────────────────────────────────────────────────────────
@@ -114,9 +114,9 @@ function FieldLabel({label,required,hint}){
       {required&&<span style={{color:C.coral,fontSize:11}}>*</span>}
       {hint&&<span style={{fontSize:10,color:C.dim,fontWeight:500}}>{hint}</span>}
     </div>
-  );
+);
 }
-const inputStyle={width:'100%',padding:'16px 16px',background:C.s2,border:`1px solid ${C.bdHi}`,borderRadius:16,fontSize:14,color:C.text,fontFamily:"'Inter',sans-serif",boxSizing:'border-box',boxShadow:'inset 0 1px 2px rgba(0,0,0,0.05)'};
+const inputStyle={width:'100%',padding:'16px 16px',background:C.s2,border:`1px solid ${C.bdHi}`,borderRadius:16,fontSize:14,color:C.text,fontFamily:"'Archivo',sans-serif",boxSizing:'border-box',boxShadow:'inset 0 1px 2px rgba(0,0,0,0.05)'};
 
 // ─── BIG STEPPER ────────────────────────────────────────────────────────
 function BigStepper({value,setValue,unit,min,max,accent,icon,label,sub}){
@@ -125,7 +125,7 @@ function BigStepper({value,setValue,unit,min,max,accent,icon,label,sub}){
     <div style={{background:`linear-gradient(160deg, ${accent}18 0%, ${accent}04 100%)`,border:`1px solid ${accent}30`,borderRadius:20,padding:20,position:'relative',overflow:'hidden',boxShadow:`0 2px 8px ${accent}20`}}>
       <div style={{position:'absolute',top:-40,right:-40,width:160,height:160,borderRadius:'50%',background:`radial-gradient(closest-side, ${accent}25, transparent 70%)`,pointerEvents:'none'}}/>
       <div style={{display:'flex',alignItems:'center',gap:12,marginBottom:20,position:'relative'}}>
-        <div style={{width:34,height:34,borderRadius:12,background:`linear-gradient(145deg, ${accent}, ${accent}99)`,color:'#0B1220',display:'grid',placeItems:'center',boxShadow:`0 4px 10px ${accent}40, inset 0 1px 0 rgba(0,0,0,0.18)`}}>
+        <div style={{width:34,height:34,borderRadius:12,background:`linear-gradient(145deg, ${accent}, ${accent}99)`,color:'#101318',display:'grid',placeItems:'center',boxShadow:`0 4px 10px ${accent}40, inset 0 1px 0 rgba(0,0,0,0.18)`}}>
           <Icon name={icon} size={16} stroke={2}/>
         </div>
         <div>
@@ -155,7 +155,7 @@ function BigStepper({value,setValue,unit,min,max,accent,icon,label,sub}){
         </div>
       </div>
     </div>
-  );
+);
 }
 
 // ─── ONBOARDING ─────────────────────────────────────────────────────────
@@ -196,10 +196,10 @@ export default function Onboarding(props){
               <>Ton <span style={{fontStyle:'italic',color:C.blueLt}}>rythme.</span></>,
             ][oStep]}
             sub={[
-              "Quelques infos pour personnaliser ton coaching.",
-              "Pour calculer tes besoins caloriques exacts.",
-              "Ton programme s'adaptera à cet objectif.",
-              "Pour estimer ta dépense énergétique précise.",
+"Quelques infos pour personnaliser ton coaching.",
+"Pour calculer tes besoins caloriques exacts.",
+"Ton programme s'adaptera à cet objectif.",
+"Pour estimer ta dépense énergétique précise.",
             ][oStep]}
             onBack={()=>oStep>0&&setOStep(s=>s-1)}
             onSkip={oStep===0?()=>setOnboardingDone(true):null}
@@ -217,14 +217,14 @@ export default function Onboarding(props){
                 <div>
                   <FieldLabel label="Sexe" required/>
                   <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}}>
-                    {[{id:"homme",l:"Homme",i:"♂"},{id:"femme",l:"Femme",i:"♀"}].map(s=>{
+                    {[{id:"homme",l:"Homme",i:""},{id:"femme",l:"Femme",i:""}].map(s=>{
                       const on=oData.sexe===s.id;
                       return(
                         <div key={s.id} onClick={()=>setOData({...oData,sexe:s.id})} className="tap" style={{...selectCard(on,C.blue),padding:'20px 16px',textAlign:'center',borderRadius:16}}>
                           <div style={{fontSize:26,marginBottom:8,color:on?C.blue:C.mid}}>{s.i}</div>
                           <div style={{fontSize:13,fontWeight:700,fontFamily:DISPLAY,color:on?C.blue:C.text}}>{s.l}</div>
                         </div>
-                      );
+);
                     })}
                   </div>
                 </div>
@@ -233,7 +233,7 @@ export default function Onboarding(props){
                   <input type="number" value={oData.age} onChange={e=>setOData({...oData,age:e.target.value})} placeholder="Ex : 25" style={inputStyle}/>
                 </div>
               </div>
-            )}
+)}
 
             {/* ════ STEP 1 — BODY ════ */}
             {oStep===1&&(
@@ -248,9 +248,9 @@ export default function Onboarding(props){
                         <span style={{fontSize:11,color:C.mid,fontWeight:600,fontFamily:DISPLAY}}>IMC estimé</span>
                         <span style={{fontFamily:SERIF,fontSize:20,color:C.blue,...NUM}}>{imc}</span>
                       </div>
-                      <div style={{fontSize:10,color:C.dim,marginTop:4}}>ℹ️ L'IMC ne distingue pas muscle et graisse</div>
+                      <div style={{fontSize:10,color:C.dim,marginTop:4}}>ℹ L'IMC ne distingue pas muscle et graisse</div>
                     </div>
-                  );
+);
                 })()}
                 <div>
                   <FieldLabel label="% Masse grasse" hint="(optionnel — prioritaire sur l'IMC)"/>
@@ -262,22 +262,22 @@ export default function Onboarding(props){
                     const bf=parseFloat(oData.bodyfat);
                     const cat=oData.sexe==="femme"?(bf<14?"Athlète":bf<21?"Forme":bf<25?"Acceptable":bf<32?"À améliorer":"Obésité"):(bf<6?"Athlète":bf<14?"Forme":bf<18?"Acceptable":bf<25?"À améliorer":"Obésité");
                     const col=cat==="Athlète"||cat==="Forme"?C.mint:cat==="Acceptable"?C.accent:C.coral;
-                    return <div style={{marginTop:8,display:'inline-flex',padding:'4px 12px',borderRadius:999,background:`${col}18`,border:`1px solid ${col}40`,color:col,fontSize:11,fontWeight:700,fontFamily:DISPLAY}}>📊 {cat}</div>;
+                    return <div style={{marginTop:8,display:'inline-flex',padding:'4px 12px',borderRadius:999,background:`${col}18`,border:`1px solid ${col}40`,color:col,fontSize:11,fontWeight:700,fontFamily:DISPLAY}}> {cat}</div>;
                   })()}
                 </div>
               </div>
-            )}
+)}
 
             {/* ════ STEP 2 — GOAL ════ */}
             {oStep===2&&(
               <div style={{display:'flex',flexDirection:'column',gap:16}}>
                 <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}}>
                   {[
-                    {id:"hypertrophie",l:"Prise de muscle",i:"💪",d:"Volume musculaire",c:C.blue},
-                    {id:"force",l:"Force",i:"🏋️",d:"Performances",c:C.accent},
-                    {id:"poids",l:"Perte de poids",i:"🔥",d:"Sèche & tonicité",c:C.coral},
-                    {id:"sante",l:"Santé générale",i:"❤️",d:"Bien-être",c:C.mint},
-                    {id:"prep_physique",l:"Prépa physique",i:"⚡",d:"Sport & condition",c:C.accent},
+                    {id:"hypertrophie",l:"Prise de muscle",i:"",d:"Volume musculaire",c:C.blue},
+                    {id:"force",l:"Force",i:"",d:"Performances",c:C.accent},
+                    {id:"poids",l:"Perte de poids",i:"",d:"Sèche & tonicité",c:C.coral},
+                    {id:"sante",l:"Santé générale",i:"",d:"Bien-être",c:C.mint},
+                    {id:"prep_physique",l:"Prépa physique",i:"",d:"Sport & condition",c:C.accent},
                   ].map(g=>{
                     const on=oData.objectif===g.id;
                     return(
@@ -287,7 +287,7 @@ export default function Onboarding(props){
                         <div style={{fontSize:13,fontWeight:700,fontFamily:DISPLAY,color:on?g.c:C.text,marginBottom:2}}>{g.l}</div>
                         <div style={{fontSize:10,color:C.mid}}>{g.d}</div>
                       </div>
-                    );
+);
                   })}
                 </div>
                 <div>
@@ -295,7 +295,7 @@ export default function Onboarding(props){
                   <input value={oData.sport||""} onChange={e=>setOData({...oData,sport:e.target.value})} placeholder="Ex : Football, Tennis, Crossfit…" style={inputStyle}/>
                 </div>
               </div>
-            )}
+)}
 
             {/* ════ STEP 3 — ACTIVITY ════ */}
             {oStep===3&&(
@@ -316,22 +316,22 @@ export default function Onboarding(props){
                       </div>
                       <div style={{fontFamily:SERIF,fontSize:20,color:on?C.accent:C.dim,...NUM}}>{a.f}</div>
                     </div>
-                  );
+);
                 })}
               </div>
-            )}
+)}
 
             {/* ── Navigation ── */}
             <div style={{marginTop:24}}>
               {oStep===total-1?(
                 <PrimaryCTA label="Lancer MorphoCoach" icon="rocket" disabled={!allValid} onClick={finish}/>
-              ):(
+):(
                 <PrimaryCTA label="Continuer" icon="arrowR" disabled={!canNext} onClick={()=>canNext&&setOStep(s=>s+1)}/>
-              )}
+)}
             </div>
           </div>
         </div>
       </div>
     </div>
-  );
+);
 }

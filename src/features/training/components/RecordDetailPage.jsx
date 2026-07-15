@@ -3,23 +3,23 @@
 // saisie poids+reps (direct + +/-), graphique avec %, historique.
 // Validée sur maquette v4.
 
-import { useState, useMemo } from "react";
-import { calc1RM } from "../../../utils/training.js";
-import { C, DARK, FONT, NUM, SERIF } from "../../../data/constants.js";
+import { useState, useMemo } from"react";
+import { calc1RM } from"../../../utils/training.js";
+import { C, DARK, FONT, NUM, SERIF } from"../../../data/constants.js";
 
 const F    = FONT;
 const SER  = SERIF;
 const BG   = C.bg;
 const S1   = C.s1;
-const BD   = "rgba(0,0,0,0.05)";
+const BD   ="rgba(0,0,0,0.05)";
 const TEXT = C.text;
 const MID  = C.mid;
 const DIM  = C.dim;
-const GRY  = "#9CA3AF";
+const GRY  ="#98A2B3";
 const BL   = C.accent;
 const BLLG = DARK.accent;
 const BLDK = C.accentDk;
-const GRN  = "#34D399";
+const GRN  ="#12B76A";
 
 // ── Graphique SVG (1RM par séance) ───────────────────────────────────────────
 function RMChart({ data, objectifKg }) {
@@ -28,7 +28,7 @@ function RMChart({ data, objectifKg }) {
       fontSize:13, color:GRY, fontFamily:F }}>
       Encore une entrée pour voir ta courbe d'évolution.
     </div>
-  );
+);
 
   const W=312, H=120, PT=20, PB=22, PL=4, PR=4;
   const cW=W-PL-PR, cH=H-PT-PB;
@@ -44,14 +44,14 @@ function RMChart({ data, objectifKg }) {
   }));
 
   const line = pts.reduce((acc,p,i) => {
-    if (i===0) return `M${p.x.toFixed(1)},${p.y.toFixed(1)}`;
+    if (i===0) return`M${p.x.toFixed(1)},${p.y.toFixed(1)}`;
     const prev = pts[i-1], t=0.4;
     const c1 = (prev.x+(p.x-prev.x)*t).toFixed(1);
     const c2 = (p.x-(p.x-prev.x)*t).toFixed(1);
-    return `${acc} C${c1},${prev.y.toFixed(1)} ${c2},${p.y.toFixed(1)} ${p.x.toFixed(1)},${p.y.toFixed(1)}`;
-  }, "");
+    return`${acc} C${c1},${prev.y.toFixed(1)} ${c2},${p.y.toFixed(1)} ${p.x.toFixed(1)},${p.y.toFixed(1)}`;
+  },"");
 
-  const fill = `${line} L${pts[pts.length-1].x.toFixed(1)},${PT+cH} L${pts[0].x.toFixed(1)},${PT+cH} Z`;
+  const fill =`${line} L${pts[pts.length-1].x.toFixed(1)},${PT+cH} L${pts[0].x.toFixed(1)},${PT+cH} Z`;
 
   // Ligne objectif
   const objY = objectifKg ? PT + cH - ((objectifKg - minV)/span)*cH : null;
@@ -59,7 +59,7 @@ function RMChart({ data, objectifKg }) {
   // Dates extrêmes
   const fmtDate = (d) => {
     const p = String(d||"").split("/");
-    return p.length===3 ? `${p[0]}/${p[1]}` : String(d||"").substring(0,5);
+    return p.length===3 ?`${p[0]}/${p[1]}` : String(d||"").substring(0,5);
   };
 
   return (
@@ -75,13 +75,13 @@ function RMChart({ data, objectifKg }) {
       {objY !== null && (
         <>
           <line x1={PL} x2={W-PR} y1={objY} y2={objY}
-            stroke="rgba(59,130,246,0.25)" strokeWidth="1" strokeDasharray="4 4"/>
-          <text x={W-PR-2} y={objY-4} fontSize="8" fill="rgba(59,130,246,0.5)"
+            stroke="rgba(60,91,255,0.25)" strokeWidth="1" strokeDasharray="4 4"/>
+          <text x={W-PR-2} y={objY-4} fontSize="8" fill="rgba(60,91,255,0.5)"
             textAnchor="end" fontFamily={F} fontWeight="700">
             Obj. {objectifKg} kg
           </text>
         </>
-      )}
+)}
       {/* Fill + line */}
       <path d={fill} fill="url(#rmg)"/>
       <path d={line} fill="none" stroke={BL} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -100,7 +100,7 @@ function RMChart({ data, objectifKg }) {
         {fmtDate(data[data.length-1]?.date)}
       </text>
     </svg>
-  );
+);
 }
 
 // ── Composant principal ───────────────────────────────────────────────────────
@@ -111,7 +111,7 @@ export default function RecordDetailPage({ exData, prog, setProg, push, onClose 
   const [showObjInput, setShowObjInput] = useState(false);
   const [objKgInput,   setObjKgInput]   = useState("");
 
-  const nom = exData?.nom || "";
+  const nom = exData?.nom ||"";
 
   // Historique trié chrono
   const hist = useMemo(() => {
@@ -159,8 +159,8 @@ export default function RecordDetailPage({ exData, prog, setProg, push, onClose 
       u.records[nom].historique = [...(u.records[nom]?.historique||[]), entry];
     }
     setProg(u);
-    push("🏆", isNew ? "Nouveau record !" : "Performance enregistrée",
-         `${nom} · ${kgNum}kg × ${repsNum} reps · 1RM≈${liveRM}kg`);
+    push("", isNew ?"Nouveau record !" :"Performance enregistrée",
+`${nom} · ${kgNum}kg × ${repsNum} reps · 1RM≈${liveRM}kg`);
     setKg(""); setReps("");
   };
 
@@ -174,7 +174,7 @@ export default function RecordDetailPage({ exData, prog, setProg, push, onClose 
     u.records[nom].objectifKg = v;
     setProg(u);
     setShowObjInput(false); setObjKgInput("");
-    push("🎯","Objectif enregistré",`${nom} · ${v} kg 1RM`);
+    push("","Objectif enregistré",`${nom} · ${v} kg 1RM`);
   };
 
   const stepKg   = (d) => setKg(k => String(Math.max(0, Math.round(((parseFloat(k)||0)+d)*2)/2)));
@@ -186,13 +186,13 @@ export default function RecordDetailPage({ exData, prog, setProg, push, onClose 
   const btnMinus = {
     width:44, height:44, borderRadius:12, border:"none", cursor:"pointer",
     fontSize:26, fontWeight:400, display:"flex", alignItems:"center", justifyContent:"center",
-    background:"#ECEEF4", color:MID, flexShrink:0,
+    background:"#EAECF0", color:MID, flexShrink:0,
   };
   const btnPlus = {
     width:44, height:44, borderRadius:12, border:"none", cursor:"pointer",
     fontSize:20, fontWeight:400, display:"flex", alignItems:"center", justifyContent:"center",
     background:`linear-gradient(145deg,${BLLG},${BLDK})`,
-    color:"#FFF", boxShadow:"0 4px 12px rgba(37,99,235,0.35)", flexShrink:0,
+    color:"#FFF", boxShadow:"0 4px 12px rgba(46,72,217,0.35)", flexShrink:0,
   };
 
   return (
@@ -238,7 +238,7 @@ export default function RecordDetailPage({ exData, prog, setProg, push, onClose 
                 color:GRY, marginBottom:4 }}>Record 1RM</div>
               <div style={{ display:"flex", alignItems:"baseline", gap:4 }}>
                 <span style={{ fontSize:34, fontWeight:700, color:TEXT, letterSpacing:-1, ...NUM }}>
-                  {currentRM || "—"}
+                  {currentRM ||"—"}
                 </span>
                 {currentRM > 0 && <span style={{ fontSize:14, color:GRY, fontWeight:600 }}>kg</span>}
               </div>
@@ -250,15 +250,15 @@ export default function RecordDetailPage({ exData, prog, setProg, push, onClose 
                   <div style={{ fontSize:8.5, fontWeight:700, letterSpacing:"0.1em", textTransform:"uppercase",
                     color:GRY, marginBottom:4 }}>Depuis le départ</div>
                   <div style={{ fontSize:14, fontWeight:700,
-                    color: pctProg > 0 ? GRN : "#F87171" }}>
-                    {pctProg > 0 ? "↗" : "↘"} {pctProg > 0 ? "+" : ""}{pctProg}%
+                    color: pctProg > 0 ? GRN :"#E5484D" }}>
+                    {pctProg > 0 ?"↗" :"↘"} {pctProg > 0 ?"+" :""}{pctProg}%
                   </div>
                   <div style={{ fontSize:10, color:GRY, marginTop:1, fontFamily:F }}>
                     {firstRM} kg → {currentRM} kg
                   </div>
                 </div>
               </>
-            )}
+)}
           </div>
         </div>
 
@@ -266,10 +266,10 @@ export default function RecordDetailPage({ exData, prog, setProg, push, onClose 
         <div style={{ margin:"0 20px 16px", background:S1, border:`1px solid ${BD}`,
           borderRadius:16, padding:"12px 16px" }}>
           <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom: objectifKg ? 9 : 0 }}>
-            <div style={{ fontSize:13, fontWeight:700, color:TEXT }}>🎯 Objectif</div>
+            <div style={{ fontSize:13, fontWeight:700, color:TEXT }}> Objectif</div>
             <button onClick={() => { setShowObjInput(!showObjInput); setObjKgInput(objectifKg||""); }}
               style={{ fontSize:11, fontWeight:700, color:BL, background:"none", border:"none", cursor:"pointer" }}>
-              {objectifKg ? "Modifier" : "+ Définir"}
+              {objectifKg ?"Modifier" :"+ Définir"}
             </button>
           </div>
 
@@ -278,13 +278,13 @@ export default function RecordDetailPage({ exData, prog, setProg, push, onClose 
               <input type="number" inputMode="decimal" value={objKgInput}
                 onChange={e => setObjKgInput(e.target.value)}
                 placeholder="Ex: 100 kg"
-                style={{ flex:1, padding:"12px 12px", borderRadius:12, border:`1.5px solid rgba(59,130,246,0.35)`,
+                style={{ flex:1, padding:"12px 12px", borderRadius:12, border:`1.5px solid rgba(60,91,255,0.35)`,
                   fontSize:14, fontWeight:700, color:TEXT, fontFamily:F, outline:"none", background:C.bg }}/>
               <button onClick={saveObjectif} style={{ padding:"12px 16px", borderRadius:12, border:"none",
                 background:`linear-gradient(145deg,${BLLG},${BLDK})`, color:"#FFF",
                 fontFamily:F, fontSize:13, fontWeight:700, cursor:"pointer" }}>OK</button>
             </div>
-          )}
+)}
 
           {objectifKg && !showObjInput && (
             <>
@@ -298,13 +298,13 @@ export default function RecordDetailPage({ exData, prog, setProg, push, onClose 
                 <span>{objectifKg} kg cible</span>
               </div>
             </>
-          )}
+)}
 
           {!objectifKg && !showObjInput && (
             <div style={{ fontSize:11, color:GRY, marginTop:8, fontFamily:F }}>
               Définis une cible 1RM pour suivre ta progression.
             </div>
-          )}
+)}
         </div>
 
         {/* ── Saisie : poids + reps ── */}
@@ -322,14 +322,14 @@ export default function RecordDetailPage({ exData, prog, setProg, push, onClose 
                 <span style={{ fontSize:16, fontWeight:700, color:BLDK, ...NUM }}>{liveRM}</span>
                 <span style={{ fontSize:10, color:GRY }}>kg 1RM</span>
                 <span style={{ fontSize:10, fontWeight:700, padding:"2px 8px", borderRadius:999,
-                  background: isNew ? "rgba(16,185,129,0.12)" : "rgba(248,113,113,0.12)",
-                  color: isNew ? "#059669" : "#DC2626" }}>
-                  {isNew ? "↗ Nouveau record" : `↘ ${diffRM} kg`}
+                  background: isNew ?"rgba(18,183,106,0.12)" :"rgba(229,72,77,0.12)",
+                  color: isNew ?"#12B76A" :"#E5484D" }}>
+                  {isNew ?"↗ Nouveau record" :`↘ ${diffRM} kg`}
                 </span>
               </div>
-            ) : (
-              <span style={{ fontSize:10, color:"#C0C6D4" }}>Saisis poids + reps</span>
-            )}
+) : (
+              <span style={{ fontSize:10, color:"#EAECF0" }}>Saisis poids + reps</span>
+)}
           </div>
 
           {/* Ligne Poids */}
@@ -340,8 +340,8 @@ export default function RecordDetailPage({ exData, prog, setProg, push, onClose 
                 textTransform:"uppercase", color:GRY, marginBottom:4 }}>Poids</div>
               <div style={{ display:"flex", alignItems:"baseline", gap:4 }}>
                 <span style={{ fontSize:44, fontWeight:700, letterSpacing:-1,
-                  lineHeight:1, color: kg ? TEXT : "#D1D5DB", ...NUM }}>
-                  {kg || "–"}
+                  lineHeight:1, color: kg ? TEXT :"#D1D5DB", ...NUM }}>
+                  {kg ||"–"}
                 </span>
                 <span style={{ fontSize:13, color:GRY, fontWeight:600 }}>kg</span>
               </div>
@@ -367,8 +367,8 @@ export default function RecordDetailPage({ exData, prog, setProg, push, onClose 
                 textTransform:"uppercase", color:GRY, marginBottom:4 }}>Répétitions</div>
               <div style={{ display:"flex", alignItems:"baseline", gap:4 }}>
                 <span style={{ fontSize:44, fontWeight:700, letterSpacing:-1,
-                  lineHeight:1, color: reps ? TEXT : "#D1D5DB", ...NUM }}>
-                  {reps || "–"}
+                  lineHeight:1, color: reps ? TEXT :"#D1D5DB", ...NUM }}>
+                  {reps ||"–"}
                 </span>
                 <span style={{ fontSize:13, color:GRY, fontWeight:600 }}>reps</span>
               </div>
@@ -390,10 +390,10 @@ export default function RecordDetailPage({ exData, prog, setProg, push, onClose 
             <button onClick={handleSave} disabled={!canSave}
               style={{ display:"flex", alignItems:"center", justifyContent:"center", gap:8,
                 width:"100%", height:48, borderRadius:12, border:"none", fontFamily:F,
-                fontSize:13, fontWeight:700, cursor: canSave ? "pointer" : "default",
-                background: canSave ? `linear-gradient(180deg,${BLLG},${BLDK})` : C.s2,
-                color: canSave ? "#FFF" : "#D1D5DB",
-                boxShadow: canSave ? "0 6px 18px rgba(37,99,235,0.35)" : "none",
+                fontSize:13, fontWeight:700, cursor: canSave ?"pointer" :"default",
+                background: canSave ?`linear-gradient(180deg,${BLLG},${BLDK})` : C.s2,
+                color: canSave ?"#FFF" :"#D1D5DB",
+                boxShadow: canSave ?"0 6px 18px rgba(46,72,217,0.35)" :"none",
                 transition:"all .15s" }}>
               {canSave ? (
                 <>
@@ -403,7 +403,7 @@ export default function RecordDetailPage({ exData, prog, setProg, push, onClose 
                   </svg>
                   {`Enregistrer · ${kgNum} kg × ${repsNum} → ${liveRM} kg 1RM`}
                 </>
-              ) : "Enregistrer"}
+) :"Enregistrer"}
             </button>
           </div>
         </div>
@@ -416,11 +416,11 @@ export default function RecordDetailPage({ exData, prog, setProg, push, onClose 
               textTransform:"uppercase", color:GRY }}>Évolution du 1RM estimé</div>
             {pctProg !== 0 && (
               <div style={{ fontSize:14, fontWeight:700,
-                color: pctProg > 0 ? GRN : "#F87171" }}>
-                {pctProg > 0 ? "+" : ""}{pctProg}%
+                color: pctProg > 0 ? GRN :"#E5484D" }}>
+                {pctProg > 0 ?"+" :""}{pctProg}%
                 <span style={{ fontSize:10, color:GRY, fontWeight:600, marginLeft:4 }}>depuis le départ</span>
               </div>
-            )}
+)}
           </div>
           <RMChart data={chartData} objectifKg={objectifKg}/>
         </div>
@@ -436,29 +436,29 @@ export default function RecordDetailPage({ exData, prog, setProg, push, onClose 
             <div style={{ padding:"20px", textAlign:"center", fontSize:13, color:GRY, fontFamily:F }}>
               Aucune entrée pour le moment. Enregistre ta première performance.
             </div>
-          ) : [...hist].reverse().map((h,i) => {
+) : [...hist].reverse().map((h,i) => {
             const rm = calc1RM(parseFloat(h.poids), parseInt(h.reps));
             const isRec = rm >= currentRM - 0.05;
             return (
               <div key={i} style={{ display:"flex", alignItems:"center", gap:12,
                 padding:"12px 16px", borderBottom:`1px solid ${BD}` }}>
                 <div style={{ fontSize:11, color:GRY, fontWeight:600, flex:1 }}>{h.date}</div>
-                <div style={{ fontSize:11, color:"#C0C6D4" }}>{h.poids} × {h.reps}</div>
+                <div style={{ fontSize:11, color:"#EAECF0" }}>{h.poids} × {h.reps}</div>
                 <div style={{ fontSize:14, fontWeight:700, color:TEXT, ...NUM, marginLeft:"auto" }}>
                   {rm} kg
                 </div>
                 <div style={{ fontSize:10, fontWeight:700, padding:"2px 8px", borderRadius:999,
                   marginLeft:8,
-                  background: isRec ? "rgba(52,211,153,0.12)" : "rgba(0,0,0,0.05)",
-                  color: isRec ? "#059669" : "#C0C6D4" }}>
-                  {isRec ? "Record" : "—"}
+                  background: isRec ?"rgba(18,183,106,0.12)" :"rgba(0,0,0,0.05)",
+                  color: isRec ?"#12B76A" :"#EAECF0" }}>
+                  {isRec ?"Record" :"—"}
                 </div>
               </div>
-            );
+);
           })}
         </div>
 
       </div>
     </div>
-  );
+);
 }

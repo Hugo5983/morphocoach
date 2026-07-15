@@ -6,19 +6,19 @@
  */
 
 
-import { useState, useRef } from "react";
+import { useState, useRef } from"react";
 import {
   callGenerateProgramAPI, compressImage,
   buildProgramFromAI, buildCalendarFromProgram,
   summarizeProgramLoads, LOAD_MESSAGES,
-} from "../../services/aiService.js";
-import { buildDossierAthlete } from "../../services/coachBrainService.js";
-import { analyserMorpho, getFicheMorpho, ficheEstValide } from "../../services/morphoService.js";
+} from"../../services/aiService.js";
+import { buildDossierAthlete } from"../../services/coachBrainService.js";
+import { analyserMorpho, getFicheMorpho, ficheEstValide } from"../../services/morphoService.js";
 import {
   T, F, SER, MON, CARD, InjectCSS, OI,
   PoseCard, Stepper, NavBtns, FL, SelRow,
   GoalCrd, EquipCrd, ZoneGrp, DayPicker,
-} from "./components/AnalyseIAKit.jsx";
+} from"./components/AnalyseIAKit.jsx";
 
 export default function AnalyseIA(props) {
   const { profil, photos, setPhotos, readFile, INT, loadIA, setLoadIA, loadMsg,
@@ -28,11 +28,11 @@ export default function AnalyseIA(props) {
   // ── État du formulaire (inchangé) ────────────────────────────────────────
   const [aStep, setAStep] = useState(0);
   const [form, setForm]   = useState({
-    prenom: profil?.prenom || "", age: profil?.age || "",
-    poids:  profil?.poids  || "", taille: profil?.taille || "",
-    sexe:   profil?.sexe   || "", metier: "",
-    niveau: "", jours: [], objectif: profil?.objectif || "",
-    objectifPrecis: "", materiel: [], pathologies: [], sport: "",
+    prenom: profil?.prenom ||"", age: profil?.age ||"",
+    poids:  profil?.poids  ||"", taille: profil?.taille ||"",
+    sexe:   profil?.sexe   ||"", metier:"",
+    niveau:"", jours: [], objectif: profil?.objectif ||"",
+    objectifPrecis:"", materiel: [], pathologies: [], sport:"",
   });
 
   const fileRefFace   = useRef();
@@ -60,13 +60,13 @@ export default function AnalyseIA(props) {
       let fiche = getFicheMorpho();
       const rawPhotos = [photos.face, photos.dos, photos.profil].filter(Boolean);
       if (rawPhotos.length > 0) {
-        setLoadMsg("📸 Analyse morphologique de tes photos…");
+        setLoadMsg(" Analyse morphologique de tes photos…");
         const compressed = [];
         for (const p of rawPhotos) compressed.push(await compressImage(p, 800, 0.65));
         fiche = await analyserMorpho(compressed, { sexe: form.sexe, age: form.age });
       } else if (fiche && !ficheEstValide()) {
         // Fiche ancienne (> 90 j) : on l'utilise quand même, mais on le signale
-        push?.("📸", "Fiche morpho ancienne", "Pense à refaire tes photos pour une analyse à jour.");
+        push?.("","Fiche morpho ancienne","Pense à refaire tes photos pour une analyse à jour.");
       }
 
       const { parsed, warnings } = await callGenerateProgramAPI({ form, dossier, ficheMorpho: fiche });
@@ -85,13 +85,13 @@ export default function AnalyseIA(props) {
       setCalSess(prev => ({ ...prev, ...newSess }));
       if (setProgView) setProgView("today");
       if (setTab)      setTab("program");
-      const pts = np.analyse?.points_faibles?.join(", ") || "";
-      push("🎯", `Programme Cycle ${np.numero} créé !`, pts ? `Points faibles: ${pts}` : "Votre programme est prêt !");
+      const pts = np.analyse?.points_faibles?.join(",") ||"";
+      push("",`Programme Cycle ${np.numero} créé !`, pts ?`Points faibles: ${pts}` :"Votre programme est prêt !");
       setLoadIA(false);
     } catch(e) {
       console.error("lancerIA error:", e);
       setLoadMsg(`Erreur: ${e.message}`);
-      setTimeout(() => { setLoadIA(false); push("❌","Échec",e.message?.substring(0,80)||"Réessayez."); }, 2000);
+      setTimeout(() => { setLoadIA(false); push("","Échec",e.message?.substring(0,80)||"Réessayez."); }, 2000);
     } finally { clearInterval(interval); }
   };
 
@@ -116,7 +116,7 @@ export default function AnalyseIA(props) {
         <InjectCSS/>
         <div style={{ ...CARD, textAlign:'center', padding:'32px 20px', marginTop:20 }}>
           <div style={{ width:56, height:56, borderRadius:'50%',
-            background:'rgba(248,113,113,0.12)', border:`1px solid rgba(248,113,113,0.25)`,
+            background:'rgba(229,72,77,0.12)', border:`1px solid rgba(229,72,77,0.25)`,
             display:'grid', placeItems:'center', margin:'0 auto 18px', color:T.red }}>
             <OI n="sparkles" sz={24}/>
           </div>
@@ -132,7 +132,7 @@ export default function AnalyseIA(props) {
           </button>
         </div>
       </div>
-    );
+);
 
     return (
       <div style={{ padding:'0 20px' }}>
@@ -194,11 +194,11 @@ export default function AnalyseIA(props) {
                 {done && <span style={{ fontFamily:MON, fontSize:8.5, color:T.t4,
                                         letterSpacing:"0.1em", textTransform:'uppercase' }}>OK</span>}
               </div>
-            );
+);
           })}
         </div>
       </div>
-    );
+);
   }
 
   // ── Wizard ────────────────────────────────────────────────────────────────
@@ -216,7 +216,7 @@ export default function AnalyseIA(props) {
           {/* Bandeau confidentialité */}
           <div style={{ ...CARD, padding:'12px 16px', display:'flex', gap:12,
             alignItems:'center', marginBottom:16,
-            background:'rgba(59,130,246,0.08)', border:`1px solid rgba(59,130,246,0.25)` }}>
+            background:'rgba(60,91,255,0.08)', border:`1px solid rgba(60,91,255,0.25)` }}>
             <div style={{ width:34, height:34, borderRadius:12, background:T.ac,
               display:'grid', placeItems:'center', flexShrink:0,
               boxShadow:`0 4px 10px ${T.acGlow}` }}>
@@ -246,7 +246,7 @@ export default function AnalyseIA(props) {
                     onTap={()=>{ if (ref.current) { ref.current.value=""; ref.current.click(); } }}
                   />
                 </div>
-              );
+);
             })}
           </div>
 
@@ -257,7 +257,7 @@ export default function AnalyseIA(props) {
               {[photos.face,photos.dos,photos.profil].map((f,i) => (
                 <span key={i} style={{ width:18, height:4, borderRadius:2,
                   background:f?T.ac:'rgba(0,0,0,0.12)' }}/>
-              ))}
+))}
             </div>
             <span style={{ fontFamily:MON, fontSize:10, fontWeight:500, color:T.t4,
                            letterSpacing:"0.1em", textTransform:'uppercase' }}>
@@ -358,17 +358,17 @@ export default function AnalyseIA(props) {
                 <SelRow key={n.id} label={n.l} meta={n.d}
                   selected={form.niveau===n.id}
                   onClick={()=>setForm({...form,niveau:n.id})}/>
-              ))}
+))}
             </div>
           </div>
 
           {(!form.age||!form.poids||!form.taille||!form.sexe||!form.niveau) && (
             <div style={{ marginTop:12, padding:'12px 16px', borderRadius:12,
-              background:'rgba(248,113,113,0.08)', border:'1px solid rgba(248,113,113,0.18)',
+              background:'rgba(229,72,77,0.08)', border:'1px solid rgba(229,72,77,0.18)',
               fontSize:11, color:T.red, lineHeight:1.5 }}>
               Remplis tous les champs marqués * pour continuer
             </div>
-          )}
+)}
         </div>
 
         <NavBtns
@@ -393,7 +393,7 @@ export default function AnalyseIA(props) {
               <GoalCrd key={o.id} id={o.id} label={o.l}
                 selected={form.objectif===o.id}
                 onClick={()=>setForm({...form,objectif:o.id})}/>
-            ))}
+))}
           </div>
 
           {/* Objectif précis */}
@@ -430,17 +430,17 @@ export default function AnalyseIA(props) {
                   {form.jours.length} jour{form.jours.length>1?'s':''} sélectionné{form.jours.length>1?'s':''}
                 </span>
               </div>
-            )}
+)}
           </div>
 
           {(!form.objectif||form.jours.length===0) && (
             <div style={{ marginTop:12, padding:'12px 16px', borderRadius:12,
-              background:'rgba(248,113,113,0.08)', border:'1px solid rgba(248,113,113,0.18)',
+              background:'rgba(229,72,77,0.08)', border:'1px solid rgba(229,72,77,0.18)',
               fontSize:11, color:T.red, lineHeight:1.5 }}>
-              {!form.objectif && "* Sélectionne un objectif principal"}
+              {!form.objectif &&"* Sélectionne un objectif principal"}
               {form.jours.length===0 && <div>* Sélectionne au moins 1 jour</div>}
             </div>
-          )}
+)}
         </div>
 
         <NavBtns
@@ -475,7 +475,7 @@ export default function AnalyseIA(props) {
           ].map(zone => (
             <ZoneGrp key={zone.z} zone={zone.z} items={zone.items}
               selected={form.pathologies} onToggle={togglePath}/>
-          ))}
+))}
 
           {/* Aucune pathologie */}
           <div style={{ paddingTop:4 }}>
@@ -483,7 +483,7 @@ export default function AnalyseIA(props) {
               onClick={()=>setForm(f=>({...f,pathologies:["Aucune"]}))}
               style={{ width:'100%', padding:'12px', borderRadius:12,
                 background: form.pathologies.includes("Aucune") ? T.acSoft : T.surfFlat,
-                border: `1px dashed ${form.pathologies.includes("Aucune")?T.bdAc:T.bdHi}`,
+                border:`1px dashed ${form.pathologies.includes("Aucune")?T.bdAc:T.bdHi}`,
                 color:T.t2, fontFamily:F, fontSize:13, fontWeight:600,
                 display:'flex', alignItems:'center', justifyContent:'center', gap:8 }}>
               <OI n="check" sz={13} s={2.2} c={T.t3}/> Aucune pathologie
@@ -513,15 +513,15 @@ export default function AnalyseIA(props) {
               <EquipCrd key={m.id} id={m.id} label={m.l}
                 selected={form.materiel.includes(m.id)}
                 onClick={()=>toggleEquip(m.id)}/>
-            ))}
+))}
           </div>
 
           {/* Corriger points faibles */}
           <button className="ob-tap"
             onClick={()=>setCorrigerFaibles(v=>!v)}
             style={{ marginTop:16, width:'100%', padding:'16px 16px', borderRadius:16, textAlign:'left',
-              background: corrigerFaibles ? `linear-gradient(95deg,${T.acSoft},${T.surf} 80%)` : T.surf,
-              border: `1px solid ${corrigerFaibles?T.bdAc:T.bd}`,
+              background: corrigerFaibles ?`linear-gradient(95deg,${T.acSoft},${T.surf} 80%)` : T.surf,
+              border:`1px solid ${corrigerFaibles?T.bdAc:T.bd}`,
               display:'flex', alignItems:'center', gap:12 }}>
             <div style={{ width:26, height:26, borderRadius:8, flexShrink:0,
               background:corrigerFaibles?T.ac:'transparent',
@@ -551,23 +551,23 @@ export default function AnalyseIA(props) {
                 { l:'Objectif', v:{hypertrophie:"Prise de muscle",force:"Force",poids:"Perte de poids",prep_physique:"Prépa physique",reathletisation:"Réathlé",sante:"Santé"}[form.objectif]||"—" },
                 { l:'Niveau',   v:{debutant:"Débutant",intermediaire:"Intermédiaire",avance:"Avancé"}[form.niveau]||"—" },
                 { l:'Fréquence',v:form.jours.length>0?`${form.jours.length} jours / sem`:"—" },
-                { l:'Contraintes', v:form.pathologies.length>0?form.pathologies.join(", "):"Aucune" },
+                { l:'Contraintes', v:form.pathologies.length>0?form.pathologies.join(","):"Aucune" },
               ].map(r => (
                 <div key={r.l} style={{ display:'flex', alignItems:'center', justifyContent:'space-between' }}>
                   <span style={{ fontSize:11, fontWeight:500, color:T.t3 }}>{r.l}</span>
                   <span style={{ fontFamily:F, fontSize:13, fontWeight:600, color:T.t1 }}>{r.v}</span>
                 </div>
-              ))}
+))}
             </div>
           </div>
 
           {form.materiel.length===0 && (
             <div style={{ marginTop:12, padding:'12px 16px', borderRadius:12,
-              background:'rgba(248,113,113,0.08)', border:'1px solid rgba(248,113,113,0.18)',
+              background:'rgba(229,72,77,0.08)', border:'1px solid rgba(229,72,77,0.18)',
               fontSize:11, color:T.red }}>
               * Sélectionne au moins un équipement
             </div>
-          )}
+)}
         </div>
 
         <NavBtns
@@ -579,6 +579,6 @@ export default function AnalyseIA(props) {
         />
       </>}
     </div>
-  );
+);
 }
 

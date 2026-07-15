@@ -27,9 +27,9 @@ export async function scanBarcode(code) {
     const data = await res.json();
     if (data.status !== 1) return { error: true };
     const n = data.product.nutriments || {};
-    const marque = (data.product.brands || "").split(",")[0].trim();
+    const marque = (data.product.brands ||"").split(",")[0].trim();
     return {
-      n:      data.product.product_name_fr || data.product.product_name || "Produit",
+      n:      data.product.product_name_fr || data.product.product_name ||"Produit",
       c:      Math.round(n["energy-kcal_100g"] || 0),
       p:      Math.round(n.proteins_100g      || 0),
       g:      Math.round(n.carbohydrates_100g || 0),
@@ -39,10 +39,10 @@ export async function scanBarcode(code) {
       na:     Math.round(n.sodium_100g * 1000        || 0),             // sodium (mg)
       su:     Math.round(n["sugars_100g"]            || 0),             // sucres (g)
       sa:     Math.round((n["saturated-fat_100g"]    || 0) * 10) / 10, // graisses saturées (g)
-      cat:    "Scanné",
+      cat:"Scanné",
       // ── Affichage produit (marque, Nutri-Score, photo) ──
       brand:      marque || null,
-      nutriscore: /^[a-e]$/i.test(data.product.nutriscore_grade || "")
+      nutriscore: /^[a-e]$/i.test(data.product.nutriscore_grade ||"")
                     ? data.product.nutriscore_grade.toUpperCase() : null,
       img:        data.product.image_front_small_url || data.product.image_small_url || null,
       code,

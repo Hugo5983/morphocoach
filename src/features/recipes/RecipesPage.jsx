@@ -1,8 +1,8 @@
-import { useState, useRef, useEffect } from "react";
-import { RECIPES, REPAS, FILTRE_GROUPES, FILTRES, recipeBadge, prixEuros } from "../../data/recipes.js";
-import RecipeDetail from "./RecipeDetail.jsx";
-import { useRecipePhoto } from "./useRecipePhoto.js";
-import { C, FONT, SERIF } from "../../data/constants.js";
+import { useState, useRef, useEffect } from"react";
+import { RECIPES, REPAS, FILTRE_GROUPES, FILTRES, recipeBadge, prixEuros } from"../../data/recipes.js";
+import RecipeDetail from"./RecipeDetail.jsx";
+import { useRecipePhoto } from"./useRecipePhoto.js";
+import { C, FONT, SERIF } from"../../data/constants.js";
 
 
 // ─── Carte recette ────────────────────────────────────────────────────────────
@@ -15,7 +15,7 @@ import { C, FONT, SERIF } from "../../data/constants.js";
 // plus rien ne se marche dessus.
 function RecipeCard({ r, liked, onLike, onOpen }) {
   const badge = recipeBadge(r);
-  const { src:photo } = useRecipePhoto(r.id, r.img, "card");
+  const { src:photo } = useRecipePhoto(r.id, r.img,"card");
   const prix = prixEuros(r);
   return (
     <div onClick={() => onOpen(r)} className="tap" style={{
@@ -44,21 +44,21 @@ function RecipeCard({ r, liked, onLike, onOpen }) {
             color:"#FFF", fontSize:11, fontWeight:700, fontFamily:FONT,
             fontVariantNumeric:"tabular-nums", whiteSpace:"nowrap",
             letterSpacing:0.1 }}>{prix}</div>
-        )}
+)}
 
         <button
           onClick={e => { e.stopPropagation(); onLike(r.id); }}
-          aria-label={liked ? "Retirer des favoris" : "Ajouter aux favoris"}
+          aria-label={liked ?"Retirer des favoris" :"Ajouter aux favoris"}
           style={{ position:"absolute", top:8, right:8,
             width:32, height:32, borderRadius:"50%",
-            background: liked ? "rgba(248,113,113,0.95)" : "rgba(255,255,255,0.92)",
-            border: liked ? "1px solid rgba(248,113,113,0.65)" : "1px solid rgba(255,255,255,0.65)",
-            boxShadow: liked ? "0 3px 10px rgba(248,113,113,0.5)" : "0 2px 8px rgba(11,18,32,0.18)",
+            background: liked ?"rgba(229,72,77,0.95)" :"rgba(255,255,255,0.92)",
+            border: liked ?"1px solid rgba(229,72,77,0.65)" :"1px solid rgba(255,255,255,0.65)",
+            boxShadow: liked ?"0 3px 10px rgba(229,72,77,0.5)" :"0 2px 8px rgba(11,18,32,0.18)",
             display:"grid", placeItems:"center", cursor:"pointer",
             transition:"all .2s ease" }}>
           <svg width="15" height="15" viewBox="0 0 24 24"
-               fill={liked ? "#FFF" : "none"}
-               stroke={liked ? "#FFF" : "#F87171"}
+               fill={liked ?"#FFF" :"none"}
+               stroke={liked ?"#FFF" :"#E5484D"}
                strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/>
           </svg>
@@ -86,7 +86,7 @@ function RecipeCard({ r, liked, onLike, onOpen }) {
         </div>
       </div>
     </div>
-  );
+);
 }
 
 // ─── RECIPES PAGE ─────────────────────────────────────────────────────────────
@@ -123,13 +123,13 @@ export default function Recipes(props) {
   useEffect(() => { setNbVisible(24); }, [search, filtres, showFavs, sortBy]);
   useEffect(() => {
     const el = sentinelle.current;
-    if (!el || typeof IntersectionObserver === "undefined") return;
+    if (!el || typeof IntersectionObserver ==="undefined") return;
     const obs = new IntersectionObserver(es => {
       if (es.some(e => e.isIntersecting)) setNbVisible(n => n + 24);
-    }, { rootMargin: "600px" });        // recharge bien avant d'atteindre le bas
+    }, { rootMargin:"600px" });        // recharge bien avant d'atteindre le bas
     obs.observe(el);
     return () => obs.disconnect();
-    // `selected` dans les dépendances : au retour de la vue détail, la
+    //`selected` dans les dépendances : au retour de la vue détail, la
     // sentinelle est un NOUVEL élément du DOM — il faut ré-observer.
   }, [selected, search, filtres, showFavs, sortBy]);
 
@@ -156,7 +156,7 @@ export default function Recipes(props) {
         repas={repas}
         setRepas={setRepas}
       />
-    );
+);
   }
 
   // ── Filtrage ──
@@ -184,7 +184,7 @@ export default function Recipes(props) {
     recettes: visible.filter(r => r.repas === rep.id),
   })).filter(s => s.recettes.length > 0);
 
-  const showFeatured = filtres.length === 0 && !search && !showFavs && sortBy === "default";
+  const showFeatured = filtres.length === 0 && !search && !showFavs && sortBy ==="default";
 
   return (
     <div className="anim" style={{ padding:"0 20px 32px" }}>
@@ -202,19 +202,19 @@ export default function Recipes(props) {
         <button onClick={() => setShowFavs(v => !v)}
           aria-label="Mes favoris"
           style={{ height:40, padding:"0 16px", borderRadius:12,
-            background: showFavs ? "rgba(248,113,113,0.95)" : C.s1,
-            border:`1px solid ${showFavs ? "rgba(248,113,113,0.65)" : "rgba(0,0,0,0.05)"}`,
-            boxShadow: showFavs ? "0 3px 10px rgba(248,113,113,0.35)" : "none",
+            background: showFavs ?"rgba(229,72,77,0.95)" : C.s1,
+            border:`1px solid ${showFavs ?"rgba(229,72,77,0.65)" :"rgba(0,0,0,0.05)"}`,
+            boxShadow: showFavs ?"0 3px 10px rgba(229,72,77,0.35)" :"none",
             display:"flex", alignItems:"center", gap:8, cursor:"pointer",
             transition:"all .2s ease" }}>
           <svg width="15" height="15" viewBox="0 0 24 24"
-               fill={showFavs ? "#FFF" : "none"}
-               stroke={showFavs ? "#FFF" : "#F87171"}
+               fill={showFavs ?"#FFF" :"none"}
+               stroke={showFavs ?"#FFF" :"#E5484D"}
                strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/>
           </svg>
           <span style={{ fontSize:13, fontWeight:700, fontFamily:FONT,
-            color: showFavs ? "#FFF" : C.mid }}>Favoris</span>
+            color: showFavs ?"#FFF" : C.mid }}>Favoris</span>
         </button>
       </div>
 
@@ -222,17 +222,17 @@ export default function Recipes(props) {
       {!premium && (
         <div onClick={() => setPaywall && setPaywall(true)} style={{
           display:"flex", alignItems:"center", gap:12,
-          background:"rgba(59,130,246,0.05)",
-          border:"1px solid rgba(59,130,246,0.18)",
+          background:"rgba(60,91,255,0.05)",
+          border:"1px solid rgba(60,91,255,0.18)",
           borderRadius:16, padding:"12px 16px", marginBottom:12,
           cursor:"pointer",
         }}>
           <div style={{
             width:40, height:40, borderRadius:12, flexShrink:0,
-            background:"rgba(59,130,246,0.12)",
-            border:"1px solid rgba(59,130,246,0.25)",
+            background:"rgba(60,91,255,0.12)",
+            border:"1px solid rgba(60,91,255,0.25)",
             display:"grid", placeItems:"center", fontSize:20,
-          }}>🍽️</div>
+          }}></div>
           <div style={{ flex:1 }}>
             <div style={{ fontSize:13, fontWeight:700, color:C.text,
               fontFamily:FONT }}>
@@ -250,7 +250,7 @@ export default function Recipes(props) {
             fontFamily:FONT,
           }}>Voir</div>
         </div>
-      )}
+)}
 
       {/* ── Recherche ── */}
       <div style={{ display:"flex", gap:8, marginBottom:16 }}>
@@ -272,17 +272,17 @@ export default function Recipes(props) {
             <button onClick={() => setSearch("")} style={{ background:"none",
               border:"none", cursor:"pointer", color:C.mid,
               fontSize:16, lineHeight:1, padding:0 }}>×</button>
-          )}
+)}
         </div>
         <div style={{ position:"relative", flexShrink:0 }}>
           <button onClick={() => setSortOpen(v => !v)}
             aria-label="Trier"
             style={{ width:40, height:40,
               background: sortBy!=="default" ? C.accent : C.s1,
-              border:`1px solid ${sortBy!=="default" ? C.accent : "rgba(0,0,0,0.05)"}`,
+              border:`1px solid ${sortBy!=="default" ? C.accent :"rgba(0,0,0,0.05)"}`,
               borderRadius:12, display:"grid", placeItems:"center", cursor:"pointer" }}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-                 stroke={sortBy!=="default" ? "#FFF" : C.mid} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                 stroke={sortBy!=="default" ?"#FFF" : C.mid} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M3 6h13M3 12h9M3 18h5M17 8l4-4 4 4M21 4v16" transform="scale(0.78) translate(3,3)"/>
               <path d="M7 4v16M3 16l4 4 4-4"/>
             </svg>
@@ -300,7 +300,7 @@ export default function Recipes(props) {
                   return (
                     <button key={k} onClick={() => { setSortBy(k); setSortOpen(false); }}
                       style={{ width:"100%", textAlign:"left", padding:"12px 12px", borderRadius:8,
-                        background: on ? "rgba(59,130,246,0.12)" : "transparent",
+                        background: on ?"rgba(60,91,255,0.12)" :"transparent",
                         border:"none", cursor:"pointer",
                         display:"flex", alignItems:"center", justifyContent:"space-between",
                         fontFamily:FONT, fontSize:13, fontWeight: on?700:500,
@@ -308,11 +308,11 @@ export default function Recipes(props) {
                       {s.l}
                       {on && <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={C.accentDk} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5"/></svg>}
                     </button>
-                  );
+);
                 })}
               </div>
             </>
-          )}
+)}
         </div>
       </div>
 
@@ -321,8 +321,8 @@ export default function Recipes(props) {
         <button className="tap" onClick={() => setMenuOuvert(o => !o)} style={{
           display:"flex", alignItems:"center", justifyContent:"space-between",
           width:"100%", padding:"12px 16px", borderRadius:14,
-          background: filtres.length ? "rgba(59,130,246,0.08)" : C.s1,
-          border:`1px solid ${filtres.length ? "rgba(59,130,246,0.3)" : "rgba(0,0,0,0.05)"}`,
+          background: filtres.length ?"rgba(60,91,255,0.08)" : C.s1,
+          border:`1px solid ${filtres.length ?"rgba(60,91,255,0.3)" :"rgba(0,0,0,0.05)"}`,
           color:C.text, fontSize:14, fontWeight:600, fontFamily:FONT,
           cursor:"pointer" }}>
           <span style={{ display:"flex", alignItems:"center", gap:8 }}>
@@ -332,10 +332,10 @@ export default function Recipes(props) {
                 justifyContent:"center", minWidth:20, height:20, padding:"0 6px",
                 borderRadius:10, background:C.accent, color:"#FFF",
                 fontSize:11, fontWeight:700 }}>{filtres.length}</span>
-            )}
+)}
           </span>
           <span style={{ color:C.mid, fontSize:12,
-            transform:menuOuvert ? "rotate(180deg)" : "none",
+            transform:menuOuvert ?"rotate(180deg)" :"none",
             transition:"transform .2s" }}>▾</span>
         </button>
 
@@ -348,11 +348,11 @@ export default function Recipes(props) {
                 style={{ padding:"5px 10px", borderRadius:14, background:C.accent,
                   border:"none", color:"#FFF", fontSize:12, fontWeight:600,
                   fontFamily:FONT, cursor:"pointer" }}>
-                {FILTRES.find(f => f.id === id)?.l} ✕
+                {FILTRES.find(f => f.id === id)?.l} 
               </button>
-            ))}
+))}
           </div>
-        )}
+)}
 
         {menuOuvert && (
           <div style={{ position:"absolute", top:"calc(100% + 8px)", left:0, right:0,
@@ -374,16 +374,16 @@ export default function Recipes(props) {
                           p.includes(f.id) ? p.filter(x => x !== f.id) : [...p, f.id])}
                         style={{
                           padding:"8px 14px", borderRadius:20, whiteSpace:"nowrap",
-                          background: on ? C.accent : "rgba(0,0,0,0.05)",
-                          border:`1px solid ${on ? C.accent : "rgba(0,0,0,0.05)"}`,
-                          color: on ? "#FFF" : C.mid,
+                          background: on ? C.accent :"rgba(0,0,0,0.05)",
+                          border:`1px solid ${on ? C.accent :"rgba(0,0,0,0.05)"}`,
+                          color: on ?"#FFF" : C.mid,
                           fontSize:13, fontWeight:600, fontFamily:FONT,
                           cursor:"pointer" }}>{f.l}</button>
-                    );
+);
                   })}
                 </div>
               </div>
-            ))}
+))}
 
             <div style={{ display:"flex", gap:8, paddingTop:4,
               borderTop:"1px solid rgba(0,0,0,0.05)" }}>
@@ -395,11 +395,11 @@ export default function Recipes(props) {
                 flex:1, padding:"10px", borderRadius:12, background:C.accent,
                 border:"none", color:"#FFF", fontSize:13, fontWeight:600,
                 fontFamily:FONT, cursor:"pointer" }}>
-                Voir {visible.length} recette{visible.length > 1 ? "s" : ""}
+                Voir {visible.length} recette{visible.length > 1 ?"s" :""}
               </button>
             </div>
           </div>
-        )}
+)}
       </div>
 
       {/* ── À la une ── */}
@@ -425,7 +425,7 @@ export default function Recipes(props) {
                 <div style={{ display:"inline-flex", alignItems:"center", gap:4,
                   fontSize:10, fontWeight:700, letterSpacing:"0.1em",
                   textTransform:"uppercase", color:"#FFF",
-                  background:"linear-gradient(135deg,#FB7185,#F43F5E)",
+                  background:"linear-gradient(135deg,#E5484D,#E5484D)",
                   border:"1px solid rgba(244,63,94,0.5)",
                   boxShadow:"0 3px 10px rgba(244,63,94,0.5)",
                   padding:"4px 8px", borderRadius:8,
@@ -440,9 +440,9 @@ export default function Recipes(props) {
                   textShadow:"0 1px 6px rgba(0,0,0,0.35)" }}>{featured.nom}</div>
                 <div style={{ display:"flex", alignItems:"center", gap:8, marginTop:4 }}>
                   {[
-                    `${featured.kcal} kcal`,
-                    `${featured.temps} min`,
-                    `${featured.prot}g prot.`,
+`${featured.kcal} kcal`,
+`${featured.temps} min`,
+`${featured.prot}g prot.`,
                   ].map((t, i) => (
                     <span key={i} style={{ display:"flex", alignItems:"center", gap:8 }}>
                       {i > 0 && <span style={{ width:3, height:3, borderRadius:"50%",
@@ -450,23 +450,23 @@ export default function Recipes(props) {
                       <span style={{ fontSize:13, color:"rgba(255,255,255,0.85)",
                         fontFamily:FONT, textShadow:"0 1px 4px rgba(0,0,0,0.35)" }}>{t}</span>
                     </span>
-                  ))}
+))}
                 </div>
               </div>
               <button
                 onClick={e => { e.stopPropagation(); toggleLike(featured.id); }}
-                aria-label={liked[featured.id] ? "Retirer des favoris" : "Ajouter aux favoris"}
+                aria-label={liked[featured.id] ?"Retirer des favoris" :"Ajouter aux favoris"}
                 style={{ position:"absolute", top:12, right:12,
                   width:34, height:34, borderRadius:"50%",
-                  background: liked[featured.id] ? "rgba(248,113,113,0.95)" : "rgba(255,255,255,0.85)",
+                  background: liked[featured.id] ?"rgba(229,72,77,0.95)" :"rgba(255,255,255,0.85)",
                   backdropFilter:"blur(8px)", WebkitBackdropFilter:"blur(8px)",
-                  border: liked[featured.id] ? "1px solid rgba(248,113,113,0.65)" : "1px solid rgba(255,255,255,0.65)",
-                  boxShadow: liked[featured.id] ? "0 3px 10px rgba(248,113,113,0.5)" : "0 2px 8px rgba(11,18,32,0.18)",
+                  border: liked[featured.id] ?"1px solid rgba(229,72,77,0.65)" :"1px solid rgba(255,255,255,0.65)",
+                  boxShadow: liked[featured.id] ?"0 3px 10px rgba(229,72,77,0.5)" :"0 2px 8px rgba(11,18,32,0.18)",
                   display:"grid", placeItems:"center", cursor:"pointer",
                   transition:"all .2s ease" }}>
                 <svg width="16" height="16" viewBox="0 0 24 24"
-                     fill={liked[featured.id] ? "#FFF" : "none"}
-                     stroke={liked[featured.id] ? "#FFF" : "#F87171"}
+                     fill={liked[featured.id] ?"#FFF" :"none"}
+                     stroke={liked[featured.id] ?"#FFF" :"#E5484D"}
                      strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/>
                 </svg>
@@ -474,17 +474,17 @@ export default function Recipes(props) {
             </div>
           </div>
         </div>
-      )}
+)}
 
       {/* ── Sections ── */}
       {sections.length === 0 ? (
         <div style={{ textAlign:"center", padding:"32px 20px",
           color:C.dim, fontSize:13, fontFamily:FONT, lineHeight:1.6 }}>
           {showFavs
-            ? "Aucune recette en favori pour l'instant. Touche le cœur d'une recette pour l'ajouter."
-            : "Aucune recette trouvée"}
+            ?"Aucune recette en favori pour l'instant. Touche le cœur d'une recette pour l'ajouter."
+            :"Aucune recette trouvée"}
         </div>
-      ) : (
+) : (
         (() => { let budget = nbVisible; return sections.map(section => {
           if (budget <= 0) return null;
           const aAfficher = section.recettes.slice(0, budget);
@@ -499,7 +499,7 @@ export default function Recipes(props) {
                   fontFamily:FONT }}>{section.label}</span>
                 <span style={{ fontSize:11, color:C.dim,
                   marginLeft:8, fontFamily:FONT }}>
-                  {section.total} recette{section.total > 1 ? "s" : ""}
+                  {section.total} recette{section.total > 1 ?"s" :""}
                 </span>
               </div>
             </div>
@@ -507,15 +507,15 @@ export default function Recipes(props) {
               {section.recettes.map(r => (
                 <RecipeCard key={r.id} r={r}
                   liked={!!liked[r.id]} onLike={toggleLike} onOpen={openRecipe}/>
-              ))}
+))}
             </div>
           </div>
-        );}); })()
-      )}
+);}); })()
+)}
 
       {/* sentinelle : déclenche le chargement des 24 cartes suivantes */}
       <div ref={sentinelle} style={{ height:1 }}/>
 
     </div>
-  );
+);
 }

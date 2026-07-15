@@ -3,8 +3,8 @@
 // Fournit : user (ou null), loading (chargement initial), et les actions
 // signUp / signIn / signOut. Un seul point de vérité pour toute l'app.
 // ═══════════════════════════════════════════════════════════════════════════
-import { useState, useEffect, useCallback } from 'react';
-import { supabase } from '../services/supabase.js';
+import { useState, useEffect, useCallback } from'react';
+import { supabase } from'../services/supabase.js';
 
 export function useAuth() {
   const [user, setUser] = useState(null);

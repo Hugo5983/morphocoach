@@ -1,12 +1,12 @@
-import { C } from "../../data/constants.js";
-import { useState, useEffect } from "react";
-import { getXPState, getLevelInfo } from "../../services/xpService.js";
-import { getLevelBadge } from "../../data/levelBadges.js";
+import { C } from"../../data/constants.js";
+import { useState, useEffect } from"react";
+import { getXPState, getLevelInfo } from"../../services/xpService.js";
+import { getLevelBadge } from"../../data/levelBadges.js";
 
-const GS     = "'General Sans',system-ui,-apple-system,sans-serif";
-const GOLD1  = "#E6B758";
-const GOLD2  = "#C9912F";
-const GOLDTX = "#9A6A13";
+const GS     ="'Archivo',system-ui,-apple-system,sans-serif";
+const GOLD1  ="#3C5BFF";
+const GOLD2  ="#2E48D9";
+const GOLDTX ="#2E48D9";
 
 export function XPBar() {
   const [state, setState] = useState(() => getXPState());
@@ -23,14 +23,14 @@ export function XPBar() {
 
   return (
     <div style={{
-      margin: "8px 20px 12px",
+      margin:"8px 20px 12px",
       borderRadius: 16,
-      background: "#FFF",
-      border: "1px solid rgba(0,0,0,0.08)",
+      background:"#FFF",
+      border:"1px solid rgba(0,0,0,0.08)",
       boxShadow: C.shadow,
-      padding: "12px 12px",
-      display: "flex",
-      alignItems: "center",
+      padding:"12px 12px",
+      display:"flex",
+      alignItems:"center",
       gap: 12,
     }}>
       {/* Badge niveau hexagonal */}
@@ -39,19 +39,19 @@ export function XPBar() {
         alt={`Niveau ${info.cur.level}`}
         style={{
           width: 46,
-          height: "auto",
+          height:"auto",
           flexShrink: 0,
-          objectFit: "contain",
-          filter: "drop-shadow(0 3px 8px rgba(30,80,220,0.35))",
-          display: "block",
+          objectFit:"contain",
+          filter:"drop-shadow(0 3px 8px rgba(30,80,220,0.35))",
+          display:"block",
         }}
       />
 
       {/* Barre + infos */}
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{
-          display: "flex", alignItems: "center",
-          justifyContent: "space-between", marginBottom: 4,
+          display:"flex", alignItems:"center",
+          justifyContent:"space-between", marginBottom: 4,
         }}>
           <span style={{
             fontSize: 13, fontWeight: 700, color: C.text,
@@ -69,12 +69,12 @@ export function XPBar() {
         {/* Barre de progression */}
         <div style={{
           height: 6, borderRadius: 4,
-          background: "rgba(0,0,0,0.08)", overflow: "hidden",
+          background:"rgba(0,0,0,0.08)", overflow:"hidden",
         }}>
           <div style={{
-            width: `${info.pct}%`, height: "100%", borderRadius: 4,
-            background: `linear-gradient(90deg,${GOLD1},${GOLD2})`,
-            transition: "width 0.6s ease",
+            width:`${info.pct}%`, height:"100%", borderRadius: 4,
+            background:`linear-gradient(90deg,${GOLD1},${GOLD2})`,
+            transition:"width 0.6s ease",
           }} />
         </div>
 
@@ -85,17 +85,17 @@ export function XPBar() {
             marginTop: 4, fontWeight: 500,
           }}>
             <span style={{ color: GOLDTX, fontWeight: 700 }}>{info.toNext} XP</span>
-            {" → Niv. "}{info.next.level} · {info.next.name}
+            {" → Niv."}{info.next.level} · {info.next.name}
           </div>
-        ) : (
+) : (
           <div style={{
             fontSize: 11, color: GOLDTX, fontFamily: GS,
             marginTop: 4, fontWeight: 700,
           }}>
-            🏆 Niveau maximum atteint !
+             Niveau maximum atteint !
           </div>
-        )}
+)}
       </div>
     </div>
-  );
+);
 }

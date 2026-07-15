@@ -5,16 +5,16 @@
 // l'état de chaque badge : débloqué ou progression x/cible.
 // Un badge débloqué reste débloqué (persisté dans mc_badgesUnlocked).
 
-import * as storage from "./storageService.js";
-import { getXPState, getLevelInfo } from "./xpService.js";
-import { ACHIEVEMENTS } from "../data/achievements.js";
-import { calc1RM } from "../utils/training.js";
+import * as storage from"./storageService.js";
+import { getXPState, getLevelInfo } from"./xpService.js";
+import { ACHIEVEMENTS } from"../data/achievements.js";
+import { calc1RM } from"../utils/training.js";
 
-const UNLOCKED_KEY = "badgesUnlocked";
+const UNLOCKED_KEY ="badgesUnlocked";
 
 /** Lecture sûre d'un JSON localStorage non préfixé (clés historiques morpho_*). */
 function rawJSON(key, fallback) {
-  try { return JSON.parse(localStorage.getItem(key) || "null") ?? fallback; }
+  try { return JSON.parse(localStorage.getItem(key) ||"null") ?? fallback; }
   catch { return fallback; }
 }
 
@@ -51,7 +51,7 @@ function bestStreakOf(dateSet) {
 export function computeBadgeStats(goals = {}) {
   const workoutLog  = rawJSON("morpho_workout_log", {});
   const sleepLog    = rawJSON("morpho_sleep_log", {});
-  const sleepTarget = parseFloat(localStorage.getItem("morpho_sleep_target") || "8");
+  const sleepTarget = parseFloat(localStorage.getItem("morpho_sleep_target") ||"8");
   const mobiliteLog = rawJSON("morpho_mobilite_log", {});
   const repasLog    = storage.get("repasLog", {}) || {};
   const weightLog   = storage.get("weightLog", []) || [];
@@ -96,7 +96,7 @@ export function computeBadgeStats(goals = {}) {
   const meilleurMoisSeances = Math.max(0, ...Object.values(monthCounts));
 
   // ── Cardio / mobilité ──────────────────────────────────────────────────────
-  const cardioCal = cal.filter((s) => s.done && (s.intensite === "leger" || s.intensite === "mobilite")).length;
+  const cardioCal = cal.filter((s) => s.done && (s.intensite ==="leger" || s.intensite ==="mobilite")).length;
   const mobiliteJours = Object.values(mobiliteLog).filter(Boolean).length;
   const cardioSeances = cardioCal + mobiliteJours;
 
@@ -164,14 +164,14 @@ export function getBadgeStates(goals = {}) {
 
   // 1er passage : tous les badges hors mode_legende
   const base = ACHIEVEMENTS.map((def) => {
-    if (def.stat === "autresBadges") return { ...def, current: 0 };
+    if (def.stat ==="autresBadges") return { ...def, current: 0 };
     const current = Math.round((stats[def.stat] || 0) * 10) / 10;
     return { ...def, current };
   });
-  const unlockedOthers = base.filter((b) => b.stat !== "autresBadges" && b.current >= b.target).length;
+  const unlockedOthers = base.filter((b) => b.stat !=="autresBadges" && b.current >= b.target).length;
 
   const states = base.map((b) => {
-    const current = b.stat === "autresBadges" ? unlockedOthers : b.current;
+    const current = b.stat ==="autresBadges" ? unlockedOthers : b.current;
     const unlocked = current >= b.target || saved.has(b.id);
     const pct = Math.max(0, Math.min(100, Math.round((current / b.target) * 100)));
     return { ...b, current: Math.min(current, b.target), pct: unlocked ? 100 : pct, unlocked };

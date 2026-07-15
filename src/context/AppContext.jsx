@@ -5,7 +5,7 @@
 // App.jsx reste la source de vérité — ce fichier expose juste le contexte.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { createContext, useContext } from "react";
+import { createContext, useContext } from"react";
 
 /** @type {React.Context<import('../types').AppContextValue | null>} */
 const AppContext = createContext(null);

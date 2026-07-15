@@ -1,22 +1,22 @@
-import { useState, useCallback, useEffect, lazy, Suspense } from "react";
-import { C, OBJ, ACTIVITE_FACTOR, GLOBAL_CSS as CSS, INT } from "./data/constants.js";
-import { FOODS } from "./data/foods.js";
-import { EX } from "./data/exercises.js";
-import { MOTIVATIONS } from "./data/motivations.js";
+import { useState, useCallback, useEffect, lazy, Suspense } from"react";
+import { C, OBJ, ACTIVITE_FACTOR, GLOBAL_CSS as CSS, INT } from"./data/constants.js";
+import { FOODS } from"./data/foods.js";
+import { EX } from"./data/exercises.js";
+import { MOTIVATIONS } from"./data/motivations.js";
 
-import { Notif }           from "./components/ui/Notif.jsx";
-import { Spinner }         from "./components/ui/Loader.jsx";
-import { XPBar }           from "./components/ui/XPBar.jsx";
-import { LevelUpModal }    from "./components/ui/LevelUpModal.jsx";
-import { Header }          from "./components/layout/Header.jsx";
-import { BottomNav }       from "./components/layout/BottomNav.jsx";
-import { Paywall }         from "./components/layout/Paywall.jsx";
-import { PaywallNutrition} from "./components/layout/PaywallNutrition.jsx";
-import { Screen }          from "./components/layout/Screen.jsx";
-import { PageContainer }   from "./components/layout/PageContainer.jsx";
-import AppContext           from "./context/AppContext.jsx";
-import Home from "./features/home/HomePage.jsx";
-import { CoachFAB } from "./features/nutrition/CoachFAB.jsx";
+import { Notif }           from"./components/ui/Notif.jsx";
+import { Spinner }         from"./components/ui/Loader.jsx";
+import { XPBar }           from"./components/ui/XPBar.jsx";
+import { LevelUpModal }    from"./components/ui/LevelUpModal.jsx";
+import { Header }          from"./components/layout/Header.jsx";
+import { BottomNav }       from"./components/layout/BottomNav.jsx";
+import { Paywall }         from"./components/layout/Paywall.jsx";
+import { PaywallNutrition} from"./components/layout/PaywallNutrition.jsx";
+import { Screen }          from"./components/layout/Screen.jsx";
+import { PageContainer }   from"./components/layout/PageContainer.jsx";
+import AppContext           from"./context/AppContext.jsx";
+import Home from"./features/home/HomePage.jsx";
+import { CoachFAB } from"./features/nutrition/CoachFAB.jsx";
 
 const CoachPage  = lazy(() => import("./features/nutrition/CoachPage.jsx"));
 const Onboarding = lazy(() => import("./features/onboarding/OnboardingPage.jsx"));
@@ -25,17 +25,17 @@ const Profile    = lazy(() => import("./features/profile/ProfilePage.jsx"));
 const ProgramTab = lazy(() => import("./features/training/ProgramTab.jsx"));
 const Recipes    = lazy(() => import("./features/recipes/RecipesPage.jsx"));
 
-import { useAuth }          from "./hooks/useAuth.js";
-import AuthPage             from "./features/auth/AuthPage.jsx";
-import { useStorage }       from "./hooks/useStorage.js";
-import { useNotif }         from "./hooks/useNotif.js";
-import { useMacros }        from "./hooks/useMacros.js";
-import { useCycleProgress } from "./hooks/useCycleProgress.js";
-import { useStreak }        from "./hooks/useStreak.js";
-import { useTotalRepas }    from "./hooks/useTotalRepas.js";
-import { useFileReader }    from "./hooks/useFileReader.js";
-import { useDailyReset }    from "./hooks/useDailyReset.js";
-import { scanBarcode } from "./services/nutritionService.js";
+import { useAuth }          from"./hooks/useAuth.js";
+import AuthPage             from"./features/auth/AuthPage.jsx";
+import { useStorage }       from"./hooks/useStorage.js";
+import { useNotif }         from"./hooks/useNotif.js";
+import { useMacros }        from"./hooks/useMacros.js";
+import { useCycleProgress } from"./hooks/useCycleProgress.js";
+import { useStreak }        from"./hooks/useStreak.js";
+import { useTotalRepas }    from"./hooks/useTotalRepas.js";
+import { useFileReader }    from"./hooks/useFileReader.js";
+import { useDailyReset }    from"./hooks/useDailyReset.js";
+import { scanBarcode } from"./services/nutritionService.js";
 
 export default function App() {
 
@@ -76,8 +76,8 @@ export default function App() {
   const [premiumNutrition, setPremiumNutrition] = useStorage("premiumNutrition", false);
 
   const [profil, setProfil] = useStorage("profil", {
-    prenom: "", age: "", poids: "", taille: "", sexe: "",
-    objectif: "hypertrophie", activite: "modere", bodyfat: "",
+    prenom:"", age:"", poids:"", taille:"", sexe:"",
+    objectif:"hypertrophie", activite:"modere", bodyfat:"",
   });
   const [onboardingDone, setOnboardingDone] = useStorage("onboardingDone", false);
   const profilComplet  = profil.poids && profil.taille && profil.age && profil.sexe;
@@ -149,7 +149,7 @@ export default function App() {
 
   useEffect(() => {
     if (prog && progs.length === 0) {
-      setProgs([{ ...prog, id: prog.id || "legacy" }]);
+      setProgs([{ ...prog, id: prog.id ||"legacy" }]);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -247,19 +247,19 @@ export default function App() {
   };
 
   const PageLoader = () => (
-    <div style={{ padding: 32, textAlign: "center" }}>
+    <div style={{ padding: 32, textAlign:"center" }}>
       <Spinner size={32} />
     </div>
-  );
+);
 
   // ── Gate auth : écran de chargement pendant la vérification de session,
   //    puis écran de connexion si personne n'est connecté ────────────────
   if (authLoading) {
     return (
-      <div style={{ minHeight: "100vh", display: "grid", placeItems: "center", background: C.bg }}>
+      <div style={{ minHeight:"100vh", display:"grid", placeItems:"center", background: C.bg }}>
         <Spinner size={32} />
       </div>
-    );
+);
   }
   if (!user) {
     return <AuthPage />;
@@ -279,18 +279,18 @@ export default function App() {
           <Suspense fallback={<PageLoader />}>
             <Onboarding {...onboardingProps} />
           </Suspense>
-        )}
+)}
 
         <PageContainer>
           <div className="page-enter">
-            {tab === "home" && <Home {...homeProps} />}
-            {tab !== "home" && (
+            {tab ==="home" && <Home {...homeProps} />}
+            {tab !=="home" && (
               <Suspense fallback={<PageLoader />}>
-                {tab === "program"   && <ProgramTab {...programProps} />}
-                {tab === "nutrition" && <Nutrition  {...nutritionProps} />}
-                {tab === "profile"   && <Profile    {...profileProps} />}
-                {tab === "recipes"   && <Recipes    premium={premiumNutrition} setPaywall={setPaywallNutrition} push={push} repas={repas} setRepas={setRepas} />}
-                {tab === "coach"     && (
+                {tab ==="program"   && <ProgramTab {...programProps} />}
+                {tab ==="nutrition" && <Nutrition  {...nutritionProps} />}
+                {tab ==="profile"   && <Profile    {...profileProps} />}
+                {tab ==="recipes"   && <Recipes    premium={premiumNutrition} setPaywall={setPaywallNutrition} push={push} repas={repas} setRepas={setRepas} />}
+                {tab ==="coach"     && (
                   <CoachPage
                     onBack={() => setTab("home")}
                     profil={profil} obj={obj}
@@ -303,19 +303,19 @@ export default function App() {
                       pctKcal: calObj ? Math.round((totR.cal / calObj) * 100) : 0,
                       nbLogged: Object.values(repas).some(arr => arr.length > 0) ? 1 : 0,
                       totalDays: 14,
-                      score: cPct ? (cPct / 10).toFixed(1) : "—",
+                      score: cPct ? (cPct / 10).toFixed(1) :"—",
                     }}
                     premium={premiumNutrition}
                     setPaywall={setPaywallNutrition}
                     push={push}
                   />
-                )}
+)}
               </Suspense>
-            )}
+)}
           </div>
         </PageContainer>
 
-        {tab !== "coach" && <BottomNav tab={tab} setTab={setTab} />}
+        {tab !=="coach" && <BottomNav tab={tab} setTab={setTab} />}
         <CoachFAB tab={tab} setTab={setTab} premium={premiumNutrition}/>
 
         {/* ── Modal Level-Up Momentum XP ── */}
@@ -332,23 +332,23 @@ export default function App() {
             onSubscribe={() => {
               setPremium(true);
               setPaywall(false);
-              push("🎉", "Coach PRO activé !", "Accès au programme IA débloqué !");
+              push("","Coach PRO activé !","Accès au programme IA débloqué !");
             }}
             onClose={() => setPaywall(false)}
           />
-        )}
+)}
 
         {paywallNutrition && (
           <PaywallNutrition
             onSubscribe={() => {
               setPremiumNutrition(true);
               setPaywallNutrition(false);
-              push("🥗", "Nutrition PRO activé !", "Bilan, recettes et macros personnalisés débloqués !");
+              push("","Nutrition PRO activé !","Bilan, recettes et macros personnalisés débloqués !");
             }}
             onClose={() => setPaywallNutrition(false)}
           />
-        )}
+)}
       </Screen>
     </AppContext.Provider>
-  );
+);
 }

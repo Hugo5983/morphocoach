@@ -3,7 +3,7 @@
  * Extrait de NutritionPage.jsx sans aucune modification de code.
  */
 
-import { C, FONT, SERIF, NUM } from "../../../data/constants.js";
+import { C, FONT, SERIF, NUM } from"../../../data/constants.js";
 
 
 // Alias locaux → tokens centraux
@@ -52,22 +52,22 @@ function CalorieRing({consumed,goal}){
       <div style={{position:'absolute',inset:0,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center'}}>
         <div style={{...eyebrowS,letterSpacing:"0.1em"}}>{over?'Dépassé':'Restant'}</div>
         <div style={{fontFamily:SERIF,fontSize:44,fontWeight:400,letterSpacing:-1,color:over?C.red:C.text,lineHeight:1,marginTop:8,...NUM}}>
-          {(over?consumed-goal:remaining).toLocaleString('fr-FR').replace(',',' ')}
+          {(over?consumed-goal:remaining).toLocaleString('fr-FR').replace(',','')}
         </div>
         <div style={{fontSize:13,color:C.mid,fontWeight:500,marginTop:8,letterSpacing:0.2,fontFamily:DISPLAY}}>kcal</div>
       </div>
     </div>
-  );
+);
 }
 
 function HeroStat({value,label,accent}){
   return(
     <div style={{display:'flex',flexDirection:'column',alignItems:'center',gap:8,flex:1}}>
       <span style={{width:22,height:2,background:accent,borderRadius:2}}/>
-      <span style={{fontFamily:DISPLAY,fontSize:20,fontWeight:700,color:C.text,letterSpacing:-0.3,...NUM}}>{(value||0).toLocaleString('fr-FR').replace(',',' ')}</span>
+      <span style={{fontFamily:DISPLAY,fontSize:20,fontWeight:700,color:C.text,letterSpacing:-0.3,...NUM}}>{(value||0).toLocaleString('fr-FR').replace(',','')}</span>
       <span style={{...eyebrowS}}>{label}</span>
     </div>
-  );
+);
 }
 
 // ─── MacroCard ────────────────────────────────────────────────────────────────
@@ -103,24 +103,24 @@ function MacroCard({label,value,goal,color,colorDk}){
       <span style={{fontSize:11,color:'rgba(255,255,255,0.85)',
         fontWeight:700,...NUM,letterSpacing:0.2,fontFamily:DISPLAY}}>{pct}%</span>
     </div>
-  );
+);
 }
 
 // ─── Config repas ─────────────────────────────────────────────────────────────
 const MEALS=[
-  {id:"matin", l:"Petit-déjeuner", icon:"sun",    accent:"#F59E0B", accentDk:"#D97706", dark:"#1A1308"},
-  {id:"snack", l:"Collation",      icon:"coffee",  accent:"#F87171", accentDk:C.red, dark:"#1F0A0A"},
-  {id:"midi",  l:"Déjeuner",       icon:"apple",   accent:C.accent, accentDk:C.accentDk, dark:"#0A1628"},
-  {id:"soir",  l:"Dîner",          icon:"moon",    accent:"#818CF8", accentDk:"#6366F1", dark:"#0D0A28"},
+  {id:"matin", l:"Petit-déjeuner", icon:"sun",    accent:"#F59E0B", accentDk:"#F59E0B", dark:"#101318"},
+  {id:"snack", l:"Collation",      icon:"coffee",  accent:"#E5484D", accentDk:C.red, dark:"#101318"},
+  {id:"midi",  l:"Déjeuner",       icon:"apple",   accent:C.accent, accentDk:C.accentDk, dark:"#101318"},
+  {id:"soir",  l:"Dîner",          icon:"moon",    accent:"#9DB0FF", accentDk:"#3C5BFF", dark:"#101318"},
 ];
 
 // ─── Formatage date ───────────────────────────────────────────────────────────
 function formatDate(offset){
   const d=new Date();
   d.setDate(d.getDate()+offset);
-  if(offset===0) return "Aujourd'hui";
-  if(offset===-1) return "Hier";
-  if(offset===-2) return "Avant-hier";
+  if(offset===0) return"Aujourd'hui";
+  if(offset===-1) return"Hier";
+  if(offset===-2) return"Avant-hier";
   return d.toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long"});
 }
 

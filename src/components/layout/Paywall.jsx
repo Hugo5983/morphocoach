@@ -1,20 +1,20 @@
-import { C, FONT, SERIF } from "../../data/constants.js";
-import { Card, Eyebrow } from "../../components/ui/index.jsx";
+import { C, FONT, SERIF } from"../../data/constants.js";
+import { Card, Eyebrow } from"../../components/ui/index.jsx";
 
 const FEATURES = [
-  { icon:"💪", label:"Programme morphologique personnalisé",  sub:"Adapté à ta morphologie, tes objectifs et ton niveau" },
-  { icon:"📅", label:"Planification 6 semaines clé en main",  sub:"Cycles progressifs avec surcharge programmée" },
-  { icon:"🔬", label:"Analyse morphologique complète",         sub:"Évaluation posture, points faibles, déséquilibres" },
-  { icon:"📊", label:"Bilan de progression bi-mensuel",        sub:"Suivi détaillé de tes progrès toutes les 2 semaines" },
-  { icon:"⚡", label:"Méthodes d'intensification avancées",    sub:"Drop sets, pyramidal, surcharge progressive" },
-  { icon:"🎯", label:"Exercices correctifs sur mesure",        sub:"Adaptés à tes limitations ou pathologies" },
+  { icon:"", label:"Programme morphologique personnalisé",  sub:"Adapté à ta morphologie, tes objectifs et ton niveau" },
+  { icon:"", label:"Planification 6 semaines clé en main",  sub:"Cycles progressifs avec surcharge programmée" },
+  { icon:"", label:"Analyse morphologique complète",         sub:"Évaluation posture, points faibles, déséquilibres" },
+  { icon:"", label:"Bilan de progression bi-mensuel",        sub:"Suivi détaillé de tes progrès toutes les 2 semaines" },
+  { icon:"", label:"Méthodes d'intensification avancées",    sub:"Drop sets, pyramidal, surcharge progressive" },
+  { icon:"", label:"Exercices correctifs sur mesure",        sub:"Adaptés à tes limitations ou pathologies" },
 ];
 
 export function Paywall({ onSubscribe, onClose }) {
   return (
     <div style={{
       position:"fixed", inset:0, zIndex:340,
-      background:"rgba(15,25,35,0.5)",
+      background:"rgba(16,19,24,0.5)",
       display:"flex", alignItems:"center", justifyContent:"center",
       padding:"0 16px",
     }}>
@@ -29,7 +29,7 @@ export function Paywall({ onSubscribe, onClose }) {
         <div style={{
           position:"absolute", top:-60, left:"50%", transform:"translateX(-50%)",
           width:300, height:160, borderRadius:"50%",
-          background:"radial-gradient(closest-side,rgba(59,130,246,0.25),transparent 70%)",
+          background:"radial-gradient(closest-side,rgba(60,91,255,0.25),transparent 70%)",
           filter:"blur(20px)", pointerEvents:"none",
         }}/>
 
@@ -48,12 +48,12 @@ export function Paywall({ onSubscribe, onClose }) {
           <div style={{
             display:"inline-flex", alignItems:"center", gap:8,
             padding:"4px 16px", borderRadius:20,
-            background:"rgba(59,130,246,0.12)",
-            border:"1px solid rgba(59,130,246,0.35)",
-            fontSize:11, fontWeight:700, color:"#1D4ED8",
+            background:"rgba(60,91,255,0.12)",
+            border:"1px solid rgba(60,91,255,0.35)",
+            fontSize:11, fontWeight:700, color:"#2438B8",
             fontFamily:FONT, letterSpacing:"0.1em", textTransform:"uppercase",
             marginBottom:16,
-          }}>💪 Entraînement PRO</div>
+          }}> Entraînement PRO</div>
 
           <div style={{ fontFamily:SERIF, fontSize:26, color:C.text, letterSpacing:-0.5, lineHeight:1.3, marginBottom:8 }}>
             Entraîne-toi smarter,<br/>
@@ -70,7 +70,7 @@ export function Paywall({ onSubscribe, onClose }) {
             <div key={i} style={{
               display:"flex", alignItems:"center", gap:12,
               padding:"12px 0",
-              borderBottom: i < FEATURES.length - 1 ? `1px solid rgba(0,0,0,0.05)` : "none",
+              borderBottom: i < FEATURES.length - 1 ?`1px solid rgba(0,0,0,0.05)` :"none",
             }}>
               <span style={{ fontSize:20, flexShrink:0 }}>{f.icon}</span>
               <div style={{ flex:1 }}>
@@ -79,13 +79,13 @@ export function Paywall({ onSubscribe, onClose }) {
               </div>
               <div style={{
                 width:20, height:20, borderRadius:8, flexShrink:0,
-                background:"rgba(59,130,246,0.12)",
-                border:"1px solid rgba(59,130,246,0.25)",
+                background:"rgba(60,91,255,0.12)",
+                border:"1px solid rgba(60,91,255,0.25)",
                 display:"grid", placeItems:"center",
-                fontSize:11, color:"#1D4ED8", fontWeight:700,
-              }}>✓</div>
+                fontSize:11, color:"#2438B8", fontWeight:700,
+              }}></div>
             </div>
-          ))}
+))}
         </Card>
 
         {/* Prix */}
@@ -102,12 +102,12 @@ export function Paywall({ onSubscribe, onClose }) {
         {/* CTA */}
         <button onClick={onSubscribe} style={{
           width:"100%", padding:"16px 16px",
-          background:"linear-gradient(135deg,#1D4ED8,#3B82F6)",
+          background:"linear-gradient(135deg,#2438B8,#3C5BFF)",
           border:"1px solid rgba(0,0,0,0.08)",
           borderRadius:16, color:"#FFF",
           fontSize:14, fontWeight:700, fontFamily:FONT,
           cursor:"pointer", marginBottom:12,
-          boxShadow:"0 4px 20px rgba(59,130,246,0.35)",
+          boxShadow:"0 4px 20px rgba(60,91,255,0.35)",
           position:"relative", overflow:"hidden",
         }}>
           <div style={{
@@ -127,5 +127,5 @@ export function Paywall({ onSubscribe, onClose }) {
         </button>
       </Card>
     </div>
-  );
+);
 }

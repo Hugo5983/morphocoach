@@ -10,7 +10,7 @@
 //   carte  → 480 px  (~25-50 Ko, net sur écran Retina)
 //   fiche  → 960 px  (plein écran)
 
-import manifest from "../../data/photoManifest.json";
+import manifest from"../../data/photoManifest.json";
 
 const LARGEURS = { card: 480, hero: 960 };
 
@@ -19,7 +19,7 @@ function dimensionner(url, taille) {
   if (!url.includes("images.pexels.com")) return url;   // photo du catalogue : telle quelle
   const base = url.split("?")[0];                        // tolère les URLs v1 (avec w=940)
   const w = LARGEURS[taille] || LARGEURS.card;
-  return `${base}?auto=compress&cs=tinysrgb&w=${w}`;
+  return`${base}?auto=compress&cs=tinysrgb&w=${w}`;
 }
 
 /**
@@ -27,7 +27,7 @@ function dimensionner(url, taille) {
  * @param {string} fallback photo du catalogue si le manifeste n'a rien
  * @param {"card"|"hero"} taille  contexte d'affichage (défaut : card)
  */
-export function useRecipePhoto(id, fallback, taille = "card") {
+export function useRecipePhoto(id, fallback, taille ="card") {
   const entree = manifest[id];
   return {
     src: dimensionner(entree?.url, taille) || fallback,

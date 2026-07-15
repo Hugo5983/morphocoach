@@ -3,38 +3,38 @@
 // Feature Premium : 5 analyses/mois gratuites, 180/mois pour les abonnés PRO.
 // Flow : Upload photo → Claude Vision → Résultat macros → Choix repas → Ajout journal
 
-import { useState, useRef, useCallback } from "react";
-import { C, DARK, FONT, SERIF } from "../../data/constants.js";
+import { useState, useRef, useCallback } from"react";
+import { C, DARK, FONT, SERIF } from"../../data/constants.js";
 
 // ─── Constantes ───────────────────────────────────────────────────────────────
-const STORAGE_KEY_PREFIX = "mc_photoAnalyses_";
+const STORAGE_KEY_PREFIX ="mc_photoAnalyses_";
 const FREE_LIMIT = 5;
 const PRO_LIMIT   = 180;
 
 const MEALS = [
-  { id: "matin", l: "Petit-déj." },
-  { id: "midi",  l: "Déjeuner"   },
-  { id: "soir",  l: "Dîner"      },
-  { id: "snack", l: "Collation"  },
+  { id:"matin", l:"Petit-déj." },
+  { id:"midi",  l:"Déjeuner"   },
+  { id:"soir",  l:"Dîner"      },
+  { id:"snack", l:"Collation"  },
 ];
 
 // ─── Helpers compteur mensuel ─────────────────────────────────────────────────
 
 function getMonthKey() {
   const d = new Date();
-  return `${STORAGE_KEY_PREFIX}${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`;
+  return`${STORAGE_KEY_PREFIX}${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`;
 }
 
 function getUsedCount() {
   try {
-    return parseInt(localStorage.getItem(getMonthKey()) || "0", 10);
+    return parseInt(localStorage.getItem(getMonthKey()) ||"0", 10);
   } catch { return 0; }
 }
 
 function incrementUsedCount() {
   try {
     const key = getMonthKey();
-    const current = parseInt(localStorage.getItem(key) || "0", 10);
+    const current = parseInt(localStorage.getItem(key) ||"0", 10);
     localStorage.setItem(key, String(current + 1));
     return current + 1;
   } catch { return 1; }
@@ -53,7 +53,7 @@ function fileToBase64(file) {
 
 // ─── Prompt IA ────────────────────────────────────────────────────────────────
 
-const ANALYSE_PROMPT = `Tu es un nutritionniste expert en estimation visuelle des portions.
+const ANALYSE_PROMPT =`Tu es un nutritionniste expert en estimation visuelle des portions.
 
 MÉTHODE (dans cet ordre) :
 1. Identifie CHAQUE aliment visible séparément.
@@ -64,32 +64,32 @@ MÉTHODE (dans cet ordre) :
 
 Réponds UNIQUEMENT avec un objet JSON valide, sans markdown ni backticks :
 {
-  "nom": "Nom du plat (2-4 mots)",
-  "description": "Ce que tu vois, en 1 phrase",
-  "items": [
-    { "nom": "Riz basmati cuit", "grammes": 180, "calories": 234, "proteines": 5, "glucides": 50, "lipides": 1 },
-    { "nom": "Blanc de poulet grillé", "grammes": 140, "calories": 231, "proteines": 43, "glucides": 0, "lipides": 5 }
+"nom":"Nom du plat (2-4 mots)",
+"description":"Ce que tu vois, en 1 phrase",
+"items": [
+    {"nom":"Riz basmati cuit","grammes": 180,"calories": 234,"proteines": 5,"glucides": 50,"lipides": 1 },
+    {"nom":"Blanc de poulet grillé","grammes": 140,"calories": 231,"proteines": 43,"glucides": 0,"lipides": 5 }
   ],
-  "fiabilite": "haute|moyenne|basse",
-  "note": "Ce qui limite la précision (ex : sauce non identifiable, aliments cachés)"
+"fiabilite":"haute|moyenne|basse",
+"note":"Ce qui limite la précision (ex : sauce non identifiable, aliments cachés)"
 }
 
 Règles :
 - N'invente RIEN : uniquement ce qui est visible. Matières grasses de cuisson :
-  ajoute un item "Huile de cuisson (estimée)" ~10 g seulement si le plat brille.
-- fiabilite "basse" si l'échelle est incertaine ou des aliments sont cachés/mélangés.
-- Aucune nourriture visible → "items": [] et fiabilite "basse".
+  ajoute un item"Huile de cuisson (estimée)" ~10 g seulement si le plat brille.
+- fiabilite"basse" si l'échelle est incertaine ou des aliments sont cachés/mélangés.
+- Aucune nourriture visible →"items": [] et fiabilite"basse".
 - Nombres entiers uniquement.`;
 
 // ─── Icône ────────────────────────────────────────────────────────────────────
-function CameraIcon({ size = 20, color = "currentColor" }) {
+function CameraIcon({ size = 20, color ="currentColor" }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
       stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
       <circle cx="12" cy="13" r="4"/>
     </svg>
-  );
+);
 }
 
 function LockIcon({ size = 14 }) {
@@ -99,7 +99,7 @@ function LockIcon({ size = 14 }) {
       <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
       <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
     </svg>
-  );
+);
 }
 
 function SparkIcon({ size = 16 }) {
@@ -107,25 +107,25 @@ function SparkIcon({ size = 16 }) {
     <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
       <path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/>
     </svg>
-  );
+);
 }
 
 // ─── Pastille fiabilité ───────────────────────────────────────────────────────
 function FiabiliteBadge({ niveau }) {
   const map = {
-    haute:   { label: "Fiabilité haute",   color: "#34D399", bg: "rgba(52,211,153,0.12)",   bd: "rgba(52,211,153,0.25)"   },
-    moyenne: { label: "Fiabilité moyenne", color: "#FBBF24", bg: "rgba(251,191,36,0.12)",   bd: "rgba(251,191,36,0.25)"   },
-    basse:   { label: "Estimation approximative", color: "#F87171", bg: "rgba(248,113,113,0.12)", bd: "rgba(248,113,113,0.25)" },
+    haute:   { label:"Fiabilité haute",   color:"#12B76A", bg:"rgba(18,183,106,0.12)",   bd:"rgba(18,183,106,0.25)"   },
+    moyenne: { label:"Fiabilité moyenne", color:"#F59E0B", bg:"rgba(245,158,11,0.12)",   bd:"rgba(245,158,11,0.25)"   },
+    basse:   { label:"Estimation approximative", color:"#E5484D", bg:"rgba(229,72,77,0.12)", bd:"rgba(229,72,77,0.25)" },
   };
   const s = map[niveau] || map.moyenne;
   return (
     <span style={{
-      display: "inline-flex", alignItems: "center", gap: 4,
-      padding: "4px 8px", borderRadius: 20,
-      background: s.bg, border: `1px solid ${s.bd}`,
+      display:"inline-flex", alignItems:"center", gap: 4,
+      padding:"4px 8px", borderRadius: 20,
+      background: s.bg, border:`1px solid ${s.bd}`,
       fontSize: 10, fontWeight: 700, color: s.color, fontFamily: FONT,
     }}>{s.label}</span>
-  );
+);
 }
 
 // ─── COMPOSANT PRINCIPAL ──────────────────────────────────────────────────────
@@ -187,24 +187,24 @@ export default function PhotoAnalyse({ onClose, onAdd, premium, setPaywall, push
 
     try {
       const res = await fetch("/api/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+        method:"POST",
+        headers: {"Content-Type":"application/json" },
         body: JSON.stringify({
-          model: "claude-sonnet-4-20250514",
+          model:"claude-sonnet-4-20250514",
           max_tokens: 1000,
           temperature: 0,
           messages: [{
-            role: "user",
+            role:"user",
             content: [
               {
-                type: "image",
+                type:"image",
                 source: {
-                  type: "base64",
-                  media_type: "image/jpeg",
+                  type:"base64",
+                  media_type:"image/jpeg",
                   data: base64,
                 },
               },
-              { type: "text", text: ANALYSE_PROMPT },
+              { type:"text", text: ANALYSE_PROMPT },
             ],
           }],
         }),
@@ -212,8 +212,8 @@ export default function PhotoAnalyse({ onClose, onAdd, premium, setPaywall, push
 
       if (!res.ok) throw new Error(`Erreur API ${res.status}`);
       const data = await res.json();
-      const text = data.content?.[0]?.text || "";
-      const clean = text.replace(/```json\n?|\n?```/g, "").trim();
+      const text = data.content?.[0]?.text ||"";
+      const clean = text.replace(/```json\n?|\n?```/g,"").trim();
       const parsed = JSON.parse(clean);
 
       // Totaux recalculés en JS depuis les items : le modèle est bien meilleur
@@ -250,7 +250,7 @@ export default function PhotoAnalyse({ onClose, onAdd, premium, setPaywall, push
     if (!result) return;
     const r = /** @type {{nom:string,calories:number,proteines:number,glucides:number,lipides:number}} */ (result);
     const aliment = {
-      n: facteur === 1 ? r.nom : `${r.nom} (portion ×${facteur.toFixed(2)})`,
+      n: facteur === 1 ? r.nom :`${r.nom} (portion ×${facteur.toFixed(2)})`,
       c: Math.round(r.calories  * facteur),
       p: Math.round(r.proteines * facteur),
       g: Math.round(r.glucides  * facteur),
@@ -258,7 +258,7 @@ export default function PhotoAnalyse({ onClose, onAdd, premium, setPaywall, push
     };
     onAdd(aliment, repasChoix);
     const repasLabel = MEALS.find(m => m.id === repasChoix)?.l || repasChoix;
-    push("📸", "Ajouté !", `${r.nom} ajouté au ${repasLabel.toLowerCase()}.`);
+    push("","Ajouté !",`${r.nom} ajouté au ${repasLabel.toLowerCase()}.`);
     onClose();
   };
 
@@ -268,21 +268,21 @@ export default function PhotoAnalyse({ onClose, onAdd, premium, setPaywall, push
 
   return (
     <div style={{
-      position: "fixed", inset: 0, zIndex: 360,
-      background: "rgba(5,8,18,0.97)",
-      display: "flex", flexDirection: "column",
+      position:"fixed", inset: 0, zIndex: 360,
+      background:"rgba(5,8,18,0.97)",
+      display:"flex", flexDirection:"column",
     }}>
 
       {/* ── HEADER ─────────────────────────────────────────────────────── */}
       <div style={{
-        display: "flex", alignItems: "center", justifyContent: "space-between",
-        padding: "20px 20px 0",
+        display:"flex", alignItems:"center", justifyContent:"space-between",
+        padding:"20px 20px 0",
       }}>
         <button onClick={onClose} style={{
-          background: "transparent", border: "none",
+          background:"transparent", border:"none",
           color: C.accent, fontSize: 13, fontWeight: 700,
-          fontFamily: FONT, cursor: "pointer",
-          display: "flex", alignItems: "center", gap: 4,
+          fontFamily: FONT, cursor:"pointer",
+          display:"flex", alignItems:"center", gap: 4,
         }}>
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
@@ -291,45 +291,45 @@ export default function PhotoAnalyse({ onClose, onAdd, premium, setPaywall, push
           Retour
         </button>
 
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <div style={{ display:"flex", alignItems:"center", gap: 8 }}>
           {/* Badge premium ou compteur */}
           {premium ? (
             <span style={{
-              display: "inline-flex", alignItems: "center", gap: 4,
-              padding: "4px 12px", borderRadius: 20,
-              background: "rgba(59,130,246,0.12)", border: "1px solid rgba(59,130,246,0.25)",
+              display:"inline-flex", alignItems:"center", gap: 4,
+              padding:"4px 12px", borderRadius: 20,
+              background:"rgba(60,91,255,0.12)", border:"1px solid rgba(60,91,255,0.25)",
               fontSize: 10, fontWeight: 700, color: C.blueLt, fontFamily: FONT,
             }}>
               <SparkIcon size={10}/> {PRO_LIMIT - proUsed} photos restantes
             </span>
-          ) : (
+) : (
             <span style={{
-              padding: "4px 12px", borderRadius: 20,
-              background: newRemain > 0 ? "rgba(251,191,36,0.12)" : "rgba(248,113,113,0.12)",
-              border: `1px solid ${newRemain > 0 ? "rgba(251,191,36,0.25)" : "rgba(248,113,113,0.25)"}`,
+              padding:"4px 12px", borderRadius: 20,
+              background: newRemain > 0 ?"rgba(245,158,11,0.12)" :"rgba(229,72,77,0.12)",
+              border:`1px solid ${newRemain > 0 ?"rgba(245,158,11,0.25)" :"rgba(229,72,77,0.25)"}`,
               fontSize: 10, fontWeight: 700,
-              color: newRemain > 0 ? "#FBBF24" : "#F87171",
+              color: newRemain > 0 ?"#F59E0B" :"#E5484D",
               fontFamily: FONT,
             }}>
-              {newRemain > 0 ? `${newRemain} photo${newRemain > 1 ? "s" : ""} restante${newRemain > 1 ? "s" : ""}` : "Limite atteinte"}
+              {newRemain > 0 ?`${newRemain} photo${newRemain > 1 ?"s" :""} restante${newRemain > 1 ?"s" :""}` :"Limite atteinte"}
             </span>
-          )}
+)}
         </div>
       </div>
 
       {/* ── TITRE ──────────────────────────────────────────────────────── */}
-      <div style={{ padding: "20px 20px 0", textAlign: "center" }}>
+      <div style={{ padding:"20px 20px 0", textAlign:"center" }}>
         <div style={{
           width: 56, height: 56, borderRadius: 20,
-          background: "linear-gradient(135deg,#3B82F6,#2563EB)",
-          display: "grid", placeItems: "center",
-          margin: "0 auto 14px",
-          boxShadow: "0 8px 24px rgba(59,130,246,0.35)",
+          background:"linear-gradient(135deg,#3C5BFF,#2E48D9)",
+          display:"grid", placeItems:"center",
+          margin:"0 auto 14px",
+          boxShadow:"0 8px 24px rgba(60,91,255,0.35)",
         }}>
           <CameraIcon size={26} color="#FFF"/>
         </div>
         <div style={{ fontFamily: SERIF, fontSize: 20, color: C.text, letterSpacing: -0.5, lineHeight: 1.2, marginBottom: 8 }}>
-          Analyse <span style={{ fontStyle: "italic" }}>photo</span>
+          Analyse <span style={{ fontStyle:"italic" }}>photo</span>
         </div>
         <div style={{ fontSize: 13, color: C.mid, fontFamily: FONT }}>
           Prends en photo ton repas pour estimer les macros
@@ -337,50 +337,50 @@ export default function PhotoAnalyse({ onClose, onAdd, premium, setPaywall, push
       </div>
 
       {/* ── CONTENU ────────────────────────────────────────────────────── */}
-      <div style={{ flex: 1, overflowY: "auto", padding: "20px 20px 32px" }}>
+      <div style={{ flex: 1, overflowY:"auto", padding:"20px 20px 32px" }}>
 
         {/* ═══ ÉTAPE UPLOAD ═══ */}
-        {(step === "upload" || step === "loading") && (
+        {(step ==="upload" || step ==="loading") && (
           <>
             {/* Zone upload */}
             <input
               ref={inputRef} type="file" accept="image/*" capture="environment"
-              style={{ display: "none" }}
+              style={{ display:"none" }}
               onChange={onFileChange}
             />
 
             {preview ? (
               /* Preview photo */
               <div style={{
-                position: "relative", borderRadius: 20, overflow: "hidden",
-                marginBottom: 16, border: `2px solid rgba(59,130,246,0.35)`,
+                position:"relative", borderRadius: 20, overflow:"hidden",
+                marginBottom: 16, border:`2px solid rgba(60,91,255,0.35)`,
               }}>
                 <img src={preview} alt="Aperçu repas"
-                  style={{ width: "100%", maxHeight: 260, objectFit: "cover", display: "block" }}/>
+                  style={{ width:"100%", maxHeight: 260, objectFit:"cover", display:"block" }}/>
                 <button onClick={() => inputRef.current?.click()} style={{
-                  position: "absolute", bottom: 12, right: 12,
-                  background: "rgba(15,25,35,0.5)", backdropFilter: "blur(8px)",
-                  border: "1px solid rgba(0,0,0,0.08)", borderRadius: 12,
-                  color: "#FFF", fontSize: 11, fontWeight: 600, fontFamily: FONT,
-                  padding: "8px 12px", cursor: "pointer",
-                  display: "flex", alignItems: "center", gap: 4,
+                  position:"absolute", bottom: 12, right: 12,
+                  background:"rgba(16,19,24,0.5)", backdropFilter:"blur(8px)",
+                  border:"1px solid rgba(0,0,0,0.08)", borderRadius: 12,
+                  color:"#FFF", fontSize: 11, fontWeight: 600, fontFamily: FONT,
+                  padding:"8px 12px", cursor:"pointer",
+                  display:"flex", alignItems:"center", gap: 4,
                 }}>
                   <CameraIcon size={12} color="#FFF"/> Changer
                 </button>
               </div>
-            ) : (
+) : (
               /* Zone drag/click */
               <button onClick={() => inputRef.current?.click()} style={{
-                width: "100%", borderRadius: 20, border: "2px dashed rgba(59,130,246,0.35)",
-                background: "rgba(59,130,246,0.05)", padding: "32px 20px",
-                cursor: "pointer", marginBottom: 16,
-                display: "flex", flexDirection: "column",
-                alignItems: "center", gap: 12,
+                width:"100%", borderRadius: 20, border:"2px dashed rgba(60,91,255,0.35)",
+                background:"rgba(60,91,255,0.05)", padding:"32px 20px",
+                cursor:"pointer", marginBottom: 16,
+                display:"flex", flexDirection:"column",
+                alignItems:"center", gap: 12,
               }}>
                 <div style={{
                   width: 48, height: 48, borderRadius: 16,
-                  background: "rgba(59,130,246,0.12)", border: "1px solid rgba(59,130,246,0.25)",
-                  display: "grid", placeItems: "center",
+                  background:"rgba(60,91,255,0.12)", border:"1px solid rgba(60,91,255,0.25)",
+                  display:"grid", placeItems:"center",
                 }}>
                   <CameraIcon size={24} color={C.accent}/>
                 </div>
@@ -393,103 +393,103 @@ export default function PhotoAnalyse({ onClose, onAdd, premium, setPaywall, push
                   </div>
                 </div>
               </button>
-            )}
+)}
 
             {/* Erreur */}
             {error && (
               <div style={{
-                padding: "12px 16px", borderRadius: 12, marginBottom: 16,
-                background: "rgba(248,113,113,0.12)", border: "1px solid rgba(248,113,113,0.25)",
-                fontSize: 13, color: "#F87171", fontFamily: FONT,
+                padding:"12px 16px", borderRadius: 12, marginBottom: 16,
+                background:"rgba(229,72,77,0.12)", border:"1px solid rgba(229,72,77,0.25)",
+                fontSize: 13, color:"#E5484D", fontFamily: FONT,
               }}>{error}</div>
-            )}
+)}
 
             {/* Bouton analyser */}
             {!canAnalyse ? (
               /* Paywall */
               <button onClick={() => setPaywall(true)} style={{
-                width: "100%", padding: "16px",
-                background: "rgba(0,0,0,0.05)",
-                border: "1px solid rgba(0,0,0,0.08)",
-                borderRadius: 16, cursor: "pointer",
-                display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                width:"100%", padding:"16px",
+                background:"rgba(0,0,0,0.05)",
+                border:"1px solid rgba(0,0,0,0.08)",
+                borderRadius: 16, cursor:"pointer",
+                display:"flex", alignItems:"center", justifyContent:"center", gap: 8,
                 fontFamily: FONT, fontSize: 14, fontWeight: 700,
-                color: "${C.dim}",
+                color:"${C.dim}",
               }}>
                 <LockIcon size={16}/> Limite atteinte · Passer au PRO
               </button>
-            ) : (
+) : (
               <button
                 onClick={analyser}
-                disabled={!preview || step === "loading"}
+                disabled={!preview || step ==="loading"}
                 style={{
-                  width: "100%", padding: "16px",
-                  background: preview && step !== "loading"
-                    ? "linear-gradient(135deg,#1D4ED8,#3B82F6)"
-                    : "rgba(0,0,0,0.05)",
-                  border: "none", borderRadius: 16,
-                  cursor: preview && step !== "loading" ? "pointer" : "not-allowed",
-                  display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                  width:"100%", padding:"16px",
+                  background: preview && step !=="loading"
+                    ?"linear-gradient(135deg,#2438B8,#3C5BFF)"
+                    :"rgba(0,0,0,0.05)",
+                  border:"none", borderRadius: 16,
+                  cursor: preview && step !=="loading" ?"pointer" :"not-allowed",
+                  display:"flex", alignItems:"center", justifyContent:"center", gap: 8,
                   fontFamily: FONT, fontSize: 14, fontWeight: 700,
-                  color: preview && step !== "loading" ? "#FFF" : C.dim,
-                  boxShadow: preview && step !== "loading" ? "0 4px 16px rgba(59,130,246,0.35)" : "none",
-                  transition: "all 0.2s",
+                  color: preview && step !=="loading" ?"#FFF" : C.dim,
+                  boxShadow: preview && step !=="loading" ?"0 4px 16px rgba(60,91,255,0.35)" :"none",
+                  transition:"all 0.2s",
                 }}
               >
-                {step === "loading" ? (
+                {step ==="loading" ? (
                   <>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
                       stroke="currentColor" strokeWidth="2" strokeLinecap="round"
-                      style={{ animation: "spin 1s linear infinite" }}>
+                      style={{ animation:"spin 1s linear infinite" }}>
                       <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
                     </svg>
                     Analyse en cours…
                   </>
-                ) : (
+) : (
                   <>
                     <SparkIcon size={16}/> Analyser ce repas
                   </>
-                )}
+)}
               </button>
-            )}
+)}
 
             {/* Info gratuité */}
             {!premium && newRemain > 0 && (
               <div style={{
-                marginTop: 12, textAlign: "center",
-                fontSize: 11, color: "${C.dim}", fontFamily: FONT,
+                marginTop: 12, textAlign:"center",
+                fontSize: 11, color:"${C.dim}", fontFamily: FONT,
               }}>
-                {newRemain} photo{newRemain > 1 ? "s" : ""} restante{newRemain > 1 ? "s" : ""} ce mois · {PRO_LIMIT} photos/mois avec Nutrition PRO
+                {newRemain} photo{newRemain > 1 ?"s" :""} restante{newRemain > 1 ?"s" :""} ce mois · {PRO_LIMIT} photos/mois avec Nutrition PRO
               </div>
-            )}
+)}
           </>
-        )}
+)}
 
         {/* ═══ RÉSULTAT ═══ */}
-        {step === "result" && result && (() => {
+        {step ==="result" && result && (() => {
           /** @type {{nom:string,description:string,calories:number,proteines:number,glucides:number,lipides:number,fiabilite:string,note:string}} */
           const res = /** @type {any} */ (result);
           return (<>
             {/* Photo miniature */}
             {preview && (
               <div style={{
-                borderRadius: 16, overflow: "hidden",
-                marginBottom: 16, border: `1px solid rgba(0,0,0,0.05)`,
+                borderRadius: 16, overflow:"hidden",
+                marginBottom: 16, border:`1px solid rgba(0,0,0,0.05)`,
                 height: 140,
               }}>
                 <img src={preview} alt="Repas analysé"
-                  style={{ width: "100%", height: "100%", objectFit: "cover" }}/>
+                  style={{ width:"100%", height:"100%", objectFit:"cover" }}/>
               </div>
-            )}
+)}
 
             {/* Résultat IA */}
             <div style={{
-              background: C.s1, border: `1px solid ${C.bd}`,
-              borderRadius: 20, padding: "20px 20px 16px",
+              background: C.s1, border:`1px solid ${C.bd}`,
+              borderRadius: 20, padding:"20px 20px 16px",
               marginBottom: 16,
             }}>
               {/* Nom + fiabilité */}
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
+              <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom: 12 }}>
                 <div>
                   <div style={{ fontSize: 20, fontWeight: 700, color: C.text, fontFamily: FONT, letterSpacing: -0.3, marginBottom: 4 }}>
                     {res.nom}
@@ -504,65 +504,65 @@ export default function PhotoAnalyse({ onClose, onAdd, premium, setPaywall, push
                   fontSize: 13, color: C.mid, fontFamily: FONT,
                   lineHeight: 1.5, marginBottom: 16,
                 }}>{res.description}</div>
-              )}
+)}
 
               {/* Macros */}
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8, marginBottom: 12 }}>
+              <div style={{ display:"grid", gridTemplateColumns:"repeat(4, 1fr)", gap: 8, marginBottom: 12 }}>
                 {[
-                  { l: "Calories", v: res.calories * facteur, u: "kcal", c: "#F59E0B" },
-                  { l: "Protéines", v: res.proteines * facteur, u: "g", c: DARK.accent },
-                  { l: "Glucides",  v: res.glucides * facteur,  u: "g", c: "#22D3EE" },
-                  { l: "Lipides",   v: res.lipides * facteur,   u: "g", c: "#34D399" },
+                  { l:"Calories", v: res.calories * facteur, u:"kcal", c:"#F59E0B" },
+                  { l:"Protéines", v: res.proteines * facteur, u:"g", c: DARK.accent },
+                  { l:"Glucides",  v: res.glucides * facteur,  u:"g", c:"#3C5BFF" },
+                  { l:"Lipides",   v: res.lipides * facteur,   u:"g", c:"#12B76A" },
                 ].map(m => (
                   <div key={m.l} style={{
-                    background: `${m.c}12`, border: `1px solid ${m.c}25`,
-                    borderRadius: 12, padding: "12px 8px", textAlign: "center",
+                    background:`${m.c}12`, border:`1px solid ${m.c}25`,
+                    borderRadius: 12, padding:"12px 8px", textAlign:"center",
                   }}>
                     <div style={{
                       fontSize: 16, fontWeight:700, color: m.c,
                       fontFamily: FONT, letterSpacing: -0.5, lineHeight: 1,
                     }}>{Math.round(m.v)}</div>
-                    <div style={{ fontSize: 10, color: "${C.dim}", marginTop: 4, fontFamily: FONT }}>{m.u}</div>
+                    <div style={{ fontSize: 10, color:"${C.dim}", marginTop: 4, fontFamily: FONT }}>{m.u}</div>
                     <div style={{ fontSize: 10, color: C.dim, fontFamily: FONT }}>{m.l}</div>
                   </div>
-                ))}
+))}
               </div>
 
               {/* Détail aliment par aliment : c'est là que se juge la fiabilité */}
               {res.items?.length > 0 && (
                 <div style={{ marginBottom: 14 }}>
                   {res.items.map((it, i) => (
-                    <div key={i} style={{ display: "flex", justifyContent: "space-between",
-                      alignItems: "center", padding: "7px 2px",
-                      borderBottom: i < res.items.length - 1 ? `1px solid ${C.bd}` : "none" }}>
+                    <div key={i} style={{ display:"flex", justifyContent:"space-between",
+                      alignItems:"center", padding:"7px 2px",
+                      borderBottom: i < res.items.length - 1 ?`1px solid ${C.bd}` :"none" }}>
                       <span style={{ fontSize: 12.5, color: C.mid, fontFamily: FONT }}>
                         {it.nom}
                       </span>
                       <span style={{ fontSize: 12, color: C.dim, fontFamily: FONT,
-                        fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap", marginLeft: 10 }}>
+                        fontVariantNumeric:"tabular-nums", whiteSpace:"nowrap", marginLeft: 10 }}>
                         {Math.round(it.grammes * facteur)} g · {Math.round(it.calories * facteur)} kcal
                       </span>
                     </div>
-                  ))}
+))}
                 </div>
-              )}
+)}
 
               {/* Ajustement de portion : l'IA propose, TU décides */}
               <div style={{ marginBottom: 4 }}>
-                <div style={{ display: "flex", justifyContent: "space-between",
+                <div style={{ display:"flex", justifyContent:"space-between",
                   marginBottom: 6 }}>
                   <span style={{ fontSize: 11, fontWeight: 600, color: C.mid, fontFamily: FONT }}>
                     Ajuster la portion
                   </span>
                   <span style={{ fontSize: 11, fontWeight: 700, color: C.accent, fontFamily: FONT }}>
-                    ×{facteur.toFixed(2).replace(".", ",")}
+                    ×{facteur.toFixed(2).replace(".",",")}
                   </span>
                 </div>
                 <input type="range" min="0.5" max="1.5" step="0.05"
                   value={facteur}
                   onChange={e => setFacteur(Number(e.target.value))}
-                  style={{ width: "100%", accentColor: C.accent }}/>
-                <div style={{ display: "flex", justifyContent: "space-between",
+                  style={{ width:"100%", accentColor: C.accent }}/>
+                <div style={{ display:"flex", justifyContent:"space-between",
                   fontSize: 10, color: C.dim, fontFamily: FONT }}>
                   <span>Moitié</span><span>Comme estimé</span><span>×1,5</span>
                 </div>
@@ -571,60 +571,60 @@ export default function PhotoAnalyse({ onClose, onAdd, premium, setPaywall, push
               {/* Note IA */}
               {res.note && (
                 <div style={{
-                  fontSize: 11, color: "${C.dim}", fontFamily: FONT,
-                  fontStyle: "italic", lineHeight: 1.5,
-                  borderTop: "1px solid rgba(0,0,0,0.05)", paddingTop: 12,
-                }}>💡 {res.note}</div>
-              )}
+                  fontSize: 11, color:"${C.dim}", fontFamily: FONT,
+                  fontStyle:"italic", lineHeight: 1.5,
+                  borderTop:"1px solid rgba(0,0,0,0.05)", paddingTop: 12,
+                }}> {res.note}</div>
+)}
             </div>
 
             {/* Choix repas */}
             <div style={{
-              background: C.s1, border: `1px solid ${C.bd}`,
-              borderRadius: 16, padding: "16px 16px",
+              background: C.s1, border:`1px solid ${C.bd}`,
+              borderRadius: 16, padding:"16px 16px",
               marginBottom: 16,
             }}>
               <div style={{
-                fontSize: 10, fontWeight: 700, color: "${C.dim}",
-                letterSpacing: "0.09em", textTransform: "uppercase",
+                fontSize: 10, fontWeight: 700, color:"${C.dim}",
+                letterSpacing:"0.09em", textTransform:"uppercase",
                 fontFamily: FONT, marginBottom: 12,
               }}>Ajouter à…</div>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8 }}>
+              <div style={{ display:"grid", gridTemplateColumns:"repeat(4, 1fr)", gap: 8 }}>
                 {MEALS.map(m => (
                   <button key={m.id} onClick={() => setRepas(m.id)} style={{
-                    padding: "8px 4px",
+                    padding:"8px 4px",
                     background: repasChoix === m.id
-                      ? "rgba(59,130,246,0.12)"
-                      : "rgba(0,0,0,0.05)",
-                    border: `1px solid ${repasChoix === m.id ? "rgba(59,130,246,0.35)" : "rgba(0,0,0,0.05)"}`,
-                    borderRadius: 12, cursor: "pointer",
+                      ?"rgba(60,91,255,0.12)"
+                      :"rgba(0,0,0,0.05)",
+                    border:`1px solid ${repasChoix === m.id ?"rgba(60,91,255,0.35)" :"rgba(0,0,0,0.05)"}`,
+                    borderRadius: 12, cursor:"pointer",
                     fontSize: 11, fontWeight: 700,
                     color: repasChoix === m.id ? C.blueLt : C.mid,
                     fontFamily: FONT,
                   }}>{m.l}</button>
-                ))}
+))}
               </div>
             </div>
 
             {/* CTA Confirmer */}
             <button onClick={confirmer} style={{
-              width: "100%", padding: "16px",
-              background: "linear-gradient(135deg,#1D4ED8,#3B82F6)",
-              border: "none", borderRadius: 16,
-              color: "#FFF", fontSize: 14, fontWeight: 700,
-              fontFamily: FONT, cursor: "pointer",
+              width:"100%", padding:"16px",
+              background:"linear-gradient(135deg,#2438B8,#3C5BFF)",
+              border:"none", borderRadius: 16,
+              color:"#FFF", fontSize: 14, fontWeight: 700,
+              fontFamily: FONT, cursor:"pointer",
               marginBottom: 8,
-              boxShadow: "0 4px 16px rgba(59,130,246,0.35)",
+              boxShadow:"0 4px 16px rgba(60,91,255,0.35)",
             }}>
-              ✓ Ajouter à mon journal
+               Ajouter à mon journal
             </button>
 
             {/* Nouvelle analyse */}
             <button onClick={() => { setStep("upload"); setResult(null); setPreview(null); setBase64(null); }} style={{
-              width: "100%", padding: "12px",
-              background: "transparent", border: `1px solid ${C.bd}`,
+              width:"100%", padding:"12px",
+              background:"transparent", border:`1px solid ${C.bd}`,
               borderRadius: 16, color: C.mid,
-              fontSize: 13, fontWeight: 500, fontFamily: FONT, cursor: "pointer",
+              fontSize: 13, fontWeight: 500, fontFamily: FONT, cursor:"pointer",
             }}>
               Analyser une autre photo
             </button>
@@ -634,7 +634,7 @@ export default function PhotoAnalyse({ onClose, onAdd, premium, setPaywall, push
 
       <style>{`
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-      `}</style>
+`}</style>
     </div>
-  );
+);
 }

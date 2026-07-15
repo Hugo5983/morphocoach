@@ -5,11 +5,11 @@
 // Le calcul des stats est dans services/badgeService.js.
 
 export const BADGE_CATEGORIES = [
-  { id: "seances",     label: "Séances" },
-  { id: "regularite",  label: "Régularité & Séries" },
-  { id: "performance", label: "Performance" },
-  { id: "nutrition",   label: "Nutrition & Récup" },
-  { id: "prestige",    label: "Prestige" },
+  { id:"seances",     label:"Séances" },
+  { id:"regularite",  label:"Régularité & Séries" },
+  { id:"performance", label:"Performance" },
+  { id:"nutrition",   label:"Nutrition & Récup" },
+  { id:"prestige",    label:"Prestige" },
 ];
 
 export const ACHIEVEMENTS = [

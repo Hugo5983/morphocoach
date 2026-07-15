@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect } from"react";
 
 export function useDailyReset(storageKey, setValue, resetValue = 0) {
   useEffect(() => {

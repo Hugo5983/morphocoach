@@ -1,10 +1,10 @@
-import { CAT } from "../data/constants.js";
+import { CAT } from"../data/constants.js";
 // @ts-check
 // ─── UTILITAIRES TRAINING ────────────────────────────────────────────────────
 // Fonctions partagées entre ProgramTab, TodayView, Calendar, SeanceDetail.
 // Source unique de vérité — ne pas dupliquer ailleurs.
 
-import { EX } from "../data/exercises.js";
+import { EX } from"../data/exercises.js";
 
 /**
  * Cherche un exercice dans la base par nom (correspondance souple).
@@ -17,9 +17,9 @@ export function findExInDB(nom) {
   for (const group of Object.values(EX)) {
     const found = group.find(e =>
       e.n.toLowerCase() === n ||
-      n.includes(e.n.toLowerCase().split(" ")[0]) ||
-      e.n.toLowerCase().includes(n.split(" ")[0])
-    );
+      n.includes(e.n.toLowerCase().split("")[0]) ||
+      e.n.toLowerCase().includes(n.split("")[0])
+);
     if (found) return found;
   }
   return null;
@@ -56,7 +56,7 @@ export const calcKgFor = (rm1, reps) => {
  * @param {string | undefined} cat
  * @returns {string}
  */
-export const catColor = (cat) => CAT[cat || "principal"] || CAT.principal;
+export const catColor = (cat) => CAT[cat ||"principal"] || CAT.principal;
 
 /**
  * Formate une clé YYYY-MM-DD depuis une Date.
@@ -64,4 +64,4 @@ export const catColor = (cat) => CAT[cat || "principal"] || CAT.principal;
  * @returns {string}
  */
 export const toDateKey = (date) =>
-  `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,"0")}-${String(date.getDate()).padStart(2,"0")}`;
+`${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,"0")}-${String(date.getDate()).padStart(2,"0")}`;

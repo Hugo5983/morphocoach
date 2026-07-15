@@ -1,5 +1,5 @@
-import { useCallback } from "react";
-import { readImageFile } from "../services/nutritionService.js";
+import { useCallback } from"react";
+import { readImageFile } from"../services/nutritionService.js";
 
 export function useFileReader(setPhotos) {
   return useCallback(async (key, file) => {

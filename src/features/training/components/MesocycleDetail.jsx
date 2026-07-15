@@ -1,8 +1,8 @@
-import { useState, useMemo } from "react";
-import { C, DARK, FONT } from "../../../data/constants.js";
+import { useState, useMemo } from"react";
+import { C, DARK, FONT } from"../../../data/constants.js";
 
-export default function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, curVol, currentWeek, WEEKS, cycleStart, checkedEx, onClose, mode = "analyse" }) {
-  const isForce   = mode === "force";
+export default function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, curVol, currentWeek, WEEKS, cycleStart, checkedEx, onClose, mode ="analyse" }) {
+  const isForce   = mode ==="force";
   const [exMenu, setExMenu] = useState(false);   // dropdown sélecteur d'exercice (mode force)
   const DISP_F = FONT;
   const SERIF_F = FONT;
@@ -31,12 +31,12 @@ export default function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, cu
     // Un ACWR fiable nécessite ≥ 21 jours de base chronique (sinon le ratio est trompeur)
     const MIN_SPAN = 21;
     if (!hasAcute || spanDays < MIN_SPAN) {
-      return { ratio: null, source: "insufficient", spanDays, need: MIN_SPAN };
+      return { ratio: null, source:"insufficient", spanDays, need: MIN_SPAN };
     }
     const acute   = d7.reduce((s,d)  => s + (wLog[d]?.totalVolume||0), 0);
     const chronic = d28.reduce((s,d) => s + (wLog[d]?.totalVolume||0), 0) / 4;
     const ratio   = chronic > 0 ? Math.round((acute/chronic)*100)/100 : null;
-    return { ratio, acute: Math.round(acute), chronic: Math.round(chronic), source: "réel", spanDays };
+    return { ratio, acute: Math.round(acute), chronic: Math.round(chronic), source:"réel", spanDays };
   }, []);
 
   // ── Sommeil data ──────────────────────────────────────────────────────────
@@ -104,23 +104,23 @@ export default function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, cu
   }, [perfData, cycleStart]);
 
   const card = (key, children) => (
-    <div onClick={()=>setExp(exp===key?null:key)} style={{background:C.s1,border:`1px solid ${exp===key?"rgba(59,130,246,0.25)":C.bd}`,borderRadius:20,padding:16,marginBottom:12,cursor:"pointer"}}>
+    <div onClick={()=>setExp(exp===key?null:key)} style={{background:C.s1,border:`1px solid ${exp===key?"rgba(60,91,255,0.25)":C.bd}`,borderRadius:20,padding:16,marginBottom:12,cursor:"pointer"}}>
       {children}
     </div>
-  );
+);
   const expandRow = (key, label) => (
     <div style={{fontSize:10,color:DARK.accent,marginTop:12,display:"flex",alignItems:"center",gap:4,fontFamily:DISP_F}}>
       {exp===key?"▴":"▾"} {label}
     </div>
-  );
+);
   const detailBox = (key, children) => exp===key ? (
     <div style={{marginTop:12,paddingTop:12,borderTop:`1px solid ${C.bd}`,fontSize:13,color:C.mid,lineHeight:1.6,fontFamily:DISP_F}}>{children}</div>
-  ) : null;
+) : null;
   const reco = (icon, txt) => (
-    <div style={{marginTop:12,padding:"12px 12px",background:"rgba(59,130,246,0.08)",border:"1px solid rgba(59,130,246,0.18)",borderRadius:12,display:"flex",gap:8,alignItems:"flex-start"}}>
+    <div style={{marginTop:12,padding:"12px 12px",background:"rgba(60,91,255,0.08)",border:"1px solid rgba(60,91,255,0.18)",borderRadius:12,display:"flex",gap:8,alignItems:"flex-start"}}>
       <span style={{fontSize:14,flexShrink:0}}>{icon}</span><div style={{fontSize:11,color:C.mid,lineHeight:1.5}}>{txt}</div>
     </div>
-  );
+);
   const lbl = {fontSize:10,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",color:C.dim,marginBottom:8,fontFamily:DISP_F};
   const badge = (bg,col,txt) => <span style={{fontSize:10,fontWeight:700,padding:"4px 8px",borderRadius:999,background:bg,color:col,whiteSpace:"nowrap",fontFamily:DISP_F}}>{txt}</span>;
   const demoBadge = badge("rgba(245,158,11,0.12)","#F59E0B","Démo · active le suivi");
@@ -137,9 +137,9 @@ export default function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, cu
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
             Retour
           </button>
-          <div style={{fontSize:10,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",color:C.blue,fontFamily:DISP_F,marginBottom:4}}>{isForce ? "Suivi de force · 1RM estimé" : `Mésocycle · Semaine ${currentWeek+1} / 6`}</div>
+          <div style={{fontSize:10,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",color:C.blue,fontFamily:DISP_F,marginBottom:4}}>{isForce ?"Suivi de force · 1RM estimé" :`Mésocycle · Semaine ${currentWeek+1} / 6`}</div>
           <div style={{fontFamily:SERIF_F,fontSize:26,letterSpacing:-1,lineHeight:1.1}}>{isForce ? <>Progression <span style={{fontStyle:"italic",color:DARK.accent}}>de force</span></> : <>Analyse <span style={{fontStyle:"italic",color:DARK.accent}}>de charge</span></>}</div>
-          <div style={{fontSize:11,color:C.dim,marginTop:4,fontFamily:DISP_F}}>{isForce ? "1RM réel par exercice · séance après séance" : `${WEEKS[currentWeek].type==="Déload"?"Phase de récupération":WEEKS[currentWeek].type==="Pic"?"Phase de pic":"Phase d'accumulation"} · Hypertrophie`}</div>
+          <div style={{fontSize:11,color:C.dim,marginTop:4,fontFamily:DISP_F}}>{isForce ?"1RM réel par exercice · séance après séance" :`${WEEKS[currentWeek].type==="Déload"?"Phase de récupération":WEEKS[currentWeek].type==="Pic"?"Phase de pic":"Phase d'accumulation"} · Hypertrophie`}</div>
         </div>
 
         {/* ── SECTIONS ANALYSE (mode analyse uniquement) ── */}
@@ -149,13 +149,13 @@ export default function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, cu
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
             <div>
               <div style={lbl}>Volume vs capacité de récupération</div>
-              <div><span style={{fontSize:34,fontWeight:700,color:nearMRV?"#F59E0B":"#34D399",letterSpacing:-1}}>{curVol}</span> <span style={{fontSize:13,fontWeight:600,color:C.dim}}>séries cette sem.</span></div>
+              <div><span style={{fontSize:34,fontWeight:700,color:nearMRV?"#F59E0B":"#12B76A",letterSpacing:-1}}>{curVol}</span> <span style={{fontSize:13,fontWeight:600,color:C.dim}}>séries cette sem.</span></div>
             </div>
-            {nearMRV ? badge("rgba(245,158,11,0.12)","#F59E0B","Limite proche") : badge("rgba(52,211,153,0.12)","#34D399","Zone optimale")}
+            {nearMRV ? badge("rgba(245,158,11,0.12)","#F59E0B","Limite proche") : badge("rgba(18,183,106,0.12)","#12B76A","Zone optimale")}
           </div>
           {/* Barres avec lignes MEV/MAV/MRV */}
           <div style={{position:"relative",display:"flex",gap:8,alignItems:"flex-end",height:120,margin:"16px 0 8px"}}>
-            {[["MRV",MRV,"#F87171"],["MAV",MAV,"#34D399"],["MEV",MEV,DARK.accent]].map(([t,v,col],k)=>{
+            {[["MRV",MRV,"#E5484D"],["MAV",MAV,"#12B76A"],["MEV",MEV,DARK.accent]].map(([t,v,col],k)=>{
               const y = 120-(v/VMAX*120);
               return <div key={k} style={{position:"absolute",left:0,right:0,top:y,height:1,borderTop:`1px dashed ${col}40`}}>
                 <span style={{position:"absolute",right:0,top:-7,fontSize:8,fontWeight:700,padding:"1px 4px",borderRadius:4,background:`${col}20`,color:col,fontFamily:DISP_F}}>{t} {v}</span>
@@ -165,10 +165,10 @@ export default function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, cu
               const v = Math.round(baseVol*w.m);
               const h = v/VMAX*120;
               const isCur = i===currentWeek;
-              const col = w.type==="Déload"?"#F87171":w.type==="Pic"?"#F59E0B":C.accent;
+              const col = w.type==="Déload"?"#E5484D":w.type==="Pic"?"#F59E0B":C.accent;
               return <div key={i} style={{flex:1,display:"flex",flexDirection:"column",justifyContent:"flex-end",alignItems:"center",gap:4,zIndex:2}}>
                 <div style={{width:"100%",height:h,borderRadius:"4px 4px 2px 2px",background:isCur?`linear-gradient(180deg,${col},${col}AA)`:col+"55",boxShadow:isCur?`0 4px 12px ${col}50`:"none"}}/>
-                <div style={{fontSize:10,fontWeight:700,color:isCur?col:"#9CA3AF",fontFamily:DISP_F}}>{w.lbl}</div>
+                <div style={{fontSize:10,fontWeight:700,color:isCur?col:"#98A2B3",fontFamily:DISP_F}}>{w.lbl}</div>
               </div>;
             })}
           </div>
@@ -178,7 +178,7 @@ export default function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, cu
             • <b style={{color:C.text}}>MEV</b> ({MEV}) minimum efficace — sous ce seuil, pas de gain<br/>
             • <b style={{color:C.text}}>MAV</b> ({MAV}) volume adaptatif optimal — la zone de progression<br/>
             • <b style={{color:C.text}}>MRV</b> ({MRV}) max récupérable — plafond, au-delà = surentraînement
-            {reco("⚠️", <>Tu es à <b style={{color:C.text}}>{curVol} séries</b>{nearMRV?<>, proche de ton MRV ({MRV}). Le <b style={{color:C.text}}>déload S5 est essentiel</b> pour dissiper la fatigue.</>:<>, dans ta zone optimale. Continue la progression.</>}</>)}
+            {reco("", <>Tu es à <b style={{color:C.text}}>{curVol} séries</b>{nearMRV?<>, proche de ton MRV ({MRV}). Le <b style={{color:C.text}}>déload S5 est essentiel</b> pour dissiper la fatigue.</>:<>, dans ta zone optimale. Continue la progression.</>}</>)}
           </>)}
         </>)}
 
@@ -200,12 +200,12 @@ export default function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, cu
           const score     = sleepPct!==null ? Math.round(sleepPct*0.55 + mobPct*0.45)
                           : mobDays>0 ? mobPct : null;
 
-          const col = score===null?"#888":score>=75?"#34D399":score>=55?"#F59E0B":"#F87171";
+          const col = score===null?"#888":score>=75?"#12B76A":score>=55?"#F59E0B":"#E5484D";
           const CIRC=264;
           const offset = score!==null ? Math.round(CIRC*(1-score/100)) : CIRC;
 
           const liveBadge = hasData
-            ? badge("rgba(52,211,153,0.12)","#34D399","Données réelles · 7j")
+            ? badge("rgba(18,183,106,0.12)","#12B76A","Données réelles · 7j")
             : demoBadge;
 
           return <>
@@ -223,7 +223,7 @@ export default function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, cu
                 </svg>
                 <div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center"}}>
                   <div style={{fontSize:26,fontWeight:700,color:col,lineHeight:1}}>{score??"-"}</div>
-                  <div style={{fontSize:8,color:"#9CA3AF",letterSpacing:"0.1em",textTransform:"uppercase",marginTop:2}}>/ 100</div>
+                  <div style={{fontSize:8,color:"#98A2B3",letterSpacing:"0.1em",textTransform:"uppercase",marginTop:2}}>/ 100</div>
                 </div>
               </div>
               {/* Barres */}
@@ -234,7 +234,7 @@ export default function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, cu
                   <div style={{flex:1,height:6,borderRadius:3,background:"rgba(0,0,0,0.05)",overflow:"hidden"}}>
                     <div style={{height:"100%",borderRadius:3,
                       width:sleepPct?`${sleepPct}%`:"0%",
-                      background:sleepPct?sleepPct>=75?"#34D399":sleepPct>=55?"#F59E0B":"#F87171":"#333",
+                      background:sleepPct?sleepPct>=75?"#12B76A":sleepPct>=55?"#F59E0B":"#E5484D":"#333",
                       transition:"width .6s"}}/>
                   </div>
                   <span style={{fontSize:10,fontWeight:700,color:sleepPct?col:"#555",width:28,textAlign:"right",flexShrink:0,fontFamily:DISP_F}}>
@@ -247,10 +247,10 @@ export default function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, cu
                   <div style={{flex:1,height:6,borderRadius:3,background:"rgba(0,0,0,0.05)",overflow:"hidden"}}>
                     <div style={{height:"100%",borderRadius:3,
                       width:`${mobPct}%`,
-                      background:mobPct>=70?"#34D399":mobPct>=40?"#F59E0B":"#F87171",
+                      background:mobPct>=70?"#12B76A":mobPct>=40?"#F59E0B":"#E5484D",
                       transition:"width .6s"}}/>
                   </div>
-                  <span style={{fontSize:10,fontWeight:700,color:mobPct>=70?"#34D399":mobPct>=40?"#F59E0B":"#F87171",width:28,textAlign:"right",flexShrink:0,fontFamily:DISP_F}}>
+                  <span style={{fontSize:10,fontWeight:700,color:mobPct>=70?"#12B76A":mobPct>=40?"#F59E0B":"#E5484D",width:28,textAlign:"right",flexShrink:0,fontFamily:DISP_F}}>
                     {mobDays}/7j
                   </span>
                 </div>
@@ -258,16 +258,16 @@ export default function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, cu
                   <div style={{fontSize:10,color:C.dim,fontFamily:DISP_F,fontStyle:"italic"}}>
                     Log sommeil + mobilité pour activer
                   </div>
-                )}
+)}
               </div>
             </div>
             {expandRow("ready","Que faire avec ce score ?")}
             {detailBox("ready", <>
               Le <b style={{color:C.text}}>score de récupération</b> combine la moyenne de sommeil des 7 derniers jours (55%) et le taux de mobilité complétée (45%).
-              {score!==null && score<60 && reco("⚠️","Score bas — réduis le volume cette semaine et priorise le sommeil. Sous 50, avance le déload.")}
-              {score!==null && score>=60 && score<75 && reco("🎯","Fatigue modérée. Maintiens la charge mais dors plus. Cible : "+sTgt+"h/nuit.")}
-              {score!==null && score>=75 && reco("✅","Bonne récupération. Tu peux progresser en charge cette semaine.")}
-              {!hasData && reco("💡","Log ton sommeil et ta mobilité depuis le jour de récup pour voir ton score réel.")}
+              {score!==null && score<60 && reco("","Score bas — réduis le volume cette semaine et priorise le sommeil. Sous 50, avance le déload.")}
+              {score!==null && score>=60 && score<75 && reco("","Fatigue modérée. Maintiens la charge mais dors plus. Cible :"+sTgt+"h/nuit.")}
+              {score!==null && score>=75 && reco("","Bonne récupération. Tu peux progresser en charge cette semaine.")}
+              {!hasData && reco("","Log ton sommeil et ta mobilité depuis le jour de récup pour voir ton score réel.")}
               <div style={{marginTop:12,fontSize:11,color:C.dim,fontStyle:"italic"}}>
                 Courbatures et RPE seront ajoutés avec le check-in hebdo.
               </div>
@@ -279,14 +279,14 @@ export default function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, cu
         {card("acwr", (() => {
           const { ratio, acute, chronic, source, spanDays = 0, need = 21 } = acwrData;
           const hasRatio = ratio !== null;
-          const insufficient = source === "insufficient";
-          const acwrCol  = !hasRatio ? "#888" : ratio >= 1.5 ? "#F87171" : ratio >= 0.8 ? "#34D399" : "#F59E0B";
-          const acwrLabel = !hasRatio ? (insufficient ? "historique insuffisant" : "—") : ratio >= 1.5 ? "dangereux" : ratio >= 1.3 ? "élevé" : ratio >= 0.8 ? "optimal" : "faible";
+          const insufficient = source ==="insufficient";
+          const acwrCol  = !hasRatio ?"#888" : ratio >= 1.5 ?"#E5484D" : ratio >= 0.8 ?"#12B76A" :"#F59E0B";
+          const acwrLabel = !hasRatio ? (insufficient ?"historique insuffisant" :"—") : ratio >= 1.5 ?"dangereux" : ratio >= 1.3 ?"élevé" : ratio >= 0.8 ?"optimal" :"faible";
           // Position sur la jauge 0.5→1.5 (100%)
           const jaugePos = hasRatio ? Math.min(100, Math.max(0, ((ratio-0.5)/1.0)*100)) : null;
           const liveBadge = hasRatio
-            ? badge(`${acwrCol}20`, acwrCol, "Données réelles")
-            : insufficient ? badge("rgba(245,158,11,0.12)", "#F59E0B", `${spanDays}/${need} j`) : demoBadge;
+            ? badge(`${acwrCol}20`, acwrCol,"Données réelles")
+            : insufficient ? badge("rgba(245,158,11,0.12)","#F59E0B",`${spanDays}/${need} j`) : demoBadge;
 
           return <>
             <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
@@ -294,9 +294,9 @@ export default function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, cu
                 <div style={lbl}>Ratio charge aiguë / chronique</div>
                 <div>
                   <span style={{fontSize:34,fontWeight:700,color:acwrCol,letterSpacing:-1}}>
-                    {hasRatio ? ratio.toFixed(2) : "—"}
+                    {hasRatio ? ratio.toFixed(2) :"—"}
                   </span>
-                  {' '}<span style={{fontSize:13,fontWeight:600,color:C.dim}}>{acwrLabel}</span>
+                  {''}<span style={{fontSize:13,fontWeight:600,color:C.dim}}>{acwrLabel}</span>
                 </div>
               </div>
               {liveBadge}
@@ -307,17 +307,17 @@ export default function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, cu
                   L'ACWR a besoin d'au moins <b style={{color:C.text}}>{need} jours</b> d'entraînement loggé pour établir une base chronique fiable. On ne l'invente pas avant.
                 </div>
                 <div style={{height:8,borderRadius:999,background:"rgba(0,0,0,0.05)",overflow:"hidden"}}>
-                  <div style={{height:"100%",width:`${Math.min(100,Math.round((spanDays/need)*100))}%`,background:"linear-gradient(90deg,#F59E0B,#FBBF24)",borderRadius:999,transition:"width .6s"}}/>
+                  <div style={{height:"100%",width:`${Math.min(100,Math.round((spanDays/need)*100))}%`,background:"linear-gradient(90deg,#F59E0B,#F59E0B)",borderRadius:999,transition:"width .6s"}}/>
                 </div>
-                <div style={{fontSize:10,color:"#9CA3AF",marginTop:8,fontFamily:DISP_F}}>{spanDays} jour{spanDays>1?"s":""} sur {need}</div>
+                <div style={{fontSize:10,color:"#98A2B3",marginTop:8,fontFamily:DISP_F}}>{spanDays} jour{spanDays>1?"s":""} sur {need}</div>
               </div>
-            ) : (
+) : (
             <div style={{position:"relative",height:30,margin:"16px 0 16px"}}>
-              <div style={{position:"absolute",bottom:8,left:0,right:0,height:8,borderRadius:4,background:"linear-gradient(90deg,#F87171 0%,#F59E0B 16%,#34D399 32%,#34D399 64%,#F59E0B 80%,#F87171 100%)"}}/>
+              <div style={{position:"absolute",bottom:8,left:0,right:0,height:8,borderRadius:4,background:"linear-gradient(90deg,#E5484D 0%,#F59E0B 16%,#12B76A 32%,#12B76A 64%,#F59E0B 80%,#E5484D 100%)"}}/>
               {jaugePos!==null && <div style={{position:"absolute",bottom:2,left:`${jaugePos}%`,width:3,height:20,background:"#FFF",borderRadius:2,boxShadow: C.shadow,transform:"translateX(-50%)"}}/>}
-              <div style={{position:"absolute",bottom:-12,left:0,right:0,display:"flex",justifyContent:"space-between",fontSize:8,color:"#9CA3AF"}}><span>0.5</span><span>0.8</span><span style={{color:"#34D399"}}>1.0</span><span>1.3</span><span>1.5+</span></div>
+              <div style={{position:"absolute",bottom:-12,left:0,right:0,display:"flex",justifyContent:"space-between",fontSize:8,color:"#98A2B3"}}><span>0.5</span><span>0.8</span><span style={{color:"#12B76A"}}>1.0</span><span>1.3</span><span>1.5+</span></div>
             </div>
-            )}
+)}
             {hasRatio && (
               <div style={{display:"flex",gap:12,marginTop:16}}>
                 {[{l:"Charge 7j",v:acute+" kg"},{l:"Moyenne/sem 28j",v:chronic+" kg"}].map(({l,v})=>(
@@ -325,16 +325,16 @@ export default function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, cu
                     <div style={{fontSize:8,color:C.dim,textTransform:"uppercase",letterSpacing:"0.1em",fontFamily:DISP_F}}>{l}</div>
                     <div style={{fontSize:14,fontWeight:700,color:C.text,marginTop:4,fontFamily:DISP_F}}>{v}</div>
                   </div>
-                ))}
+))}
               </div>
-            )}
+)}
             {expandRow("acwr","Pourquoi c'est crucial")}
             {detailBox("acwr", <>
               L'<b style={{color:C.text}}>ACWR</b> compare ta charge des 7 derniers jours à ta moyenne 28 jours. Indicateur n°1 du <b style={{color:C.text}}>risque de blessure</b>.<br/><br/>
               • <b style={{color:C.text}}>0,8–1,3</b> : adaptation optimale · <b style={{color:C.text}}>&gt;1,5</b> : pic dangereux · <b style={{color:C.text}}>&lt;0,8</b> : désentraînement
-              {insufficient && reco("⏳",`Continue à logger tes séances : encore ${Math.max(0,need-spanDays)} jour(s) avant un ACWR fiable.`)}
-              {hasRatio && ratio >= 1.3 && reco("⚠️",`À ${ratio}, tu approches la zone de risque. Évite d'augmenter le volume cette semaine.`)}
-              {hasRatio && ratio >= 0.8 && ratio < 1.3 && reco("✅",`À ${ratio} tu progresses sans danger. Continue la progression planifiée.`)}
+              {insufficient && reco("",`Continue à logger tes séances : encore ${Math.max(0,need-spanDays)} jour(s) avant un ACWR fiable.`)}
+              {hasRatio && ratio >= 1.3 && reco("",`À ${ratio}, tu approches la zone de risque. Évite d'augmenter le volume cette semaine.`)}
+              {hasRatio && ratio >= 0.8 && ratio < 1.3 && reco("",`À ${ratio} tu progresses sans danger. Continue la progression planifiée.`)}
             </>)}
           </>;
         })())}
@@ -342,26 +342,26 @@ export default function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, cu
         {/* 4. SURENTRAÎNEMENT — sommeil réel, reste honnête */}
         {card("over", (() => {
           const { avg: slpAvg, pct: slpPct, target: slpTgt, days: slpDays } = sleepData;
-          const slpStatus = slpAvg === null ? 'unknown' : slpAvg >= slpTgt ? 'ok' : slpAvg >= slpTgt-1.5 ? 'warn' : 'alert';
-          const slpLabel  = slpAvg === null ? `Pas de données (${slpDays} nuits loggées)` : `${slpAvg}h moyenne (cible ${slpTgt}h)`;
-          const slpBadge  = slpAvg === null ? ["rgba(138,148,166,0.12)","#888","–"] : slpStatus==='ok' ? ["rgba(52,211,153,0.12)","#34D399","OK"] : slpStatus==='warn' ? ["rgba(245,158,11,0.12)","#F59E0B","À surveiller"] : ["rgba(248,113,113,0.12)","#F87171","Alerte"];
+          const slpStatus = slpAvg === null ?'unknown' : slpAvg >= slpTgt ?'ok' : slpAvg >= slpTgt-1.5 ?'warn' :'alert';
+          const slpLabel  = slpAvg === null ?`Pas de données (${slpDays} nuits loggées)` :`${slpAvg}h moyenne (cible ${slpTgt}h)`;
+          const slpBadge  = slpAvg === null ? ["rgba(138,148,166,0.12)","#888","–"] : slpStatus==='ok' ? ["rgba(18,183,106,0.12)","#12B76A","OK"] : slpStatus==='warn' ? ["rgba(245,158,11,0.12)","#F59E0B","À surveiller"] : ["rgba(229,72,77,0.12)","#E5484D","Alerte"];
 
           const perfTrend = perfData?.trend;
-          const perfStatus = perfTrend === null || perfTrend === undefined ? 'unknown' : perfTrend >= 0 ? 'ok' : perfTrend >= -2 ? 'warn' : 'alert';
-          const perfLabel  = !perfData ? "Log des charges pour activer" : perfTrend===null ? `${perfData.exNom} — 1 séance seulement` : `${perfTrend>=0?'+':''}${perfTrend}% · ${perfData.exNom}`;
-          const perfBadge  = !perfData||perfTrend===null ? ["rgba(138,148,166,0.12)","#888","–"] : perfStatus==='ok' ? ["rgba(52,211,153,0.12)","#34D399","OK"] : perfStatus==='warn' ? ["rgba(245,158,11,0.12)","#F59E0B","À surveiller"] : ["rgba(248,113,113,0.12)","#F87171","Alerte"];
+          const perfStatus = perfTrend === null || perfTrend === undefined ?'unknown' : perfTrend >= 0 ?'ok' : perfTrend >= -2 ?'warn' :'alert';
+          const perfLabel  = !perfData ?"Log des charges pour activer" : perfTrend===null ?`${perfData.exNom} — 1 séance seulement` :`${perfTrend>=0?'+':''}${perfTrend}% · ${perfData.exNom}`;
+          const perfBadge  = !perfData||perfTrend===null ? ["rgba(138,148,166,0.12)","#888","–"] : perfStatus==='ok' ? ["rgba(18,183,106,0.12)","#12B76A","OK"] : perfStatus==='warn' ? ["rgba(245,158,11,0.12)","#F59E0B","À surveiller"] : ["rgba(229,72,77,0.12)","#E5484D","Alerte"];
 
           const signals = [
-            { ic:"📉", t:"Performance", s:perfLabel, st:perfBadge[2], col:perfBadge[1], bg:perfBadge[0] },
-            { ic:"😴", t:"Sommeil",     s:slpLabel,  st:slpBadge[2],  col:slpBadge[1],  bg:slpBadge[0]  },
-            { ic:"💓", t:"FC repos",    s:"Connecte une app santé",   st:"–", col:"#888", bg:"rgba(138,148,166,0.12)" },
-            { ic:"🔥", t:"Motivation",  s:"Check-in hebdo à venir",   st:"–", col:"#888", bg:"rgba(138,148,166,0.12)" },
+            { ic:"", t:"Performance", s:perfLabel, st:perfBadge[2], col:perfBadge[1], bg:perfBadge[0] },
+            { ic:"", t:"Sommeil",     s:slpLabel,  st:slpBadge[2],  col:slpBadge[1],  bg:slpBadge[0]  },
+            { ic:"", t:"FC repos",    s:"Connecte une app santé",   st:"–", col:"#888", bg:"rgba(138,148,166,0.12)" },
+            { ic:"", t:"Motivation",  s:"Check-in hebdo à venir",   st:"–", col:"#888", bg:"rgba(138,148,166,0.12)" },
           ];
-          const alertCount = signals.filter(s=>s.col==='#F87171').length;
+          const alertCount = signals.filter(s=>s.col==='#E5484D').length;
           const warnCount  = signals.filter(s=>s.col==='#F59E0B').length;
-          const statusLabel = alertCount>0 ? `${alertCount+warnCount} / 4 signaux` : warnCount>0 ? `${warnCount} / 4 à surveiller` : "Surveillance";
-          const statusColor = alertCount>0 ? "#F87171" : warnCount>0 ? "#F59E0B" : "#34D399";
-          const overallLabel = alertCount>=2 ? "Risque élevé" : alertCount===1||warnCount>=2 ? "Surveillance" : warnCount===1 ? "OK" : "Récup bonne";
+          const statusLabel = alertCount>0 ?`${alertCount+warnCount} / 4 signaux` : warnCount>0 ?`${warnCount} / 4 à surveiller` :"Surveillance";
+          const statusColor = alertCount>0 ?"#E5484D" : warnCount>0 ?"#F59E0B" :"#12B76A";
+          const overallLabel = alertCount>=2 ?"Risque élevé" : alertCount===1||warnCount>=2 ?"Surveillance" : warnCount===1 ?"OK" :"Récup bonne";
 
           return <>
             <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
@@ -381,7 +381,7 @@ export default function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, cu
                   </div>
                   {badge(`${col}15`,col,st)}
                 </div>
-              ))}
+))}
             </div>
 
             {/* Graphique sommeil — 14 derniers jours (dates + valeurs réelles) */}
@@ -390,42 +390,42 @@ export default function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, cu
               const series = daysBack(14).reverse().map(d => ({ d, h: sLog[d] || 0 }));
               const any = series.some(s => s.h > 0);
               if (!any) return (
-                <div style={{marginTop:8,padding:"12px",background:"rgba(99,102,241,0.05)",border:"1px dashed rgba(99,102,241,0.25)",borderRadius:12,fontSize:11,color:C.mid,textAlign:"center",fontFamily:DISP_F}}>
-                  😴 Note ton sommeil depuis l'Accueil pour voir ta courbe ici.
+                <div style={{marginTop:8,padding:"12px",background:"rgba(60,91,255,0.05)",border:"1px dashed rgba(60,91,255,0.25)",borderRadius:12,fontSize:11,color:C.mid,textAlign:"center",fontFamily:DISP_F}}>
+                   Note ton sommeil depuis l'Accueil pour voir ta courbe ici.
                 </div>
-              );
+);
               const maxH = Math.max(...series.map(s=>s.h), slpTgt, 9);
               return (
                 <div style={{marginTop:12,padding:"12px 12px 8px",background:"rgba(0,0,0,0.05)",borderRadius:12}}>
                   <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}>
                     <span style={{fontSize:10,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",color:C.dim,fontFamily:DISP_F}}>Sommeil · 14 jours</span>
-                    <span style={{fontSize:10,color:"#9CA3AF",fontFamily:DISP_F}}>cible {slpTgt}h</span>
+                    <span style={{fontSize:10,color:"#98A2B3",fontFamily:DISP_F}}>cible {slpTgt}h</span>
                   </div>
                   <div style={{position:"relative",display:"flex",alignItems:"flex-end",gap:4,height:56}}>
                     {/* ligne cible */}
-                    <div style={{position:"absolute",left:0,right:0,bottom:`${(slpTgt/maxH)*54}px`,height:1,background:"rgba(99,102,241,0.5)",borderTop:"1px dashed rgba(99,102,241,0.5)"}}/>
+                    <div style={{position:"absolute",left:0,right:0,bottom:`${(slpTgt/maxH)*54}px`,height:1,background:"rgba(60,91,255,0.5)",borderTop:"1px dashed rgba(60,91,255,0.5)"}}/>
                     {series.map((s,k)=>{
                       const h = s.h>0 ? Math.max(3,(s.h/maxH)*54) : 2;
                       const ok = s.h>=slpTgt;
-                      const col = s.h===0 ? "rgba(0,0,0,0.05)" : ok ? "#34D399" : s.h>=slpTgt-1.5 ? "#FBBF24" : "#F87171";
+                      const col = s.h===0 ?"rgba(0,0,0,0.05)" : ok ?"#12B76A" : s.h>=slpTgt-1.5 ?"#F59E0B" :"#E5484D";
                       return <div key={k} title={`${s.h||"—"}h`} style={{flex:1,height:`${h}px`,background:col,borderRadius:3,minWidth:0,transition:"height .4s"}}/>;
                     })}
                   </div>
-                  <div style={{display:"flex",justifyContent:"space-between",marginTop:4,fontSize:8.5,color:"#9CA3AF",fontFamily:DISP_F}}>
-                    <span>{(() => { const [,m,j]=series[0].d.split("-"); return `${j}/${m}`; })()}</span>
+                  <div style={{display:"flex",justifyContent:"space-between",marginTop:4,fontSize:8.5,color:"#98A2B3",fontFamily:DISP_F}}>
+                    <span>{(() => { const [,m,j]=series[0].d.split("-"); return`${j}/${m}`; })()}</span>
                     <span>aujourd'hui</span>
                   </div>
                 </div>
-              );
+);
             })()}
 
             {expandRow("over","Interprétation coach")}
             {detailBox("over", <>
               <b style={{color:C.text}}>Sommeil</b> et <b style={{color:C.text}}>performance</b> sont calculés en temps réel depuis tes logs.
               FC repos et Motivation arriveront avec le check-in hebdo (20 s).
-              {alertCount>=2 && reco("🩺","2+ signaux en rouge. Réduis le volume cette semaine et priorise le sommeil.")}
-              {alertCount===1 && reco("⚠️","1 signal alerte. Surveille ta récup, un déload préventif peut être bénéfique.")}
-              {alertCount===0 && warnCount===0 && reco("✅","Aucun signal préoccupant. Continue la progression planifiée.")}
+              {alertCount>=2 && reco("","2+ signaux en rouge. Réduis le volume cette semaine et priorise le sommeil.")}
+              {alertCount===1 && reco("","1 signal alerte. Surveille ta récup, un déload préventif peut être bénéfique.")}
+              {alertCount===0 && warnCount===0 && reco("","Aucun signal préoccupant. Continue la progression planifiée.")}
             </>)}
           </>;
         })())}
@@ -441,10 +441,10 @@ export default function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, cu
           const pct = hasProg
             ? Math.round(((sessions[sessions.length-1].rm - sessions[0].rm) / sessions[0].rm)*100*10)/10
             : null;
-          const pctCol = pct===null?"#888":pct>=0?DARK.accent:"#F87171";
-          const exLabel = perfData?.exNom || "Exercice";
+          const pctCol = pct===null?"#888":pct>=0?DARK.accent:"#E5484D";
+          const exLabel = perfData?.exNom ||"Exercice";
           const liveBadge = hasProg
-            ? badge(pct>=0?"rgba(52,211,153,0.12)":"rgba(248,113,113,0.12)", pct>=0?"#34D399":"#F87171", pct>=0?"↗ En hausse":"↘ En baisse")
+            ? badge(pct>=0?"rgba(18,183,106,0.12)":"rgba(229,72,77,0.12)", pct>=0?"#12B76A":"#E5484D", pct>=0?"↗ En hausse":"↘ En baisse")
             : demoBadge;
 
           // Courbe 1RM réelle sur les séances datées
@@ -458,8 +458,8 @@ export default function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, cu
             y: PT + cH - ((s.rm - minRM)/span)*cH,
             ...s,
           }));
-          const polyline = pts.map(p=>`${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
-          const fmtD = (d) => { const [,m,j] = d.split("-"); return `${j}/${m}`; };
+          const polyline = pts.map(p=>`${p.x.toFixed(1)},${p.y.toFixed(1)}`).join('');
+          const fmtD = (d) => { const [,m,j] = d.split("-"); return`${j}/${m}`; };
 
           return <>
             <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
@@ -467,10 +467,10 @@ export default function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, cu
                 <div style={lbl}>Progression force · {exLabel}</div>
                 <div>
                   <span style={{fontSize:34,fontWeight:700,color:pctCol,letterSpacing:-1}}>
-                    {pct!==null ? `${pct>=0?'+':''}${pct}` : "–"}
+                    {pct!==null ?`${pct>=0?'+':''}${pct}` :"–"}
                   </span>
-                  {' '}<span style={{fontSize:13,fontWeight:600,color:C.dim}}>
-                    {hasProg ? `% sur ${sessions.length} séances` : hasAny ? "1 séance seulement" : "Log des charges pour activer"}
+                  {''}<span style={{fontSize:13,fontWeight:600,color:C.dim}}>
+                    {hasProg ?`% sur ${sessions.length} séances` : hasAny ?"1 séance seulement" :"Log des charges pour activer"}
                   </span>
                 </div>
               </div>
@@ -483,12 +483,12 @@ export default function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, cu
                 <button onClick={()=>setExMenu(m=>!m)}
                   style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between",
                     padding:"12px 16px",borderRadius:12,cursor:"pointer",
-                    background:"#FFF",border:`1px solid ${exMenu?"rgba(59,130,246,0.5)":C.bd}`,
-                    boxShadow:exMenu?"0 4px 14px rgba(59,130,246,0.12)":"0 1px 4px rgba(15,25,35,0.05)",
+                    background:"#FFF",border:`1px solid ${exMenu?"rgba(60,91,255,0.5)":C.bd}`,
+                    boxShadow:exMenu?"0 4px 14px rgba(60,91,255,0.12)":"0 1px 4px rgba(16,19,24,0.05)",
                     fontFamily:DISP_F}}>
                   <span style={{display:"flex",alignItems:"center",gap:8,minWidth:0}}>
                     <span style={{width:30,height:30,borderRadius:8,flexShrink:0,
-                      background:"rgba(59,130,246,0.12)",display:"grid",placeItems:"center"}}>
+                      background:"rgba(60,91,255,0.12)",display:"grid",placeItems:"center"}}>
                       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={C.accent} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="m6.5 17.5 11-11M4 15l-1.5 1.5M20 9l1.5-1.5M8.5 19.5l-3-3M18.5 7.5l-3-3"/></svg>
                     </span>
                     <span style={{fontSize:14,fontWeight:700,color:C.text,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>
@@ -509,7 +509,7 @@ export default function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, cu
                         <button key={nm} onClick={()=>{setSelEx(nm);setExMenu(false);}}
                           style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between",
                             padding:"12px 16px",cursor:"pointer",textAlign:"left",
-                            background:on?"rgba(59,130,246,0.08)":"transparent",
+                            background:on?"rgba(60,91,255,0.08)":"transparent",
                             border:"none",borderTop:k>0?`1px solid rgba(0,0,0,0.05)`:"none",fontFamily:DISP_F}}>
                           <span style={{fontSize:14,fontWeight:on?700:500,color:on?C.accentDk:C.text,
                             whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{nm}</span>
@@ -518,12 +518,12 @@ export default function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, cu
                             marginLeft:8,whiteSpace:"nowrap"}}>à logger</span>}
                           {on && logged && <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={C.accentDk} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" style={{flexShrink:0}}><path d="M5 12.5 10 17l9-10"/></svg>}
                         </button>
-                      );
+);
                     })}
                   </div>
-                )}
+)}
               </div>
-            )}
+)}
 
             {hasProg ? (
               <>
@@ -542,31 +542,31 @@ export default function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, cu
                         <circle cx={p.x} cy={p.y} r={k===pts.length-1?5:3}
                           fill={C.accent} stroke={k===pts.length-1?"#FFF":"none"} strokeWidth={k===pts.length-1?1.5:0}/>
                         {(k===0||k===pts.length-1) && (
-                          <text x={p.x} y={p.y-9} fontSize="10" fontWeight="700" fill={C.accentDk} textAnchor="middle" fontFamily="'General Sans',system-ui,-apple-system,sans-serif">{p.rm}kg</text>
-                        )}
+                          <text x={p.x} y={p.y-9} fontSize="10" fontWeight="700" fill={C.accentDk} textAnchor="middle" fontFamily="'Archivo',system-ui,-apple-system,sans-serif">{p.rm}kg</text>
+)}
                       </g>
-                    ))}
-                    <text x={pts[0].x} y={SVG_H-6} fontSize="9" fill="#9CA3AF" textAnchor="start" fontFamily="'General Sans',system-ui,-apple-system,sans-serif">{fmtD(sessions[0].date)}</text>
-                    <text x={pts[pts.length-1].x} y={SVG_H-6} fontSize="9" fill="#9CA3AF" textAnchor="end" fontFamily="'General Sans',system-ui,-apple-system,sans-serif">{fmtD(sessions[sessions.length-1].date)}</text>
+))}
+                    <text x={pts[0].x} y={SVG_H-6} fontSize="9" fill="#98A2B3" textAnchor="start" fontFamily="'Archivo',system-ui,-apple-system,sans-serif">{fmtD(sessions[0].date)}</text>
+                    <text x={pts[pts.length-1].x} y={SVG_H-6} fontSize="9" fill="#98A2B3" textAnchor="end" fontFamily="'Archivo',system-ui,-apple-system,sans-serif">{fmtD(sessions[sessions.length-1].date)}</text>
                   </svg>
                 </div>
-                <div style={{display:"flex",justifyContent:"space-between",marginTop:8,fontSize:11,color:"#9CA3AF",fontFamily:DISP_F}}>
+                <div style={{display:"flex",justifyContent:"space-between",marginTop:8,fontSize:11,color:"#98A2B3",fontFamily:DISP_F}}>
                   <span>Départ : <b style={{color:C.mid}}>{sessions[0].rm}kg</b></span>
                   <span>Record : <b style={{color:C.mid}}>{perfData.best}kg</b></span>
                   <span>Actuel : <b style={{color:C.accentDk}}>{sessions[sessions.length-1].rm}kg</b></span>
                 </div>
               </>
-            ) : (
-              <div style={{marginTop:16,padding:"16px",background:"rgba(59,130,246,0.05)",border:"1px dashed rgba(59,130,246,0.18)",borderRadius:12,fontSize:13,color:C.mid,textAlign:"center",fontFamily:DISP_F}}>
-                {hasAny ? "Encore une séance loggée sur cet exercice et ta courbe d'évolution apparaît." : "Démarre une séance Focus Mode et logge tes charges pour activer la progression"}
+) : (
+              <div style={{marginTop:16,padding:"16px",background:"rgba(60,91,255,0.05)",border:"1px dashed rgba(60,91,255,0.18)",borderRadius:12,fontSize:13,color:C.mid,textAlign:"center",fontFamily:DISP_F}}>
+                {hasAny ?"Encore une séance loggée sur cet exercice et ta courbe d'évolution apparaît." :"Démarre une séance Focus Mode et logge tes charges pour activer la progression"}
               </div>
-            )}
+)}
             {expandRow("rm","Détail de la progression")}
             {detailBox("rm", <>
               Le <b style={{color:C.text}}>1RM estimé</b> est calculé via la formule d'Epley sur tes meilleures séries : <code>poids × (1 + reps/30)</code>. La courbe suit ton 1RM réel séance après séance.
-              {hasProg && pct!==null && pct>=2 && reco("📈",`Progression saine (+${pct}%) sur ${exLabel}. Continue la périodisation.`)}
-              {hasProg && pct!==null && pct<0 && reco("⚠️",`Baisse détectée sur ${exLabel}. Vérifie ton sommeil et ton volume total.`)}
-              {!hasProg && reco("💡","Logge des charges en séance Focus Mode pour voir ta courbe de progression réelle.")}
+              {hasProg && pct!==null && pct>=2 && reco("",`Progression saine (+${pct}%) sur ${exLabel}. Continue la périodisation.`)}
+              {hasProg && pct!==null && pct<0 && reco("",`Baisse détectée sur ${exLabel}. Vérifie ton sommeil et ton volume total.`)}
+              {!hasProg && reco("","Logge des charges en séance Focus Mode pour voir ta courbe de progression réelle.")}
             </>)}
           </>;
         })())}
@@ -574,6 +574,6 @@ export default function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, cu
         <div style={{height:20}}/>
       </div>
     </div>
-  );
+);
 }
 

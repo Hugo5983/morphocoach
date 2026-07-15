@@ -7,10 +7,10 @@
 //   <BehindOverlay />
 //   <div style={{ ...swipeStyle }} onTouchStart={...} onTouchMove={...} onTouchEnd={...}>
 //
-// L'option "edgeOnly" (true par défaut) impose que le swipe parte du bord gauche
+// L'option"edgeOnly" (true par défaut) impose que le swipe parte du bord gauche
 // (< 24px) — comportement natif iOS.
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback } from"react";
 
 export function useSwipeBack(onBack, { edgeOnly = true, threshold = 0.30 } = {}) {
   const [translateX, setTranslateX] = useState(0);
@@ -49,7 +49,7 @@ export function useSwipeBack(onBack, { edgeOnly = true, threshold = 0.30 } = {})
   const onTouchEnd = useCallback(() => {
     if (!active.current) return;
     active.current = false;
-    const W = (typeof window !== "undefined" ? window.innerWidth : 390);
+    const W = (typeof window !=="undefined" ? window.innerWidth : 390);
     if (translateX > W * threshold) {
       setTranslateX(W);
       setSwiping(false);
@@ -63,7 +63,7 @@ export function useSwipeBack(onBack, { edgeOnly = true, threshold = 0.30 } = {})
     }
   }, [translateX, threshold, onBack]);
 
-  const W = (typeof window !== "undefined" ? window.innerWidth : 390);
+  const W = (typeof window !=="undefined" ? window.innerWidth : 390);
   const progress = Math.max(0, Math.min(1, translateX / W));
 
   return {
@@ -72,12 +72,12 @@ export function useSwipeBack(onBack, { edgeOnly = true, threshold = 0.30 } = {})
     isSwipingBack,
     onTouchStart, onTouchMove, onTouchEnd,
     swipeStyle: {
-      transform: `translateX(${translateX}px)`,
-      transition: isSwipingBack ? "none" : "transform .28s cubic-bezier(.32,.72,0,1)",
-      willChange: "transform",
-      touchAction: "pan-y",
+      transform:`translateX(${translateX}px)`,
+      transition: isSwipingBack ?"none" :"transform .28s cubic-bezier(.32,.72,0,1)",
+      willChange:"transform",
+      touchAction:"pan-y",
       // Ombre portée à gauche de la page (style iOS) — donne l'illusion d'une page derrière
-      boxShadow: translateX > 0 ? "-8px 0 30px rgba(0,0,0,0.22)" : "none",
+      boxShadow: translateX > 0 ?"-8px 0 30px rgba(0,0,0,0.22)" :"none",
     },
   };
 }

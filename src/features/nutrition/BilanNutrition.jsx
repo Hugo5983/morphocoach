@@ -1,22 +1,22 @@
 // ─── BilanNutrition.jsx — v4 (design maquette validée) ──────────────────────
 // Logique identique v3 · redesign visuel Tableau de bord :
 //   • Mini-rings animés par macro · carrés P/G/L pleine couleur
-//   • "Encore Xg pour atteindre ta cible" · Moyenne sur totalDays
+//   •"Encore Xg pour atteindre ta cible" · Moyenne sur totalDays
 //   • Hero cohérence dégradé sombre · sections avec accent coloré
-//   • Onglet "Analyse détaillée" inchangé
+//   • Onglet"Analyse détaillée" inchangé
 
-import { useState, useMemo, useEffect, useRef } from "react";
-import { C, FONT, SERIF, NUM } from "../../data/constants.js";
-import { useSwipeBack } from "../../hooks/useSwipeBack.js";
+import { useState, useMemo, useEffect, useRef } from"react";
+import { C, FONT, SERIF, NUM } from"../../data/constants.js";
+import { useSwipeBack } from"../../hooks/useSwipeBack.js";
 import {
   computeBilan, computeCriteria, computeIndicators,
   computeHealthScore, CritRow, SectionHeader,
   MIN_DAYS_FULL_BILAN,
-} from "./components/BilanUtils.jsx";
+} from"./components/BilanUtils.jsx";
 import {
   BG, S1, BD, TEXT, MID, DIM, BL, GRN, AMB, RED,
   I, MacroCard, SecHead, NoteCalme, NextBilanCard, StreakGrid,
-} from "./components/BilanKit.jsx";
+} from"./components/BilanKit.jsx";
 
 export default function BilanNutrition({
   onBack, repasHistory, repas, foods, calObj, pObj, gObj, lObj,
@@ -41,7 +41,7 @@ export default function BilanNutrition({
   const bilan = useMemo(() =>
     computeBilan(repasHistory, calObj, pObj, gObj, lObj),
     [repasHistory, calObj, pObj, gObj, lObj]
-  );
+);
 
   const realItems = useMemo(() => {
     const r = repas || {};
@@ -92,17 +92,17 @@ export default function BilanNutrition({
         <button key={i} onClick={() => setActiveTab(i)}
           style={{ flex:1,padding:"12px 0",borderRadius:12,
             fontSize:13,fontWeight:700,fontFamily:FONT,
-            border:`1px solid ${activeTab===i?"rgba(59,130,246,0.35)":BD}`,
-            background:activeTab===i?"rgba(59,130,246,0.12)":S1,
+            border:`1px solid ${activeTab===i?"rgba(60,91,255,0.35)":BD}`,
+            background:activeTab===i?"rgba(60,91,255,0.12)":S1,
             color:activeTab===i?C.blueLt:MID,
             cursor:"pointer",display:"flex",alignItems:"center",
             justifyContent:"center",gap:8,transition:"all .18s" }}>
           <I name={tab.ico} size={14} stroke={activeTab===i?2.2:1.8} color={activeTab===i?C.blueLt:MID}/>
           {tab.label}
         </button>
-      ))}
+))}
     </div>
-  );
+);
 
   // ─── ONGLET 1 · Tableau de bord ───────────────────────────────────────
   const renderDashboard = () => {
@@ -110,7 +110,7 @@ export default function BilanNutrition({
       <div style={{ margin:"8px 16px 16px" }}>
         <div style={{ background:S1,border:`1px solid ${BD}`,borderRadius:20,
           padding:"32px 24px",textAlign:"center" }}>
-          <div style={{ fontSize:34,marginBottom:12 }}>🍽️</div>
+          <div style={{ fontSize:34,marginBottom:12 }}></div>
           <div style={{ fontSize:16,fontWeight:700,color:TEXT,fontFamily:FONT,marginBottom:8 }}>
             En attente de ton premier jour
           </div>
@@ -120,7 +120,7 @@ export default function BilanNutrition({
           </div>
         </div>
       </div>
-    );
+);
 
     return (
       <div style={{ padding:"0 20px" }}>
@@ -128,7 +128,7 @@ export default function BilanNutrition({
         {/* Note calme si données partielles */}
         {bilan.isPartial && (
           <NoteCalme nbLogged={bilan.nbLogged} totalDays={bilan.totalDays}/>
-        )}
+)}
 
         {/* ── COHÉRENCE — HERO CARD (en premier) ── */}
         <SecHead
@@ -138,8 +138,8 @@ export default function BilanNutrition({
         />
         <div style={{
           borderRadius:20,padding:"24px 20px",marginBottom:20,
-          background:"linear-gradient(140deg,#1E3A8A 0%,#4C1D95 52%,#9D174D 100%)",
-          boxShadow:"0 12px 40px rgba(99,102,241,0.35)",
+          background:"linear-gradient(140deg,#2E48D9 0%,#2E48D9 52%,#E5484D 100%)",
+          boxShadow:"0 12px 40px rgba(60,91,255,0.35)",
           color:"white",display:"flex",alignItems:"center",gap:20,
           position:"relative",overflow:"hidden",
         }}>
@@ -171,7 +171,7 @@ export default function BilanNutrition({
                 </div>
               </div>
             </div>
-          ) : (
+) : (
             <div style={{ position:"relative",width:108,height:108,flexShrink:0 }}>
               <svg width="108" height="108" style={{ position:"absolute",inset:0 }}>
                 <circle cx="54" cy="54" r="48" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth={11}/>
@@ -190,7 +190,7 @@ export default function BilanNutrition({
                 <div style={{ fontSize:10,opacity:.75,fontWeight:600,marginTop:4,fontFamily:FONT }}>sur 10</div>
               </div>
             </div>
-          )}
+)}
 
           <div style={{ flex:1 }}>
             {bilan.isPartial ? (
@@ -198,26 +198,26 @@ export default function BilanNutrition({
                 fontWeight:700,color:"rgba(255,255,255,0.85)",
                 background:"rgba(255,255,255,0.18)",padding:"4px 12px",borderRadius:8,fontFamily:FONT }}>
                 <I name="lock" size={11} color="rgba(255,255,255,0.85)"/>
-                {" "}Score dans {Math.max(0,MIN_DAYS_FULL_BILAN-bilan.nbLogged)} jours
+                {""}Score dans {Math.max(0,MIN_DAYS_FULL_BILAN-bilan.nbLogged)} jours
               </div>
-            ) : (
+) : (
               <div style={{ display:"inline-block",fontSize:11,fontWeight:700,
                 color:"rgba(255,255,255,0.85)",background:"rgba(255,255,255,0.18)",
                 padding:"4px 12px",borderRadius:8,fontFamily:FONT }}>
-                Objectif · {obj?.l || "Prise de muscle"}
+                Objectif · {obj?.l ||"Prise de muscle"}
               </div>
-            )}
+)}
             <div style={{ fontFamily:SERIF,fontSize:26,color:"white",marginTop:12,
               letterSpacing:-0.5,lineHeight:1 }}>
-              {avgKcalP}{" "}
+              {avgKcalP}{""}
               <span style={{ fontFamily:FONT,fontSize:13,fontWeight:600,opacity:.72 }}>kcal/j moy.</span>
             </div>
             <div style={{ fontSize:11,opacity:.72,marginTop:8,lineHeight:1.6,fontFamily:FONT }}>
               Cible : {calObj} kcal/j · {pctKcalP}% atteint<br/>
               <span style={{ opacity:.9,fontWeight:600 }}>
                 {bilan.isPartial
-                  ? "Continue à tout enregistrer ✦"
-                  : `${bilan.daysOk} jour${bilan.daysOk>1?"s":""} dans la cible ✦`}
+                  ?"Continue à tout enregistrer"
+                  :`${bilan.daysOk} jour${bilan.daysOk>1?"s":""} dans la cible`}
               </span>
             </div>
           </div>
@@ -231,8 +231,8 @@ export default function BilanNutrition({
           color={GRN}
         />
         <div style={{ borderRadius:20,padding:"20px",
-          background:"linear-gradient(140deg,#F0FDF4,#FFF8F0)",
-          border:"1px solid rgba(16,185,129,0.18)",
+          background:"linear-gradient(140deg,#E8EBFF,#F6F7F9)",
+          border:"1px solid rgba(18,183,106,0.18)",
           boxShadow: C.shadow,
           marginBottom:20 }}>
           {/* Header : chiffre + illustration calendrier */}
@@ -251,22 +251,22 @@ export default function BilanNutrition({
             </div>
             {/* Illustration calendrier */}
             <svg width="82" height="68" viewBox="0 0 86 72" fill="none">
-              <rect x="10" y="14" width="66" height="52" rx="8" fill="#EEF2FB" stroke="#C9D6F0" strokeWidth="2"/>
-              <rect x="10" y="14" width="66" height="15" rx="8" fill="#DBE6FB"/>
-              <path d="M24 8v12M62 8v12" stroke="#9DB5E6" strokeWidth="3.5" strokeLinecap="round"/>
+              <rect x="10" y="14" width="66" height="52" rx="8" fill="#E8EBFF" stroke="#C9D3FF" strokeWidth="2"/>
+              <rect x="10" y="14" width="66" height="15" rx="8" fill="#E8EBFF"/>
+              <path d="M24 8v12M62 8v12" stroke="#9DB0FF" strokeWidth="3.5" strokeLinecap="round"/>
               <path d="M26 44l5 5 9-11" stroke={C.accent} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-              <circle cx="56" cy="48" r="3.2" fill="#CDD9F1"/>
+              <circle cx="56" cy="48" r="3.2" fill="#C9D3FF"/>
             </svg>
           </div>
 
           <StreakGrid days={repasHistory} calObj={calObj}/>
 
           <div style={{ display:"flex",gap:16,paddingTop:12,
-            borderTop:"1px solid rgba(16,185,129,0.12)",flexWrap:"wrap" }}>
+            borderTop:"1px solid rgba(18,183,106,0.12)",flexWrap:"wrap" }}>
             {[
               { color:GRN, label:"Atteint" },
               { color:AMB, label:"Proche cible" },
-              { color:RED, bg:"rgba(248,113,113,0.12)", label:"Hors cible" },
+              { color:RED, bg:"rgba(229,72,77,0.12)", label:"Hors cible" },
               { bg:"rgba(0,0,0,0.05)", bd:"1.5px dashed rgba(18,26,48,0.12)", label:"Non renseigné" },
             ].map((x,i) => (
               <div key={i} style={{ display:"flex",alignItems:"center",gap:8,
@@ -275,7 +275,7 @@ export default function BilanNutrition({
                   background:x.bg||x.color,border:x.bd||"none" }}/>
                 {x.label}
               </div>
-            ))}
+))}
           </div>
         </div>
 
@@ -314,12 +314,12 @@ export default function BilanNutrition({
           icon={<I name="drop" size={12} color="white" stroke={2}/>}
         />
         <div style={{ borderRadius:20,padding:"20px 20px",background:S1,
-          border:"1px solid rgba(16,185,129,0.25)",
+          border:"1px solid rgba(18,183,106,0.25)",
           boxShadow: C.shadow,
           marginBottom:16 }}>
           <div style={{ display:"flex",alignItems:"center",gap:16 }}>
             <div style={{ width:56,height:56,borderRadius:16,flexShrink:0,
-              background:"linear-gradient(135deg,#34D399,#047857)",
+              background:"linear-gradient(135deg,#12B76A,#12B76A)",
               display:"grid",placeItems:"center",
               boxShadow:"0 8px 22px rgba(4,120,87,0.35),inset 0 1px 0 rgba(255,255,255,0.25)" }}>
               <I name="drop" size={26} color="white" stroke={2}/>
@@ -337,11 +337,11 @@ export default function BilanNutrition({
                   {Math.min(100,Math.round((avgEauP*0.25/2)*100))}%
                 </span>
               </div>
-              <div style={{ height:9,borderRadius:8,background:"rgba(16,185,129,0.12)",
+              <div style={{ height:9,borderRadius:8,background:"rgba(18,183,106,0.12)",
                 marginTop:12,overflow:"hidden" }}>
                 <div style={{ height:"100%",borderRadius:8,
-                  background:"linear-gradient(90deg,#6EE7B7,#10B981)",
-                  boxShadow:"2px 0 10px rgba(16,185,129,0.35)",
+                  background:"linear-gradient(90deg,#12B76A,#12B76A)",
+                  boxShadow:"2px 0 10px rgba(18,183,106,0.35)",
                   width:go?`${Math.min(100,(avgEauP*0.25/2)*100)}%`:"0%",
                   transition:"width 1.4s cubic-bezier(.34,1.2,.64,1) .4s" }}/>
               </div>
@@ -367,7 +367,7 @@ export default function BilanNutrition({
         </div>
 
       </div>
-    );
+);
   };
 
   // ─── ONGLET 2 · Analyse détaillée (inchangé) ──────────────────────────
@@ -377,8 +377,8 @@ export default function BilanNutrition({
         <div style={{ margin:"0 16px 16px",background:S1,border:`1px solid ${BD}`,
           borderRadius:20,padding:"24px 20px",textAlign:"center" }}>
           <div style={{ width:48,height:48,borderRadius:16,margin:"0 auto 12px",
-            background:"rgba(59,130,246,0.08)",border:"1px solid rgba(59,130,246,0.18)",
-            display:"grid",placeItems:"center",fontSize:20 }}>🥗</div>
+            background:"rgba(60,91,255,0.08)",border:"1px solid rgba(60,91,255,0.18)",
+            display:"grid",placeItems:"center",fontSize:20 }}></div>
           <div style={{ fontSize:14,fontWeight:700,color:TEXT,fontFamily:FONT,marginBottom:4 }}>
             Aucun aliment saisi
           </div>
@@ -386,7 +386,7 @@ export default function BilanNutrition({
             Ajoute tes repas du jour pour calculer ton score qualité et tes indicateurs nutritionnels.
           </div>
         </div>
-      )}
+)}
       {hasFood && (<>
         <div style={{ margin:"0 16px 16px",background:S1,border:`1px solid ${BD}`,
           borderRadius:20,padding:"24px 20px",position:"relative",overflow:"hidden" }}>
@@ -415,7 +415,7 @@ export default function BilanNutrition({
               </div>
             </div>
           </div>
-          <div style={{ height:8,background:"linear-gradient(90deg,#F87171 0%,#F59E0B 50%,#34D399 100%)",
+          <div style={{ height:8,background:"linear-gradient(90deg,#E5484D 0%,#F59E0B 50%,#12B76A 100%)",
             borderRadius:999,position:"relative",opacity:.4 }}>
             <div style={{ position:"absolute",top:-3,width:14,height:14,borderRadius:"50%",
               background:"white",border:`2px solid ${health.color}`,
@@ -426,7 +426,7 @@ export default function BilanNutrition({
             {["E","D","C","B","A"].map(l => (
               <span key={l} style={{ fontSize:10,
                 color:l===health.letter?health.color:DIM,fontWeight:700,fontFamily:FONT }}>{l}</span>
-            ))}
+))}
           </div>
         </div>
 
@@ -437,7 +437,7 @@ export default function BilanNutrition({
               <div key={c.key} style={{ borderBottom:i===criteria.length-1?"none":undefined }}>
                 <CritRow crit={c}/>
               </div>
-            ))}
+))}
           </div>
         </div>
 
@@ -470,7 +470,7 @@ export default function BilanNutrition({
                       boxShadow:`0 0 6px ${m.color}` }}/>
                   </div>
                 </div>
-              ))}
+))}
             </div>
             <div style={{ marginTop:12,fontSize:11,color:MID,lineHeight:1.5,fontFamily:FONT }}>
               Indicateurs calculés à partir des aliments réellement saisis.
@@ -484,7 +484,7 @@ export default function BilanNutrition({
           background:S1,border:`1px solid ${BD}`,borderRadius:16,cursor:"pointer",
           display:"flex",alignItems:"center",gap:12,fontFamily:FONT,textAlign:"left" }}>
           <div style={{ width:34,height:34,borderRadius:12,
-            background:"rgba(59,130,246,0.12)",border:"1px solid rgba(59,130,246,0.25)",
+            background:"rgba(60,91,255,0.12)",border:"1px solid rgba(60,91,255,0.25)",
             display:"grid",placeItems:"center",flexShrink:0 }}>
             <I name="arch" size={15} color={C.blueLt}/>
           </div>
@@ -500,7 +500,7 @@ export default function BilanNutrition({
         </button>
       </div>
     </>
-  );
+);
 
   // ─── Render ────────────────────────────────────────────────────────────
   const { swipeStyle, onTouchStart, onTouchMove, onTouchEnd } = useSwipeBack(onBack);
@@ -535,6 +535,6 @@ export default function BilanNutrition({
       {renderHeader()}
       {activeTab === 0 ? renderDashboard() : renderDetailed()}
     </div>
-  );
+);
 }
 

@@ -1,6 +1,6 @@
 // @ts-check
-import { useMemo } from "react";
-import { OBJ, ACTIVITE_FACTOR } from "../data/constants.js";
+import { useMemo } from"react";
+import { OBJ, ACTIVITE_FACTOR } from"../data/constants.js";
 
 /**
  * Calcule les macros et calories cibles du profil.
@@ -13,7 +13,7 @@ export function useMacros(profil, cycles = []) {
     () => profil.poids && profil.taille
       ? (parseFloat(profil.poids) / ((parseFloat(profil.taille) / 100) ** 2)).toFixed(1) : null,
     [profil.poids, profil.taille]
-  );
+);
   const obj = useMemo(() => OBJ[profil.objectif] || OBJ.sante, [profil.objectif]);
   const calObj = useMemo(() => {
     const p = parseFloat(profil.poids) || 0;
@@ -21,7 +21,7 @@ export function useMacros(profil, cycles = []) {
     const a = parseFloat(profil.age) || 0;
     if (!p || !t || !a) return 2000;
     // Métabolisme de base — Mifflin-St Jeor (référence clinique, plus précise que Harris-Benedict)
-    const mb = profil.sexe === "femme"
+    const mb = profil.sexe ==="femme"
       ? 10 * p + 6.25 * t - 5 * a - 161
       : 10 * p + 6.25 * t - 5 * a + 5;
     const factAct = ACTIVITE_FACTOR[profil.activite] || 1.375;
@@ -30,10 +30,10 @@ export function useMacros(profil, cycles = []) {
     const adj = (obj.surplus ?? obj.deficit ?? 0);
     const cycleNum = cycles.length + 1;
     let cycleAdj = 0;
-    if (profil.objectif === "hypertrophie") cycleAdj = Math.min((cycleNum - 1) * 50, 200);
-    else if (profil.objectif === "poids")  cycleAdj = cycleNum % 4 < 2 ? 0 : -50; // mini-paliers de déficit
+    if (profil.objectif ==="hypertrophie") cycleAdj = Math.min((cycleNum - 1) * 50, 200);
+    else if (profil.objectif ==="poids")  cycleAdj = cycleNum % 4 < 2 ? 0 : -50; // mini-paliers de déficit
     // Plancher de sécurité : jamais sous le BMR pour la perte de poids
-    const floor = profil.objectif === "poids" ? Math.round(mb * 1.05) : 1200;
+    const floor = profil.objectif ==="poids" ? Math.round(mb * 1.05) : 1200;
     return Math.max(floor, tdee + adj + cycleAdj);
   }, [profil, obj, cycles]);
   const { pObj, lObj, gObj } = useMemo(() => {

@@ -3,45 +3,45 @@
 // Streaming token par token via /api/generate.
 // Limite gratuit : FREE_MSG_LIMIT questions/mois. PRO : illimité.
 
-import { useState, useRef, useEffect, useCallback } from "react";
-import { C, DARK, FONT, SERIF } from "../../data/constants.js";
-import { useSwipeBack } from "../../hooks/useSwipeBack.js";
+import { useState, useRef, useEffect, useCallback } from"react";
+import { C, DARK, FONT, SERIF } from"../../data/constants.js";
+import { useSwipeBack } from"../../hooks/useSwipeBack.js";
 
 // ─── Constantes ───────────────────────────────────────────────────────────────
 const FREE_MSG_LIMIT = 3;
-const STORAGE_KEY    = "morphocoach_coach_usage"; // { count, month }
+const STORAGE_KEY    ="morphocoach_coach_usage"; // { count, month }
 
 const BG   = C.bg;
 const S1   = C.s1;
 const S2   = C.s2;
-const BD   = C.bd || "rgba(0,0,0,0.05)";
-const TEXT = C.text || "${C.text}";
-const MID  = C.mid || "${C.mid}";
-const DIM  = C.dim || "${C.dim}";
+const BD   = C.bd ||"rgba(0,0,0,0.05)";
+const TEXT = C.text ||"${C.text}";
+const MID  = C.mid ||"${C.mid}";
+const DIM  = C.dim ||"${C.dim}";
 const BL   = C.accent || C.accent;
 const BLD  = C.accentDk || C.accentDk;
-const VIO  = "#6366F1";
-const VIOD = "#4F46E5";
-const GRN  = "#34D399";
-const AMB  = "#F59E0B";
-const RED  = "#F87171";
+const VIO  ="#3C5BFF";
+const VIOD ="#2E48D9";
+const GRN  ="#12B76A";
+const AMB  ="#F59E0B";
+const RED  ="#E5484D";
 
 // ─── Questions suggérées ──────────────────────────────────────────────────────
 const SUGGESTIONS = [
-  "Quelles sont mes carences principales ?",
-  "Que manger ce soir selon mes objectifs ?",
-  "Pourquoi mon score nutrition est faible ?",
-  "Repas idéal avant l'entraînement ?",
-  "Comment améliorer ma qualité alimentaire ?",
-  "Mes points forts en nutrition ?",
+"Quelles sont mes carences principales ?",
+"Que manger ce soir selon mes objectifs ?",
+"Pourquoi mon score nutrition est faible ?",
+"Repas idéal avant l'entraînement ?",
+"Comment améliorer ma qualité alimentaire ?",
+"Mes points forts en nutrition ?",
 ];
 
 // ─── Icônes ───────────────────────────────────────────────────────────────────
-function I({ name, size = 18, color = "currentColor", stroke = 1.8 }) {
+function I({ name, size = 18, color ="currentColor", stroke = 1.8 }) {
   const p = {
-    width: size, height: size, viewBox: "0 0 24 24",
-    fill: "none", stroke: color, strokeWidth: stroke,
-    strokeLinecap: "round", strokeLinejoin: "round",
+    width: size, height: size, viewBox:"0 0 24 24",
+    fill:"none", stroke: color, strokeWidth: stroke,
+    strokeLinecap:"round", strokeLinejoin:"round",
   };
   const paths = {
     chevL:  <path d="m15 18-6-6 6-6"/>,
@@ -85,8 +85,8 @@ export default function CoachPage({
 }) {
   const [messages, setMessages] = useState([
     {
-      role: "assistant",
-      content: `Bonjour ${profil?.prenom || ""} ! Je suis ton Coach Nutrition. J'ai accès à ton bilan des 14 derniers jours. Pose-moi tes questions sur ton alimentation, tes macros ou tes carences.`,
+      role:"assistant",
+      content:`Bonjour ${profil?.prenom ||""} ! Je suis ton Coach Nutrition. J'ai accès à ton bilan des 14 derniers jours. Pose-moi tes questions sur ton alimentation, tes macros ou tes carences.`,
       ts: Date.now(),
     },
   ]);
@@ -101,7 +101,7 @@ export default function CoachPage({
 
   // Auto-scroll au dernier message
   useEffect(() => {
-    msgsEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    msgsEndRef.current?.scrollIntoView({ behavior:"smooth" });
   }, [messages, streamText]);
 
   // Compteur d'utilisation restante (gratuit)
@@ -115,7 +115,7 @@ export default function CoachPage({
     if (!canSend) { if (setPaywall) setPaywall(true); return; }
 
     // Ajoute le message user
-    const userMsg = { role: "user", content: q, ts: Date.now() };
+    const userMsg = { role:"user", content: q, ts: Date.now() };
     const history = [...messages, userMsg];
     setMessages(history);
     setInput("");
@@ -140,8 +140,8 @@ export default function CoachPage({
       // Le system prompt et la connaissance MorphoCoach sont construits CÔTÉ
       // SERVEUR (/api/coach-chat) — on n'envoie que les données de contexte.
       const res = await fetch("/api/coach-chat", {
-        method:  "POST",
-        headers: { "Content-Type": "application/json" },
+        method:"POST",
+        headers: {"Content-Type":"application/json" },
         body: JSON.stringify({
           messages: apiMessages,
           contexte: {
@@ -156,32 +156,32 @@ export default function CoachPage({
 
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
-        throw new Error(err.error || `Erreur ${res.status}`);
+        throw new Error(err.error ||`Erreur ${res.status}`);
       }
 
       const data = await res.json();
-      const answer = (data.answer || "").trim()
-        || "Je n'ai pas pu générer une réponse. Réessaie.";
+      const answer = (data.answer ||"").trim()
+        ||"Je n'ai pas pu générer une réponse. Réessaie.";
 
       // Simule le streaming (l'API /api/generate ne stream pas — on affiche mot par mot)
       setLoading(false);
-      const words = answer.split(" ");
-      let built = "";
+      const words = answer.split("");
+      let built ="";
       for (let i = 0; i < words.length; i++) {
-        built += (i > 0 ? " " : "") + words[i];
+        built += (i > 0 ?"" :"") + words[i];
         setStream(built);
         await new Promise(r => setTimeout(r, 18));
       }
       setStream("");
-      setMessages(prev => [...prev, { role: "assistant", content: answer, ts: Date.now() }]);
+      setMessages(prev => [...prev, { role:"assistant", content: answer, ts: Date.now() }]);
 
     } catch (err) {
-      if (err.name === "AbortError") return;
+      if (err.name ==="AbortError") return;
       setLoading(false);
       setStream("");
       setMessages(prev => [...prev, {
-        role: "assistant",
-        content: "Une erreur s'est produite. Vérifie ta connexion et réessaie.",
+        role:"assistant",
+        content:"Une erreur s'est produite. Vérifie ta connexion et réessaie.",
         ts: Date.now(),
         error: true,
       }]);
@@ -189,7 +189,7 @@ export default function CoachPage({
   }, [input, loading, messages, canSend, premium, usage, profil, obj, calObj, pObj, gObj, lObj, bilan]);
 
   const handleKey = (e) => {
-    if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+    if (e.key ==="Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); }
   };
 
   // ─── RENDER ────────────────────────────────────────────────────────────────
@@ -198,31 +198,31 @@ export default function CoachPage({
   return (
     <div onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd}
       style={{
-      position: "fixed", inset: 0, zIndex: 200,
+      position:"fixed", inset: 0, zIndex: 200,
       background: BG,
-      display: "flex", flexDirection: "column",
+      display:"flex", flexDirection:"column",
       fontFamily: FONT,
-      paddingTop: "env(safe-area-inset-top, 0px)",
-      paddingBottom: "env(safe-area-inset-bottom, 0px)",
-      height: "100dvh",
-      boxSizing: "border-box",
+      paddingTop:"env(safe-area-inset-top, 0px)",
+      paddingBottom:"env(safe-area-inset-bottom, 0px)",
+      height:"100dvh",
+      boxSizing:"border-box",
       ...swipeStyle,
     }}>
 
       {/* ── Header ─────────────────────────────────────────────────────── */}
-      <div style={{ padding: "16px 20px 12px", borderBottom: `1px solid ${BD}`,
-        display: "flex", alignItems: "center", gap: 12, flexShrink: 0,
+      <div style={{ padding:"16px 20px 12px", borderBottom:`1px solid ${BD}`,
+        display:"flex", alignItems:"center", gap: 12, flexShrink: 0,
         background: BG }}>
-        <button onClick={onBack} style={{ background: "transparent", border: "none",
-          color: BL, cursor: "pointer", fontSize: 13, fontWeight: 700,
-          display: "flex", alignItems: "center", gap: 4, fontFamily: FONT, padding: 0 }}>
+        <button onClick={onBack} style={{ background:"transparent", border:"none",
+          color: BL, cursor:"pointer", fontSize: 13, fontWeight: 700,
+          display:"flex", alignItems:"center", gap: 4, fontFamily: FONT, padding: 0 }}>
           <I name="chevL" size={15} color={BL} stroke={2.5}/> Retour
         </button>
 
         <div style={{ width: 34, height: 34, borderRadius: 12,
-          background: `linear-gradient(135deg, ${VIO}, ${VIOD})`,
-          display: "grid", placeItems: "center",
-          boxShadow: `0 3px 12px ${VIO}60`, flexShrink: 0 }}>
+          background:`linear-gradient(135deg, ${VIO}, ${VIOD})`,
+          display:"grid", placeItems:"center",
+          boxShadow:`0 3px 12px ${VIO}60`, flexShrink: 0 }}>
           <I name="spark" size={16} color="#FFF"/>
         </div>
 
@@ -230,16 +230,16 @@ export default function CoachPage({
           <div style={{ fontSize: 13, fontWeight: 700, color: TEXT, fontFamily: FONT }}>
             Coach Nutrition
           </div>
-          <div style={{ fontSize: 10, color: GRN, display: "flex", alignItems: "center",
+          <div style={{ fontSize: 10, color: GRN, display:"flex", alignItems:"center",
             gap: 4, marginTop: 2, fontFamily: FONT }}>
-            <span style={{ width: 5, height: 5, borderRadius: "50%",
-              background: GRN, display: "inline-block" }}/>
+            <span style={{ width: 5, height: 5, borderRadius:"50%",
+              background: GRN, display:"inline-block" }}/>
             Contexte chargé
             {!premium && (
               <span style={{ marginLeft: 8, color: AMB }}>
-                · {remaining} question{remaining > 1 ? "s" : ""} restante{remaining > 1 ? "s" : ""}
+                · {remaining} question{remaining > 1 ?"s" :""} restante{remaining > 1 ?"s" :""}
               </span>
-            )}
+)}
             {premium && <span style={{ marginLeft: 8, color: BL }}>· PRO</span>}
           </div>
         </div>
@@ -247,134 +247,134 @@ export default function CoachPage({
 
       {/* ── Strip contexte ─────────────────────────────────────────────── */}
       {bilan && (
-        <div style={{ margin: "12px 20px 0", padding: "8px 12px",
-          background: `${VIO}0F`, border: `1px solid ${VIO}30`,
-          borderRadius: 12, display: "flex", gap: 0, flexShrink: 0 }}>
+        <div style={{ margin:"12px 20px 0", padding:"8px 12px",
+          background:`${VIO}0F`, border:`1px solid ${VIO}30`,
+          borderRadius: 12, display:"flex", gap: 0, flexShrink: 0 }}>
           {[
-            { v: bilan.score ?? "—",                            c: AMB,  l: "Score" },
-            { v: bilan.avgKcal ? Math.round(bilan.avgKcal) : "—", c: TEXT, l: "kcal/j" },
-            { v: `${bilan.nbLogged ?? 0}/${bilan.totalDays ?? 14}`, c: TEXT, l: "Jours" },
-            { v: bilan.avgProt ? `${Math.round(bilan.avgProt)}g` : "—", c: DARK.accent, l: "Prot." },
+            { v: bilan.score ??"—",                            c: AMB,  l:"Score" },
+            { v: bilan.avgKcal ? Math.round(bilan.avgKcal) :"—", c: TEXT, l:"kcal/j" },
+            { v:`${bilan.nbLogged ?? 0}/${bilan.totalDays ?? 14}`, c: TEXT, l:"Jours" },
+            { v: bilan.avgProt ?`${Math.round(bilan.avgProt)}g` :"—", c: DARK.accent, l:"Prot." },
           ].map((item, i, arr) => (
-            <div key={item.l} style={{ flex: 1, textAlign: "center",
-              borderRight: i < arr.length - 1 ? `1px solid ${BD}` : "none" }}>
+            <div key={item.l} style={{ flex: 1, textAlign:"center",
+              borderRight: i < arr.length - 1 ?`1px solid ${BD}` :"none" }}>
               <div style={{ fontSize: 13, fontWeight: 700, color: item.c,
                 fontFamily: FONT }}>{item.v}</div>
               <div style={{ fontSize: 8, color: DIM, marginTop: 1, fontFamily: FONT }}>
                 {item.l}
               </div>
             </div>
-          ))}
+))}
         </div>
-      )}
+)}
 
       {/* ── Messages ───────────────────────────────────────────────────── */}
-      <div style={{ flex: 1, minHeight: 0, overflowY: "auto", padding: "16px 20px",
-        display: "flex", flexDirection: "column", gap: 12 }}>
+      <div style={{ flex: 1, minHeight: 0, overflowY:"auto", padding:"16px 20px",
+        display:"flex", flexDirection:"column", gap: 12 }}>
 
         {messages.map((m, i) => (
           <div key={i} style={{
-            display: "flex",
-            justifyContent: m.role === "user" ? "flex-end" : "flex-start",
-            gap: 8, alignItems: "flex-end",
+            display:"flex",
+            justifyContent: m.role ==="user" ?"flex-end" :"flex-start",
+            gap: 8, alignItems:"flex-end",
           }}>
-            {m.role === "assistant" && (
+            {m.role ==="assistant" && (
               <div style={{ width: 24, height: 24, borderRadius: 8,
-                background: `linear-gradient(135deg, ${VIO}, ${VIOD})`,
-                display: "grid", placeItems: "center", flexShrink: 0, marginBottom: 2 }}>
+                background:`linear-gradient(135deg, ${VIO}, ${VIOD})`,
+                display:"grid", placeItems:"center", flexShrink: 0, marginBottom: 2 }}>
                 <I name="spark" size={11} color="#FFF"/>
               </div>
-            )}
+)}
             <div style={{
-              maxWidth: "82%",
-              padding: "12px 12px",
-              borderRadius: m.role === "user"
-                ? "14px 14px 4px 14px"
-                : "14px 14px 14px 4px",
-              background: m.role === "user"
-                ? `linear-gradient(135deg, ${BL}, ${BLD})`
+              maxWidth:"82%",
+              padding:"12px 12px",
+              borderRadius: m.role ==="user"
+                ?"14px 14px 4px 14px"
+                :"14px 14px 14px 4px",
+              background: m.role ==="user"
+                ?`linear-gradient(135deg, ${BL}, ${BLD})`
                 : m.error
-                  ? "rgba(248,113,113,0.12)"
-                  : `${VIO}12`,
-              border: m.role === "user"
-                ? "none"
+                  ?"rgba(229,72,77,0.12)"
+                  :`${VIO}12`,
+              border: m.role ==="user"
+                ?"none"
                 : m.error
-                  ? "1px solid rgba(248,113,113,0.25)"
-                  : `1px solid ${VIO}25`,
+                  ?"1px solid rgba(229,72,77,0.25)"
+                  :`1px solid ${VIO}25`,
               fontSize: 13,
               lineHeight: 1.6,
-              color: m.role === "user" ? "#FFF" : m.error ? RED : TEXT,
+              color: m.role ==="user" ?"#FFF" : m.error ? RED : TEXT,
               fontFamily: FONT,
-              whiteSpace: "pre-wrap",
+              whiteSpace:"pre-wrap",
             }}>
               {m.content}
             </div>
           </div>
-        ))}
+))}
 
         {/* Streaming en cours */}
         {(loading || streamText) && (
-          <div style={{ display: "flex", gap: 8, alignItems: "flex-end" }}>
+          <div style={{ display:"flex", gap: 8, alignItems:"flex-end" }}>
             <div style={{ width: 24, height: 24, borderRadius: 8,
-              background: `linear-gradient(135deg, ${VIO}, ${VIOD})`,
-              display: "grid", placeItems: "center", flexShrink: 0, marginBottom: 2 }}>
+              background:`linear-gradient(135deg, ${VIO}, ${VIOD})`,
+              display:"grid", placeItems:"center", flexShrink: 0, marginBottom: 2 }}>
               <I name="spark" size={11} color="#FFF"/>
             </div>
-            <div style={{ maxWidth: "82%", padding: "12px 12px",
-              borderRadius: "16px 16px 16px 4px",
-              background: `${VIO}12`, border: `1px solid ${VIO}25`,
+            <div style={{ maxWidth:"82%", padding:"12px 12px",
+              borderRadius:"16px 16px 16px 4px",
+              background:`${VIO}12`, border:`1px solid ${VIO}25`,
               fontSize: 13, lineHeight: 1.6, color: TEXT, fontFamily: FONT }}>
               {streamText || (
-                <div style={{ display: "flex", gap: 4, alignItems: "center" }}>
+                <div style={{ display:"flex", gap: 4, alignItems:"center" }}>
                   {[0,1,2].map(j => (
-                    <div key={j} style={{ width: 6, height: 6, borderRadius: "50%",
-                      background: `${VIO}CC`,
-                      animation: `coachBounce 1.2s ease-in-out ${j*0.15}s infinite` }}/>
-                  ))}
+                    <div key={j} style={{ width: 6, height: 6, borderRadius:"50%",
+                      background:`${VIO}CC`,
+                      animation:`coachBounce 1.2s ease-in-out ${j*0.15}s infinite` }}/>
+))}
                   <style>{`@keyframes coachBounce{0%,80%,100%{transform:scale(0.6);opacity:0.5}40%{transform:scale(1);opacity:1}}`}</style>
                 </div>
-              )}
+)}
               {streamText && (
-                <span style={{ display: "inline-block", width: 2, height: 12,
-                  background: `${VIO}CC`, borderRadius: 1, marginLeft: 2,
-                  verticalAlign: -2, animation: "blink 1s step-end infinite" }}/>
-              )}
+                <span style={{ display:"inline-block", width: 2, height: 12,
+                  background:`${VIO}CC`, borderRadius: 1, marginLeft: 2,
+                  verticalAlign: -2, animation:"blink 1s step-end infinite" }}/>
+)}
               <style>{`@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}`}</style>
             </div>
           </div>
-        )}
+)}
 
         {/* Suggestions (affiché seulement au départ) */}
         {messages.length === 1 && !loading && (
           <div style={{ marginTop: 8 }}>
-            <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em",
-              textTransform: "uppercase", color: DIM, marginBottom: 8, fontFamily: FONT }}>
+            <div style={{ fontSize: 10, fontWeight: 700, letterSpacing:"0.1em",
+              textTransform:"uppercase", color: DIM, marginBottom: 8, fontFamily: FONT }}>
               Questions suggérées
             </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+            <div style={{ display:"flex", flexDirection:"column", gap: 4 }}>
               {SUGGESTIONS.map((s, i) => (
                 <button key={i} onClick={() => sendMessage(s)}
-                  style={{ padding: "8px 12px", background: `${VIO}08`,
-                    border: `1px solid ${VIO}25`, borderRadius: 12,
-                    color: "#A5B4FC", fontSize: 13, fontFamily: FONT,
-                    cursor: "pointer", textAlign: "left",
-                    display: "flex", alignItems: "center", gap: 8,
-                    transition: "border-color .15s" }}>
-                  <span style={{ color: `${VIO}80`, fontSize: 13 }}>→</span>
+                  style={{ padding:"8px 12px", background:`${VIO}08`,
+                    border:`1px solid ${VIO}25`, borderRadius: 12,
+                    color:"#C9D3FF", fontSize: 13, fontFamily: FONT,
+                    cursor:"pointer", textAlign:"left",
+                    display:"flex", alignItems:"center", gap: 8,
+                    transition:"border-color .15s" }}>
+                  <span style={{ color:`${VIO}80`, fontSize: 13 }}>→</span>
                   {s}
                 </button>
-              ))}
+))}
             </div>
           </div>
-        )}
+)}
 
         <div ref={msgsEndRef}/>
       </div>
 
       {/* ── Paywall gratuit ────────────────────────────────────────────── */}
       {!premium && remaining === 0 && (
-        <div style={{ margin: "0 16px 12px", padding: "12px 16px",
-          background: "rgba(59,130,246,0.08)", border: "1px solid rgba(59,130,246,0.25)",
+        <div style={{ margin:"0 16px 12px", padding:"12px 16px",
+          background:"rgba(60,91,255,0.08)", border:"1px solid rgba(60,91,255,0.25)",
           borderRadius: 16, flexShrink: 0 }}>
           <div style={{ fontSize: 13, fontWeight: 700, color: BL, marginBottom: 4, fontFamily: FONT }}>
             {FREE_MSG_LIMIT} questions gratuites utilisées ce mois-ci
@@ -383,54 +383,54 @@ export default function CoachPage({
             Passe à Nutrition PRO pour des questions illimitées.
           </div>
           <button onClick={() => setPaywall && setPaywall(true)}
-            style={{ padding: "8px 16px",
-              background: `linear-gradient(135deg, ${BL}, ${BLD})`,
-              border: "none", borderRadius: 12, color: "#FFF",
-              fontSize: 13, fontWeight: 700, fontFamily: FONT, cursor: "pointer",
-              boxShadow: "0 4px 14px rgba(59,130,246,0.35)" }}>
+            style={{ padding:"8px 16px",
+              background:`linear-gradient(135deg, ${BL}, ${BLD})`,
+              border:"none", borderRadius: 12, color:"#FFF",
+              fontSize: 13, fontWeight: 700, fontFamily: FONT, cursor:"pointer",
+              boxShadow:"0 4px 14px rgba(60,91,255,0.35)" }}>
             Débloquer Nutrition PRO
           </button>
         </div>
-      )}
+)}
 
       {/* ── Input ──────────────────────────────────────────────────────── */}
-      <div style={{ padding: "12px 16px 12px",
-        borderTop: `1px solid ${BD}`, display: "flex", gap: 8,
-        alignItems: "flex-end", flexShrink: 0, background: BG }}>
+      <div style={{ padding:"12px 16px 12px",
+        borderTop:`1px solid ${BD}`, display:"flex", gap: 8,
+        alignItems:"flex-end", flexShrink: 0, background: BG }}>
         <textarea
           ref={inputRef}
           value={input}
           onChange={e => setInput(e.target.value)}
           onKeyDown={handleKey}
-          placeholder={canSend ? "Pose ta question au coach…" : "Limite atteinte ce mois-ci"}
+          placeholder={canSend ?"Pose ta question au coach…" :"Limite atteinte ce mois-ci"}
           disabled={!canSend || loading}
           rows={1}
-          style={{ flex: 1, background: S1, border: `1px solid ${BD}`,
-            borderRadius: 20, padding: "8px 16px",
+          style={{ flex: 1, background: S1, border:`1px solid ${BD}`,
+            borderRadius: 20, padding:"8px 16px",
             color: canSend ? TEXT : MID, fontSize: 13, fontFamily: FONT,
-            resize: "none", outline: "none", lineHeight: 1.5,
-            maxHeight: 100, overflowY: "auto",
-            transition: "border-color .18s",
+            resize:"none", outline:"none", lineHeight: 1.5,
+            maxHeight: 100, overflowY:"auto",
+            transition:"border-color .18s",
             opacity: canSend ? 1 : 0.5 }}
-          onFocus={e => { if (canSend) e.target.style.borderColor = `${VIO}50`; }}
+          onFocus={e => { if (canSend) e.target.style.borderColor =`${VIO}50`; }}
           onBlur={e => e.target.style.borderColor = BD}
         />
         <button
           onClick={() => sendMessage()}
           disabled={!input.trim() || !canSend || loading}
-          style={{ width: 40, height: 40, borderRadius: "50%", flexShrink: 0,
+          style={{ width: 40, height: 40, borderRadius:"50%", flexShrink: 0,
             background: input.trim() && canSend && !loading
-              ? `linear-gradient(135deg, ${VIO}, ${VIOD})`
+              ?`linear-gradient(135deg, ${VIO}, ${VIOD})`
               : S2,
-            border: "none", display: "grid", placeItems: "center",
-            cursor: input.trim() && canSend && !loading ? "pointer" : "default",
-            transition: "all .2s",
+            border:"none", display:"grid", placeItems:"center",
+            cursor: input.trim() && canSend && !loading ?"pointer" :"default",
+            transition:"all .2s",
             boxShadow: input.trim() && canSend && !loading
-              ? `0 4px 14px ${VIO}50` : "none" }}>
-          <I name="send" size={16} color={input.trim() && canSend && !loading ? "#FFF" : DIM} stroke={2}/>
+              ?`0 4px 14px ${VIO}50` :"none" }}>
+          <I name="send" size={16} color={input.trim() && canSend && !loading ?"#FFF" : DIM} stroke={2}/>
         </button>
       </div>
 
     </div>
-  );
+);
 }

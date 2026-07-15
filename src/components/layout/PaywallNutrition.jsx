@@ -1,13 +1,13 @@
-import { C, FONT, SERIF } from "../../data/constants.js";
-import { Card, Eyebrow } from "../../components/ui/index.jsx";
+import { C, FONT, SERIF } from"../../data/constants.js";
+import { Card, Eyebrow } from"../../components/ui/index.jsx";
 
 const FEATURES = [
-  { icon:"📚", label:"+500 recettes premium complètes",       sub:"Ingrédients, étapes détaillées, curseur calories" },
-  { icon:"🎯", label:"Conseils nutritionnels personnalisés",   sub:"Selon ton objectif, profil et régime alimentaire" },
-  { icon:"📷", label:"Estimation macros par photo de repas",   sub:"Analyse instantanée — jusqu'à 120 photos/mois" },
-  { icon:"📊", label:"Bilan nutritionnel bi-mensuel",          sub:"Analyse complète de tes apports toutes les 2 semaines" },
-  { icon:"🥦", label:"Suivi fruits & légumes quotidien",       sub:"Tracker avec objectifs personnalisés" },
-  { icon:"📈", label:"Recommandations actionnables",           sub:"Conseils concrets pour progresser chaque semaine" },
+  { icon:"", label:"+500 recettes premium complètes",       sub:"Ingrédients, étapes détaillées, curseur calories" },
+  { icon:"", label:"Conseils nutritionnels personnalisés",   sub:"Selon ton objectif, profil et régime alimentaire" },
+  { icon:"", label:"Estimation macros par photo de repas",   sub:"Analyse instantanée — jusqu'à 120 photos/mois" },
+  { icon:"", label:"Bilan nutritionnel bi-mensuel",          sub:"Analyse complète de tes apports toutes les 2 semaines" },
+  { icon:"", label:"Suivi fruits & légumes quotidien",       sub:"Tracker avec objectifs personnalisés" },
+  { icon:"", label:"Recommandations actionnables",           sub:"Conseils concrets pour progresser chaque semaine" },
 ];
 
 export function PaywallNutrition({ onSubscribe, onClose }) {
@@ -19,7 +19,7 @@ export function PaywallNutrition({ onSubscribe, onClose }) {
       padding:"0 16px",
     }}>
       <Card padding="none" style={{
-        border:"1px solid rgba(16,185,129,0.25)",
+        border:"1px solid rgba(18,183,106,0.25)",
         padding:"24px 20px",
         width:"100%", maxWidth:400,
         boxShadow: C.shadow,
@@ -30,7 +30,7 @@ export function PaywallNutrition({ onSubscribe, onClose }) {
         <div style={{
           position:"absolute", top:-60, left:"50%", transform:"translateX(-50%)",
           width:300, height:160, borderRadius:"50%",
-          background:"radial-gradient(closest-side,rgba(16,185,129,0.18),transparent 70%)",
+          background:"radial-gradient(closest-side,rgba(18,183,106,0.18),transparent 70%)",
           filter:"blur(20px)", pointerEvents:"none",
         }}/>
 
@@ -51,10 +51,10 @@ export function PaywallNutrition({ onSubscribe, onClose }) {
             padding:"4px 16px", borderRadius:20,
             background:"rgba(5,150,105,0.12)",
             border:"1px solid rgba(5,150,105,0.35)",
-            fontSize:11, fontWeight:700, color:"#065F46",
+            fontSize:11, fontWeight:700, color:"#12B76A",
             fontFamily:FONT, letterSpacing:"0.1em", textTransform:"uppercase",
             marginBottom:16,
-          }}>🥗 Nutrition PRO</div>
+          }}> Nutrition PRO</div>
 
           <div style={{ fontFamily:SERIF, fontSize:26, color:C.text, letterSpacing:-0.5, lineHeight:1.3, marginBottom:8 }}>
             Mange mieux,<br/>
@@ -71,7 +71,7 @@ export function PaywallNutrition({ onSubscribe, onClose }) {
             <div key={i} style={{
               display:"flex", alignItems:"center", gap:12,
               padding:"12px 0",
-              borderBottom: i < FEATURES.length - 1 ? `1px solid rgba(0,0,0,0.05)` : "none",
+              borderBottom: i < FEATURES.length - 1 ?`1px solid rgba(0,0,0,0.05)` :"none",
             }}>
               <span style={{ fontSize:20, flexShrink:0 }}>{f.icon}</span>
               <div style={{ flex:1 }}>
@@ -83,10 +83,10 @@ export function PaywallNutrition({ onSubscribe, onClose }) {
                 background:"rgba(5,150,105,0.12)",
                 border:"1px solid rgba(5,150,105,0.25)",
                 display:"grid", placeItems:"center",
-                fontSize:11, color:"#065F46", fontWeight:700,
-              }}>✓</div>
+                fontSize:11, color:"#12B76A", fontWeight:700,
+              }}></div>
             </div>
-          ))}
+))}
         </Card>
 
         {/* Prix */}
@@ -103,12 +103,12 @@ export function PaywallNutrition({ onSubscribe, onClose }) {
         {/* CTA */}
         <button onClick={onSubscribe} style={{
           width:"100%", padding:"16px 16px",
-          background:"linear-gradient(135deg,#059669,#10B981)",
+          background:"linear-gradient(135deg,#12B76A,#12B76A)",
           border:"1px solid rgba(0,0,0,0.08)",
           borderRadius:16, color:"#FFF",
           fontSize:14, fontWeight:700, fontFamily:FONT,
           cursor:"pointer", marginBottom:12,
-          boxShadow:"0 4px 20px rgba(16,185,129,0.35)",
+          boxShadow:"0 4px 20px rgba(18,183,106,0.35)",
           position:"relative", overflow:"hidden",
         }}>
           <div style={{
@@ -128,5 +128,5 @@ export function PaywallNutrition({ onSubscribe, onClose }) {
         </button>
       </Card>
     </div>
-  );
+);
 }

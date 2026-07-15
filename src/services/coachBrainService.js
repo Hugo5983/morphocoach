@@ -1,6 +1,6 @@
 // @ts-check
 // ─── COACH BRAIN SERVICE — COUCHE 0 : RAISONNEMENT COACH ────────────────────
-// Construit le "Dossier Athlète" : l'objet de décision que l'IA lit AVANT
+// Construit le"Dossier Athlète" : l'objet de décision que l'IA lit AVANT
 // toute génération. Philosophie : Programme = réflexion(dossier),
 // et non Programme = objectif.
 //
@@ -14,7 +14,7 @@
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
 function readJSON(key, fallback) {
-  try { return JSON.parse(localStorage.getItem(key) || "null") ?? fallback; }
+  try { return JSON.parse(localStorage.getItem(key) ||"null") ?? fallback; }
   catch { return fallback; }
 }
 
@@ -24,7 +24,7 @@ function daysSince(isoOrDate) {
   return Math.floor((Date.now() - d.getTime()) / 864e5);
 }
 
-/** "12/03/2026" (fr-FR) → Date */
+/**"12/03/2026" (fr-FR) → Date */
 function parseFrDate(str) {
   if (!str) return null;
   const p = String(str).split("/");
@@ -35,7 +35,7 @@ function parseFrDate(str) {
 
 // ─── FEEDBACK POST-EXERCICE (écrit par Focus Mode, lu par la Couche 0) ──────
 
-const FEEDBACK_KEY = "morpho_exo_feedback";
+const FEEDBACK_KEY ="morpho_exo_feedback";
 const FEEDBACK_MAX_PER_EXO = 10;
 
 /**
@@ -71,9 +71,9 @@ export function analyzeDetraining({ prog, cycles }) {
 
   if (dates.length === 0) {
     return {
-      statut: "premier_programme",
+      statut:"premier_programme",
       jours_depuis_derniere_seance: null,
-      directive: "Aucun historique : bases solides, apprentissage technique, progression linéaire simple.",
+      directive:"Aucun historique : bases solides, apprentissage technique, progression linéaire simple.",
     };
   }
 
@@ -81,20 +81,20 @@ export function analyzeDetraining({ prog, cycles }) {
   const jours = daysSince(last);
 
   if (jours <= 10) return {
-    statut: "actif", jours_depuis_derniere_seance: jours,
-    directive: "Athlète actif : progression normale vs cycle précédent (+2.5 à 5% charge ou +1 série).",
+    statut:"actif", jours_depuis_derniere_seance: jours,
+    directive:"Athlète actif : progression normale vs cycle précédent (+2.5 à 5% charge ou +1 série).",
   };
   if (jours <= 20) return {
-    statut: "pause_courte", jours_depuis_derniere_seance: jours,
-    directive: "Pause courte détectée : semaine 1 à -10% des dernières charges connues, retour à la normale en semaine 2. Pas d'échec musculaire en S1.",
+    statut:"pause_courte", jours_depuis_derniere_seance: jours,
+    directive:"Pause courte détectée : semaine 1 à -10% des dernières charges connues, retour à la normale en semaine 2. Pas d'échec musculaire en S1.",
   };
   if (jours <= 45) return {
-    statut: "reprise", jours_depuis_derniere_seance: jours,
-    directive: "REPRISE APRÈS COUPURE (~" + Math.round(jours / 7) + " semaines) : charges à -25/-35% vs dernières perfs connues, volume au MEV, S1-S2 = réadaptation technique et tissulaire, AUCUN échec avant S3, courbatures à anticiper (volume progressif). Le programme DOIT être différent du précédent : la coupure est l'occasion parfaite d'introduire de nouveaux stimuli.",
+    statut:"reprise", jours_depuis_derniere_seance: jours,
+    directive:"REPRISE APRÈS COUPURE (~" + Math.round(jours / 7) +" semaines) : charges à -25/-35% vs dernières perfs connues, volume au MEV, S1-S2 = réadaptation technique et tissulaire, AUCUN échec avant S3, courbatures à anticiper (volume progressif). Le programme DOIT être différent du précédent : la coupure est l'occasion parfaite d'introduire de nouveaux stimuli.",
   };
   return {
-    statut: "reprise_longue", jours_depuis_derniere_seance: jours,
-    directive: "COUPURE LONGUE (" + Math.round(jours / 7) + " semaines+) : repartir sur une base quasi débutant-intermédiaire. Charges -40/-50%, corps entier ou split simple les 2 premières semaines, tempo contrôlé, mobilité intégrée, reconstruction des patterns moteurs. Programme entièrement renouvelé.",
+    statut:"reprise_longue", jours_depuis_derniere_seance: jours,
+    directive:"COUPURE LONGUE (" + Math.round(jours / 7) +" semaines+) : repartir sur une base quasi débutant-intermédiaire. Charges -40/-50%, corps entier ou split simple les 2 premières semaines, tempo contrôlé, mobilité intégrée, reconstruction des patterns moteurs. Programme entièrement renouvelé.",
   };
 }
 
@@ -111,7 +111,7 @@ export function analyzeProgressionParExercice({ prog, cycles }) {
 
   const pushPoint = (nom, date, kg, reps) => {
     const k = parseFloat(String(kg)); if (!nom || !isFinite(k) || k <= 0) return;
-    (series[nom] = series[nom] || []).push({ date: String(date || ""), top: k, reps: parseInt(String(reps)) || 0 });
+    (series[nom] = series[nom] || []).push({ date: String(date ||""), top: k, reps: parseInt(String(reps)) || 0 });
   };
 
   // a) Log réel du Focus Mode (source la plus fiable)
@@ -129,8 +129,8 @@ export function analyzeProgressionParExercice({ prog, cycles }) {
   [...(cycles || []), ...(prog ? [prog] : [])].forEach(p =>
     (p.jours || []).forEach(j => (j.exercices || []).forEach(ex =>
       (ex.historique || []).forEach(h => pushPoint(ex.nom, h.date, h.poids, h.reps))
-    ))
-  );
+))
+);
 
   const verdicts = [];
   Object.entries(series).forEach(([nom, pts]) => {
@@ -141,19 +141,19 @@ export function analyzeProgressionParExercice({ prog, cycles }) {
     const delta = (lastP.top - first) / first;
     let tendance, action;
     if (delta >= 0.02) {
-      tendance = "progression";
-      action = "Exercice qui FONCTIONNE pour ce profil → à conserver ou faire évoluer légèrement.";
+      tendance ="progression";
+      action ="Exercice qui FONCTIONNE pour ce profil → à conserver ou faire évoluer légèrement.";
     } else if (delta <= -0.02) {
-      tendance = "regression";
-      action = "Régression → réduire le volume 2 semaines OU remplacer par une variante moins exigeante, vérifier la récupération.";
+      tendance ="regression";
+      action ="Régression → réduire le volume 2 semaines OU remplacer par une variante moins exigeante, vérifier la récupération.";
     } else {
-      tendance = "stagnation";
-      action = "STAGNATION (" + win.length + " séances à ~" + lastP.top + "kg) → cet exercice ne produit plus d'adaptation : remplacer par une variante du même pattern (angle/prise/matériel différent) OU changer radicalement la plage de reps OU passer en rest-pause.";
+      tendance ="stagnation";
+      action ="STAGNATION (" + win.length +" séances à ~" + lastP.top +"kg) → cet exercice ne produit plus d'adaptation : remplacer par une variante du même pattern (angle/prise/matériel différent) OU changer radicalement la plage de reps OU passer en rest-pause.";
     }
     verdicts.push({
       nom, seances_analysees: pts.length,
-      derniere_perf: lastP.top + "kg × " + (lastP.reps || "?"),
-      evolution_recente: win.map(p => p.top).join(" → "),
+      derniere_perf: lastP.top +"kg ×" + (lastP.reps ||"?"),
+      evolution_recente: win.map(p => p.top).join(" →"),
       tendance, action,
     });
   });
@@ -167,7 +167,7 @@ export function analyzeProgressionParExercice({ prog, cycles }) {
 // ─── 3. ASSIDUITÉ & PERSONNALITÉ SPORTIVE ───────────────────────────────────
 
 /**
- * Ce que le coach "sent" sans le mesurer : les séances évitées, les
+ * Ce que le coach"sent" sans le mesurer : les séances évitées, les
  * séances favorites, la fréquence réelle vs prévue.
  */
 export function analyzeAdherence({ prog, form }) {
@@ -187,7 +187,7 @@ export function analyzeAdherence({ prog, form }) {
   // Focus évités / favoris sur le programme en cours
   const parFocus = {};
   (prog?.jours || []).forEach(j => {
-    const focus = (j.focus || j.type_seance || j.nom || "?").toLowerCase();
+    const focus = (j.focus || j.type_seance || j.nom ||"?").toLowerCase();
     const f = (parFocus[focus] = parFocus[focus] || { prevu: 0, fait: 0 });
     f.prevu++; if (j.complete) f.fait++;
   });
@@ -200,11 +200,11 @@ export function analyzeAdherence({ prog, form }) {
   });
 
   const freqPrevue = (form?.jours || []).length || null;
-  let verdict = "";
+  let verdict ="";
   if (freqReelle !== null && freqPrevue && freqReelle < freqPrevue - 0.8)
-    verdict = "Fait MOINS de séances que prévu (" + freqReelle + "/sem réel vs " + freqPrevue + " prévu) → programme réaliste : moins de séances mais denses, chaque séance doit être autosuffisante.";
+    verdict ="Fait MOINS de séances que prévu (" + freqReelle +"/sem réel vs" + freqPrevue +" prévu) → programme réaliste : moins de séances mais denses, chaque séance doit être autosuffisante.";
   else if (freqReelle !== null && freqPrevue && freqReelle >= freqPrevue)
-    verdict = "Très assidu (" + freqReelle + " séances/sem réelles) → on peut oser un volume et une structure plus ambitieux.";
+    verdict ="Très assidu (" + freqReelle +" séances/sem réelles) → on peut oser un volume et une structure plus ambitieux.";
 
   return {
     frequence_reelle_par_semaine: freqReelle,
@@ -227,17 +227,17 @@ export function analyzeFeedbacks() {
     const recents = list.slice(-3);
     const maxPain = Math.max(...recents.map(f => f.pain ?? 0));
     const nbNonRessenti = recents.filter(f => f.feel === 2).length;
-    recents.forEach(f => { if (typeof f.rpe === "number") { rpeSum += f.rpe; rpeN++; } });
+    recents.forEach(f => { if (typeof f.rpe ==="number") { rpeSum += f.rpe; rpeN++; } });
 
-    if (maxPain >= 3) douloureux.push({ nom, niveau: "douleur STOP", consigne: "INTERDIT — remplacer par une alternative sans stress articulaire sur la même zone." });
-    else if (maxPain === 2) douloureux.push({ nom, niveau: "gêne répétée", consigne: "Remplacer ou réduire la charge de 15% + tempo contrôlé, surveiller." });
-    if (nbNonRessenti >= 2) nonRessentis.push({ nom, consigne: "Muscle cible non ressenti ×" + nbNonRessenti + " → remplacer par un exercice à meilleure connexion pour ce profil (câble/unilatéral) ou imposer tempo 3-1-3." });
+    if (maxPain >= 3) douloureux.push({ nom, niveau:"douleur STOP", consigne:"INTERDIT — remplacer par une alternative sans stress articulaire sur la même zone." });
+    else if (maxPain === 2) douloureux.push({ nom, niveau:"gêne répétée", consigne:"Remplacer ou réduire la charge de 15% + tempo contrôlé, surveiller." });
+    if (nbNonRessenti >= 2) nonRessentis.push({ nom, consigne:"Muscle cible non ressenti ×" + nbNonRessenti +" → remplacer par un exercice à meilleure connexion pour ce profil (câble/unilatéral) ou imposer tempo 3-1-3." });
   });
 
   const rpeMoyen = rpeN > 0 ? Math.round((rpeSum / rpeN) * 10) / 10 : null;
   let calibration = null;
-  if (rpeMoyen !== null && rpeMoyen >= 9) calibration = "RPE moyen rapporté très haut (" + rpeMoyen + ") : cet athlète pousse toujours plus que prévu → prescrire des charges 5% plus conservatrices et verrouiller le RIR.";
-  else if (rpeMoyen !== null && rpeMoyen <= 6.5) calibration = "RPE moyen rapporté bas (" + rpeMoyen + ") : marge disponible → progression de charge légèrement plus agressive.";
+  if (rpeMoyen !== null && rpeMoyen >= 9) calibration ="RPE moyen rapporté très haut (" + rpeMoyen +") : cet athlète pousse toujours plus que prévu → prescrire des charges 5% plus conservatrices et verrouiller le RIR.";
+  else if (rpeMoyen !== null && rpeMoyen <= 6.5) calibration ="RPE moyen rapporté bas (" + rpeMoyen +") : marge disponible → progression de charge légèrement plus agressive.";
 
   return { exercices_douloureux: douloureux, exercices_non_ressentis: nonRessentis, rpe_moyen_rapporte: rpeMoyen, calibration };
 }
@@ -258,14 +258,14 @@ export function buildExerciseMemory({ prog, cycles, verdicts, feedbacks }) {
     (p.jours || []).forEach(j => (j.exercices || []).forEach(ex => {
       if (ex.nom) usage[ex.nom] = (usage[ex.nom] || 0) + 1;
     }))
-  );
+);
 
   const problemes = new Set([
-    ...verdicts.filter(v => v.tendance !== "progression").map(v => v.nom),
+    ...verdicts.filter(v => v.tendance !=="progression").map(v => v.nom),
     ...feedbacks.exercices_douloureux.map(d => d.nom),
     ...feedbacks.exercices_non_ressentis.map(d => d.nom),
   ]);
-  const quiMarchent = verdicts.filter(v => v.tendance === "progression" && !problemes.has(v.nom)).map(v => v.nom);
+  const quiMarchent = verdicts.filter(v => v.tendance ==="progression" && !problemes.has(v.nom)).map(v => v.nom);
 
   const aConserver = quiMarchent.slice(0, 8);
   const aRemplacer = [...problemes].slice(0, 10);
@@ -284,28 +284,28 @@ export function buildExerciseMemory({ prog, cycles, verdicts, feedbacks }) {
 // ─── 6. DIRECTIVES DE VARIATION (rotation split / méthodes / reps) ──────────
 
 const SPLITS_PAR_JOURS = {
-  2: ["Corps entier ×2 (patterns différents chaque séance)", "Haut / Bas"],
-  3: ["Push / Pull / Legs", "Corps entier ×3 à dominantes différentes", "Haut / Bas / Corps entier", "Tirage-Postérieur / Poussée / Jambes-Gainage"],
-  4: ["Haut / Bas ×2 (intensité ≠ volume)", "Push / Pull / Legs / Haut", "Torse / Dos / Jambes / Bras-Épaules", "Poussée / Tirage / Jambes / Points faibles"],
-  5: ["Push / Pull / Legs / Haut / Bas", "Split spécialisation point faible (2 séances dédiées)", "Torse / Dos / Jambes / Épaules-Bras / Full pump"],
-  6: ["Push / Pull / Legs ×2 (lourd puis volume)", "Arnold split (Torse-Dos / Épaules-Bras / Jambes) ×2", "Spécialisation : 2 séances point faible + PPL entretien"],
+  2: ["Corps entier ×2 (patterns différents chaque séance)","Haut / Bas"],
+  3: ["Push / Pull / Legs","Corps entier ×3 à dominantes différentes","Haut / Bas / Corps entier","Tirage-Postérieur / Poussée / Jambes-Gainage"],
+  4: ["Haut / Bas ×2 (intensité ≠ volume)","Push / Pull / Legs / Haut","Torse / Dos / Jambes / Bras-Épaules","Poussée / Tirage / Jambes / Points faibles"],
+  5: ["Push / Pull / Legs / Haut / Bas","Split spécialisation point faible (2 séances dédiées)","Torse / Dos / Jambes / Épaules-Bras / Full pump"],
+  6: ["Push / Pull / Legs ×2 (lourd puis volume)","Arnold split (Torse-Dos / Épaules-Bras / Jambes) ×2","Spécialisation : 2 séances point faible + PPL entretien"],
 };
 
 const ACCENTS_METHODE = [
-  "Tempo contrôlé 3-1-3 sur toutes les isolations (connexion neuromusculaire)",
-  "Travail unilatéral prioritaire (haltères/câble un bras-une jambe) sur les assistances",
-  "Supersets antagonistes sur le milieu de séance (densité)",
-  "Pré-fatigue du point faible avant le composé principal",
-  "Rest-pause sur le DERNIER set de chaque composé",
-  "Clusters 2×(3+3+3) sur les composés principaux",
+"Tempo contrôlé 3-1-3 sur toutes les isolations (connexion neuromusculaire)",
+"Travail unilatéral prioritaire (haltères/câble un bras-une jambe) sur les assistances",
+"Supersets antagonistes sur le milieu de séance (densité)",
+"Pré-fatigue du point faible avant le composé principal",
+"Rest-pause sur le DERNIER set de chaque composé",
+"Clusters 2×(3+3+3) sur les composés principaux",
 ];
 
 const VAGUES_REPS = {
-  hypertrophie: ["6-8 composés / 10-12 assistance", "8-12 partout, tempo strict", "5-8 composés lourds / 12-15 isolations", "10-15 métabolique, repos courts"],
-  force: ["3-5 composés / 6-8 assistance", "5×5 linéaire", "vague 5-3-1 / 8-10 assistance"],
-  poids: ["12-15 + circuits", "10-12 supersets, repos 60s", "15-20 métabolique + finishers"],
-  sante: ["12-15 confortable", "10-12 varié machines/câbles", "12-15 fonctionnel + gainage"],
-  prep_physique: ["5-8 force / 8-10 transfert", "puissance 3-5 + conditionnement", "contraste lourd-explosif"],
+  hypertrophie: ["6-8 composés / 10-12 assistance","8-12 partout, tempo strict","5-8 composés lourds / 12-15 isolations","10-15 métabolique, repos courts"],
+  force: ["3-5 composés / 6-8 assistance","5×5 linéaire","vague 5-3-1 / 8-10 assistance"],
+  poids: ["12-15 + circuits","10-12 supersets, repos 60s","15-20 métabolique + finishers"],
+  sante: ["12-15 confortable","10-12 varié machines/câbles","12-15 fonctionnel + gainage"],
+  prep_physique: ["5-8 force / 8-10 transfert","puissance 3-5 + conditionnement","contraste lourd-explosif"],
 };
 
 /**
@@ -320,7 +320,7 @@ export function getVariationDirectives({ cycleNum, nbJours, objectif, niveau }) 
   const pool = SPLITS_PAR_JOURS[Math.min(Math.max(nbJours || 3, 2), 6)] || SPLITS_PAR_JOURS[3];
   const split = pool[seed % pool.length];
 
-  const accents = niveau === "debutant" ? ACCENTS_METHODE.slice(0, 2) : ACCENTS_METHODE;
+  const accents = niveau ==="debutant" ? ACCENTS_METHODE.slice(0, 2) : ACCENTS_METHODE;
   const accent = accents[(seed + 1) % accents.length];
 
   const vagues = VAGUES_REPS[objectif] || VAGUES_REPS.hypertrophie;
@@ -330,7 +330,7 @@ export function getVariationDirectives({ cycleNum, nbJours, objectif, niveau }) 
     split_impose: split,
     accent_methode: accent,
     vague_de_reps: vague,
-    regle_overlap: "MAXIMUM 40% des exercices peuvent provenir du cycle précédent. Les exercices repris doivent être EXCLUSIVEMENT ceux listés dans 'exercices_a_conserver' (ils progressent). Tout le reste doit être renouvelé : autre variante du même pattern, autre angle, autre matériel.",
+    regle_overlap:"MAXIMUM 40% des exercices peuvent provenir du cycle précédent. Les exercices repris doivent être EXCLUSIVEMENT ceux listés dans'exercices_a_conserver' (ils progressent). Tout le reste doit être renouvelé : autre variante du même pattern, autre angle, autre matériel.",
   };
 }
 
@@ -370,8 +370,8 @@ export function buildDossierAthlete({ form, prog, cycles, corrigerFaibles }) {
     feedback_corporel: feedbacks,
     memoire_exercices: memoire,
     recuperation: sommeilMoyen !== null
-      ? { sommeil_moyen_7j: sommeilMoyen + "h", note: sommeilMoyen < 6.5 ? "Sommeil insuffisant → réduire le volume de 10-15%, éviter l'échec fréquent." : "Récupération correcte." }
-      : { note: "Pas de données sommeil récentes." },
+      ? { sommeil_moyen_7j: sommeilMoyen +"h", note: sommeilMoyen < 6.5 ?"Sommeil insuffisant → réduire le volume de 10-15%, éviter l'échec fréquent." :"Récupération correcte." }
+      : { note:"Pas de données sommeil récentes." },
     priorite_points_faibles: !!corrigerFaibles,
   };
 
@@ -381,6 +381,6 @@ export function buildDossierAthlete({ form, prog, cycles, corrigerFaibles }) {
 /** Sérialisation compacte pour injection dans le prompt (budget tokens). */
 export function formatDossierPourPrompt(dossier) {
   return JSON.stringify(dossier, null, 1)
-    .replace(/\n\s*/g, "\n")
+    .replace(/\n\s*/g,"\n")
     .substring(0, 6000);
 }

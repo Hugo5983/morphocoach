@@ -3,29 +3,29 @@
  * Extrait de Creer.jsx sans aucune modification de code.
  */
 
-import { useState } from "react";
-import { C, FONT, SERIF, CAT } from "../../../data/constants.js";
-import { EX } from "../../../data/exercises.js";
-import { Tabs } from "../../../components/ui/Tabs.jsx";
+import { useState } from"react";
+import { C, FONT, SERIF, CAT } from"../../../data/constants.js";
+import { EX } from"../../../data/exercises.js";
+import { Tabs } from"../../../components/ui/Tabs.jsx";
 
 
 // ─── Tokens ──────────────────────────────────────────────────────────────────
 const BL   = C.accent || C.accent;
 const BLD  = C.accentDk || C.accentDk;
-const BLS  = "rgba(59,130,246,0.12)";
-const BLBR = "rgba(59,130,246,0.35)";
+const BLS  ="rgba(60,91,255,0.12)";
+const BLBR ="rgba(60,91,255,0.35)";
 const BG   = C.bg;
-const S1   = C.s1 || "#FFFFFF";
+const S1   = C.s1 ||"#FFFFFF";
 const S2   = C.s2 || C.s2;
-const BD   = C.bd  || "rgba(0,0,0,0.05)";
-const BDHI = C.bdHi || "rgba(0,0,0,0.08)";
-const TEXT = C.text || "${C.text}";
-const MID  = C.mid  || "${C.mid}";
-const DIM  = C.dim  || "${C.dim}";
-const GRN  = C.green || "#34D399";
-const RED  = "#F87171";
-const PRP  = "#9A8CFF";
-const AMB  = "#F59E0B";
+const BD   = C.bd  ||"rgba(0,0,0,0.05)";
+const BDHI = C.bdHi ||"rgba(0,0,0,0.08)";
+const TEXT = C.text ||"${C.text}";
+const MID  = C.mid  ||"${C.mid}";
+const DIM  = C.dim  ||"${C.dim}";
+const GRN  = C.green ||"#12B76A";
+const RED  ="#E5484D";
+const PRP  ="#9DB0FF";
+const AMB  ="#F59E0B";
 const F    = FONT;
 const SF   = SERIF;
 
@@ -47,7 +47,7 @@ const INTENSITIES = [
   {id:"mobilite",label:"Mobilité", color:PRP},
 ];
 const METHODS = ["Standard","Pyramidal","Super-set","Drop-set","Rest-pause",
-                 "5×5","Séries de 100","Dégressif","Pré-fatigue","Wave loading"];
+"5×5","Séries de 100","Dégressif","Pré-fatigue","Wave loading"];
 const CAT_C = { ...CAT }; // palette catégorielle canonique (constants.js)
 const cc = cat => CAT_C[cat] || CAT.principal;
 
@@ -60,7 +60,7 @@ const parseScheme = scheme => {
 };
 
 // ─── CSS ─────────────────────────────────────────────────────────────────────
-const CSS = `
+const CSS =`
 @keyframes mcFadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 @keyframes mcPop{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
 @keyframes mcShine{0%,60%{background-position:-180% 0}100%{background-position:200% 0}}
@@ -91,7 +91,7 @@ const CSS = `
   padding:12px 20px;border-radius:12px;border:1.5px solid ${BD};
   background:${S1};color:${MID};transition:.18s;position:relative}
 .mc-dtab.on{border-color:${BL};color:#FFF;background:${BLS}}
-.mc-dtab.miss{border-color:rgba(248,113,113,0.5)}
+.mc-dtab.miss{border-color:rgba(229,72,77,0.5)}
 /* Exercise card */
 .mc-ex{background:${S1};border:1px solid ${BD};border-radius:20px;padding:16px;margin-bottom:12px}
 .mc-metric{flex:1;background:${S2};border:1px solid ${BD};border-radius:12px;padding:8px 8px 12px;text-align:center}
@@ -123,8 +123,8 @@ const CSS = `
 .mc-method.on{border-color:${BL};color:${BL};background:${BLS}}
 /* Add button */
 .mc-add-ex{width:100%;cursor:pointer;font-family:${F};font-weight:700;font-size:14px;
-  padding:16px;border-radius:16px;border:1.5px dashed rgba(59,130,246,0.35);
-  background:rgba(59,130,246,0.05);color:${BL};
+  padding:16px;border-radius:16px;border:1.5px dashed rgba(60,91,255,0.35);
+  background:rgba(60,91,255,0.05);color:${BL};
   display:flex;align-items:center;justify-content:center;gap:8px;transition:.16s;margin-top:8px}
 .mc-add-ex:active{transform:scale(.98)}
 /* Recap */
@@ -135,15 +135,15 @@ const CSS = `
   padding:20px;font-size:16px;font-family:${F};color:${TEXT};outline:none;
   transition:.18s;box-sizing:border-box}
 .mc-field::placeholder{color:${DIM}}
-.mc-field:focus{border-color:${BLBR};background:${S2};box-shadow:0 0 0 3px rgba(59,130,246,0.12)}
+.mc-field:focus{border-color:${BLBR};background:${S2};box-shadow:0 0 0 3px rgba(60,91,255,0.12)}
 /* Lib */
 .mc-lib{background:${S1};border:1px solid ${BD};border-radius:16px;padding:16px;margin-bottom:12px;transition:.18s}
-.mc-lib.added{border-color:rgba(52,211,153,0.35);background:linear-gradient(135deg,rgba(52,211,153,0.05),transparent)}
+.mc-lib.added{border-color:rgba(18,183,106,0.35);background:linear-gradient(135deg,rgba(18,183,106,0.05),transparent)}
 .mc-lib-add{margin-top:12px;width:100%;cursor:pointer;font-family:${F};font-weight:700;font-size:14px;
   padding:12px;border-radius:12px;border:none;
   background:linear-gradient(135deg,${BL},${BLD});color:#FFF;
   display:flex;align-items:center;justify-content:center;gap:8px;transition:.16s}
-.mc-lib-add.done{background:rgba(52,211,153,0.12);color:${GRN};border:1px solid rgba(52,211,153,0.35)}
+.mc-lib-add.done{background:rgba(18,183,106,0.12);color:${GRN};border:1px solid rgba(18,183,106,0.35)}
 .mc-lib-add:active{transform:scale(.98)}
 /* Seg bar */
 .mc-seg{height:5px;border-radius:3px;flex:1;background:rgba(255,255,255,0.08);overflow:hidden}
@@ -152,7 +152,7 @@ const CSS = `
 .mc-seg.done i,.mc-seg.active i{width:100%}
 /* Warning */
 .mc-warn{display:flex;gap:12px;align-items:flex-start;border-radius:16px;padding:16px 16px;
-  background:rgba(248,113,113,0.08);border:1px solid rgba(248,113,113,0.25)}
+  background:rgba(229,72,77,0.08);border:1px solid rgba(229,72,77,0.25)}
 /* Empty state */
 .mc-empty{text-align:center;padding:32px 12px;color:${MID};font-size:14px;
   display:flex;flex-direction:column;align-items:center;
@@ -163,7 +163,7 @@ const CSS = `
 function ExCard({ ex, onUpdate, onRemove }) {
   const [open, setOpen] = useState(false);
   const catColor = cc(ex.cat);
-  const catLabel = ex.cat === "principal" ? "PRINCIPAL" : ex.cat?.toUpperCase() || "ISOLATION";
+  const catLabel = ex.cat ==="principal" ?"PRINCIPAL" : ex.cat?.toUpperCase() ||"ISOLATION";
 
   return (
     <div className="mc-ex mc-pop" style={{ borderLeft:`3px solid ${catColor}`,
@@ -179,8 +179,8 @@ function ExCard({ ex, onUpdate, onRemove }) {
           <div style={{ fontSize:13, color:MID }}>{ex.series}×{ex.reps} · {ex.repos}s</div>
         </div>
         <button onClick={onRemove} style={{ width:40, height:40, borderRadius:12, flexShrink:0,
-          border:"1px solid rgba(248,113,113,0.25)", background:"rgba(248,113,113,0.08)",
-          display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer", color:RED, fontSize:16 }}>✕</button>
+          border:"1px solid rgba(229,72,77,0.25)", background:"rgba(229,72,77,0.08)",
+          display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer", color:RED, fontSize:16 }}></button>
       </div>
 
       <div style={{ display:"flex", gap:8, marginTop:12 }}>
@@ -213,10 +213,10 @@ function ExCard({ ex, onUpdate, onRemove }) {
       </div>
 
       <button className={`mc-tempo${open?" open":""}`} onClick={() => setOpen(o=>!o)}>
-        <span style={{ fontSize:14 }}>⚙</span>
+        <span style={{ fontSize:14 }}></span>
         {ex.methode && ex.methode!=="Standard"
           ? <span style={{ color:BL, fontWeight:700 }}>{ex.methode}{ex.tempo?` · ${ex.tempo}`:""}</span>
-          : "Tempo & intensité"}
+          :"Tempo & intensité"}
         <span style={{ marginLeft:"auto", fontSize:11, transition:"transform .2s",
           display:"inline-block", transform:open?"rotate(180deg)":"none" }}>▾</span>
       </button>
@@ -236,13 +236,13 @@ function ExCard({ ex, onUpdate, onRemove }) {
               {METHODS.map(m => (
                 <button key={m} className={`mc-method${ex.methode===m?" on":""}`}
                   onClick={() => onUpdate({...ex,methode:m})}>{m}</button>
-              ))}
+))}
             </div>
           </div>
         </div>
-      )}
+)}
     </div>
-  );
+);
 }
 
 // ─── BiblioSheet ─────────────────────────────────────────────────────────────
@@ -274,7 +274,7 @@ function BiblioSheet({ onClose, onAdd, addedNoms }) {
               <div style={{ fontSize:14, fontWeight:700, color:BL, fontFamily:F }}>{s.v}</div>
               <div style={{ fontSize:10, color:MID, marginTop:2 }}>{s.l}</div>
             </div>
-          ))}
+))}
         </div>
         <Tabs items={[{id:"tips",l:"Tips"},{id:"variantes",l:"Variantes"},{id:"erreurs",l:"Erreurs"},{id:"morpho",l:"Morpho"}]}
           value={guideTab} onChange={setGuideTab}/>
@@ -287,37 +287,37 @@ function BiblioSheet({ onClose, onAdd, addedNoms }) {
                 flexShrink:0, fontSize:10, fontWeight:700, color:BL }}>{i+1}</div>
               <div style={{ fontSize:13, color:TEXT, lineHeight:1.6 }}>{tip}</div>
             </div>
-          ))}
+))}
           {guideTab==="variantes" && (guideEx.variantes||[]).map((v,i) => (
             <div key={i} style={{ paddingBottom:12, marginBottom:12,
               borderBottom:`1px solid ${BD}` }}>
               <div style={{ fontSize:13, fontWeight:700, color:TEXT, marginBottom:4 }}>{v.nom||v}</div>
               {v.note && <div style={{ fontSize:11, color:MID, lineHeight:1.5 }}>{v.note}</div>}
             </div>
-          ))}
+))}
           {guideTab==="erreurs" && (guideEx.erreurs||[]).map((e,i) => (
             <div key={i} style={{ display:"flex", gap:12, marginBottom:12, alignItems:"flex-start" }}>
-              <div style={{ width:20, height:20, borderRadius:"50%", background:"rgba(248,113,113,0.12)",
-                border:"1px solid rgba(248,113,113,0.25)", display:"grid", placeItems:"center",
-                flexShrink:0, fontSize:10, color:RED }}>✕</div>
+              <div style={{ width:20, height:20, borderRadius:"50%", background:"rgba(229,72,77,0.12)",
+                border:"1px solid rgba(229,72,77,0.25)", display:"grid", placeItems:"center",
+                flexShrink:0, fontSize:10, color:RED }}></div>
               <div style={{ fontSize:13, color:TEXT, lineHeight:1.6 }}>{e}</div>
             </div>
-          ))}
+))}
           {guideTab==="morpho" && (guideEx.morpho||"").split('\n').filter(Boolean).map((line,i,arr)=>(
             <div key={i} style={{ display:"flex", gap:8, paddingBottom:12, marginBottom:12,
               borderBottom:i<arr.length-1?`1px solid ${BD}`:"none" }}>
               <div style={{ fontSize:14, flexShrink:0 }}>{line.split(':')[0].trim()}</div>
               <div style={{ fontSize:11, color:TEXT, lineHeight:1.6, flex:1 }}>{line.split(':').slice(1).join(':').trim()}</div>
             </div>
-          ))}
+))}
         </div>
         <button onClick={() => { onAdd(guideEx); setGuideEx(null); }}
           className={`mc-lib-add${addedNoms.includes(guideEx.n)?" done":""}`}>
-          {addedNoms.includes(guideEx.n) ? "✓ Déjà ajouté" : "+ Ajouter cet exercice"}
+          {addedNoms.includes(guideEx.n) ?" Déjà ajouté" :"+ Ajouter cet exercice"}
         </button>
       </div>
     </div>
-  );
+);
 
   return (
     <div style={{ position:"fixed", inset:0, zIndex:320 }}>
@@ -360,10 +360,10 @@ function BiblioSheet({ onClose, onAdd, addedNoms }) {
                   background:on?BLS:S1, color:on?BL:MID, fontSize:13, fontWeight:700,
                   cursor:"pointer", fontFamily:F, whiteSpace:"nowrap",
                   transition:"all .18s" }}>{g}</button>
-              );
+);
             })}
           </div>
-        )}
+)}
         {/* Liste */}
         <div style={{ flex:1, overflowY:"auto", padding:"4px 20px 24px" }} className="mc-scroll">
           {list.map((ex,i) => {
@@ -383,7 +383,7 @@ function BiblioSheet({ onClose, onAdd, addedNoms }) {
                 </div>
                 <div style={{ display:"flex", gap:8 }}>
                   <button onClick={() => onAdd(ex)} className={`mc-lib-add${added?" done":""}`} style={{ flex:1 }}>
-                    {added ? "✓ Ajouté" : "+ Ajouter"}
+                    {added ?" Ajouté" :"+ Ajouter"}
                   </button>
                   <button onClick={() => setGuideEx(ex)} style={{ padding:"12px 16px",
                     background:BLS, border:`1px solid ${BLBR}`, borderRadius:12,
@@ -392,12 +392,12 @@ function BiblioSheet({ onClose, onAdd, addedNoms }) {
                   </button>
                 </div>
               </div>
-            );
+);
           })}
         </div>
       </div>
     </div>
-  );
+);
 }
 
 // ─── MAIN ─────────────────────────────────────────────────────────────────────

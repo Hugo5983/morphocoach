@@ -3,40 +3,40 @@
  * Extrait de BilanNutrition.jsx sans aucune modification de code.
  */
 
-import { C, FONT, SERIF, NUM } from "../../../data/constants.js";
-import { MIN_DAYS_FULL_BILAN } from "./BilanUtils.jsx";
+import { C, FONT, SERIF, NUM } from"../../../data/constants.js";
+import { MIN_DAYS_FULL_BILAN } from"./BilanUtils.jsx";
 
 // ─── Palette ───────────────────────────────────────────────────────────────
 const BG  = C.bg;
-const S1  = C.s1  || "#FFFFFF";
-const BD  = C.bd  || "rgba(0,0,0,0.05)";
+const S1  = C.s1  ||"#FFFFFF";
+const BD  = C.bd  ||"rgba(0,0,0,0.05)";
 const TEXT = C.text;
 const MID  = C.mid;
 const DIM  = C.dim;
 const BL   = C.accent;
 const BLD  = C.accentDk;
 const GRN  = C.green;
-const AMB  = "#F59E0B";
-const RED  = "#F87171";
+const AMB  ="#F59E0B";
+const RED  ="#E5484D";
 
 // ─── Config macros ─────────────────────────────────────────────────────────
 const MCFG = {
   Protéines: {
-    L:"P", sq:"linear-gradient(135deg,#60A5FA,#1D4ED8)", sqS:"rgba(29,78,216,0.35)",
-    bar:"linear-gradient(90deg,#93C5FD,#3B82F6)", barG:"rgba(59,130,246,0.35)",
-    color:C.accent, roleC:"#1D4ED8", roleBg:C.accentLt,
-    role:"Muscle & récup'", brd:"rgba(59,130,246,0.25)",
+    L:"P", sq:"linear-gradient(135deg,#9DB0FF,#2438B8)", sqS:"rgba(36,56,184,0.35)",
+    bar:"linear-gradient(90deg,#C9D3FF,#3C5BFF)", barG:"rgba(60,91,255,0.35)",
+    color:C.accent, roleC:"#2438B8", roleBg:C.accentLt,
+    role:"Muscle & récup'", brd:"rgba(60,91,255,0.25)",
   },
   Glucides: {
-    L:"G", sq:"linear-gradient(135deg,#22D3EE,#0E7490)", sqS:"rgba(14,116,144,0.35)",
-    bar:"linear-gradient(90deg,#67E8F9,#06B6D4)", barG:"rgba(6,182,212,0.35)",
-    color:"#06B6D4", roleC:"#0E7490", roleBg:"#CFFAFE",
+    L:"G", sq:"linear-gradient(135deg,#3C5BFF,#2E48D9)", sqS:"rgba(14,116,144,0.35)",
+    bar:"linear-gradient(90deg,#9DB0FF,#3C5BFF)", barG:"rgba(60,91,255,0.35)",
+    color:"#3C5BFF", roleC:"#2E48D9", roleBg:"#E8EBFF",
     role:"Carburant sport", brd:"rgba(18,26,48,0.08)",
   },
   Lipides: {
-    L:"L", sq:"linear-gradient(135deg,#FB923C,#EA580C)", sqS:"rgba(234,88,12,0.35)",
-    bar:"linear-gradient(90deg,#FDBA74,#F97316)", barG:"rgba(249,115,22,0.35)",
-    color:"#F97316", roleC:"#C2410C", roleBg:"#FFEDD5",
+    L:"L", sq:"linear-gradient(135deg,#3C5BFF,#E5484D)", sqS:"rgba(234,88,12,0.35)",
+    bar:"linear-gradient(90deg,#F59E0B,#F59E0B)", barG:"rgba(249,115,22,0.35)",
+    color:"#F59E0B", roleC:"#F59E0B", roleBg:"#E8EBFF",
     role:"Récupération", brd:"rgba(249,115,22,0.25)",
   },
 };
@@ -89,18 +89,18 @@ function MiniRing({ pct, color, go, delay=0 }) {
         </div>
       </div>
     </div>
-  );
+);
 }
 
 // ─── Carte macro avec mini-ring ────────────────────────────────────────────
 function MacroCard({ label, value, goal, pct, isPointFort, go, delay=0 }) {
   const cfg = MCFG[label] || MCFG.Protéines;
   const remaining = Math.max(0, goal - Math.round(value));
-  const tagLabel = pct >= 90 ? "Objectif atteint ✓"
-                 : isPointFort ? "Ton point fort"
-                 : "À compléter";
-  const tagBg    = pct >= 90 ? "#D1FAE5" : isPointFort ? cfg.roleBg : "#FEF3C7";
-  const tagColor = pct >= 90 ? "#047857" : isPointFort ? cfg.roleC  : "#92400E";
+  const tagLabel = pct >= 90 ?"Objectif atteint"
+                 : isPointFort ?"Ton point fort"
+                 :"À compléter";
+  const tagBg    = pct >= 90 ?"#E8EBFF" : isPointFort ? cfg.roleBg :"#E8EBFF";
+  const tagColor = pct >= 90 ?"#12B76A" : isPointFort ? cfg.roleC  :"#F59E0B";
 
   return (
     <div style={{ borderRadius:20, padding:"20px 20px 16px", background:S1,
@@ -147,12 +147,12 @@ function MacroCard({ label, value, goal, pct, isPointFort, go, delay=0 }) {
         </span>
         <span style={{ fontSize:13,color:DIM,fontWeight:500,flex:1,minWidth:0,
           overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",fontFamily:FONT }}>
-          {remaining > 0 ? `Encore ${remaining} g pour atteindre ta cible` : "Cible atteinte 🎯"}
+          {remaining > 0 ?`Encore ${remaining} g pour atteindre ta cible` :"Cible atteinte"}
         </span>
         <I name="chevR" size={17} color={DIM}/>
       </div>
     </div>
-  );
+);
 }
 
 // ─── En-tête de section ────────────────────────────────────────────────────
@@ -175,9 +175,9 @@ function SecHead({ title, sub, color=BL, icon=null }) {
       {sub && (
         <div style={{ fontSize:13,color:DIM,fontWeight:500,marginTop:4,
           paddingLeft:icon?30:12,fontFamily:FONT,lineHeight:1.4 }}>{sub}</div>
-      )}
+)}
     </div>
-  );
+);
 }
 
 // ─── Note calme (remplace PartialBanner) ───────────────────────────────────
@@ -185,22 +185,22 @@ function NoteCalme({ nbLogged, totalDays }) {
   const daysLeft = Math.max(0, MIN_DAYS_FULL_BILAN - nbLogged);
   return (
     <div style={{ display:"flex",alignItems:"center",gap:12,padding:"16px 16px",
-      borderRadius:16,background:"rgba(238,242,255,0.95)",border:"1px solid rgba(99,102,241,0.25)",
+      borderRadius:16,background:"rgba(238,242,255,0.95)",border:"1px solid rgba(60,91,255,0.25)",
       marginBottom:20,cursor:"pointer" }}>
-      <div style={{ width:36,height:36,borderRadius:12,background:"#E0E7FF",
+      <div style={{ width:36,height:36,borderRadius:12,background:"#E8EBFF",
         display:"grid",placeItems:"center",flexShrink:0 }}>
-        <I name="info" size={17} color="#4338CA" stroke={2.2}/>
+        <I name="info" size={17} color="#2E48D9" stroke={2.2}/>
       </div>
-      <div style={{ flex:1,fontSize:14,color:"#312E81",lineHeight:1.5,fontFamily:FONT }}>
+      <div style={{ flex:1,fontSize:14,color:"#2E48D9",lineHeight:1.5,fontFamily:FONT }}>
         <b>{nbLogged} jour{nbLogged>1?"s":""} sur {totalDays} renseigné{nbLogged>1?"s":""}.</b>
-        {" "}Il te faut {daysLeft} jour{daysLeft>1?"s":""} de plus pour un score fiable.
+        {""}Il te faut {daysLeft} jour{daysLeft>1?"s":""} de plus pour un score fiable.
       </div>
-      <I name="chevR" size={17} color="#6366F1"/>
+      <I name="chevR" size={17} color="#3C5BFF"/>
     </div>
-  );
+);
 }
 
-// ─── Carte "Prochain bilan archivé" ────────────────────────────────────────
+// ─── Carte"Prochain bilan archivé" ────────────────────────────────────────
 function NextBilanCard({ nextDate, daysUntil, onOpen }) {
   return (
     <div onClick={onOpen} style={{ background:S1,
@@ -209,9 +209,9 @@ function NextBilanCard({ nextDate, daysUntil, onOpen }) {
       cursor:"pointer",
       boxShadow: C.shadow }}>
       <div style={{ width:48,height:48,borderRadius:16,
-        background:`linear-gradient(135deg,#60A5FA,${BLD})`,
+        background:`linear-gradient(135deg,#9DB0FF,${BLD})`,
         display:"grid",placeItems:"center",
-        boxShadow:"0 5px 16px rgba(37,99,235,0.35)",flexShrink:0 }}>
+        boxShadow:"0 5px 16px rgba(46,72,217,0.35)",flexShrink:0 }}>
         <I name="calendar" size={23} color="#FFF"/>
       </div>
       <div style={{ flex:1,minWidth:0 }}>
@@ -220,7 +220,7 @@ function NextBilanCard({ nextDate, daysUntil, onOpen }) {
           Prochain bilan complet
         </div>
         <div style={{ fontSize:14,fontWeight:700,color:TEXT,fontFamily:FONT }}>
-          {nextDate}{daysUntil!=null ? ` · dans ${daysUntil} jour${daysUntil>1?"s":""}` : ""}
+          {nextDate}{daysUntil!=null ?` · dans ${daysUntil} jour${daysUntil>1?"s":""}` :""}
         </div>
         <div style={{ fontSize:13,color:MID,fontFamily:FONT,marginTop:2 }}>
           Rapport bi-hebdomadaire automatique
@@ -228,7 +228,7 @@ function NextBilanCard({ nextDate, daysUntil, onOpen }) {
       </div>
       <I name="chevR" size={18} color={MID}/>
     </div>
-  );
+);
 }
 
 // ─── Grille régularité — 7 jours avec lettres ──────────────────────────────
@@ -237,23 +237,23 @@ function StreakGrid({ days, calObj }) {
   const padded = [...Array(Math.max(0, 7 - arr.length)).fill(null), ...arr];
 
   const statusOf = (day) => {
-    if (!day || !day.kcal) return "empty";
+    if (!day || !day.kcal) return"empty";
     const diff = Math.abs(day.kcal - calObj);
-    if (diff < calObj * 0.15) return "ok";
-    if (diff < calObj * 0.30) return "warn";
-    return "bad";
+    if (diff < calObj * 0.15) return"ok";
+    if (diff < calObj * 0.30) return"warn";
+    return"bad";
   };
 
   const dayLetter = (iso) => {
     if (!iso) return null;
-    try { return ["D","L","M","M","J","V","S"][new Date(iso + "T12:00:00").getDay()]; }
+    try { return ["D","L","M","M","J","V","S"][new Date(iso +"T12:00:00").getDay()]; }
     catch { return null; }
   };
 
   const STYLES = {
-    ok:    { bg:"linear-gradient(135deg,#2EE89A,#059669)", shadow:"0 5px 14px rgba(5,150,105,0.5)", bd:"none" },
-    warn:  { bg:"linear-gradient(135deg,#FFD15C,#F59E0B)", shadow:"0 5px 14px rgba(245,158,11,0.35)", bd:"none" },
-    bad:   { bg:"linear-gradient(135deg,#F87171,#DC2626)", shadow:"0 5px 14px rgba(220,38,38,0.35)", bd:"none" },
+    ok:    { bg:"linear-gradient(135deg,#12B76A,#12B76A)", shadow:"0 5px 14px rgba(5,150,105,0.5)", bd:"none" },
+    warn:  { bg:"linear-gradient(135deg,#F59E0B,#F59E0B)", shadow:"0 5px 14px rgba(245,158,11,0.35)", bd:"none" },
+    bad:   { bg:"linear-gradient(135deg,#E5484D,#E5484D)", shadow:"0 5px 14px rgba(220,38,38,0.35)", bd:"none" },
     empty: { bg:"rgba(18,26,48,0.05)", shadow:"none", bd:"1.5px solid rgba(18,26,48,0.18)" },
   };
 
@@ -272,26 +272,26 @@ function StreakGrid({ days, calObj }) {
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M5 12.5L10 17l9-10"/>
                 </svg>
-              )}
+)}
               {st==="warn" && (
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3.2" strokeLinecap="round">
                   <path d="M5 12h14"/>
                 </svg>
-              )}
+)}
               {st==="bad" && (
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round">
                   <path d="M18 6L6 18M6 6l12 12"/>
                 </svg>
-              )}
+)}
             </div>
             <span style={{ fontSize:13, fontWeight:700, color:DIM, fontFamily:FONT }}>
-              {letter || "·"}
+              {letter ||"·"}
             </span>
           </div>
-        );
+);
       })}
     </div>
-  );
+);
 }
 
 export { BG, S1, BD, TEXT, MID, DIM, BL, BLD, GRN, AMB, RED, MCFG, I, MiniRing, MacroCard, SecHead, NoteCalme, NextBilanCard, StreakGrid };

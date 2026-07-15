@@ -1,11 +1,11 @@
-import { useState } from "react";
-import { C, INT, FONT } from "../../data/constants.js";
-import { EX } from "../../data/exercises.js";
-import { Card, Eyebrow, Lbl, Btn, Row } from "../../components/ui/index.jsx";
-import { Tabs } from "../../components/ui/Tabs.jsx";
-import { MonthCal } from "../../components/ui/MonthCal.jsx";
-import { findExInDB , catColor } from "../../utils/training.js";
-import { CardioModal, SportModal, GuideExModal, InfoExModal, ExerciceEditable } from "./components/CalendarModals.jsx";
+import { useState } from"react";
+import { C, INT, FONT } from"../../data/constants.js";
+import { EX } from"../../data/exercises.js";
+import { Card, Eyebrow, Lbl, Btn, Row } from"../../components/ui/index.jsx";
+import { Tabs } from"../../components/ui/Tabs.jsx";
+import { MonthCal } from"../../components/ui/MonthCal.jsx";
+import { findExInDB , catColor } from"../../utils/training.js";
+import { CardioModal, SportModal, GuideExModal, InfoExModal, ExerciceEditable } from"./components/CalendarModals.jsx";
 
 export default function Calendar(props) {
   const { prog, setProg, progs, setProgs, cycleStart, setTab, premium, setPaywall, push, calSess, setCalSess, checkedEx, setCheckedEx, setChrono, setChronoSec, jR, semC, INT, setProgView, profil } = props;
@@ -21,7 +21,7 @@ export default function Calendar(props) {
   // Toggle de validation d'un exercice (avec déclenchement chrono)
   const toggleCheck = (seanceId, exIdx, repos) => {
     if (!setCheckedEx) return;
-    const key = `${seanceId}-${exIdx}`;
+    const key =`${seanceId}-${exIdx}`;
     setCheckedEx(prev => ({...prev, [key]: !prev[key]}));
   };
 
@@ -37,13 +37,13 @@ export default function Calendar(props) {
         onClose={() => setCardioOpen(false)}
         onSave={(sess) => {
           const today = new Date();
-          const key = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,"0")}-${String(today.getDate()).padStart(2,"0")}`;
+          const key =`${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,"0")}-${String(today.getDate()).padStart(2,"0")}`;
           setCalSess(s => ({...s,[key]:sess}));
           setCardioOpen(false);
-          push("🏃","Cardio enregistré !",`${sess.nom}${sess.cardio?.kcal?` · ${sess.cardio.kcal} kcal`:""}`);
+          push("","Cardio enregistré !",`${sess.nom}${sess.cardio?.kcal?` · ${sess.cardio.kcal} kcal`:""}`);
         }}
       />
-    );
+);
   }
 
   // ── Sport modal ──
@@ -55,13 +55,13 @@ export default function Calendar(props) {
         onClose={() => setSportOpen(false)}
         onSave={(sess) => {
           const today = new Date();
-          const key = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,"0")}-${String(today.getDate()).padStart(2,"0")}`;
+          const key =`${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,"0")}-${String(today.getDate()).padStart(2,"0")}`;
           setCalSess(s => ({...s,[key]:sess}));
           setSportOpen(false);
-          push("🏆","Sport enregistré !",`${sess.nom}${sess.sport?.kcal?` · ${sess.sport.kcal} kcal`:""}`);
+          push("","Sport enregistré !",`${sess.nom}${sess.sport?.kcal?` · ${sess.sport.kcal} kcal`:""}`);
         }}
       />
-    );
+);
   }
 
   // ── Info modal ──
@@ -73,7 +73,7 @@ export default function Calendar(props) {
         onClose={() => setInfoEx(null)}
         onOpenGuide={infoEx.dbEx ? (dbEx, serieEx) => { setInfoEx(null); setGuideEx({dbEx, serieEx}); } : null}
       />
-    );
+);
   }
 
   // ── Guide modal ──
@@ -85,10 +85,10 @@ export default function Calendar(props) {
   if (viewJour !== null && prog) {
     const jour = prog.jours[viewJour];
     const weekInt = INT[WEEK_INTENSITY[currentWeek]];
-    const int = INT[jour.intensite || "modere"];
+    const int = INT[jour.intensite ||"modere"];
     return (
       <div style={{padding:"0 20px"}}>
-        <button onClick={() => setViewJour(null)} style={{background:"transparent",border:"none",color:"#4D8BFF",cursor:"pointer",fontSize:13,fontWeight:600,padding:"16px 0 12px",display:"flex",alignItems:"center",gap:4}}>← Retour aux séances</button>
+        <button onClick={() => setViewJour(null)} style={{background:"transparent",border:"none",color:"#3C5BFF",cursor:"pointer",fontSize:13,fontWeight:600,padding:"16px 0 12px",display:"flex",alignItems:"center",gap:4}}>← Retour aux séances</button>
         <div style={{padding:"12px 16px",background:`${int.c}14`,border:`0.5px solid ${int.c}40`,borderRadius:12,marginBottom:4}}>
           <div style={{fontSize:10,color:int.c,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",marginBottom:4}}>{int.l}</div>
           <div style={{fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",fontSize:20,fontWeight:400,marginBottom:2}}>{jour.nom}</div>
@@ -104,7 +104,7 @@ export default function Calendar(props) {
           return <ExerciceEditable key={k} ex={ex} exIdx={k} jourIdx={viewJour} prog={prog} setProg={setProg} cc={cc} METHODS={METHODS} onGuide={(dbEx,serieEx)=>setGuideEx({dbEx,serieEx})} onInfo={(exo)=>setInfoEx({ex:exo,dbEx:findExInDB(exo.nom)})} checkedEx={checkedEx} toggleCheck={toggleCheck} seanceId={prog.jours[viewJour].id} />;
         })}
       </div>
-    );
+);
   }
 
   return (
@@ -131,5 +131,5 @@ export default function Calendar(props) {
 
 
     </div>
-  );
+);
 }

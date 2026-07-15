@@ -1,22 +1,22 @@
-import { C } from "../../../data/constants.js";
+import { C } from"../../../data/constants.js";
 /**
  * FocusModeStages.jsx — Tokens & étapes visuelles du FocusMode (Set / Rest / Done).
  * Extrait de FocusMode.jsx sans aucune modification de code.
  */
 
-import { useState } from "react";
+import { useState } from"react";
 // ── Tokens ───────────────────────────────────────────────────────────────────
 const T = {
-  bg:C.bg, bgLo:'#EEF1F7', surf:'#FFFFFF', surfFlat:C.s2,
-  bd:'rgba(0,0,0,0.08)', bdHi:'rgba(0,0,0,0.12)', bdAc:'rgba(59,130,246,0.25)',
+  bg:C.bg, bgLo:'#F2F4F7', surf:'#FFFFFF', surfFlat:C.s2,
+  bd:'rgba(0,0,0,0.08)', bdHi:'rgba(0,0,0,0.12)', bdAc:'rgba(60,91,255,0.25)',
   t1:C.text, t2:C.mid, t3:C.dim,
   t4:'rgba(107,114,128,0.65)', t5:'rgba(107,114,128,0.35)',
   ac:C.accent, acLt:C.blueLt, acDk:C.accentDk,
-  acSoft:'rgba(59,130,246,0.12)', acGlow:'rgba(59,130,246,0.18)',
+  acSoft:'rgba(60,91,255,0.12)', acGlow:'rgba(60,91,255,0.18)',
 };
-const F   = "General Sans,system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif";
-const SER = "General Sans,system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif";
-const MON = '"JetBrains Mono",ui-monospace,monospace';
+const F   ="Archivo,system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif";
+const SER ="Archivo,system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif";
+const MON ='"JetBrains Mono",ui-monospace,monospace';
 const NUM = { fontVariantNumeric:'tabular-nums', fontFeatureSettings:'"tnum","cv11"' };
 const GL  = {
   background:'rgba(246,248,251,0.85)',
@@ -27,7 +27,7 @@ const GL  = {
 };
 
 // Keyframes injectés en inline → synchrones, jamais en retard
-const CSS = `
+const CSS =`
   @keyframes fm-pulseDot  { 0%,100%{opacity:.5} 50%{opacity:1} }
   @keyframes fm-breathe   { 0%,100%{opacity:.55;transform:scale(1)} 50%{opacity:.95;transform:scale(1.06)} }
   @keyframes fm-ringPulse { 0%{transform:scale(0.85);opacity:.7} 100%{transform:scale(1.7);opacity:0} }
@@ -73,7 +73,7 @@ function SetStage({ phase, setNum, totalSets, kg, reps, setKg, setReps,
                   position:'relative', padding:'0 24px' }}>
 
       {/* Flash overlay */}
-      {phase === 'flash' && (
+      {phase ==='flash' && (
         <div style={{ position:'absolute', inset:0, zIndex:40,
                       display:'grid', placeItems:'center', pointerEvents:'none' }}>
           <div style={{ position:'absolute', inset:0,
@@ -92,12 +92,12 @@ function SetStage({ phase, setNum, totalSets, kg, reps, setKg, setReps,
             </div>
           </div>
         </div>
-      )}
+)}
 
       {/* Centré verticalement */}
       <div style={{ flex:1, display:'flex', flexDirection:'column',
                     justifyContent:'center',
-                    opacity: phase === 'flash' ? 0.22 : 1,
+                    opacity: phase ==='flash' ? 0.22 : 1,
                     transition:'opacity .3s', gap:0 }}>
 
         {/* Badge série */}
@@ -109,9 +109,9 @@ function SetStage({ phase, setNum, totalSets, kg, reps, setKg, setReps,
               boxShadow:`0 0 8px ${T.ac}` }}/>
             <span style={{ fontFamily:F, fontSize:14, fontWeight:700,
                            color:T.t1, letterSpacing:0.2 }}>
-              SÉRIE{' '}
+              SÉRIE{''}
               <span style={{ color:T.acLt }}>{setNum}</span>
-              {' '}<span style={{ color:T.t4, fontWeight:500 }}>/ {totalSets}</span>
+              {''}<span style={{ color:T.t4, fontWeight:500 }}>/ {totalSets}</span>
             </span>
           </div>
         </div>
@@ -199,7 +199,7 @@ function SetStage({ phase, setNum, totalSets, kg, reps, setKg, setReps,
                 {lastSetLabel}
               </span>
             </span>
-          )}
+)}
           {isIaBump && (
             <span style={{ display:'inline-flex', alignItems:'center', gap:8,
               padding:'8px 12px', borderRadius:999,
@@ -209,7 +209,7 @@ function SetStage({ phase, setNum, totalSets, kg, reps, setKg, setReps,
                 +2.5 kg suggéré
               </span>
             </span>
-          )}
+)}
         </div>
       </div>
 
@@ -217,20 +217,20 @@ function SetStage({ phase, setNum, totalSets, kg, reps, setKg, setReps,
       <div style={{ flexShrink:0, paddingBottom:'max(28px, env(safe-area-inset-bottom, 28px))',
                     paddingTop:16 }}>
         <button className="fm-tap" onClick={onValidate}
-          disabled={phase === 'flash'}
+          disabled={phase ==='flash'}
           style={{ width:'100%', padding:'24px', borderRadius:20,
             background:`linear-gradient(180deg,${T.acLt} 0%,${T.ac} 48%,${T.acDk} 100%)`,
             color:T.t1, border:`1px solid ${T.acLt}70`,
             display:'flex', alignItems:'center', justifyContent:'center', gap:12,
             fontFamily:F, fontSize:20, fontWeight:700, letterSpacing:0.2,
             boxShadow:'inset 0 1px 0 rgba(255,255,255,0.35), 0 14px 36px rgba(45,93,201,0.65)',
-            cursor: phase === 'flash' ? 'default' : 'pointer',
-            opacity: phase === 'flash' ? 0.5 : 1 }}>
+            cursor: phase ==='flash' ?'default' :'pointer',
+            opacity: phase ==='flash' ? 0.5 : 1 }}>
           <I n="check" sz={24} s={2.6}/> VALIDER LA SÉRIE
         </button>
       </div>
     </div>
-  );
+);
 }
 
 // ── RestStage — Chrono de repos entre les séries (original) ─────────────────
@@ -240,7 +240,7 @@ function RestStage({ rest, total, nextKg, nextReps, nextNum, onSkip, onAdd }) {
   const pct  = total > 0 ? rest / total : 0;
   const off  = CIRC * (1 - pct);
   const mm   = Math.floor(rest / 60);
-  const ss   = String(rest % 60).padStart(2, '0');
+  const ss   = String(rest % 60).padStart(2,'0');
 
   return (
     <div style={{ flex:1, display:'flex', flexDirection:'column',
@@ -317,7 +317,7 @@ function RestStage({ rest, total, nextKg, nextReps, nextNum, onSkip, onAdd }) {
         </span>
       </div>
     </div>
-  );
+);
 }
 
 // ── DoneStage avec bottom sheet feedback (facultatif, free + PRO) ────────────
@@ -331,25 +331,25 @@ function DoneStage({ loggedSets, onNextExercise, coachMsg, premium }) {
   const [pain, setPain] = useState(null);
   const [feel, setFeel] = useState(null);
 
-  const rpeColors  = { 6:'#34D399', 7:'#86EFAC', 8:'#FBBF24', 9:'#FB923C', 10:'#F87171' };
-  const painOpts   = [{ e:'😌', l:'Aucune' }, { e:'😐', l:'Légère' }, { e:'😬', l:'Gêne' }, { e:'😣', l:'Stop' }];
-  const feelOpts   = [{ e:'💪', l:'Parfait' }, { e:'🤔', l:'Moyen' }, { e:'❌', l:'Non ressenti' }];
-  const painCols   = ['#34D399','#FBBF24','#FB923C','#F87171'];
-  const feelCols   = ['#34D399','#FBBF24','#F87171'];
+  const rpeColors  = { 6:'#12B76A', 7:'#12B76A', 8:'#F59E0B', 9:'#3C5BFF', 10:'#E5484D' };
+  const painOpts   = [{ e:'', l:'Aucune' }, { e:'', l:'Légère' }, { e:'', l:'Gêne' }, { e:'', l:'Stop' }];
+  const feelOpts   = [{ e:'', l:'Parfait' }, { e:'', l:'Moyen' }, { e:'', l:'Non ressenti' }];
+  const painCols   = ['#12B76A','#F59E0B','#3C5BFF','#E5484D'];
+  const feelCols   = ['#12B76A','#F59E0B','#E5484D'];
   const anyNote    = rpe !== null || pain !== null || feel !== null;
 
   // Message Coach IA dynamique (PRO seulement)
   const aiMsg = (() => {
-    if (pain === 3) return "⚠️ Douleur articulaire signalée. Je retire cet exercice de ta prochaine séance et te propose une alternative. Consulte un kiné si ça persiste.";
-    if (pain === 2) return "Gêne articulaire notée. Je réduis le poids de 10 % la semaine prochaine. Pense à l'échauffement articulaire.";
-    if (feel === 2 && rpe >= 9) return "Effort élevé sans ressentir le muscle — réduis de 5 kg et ralentis l'excentrique pour améliorer la connexion neuromusculaire.";
-    if (feel === 2) return "Muscle cible peu ressenti. Ralentis la phase excentrique et concentre-toi sur la contraction au pic du mouvement.";
-    if (rpe === 10) return "RPE 10 — tu as touché l'échec. Semaine de déload recommandée avant d'augmenter les charges.";
-    if (rpe === 9)  return `RPE 9${feel === 0 ? ', sensation parfaite ✓' : ''} — charge idéale. Continue la semaine prochaine, +2,5 kg en S3 si la douleur reste nulle.`;
-    if (rpe === 8)  return "RPE 8 — intensité optimale pour l'hypertrophie. Maintiens 2 semaines, puis +2,5 kg.";
-    if (rpe === 7)  return "RPE 7 — bonne zone de travail. Volume efficace, maintiens ce niveau.";
-    if (rpe === 6)  return "RPE 6 — trop confortable. Tu peux ajouter +2,5 kg ou +2 reps la semaine prochaine.";
-    return coachMsg || `${loggedSets.length} séries bouclées. Beau travail, continue.`;
+    if (pain === 3) return" Douleur articulaire signalée. Je retire cet exercice de ta prochaine séance et te propose une alternative. Consulte un kiné si ça persiste.";
+    if (pain === 2) return"Gêne articulaire notée. Je réduis le poids de 10 % la semaine prochaine. Pense à l'échauffement articulaire.";
+    if (feel === 2 && rpe >= 9) return"Effort élevé sans ressentir le muscle — réduis de 5 kg et ralentis l'excentrique pour améliorer la connexion neuromusculaire.";
+    if (feel === 2) return"Muscle cible peu ressenti. Ralentis la phase excentrique et concentre-toi sur la contraction au pic du mouvement.";
+    if (rpe === 10) return"RPE 10 — tu as touché l'échec. Semaine de déload recommandée avant d'augmenter les charges.";
+    if (rpe === 9)  return`RPE 9${feel === 0 ?', sensation parfaite' :''} — charge idéale. Continue la semaine prochaine, +2,5 kg en S3 si la douleur reste nulle.`;
+    if (rpe === 8)  return"RPE 8 — intensité optimale pour l'hypertrophie. Maintiens 2 semaines, puis +2,5 kg.";
+    if (rpe === 7)  return"RPE 7 — bonne zone de travail. Volume efficace, maintiens ce niveau.";
+    if (rpe === 6)  return"RPE 6 — trop confortable. Tu peux ajouter +2,5 kg ou +2 reps la semaine prochaine.";
+    return coachMsg ||`${loggedSets.length} séries bouclées. Beau travail, continue.`;
   })();
 
   const validate = () => { setSheetOpen(false); onNextExercise(); };
@@ -379,7 +379,7 @@ function DoneStage({ loggedSets, onNextExercise, coachMsg, premium }) {
         </div>
         <div style={{ fontFamily:SER, fontSize:34, color:T.t1, marginTop:12,
                       letterSpacing:-1, animation:'fm-fadeUp .5s ease both 180ms' }}>
-          {loggedSets.length} séries,{' '}
+          {loggedSets.length} séries,{''}
           <span style={{ fontStyle:'italic', color:T.acLt }}>bouclées.</span>
         </div>
       </div>
@@ -401,7 +401,7 @@ function DoneStage({ loggedSets, onNextExercise, coachMsg, premium }) {
               {s.u && <span style={{ fontFamily:MON, fontSize:10, color:T.t4 }}>{s.u}</span>}
             </div>
           </div>
-        ))}
+))}
       </div>
 
       {/* ── Récap séries ── */}
@@ -410,7 +410,7 @@ function DoneStage({ loggedSets, onNextExercise, coachMsg, premium }) {
         {loggedSets.map((s,i) => (
           <div key={i} style={{ display:'flex', alignItems:'center',
             justifyContent:'space-between', padding:'12px 0',
-            borderBottom: i < loggedSets.length-1 ? `1px solid ${T.bd}` : 'none' }}>
+            borderBottom: i < loggedSets.length-1 ?`1px solid ${T.bd}` :'none' }}>
             <span style={{ fontFamily:F, fontSize:13, fontWeight:700, color:T.t3 }}>Série {i+1}</span>
             <span style={{ fontFamily:MON, fontSize:13, fontWeight:600, color:T.t1, ...NUM }}>
               {s.kg} kg × {s.reps}
@@ -420,7 +420,7 @@ function DoneStage({ loggedSets, onNextExercise, coachMsg, premium }) {
               <I n="check" sz={12} s={2.8} c={T.acLt}/>
             </span>
           </div>
-        ))}
+))}
       </div>
 
       {/* ── Bouton suivant ── */}
@@ -442,7 +442,7 @@ function DoneStage({ loggedSets, onNextExercise, coachMsg, premium }) {
       {sheetOpen && (
         <div onClick={(e) => { if (e.target === e.currentTarget) validate(); }}
           style={{ position:'fixed', inset:0, zIndex:380,
-            background:'rgba(15,25,35,0.5)', backdropFilter:'blur(2px)',
+            background:'rgba(16,19,24,0.5)', backdropFilter:'blur(2px)',
             display:'flex', alignItems:'flex-end', justifyContent:'center' }}>
           <div style={{ width:'100%', maxWidth:430,
             background:'#FFF', borderRadius:'20px 20px 0 0',
@@ -458,18 +458,18 @@ function DoneStage({ loggedSets, onNextExercise, coachMsg, premium }) {
             <div style={{ display:'flex', alignItems:'center', gap:12, marginBottom:16 }}>
               <div style={{ width:30, height:30, borderRadius:8, flexShrink:0,
                 background: premium
-                  ? `linear-gradient(145deg,#818CF8,#6366F1)`
-                  : `linear-gradient(145deg,${T.acLt},${T.acDk})`,
+                  ?`linear-gradient(145deg,#9DB0FF,#3C5BFF)`
+                  :`linear-gradient(145deg,${T.acLt},${T.acDk})`,
                 display:'grid', placeItems:'center',
-                boxShadow: premium ? '0 3px 10px rgba(99,102,241,0.35)' : '0 3px 10px rgba(59,130,246,0.35)' }}>
+                boxShadow: premium ?'0 3px 10px rgba(60,91,255,0.35)' :'0 3px 10px rgba(60,91,255,0.35)' }}>
                 <I n="spark" sz={14} c="#FFF" s={1.8}/>
               </div>
               <div>
                 <div style={{ fontFamily:F, fontSize:13, fontWeight:700, color:T.t1 }}>
-                  {premium ? 'Note Coach IA' : 'Note rapide'}
+                  {premium ?'Note Coach IA' :'Note rapide'}
                 </div>
                 <div style={{ fontFamily:F, fontSize:10, color:T.t4, marginTop:1 }}>
-                  Facultatif · {premium ? 'analyse en direct' : 'alimente ton historique'}
+                  Facultatif · {premium ?'analyse en direct' :'alimente ton historique'}
                 </div>
               </div>
             </div>
@@ -490,13 +490,13 @@ function DoneStage({ loggedSets, onNextExercise, coachMsg, premium }) {
                     <button key={v} className="fm-tap" onClick={() => setRpe(v)} style={{
                       flex:1, height:40, borderRadius:8,
                       border:`1.5px solid ${on ? col : T.bd}`,
-                      background: on ? `${col}20` : T.surfFlat,
+                      background: on ?`${col}20` : T.surfFlat,
                       color: on ? col : T.t2,
                       fontFamily:F, fontSize:13, fontWeight:700, cursor:'pointer',
                       transition:'all .13s',
-                      boxShadow: on ? `0 2px 8px ${col}40` : 'none',
+                      boxShadow: on ?`0 2px 8px ${col}40` :'none',
                     }}>{v}</button>
-                  );
+);
                 })}
               </div>
             </div>
@@ -513,13 +513,13 @@ function DoneStage({ loggedSets, onNextExercise, coachMsg, premium }) {
                     <button key={i} className="fm-tap" onClick={() => setPain(i)} style={{
                       flex:1, padding:'8px 4px', borderRadius:12,
                       border:`1.5px solid ${on ? painCols[i] : T.bd}`,
-                      background: on ? `${painCols[i]}18` : T.surfFlat,
+                      background: on ?`${painCols[i]}18` : T.surfFlat,
                       cursor:'pointer', textAlign:'center', transition:'all .13s' }}>
                       <div style={{ fontSize:16, marginBottom:2 }}>{o.e}</div>
                       <div style={{ fontFamily:F, fontSize:10, fontWeight:700,
                                     color: on ? painCols[i] : T.t4 }}>{o.l}</div>
                     </button>
-                  );
+);
                 })}
               </div>
             </div>
@@ -536,13 +536,13 @@ function DoneStage({ loggedSets, onNextExercise, coachMsg, premium }) {
                     <button key={i} className="fm-tap" onClick={() => setFeel(i)} style={{
                       flex:1, padding:'8px 4px', borderRadius:12,
                       border:`1.5px solid ${on ? feelCols[i] : T.bd}`,
-                      background: on ? `${feelCols[i]}18` : T.surfFlat,
+                      background: on ?`${feelCols[i]}18` : T.surfFlat,
                       cursor:'pointer', textAlign:'center', transition:'all .13s' }}>
                       <div style={{ fontSize:16, marginBottom:4 }}>{o.e}</div>
                       <div style={{ fontFamily:F, fontSize:10, fontWeight:700,
                                     color: on ? feelCols[i] : T.t4 }}>{o.l}</div>
                     </button>
-                  );
+);
                 })}
               </div>
             </div>
@@ -552,27 +552,27 @@ function DoneStage({ loggedSets, onNextExercise, coachMsg, premium }) {
               premium ? (
                 /* PRO → analyse Coach IA */
                 <div style={{ marginBottom:12, padding:'12px 12px',
-                  background:'rgba(59,130,246,0.08)',
+                  background:'rgba(60,91,255,0.08)',
                   borderLeft:`2.5px solid ${T.ac}`,
                   borderRadius:'0 12px 12px 0',
                   fontFamily:F, fontSize:11, color:T.t1, lineHeight:1.5 }}>
                   {aiMsg}
                 </div>
-              ) : (
+) : (
                 /* GRATUIT → confirmation simple + hint PRO */
                 <div style={{ marginBottom:12, padding:'12px 12px',
-                  background:'rgba(52,211,153,0.08)',
-                  borderLeft:'2.5px solid #34D399',
+                  background:'rgba(18,183,106,0.08)',
+                  borderLeft:'2.5px solid #12B76A',
                   borderRadius:'0 12px 12px 0' }}>
-                  <div style={{ fontFamily:F, fontSize:11, color:'#065F46', lineHeight:1.5 }}>
-                    ✓ Enregistré dans ton historique.
+                  <div style={{ fontFamily:F, fontSize:11, color:'#12B76A', lineHeight:1.5 }}>
+                     Enregistré dans ton historique.
                   </div>
                   <div style={{ fontFamily:F, fontSize:10, color:T.t4, marginTop:4 }}>
-                    🔒 Passe à PRO pour que le Coach IA analyse tes notes et adapte ton programme.
+                     Passe à PRO pour que le Coach IA analyse tes notes et adapte ton programme.
                   </div>
                 </div>
-              )
-            )}
+)
+)}
 
             {/* Actions */}
             <button className="fm-tap" onClick={validate} style={{
@@ -591,9 +591,9 @@ function DoneStage({ loggedSets, onNextExercise, coachMsg, premium }) {
             </button>
           </div>
         </div>
-      )}
+)}
     </div>
-  );
+);
 }
 
 export { T, F, SER, MON, NUM, GL, CSS, I, SetStage, RestStage, DoneStage };

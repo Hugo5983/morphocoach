@@ -1,10 +1,10 @@
-import { catColor } from "../../utils/training.js";
-import { useState, memo, useMemo } from "react";
-import { C, DARK, INT, SERIF, SESS_COLORS } from "../../data/constants.js";
-import { EX } from "../../data/exercises.js";
-import { Inp, Btn } from "./index.jsx";
+import { catColor } from"../../utils/training.js";
+import { useState, memo, useMemo } from"react";
+import { C, DARK, INT, SERIF, SESS_COLORS } from"../../data/constants.js";
+import { EX } from"../../data/exercises.js";
+import { Inp, Btn } from"./index.jsx";
 
-const DISPLAY = "'General Sans',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif";
+const DISPLAY ="'Archivo',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif";
 const NUM     = { fontVariantNumeric:'tabular-nums', fontFeatureSettings:'"tnum"' };
 const ey      = { fontSize:10, fontWeight:700, letterSpacing:"0.1em", textTransform:'uppercase', color:C.accent, fontFamily:DISPLAY };
 
@@ -43,7 +43,7 @@ function MusculationPicker({ onSave, onClose }) {
       <div style={{display:'flex',gap:4,flexWrap:'wrap',marginBottom:12}}>
         {Object.entries(INT).map(([k,v])=>(
           <button key={k} onClick={()=>setInt(k)} style={{padding:'4px 12px',background:intensite===k?`${v.c}20`:C.s2,border:`1px solid ${intensite===k?v.c:'rgba(0,0,0,0.05)'}`,borderRadius:8,cursor:'pointer',fontSize:11,color:intensite===k?v.c:C.mid,fontWeight:intensite===k?700:400,fontFamily:DISPLAY}}>{v.l}</button>
-        ))}
+))}
       </div>
       {exos.length>0&&(
         <div style={{marginBottom:12}}>
@@ -51,11 +51,11 @@ function MusculationPicker({ onSave, onClose }) {
             <div key={i} style={{display:'flex',alignItems:'center',gap:8,padding:'8px 12px',background:C.s2,borderRadius:8,marginBottom:4}}>
               <div style={{width:3,height:20,borderRadius:2,background:cc(ex.cat),flexShrink:0}}/>
               <div style={{flex:1,fontSize:13,color:C.text}}>{ex.nom}</div>
-              <button onClick={()=>setExos(p=>p.filter(e=>e.nom!==ex.nom))} style={{background:'transparent',border:'none',color:'#F87171',cursor:'pointer',padding:0}}><I name="x" size={14} stroke={2}/></button>
+              <button onClick={()=>setExos(p=>p.filter(e=>e.nom!==ex.nom))} style={{background:'transparent',border:'none',color:'#E5484D',cursor:'pointer',padding:0}}><I name="x" size={14} stroke={2}/></button>
             </div>
-          ))}
+))}
         </div>
-      )}
+)}
       <div style={{border:'1px solid rgba(0,0,0,0.05)',borderRadius:12,overflow:'hidden',marginBottom:12}}>
         <div style={{padding:'8px',background:C.s2}}>
           <input value={search} onChange={e=>{setSearch(e.target.value);setGroupe(null);}} placeholder="Rechercher un exercice…"
@@ -64,12 +64,12 @@ function MusculationPicker({ onSave, onClose }) {
         {!search&&(
           <div style={{padding:'8px',display:'flex',flexWrap:'wrap',gap:4,maxHeight:110,overflowY:'auto'}}>
             {Object.keys(EX).map(g=>(
-              <button key={g} onClick={()=>setGroupe(g===groupe?null:g)} style={{padding:'4px 8px',background:groupe===g?'rgba(59,130,246,0.12)':C.s2,border:`1px solid ${groupe===g?C.accent:'rgba(0,0,0,0.05)'}`,borderRadius:12,color:groupe===g?C.accent:C.mid,cursor:'pointer',fontSize:10,fontFamily:DISPLAY}}>
+              <button key={g} onClick={()=>setGroupe(g===groupe?null:g)} style={{padding:'4px 8px',background:groupe===g?'rgba(60,91,255,0.12)':C.s2,border:`1px solid ${groupe===g?C.accent:'rgba(0,0,0,0.05)'}`,borderRadius:12,color:groupe===g?C.accent:C.mid,cursor:'pointer',fontSize:10,fontFamily:DISPLAY}}>
                 {g} <span style={{fontSize:8.5,opacity:0.6}}>({(EX[g]||[]).length})</span>
               </button>
-            ))}
+))}
           </div>
-        )}
+)}
         {searchList.length>0&&(
           <div style={{maxHeight:150,overflowY:'auto',padding:'4px 8px'}}>
             {searchList.map((ex,i)=>(
@@ -79,23 +79,23 @@ function MusculationPicker({ onSave, onClose }) {
                 onMouseLeave={ev=>ev.currentTarget.style.background='transparent'}>
                 <div style={{width:3,height:20,borderRadius:2,background:cc(ex.cat),flexShrink:0}}/>
                 <div style={{flex:1,fontSize:13,color:C.text}}>{ex.nom}</div>
-                <div style={{fontSize:10,color:C.accent,fontWeight:600}}>{exos.find(e=>e.nom===ex.nom)?'✓':'+'}</div>
+                <div style={{fontSize:10,color:C.accent,fontWeight:600}}>{exos.find(e=>e.nom===ex.nom)?'':'+'}</div>
               </div>
-            ))}
+))}
           </div>
-        )}
+)}
         {!search&&!groupe&&<div style={{padding:'12px',textAlign:'center',fontSize:11,color:C.mid}}>Sélectionne un groupe musculaire</div>}
       </div>
-      <Btn disabled={exos.length===0&&!seNom} onClick={()=>{const color=INT[intensite]?.c||'#3B82F6';onSave({nom:seNom||(exos.map(e=>e.nom.split(' ')[0]).join('+')||'Musculation'),intensite,color,musculation:{exercices:exos}});onClose();}}>✓ Enregistrer</Btn>
+      <Btn disabled={exos.length===0&&!seNom} onClick={()=>{const color=INT[intensite]?.c||'#3C5BFF';onSave({nom:seNom||(exos.map(e=>e.nom.split('')[0]).join('+')||'Musculation'),intensite,color,musculation:{exercices:exos}});onClose();}}> Enregistrer</Btn>
       <Btn v="ghost" onClick={onClose} style={{marginTop:8}}>Annuler</Btn>
     </div>
-  );
+);
 }
 
 // ─── BONUS TYPES ──────────────────────────────────────────────────────────────
 const BONUS = [
   { id:'cardio',   icon:'run',    label:'Cardio',               color:C.accent, desc:'Course, vélo, rameur…',        suggestions:['Course à pied','Vélo','Rameur','Elliptique','HIIT','Tapis roulant'] },
-  { id:'mobility', icon:'yoga',   label:'Mobilité & Étirements', color:'#34D399', desc:'Yoga, stretching, récupération', suggestions:['Yoga','Stretching','Foam rolling','Récupération active','Pilates','Mobilité'] },
+  { id:'mobility', icon:'yoga',   label:'Mobilité & Étirements', color:'#12B76A', desc:'Yoga, stretching, récupération', suggestions:['Yoga','Stretching','Foam rolling','Récupération active','Pilates','Mobilité'] },
   { id:'sport',    icon:'trophy', label:'Autre sport',           color:'#F59E0B', desc:'Natation, tennis, foot…',        suggestions:['Natation','Tennis','Football','Basketball','Boxe','Escalade','Padel'] },
 ];
 
@@ -116,7 +116,7 @@ function BonusForm({ type, onSave, onBack }) {
       <div style={{display:'flex',flexWrap:'wrap',gap:4,marginBottom:12}}>
         {type.suggestions.map(s=>(
           <button key={s} onClick={()=>setNom(s)} style={{padding:'4px 12px',background:nom===s?`${type.color}18`:C.s2,border:`1px solid ${nom===s?type.color:'rgba(0,0,0,0.05)'}`,borderRadius:999,cursor:'pointer',fontSize:11,color:nom===s?type.color:C.mid,fontFamily:DISPLAY,fontWeight:nom===s?700:400}}>{s}</button>
-        ))}
+))}
       </div>
       <Inp placeholder="Ou saisir manuellement…" value={nom} onChange={e=>setNom(e.target.value)} style={{marginBottom:12}}/>
       <div style={{...ey,marginBottom:8}}>Durée</div>
@@ -128,12 +128,12 @@ function BonusForm({ type, onSave, onBack }) {
       <div style={{display:'flex',gap:4,marginBottom:16}}>
         {[15,20,30,45,60,90].map(d=>(
           <button key={d} onClick={()=>setDuree(d)} style={{flex:1,padding:'4px 2px',background:duree===d?`${type.color}14`:'transparent',border:`1px solid ${duree===d?type.color:'rgba(0,0,0,0.05)'}`,borderRadius:8,color:duree===d?type.color:C.mid,cursor:'pointer',fontSize:10,fontFamily:DISPLAY,fontWeight:duree===d?700:400}}>{d}'</button>
-        ))}
+))}
       </div>
-      <Btn disabled={!nom} onClick={()=>onSave({nom:`${nom} · ${duree}min`,intensite:type.id==='mobility'?'leger':'modere',color:type.color,bonus:{type:type.id,duree,label:nom}})}>✓ Ajouter à ce jour</Btn>
+      <Btn disabled={!nom} onClick={()=>onSave({nom:`${nom} · ${duree}min`,intensite:type.id==='mobility'?'leger':'modere',color:type.color,bonus:{type:type.id,duree,label:nom}})}> Ajouter à ce jour</Btn>
       <button onClick={onBack} style={{width:'100%',marginTop:8,padding:'8px',background:'transparent',border:'none',color:C.mid,cursor:'pointer',fontSize:13,fontFamily:DISPLAY}}>← Retour</button>
     </div>
-  );
+);
 }
 
 // ─── DAY MODAL (bottom sheet) ─────────────────────────────────────────────────
@@ -159,7 +159,7 @@ export function DayModal({ date, sessions, onSave, onDelete, onToggleDone, onClo
         <MusculationPicker onSave={sess=>{onSave(sess);onClose();}} onClose={()=>setStep('main')}/>
       </div>
     </div>
-  );
+);
 
   // ── Bonus step ──
   if (step==='bonus'&&selectedBonus) return (
@@ -169,7 +169,7 @@ export function DayModal({ date, sessions, onSave, onDelete, onToggleDone, onClo
         <BonusForm type={selectedBonus} onSave={sess=>{onSave(sess);onClose();}} onBack={()=>setStep('main')}/>
       </div>
     </div>
-  );
+);
 
   // ── Main step ──
   return (
@@ -201,9 +201,9 @@ export function DayModal({ date, sessions, onSave, onDelete, onToggleDone, onClo
                       {sess.done&&<div style={{width:15,height:15,borderRadius:5,background:col,display:'grid',placeItems:'center',flexShrink:0}}><I name="check" size={9} stroke={3.2} color="#FFF"/></div>}
                       <div style={{fontSize:13,fontWeight:600,color:C.text,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{sess.nom}</div>
                     </div>
-                    <div style={{fontSize:11,color:C.mid,marginTop:2}}>{INT[sess.intensite||'modere']?.l}{sess.bonus?` · ${sess.bonus.duree}min`:''}{sess.done?' · Validée ✓':''}</div>
+                    <div style={{fontSize:11,color:C.mid,marginTop:2}}>{INT[sess.intensite||'modere']?.l}{sess.bonus?` · ${sess.bonus.duree}min`:''}{sess.done?' · Validée':''}</div>
                   </div>
-                  <button onClick={()=>onDelete(i)} style={{background:'transparent',border:'none',color:'rgba(248,113,113,0.65)',cursor:'pointer',padding:'4px',flexShrink:0,display:'grid',placeItems:'center'}}>
+                  <button onClick={()=>onDelete(i)} style={{background:'transparent',border:'none',color:'rgba(229,72,77,0.65)',cursor:'pointer',padding:'4px',flexShrink:0,display:'grid',placeItems:'center'}}>
                     <I name="trash" size={14} stroke={1.8}/>
                   </button>
                 </div>
@@ -215,20 +215,20 @@ export function DayModal({ date, sessions, onSave, onDelete, onToggleDone, onClo
                     border:sess.done?`1px solid ${C.bd}`:`1px solid ${col}`,
                     color:sess.done?C.mid:'#FFF',
                   }}>
-                    {sess.done ? '↺ Reprendre la séance' : <><I name="check" size={14} stroke={2.4} color="#FFF"/> Terminer la séance</>}
+                    {sess.done ?'↺ Reprendre la séance' : <><I name="check" size={14} stroke={2.4} color="#FFF"/> Terminer la séance</>}
                   </button>
-                )}
+)}
               </div>
-            );})}
+);})}
           </div>
-        )}
+)}
 
         {/* Add session */}
         <div style={{...ey,marginBottom:12}}>{allSess.length>0?'Ajouter une séance':'Planifier ce jour'}</div>
 
         {/* Musculation CTA */}
-        <button onClick={()=>setStep('musculation')} style={{width:'100%',display:'flex',alignItems:'center',gap:12,padding:'12px 16px',background:C.s2,border:`1px solid rgba(59,130,246,0.25)`,borderRadius:16,cursor:'pointer',marginBottom:12,textAlign:'left'}}>
-          <div style={{width:44,height:44,borderRadius:12,background:'rgba(59,130,246,0.12)',display:'grid',placeItems:'center',flexShrink:0}}>
+        <button onClick={()=>setStep('musculation')} style={{width:'100%',display:'flex',alignItems:'center',gap:12,padding:'12px 16px',background:C.s2,border:`1px solid rgba(60,91,255,0.25)`,borderRadius:16,cursor:'pointer',marginBottom:12,textAlign:'left'}}>
+          <div style={{width:44,height:44,borderRadius:12,background:'rgba(60,91,255,0.12)',display:'grid',placeItems:'center',flexShrink:0}}>
             <I name="dumbbell" size={20} color={C.accent} stroke={1.8}/>
           </div>
           <div style={{flex:1}}>
@@ -248,11 +248,11 @@ export function DayModal({ date, sessions, onSave, onDelete, onToggleDone, onClo
               </div>
               <div style={{fontSize:11,fontWeight:700,color:C.text,fontFamily:DISPLAY,lineHeight:1.2}}>{t.label}</div>
             </button>
-          ))}
+))}
         </div>
       </div>
     </div>
-  );
+);
 }
 
 // ─── BILAN DU MOIS ────────────────────────────────────────────────────────────
@@ -262,9 +262,9 @@ function BilanMois({ sessions, year, month, currentWeek }) {
     const wLog = (() => { try { return JSON.parse(localStorage.getItem('morpho_workout_log')||'{}'); } catch{return{};} })();
     const realVolumeOf = (dateKey) => { const e = wLog[dateKey]; return e ? e.totalVolume : 0; };
 
-    const prefix = `${year}-${String(month+1).padStart(2,'0')}`;
+    const prefix =`${year}-${String(month+1).padStart(2,'0')}`;
     const pd = new Date(year, month-1, 1);
-    const prevPrefix = `${pd.getFullYear()}-${String(pd.getMonth()+1).padStart(2,'0')}`;
+    const prevPrefix =`${pd.getFullYear()}-${String(pd.getMonth()+1).padStart(2,'0')}`;
 
     let planned = 0, validated = 0, tonnage = 0;
     let prevValidated = 0, prevTonnage = 0;
@@ -324,43 +324,43 @@ function BilanMois({ sessions, year, month, currentWeek }) {
           <div style={{fontSize:10,fontWeight:700,color:DARK.accent,fontFamily:DISPLAY,letterSpacing:"0.1em",textTransform:'uppercase',paddingBottom:2}}>
             MÉSOCYCLE SEM. {(currentWeek||0)+1}/6
           </div>
-        )}
+)}
       </div>
 
       {/* ── Deux carrés compacts côte à côte ── */}
       <div style={{display:'flex',gap:8}}>
 
         {/* Séances */}
-        <div style={{flex:1,background:`radial-gradient(ellipse 100% 70% at 80% 0%, rgba(99,72,235,0.35), transparent 60%), linear-gradient(160deg, #0E0C28 0%, #12102F 55%, #191243 100%)`,border:'1px solid rgba(170,180,255,0.18)',boxShadow: C.shadow,borderRadius:20,padding:'16px 12px',minWidth:0}}>
+        <div style={{flex:1,background:`radial-gradient(ellipse 100% 70% at 80% 0%, rgba(99,72,235,0.35), transparent 60%), linear-gradient(160deg, #101318 0%, #101318 55%, #101318 100%)`,border:'1px solid rgba(170,180,255,0.18)',boxShadow: C.shadow,borderRadius:20,padding:'16px 12px',minWidth:0}}>
           <div style={{...ey,color:DARK.accent,marginBottom:12}}>Séances</div>
           <div style={{fontFamily:DISPLAY,fontSize:26,fontWeight:700,color:'#FFFFFF',letterSpacing:-1,lineHeight:1,...NUM}}>
             {stats.validated}
-            <span style={{fontSize:13,fontWeight:400,color:'#9CA3AF',marginLeft:2}}>/{stats.planned}</span>
+            <span style={{fontSize:13,fontWeight:400,color:'#98A2B3',marginLeft:2}}>/{stats.planned}</span>
           </div>
           <div style={{fontSize:11,fontWeight:700,marginTop:8,fontFamily:DISPLAY,
-            color: stats.validated>0&&stats.diff>=0 ? C.green : '#F87171', ...NUM}}>
+            color: stats.validated>0&&stats.diff>=0 ? C.green :'#E5484D', ...NUM}}>
             {stats.prevValidated>0
-              ? (stats.diff>=0 ? `▲ +${stats.diff}` : `▼ ${stats.diff}`)
-              : stats.validated>0 ? `▲ ${stats.validated} faite${stats.validated>1?'s':''}` : '—'}
+              ? (stats.diff>=0 ?`▲ +${stats.diff}` :`▼ ${stats.diff}`)
+              : stats.validated>0 ?`▲ ${stats.validated} faite${stats.validated>1?'s':''}` :'—'}
           </div>
         </div>
 
         {/* Assiduité */}
-        <div style={{flex:1,background:`radial-gradient(ellipse 100% 70% at 80% 0%, rgba(99,72,235,0.35), transparent 60%), linear-gradient(160deg, #0E0C28 0%, #12102F 55%, #191243 100%)`,border:'1px solid rgba(170,180,255,0.18)',boxShadow: C.shadow,borderRadius:20,padding:'16px 12px',minWidth:0}}>
+        <div style={{flex:1,background:`radial-gradient(ellipse 100% 70% at 80% 0%, rgba(99,72,235,0.35), transparent 60%), linear-gradient(160deg, #101318 0%, #101318 55%, #101318 100%)`,border:'1px solid rgba(170,180,255,0.18)',boxShadow: C.shadow,borderRadius:20,padding:'16px 12px',minWidth:0}}>
           <div style={{...ey,color:DARK.accent,marginBottom:12}}>Assiduité</div>
           <div style={{fontFamily:DISPLAY,fontSize:26,fontWeight:700,color:'#FFFFFF',letterSpacing:-1,lineHeight:1,...NUM}}>
             {stats.assiduite}
-            <span style={{fontSize:13,fontWeight:400,color:'#9CA3AF',marginLeft:1}}>%</span>
+            <span style={{fontSize:13,fontWeight:400,color:'#98A2B3',marginLeft:1}}>%</span>
           </div>
           <div style={{height:7,background:'rgba(255,255,255,0.12)',borderRadius:5,overflow:'hidden',marginTop:8}}>
             <div style={{height:'100%',width:`${stats.assiduite}%`,
-              background:'linear-gradient(90deg,#34D399,#10B981)',
+              background:'linear-gradient(90deg,#12B76A,#12B76A)',
               borderRadius:5,transition:'width .7s cubic-bezier(.4,0,.2,1)'}}/>
           </div>
         </div>
       </div>
     </div>
-  );
+);
 }
 
 // ─── MONTH CALENDAR ───────────────────────────────────────────────────────────
@@ -374,8 +374,8 @@ export const MonthCal = memo(function MonthCal({ sessions, onUpdate, semC, curre
   const first = (new Date(y,m,1).getDay()+6)%7;
   const daysInMonth = new Date(y,m+1,0).getDate();
   const today = new Date();
-  const todayStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
-  const ds = d => `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+  const todayStr =`${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+  const ds = d =>`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
   const canPrev = y > today.getFullYear() || (y===today.getFullYear() && m>today.getMonth());
   const canNext = y < 2027;
 
@@ -397,11 +397,11 @@ export const MonthCal = memo(function MonthCal({ sessions, onUpdate, semC, curre
     <div style={{paddingBottom:4}}>
 
       {/* ── Calendrier card ── */}
-      <div style={{background:`radial-gradient(ellipse 90% 60% at 85% 0%, rgba(99,72,235,0.35), transparent 55%), radial-gradient(ellipse 70% 50% at 10% 100%, rgba(47,107,255,0.25), transparent 60%), linear-gradient(160deg, #0E0C28 0%, #12102F 55%, #191243 100%)`,border:'1px solid rgba(170,180,255,0.18)',boxShadow: C.shadow,borderRadius:20,padding:'16px 16px 16px'}}>
+      <div style={{background:`radial-gradient(ellipse 90% 60% at 85% 0%, rgba(99,72,235,0.35), transparent 55%), radial-gradient(ellipse 70% 50% at 10% 100%, rgba(47,107,255,0.25), transparent 60%), linear-gradient(160deg, #101318 0%, #101318 55%, #101318 100%)`,border:'1px solid rgba(170,180,255,0.18)',boxShadow: C.shadow,borderRadius:20,padding:'16px 16px 16px'}}>
         <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:16}}>
           <button onClick={()=>canPrev&&setDate(new Date(y,m-1,1))} disabled={!canPrev} className="tap"
             style={{width:30,height:30,borderRadius:8,background:'rgba(255,255,255,0.08)',border:'1px solid rgba(170,180,255,0.25)',color:canPrev?C.mid:C.dim,cursor:canPrev?'pointer':'not-allowed',display:'grid',placeItems:'center',padding:0,flexShrink:0}}>
-            <I name="chevL" size={13} stroke={2} color={canPrev?DARK.dim:'#565D85'}/>
+            <I name="chevL" size={13} stroke={2} color={canPrev?DARK.dim:'#667085'}/>
           </button>
           <div style={{textAlign:'center'}}>
             <div style={{...ey,color:DARK.accent,marginBottom:4}}>Calendrier</div>
@@ -411,13 +411,13 @@ export const MonthCal = memo(function MonthCal({ sessions, onUpdate, semC, curre
           </div>
           <button onClick={()=>canNext&&setDate(new Date(y,m+1,1))} disabled={!canNext} className="tap"
             style={{width:30,height:30,borderRadius:8,background:'rgba(255,255,255,0.08)',border:'1px solid rgba(170,180,255,0.25)',color:canNext?C.mid:C.dim,cursor:canNext?'pointer':'not-allowed',display:'grid',placeItems:'center',padding:0,flexShrink:0}}>
-            <I name="chevR" size={13} stroke={2} color={canNext?DARK.dim:'#565D85'}/>
+            <I name="chevR" size={13} stroke={2} color={canNext?DARK.dim:'#667085'}/>
           </button>
         </div>
         <div style={{display:'grid',gridTemplateColumns:'repeat(7,1fr)',gap:4,marginBottom:4}}>
           {DAYS.map((d,i)=>(
-            <div key={i} style={{textAlign:'center',fontSize:10,color:'#8F95B8',fontWeight:700,letterSpacing:"0.1em",fontFamily:DISPLAY}}>{d}</div>
-          ))}
+            <div key={i} style={{textAlign:'center',fontSize:10,color:'#98A2B3',fontWeight:700,letterSpacing:"0.1em",fontFamily:DISPLAY}}>{d}</div>
+))}
         </div>
         <div style={{display:'grid',gridTemplateColumns:'repeat(7,1fr)',gap:4}}>
           {[...Array(first)].map((_,i)=><div key={`e${i}`}/>)}
@@ -430,17 +430,17 @@ export const MonthCal = memo(function MonthCal({ sessions, onUpdate, semC, curre
             const color   = getDayColor(key);
             const hasSess = daySess.length>0;
             const isDone  = daySess.some(s=>s.done);          // au moins une séance validée
-            const dotColors = daySess.filter(s=>!s.done).map(s=>INT[s.intensite||'modere']?.c||s.color||'#3B82F6').slice(0,3);
+            const dotColors = daySess.filter(s=>!s.done).map(s=>INT[s.intensite||'modere']?.c||s.color||'#3C5BFF').slice(0,3);
 
             // ── Styles selon l'état : validée = plein, planifiée = teintée ──
             let bg, bd, numColor;
-            if (isDone)       { bg = color;            bd = `1px solid ${color}`;      numColor = '#FFF'; }
-            else if (hasSess) { bg = `linear-gradient(${color}40,${color}40), #20264C`; bd = `1px solid ${color}88`; numColor = '#FFF'; }
-            else              { bg = isPast?'#171B38':'#232A55'; bd = '1px solid rgba(170,180,255,0.12)'; numColor = isPast?'#565D85':'#E8EAF6'; }
+            if (isDone)       { bg = color;            bd =`1px solid ${color}`;      numColor ='#FFF'; }
+            else if (hasSess) { bg =`linear-gradient(${color}40,${color}40), #1A1F27`; bd =`1px solid ${color}88`; numColor ='#FFF'; }
+            else              { bg = isPast?'#101318':'#1A1F27'; bd ='1px solid rgba(170,180,255,0.12)'; numColor = isPast?'#667085':'#EAECF0'; }
 
             const boxShadow = isToday
-              ? `0 0 0 2px #60A5FA, 0 4px 12px rgba(59,130,246,0.35)`
-              : isDone ? `0 4px 12px ${color}45` : 'none';
+              ?`0 0 0 2px #9DB0FF, 0 4px 12px rgba(60,91,255,0.35)`
+              : isDone ?`0 4px 12px ${color}45` :'none';
 
             return (
               <button key={d} onClick={()=>setModal({date:key,sessions:daySess})} className="tap" style={{
@@ -452,17 +452,17 @@ export const MonthCal = memo(function MonthCal({ sessions, onUpdate, semC, curre
               }}>
                 {isDone&&(
                   <svg viewBox="0 0 24 24" width="9" height="9" fill="none" stroke="#FFF" strokeWidth="3.4" strokeLinecap="round" strokeLinejoin="round" style={{position:'absolute',top:4,right:4,opacity:0.95}}><path d="M20 6 9 17l-5-5"/></svg>
-                )}
+)}
                 <span style={{fontFamily:DISPLAY,fontSize:11,fontWeight:isDone||isToday?700:hasSess?600:500,color:numColor,...NUM}}>{d}</span>
                 {dotColors.length>0&&(
                   <div style={{display:'flex',gap:2,alignItems:'center'}}>
                     {dotColors.map((dc,di)=>(
                       <span key={di} style={{width:4,height:4,borderRadius:'50%',background:dc}}/>
-                    ))}
+))}
                   </div>
-                )}
+)}
               </button>
-            );
+);
           })}
         </div>
         <div style={{marginTop:12,paddingTop:12,borderTop:'1px solid rgba(170,180,255,0.12)',display:'flex',flexWrap:'wrap',gap:8,alignItems:'center'}}>
@@ -472,11 +472,11 @@ export const MonthCal = memo(function MonthCal({ sessions, onUpdate, semC, curre
               <div style={{width:6,height:6,borderRadius:2,background:v.c,flexShrink:0}}/>
               <span style={{fontSize:10,color:DARK.dim,fontFamily:DISPLAY}}>{v.l}</span>
             </div>
-          ))}
+))}
         </div>
         <div style={{marginTop:8,display:'flex',flexWrap:'wrap',gap:12,alignItems:'center'}}>
           <div style={{display:'flex',alignItems:'center',gap:4}}>
-            <div style={{width:13,height:13,borderRadius:4,background:'rgba(59,130,246,0.25)',border:'1px solid rgba(59,130,246,0.5)',flexShrink:0}}/>
+            <div style={{width:13,height:13,borderRadius:4,background:'rgba(60,91,255,0.25)',border:'1px solid rgba(60,91,255,0.5)',flexShrink:0}}/>
             <span style={{fontSize:10,color:DARK.dim,fontFamily:DISPLAY}}>Planifiée</span>
           </div>
           <div style={{display:'flex',alignItems:'center',gap:4}}>
@@ -517,7 +517,7 @@ export const MonthCal = memo(function MonthCal({ sessions, onUpdate, semC, curre
           }}
           onClose={()=>setModal(null)}
         />
-      )}
+)}
     </div>
-  );
+);
 });

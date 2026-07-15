@@ -1,10 +1,10 @@
-import { useState, useMemo } from "react";
-import { createPortal } from "react-dom";
+import { useState, useMemo } from"react";
+import { createPortal } from"react-dom";
 import {
   BL, BLD, BLS, BLBR, BG, S1, S2, BD, TEXT, MID, DIM, GRN, RED, F, SF,
   DAYS_ALL, SPLITS, INTENSITIES, parseScheme, CSS,
   ExCard, BiblioSheet,
-} from "./components/CreerKit.jsx";
+} from"./components/CreerKit.jsx";
 
 export default function Creer(props) {
   const { setProg, setCycleStart, push, setCalSess, INT,
@@ -63,7 +63,7 @@ export default function Creer(props) {
       if (!exs.length) return 0;
       const secs = exs.reduce((sum, ex) => {
         const sets  = parseInt(ex.series) || 4;
-        const repos = parseInt(String(ex.repos || "90").replace(/\D/g,"")) || 90;
+        const repos = parseInt(String(ex.repos ||"90").replace(/\D/g,"")) || 90;
         return sum + sets * (repos + 60);   // repos entre séries + ~60s de travail par série
       }, 0);
       return Math.round(secs / 60);
@@ -102,7 +102,7 @@ export default function Creer(props) {
           const d = new Date(today);
           d.setDate(d.getDate()+((match[1]-d.getDay()+7)%7||7)+w*7);
           const key=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
-          newSess[key]={nom:jour.nom,intensite:jour.intensite||"modere",color:INT[jour.intensite||"modere"]?.c||"#4D8BFF"};
+          newSess[key]={nom:jour.nom,intensite:jour.intensite||"modere",color:INT[jour.intensite||"modere"]?.c||"#3C5BFF"};
         }
       }
     });
@@ -110,7 +110,7 @@ export default function Creer(props) {
     setProgView("calendar");
     if (setCS) setCS(0);
     if (setNewP) setNewP({nom:"",split:null,jours:[],seances:{}});
-    push("✅","Programme créé !",`${name} · Calendrier mis à jour !`);
+    push("","Programme créé !",`${name} · Calendrier mis à jour !`);
   };
 
   const ad = activeDay||sortedDays[0];
@@ -136,12 +136,12 @@ export default function Creer(props) {
             style={{ width:44, height:44, borderRadius:16, border:`1px solid ${BD}`,
               background:S1, display:"grid", placeItems:"center", color:TEXT,
               cursor:"pointer", fontSize:20, flexShrink:0, transition:".15s" }}>
-            {step>1 ? "‹" : "✕"}
+            {step>1 ?"‹" :""}
           </button>
           <div style={{ display:"flex", gap:8, flex:1 }}>
             {[1,2,3].map(n=>(
               <div key={n} className={`mc-seg${step>n?" done":""}${step===n?" active":""}`}><i/></div>
-            ))}
+))}
           </div>
           <div style={{ fontSize:13, fontWeight:700, color:DIM, letterSpacing:0.2,
             flexShrink:0 }}>{step}/3</div>
@@ -178,8 +178,8 @@ export default function Creer(props) {
                 return (
                   <button key={sp.id} className="mc-split" onClick={() => applySplit(sp)}
                     style={{ borderColor:on?BL:BD,
-                      background:on?`linear-gradient(135deg,rgba(59,130,246,0.12),rgba(59,130,246,0.05))`:S1,
-                      boxShadow:on?`0 0 0 1px ${BL},0 16px 40px -20px rgba(59,130,246,0.65)`:"0 2px 8px rgba(0,0,0,0.25)",
+                      background:on?`linear-gradient(135deg,rgba(60,91,255,0.12),rgba(60,91,255,0.05))`:S1,
+                      boxShadow:on?`0 0 0 1px ${BL},0 16px 40px -20px rgba(60,91,255,0.65)`:"0 2px 8px rgba(0,0,0,0.25)",
                       transform:on?"translateY(-2px)":"none",
                       marginBottom:12 }}>
                     {/* Tick */}
@@ -188,7 +188,7 @@ export default function Creer(props) {
                       background:on?BL:"transparent",
                       display:"flex", alignItems:"center", justifyContent:"center",
                       transition:"all .2s" }}>
-                      {on && <span style={{ color:"#FFF", fontSize:13, fontWeight:700 }}>✓</span>}
+                      {on && <span style={{ color:"#FFF", fontSize:13, fontWeight:700 }}></span>}
                     </span>
                     <div style={{ flex:1 }}>
                       <div style={{ fontSize:16, fontWeight:700, letterSpacing:-0.2 }}>{sp.name}</div>
@@ -201,9 +201,9 @@ export default function Creer(props) {
                         background:on?BLS:"transparent" }}>
                         {sp.days}j
                       </span>
-                    )}
+)}
                   </button>
-                );
+);
               })}
 
               {/* Jours */}
@@ -215,7 +215,7 @@ export default function Creer(props) {
                   <span style={{ fontSize:11, fontWeight:700, color:BL,
                     background:BLS, border:`1px solid ${BLBR}`, padding:"4px 8px",
                     borderRadius:8, textTransform:"none", letterSpacing:0 }}>Pré-définis</span>
-                )}
+)}
               </div>
               <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:12 }}>
                 {DAYS_ALL.map(d => {
@@ -224,14 +224,14 @@ export default function Creer(props) {
                     <button key={d} className="mc-day" onClick={() => toggleDay(d)}
                       style={{ color:on?"#FFF":MID, borderColor:on?BL:BD,
                         background:on?`linear-gradient(135deg,${BL},${BLD})`:S1,
-                        boxShadow:on?"0 10px 26px -10px rgba(59,130,246,0.85)":"none" }}>
+                        boxShadow:on?"0 10px 26px -10px rgba(60,91,255,0.85)":"none" }}>
                       {d}
                     </button>
-                  );
+);
                 })}
               </div>
             </div>
-          )}
+)}
 
           {/* ══ STEP 2 — Séance par séance ══ */}
           {step===2 && ad && s && (
@@ -270,14 +270,14 @@ export default function Creer(props) {
                         {d}
                         <span style={{
                           width:7, height:7, borderRadius:"50%", flexShrink:0,
-                          background:empty?"#F87171":itDay.color,
-                          boxShadow:empty?"0 0 6px #F87171":`0 0 7px ${itDay.color}`
+                          background:empty?"#E5484D":itDay.color,
+                          boxShadow:empty?"0 0 6px #E5484D":`0 0 7px ${itDay.color}`
                         }}/>
                       </button>
-                    );
+);
                   })}
                 </div>
-              )}
+)}
 
               {/* Nom séance */}
               <input className="mc-field" style={{ marginBottom:24 }}
@@ -297,7 +297,7 @@ export default function Creer(props) {
                         boxShadow:on?`0 0 0 1px ${it.color},0 8px 22px -14px ${it.color}`:"none" }}>
                       {it.label}
                     </button>
-                  );
+);
                 })}
               </div>
 
@@ -312,7 +312,7 @@ export default function Creer(props) {
               {s.ex.length===0
                 ? <div style={{borderRadius:20,padding:"20px 16px",background:"rgba(0,0,0,0.05)",border:`1px dashed ${BD}`}}>
                     {/* Ghost rows — exercices à venir */}
-                    {[{w:"65%",col:"#4D8BFF"},{w:"50%",col:"#5FE0A5"},{w:"72%",col:"#B69DFF"}].map((g,i)=>(
+                    {[{w:"65%",col:"#3C5BFF"},{w:"50%",col:"#12B76A"},{w:"72%",col:"#9DB0FF"}].map((g,i)=>(
                       <div key={i} style={{display:"flex",alignItems:"center",gap:12,padding:"12px 0",
                         borderBottom:i<2?`1px solid rgba(0,0,0,0.05)`:"none",opacity:1-i*0.2}}>
                         {/* Numéro */}
@@ -325,7 +325,7 @@ export default function Creer(props) {
                           <div style={{height:9,borderRadius:3,background:"rgba(0,0,0,0.05)",width:"40%"}}/>
                         </div>
                       </div>
-                    ))}
+))}
                     <div style={{textAlign:"center",paddingTop:16,fontSize:13,color:DIM}}>
                       Ajoute ton premier exercice ci-dessous
                     </div>
@@ -334,7 +334,7 @@ export default function Creer(props) {
                     <ExCard key={ex.id||ex.nom} ex={ex}
                       onUpdate={u => updateEx(ad,ex.id||ex.nom,u)}
                       onRemove={() => removeEx(ad,ex.id||ex.nom)}/>
-                  ))}
+))}
 
               <button className="mc-add-ex" onClick={() => setSheet(true)}>
                 + Ajouter un exercice
@@ -342,9 +342,9 @@ export default function Creer(props) {
 
               {missingDays.length>0 && (
                 <div className="mc-warn" style={{ marginTop:20 }}>
-                  <span style={{ color:RED, fontSize:20, flexShrink:0 }}>⚠</span>
+                  <span style={{ color:RED, fontSize:20, flexShrink:0 }}></span>
                   <div>
-                    <div style={{ fontSize:14, fontWeight:700, color:"#FFB4B4", marginBottom:4 }}>
+                    <div style={{ fontSize:14, fontWeight:700, color:"#E5484D", marginBottom:4 }}>
                       {missingDays.length} séance{missingDays.length>1?"s":""} à compléter
                     </div>
                     <div style={{ fontSize:13, color:MID, lineHeight:1.4 }}>
@@ -353,16 +353,16 @@ export default function Creer(props) {
                     <div style={{ display:"inline-flex", gap:8, flexWrap:"wrap", marginTop:8 }}>
                       {missingDays.map(d => (
                         <span key={d} onClick={() => setActiveDay(d)}
-                          style={{ fontSize:13, fontWeight:700, color:"#FF9A9A",
+                          style={{ fontSize:13, fontWeight:700, color:"#E5484D",
                             background:"rgba(255,90,90,0.12)", border:"1px solid rgba(255,90,90,0.25)",
                             padding:"4px 12px", borderRadius:8, cursor:"pointer" }}>{d} →</span>
-                      ))}
+))}
                     </div>
                   </div>
                 </div>
-              )}
+)}
             </div>
-          )}
+)}
 
           {/* ══ STEP 3 — Récap ══ */}
           {step===3 && (
@@ -381,9 +381,9 @@ export default function Creer(props) {
               {/* Alerte si incomplet */}
               {!allComplete && (
                 <div className="mc-warn" style={{ marginBottom:20 }}>
-                  <span style={{ color:RED, fontSize:20 }}>⚠</span>
+                  <span style={{ color:RED, fontSize:20 }}></span>
                   <div>
-                    <div style={{ fontSize:14, fontWeight:700, color:"#FFB4B4", marginBottom:4 }}>
+                    <div style={{ fontSize:14, fontWeight:700, color:"#E5484D", marginBottom:4 }}>
                       Validation impossible
                     </div>
                     <div style={{ fontSize:13, color:MID, lineHeight:1.4 }}>
@@ -391,7 +391,7 @@ export default function Creer(props) {
                     </div>
                   </div>
                 </div>
-              )}
+)}
 
               {/* Carte programme */}
               <div style={{ background:S1, borderRadius:20, border:`1px solid ${BD}`,
@@ -399,7 +399,7 @@ export default function Creer(props) {
 
                 {/* Header carte */}
                 <div style={{ padding:"20px 20px 16px",
-                  background:"linear-gradient(135deg,rgba(59,130,246,0.12),rgba(59,130,246,0.05))",
+                  background:"linear-gradient(135deg,rgba(60,91,255,0.12),rgba(60,91,255,0.05))",
                   borderBottom:`1px solid ${BD}` }}>
                   <div style={{ fontSize:20, fontWeight:700, fontFamily:SF,
                     color:TEXT, letterSpacing:-0.3, marginBottom:12 }}>
@@ -408,8 +408,8 @@ export default function Creer(props) {
                   <div style={{ display:"flex", gap:8, flexWrap:"wrap" }}>
                     {[
                       { icon:"◐", val:activeSplit?.name||"Personnalisé" },
-                      { icon:"📅", val:`${sortedDays.length} séances/sem` },
-                      { icon:"🏋", val:`${totalEx} exercices` },
+                      { icon:"", val:`${sortedDays.length} séances/sem` },
+                      { icon:"", val:`${totalEx} exercices` },
                     ].map((p,i) => (
                       <span key={i} style={{ display:"inline-flex", alignItems:"center", gap:4,
                         fontSize:13, fontWeight:600, color:MID,
@@ -417,7 +417,7 @@ export default function Creer(props) {
                         borderRadius:8, border:`1px solid ${BD}` }}>
                         {p.icon} {p.val}
                       </span>
-                    ))}
+))}
                   </div>
                 </div>
 
@@ -433,11 +433,11 @@ export default function Creer(props) {
                         borderTop:i>0?`1px solid rgba(255,255,255,0.05)`:"none" }}>
                         {/* Badge jour */}
                         <div style={{ width:48, height:48, borderRadius:16, flexShrink:0,
-                          background:empty?"rgba(248,113,113,0.12)":`${it.color}12`,
-                          border:`1.5px solid ${empty?"rgba(248,113,113,0.35)":`${it.color}40`}`,
+                          background:empty?"rgba(229,72,77,0.12)":`${it.color}12`,
+                          border:`1.5px solid ${empty?"rgba(229,72,77,0.35)":`${it.color}40`}`,
                           display:"flex", alignItems:"center", justifyContent:"center",
                           fontWeight:700, fontSize:14,
-                          color:empty?"#FF8A8A":it.color }}>
+                          color:empty?"#E5484D":it.color }}>
                           {d}
                         </div>
                         {/* Infos */}
@@ -457,12 +457,12 @@ export default function Creer(props) {
                         </div>
                         {/* Droite */}
                         {empty ? (
-                          <span style={{ fontSize:11, fontWeight:700, color:"#FF8A8A",
+                          <span style={{ fontSize:11, fontWeight:700, color:"#E5484D",
                             background:"rgba(255,90,90,0.12)", border:"1px solid rgba(255,90,90,0.25)",
                             padding:"4px 12px", borderRadius:8, flexShrink:0 }}>
                             À compléter
                           </span>
-                        ) : (
+) : (
                           <div style={{ display:"flex", flexDirection:"column",
                             alignItems:"flex-end", gap:4, flexShrink:0 }}>
                             <span style={{ fontSize:16, fontWeight:700, color:TEXT }}>
@@ -475,9 +475,9 @@ export default function Creer(props) {
                                 background:it.color }}/>
                             </div>
                           </div>
-                        )}
+)}
                       </div>
-                    );
+);
                   })}
                 </div>
               </div>
@@ -488,7 +488,7 @@ export default function Creer(props) {
                 {[
                   { label:"Séances",   val:String(sortedDays.length),          sub:"/ semaine" },
                   { label:"Exercices", val:String(totalEx),                      sub:"au total"  },
-                  { label:"Durée moy", val:avgDur ? `~${avgDur}` : "—",         sub:"minutes"   },
+                  { label:"Durée moy", val:avgDur ?`~${avgDur}` :"—",         sub:"minutes"   },
                 ].map((st,i) => (
                   <div key={i} style={{ background:S1, border:`1px solid ${BD}`,
                     borderRadius:16, padding:"16px 12px", textAlign:"center" }}>
@@ -498,20 +498,20 @@ export default function Creer(props) {
                       marginTop:4, lineHeight:1.3 }}>{st.label}</div>
                     <div style={{ fontSize:10, color:DIM }}>{st.sub}</div>
                   </div>
-                ))}
+))}
               </div>
 
               {/* Tip */}
               <div style={{ display:"flex", gap:12, alignItems:"flex-start",
                 padding:"16px 16px", borderRadius:16,
                 background:BLS, border:`1px solid ${BLBR}` }}>
-                <span style={{ fontSize:20, flexShrink:0 }}>✨</span>
+                <span style={{ fontSize:20, flexShrink:0 }}></span>
                 <span style={{ fontSize:13, color:MID, lineHeight:1.6 }}>
                   Tu pourras ajuster charges, tempo et méthodes à tout moment depuis le planning.
                 </span>
               </div>
             </div>
-          )}
+)}
         </div>
 
         {/* ── Footer ── */}
@@ -526,19 +526,19 @@ export default function Creer(props) {
                   color:MID, fontSize:16, fontWeight:700, cursor:"pointer", fontFamily:F }}>
                   Annuler
                 </button>
-              )}
+)}
               <button disabled={!canNext1} onClick={() => goStep(2)}
                 className="mc-shine"
                 style={{ flex:1, padding:"16px", borderRadius:16, border:"none", cursor:"pointer",
                   background:canNext1?`linear-gradient(135deg,${BL},${BLD})`:`${S2}`,
                   color:canNext1?"#FFF":DIM, fontSize:16, fontWeight:700, fontFamily:F,
-                  boxShadow:canNext1?"0 12px 30px -10px rgba(59,130,246,0.85)":"none",
+                  boxShadow:canNext1?"0 12px 30px -10px rgba(60,91,255,0.85)":"none",
                   display:"flex", alignItems:"center", justifyContent:"center", gap:8,
                   transition:"all .25s" }}>
                 Suivant →
               </button>
             </>
-          )}
+)}
           {step===2 && (
             <>
               <button onClick={() => goStep(1)} style={{ flexShrink:0, padding:"16px 24px",
@@ -550,12 +550,12 @@ export default function Creer(props) {
                 style={{ flex:1, padding:"16px", borderRadius:16, border:"none", cursor:"pointer",
                   background:`linear-gradient(135deg,${BL},${BLD})`, color:"#FFF",
                   fontSize:16, fontWeight:700, fontFamily:F,
-                  boxShadow:"0 12px 30px -10px rgba(59,130,246,0.85)",
+                  boxShadow:"0 12px 30px -10px rgba(60,91,255,0.85)",
                   display:"flex", alignItems:"center", justifyContent:"center", gap:8 }}>
                 Voir le récap · {totalEx} ex. →
               </button>
             </>
-          )}
+)}
           {step===3 && (
             <>
               <button onClick={() => goStep(2)} style={{ flexShrink:0, padding:"16px 24px",
@@ -565,15 +565,15 @@ export default function Creer(props) {
               </button>
               <button disabled={!allComplete} onClick={handleSave} className="mc-shine"
                 style={{ flex:1, padding:"16px", borderRadius:16, border:"none", cursor:"pointer",
-                  background:allComplete?`linear-gradient(135deg,${GRN},#059669)`:S2,
+                  background:allComplete?`linear-gradient(135deg,${GRN},#12B76A)`:S2,
                   color:allComplete?"#FFF":DIM, fontSize:16, fontWeight:700, fontFamily:F,
-                  boxShadow:allComplete?"0 12px 30px -10px rgba(52,211,153,0.65)":"none",
+                  boxShadow:allComplete?"0 12px 30px -10px rgba(18,183,106,0.65)":"none",
                   display:"flex", alignItems:"center", justifyContent:"center", gap:8,
                   transition:"all .25s" }}>
-                ✓ Créer le programme
+                 Créer le programme
               </button>
             </>
-          )}
+)}
         </div>
 
       </div>
@@ -582,9 +582,9 @@ export default function Creer(props) {
       {sheet && (
         <BiblioSheet onClose={() => setSheet(false)} onAdd={addEx(ad)}
           addedNoms={(s?.ex||[]).map(e=>e.nom)}/>
-      )}
+)}
     </>,
     document.body
-  );
+);
 }
 

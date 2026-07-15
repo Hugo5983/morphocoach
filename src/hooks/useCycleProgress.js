@@ -1,6 +1,6 @@
 // @ts-check
-import { useMemo } from "react";
-import { getCycleProgress } from "../services/workoutService.js";
+import { useMemo } from"react";
+import { getCycleProgress } from"../services/workoutService.js";
 
 /**
  * Calcule la progression dans le cycle en cours.

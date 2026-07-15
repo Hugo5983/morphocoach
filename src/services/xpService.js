@@ -1,9 +1,9 @@
 // ─── MorphoCoach · XP Service ────────────────────────────────────────────────
 // Source unique de vérité pour le système de progression Momentum XP.
-// Stockage : localStorage 'morpho_xp'
-// Communication : CustomEvent 'morpho_xp_update'
+// Stockage : localStorage'morpho_xp'
+// Communication : CustomEvent'morpho_xp_update'
 
-const KEY = 'morpho_xp';
+const KEY ='morpho_xp';
 
 export const LEVELS = [
   { level:1,  xp:0,     name:"Débutant"  },
@@ -16,7 +16,7 @@ export const LEVELS = [
   { level:8,  xp:7000,  name:"Expert"    },
   { level:9,  xp:9500,  name:"Élite"     },
   { level:10, xp:12500, name:"Champion"  },
-  { level:11, xp:16000, name:"Légende 🏆"},
+  { level:11, xp:16000, name:"Légende"},
 ];
 
 // XP par action
@@ -62,8 +62,8 @@ export function getXPState() {
 
 // ─── Ajouter des XP ──────────────────────────────────────────────────────────
 // Retourne { xp, leveledUp, newLevel }
-// Émet l'event 'morpho_xp_update' pour que XPBar et LevelUpModal réagissent
-export function addXP(amount, reason = '') {
+// Émet l'event'morpho_xp_update' pour que XPBar et LevelUpModal réagissent
+export function addXP(amount, reason ='') {
   const state  = load();
   const oldXP  = state.xp || 0;
   const newXP  = oldXP + amount;
@@ -86,7 +86,7 @@ export function addXPNutrition(repasId) {
   const state   = load();
   const today   = new Date().toISOString().split('T')[0];
   const logged  = state.lastNutriDate || {};
-  const key     = `${today}_${repasId}`;
+  const key     =`${today}_${repasId}`;
   if (logged[key]) return false;           // déjà accordé
 
   // Nettoie les anciens logs (> 3 jours) pour ne pas grossir le localStorage
@@ -96,10 +96,10 @@ export function addXPNutrition(repasId) {
       const d = new Date(k.split('_')[0]).getTime();
       return d > cutoff;
     })
-  );
+);
   clean[key] = true;
   save({ ...state, lastNutriDate: clean });
 
-  addXP(XP.NUTRITION_MEAL, `repas_${repasId}`);
+  addXP(XP.NUTRITION_MEAL,`repas_${repasId}`);
   return true;
 }

@@ -1,6 +1,6 @@
 // @ts-check
-import { useMemo } from "react";
-import { computeStreak } from "../services/workoutService.js";
+import { useMemo } from"react";
+import { computeStreak } from"../services/workoutService.js";
 
 /**
  * Retourne le nombre de jours consécutifs de séances.

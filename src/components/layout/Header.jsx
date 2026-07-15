@@ -1,27 +1,27 @@
-import { C, FONT } from "../../data/constants.js";
+import { C, FONT } from"../../data/constants.js";
 
 
 export function Header({ premium, cycleStart, jR, tab, setTab }) {
   return (
     <div className="np" style={{
-      background: "rgba(246,248,251,0.97)",
-      backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)",
-      borderBottom: `1px solid ${C.bd}`,
-      paddingTop: "calc(8px + env(safe-area-inset-top, 0px))",
-      paddingBottom: "8px",
-      paddingLeft: "16px",
-      paddingRight: "16px",
-      position: "sticky", top: 0, zIndex: 100,
-      display: "flex", alignItems: "center", justifyContent: "space-between",
+      background:"rgba(246,248,251,0.97)",
+      backdropFilter:"blur(24px)", WebkitBackdropFilter:"blur(24px)",
+      borderBottom:`1px solid ${C.bd}`,
+      paddingTop:"calc(8px + env(safe-area-inset-top, 0px))",
+      paddingBottom:"8px",
+      paddingLeft:"16px",
+      paddingRight:"16px",
+      position:"sticky", top: 0, zIndex: 100,
+      display:"flex", alignItems:"center", justifyContent:"space-between",
       gap: 12,
     }}>
       {/* Logo */}
-      <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
+      <div style={{ display:"flex", alignItems:"center", gap: 8, flexShrink: 0 }}>
         <div style={{
           width: 32, height: 32, borderRadius: 12,
-          background: `linear-gradient(145deg, ${C.accent}, #2563EB)`,
-          display: "grid", placeItems: "center",
-          boxShadow: "0 3px 10px rgba(59,130,246,0.35), inset 0 1px 0 rgba(0,0,0,0.12)",
+          background:`linear-gradient(145deg, ${C.accent}, #2E48D9)`,
+          display:"grid", placeItems:"center",
+          boxShadow:"0 3px 10px rgba(60,91,255,0.35), inset 0 1px 0 rgba(0,0,0,0.12)",
           flexShrink: 0,
         }}>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFF" strokeWidth="2.2" strokeLinecap="round">
@@ -36,35 +36,35 @@ export function Header({ premium, cycleStart, jR, tab, setTab }) {
       </div>
 
       {/* Right actions */}
-      <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+      <div style={{ display:"flex", gap: 8, alignItems:"center" }}>
         {cycleStart && jR !== null && jR <= 7 && (
           <div style={{
-            padding: "4px 12px", borderRadius: 8,
-            background: "rgba(248,113,113,0.12)",
-            border: "1px solid rgba(248,113,113,0.25)",
+            padding:"4px 12px", borderRadius: 8,
+            background:"rgba(229,72,77,0.12)",
+            border:"1px solid rgba(229,72,77,0.25)",
             fontSize: 11, color: C.red, fontWeight: 700, fontFamily: FONT,
             letterSpacing: 0.2,
           }}>J-{jR}</div>
-        )}
+)}
         {premium && (
           <div style={{
-            padding: "4px 12px", borderRadius: 8,
-            background: "rgba(59,130,246,0.12)",
-            border: "1px solid rgba(59,130,246,0.25)",
+            padding:"4px 12px", borderRadius: 8,
+            background:"rgba(60,91,255,0.12)",
+            border:"1px solid rgba(60,91,255,0.25)",
             fontSize: 10, color: C.accent, fontWeight: 700,
-            letterSpacing: "0.1em", fontFamily: FONT, textTransform: "uppercase",
+            letterSpacing:"0.1em", fontFamily: FONT, textTransform:"uppercase",
           }}>Pro</div>
-        )}
+)}
         <button
-          onClick={() => setTab(tab === "profile" ? "home" : "profile")}
+          onClick={() => setTab(tab ==="profile" ?"home" :"profile")}
           className="tap-icon"
           style={{
             width: 36, height: 36, borderRadius: 12,
-            background: tab === "profile" ? "rgba(59,130,246,0.12)" : C.s1,
-            border: `1px solid ${tab === "profile" ? "rgba(59,130,246,0.35)" : C.bd}`,
-            display: "grid", placeItems: "center",
-            cursor: "pointer", color: tab === "profile" ? C.accent : C.mid,
-            transition: "all .15s", flexShrink: 0,
+            background: tab ==="profile" ?"rgba(60,91,255,0.12)" : C.s1,
+            border:`1px solid ${tab ==="profile" ?"rgba(60,91,255,0.35)" : C.bd}`,
+            display:"grid", placeItems:"center",
+            cursor:"pointer", color: tab ==="profile" ? C.accent : C.mid,
+            transition:"all .15s", flexShrink: 0,
           }}
         >
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none"
@@ -74,5 +74,5 @@ export function Header({ premium, cycleStart, jR, tab, setTab }) {
         </button>
       </div>
     </div>
-  );
+);
 }

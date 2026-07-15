@@ -1,7 +1,7 @@
 // @ts-check
 // ─── STORAGE SERVICE ────────────────────────────────────────────────────────
-// Wrapper sécurisé autour de localStorage avec préfixe "mc_".
-const PREFIX = "mc_";
+// Wrapper sécurisé autour de localStorage avec préfixe"mc_".
+const PREFIX ="mc_";
 
 /**
  * @template T
