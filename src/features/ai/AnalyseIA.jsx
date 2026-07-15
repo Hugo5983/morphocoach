@@ -1,4 +1,5 @@
 /**
+import { I } from"../../components/ui/Icon.jsx";
  * AnalyseIA.jsx — Refonte visuelle uniquement (design system onboarding)
  * ─────────────────────────────────────────────────────────────────────
  * LOGIQUE 100% INCHANGÉE : états, handlers, validation, services IA.
@@ -7,6 +8,7 @@
 
 
 import { useState, useRef } from"react";
+import useScrollTop from"../../hooks/useScrollTop.js";
 import {
   callGenerateProgramAPI, compressImage,
   buildProgramFromAI, buildCalendarFromProgram,
@@ -21,6 +23,7 @@ import {
 } from"./components/AnalyseIAKit.jsx";
 
 export default function AnalyseIA(props) {
+  useScrollTop();
   const { profil, photos, setPhotos, readFile, INT, loadIA, setLoadIA, loadMsg,
           setLoadMsg, corrigerFaibles, setCorrigerFaibles, setProg, setCycleStart,
           setCalSess, setProgView, setTab, cycles, setCycles, prog, push } = props;
@@ -128,7 +131,7 @@ export default function AnalyseIA(props) {
             style={{ padding:'16px 24px', borderRadius:16,
               background:`linear-gradient(180deg,${T.acLt},${T.ac})`,
               color:T.t1, border:'none', fontFamily:F, fontSize:14, fontWeight:600, cursor:'pointer' }}>
-            ← Réessayer
+            <I name="chevronLeft" size={14}/> Réessayer
           </button>
         </div>
       </div>

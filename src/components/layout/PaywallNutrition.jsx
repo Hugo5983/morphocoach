@@ -2,12 +2,12 @@ import { C, FONT, SERIF } from"../../data/constants.js";
 import { Card, Eyebrow } from"../../components/ui/index.jsx";
 
 const FEATURES = [
-  { icon:"", label:"+500 recettes premium complètes",       sub:"Ingrédients, étapes détaillées, curseur calories" },
-  { icon:"", label:"Conseils nutritionnels personnalisés",   sub:"Selon ton objectif, profil et régime alimentaire" },
-  { icon:"", label:"Estimation macros par photo de repas",   sub:"Analyse instantanée — jusqu'à 120 photos/mois" },
-  { icon:"", label:"Bilan nutritionnel bi-mensuel",          sub:"Analyse complète de tes apports toutes les 2 semaines" },
-  { icon:"", label:"Suivi fruits & légumes quotidien",       sub:"Tracker avec objectifs personnalisés" },
-  { icon:"", label:"Recommandations actionnables",           sub:"Conseils concrets pour progresser chaque semaine" },
+  { label:"+500 recettes premium complètes",       sub:"Ingrédients, étapes détaillées, curseur calories" },
+  { label:"Conseils nutritionnels personnalisés",   sub:"Selon ton objectif, profil et régime alimentaire" },
+  { label:"Estimation macros par photo de repas",   sub:"Analyse instantanée — jusqu'à 120 photos/mois" },
+  { label:"Bilan nutritionnel bi-mensuel",          sub:"Analyse complète de tes apports toutes les 2 semaines" },
+  { label:"Suivi fruits & légumes quotidien",       sub:"Tracker avec objectifs personnalisés" },
+  { label:"Recommandations actionnables",           sub:"Conseils concrets pour progresser chaque semaine" },
 ];
 
 export function PaywallNutrition({ onSubscribe, onClose }) {
@@ -73,7 +73,7 @@ export function PaywallNutrition({ onSubscribe, onClose }) {
               padding:"12px 0",
               borderBottom: i < FEATURES.length - 1 ?`1px solid rgba(0,0,0,0.05)` :"none",
             }}>
-              <span style={{ fontSize:20, flexShrink:0 }}>{f.icon}</span>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={C.accent} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{flexShrink:0}}><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
               <div style={{ flex:1 }}>
                 <div style={{ fontSize:13, fontWeight:600, color:C.text, fontFamily:FONT }}>{f.label}</div>
                 <div style={{ fontSize:11, color:C.mid, marginTop:1, fontFamily:FONT }}>{f.sub}</div>

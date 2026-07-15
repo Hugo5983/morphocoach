@@ -1,4 +1,5 @@
 import { catColor } from"../../utils/training.js";
+import useScrollTop from"../../hooks/useScrollTop.js";
 import { useState } from"react";
 import { C, DARK } from"../../data/constants.js";
 import Creer from"./Creer.jsx";
@@ -8,6 +9,7 @@ import MesocycleChart from"./components/MesocycleChart.jsx";
 import MesocycleDetail from"./components/MesocycleDetail.jsx";
 
 export default function ProgrammeView(props) {
+  useScrollTop();
   const { prog, setProg, progs, setProgs, premium, setPaywall, push, calSess, setCalSess, checkedEx, createStep, setCS, newP, setNewP, jourActif, setJourActif, groupe, setGroupe, editExIdx, setEditExIdx, exModal, setExModal, exModalTab, setExModalTab, INT, EX, setProgView, cycleStart, setCycleStart, semC, jR, profil } = props;
 
   // vue interne :"creer" uniquement (seance detail → overlay fixe via selectedJour)

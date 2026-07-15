@@ -100,7 +100,7 @@ body{background:#F6F7F9;color:#101318;font-family:'Archivo',system-ui,-apple-sys
 #root{min-height:100vh;min-height:100dvh;background:#F6F7F9}
 input,textarea,select{outline:none;font-family:'Archivo',system-ui,sans-serif;color:${C.text}}
 input::placeholder,textarea::placeholder{color:#667085}
-select option{background:#101318;color:${C.text}}
+select option{background:#FFFFFF;color:#101318}
 ::-webkit-scrollbar{width:2px;height:2px}
 ::-webkit-scrollbar-thumb{background:rgba(16,19,24,0.10);border-radius:2px}
 
@@ -115,6 +115,14 @@ select option{background:#101318;color:${C.text}}
 @keyframes bounceIn{0%{transform:translateY(4px);opacity:0}60%{transform:translateY(-2px)}100%{transform:translateY(0);opacity:1}}
 @keyframes pulseGlow{0%,100%{opacity:.5}50%{opacity:.9}}
 @keyframes shine{0%{background-position:-180% 0}100%{background-position:200% 0}}
+@keyframes bu-fade{from{opacity:0}to{opacity:1}}
+@keyframes bu-spin{to{transform:rotate(360deg)}}
+@keyframes bu-ring{0%{transform:scale(.55);opacity:.8}100%{transform:scale(1.7);opacity:0}}
+@keyframes bu-pop{0%{transform:scale(.4);opacity:0}60%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
+@keyframes bu-sweep{0%{transform:translateX(-160%) rotate(18deg)}55%,100%{transform:translateX(320%) rotate(18deg)}}
+@keyframes bu-rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes badge-in{0%{opacity:0;transform:scale(.8) translateY(8px)}100%{opacity:1;transform:scale(1) translateY(0)}}
+@keyframes badge-shine{0%{background-position:-180% 0}60%,100%{background-position:220% 0}}
 
 .anim{animation:fadeUp .25s ease both}
 .notif{animation:slideDown .35s cubic-bezier(.22,1,.36,1) both}
@@ -128,6 +136,9 @@ select option{background:#101318;color:${C.text}}
 .tap:active{transform:scale(0.98);opacity:0.85}
 .tap-sm:active{transform:scale(0.96)}
 .tap-icon:active{transform:scale(0.90)}
+
+.badge-earned{position:relative;overflow:hidden}
+.badge-earned::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.55) 50%,transparent 60%);background-size:220% 100%;animation:badge-shine 4.5s ease-in-out infinite}
 
 .skeleton{background:linear-gradient(90deg,rgba(16,19,24,0.03) 25%,rgba(16,19,24,0.06) 50%,rgba(16,19,24,0.03) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:8px}
 

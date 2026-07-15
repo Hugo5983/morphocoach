@@ -28,13 +28,13 @@ const MCFG = {
     role:"Muscle & récup'", brd:"rgba(60,91,255,0.25)",
   },
   Glucides: {
-    L:"G", sq:"linear-gradient(135deg,#3C5BFF,#2E48D9)", sqS:"rgba(14,116,144,0.35)",
+    L:"G", sq:"linear-gradient(135deg,#F59E0B,#D97706)", sqS:"rgba(245,158,11,0.25)",
     bar:"linear-gradient(90deg,#9DB0FF,#3C5BFF)", barG:"rgba(60,91,255,0.35)",
     color:"#3C5BFF", roleC:"#2E48D9", roleBg:"#E8EBFF",
     role:"Carburant sport", brd:"rgba(18,26,48,0.08)",
   },
   Lipides: {
-    L:"L", sq:"linear-gradient(135deg,#3C5BFF,#E5484D)", sqS:"rgba(234,88,12,0.35)",
+    L:"L", sq:"linear-gradient(135deg,#E5484D,#C53030)", sqS:"rgba(229,72,77,0.25)",
     bar:"linear-gradient(90deg,#F59E0B,#F59E0B)", barG:"rgba(249,115,22,0.35)",
     color:"#F59E0B", roleC:"#F59E0B", roleBg:"#E8EBFF",
     role:"Récupération", brd:"rgba(249,115,22,0.25)",

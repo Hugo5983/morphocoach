@@ -1,4 +1,5 @@
 import { useState, useMemo } from"react";
+import { I } from"../../../components/ui/Icon.jsx";
 import { calc1RM, calcKgFor, findExInDB , catColor } from"../../../utils/training.js";
 import { C, DARK, FONT, INT, SERIF } from"../../../data/constants.js";
 import { EX } from"../../../data/exercises.js";
@@ -339,7 +340,7 @@ export function CreateSeanceModal({ prog, setProg, setCalSess, push, onClose, C 
                       <div style={{fontSize:14,fontWeight:700,color:"${C.text}",fontFamily:DISP_F,letterSpacing:-0.2}}>{ex.nom}</div>
                       <div style={{fontSize:11,color:"${C.dim}",marginTop:2,fontFamily:DISP_F}}>
                         {ex.series}×{ex.reps} · {ex.repos}{ex.charge?` ·`+ex.charge:""}{ex.methode&&ex.methode!=="Classique"?` · ${ex.methode}`:""}
-                        <span style={{color:DARK.accent,marginLeft:8}}>{isOpen?"▲":""}</span>
+                        <span style={{color:DARK.accent,marginLeft:8}}>{isOpen?"−":""}</span>
                       </div>
                     </div>
                     <button onClick={()=>removeEx(i)} style={{background:"rgba(229,72,77,0.08)",border:"1px solid rgba(229,72,77,0.18)",borderRadius:8,padding:"8px 12px",color:"#E5484D",cursor:"pointer",fontSize:11,fontFamily:DISP_F,fontWeight:600}}>×</button>
@@ -416,7 +417,7 @@ export function CreateSeanceModal({ prog, setProg, setCalSess, push, onClose, C 
                       {done ?" Ajouté" :"+ Ajouter"}
                     </button>
                     <button onClick={()=>setGuideEx(ex.raw||ex)} style={{padding:"12px 16px",background:"rgba(60,91,255,0.12)",border:"1px solid rgba(60,91,255,0.25)",borderRadius:12,color:DARK.accent,cursor:"pointer",fontSize:13,fontWeight:700,fontFamily:DISP_F}}>
-                      Guide →
+                      <>Guide <I name="chevronRight" size={12}/></>
                     </button>
                   </div>
                 </div>
@@ -436,14 +437,14 @@ export function CreateSeanceModal({ prog, setProg, setCalSess, push, onClose, C 
             {(step===2||newExForm) && (
               <button onClick={newExForm?()=>setNewExForm(null):()=>setStep(1)}
                 style={{flex:1,padding:"16px",borderRadius:16,border:`1px solid ${C.bd}`,background:"transparent",color:C.mid,fontFamily:DISP_F,fontSize:14,fontWeight:600,cursor:"pointer"}}>
-                ← Retour
+                <I name="chevronLeft" size={14}/> Retour
               </button>
 )}
             <button onClick={newExForm?confirmAdd:step===1?()=>setStep(2):handleSave}
               disabled={newExForm?!newExForm.nom:(!nextOk)}
               style={nextBtn}>
               {newExForm ?"Ajouter à la séance"
-                : step===1 ?"Continuer →"
+                : step===1 ?<>Continuer <I name="arrowRight" size={14}/></>
                 :`Créer la séance${exos.length>0?` · ${exos.length} exo${exos.length>1?"s":""}`:" (sans exercice)"}`}
             </button>
           </div>
@@ -652,14 +653,14 @@ export function RMCard({ exData, objectif, C, onEdit }) {
 
         {/* Recommandation objectif */}
         <div style={{textAlign:"center",padding:"8px 12px",background:`${target.color}0d`,border:`1px solid ${target.color}35`,borderRadius:8,flexShrink:0,marginLeft:12}}>
-          <div style={{fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",fontSize:20,fontWeight:400,color:target.color,lineHeight:1}}>{kgCible > 0 ? kgCible :"—"}<span style={{fontSize:10,color:"rgba(245,241,232,0.5)",fontFamily:"'Archivo',sans-serif",fontWeight:400}}>{kgCible>0?" kg":""}</span></div>
+          <div style={{fontFamily:"'Archivo',system-ui,sans-serif",fontSize:20,fontWeight:400,color:target.color,lineHeight:1}}>{kgCible > 0 ? kgCible :"—"}<span style={{fontSize:10,color:"rgba(245,241,232,0.5)",fontFamily:"'Archivo',sans-serif",fontWeight:400}}>{kgCible>0?" kg":""}</span></div>
           <div style={{fontSize:8,color:target.color,fontWeight:600,marginTop:1}}>{target.l}</div>
           <div style={{fontSize:7,color:"rgba(245,241,232,0.5)"}}>{target.reps} reps</div>
         </div>
 
         <div style={{display:"flex",alignItems:"center",gap:8,marginLeft:8,flexShrink:0}}>
           {onEdit && <button onClick={e=>{e.stopPropagation();onEdit(exData);}} style={{padding:"4px 8px",background:"rgba(60,91,255,0.12)",border:"1px solid rgba(60,91,255,0.25)",borderRadius:8,color:"#3C5BFF",cursor:"pointer",fontSize:10,fontWeight:600}}></button>}
-          <div style={{color:"rgba(245,241,232,0.5)",fontSize:14,transition:"transform .15s",transform:expanded?"rotate(90deg)":"rotate(0)"}}>›</div>
+          <div style={{color:"rgba(245,241,232,0.5)",fontSize:14,transition:"transform .15s",transform:expanded?"rotate(90deg)":"rotate(0)"}}><I name="chevronRight" size={14}/></div>
         </div>
       </div>
 
@@ -677,7 +678,7 @@ export function RMCard({ exData, objectif, C, onEdit }) {
                     <div style={{fontSize:10,fontWeight:isCurrentObj?700:500,color:isCurrentObj?obj.color:"rgba(245,241,232,0.5)"}}>{obj.l}{isCurrentObj?"":""}</div>
                     <div style={{fontSize:8,color:"rgba(245,241,232,0.5)"}}>{obj.reps} reps · {obj.pct}%</div>
                   </div>
-                  <div style={{fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",fontSize:14,fontWeight:400,color:isCurrentObj?obj.color:"rgba(245,241,232,0.5)"}}>{kg > 0 ?`${kg}kg` :"—"}</div>
+                  <div style={{fontFamily:"'Archivo',system-ui,sans-serif",fontSize:14,fontWeight:400,color:isCurrentObj?obj.color:"rgba(245,241,232,0.5)"}}>{kg > 0 ?`${kg}kg` :"—"}</div>
                 </div>
 );
             })}

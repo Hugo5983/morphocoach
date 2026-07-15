@@ -131,7 +131,7 @@ function BonusForm({ type, onSave, onBack }) {
 ))}
       </div>
       <Btn disabled={!nom} onClick={()=>onSave({nom:`${nom} · ${duree}min`,intensite:type.id==='mobility'?'leger':'modere',color:type.color,bonus:{type:type.id,duree,label:nom}})}> Ajouter à ce jour</Btn>
-      <button onClick={onBack} style={{width:'100%',marginTop:8,padding:'8px',background:'transparent',border:'none',color:C.mid,cursor:'pointer',fontSize:13,fontFamily:DISPLAY}}>← Retour</button>
+      <button onClick={onBack} style={{width:'100%',marginTop:8,padding:'8px',background:'transparent',border:'none',color:C.mid,cursor:'pointer',fontSize:13,fontFamily:DISPLAY}}><I name="chevronLeft" size={14}/> Retour</button>
     </div>
 );
 }
@@ -215,7 +215,7 @@ export function DayModal({ date, sessions, onSave, onDelete, onToggleDone, onClo
                     border:sess.done?`1px solid ${C.bd}`:`1px solid ${col}`,
                     color:sess.done?C.mid:'#FFF',
                   }}>
-                    {sess.done ?'↺ Reprendre la séance' : <><I name="check" size={14} stroke={2.4} color="#FFF"/> Terminer la séance</>}
+                    {sess.done ?<><I name="refresh" size={14} stroke={2} color="#FFF"/> Reprendre la séance</> : <><I name="check" size={14} stroke={2.4} color="#FFF"/> Terminer la séance</>}
                   </button>
 )}
               </div>
@@ -340,8 +340,8 @@ function BilanMois({ sessions, year, month, currentWeek }) {
           <div style={{fontSize:11,fontWeight:700,marginTop:8,fontFamily:DISPLAY,
             color: stats.validated>0&&stats.diff>=0 ? C.green :'#E5484D', ...NUM}}>
             {stats.prevValidated>0
-              ? (stats.diff>=0 ?`▲ +${stats.diff}` :`▼ ${stats.diff}`)
-              : stats.validated>0 ?`▲ ${stats.validated} faite${stats.validated>1?'s':''}` :'—'}
+              ? (stats.diff>=0 ?`+ ${stats.diff}` :`${stats.diff}`)
+              : stats.validated>0 ?`${stats.validated} faite${stats.validated>1?'s':''}` :'—'}
           </div>
         </div>
 

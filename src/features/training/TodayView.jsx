@@ -1,4 +1,5 @@
 import { useState } from"react";
+import { I } from"../../components/ui/Icon.jsx";
 import { C, DARK, FONT, NUM, SERIF } from"../../data/constants.js";
 import { Card, Eyebrow, Btn } from"../../components/ui/index.jsx";
 import SeanceDetail from"./SeanceDetail.jsx";
@@ -133,9 +134,9 @@ export default function TodayView(props) {
   };
 
   const REST_TIPS = [
-    { icon:"", title:"Hydrate-toi bien", desc:"La récupération musculaire dépend de ton hydratation. Vise 2,5L aujourd'hui." },
-    { icon:"", title:"Protéines++", desc:"Un apport élevé en protéines aujourd'hui accélère la reconstruction musculaire." },
-    { icon:"", title:"8h de sommeil", desc:"80% des gains se font la nuit. Dors tôt, ton corps travaille pour toi." },
+    { icon:"·", title:"Hydrate-toi bien", desc:"La récupération musculaire dépend de ton hydratation. Vise 2,5L aujourd'hui." },
+    { icon:"·", title:"Protéines++", desc:"Un apport élevé en protéines aujourd'hui accélère la reconstruction musculaire." },
+    { icon:"·", title:"8h de sommeil", desc:"80% des gains se font la nuit. Dors tôt, ton corps travaille pour toi." },
   ];
 
   const rmData       = prog ? getRM() : [];
@@ -436,7 +437,7 @@ export default function TodayView(props) {
               bg:"linear-gradient(135deg,#12B76A,#12B76A)", bd:"rgba(255,255,255,0.25)",
               glow:"0 4px 14px rgba(18,183,106,0.5)",
               t:"Hydratation · 2,5 L",
-              s:"Tap pour tracker ton eau →",
+              s:"Tap pour tracker ton eau",
               tap: () => setTab?.("nutrition"),
               arrow: true,
             },
@@ -505,7 +506,7 @@ export default function TodayView(props) {
                     : <span style={{ color:"rgba(255,255,255,0.25)", fontSize:11 }}>○</span>}
                 </div>
 )}
-              {g.arrow && <div style={{ fontSize:14, color:"#98A2B3", flexShrink:0 }}>›</div>}
+              {g.arrow && <div style={{ fontSize:14, color:"#98A2B3", flexShrink:0 }}><I name="chevronRight" size={14} color="#98A2B3"/></div>}
             </div>
 ))}
 
@@ -610,7 +611,7 @@ export default function TodayView(props) {
                       </div>
                       {tr && (
                         <div style={{ fontSize:10, color:C.green, fontWeight:700,
-                          marginTop:4, fontFamily:DISP }}>▲ +{tr} kg</div>
+                          marginTop:4, fontFamily:DISP }}>+{tr} kg</div>
 )}
                     </div>
 );

@@ -1,4 +1,5 @@
 import { C } from"../../data/constants.js";
+import { I } from"./Icon.jsx";
 // ─── Modal Level-Up ──────────────────────────────────────────────────────────
 // S'affiche automatiquement quand l'utilisateur passe un niveau.
 // Reçoit les props : show, levelInfo, amount, onClose
@@ -140,7 +141,7 @@ export function LevelUpModal({ show, levelInfo, amount, reason, onClose }) {
                 <span style={{ color:"#E8EBFF", fontWeight: 700 }}>
                   {levelInfo.toNext} XP
                 </span>
-                {" →"}{levelInfo.next.name}
+                {" ·"}{levelInfo.next.name}
               </span>
             </div>
             <div style={{

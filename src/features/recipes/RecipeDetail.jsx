@@ -1,4 +1,5 @@
 import { useState, useMemo } from"react";
+import useScrollTop from"../../hooks/useScrollTop.js";
 import { REPAS, MICROS, PRIX_LABEL, PRIX_TEXTE, FILTRES } from"../../data/recipes.js";
 import { useRecipePhoto } from"./useRecipePhoto.js";
 import { C, DARK, FONT, SERIF } from"../../data/constants.js";
@@ -43,6 +44,7 @@ function scaleQte(qte, ratio) {
 }
 
 export default function RecipeDetail({ recipe, onBack, liked, onLike, push, repas, setRepas }) {
+  useScrollTop();
   const [targetKcal, setTargetKcal] = useState(null);
   const [showMealPicker, setShowMealPicker] = useState(false);
 

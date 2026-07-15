@@ -23,7 +23,7 @@ export default class ErrorBoundary extends Component {
           display:"flex", alignItems:"center", justifyContent:"center",
           padding: 24, flexDirection:"column", textAlign:"center",
         }}>
-          <div style={{ fontSize: 44, marginBottom: 16 }}></div>
+          <div style={{ width:44, height:44, borderRadius:22, background:"rgba(229,72,77,0.12)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:20, fontWeight:700, color:"#E5484D", marginBottom:16 }}>!</div>
           <div style={{
             fontFamily: FONT,
             fontSize: 20, fontWeight: 500, color:"#F6F7F9", marginBottom: 8,

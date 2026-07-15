@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect } from"react";
+import useScrollTop from"../../hooks/useScrollTop.js";
 import { C, DARK, FONT, NUM, SERIF } from"../../data/constants.js";
 import { Card, Eyebrow, Btn, Inp, G2 } from"../../components/ui/index.jsx";
 import BilanNutrition from"./BilanNutrition.jsx";
@@ -12,6 +13,7 @@ import {
 } from"./components/NutritionKit.jsx";
 
 export default function Nutrition(props){
+  useScrollTop(nView);
   const { profil, prog, push, repas, setRepas, repasLog, setRepasLog, myFoods, setMyFoods, eau, setEau, scanRes, setScanRes, obj, calObj, pObj, lObj, gObj, totR, handleScan, FOODS, premium, setPaywall } = props;
 
   const [nView,   setNView]   = useState("journal");
@@ -232,8 +234,8 @@ export default function Nutrition(props){
             <div style={{padding:'16px 20px 0'}}>
               <div style={{display:'flex',gap:8}}>
                 <MacroCard label="Protéines" value={tot.p} goal={pObj} color={DARK.accent} colorDk="#2438B8"/>
-                <MacroCard label="Glucides"  value={tot.g} goal={gObj} color="#3C5BFF" colorDk="#2E48D9"/>
-                <MacroCard label="Lipides"   value={tot.l} goal={lObj} color="#3C5BFF" colorDk="#E5484D"/>
+                <MacroCard label="Glucides"  value={tot.g} goal={gObj} color="#F59E0B" colorDk="#D97706"/>
+                <MacroCard label="Lipides"   value={tot.l} goal={lObj} color="#E5484D" colorDk="#C53030"/>
               </div>
             </div>
 

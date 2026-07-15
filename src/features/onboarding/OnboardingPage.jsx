@@ -1,4 +1,5 @@
 import { useState } from"react";
+import useScrollTop from"../../hooks/useScrollTop.js";
 import { C, FONT, SERIF, NUM as NUM_TOKEN } from"../../data/constants.js";
 
 // ─── FONT TOKENS (from mockup) ──────────────────────────────────────────
@@ -160,6 +161,7 @@ function BigStepper({value,setValue,unit,min,max,accent,icon,label,sub}){
 
 // ─── ONBOARDING ─────────────────────────────────────────────────────────
 export default function Onboarding(props){
+  useScrollTop();
   const { profil, setProfil, setOnboardingDone } = props;
   const [oStep,setOStep]=useState(0);
   const [oData,setOData]=useState({prenom:"",sexe:"",age:"",poids:"",taille:"",bodyfat:"",objectif:"hypertrophie",activite:"modere",sport:""});
@@ -217,7 +219,7 @@ export default function Onboarding(props){
                 <div>
                   <FieldLabel label="Sexe" required/>
                   <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}}>
-                    {[{id:"homme",l:"Homme",i:""},{id:"femme",l:"Femme",i:""}].map(s=>{
+                    {[{id:"homme",l:"Homme",i:"H"},{id:"femme",l:"Femme",i:"F"}].map(s=>{
                       const on=oData.sexe===s.id;
                       return(
                         <div key={s.id} onClick={()=>setOData({...oData,sexe:s.id})} className="tap" style={{...selectCard(on,C.blue),padding:'20px 16px',textAlign:'center',borderRadius:16}}>
@@ -273,11 +275,11 @@ export default function Onboarding(props){
               <div style={{display:'flex',flexDirection:'column',gap:16}}>
                 <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}}>
                   {[
-                    {id:"hypertrophie",l:"Prise de muscle",i:"",d:"Volume musculaire",c:C.blue},
-                    {id:"force",l:"Force",i:"",d:"Performances",c:C.accent},
-                    {id:"poids",l:"Perte de poids",i:"",d:"Sèche & tonicité",c:C.coral},
-                    {id:"sante",l:"Santé générale",i:"",d:"Bien-être",c:C.mint},
-                    {id:"prep_physique",l:"Prépa physique",i:"",d:"Sport & condition",c:C.accent},
+                    {id:"hypertrophie",l:"Prise de muscle",i:"M",d:"Volume musculaire",c:C.blue},
+                    {id:"force",l:"Force",i:"F",d:"Performances",c:C.accent},
+                    {id:"poids",l:"Perte de poids",i:"P",d:"Sèche & tonicité",c:C.coral},
+                    {id:"sante",l:"Santé générale",i:"S",d:"Bien-être",c:C.mint},
+                    {id:"prep_physique",l:"Prépa physique",i:"A",d:"Sport & condition",c:C.accent},
                   ].map(g=>{
                     const on=oData.objectif===g.id;
                     return(

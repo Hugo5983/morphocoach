@@ -1,4 +1,5 @@
 import { useState } from"react";
+import { I } from"../../../components/ui/Icon.jsx";
 import { findExInDB , catColor } from"../../../utils/training.js";
 import { C, DARK, FONT, INT } from"../../../data/constants.js";
 import { EX } from"../../../data/exercises.js";
@@ -20,14 +21,14 @@ export function GuideExModal({ exData, exSerie, onClose, C }) {
         <div style={{padding:"20px 16px 0",display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
           <div style={{flex:1}}>
             <div style={{display:"inline-block",padding:"4px 12px",background:`${cc}14`,border:`0.5px solid ${cc}40`,borderRadius:8,fontSize:10,color:cc,letterSpacing:"0.1em",textTransform:"uppercase",fontWeight:600,marginBottom:12}}>{exData.cat}</div>
-            <div style={{fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",fontSize:20,fontWeight:400,lineHeight:1.2,color:"${C.text}",marginBottom:4}}>{exData.n}</div>
+            <div style={{fontFamily:"'Archivo',system-ui,sans-serif",fontSize:20,fontWeight:400,lineHeight:1.2,color:"${C.text}",marginBottom:4}}>{exData.n}</div>
           </div>
           <button onClick={onClose} style={{background:C.s2,border:"0.5px solid rgba(0,0,0,0.05)",borderRadius:12,width:36,height:36,color:C.mid,cursor:"pointer",fontSize:20,flexShrink:0,marginLeft:12}}>×</button>
         </div>
         <div style={{padding:"12px 16px",display:"flex",gap:8,flexWrap:"wrap"}}>
           {[{l:"Séries",v:exSerie?.series||exData.s},{l:"Reps",v:exSerie?.reps||exData.r},{l:"Repos",v:exSerie?.repos||exData.rest},{l:"Charge",v:exSerie?.charge||exData.ch}].map(s=>(
             <div key={s.l} style={{padding:"8px 12px",background:C.s1,border:"0.5px solid rgba(0,0,0,0.05)",borderRadius:12,textAlign:"center",flex:1,minWidth:60}}>
-              <div style={{fontSize:14,fontWeight:400,color:"#3C5BFF",fontFamily:"'Outfit','DM Sans',system-ui,sans-serif"}}>{s.v||"—"}</div>
+              <div style={{fontSize:14,fontWeight:400,color:"#3C5BFF",fontFamily:"'Archivo',system-ui,sans-serif"}}>{s.v||"—"}</div>
               <div style={{fontSize:10,color:C.mid,marginTop:2}}>{s.l}</div>
             </div>
 ))}
@@ -55,7 +56,7 @@ export function GuideExModal({ exData, exSerie, onClose, C }) {
           </div>)}
         </div>
         <div style={{padding:"16px 16px 0"}}>
-          <button onClick={onClose} style={{width:"100%",padding:"12px",background:"transparent",border:"0.5px solid rgba(0,0,0,0.05)",borderRadius:12,color:C.mid,cursor:"pointer",fontSize:13,fontFamily:"'Archivo',sans-serif"}}>← Retour à la séance</button>
+          <button onClick={onClose} style={{width:"100%",padding:"12px",background:"transparent",border:"0.5px solid rgba(0,0,0,0.05)",borderRadius:12,color:C.mid,cursor:"pointer",fontSize:13,fontFamily:"'Archivo',sans-serif"}}><I name="chevronLeft" size={14}/> Retour à la séance</button>
         </div>
       </div>
     </div>
@@ -64,8 +65,8 @@ export function GuideExModal({ exData, exSerie, onClose, C }) {
 
 // ─── SÉANCE DETAIL (vue exercices d'une séance depuis Programme) ─────────────
 export function SeanceDetailModal({ jour, jourIdx, prog, setProg, onClose, C, INT }) {
-  const DISP_F ="'Outfit','DM Sans',system-ui,sans-serif";
-  const SERIF_F ="'DM Serif Display','Georgia',serif";
+  const DISP_F ="'Archivo',system-ui,sans-serif";
+  const SERIF_F ="'Archivo',system-ui,sans-serif";
   const [editEx,     setEditEx]    = useState({});
   const [guideEx,    setGuideEx]   = useState(null);
   const [showBiblio, setShowBiblio]= useState(false);
@@ -235,7 +236,7 @@ export function SeanceDetailModal({ jour, jourIdx, prog, setProg, onClose, C, IN
                   {dbEx && (
                     <button onClick={()=>{const d=findExInDB(ex.nom);if(d)setGuideEx({dbEx:d,serieEx:ex});}}
                       style={{padding:"12px 16px",background:"rgba(60,91,255,0.12)",border:"1px solid rgba(60,91,255,0.25)",borderRadius:12,color:DARK.accent,cursor:"pointer",fontSize:13,fontWeight:700,fontFamily:DISP_F}}>
-                      Guide →
+                      <>Guide <I name="chevronRight" size={12}/></>
                     </button>
 )}
                 </div>
@@ -334,7 +335,7 @@ export function SeanceDetailModal({ jour, jourIdx, prog, setProg, onClose, C, IN
                     </div>
                     <div style={{display:"flex",gap:4,marginLeft:8}}>
                       {findExInDB(ex.nom) && (
-                        <button onClick={()=>{const d=findExInDB(ex.nom);if(d)setGuideEx({dbEx:d,serieEx:ex});}} style={{padding:"4px 8px",background:"rgba(60,91,255,0.05)",border:"0.5px solid rgba(60,91,255,0.18)",borderRadius:8,color:DARK.accent,cursor:"pointer",fontSize:10,fontWeight:700,fontFamily:DISP_F}}>Guide›</button>
+                        <button onClick={()=>{const d=findExInDB(ex.nom);if(d)setGuideEx({dbEx:d,serieEx:ex});}} style={{padding:"4px 8px",background:"rgba(60,91,255,0.05)",border:"0.5px solid rgba(60,91,255,0.18)",borderRadius:8,color:DARK.accent,cursor:"pointer",fontSize:10,fontWeight:700,fontFamily:DISP_F}}><>Guide <I name="chevronRight" size={12}/></></button>
 )}
                       <button onClick={()=>setEditEx(m=>({...m,[k]:!m[k]}))} style={{width:30,height:30,borderRadius:8,background:"rgba(60,91,255,0.08)",border:"0.5px solid rgba(60,91,255,0.18)",color:DARK.accent,cursor:"pointer",fontSize:13,display:"grid",placeItems:"center"}}></button>
                       <button onClick={()=>deleteEx(k)} style={{width:30,height:30,borderRadius:8,background:"rgba(229,72,77,0.08)",border:"0.5px solid rgba(229,72,77,0.25)",color:"#E5484D",cursor:"pointer",fontSize:13,display:"grid",placeItems:"center"}}>×</button>

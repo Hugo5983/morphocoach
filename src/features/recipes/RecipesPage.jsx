@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from"react";
+import useScrollTop from"../../hooks/useScrollTop.js";
 import { RECIPES, REPAS, FILTRE_GROUPES, FILTRES, recipeBadge, prixEuros } from"../../data/recipes.js";
 import RecipeDetail from"./RecipeDetail.jsx";
 import { useRecipePhoto } from"./useRecipePhoto.js";
@@ -91,6 +92,7 @@ function RecipeCard({ r, liked, onLike, onOpen }) {
 
 // ─── RECIPES PAGE ─────────────────────────────────────────────────────────────
 export default function Recipes(props) {
+  useScrollTop();
   const push     = props?.push;
   const premium  = props?.premium || false;
   const setPaywall = props?.setPaywall;

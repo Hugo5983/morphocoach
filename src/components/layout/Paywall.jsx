@@ -2,12 +2,12 @@ import { C, FONT, SERIF } from"../../data/constants.js";
 import { Card, Eyebrow } from"../../components/ui/index.jsx";
 
 const FEATURES = [
-  { icon:"", label:"Programme morphologique personnalisé",  sub:"Adapté à ta morphologie, tes objectifs et ton niveau" },
-  { icon:"", label:"Planification 6 semaines clé en main",  sub:"Cycles progressifs avec surcharge programmée" },
-  { icon:"", label:"Analyse morphologique complète",         sub:"Évaluation posture, points faibles, déséquilibres" },
-  { icon:"", label:"Bilan de progression bi-mensuel",        sub:"Suivi détaillé de tes progrès toutes les 2 semaines" },
-  { icon:"", label:"Méthodes d'intensification avancées",    sub:"Drop sets, pyramidal, surcharge progressive" },
-  { icon:"", label:"Exercices correctifs sur mesure",        sub:"Adaptés à tes limitations ou pathologies" },
+  { label:"Programme morphologique personnalisé",  sub:"Adapté à ta morphologie, tes objectifs et ton niveau" },
+  { label:"Planification 6 semaines clé en main",  sub:"Cycles progressifs avec surcharge programmée" },
+  { label:"Analyse morphologique complète",         sub:"Évaluation posture, points faibles, déséquilibres" },
+  { label:"Bilan de progression bi-mensuel",        sub:"Suivi détaillé de tes progrès toutes les 2 semaines" },
+  { label:"Méthodes d'intensification avancées",    sub:"Drop sets, pyramidal, surcharge progressive" },
+  { label:"Exercices correctifs sur mesure",        sub:"Adaptés à tes limitations ou pathologies" },
 ];
 
 export function Paywall({ onSubscribe, onClose }) {
@@ -72,7 +72,7 @@ export function Paywall({ onSubscribe, onClose }) {
               padding:"12px 0",
               borderBottom: i < FEATURES.length - 1 ?`1px solid rgba(0,0,0,0.05)` :"none",
             }}>
-              <span style={{ fontSize:20, flexShrink:0 }}>{f.icon}</span>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={C.accent} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{flexShrink:0}}><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
               <div style={{ flex:1 }}>
                 <div style={{ fontSize:13, fontWeight:600, color:C.text, fontFamily:FONT }}>{f.label}</div>
                 <div style={{ fontSize:11, color:C.mid, marginTop:1, fontFamily:FONT }}>{f.sub}</div>

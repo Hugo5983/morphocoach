@@ -6,6 +6,7 @@
 //   • Onglet"Analyse détaillée" inchangé
 
 import { useState, useMemo, useEffect, useRef } from"react";
+import useScrollTop from"../../hooks/useScrollTop.js";
 import { C, FONT, SERIF, NUM } from"../../data/constants.js";
 import { useSwipeBack } from"../../hooks/useSwipeBack.js";
 import {
@@ -22,6 +23,7 @@ export default function BilanNutrition({
   onBack, repasHistory, repas, foods, calObj, pObj, gObj, lObj,
   profil, obj, premium, onOpenArchive,
 }) {
+  useScrollTop();
   const [activeTab, setActiveTab] = useState(0);
   const [go, setGo] = useState(false);
   const scrollRef = useRef(null);

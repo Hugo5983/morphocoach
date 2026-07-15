@@ -1,4 +1,5 @@
 import { useState } from"react";
+import { I } from"../../../components/ui/Icon.jsx";
 import { findExInDB , catColor } from"../../../utils/training.js";
 import { C, DARK, FONT, INT } from"../../../data/constants.js";
 import { EX } from"../../../data/exercises.js";
@@ -8,40 +9,40 @@ import { MonthCal } from"../../../components/ui/MonthCal.jsx";
 
 // ─── ERGOMÈTRES — définitions + calculs calories ─────────────────────────────
 const ERGOS = [
-  { id:"tapis",     l:"Tapis roulant",    i:"",  color:"#3C5BFF",
+  { id:"tapis",     l:"Tapis roulant",    i:"T",  color:"#3C5BFF",
     params:[{k:"vitesse",l:"Vitesse",unit:"km/h",def:"10"},{k:"pente",l:"Pente",unit:"%",def:"1"}],
     kcal:(p,kg,min)=>{ const v=parseFloat(p.vitesse)||8,pnt=parseFloat(p.pente)||0; return Math.round((v*0.82+pnt*0.5)*kg*min/60); } },
-  { id:"marche",    l:"Marche rapide",    i:"",  color:"#12B76A",
+  { id:"marche",    l:"Marche rapide",    i:"M",  color:"#12B76A",
     params:[{k:"vitesse",l:"Vitesse",unit:"km/h",def:"5"},{k:"pente",l:"Pente",unit:"%",def:"3"}],
     kcal:(p,kg,min)=>{ const v=parseFloat(p.vitesse)||5,pnt=parseFloat(p.pente)||0; return Math.round((2.5+v*0.4+pnt*0.4)*kg*min/60); } },
-  { id:"velo",      l:"Vélo stationnaire",i:"",  color:"#3C5BFF",
+  { id:"velo",      l:"Vélo stationnaire",i:"V",  color:"#3C5BFF",
     params:[{k:"resistance",l:"Résistance",unit:"/20",def:"12"},{k:"cadence",l:"Cadence",unit:"RPM",def:"80"},{k:"watts",l:"Puissance",unit:"W",def:""}],
     kcal:(p,kg,min)=>{ const w=parseFloat(p.watts),res=parseFloat(p.resistance)||10; return Math.round((w?w*0.014+2:3+res*0.5)*kg*min/60); } },
-  { id:"elliptique",l:"Elliptique",       i:"",  color:"#9DB0FF",
+  { id:"elliptique",l:"Elliptique",       i:"E",  color:"#9DB0FF",
     params:[{k:"resistance",l:"Résistance",unit:"/20",def:"10"},{k:"cadence",l:"Cadence",unit:"SPM",def:"70"}],
     kcal:(p,kg,min)=>{ const res=parseFloat(p.resistance)||8; return Math.round((4+res*0.4)*kg*min/60); } },
-  { id:"rameur",    l:"Rameur",           i:"",  color:"#3C5BFF",
+  { id:"rameur",    l:"Rameur",           i:"R",  color:"#3C5BFF",
     params:[{k:"split",l:"Split 500m",unit:"ex: 2:10",def:""},{k:"watts",l:"Puissance",unit:"W",def:""}],
     kcal:(p,kg,min)=>{ const w=parseFloat(p.watts); if(w) return Math.round(w*min/60*0.86*0.24); const sp=p.split||"2:15"; const parts=sp.split(":"); const sec=(parseInt(parts[0])||2)*60+(parseInt(parts[1])||15); const pw=Math.pow(2.8/(sec/500),3); return Math.round(pw*min/60*0.86*0.24); } },
-  { id:"stairmaster",l:"StairMaster",     i:"",  color:"#3C5BFF",
+  { id:"stairmaster",l:"StairMaster",     i:"S",  color:"#3C5BFF",
     params:[{k:"vitesse",l:"Vitesse",unit:"étages/min",def:"60"}],
     kcal:(p,kg,min)=>{ const v=parseFloat(p.vitesse)||60; return Math.round((6+v/40)*kg*min/60); } },
-  { id:"skierg",    l:"Ski Erg",          i:"",  color:"#3C5BFF",
+  { id:"skierg",    l:"Ski Erg",          i:"S",  color:"#3C5BFF",
     params:[{k:"split",l:"Split 500m",unit:"ex: 2:20",def:""},{k:"watts",l:"Puissance",unit:"W",def:""}],
     kcal:(p,kg,min)=>{ const w=parseFloat(p.watts)||100; return Math.round(w*min/60*0.7*0.24); } },
-  { id:"assault",   l:"Assault Bike",     i:"",  color:"#3C5BFF",
+  { id:"assault",   l:"Assault Bike",     i:"A",  color:"#3C5BFF",
     params:[{k:"rpm",l:"RPM",unit:"tr/min",def:"70"},{k:"watts",l:"Puissance",unit:"W",def:""}],
     kcal:(p,kg,min)=>{ const w=parseFloat(p.watts),rpm=parseFloat(p.rpm)||70; return Math.round((w?w*0.75*0.24:rpm*0.3+5)*kg*min/60); } },
-  { id:"airrunner", l:"Air Runner",       i:"",  color:"#3C5BFF",
+  { id:"airrunner", l:"Air Runner",       i:"A",  color:"#3C5BFF",
     params:[{k:"vitesse",l:"Vitesse",unit:"km/h",def:"12"}],
     kcal:(p,kg,min)=>{ const v=parseFloat(p.vitesse)||10; return Math.round(v*1.1*kg*min/60); } },
-  { id:"corde",     l:"Corde à sauter",   i:"",  color:"#12B76A",
+  { id:"corde",     l:"Corde à sauter",   i:"C",  color:"#12B76A",
     params:[{k:"rpm",l:"Sauts/min",unit:"s/min",def:"120"}],
     kcal:(p,kg,min)=>{ const rpm=parseFloat(p.rpm)||100; return Math.round((8+rpm/100)*kg*min/60); } },
-  { id:"velo_ext",  l:"Vélo extérieur",   i:"",  color:"#3C5BFF",
+  { id:"velo_ext",  l:"Vélo extérieur",   i:"V",  color:"#3C5BFF",
     params:[{k:"vitesse",l:"Vitesse moy.",unit:"km/h",def:"25"},{k:"denivele",l:"Dénivelé+",unit:"m",def:"0"}],
     kcal:(p,kg,min)=>{ const v=parseFloat(p.vitesse)||20,d=parseFloat(p.denivele)||0; return Math.round((2+v*0.3+d/100)*kg*min/60); } },
-  { id:"course",    l:"Course à pied",    i:"",  color:"#3C5BFF",
+  { id:"course",    l:"Course à pied",    i:"C",  color:"#3C5BFF",
     params:[{k:"vitesse",l:"Vitesse",unit:"km/h",def:"10"},{k:"denivele",l:"Dénivelé+",unit:"m",def:"0"}],
     kcal:(p,kg,min)=>{ const v=parseFloat(p.vitesse)||10,d=parseFloat(p.denivele)||0; return Math.round((v*0.82+d/100+2)*kg*min/60); } },
 ];
@@ -96,7 +97,7 @@ export function CardioModal({ onClose, onSave, poids, C }) {
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"20px 16px 16px"}}>
           <div>
             <div style={{fontSize:10,color:"rgba(245,241,232,0.5)",fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",marginBottom:4}}>Cardio</div>
-            <div style={{fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",fontSize:20,fontWeight:400,color:"#F6F7F9"}}>
+            <div style={{fontFamily:"'Archivo',system-ui,sans-serif",fontSize:20,fontWeight:400,color:"#F6F7F9"}}>
               {step===0 ?"Choix de l'ergomètre" : ergo?.l}
             </div>
           </div>
@@ -115,7 +116,7 @@ export function CardioModal({ onClose, onSave, poids, C }) {
                     style={{padding:"16px 12px",background:C.s1,border:"0.5px solid rgba(190,180,255,0.08)",borderRadius:12,cursor:"pointer",display:"flex",alignItems:"center",gap:12,transition:"border-color .15s"}}
                     onMouseEnter={ev=>ev.currentTarget.style.borderColor=e.color}
                     onMouseLeave={ev=>ev.currentTarget.style.borderColor="rgba(190,180,255,0.08)"}>
-                    <div style={{fontSize:20,flexShrink:0}}>{e.i}</div>
+                    <div style={{width:28,height:28,borderRadius:6,background:e.color+"18",display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,fontWeight:700,color:e.color,flexShrink:0}}>{e.i}</div>
                     <div>
                       <div style={{fontSize:13,fontWeight:500,color:"#F6F7F9",lineHeight:1.2}}>{e.l}</div>
                       <div style={{fontSize:10,color:e.color,fontWeight:600,marginTop:2}}>{e.params.map(p=>p.unit).filter(Boolean).slice(0,2).join(" ·")}</div>
@@ -129,7 +130,7 @@ export function CardioModal({ onClose, onSave, poids, C }) {
           {/* ── STEP 1 : configuration ── */}
           {step === 1 && ergo && (
             <div>
-              <button onClick={() => setStep(0)} style={{background:"transparent",border:"none",color:"#3C5BFF",cursor:"pointer",fontSize:13,fontWeight:600,padding:"0 0 16px",display:"flex",alignItems:"center",gap:4}}>← Changer d'ergomètre</button>
+              <button onClick={() => setStep(0)} style={{background:"transparent",border:"none",color:"#3C5BFF",cursor:"pointer",fontSize:13,fontWeight:600,padding:"0 0 16px",display:"flex",alignItems:"center",gap:4}}><I name="chevronLeft" size={14}/> Changer d'ergomètre</button>
 
               {/* Durée */}
               <div style={{background:C.s1,border:"0.5px solid rgba(190,180,255,0.08)",borderRadius:12,padding:"16px 16px",marginBottom:12}}>
@@ -137,7 +138,7 @@ export function CardioModal({ onClose, onSave, poids, C }) {
                 <div style={{display:"flex",alignItems:"center",gap:12}}>
                   <button onClick={() => setDuree(d => Math.max(5,d-5))} style={{width:36,height:36,borderRadius:8,background:C.s2,border:"none",cursor:"pointer",fontSize:20,fontWeight:400,color:"rgba(245,241,232,0.5)"}}>−</button>
                   <div style={{flex:1,textAlign:"center"}}>
-                    <div style={{fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",fontSize:34,fontWeight:400,color:"#F6F7F9",lineHeight:1}}>{duree}</div>
+                    <div style={{fontFamily:"'Archivo',system-ui,sans-serif",fontSize:34,fontWeight:400,color:"#F6F7F9",lineHeight:1}}>{duree}</div>
                     <div style={{fontSize:11,color:"rgba(245,241,232,0.5)",marginTop:2}}>minutes</div>
                   </div>
                   <button onClick={() => setDuree(d => Math.min(180,d+5))} style={{width:36,height:36,borderRadius:8,background:C.accent,border:"none",cursor:"pointer",fontSize:20,color:DARK.surface}}>+</button>
@@ -207,12 +208,12 @@ export function CardioModal({ onClose, onSave, poids, C }) {
                 </div>
                 {editKcal ? (
                   <div style={{display:"flex",alignItems:"center",gap:8}}>
-                    <input value={kcalManuel} onChange={e=>setKcalManuel(e.target.value)} style={{flex:1,padding:"12px 12px",background:C.s2,border:"0.5px solid #3C5BFF",borderRadius:8,fontSize:16,fontWeight:500,color:"#F6F7F9",fontFamily:"'Outfit','DM Sans',system-ui,sans-serif"}}/>
+                    <input value={kcalManuel} onChange={e=>setKcalManuel(e.target.value)} style={{flex:1,padding:"12px 12px",background:C.s2,border:"0.5px solid #3C5BFF",borderRadius:8,fontSize:16,fontWeight:500,color:"#F6F7F9",fontFamily:"'Archivo',system-ui,sans-serif"}}/>
                     <span style={{fontSize:13,color:"rgba(245,241,232,0.5)"}}>kcal</span>
                   </div>
 ) : (
                   <div style={{display:"flex",alignItems:"baseline",gap:8}}>
-                    <div style={{fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",fontSize:34,fontWeight:400,color:kcalAuto>0?"#3C5BFF":"rgba(245,241,232,0.35)",lineHeight:1}}>{kcalAuto>0?kcalAuto:"—"}</div>
+                    <div style={{fontFamily:"'Archivo',system-ui,sans-serif",fontSize:34,fontWeight:400,color:kcalAuto>0?"#3C5BFF":"rgba(245,241,232,0.35)",lineHeight:1}}>{kcalAuto>0?kcalAuto:"—"}</div>
                     {kcalAuto>0&&<div style={{fontSize:13,color:"rgba(245,241,232,0.5)"}}>kcal</div>}
                   </div>
 )}
@@ -223,7 +224,7 @@ export function CardioModal({ onClose, onSave, poids, C }) {
 )}
               </div>
 
-              <button onClick={handleSave} style={{width:"100%",padding:"16px",background:C.accent,border:"none",borderRadius:12,color:DARK.surface,fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",marginBottom:8}}>
+              <button onClick={handleSave} style={{width:"100%",padding:"16px",background:C.accent,border:"none",borderRadius:12,color:DARK.surface,fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"'Archivo',system-ui,sans-serif",marginBottom:8}}>
                  Enregistrer la séance
               </button>
               <button onClick={onClose} style={{width:"100%",padding:"12px",background:"transparent",border:"0.5px solid rgba(190,180,255,0.08)",borderRadius:12,color:"rgba(245,241,232,0.5)",cursor:"pointer",fontSize:13,fontFamily:"'Archivo',sans-serif"}}>Annuler</button>
@@ -238,35 +239,35 @@ export function CardioModal({ onClose, onSave, poids, C }) {
 
 // ─── SPORTS — 30 activités sportives + MET ───────────────────────────────────
 const SPORTS = [
-  {id:"football",   l:"Football",          i:"", color:"#12B76A", met:8.5},
-  {id:"basketball", l:"Basketball",        i:"", color:"#3C5BFF", met:7.0},
-  {id:"tennis",     l:"Tennis",            i:"", color:"#F59E0B", met:7.5},
-  {id:"padel",      l:"Padel",             i:"", color:"#12B76A", met:7.0},
-  {id:"rugby",      l:"Rugby",             i:"", color:"#F59E0B", met:8.5},
-  {id:"volleyball", l:"Volleyball",        i:"", color:"#3C5BFF", met:5.0},
-  {id:"handball",   l:"Handball",          i:"", color:"#3C5BFF", met:8.0},
-  {id:"badminton",  l:"Badminton",         i:"", color:"#3C5BFF", met:6.5},
-  {id:"pingpong",   l:"Tennis de table",   i:"", color:"#3C5BFF", met:4.5},
-  {id:"squash",     l:"Squash",            i:"", color:"#3C5BFF", met:12.0},
-  {id:"boxe",       l:"Boxe",              i:"", color:"#3C5BFF", met:9.5},
-  {id:"mma",        l:"MMA / Kickboxing",  i:"", color:"#E5484D", met:10.5},
-  {id:"judo",       l:"Judo / Jiu-jitsu",  i:"", color:"#2438B8", met:9.0},
-  {id:"karate",     l:"Karaté / Arts mart.",i:"", color:"#3C5BFF", met:8.5},
-  {id:"escalade",   l:"Escalade",          i:"", color:"#F59E0B", met:8.0},
-  {id:"yoga",       l:"Yoga",              i:"", color:"#9DB0FF", met:3.0},
-  {id:"pilates",    l:"Pilates",           i:"", color:"#3C5BFF", met:3.5},
-  {id:"crossfit",   l:"CrossFit",          i:"", color:"#3C5BFF", met:10.0},
-  {id:"surf",       l:"Surf",              i:"", color:"#2E48D9", met:6.0},
-  {id:"ski",        l:"Ski / Snowboard",   i:"", color:"#DCE2FF", met:7.5},
-  {id:"golf",       l:"Golf",              i:"", color:"#12B76A", met:4.5},
-  {id:"cyclisme",   l:"Cyclisme route",    i:"", color:"#3C5BFF", met:9.0},
-  {id:"triathlon",  l:"Triathlon",         i:"", color:"#3C5BFF", met:11.0},
-  {id:"athletisme", l:"Athlétisme",        i:"", color:"#3C5BFF", met:10.0},
-  {id:"danse",      l:"Danse / Zumba",     i:"", color:"#3C5BFF", met:6.0},
-  {id:"hockey",     l:"Hockey",            i:"", color:"rgba(245,241,232,0.5)", met:8.0},
-  {id:"equitation", l:"Équitation",        i:"", color:"#F59E0B", met:5.0},
-  {id:"roller",     l:"Roller / Skate",    i:"", color:"#3C5BFF", met:8.0},
-  {id:"petanque",   l:"Pétanque",          i:"", color:C.dim, met:2.5},
+  {id:"football",   l:"Football",          i:"F", color:"#12B76A", met:8.5},
+  {id:"basketball", l:"Basketball",        i:"B", color:"#3C5BFF", met:7.0},
+  {id:"tennis",     l:"Tennis",            i:"T", color:"#F59E0B", met:7.5},
+  {id:"padel",      l:"Padel",             i:"P", color:"#12B76A", met:7.0},
+  {id:"rugby",      l:"Rugby",             i:"R", color:"#F59E0B", met:8.5},
+  {id:"volleyball", l:"Volleyball",        i:"V", color:"#3C5BFF", met:5.0},
+  {id:"handball",   l:"Handball",          i:"H", color:"#3C5BFF", met:8.0},
+  {id:"badminton",  l:"Badminton",         i:"B", color:"#3C5BFF", met:6.5},
+  {id:"pingpong",   l:"Tennis de table",   i:"T", color:"#3C5BFF", met:4.5},
+  {id:"squash",     l:"Squash",            i:"S", color:"#3C5BFF", met:12.0},
+  {id:"boxe",       l:"Boxe",              i:"B", color:"#3C5BFF", met:9.5},
+  {id:"mma",        l:"MMA / Kickboxing",  i:"M", color:"#E5484D", met:10.5},
+  {id:"judo",       l:"Judo / Jiu-jitsu",  i:"J", color:"#2438B8", met:9.0},
+  {id:"karate",     l:"Karaté / Arts mart.",i:"K", color:"#3C5BFF", met:8.5},
+  {id:"escalade",   l:"Escalade",          i:"E", color:"#F59E0B", met:8.0},
+  {id:"yoga",       l:"Yoga",              i:"Y", color:"#9DB0FF", met:3.0},
+  {id:"pilates",    l:"Pilates",           i:"P", color:"#3C5BFF", met:3.5},
+  {id:"crossfit",   l:"CrossFit",          i:"C", color:"#3C5BFF", met:10.0},
+  {id:"surf",       l:"Surf",              i:"S", color:"#2E48D9", met:6.0},
+  {id:"ski",        l:"Ski / Snowboard",   i:"S", color:"#DCE2FF", met:7.5},
+  {id:"golf",       l:"Golf",              i:"G", color:"#12B76A", met:4.5},
+  {id:"cyclisme",   l:"Cyclisme route",    i:"C", color:"#3C5BFF", met:9.0},
+  {id:"triathlon",  l:"Triathlon",         i:"T", color:"#3C5BFF", met:11.0},
+  {id:"athletisme", l:"Athlétisme",        i:"A", color:"#3C5BFF", met:10.0},
+  {id:"danse",      l:"Danse / Zumba",     i:"D", color:"#3C5BFF", met:6.0},
+  {id:"hockey",     l:"Hockey",            i:"H", color:"rgba(245,241,232,0.5)", met:8.0},
+  {id:"equitation", l:"Équitation",        i:"É", color:"#F59E0B", met:5.0},
+  {id:"roller",     l:"Roller / Skate",    i:"R", color:"#3C5BFF", met:8.0},
+  {id:"petanque",   l:"Pétanque",          i:"P", color:C.dim, met:2.5},
 ];
 
 // ─── SPORT MODAL ──────────────────────────────────────────────────────────────
@@ -295,7 +296,7 @@ export function SportModal({ onClose, onSave, poids, C }) {
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"20px 16px 16px"}}>
           <div>
             <div style={{fontSize:10,color:"rgba(245,241,232,0.5)",fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",marginBottom:4}}>Activité sportive</div>
-            <div style={{fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",fontSize:20,fontWeight:400,color:"#F6F7F9"}}>
+            <div style={{fontFamily:"'Archivo',system-ui,sans-serif",fontSize:20,fontWeight:400,color:"#F6F7F9"}}>
               {sport ? sport.l :"Choix du sport"}
             </div>
           </div>
@@ -313,7 +314,7 @@ export function SportModal({ onClose, onSave, poids, C }) {
                     style={{padding:"12px 12px",background:C.s1,border:"0.5px solid rgba(190,180,255,0.08)",borderRadius:12,cursor:"pointer",display:"flex",alignItems:"center",gap:8,transition:"border-color .15s"}}
                     onMouseEnter={ev => ev.currentTarget.style.borderColor = s.color}
                     onMouseLeave={ev => ev.currentTarget.style.borderColor ="rgba(190,180,255,0.08)"}>
-                    <div style={{fontSize:20,flexShrink:0}}>{s.i}</div>
+                    <div style={{width:28,height:28,borderRadius:6,background:s.color+"18",display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,fontWeight:700,color:s.color,flexShrink:0}}>{s.i}</div>
                     <div style={{flex:1,minWidth:0}}>
                       <div style={{fontSize:11,fontWeight:500,color:"#F6F7F9",lineHeight:1.3}}>{s.l}</div>
                       <div style={{fontSize:10,color:"rgba(245,241,232,0.5)",marginTop:1}}>~{Math.round(s.met*70)} kcal/h</div>
@@ -327,13 +328,13 @@ export function SportModal({ onClose, onSave, poids, C }) {
           {/* Configuration après sélection */}
           {sport && (
             <div>
-              <button onClick={() => setSport(null)} style={{background:"transparent",border:"none",color:"#3C5BFF",cursor:"pointer",fontSize:13,fontWeight:600,padding:"0 0 16px",display:"flex",alignItems:"center",gap:4}}>← Changer de sport</button>
+              <button onClick={() => setSport(null)} style={{background:"transparent",border:"none",color:"#3C5BFF",cursor:"pointer",fontSize:13,fontWeight:600,padding:"0 0 16px",display:"flex",alignItems:"center",gap:4}}><I name="chevronLeft" size={14}/> Changer de sport</button>
 
               {/* Sport sélectionné */}
               <div style={{display:"flex",alignItems:"center",gap:12,padding:"12px 16px",background:`${sport.color}10`,border:`0.5px solid ${sport.color}30`,borderRadius:12,marginBottom:12}}>
-                <div style={{fontSize:26}}>{sport.i}</div>
+                <div style={{width:36,height:36,borderRadius:8,background:sport.color+"18",display:"flex",alignItems:"center",justifyContent:"center",fontSize:15,fontWeight:700,color:sport.color}}>{sport.i}</div>
                 <div>
-                  <div style={{fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",fontSize:16,fontWeight:400,color:"#F6F7F9"}}>{sport.l}</div>
+                  <div style={{fontFamily:"'Archivo',system-ui,sans-serif",fontSize:16,fontWeight:400,color:"#F6F7F9"}}>{sport.l}</div>
                   <div style={{fontSize:10,color:"rgba(245,241,232,0.5)",marginTop:2}}>MET {sport.met} · Intensité {sport.met>=10?"élevée":sport.met>=6?"modérée":"faible"}</div>
                 </div>
               </div>
@@ -344,7 +345,7 @@ export function SportModal({ onClose, onSave, poids, C }) {
                 <div style={{display:"flex",alignItems:"center",gap:12}}>
                   <button onClick={() => setDuree(d => Math.max(5,d-5))} style={{width:36,height:36,borderRadius:8,background:C.s2,border:"none",cursor:"pointer",fontSize:20,fontWeight:400,color:"rgba(245,241,232,0.5)"}}>−</button>
                   <div style={{flex:1,textAlign:"center"}}>
-                    <div style={{fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",fontSize:34,fontWeight:400,color:"#F6F7F9",lineHeight:1}}>{duree}</div>
+                    <div style={{fontFamily:"'Archivo',system-ui,sans-serif",fontSize:34,fontWeight:400,color:"#F6F7F9",lineHeight:1}}>{duree}</div>
                     <div style={{fontSize:11,color:"rgba(245,241,232,0.5)",marginTop:2}}>minutes</div>
                   </div>
                   <button onClick={() => setDuree(d => Math.min(240,d+5))} style={{width:36,height:36,borderRadius:8,background:C.accent,border:"none",cursor:"pointer",fontSize:20,color:DARK.surface}}>+</button>
@@ -364,13 +365,13 @@ export function SportModal({ onClose, onSave, poids, C }) {
                 </div>
                 {editKcal ? (
                   <div style={{display:"flex",alignItems:"center",gap:8}}>
-                    <input value={kcalManuel} onChange={e=>setKcalManuel(e.target.value)} style={{flex:1,padding:"12px 12px",background:C.s2,border:"0.5px solid #3C5BFF",borderRadius:8,fontSize:16,fontWeight:500,color:"#F6F7F9",fontFamily:"'Outfit','DM Sans',system-ui,sans-serif"}}/>
+                    <input value={kcalManuel} onChange={e=>setKcalManuel(e.target.value)} style={{flex:1,padding:"12px 12px",background:C.s2,border:"0.5px solid #3C5BFF",borderRadius:8,fontSize:16,fontWeight:500,color:"#F6F7F9",fontFamily:"'Archivo',system-ui,sans-serif"}}/>
                     <span style={{fontSize:13,color:"rgba(245,241,232,0.5)"}}>kcal</span>
                   </div>
 ) : (
                   <div>
                     <div style={{display:"flex",alignItems:"baseline",gap:8}}>
-                      <div style={{fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",fontSize:34,fontWeight:400,color:"#3C5BFF",lineHeight:1}}>{kcalAuto}</div>
+                      <div style={{fontFamily:"'Archivo',system-ui,sans-serif",fontSize:34,fontWeight:400,color:"#3C5BFF",lineHeight:1}}>{kcalAuto}</div>
                       <div style={{fontSize:13,color:"rgba(245,241,232,0.5)"}}>kcal</div>
                     </div>
                     <div style={{fontSize:10,color:"rgba(245,241,232,0.5)",marginTop:4}}>Estimation MET {sport.met} · {poids||70}kg · {duree}min</div>
@@ -378,7 +379,7 @@ export function SportModal({ onClose, onSave, poids, C }) {
 )}
               </div>
 
-              <button onClick={handleSave} style={{width:"100%",padding:"16px",background:C.accent,border:"none",borderRadius:12,color:DARK.surface,fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",marginBottom:8}}>
+              <button onClick={handleSave} style={{width:"100%",padding:"16px",background:C.accent,border:"none",borderRadius:12,color:DARK.surface,fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"'Archivo',system-ui,sans-serif",marginBottom:8}}>
                  Enregistrer la séance
               </button>
               <button onClick={onClose} style={{width:"100%",padding:"12px",background:"transparent",border:"0.5px solid rgba(190,180,255,0.08)",borderRadius:12,color:"rgba(245,241,232,0.5)",cursor:"pointer",fontSize:13,fontFamily:"'Archivo',sans-serif"}}>Annuler</button>
@@ -403,14 +404,14 @@ export function GuideExModal({ exData, exSerie, onClose, C, INT }) {
         <div style={{padding:"20px 16px 0",display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
           <div style={{flex:1}}>
             <div style={{display:"inline-block",padding:"4px 12px",background:`${cc}14`,border:`0.5px solid ${cc}40`,borderRadius:8,fontSize:10,color:cc,letterSpacing:"0.1em",textTransform:"uppercase",fontWeight:600,marginBottom:12}}>{exData.cat}</div>
-            <div style={{fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",fontSize:20,fontWeight:400,lineHeight:1.2,color:"#F6F7F9",marginBottom:4}}>{exData.n}</div>
+            <div style={{fontFamily:"'Archivo',system-ui,sans-serif",fontSize:20,fontWeight:400,lineHeight:1.2,color:"#F6F7F9",marginBottom:4}}>{exData.n}</div>
           </div>
           <button onClick={onClose} style={{background:C.s2,border:"0.5px solid rgba(190,180,255,0.08)",borderRadius:12,width:36,height:36,color:"rgba(245,241,232,0.5)",cursor:"pointer",fontSize:20,flexShrink:0,marginLeft:12}}>×</button>
         </div>
         <div style={{padding:"12px 16px",display:"flex",gap:8,flexWrap:"wrap"}}>
           {[{l:"Séries",v:exSerie?.series||exData.s},{l:"Reps",v:exSerie?.reps||exData.r},{l:"Repos",v:exSerie?.repos||exData.rest},{l:"Charge",v:exSerie?.charge||exData.ch}].map(s => (
             <div key={s.l} style={{padding:"8px 12px",background:C.s1,border:"0.5px solid rgba(190,180,255,0.08)",borderRadius:12,textAlign:"center",flex:1,minWidth:60}}>
-              <div style={{fontSize:14,fontWeight:400,color:"#3C5BFF",fontFamily:"'Outfit','DM Sans',system-ui,sans-serif"}}>{s.v||"—"}</div>
+              <div style={{fontSize:14,fontWeight:400,color:"#3C5BFF",fontFamily:"'Archivo',system-ui,sans-serif"}}>{s.v||"—"}</div>
               <div style={{fontSize:10,color:"rgba(245,241,232,0.5)",marginTop:2}}>{s.l}</div>
             </div>
 ))}
@@ -468,7 +469,7 @@ export function GuideExModal({ exData, exSerie, onClose, C, INT }) {
 )}
         </div>
         <div style={{padding:"16px 16px 0"}}>
-          <button onClick={onClose} style={{width:"100%",padding:"12px",background:"transparent",border:"0.5px solid rgba(190,180,255,0.08)",borderRadius:12,color:"rgba(245,241,232,0.5)",cursor:"pointer",fontSize:13,fontFamily:"'Archivo',sans-serif"}}>← Retour à la séance</button>
+          <button onClick={onClose} style={{width:"100%",padding:"12px",background:"transparent",border:"0.5px solid rgba(190,180,255,0.08)",borderRadius:12,color:"rgba(245,241,232,0.5)",cursor:"pointer",fontSize:13,fontFamily:"'Archivo',sans-serif"}}><I name="chevronLeft" size={14}/> Retour à la séance</button>
         </div>
       </div>
     </div>
@@ -480,9 +481,9 @@ export function InfoExModal({ ex, dbEx, onClose, onOpenGuide }) {
   return (
     <div style={{minHeight:"100vh",background:C.bg}}>
       <div style={{padding:"20px 16px",paddingBottom:32}}>
-        <button onClick={onClose} style={{background:"transparent",border:"none",color:"#3C5BFF",cursor:"pointer",fontSize:13,fontWeight:600,padding:"0 0 16px",display:"flex",alignItems:"center",gap:4}}>← Retour</button>
+        <button onClick={onClose} style={{background:"transparent",border:"none",color:"#3C5BFF",cursor:"pointer",fontSize:13,fontWeight:600,padding:"0 0 16px",display:"flex",alignItems:"center",gap:4}}><I name="chevronLeft" size={14}/> Retour</button>
 
-        <div style={{fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",fontSize:20,fontWeight:400,color:"#F6F7F9",marginBottom:4}}>{ex.nom}</div>
+        <div style={{fontFamily:"'Archivo',system-ui,sans-serif",fontSize:20,fontWeight:400,color:"#F6F7F9",marginBottom:4}}>{ex.nom}</div>
         <div style={{fontSize:11,color:"rgba(245,241,232,0.5)",marginBottom:16}}>{ex.series}×{ex.reps} · Repos {ex.repos}{ex.charge?` · ${ex.charge}`:""}</div>
 
         {!dbEx && (
@@ -523,8 +524,8 @@ export function InfoExModal({ ex, dbEx, onClose, onOpenGuide }) {
 
             {/* Bouton voir guide complet */}
             {onOpenGuide && (
-              <button onClick={()=>onOpenGuide(dbEx,ex)} style={{width:"100%",padding:"12px",background:"rgba(60,91,255,0.05)",border:"0.5px solid rgba(60,91,255,0.25)",borderRadius:12,color:"#3C5BFF",cursor:"pointer",fontSize:13,fontWeight:600,fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",marginTop:4}}>
-                Voir le guide complet ›
+              <button onClick={()=>onOpenGuide(dbEx,ex)} style={{width:"100%",padding:"12px",background:"rgba(60,91,255,0.05)",border:"0.5px solid rgba(60,91,255,0.25)",borderRadius:12,color:"#3C5BFF",cursor:"pointer",fontSize:13,fontWeight:600,fontFamily:"'Archivo',system-ui,sans-serif",marginTop:4}}>
+                <>Voir le guide complet <I name="chevronRight" size={12}/></>
               </button>
 )}
           </>
@@ -559,7 +560,7 @@ export function ExerciceEditable({ ex, exIdx, jourIdx, prog, setProg, cc, METHOD
        </div>
        <div style={{display:"flex",gap:4,flexShrink:0}}>
         {onInfo && <button onClick={(e)=>{e.stopPropagation();onInfo(ex);}} title="Infos" style={{padding:"4px 8px",background:"rgba(60,91,255,0.05)",border:"0.5px solid rgba(60,91,255,0.25)",borderRadius:8,color:"#3C5BFF",cursor:"pointer",fontSize:10,fontWeight:700,fontFamily:"'Archivo',sans-serif"}}>i</button>}
-        {dbEx && onGuide && <button onClick={(e)=>{e.stopPropagation();onGuide(dbEx,ex);}} style={{padding:"4px 8px",background:"rgba(60,91,255,0.05)",border:"0.5px solid rgba(60,91,255,0.18)",borderRadius:8,color:"#3C5BFF",cursor:"pointer",fontSize:10,fontWeight:600,fontFamily:"'Archivo',sans-serif"}}>Guide ›</button>}
+        {dbEx && onGuide && <button onClick={(e)=>{e.stopPropagation();onGuide(dbEx,ex);}} style={{padding:"4px 8px",background:"rgba(60,91,255,0.05)",border:"0.5px solid rgba(60,91,255,0.18)",borderRadius:8,color:"#3C5BFF",cursor:"pointer",fontSize:10,fontWeight:600,fontFamily:"'Archivo',sans-serif"}}><>Guide <I name="chevronRight" size={12}/></></button>}
         <button onClick={(e)=>{e.stopPropagation();setEditing(ed=>!ed);}} style={{padding:"4px 8px",background:"rgba(60,91,255,0.08)",border:"0.5px solid rgba(60,91,255,0.18)",borderRadius:8,color:"#3C5BFF",cursor:"pointer",fontSize:10}}></button>
        </div>
       </div>

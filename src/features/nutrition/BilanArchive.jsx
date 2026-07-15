@@ -3,6 +3,7 @@
 // Liste consultable avec score lettre + graphique d'évolution sur les 6 derniers.
 
 import { useMemo, useEffect } from"react";
+import useScrollTop from"../../hooks/useScrollTop.js";
 import { useSwipeBack } from"../../hooks/useSwipeBack.js";
 import { C, FONT, SERIF, NUM } from"../../data/constants.js";
 
@@ -45,11 +46,12 @@ function colorFromLetter(l) {
 
 function formatPeriod(start, end) {
   const fmt = (d) => new Date(d).toLocaleDateString("fr-FR", { day:"numeric", month:"short" });
-  return`${fmt(start)} → ${fmt(end)}`;
+  return`${fmt(start)} · ${fmt(end)}`;
 }
 
 // ─── Composant principal ──────────────────────────────────────────────────
 export default function BilanArchive({ onBack, bilans = [], onOpenBilan, currentBilan }) {
+  useScrollTop();
   // Remonter en haut à l'ouverture de l'historique
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -70,7 +72,7 @@ export default function BilanArchive({ onBack, bilans = [], onOpenBilan, current
     const last  = last6[last6.length-1].healthScore;
     if (last > first + 5)  return { dir:"up",   color:GRN, label:"↗" };
     if (last < first - 5)  return { dir:"down", color:RED, label:"↘" };
-    return { dir:"flat", color:AMB, label:"→" };
+    return { dir:"flat", color:AMB, label:"·" };
   })();
 
   const avgScore = last6.length
@@ -161,7 +163,7 @@ export default function BilanArchive({ onBack, bilans = [], onOpenBilan, current
             <TrendChart bilans={last6}/>
             <div style={{ display:"flex", justifyContent:"space-between",
               paddingTop:16, marginTop:8, borderTop:"1px solid rgba(0,0,0,0.05)" }}>
-              <Stat icon={trend?.label ||"→"} color={trend?.color || MID} label="Tendance"/>
+              <Stat icon={trend?.label ||"·"} color={trend?.color || MID} label="Tendance"/>
               <Stat letter={letterFromScore(avgScore)} label="Moyenne"/>
               <Stat letter={letterFromScore(bestScore)} label="Meilleur" highlight/>
             </div>

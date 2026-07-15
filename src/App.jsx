@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect, lazy, Suspense } from"react";
+import { scrollTop } from"./hooks/useScrollTop.js";
 import { C, OBJ, ACTIVITE_FACTOR, GLOBAL_CSS as CSS, INT } from"./data/constants.js";
 import { FOODS } from"./data/foods.js";
 import { EX } from"./data/exercises.js";
@@ -58,13 +59,9 @@ export default function App() {
 
   // Toujours remonter en haut quand on change d'onglet/de page
   useEffect(() => {
-    window.scrollTo(0, 0);
-    try {
-      document.documentElement.scrollTop = 0;
-      document.body.scrollTop = 0;
-      const sc = document.querySelector("[data-scroll-root]");
-      if (sc) sc.scrollTop = 0;
-    } catch {}
+    scrollTop();
+    const r = requestAnimationFrame(() => requestAnimationFrame(scrollTop));
+    return () => cancelAnimationFrame(r);
   }, [tab]);
   const [paywall,          setPaywall]          = useState(false);
   const [paywallNutrition, setPaywallNutrition] = useState(false);

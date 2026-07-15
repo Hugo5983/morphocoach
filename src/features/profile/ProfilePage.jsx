@@ -1,4 +1,5 @@
 import { useState } from"react";
+import useScrollTop from"../../hooks/useScrollTop.js";
 import { ACTIVITE_FACTOR, C, DARK, FONT, NUM, OBJ, SERIF } from"../../data/constants.js";
 import {
   I, ic, Glass, StatCard, Tabs, SectionLabel, Row, EditRow, AddRow,
@@ -6,6 +7,7 @@ import {
 } from"./components/ProfileKit.jsx";
 
 export default function Profile(props) {
+  useScrollTop();
   const { profil, setProfil, premium, premiumNutrition, setPremium, push,
     weightLog, setWeightLog, imc, obj, calObj, pObj, lObj, gObj } = props;
 
@@ -129,9 +131,9 @@ export default function Profile(props) {
           <SectionLabel icon={ic.zap}>Programme</SectionLabel>
           <Glass pad={0} style={{ animation:"rise .4s .08s both" }}>
             <EditRow label="Objectif" value={profil.objectif}
-              displayValue={obj ?`${obj.icon} ${obj.l}` : null}
+              displayValue={obj ?`${obj.l}` : null}
               onChange={set("objectif")}
-              options={Object.entries(OBJ).map(([k, v]) => ({ value: k, label:`${v.icon} ${v.l}` }))}
+              options={Object.entries(OBJ).map(([k, v]) => ({ value: k, label:`${v.l}` }))}
             />
             <EditRow label="Activité" value={profil.activite}
               displayValue={ACTIVITE_LABELS[profil.activite] || null}

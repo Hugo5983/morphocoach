@@ -46,7 +46,7 @@ export function Notif({ n, onClose }) {
             fontFamily: FONT,
           }}
         >
-          <span style={{ fontSize: 20, flexShrink: 0, lineHeight: 1 }}>{n.icon}</span>
+          {n.icon ? <span style={{ fontSize: 20, flexShrink: 0, lineHeight: 1 }}>{n.icon}</span> : <div style={{width:8,height:8,borderRadius:4,background:C.accent,flexShrink:0,marginTop:6}}/>}
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{ fontSize: 14, fontWeight: 700, color: C.text, lineHeight: 1.3, letterSpacing: -0.2 }}>
               {n.title}

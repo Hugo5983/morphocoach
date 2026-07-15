@@ -1,4 +1,5 @@
 import { C } from"../../data/constants.js";
+import useScrollTop from"../../hooks/useScrollTop.js";
 /**
  * FocusMode.jsx
  * Portal vers document.body → couvre TOUT l'écran (header app + bottom nav compris).
@@ -20,6 +21,7 @@ export default function FocusMode({
   seance, checkedEx, toggleCheck,
   prog, setProg, push, C, INT, EX, todayKey, premium, onClose,
 }) {
+  useScrollTop();
   const exercices  = seance?.exercices || [];
   const [exIdx,  setExIdx] = useState(0);
   const ex        = exercices[exIdx] || null;

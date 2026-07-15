@@ -1,4 +1,5 @@
 import { useState } from"react";
+import useScrollTop from"../../hooks/useScrollTop.js";
 import { C, DARK, FONT, NUM, SERIF } from"../../data/constants.js";
 import { Card, Eyebrow, Btn } from"../../components/ui/index.jsx";
 import SeanceDetail from"./SeanceDetail.jsx";
@@ -9,6 +10,7 @@ const DISP = FONT;
 const SERIF_F = SERIF;
 
 export default function TodayView(props) {
+  useScrollTop();
   const { prog, setProg, calSess, setCalSess, checkedEx, setCheckedEx,
     seance, setSeance, setChrono, setChronoSec,
     exDetails, setExDetails, exEdit, setExEdit,
@@ -89,9 +91,9 @@ export default function TodayView(props) {
   };
 
   const REST_TIPS = [
-    { icon:"", title:"Hydrate-toi bien", desc:"La récupération musculaire dépend de ton hydratation. Vise 2,5L aujourd'hui." },
-    { icon:"", title:"Protéines++", desc:"Un apport élevé en protéines aujourd'hui accélère la reconstruction musculaire." },
-    { icon:"", title:"8h de sommeil", desc:"80% des gains se font la nuit. Dors tôt, ton corps travaille pour toi." },
+    { icon:"·", title:"Hydrate-toi bien", desc:"La récupération musculaire dépend de ton hydratation. Vise 2,5L aujourd'hui." },
+    { icon:"·", title:"Protéines++", desc:"Un apport élevé en protéines aujourd'hui accélère la reconstruction musculaire." },
+    { icon:"·", title:"8h de sommeil", desc:"80% des gains se font la nuit. Dors tôt, ton corps travaille pour toi." },
   ];
 
   const rmData       = prog ? getRM() : [];
@@ -335,7 +337,7 @@ export default function TodayView(props) {
                       <div style={{ fontFamily:DISP, fontSize:26, fontWeight:700, color:col, letterSpacing:-1, lineHeight:1, ...NUM }}>{ex.rm1}</div>
                       <div style={{ fontSize:10, color:"${C.dim}", fontWeight:600, marginTop:2, fontFamily:DISP }}>kg · 1RM</div>
                       <div style={{ fontSize:11, color:"${C.mid}", fontWeight:600, marginTop:8, fontFamily:DISP, lineHeight:1.2, overflow:"hidden", textOverflow:"ellipsis", display:"-webkit-box", WebkitLineClamp:2, WebkitBoxOrient:"vertical" }}>{ex.nom}</div>
-                      {tr && <div style={{ fontSize:10, color:"#12B76A", fontWeight:700, marginTop:4, fontFamily:DISP }}>▲ +{tr}</div>}
+                      {tr && <div style={{ fontSize:10, color:"#12B76A", fontWeight:700, marginTop:4, fontFamily:DISP }}>+{tr}</div>}
                     </div>
 );
                 })}

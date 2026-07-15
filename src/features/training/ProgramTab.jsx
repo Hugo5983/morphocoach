@@ -1,4 +1,5 @@
 import { useState } from"react";
+import useScrollTop from"../../hooks/useScrollTop.js";
 import { C, INT, FONT } from"../../data/constants.js";
 import Calendar from"./Calendar.jsx";
 import TodayView from"./TodayView.jsx";
@@ -6,6 +7,7 @@ import AnalyseIA from"../ai/AnalyseIA.jsx";
 import ProgrammeView from"./ProgrammeView.jsx";
 
 export default function ProgramTab(props){
+  useScrollTop();
   const { prog, setProg, progs, setProgs, cycleStart, setCycleStart, premium, setPaywall, push, calSess, setCalSess, checkedEx, setCheckedEx, seance, setSeance, setChrono, setChronoSec, exDetails, setExDetails, exEdit, setExEdit, profil, cycles, EX, loadIA, setLoadIA, loadMsg, setLoadMsg, photos, setPhotos, readFile, corrigerFaibles, setCorrigerFaibles } = props;
 
   // ─── State interne ───────────────────────────────────────────────────────
@@ -132,9 +134,9 @@ export default function ProgramTab(props){
             <div style={{fontFamily:FONT,fontSize:34,fontWeight:700,letterSpacing:-1,color:C.text,lineHeight:1,marginTop:16}}>L'expérience<br/><span style={{fontStyle:"italic",color:C.blueLt}}>complète.</span></div>
             <div style={{marginTop:20,display:"flex",flexDirection:"column",gap:12}}>
               {[
-                {i:"",t:"Coach morphologique",s:"Programme adapté à ta morphologie précise"},
+                {i:"·",t:"Coach morphologique",s:"Programme adapté à ta morphologie précise"},
                 {i:"◎",t:"Exercices correctifs",s:"Compensation des asymétries & déséquilibres"},
-                {i:"",t:"Cycle 6 semaines",s:"Périodisation pro pour des gains durables"},
+                {i:"·",t:"Cycle 6 semaines",s:"Périodisation pro pour des gains durables"},
                 {i:"⊙",t:"Suivi 3D",s:"Mesures corporelles et photo-progression"},
               ].map(f=>(
                 <div key={f.t} style={{display:"flex",alignItems:"flex-start",gap:12}}>

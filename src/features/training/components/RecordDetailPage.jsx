@@ -254,7 +254,7 @@ export default function RecordDetailPage({ exData, prog, setProg, push, onClose 
                     {pctProg > 0 ?"↗" :"↘"} {pctProg > 0 ?"+" :""}{pctProg}%
                   </div>
                   <div style={{ fontSize:10, color:GRY, marginTop:1, fontFamily:F }}>
-                    {firstRM} kg → {currentRM} kg
+                    {firstRM} kg · {currentRM} kg
                   </div>
                 </div>
               </>
@@ -401,7 +401,7 @@ export default function RecordDetailPage({ exData, prog, setProg, push, onClose 
                     stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
                     <path d="M20 6L9 17l-5-5"/>
                   </svg>
-                  {`Enregistrer · ${kgNum} kg × ${repsNum} → ${liveRM} kg 1RM`}
+                  {`Enregistrer · ${kgNum} kg × ${repsNum} · ${liveRM} kg 1RM`}
                 </>
 ) :"Enregistrer"}
             </button>

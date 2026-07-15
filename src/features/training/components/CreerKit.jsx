@@ -1,4 +1,5 @@
 /**
+import { I } from"../../../components/ui/Icon.jsx";
  * CreerKit.jsx — Tokens, constantes & composants du créateur de programme.
  * Extrait de Creer.jsx sans aucune modification de code.
  */
@@ -262,7 +263,7 @@ function BiblioSheet({ onClose, onAdd, addedNoms }) {
       <div style={{ maxWidth:500, margin:"0 auto", padding:"20px 20px 32px" }}>
         <button onClick={() => setGuideEx(null)} style={{ background:"transparent", border:"none",
           color:BL, cursor:"pointer", fontSize:13, fontWeight:700, display:"flex",
-          alignItems:"center", gap:4, marginBottom:20, fontFamily:F }}>← Retour</button>
+          alignItems:"center", gap:4, marginBottom:20, fontFamily:F }}><I name="chevronLeft" size={14}/> Retour</button>
         <span style={{ fontSize:11, fontWeight:700, letterSpacing:"0.1em", padding:"4px 8px",
           borderRadius:8, display:"inline-block", marginBottom:12,
           color:cc(guideEx.cat), background:`${cc(guideEx.cat)}18` }}>{guideEx.cat?.toUpperCase()}</span>
@@ -388,7 +389,7 @@ function BiblioSheet({ onClose, onAdd, addedNoms }) {
                   <button onClick={() => setGuideEx(ex)} style={{ padding:"12px 16px",
                     background:BLS, border:`1px solid ${BLBR}`, borderRadius:12,
                     color:BL, cursor:"pointer", fontSize:13, fontWeight:700, fontFamily:F }}>
-                    Guide →
+                    <>Guide <I name="chevronRight" size={12}/></>
                   </button>
                 </div>
               </div>

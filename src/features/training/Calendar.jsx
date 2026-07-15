@@ -1,4 +1,5 @@
 import { useState } from"react";
+import { I } from"../../components/ui/Icon.jsx";
 import { C, INT, FONT } from"../../data/constants.js";
 import { EX } from"../../data/exercises.js";
 import { Card, Eyebrow, Lbl, Btn, Row } from"../../components/ui/index.jsx";
@@ -88,10 +89,10 @@ export default function Calendar(props) {
     const int = INT[jour.intensite ||"modere"];
     return (
       <div style={{padding:"0 20px"}}>
-        <button onClick={() => setViewJour(null)} style={{background:"transparent",border:"none",color:"#3C5BFF",cursor:"pointer",fontSize:13,fontWeight:600,padding:"16px 0 12px",display:"flex",alignItems:"center",gap:4}}>← Retour aux séances</button>
+        <button onClick={() => setViewJour(null)} style={{background:"transparent",border:"none",color:"#3C5BFF",cursor:"pointer",fontSize:13,fontWeight:600,padding:"16px 0 12px",display:"flex",alignItems:"center",gap:4}}><I name="chevronLeft" size={14}/> Retour aux séances</button>
         <div style={{padding:"12px 16px",background:`${int.c}14`,border:`0.5px solid ${int.c}40`,borderRadius:12,marginBottom:4}}>
           <div style={{fontSize:10,color:int.c,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",marginBottom:4}}>{int.l}</div>
-          <div style={{fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",fontSize:20,fontWeight:400,marginBottom:2}}>{jour.nom}</div>
+          <div style={{fontFamily:"'Archivo',system-ui,sans-serif",fontSize:20,fontWeight:400,marginBottom:2}}>{jour.nom}</div>
           <div style={{fontSize:11,color:"rgba(245,241,232,0.5)"}}>{jour.focus} · {jour.duree} · {jour.exercices?.length||0} exercices</div>
         </div>
         <div style={{display:"flex",alignItems:"center",gap:8,padding:"8px 12px",background:`${weekInt.c}10`,border:`0.5px solid ${weekInt.c}30`,borderRadius:8,marginBottom:12}}>
@@ -112,14 +113,14 @@ export default function Calendar(props) {
 
       {/* ── Header planning ── */}
       <div style={{marginBottom:20,paddingTop:4}}>
-        <div style={{fontSize:10,fontWeight:700,letterSpacing:"0.1em",textTransform:'uppercase',color:C.accent,fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",marginBottom:8}}>Planning</div>
-        <div style={{fontFamily:"'DM Serif Display','Georgia',serif",fontSize:34,fontWeight:400,letterSpacing:-1,color:'${C.text}',lineHeight:1.1,marginBottom:2}}>
+        <div style={{fontSize:10,fontWeight:700,letterSpacing:"0.1em",textTransform:'uppercase',color:C.accent,fontFamily:"'Archivo',system-ui,sans-serif",marginBottom:8}}>Planning</div>
+        <div style={{fontFamily:"'Archivo',system-ui,sans-serif",fontSize:34,fontWeight:400,letterSpacing:-1,color:'${C.text}',lineHeight:1.1,marginBottom:2}}>
           Ton mois
         </div>
-        <div style={{fontFamily:"'DM Serif Display','Georgia',serif",fontSize:34,fontWeight:400,letterSpacing:-1,color:C.accent,lineHeight:1.1,fontStyle:'italic',marginBottom:12}}>
+        <div style={{fontFamily:"'Archivo',system-ui,sans-serif",fontSize:34,fontWeight:400,letterSpacing:-1,color:C.accent,lineHeight:1.1,fontStyle:'italic',marginBottom:12}}>
           en clair.
         </div>
-        <div style={{fontSize:13,color:C.mid,lineHeight:1.6,fontFamily:"'Outfit','DM Sans',system-ui,sans-serif",fontWeight:400}}>
+        <div style={{fontSize:13,color:C.mid,lineHeight:1.6,fontFamily:"'Archivo',system-ui,sans-serif",fontWeight:400}}>
           Densité d'effort, séances planifiées, jours de récupération.
         </div>
       </div>

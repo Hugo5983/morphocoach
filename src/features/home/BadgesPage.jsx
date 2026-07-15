@@ -5,12 +5,15 @@
 // alimentée automatiquement par badgeService (ex. 8/10 séances).
 
 import { useMemo } from"react";
+import useScrollTop from"../../hooks/useScrollTop.js";
 import { C, FONT, SERIF, NUM } from"../../data/constants.js";
+import { I } from"../../components/ui/Icon.jsx";
 import { useSwipeBack } from"../../hooks/useSwipeBack.js";
 import { BADGE_CATEGORIES } from"../../data/achievements.js";
 import { getBadgeStates } from"../../services/badgeService.js";
 
 export default function BadgesPage({ onBack, calObj, pObj }) {
+  useScrollTop();
   const swipe = useSwipeBack(onBack);
   const states = useMemo(() => getBadgeStates({ calObj, pObj }), [calObj, pObj]);
   const unlockedCount = states.filter((s) => s.unlocked).length;
@@ -29,7 +32,7 @@ export default function BadgesPage({ onBack, calObj, pObj }) {
           width: 36, height: 36, borderRadius: 12, cursor:"pointer",
           background: C.s1, border:`1px solid ${C.bd}`,
           display:"grid", placeItems:"center", fontSize: 16, color: C.text,
-        }}>‹</button>
+        }}><I name="chevronLeft" size={18}/></button>
         <div style={{ flex: 1 }}>
           <div style={{ fontFamily: SERIF, fontSize: 20, color: C.text, letterSpacing: -0.3 }}>
             Mes <span style={{ color: C.accent, fontStyle:"italic" }}>badges</span>
@@ -60,13 +63,15 @@ export default function BadgesPage({ onBack, calObj, pObj }) {
               </span>
             </div>
             <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap: 12 }}>
-              {items.map((b) => (
-                <div key={b.id} style={{
+              {items.map((b, idx) => (
+                <div key={b.id} className={b.unlocked ? "badge-earned" : undefined} style={{
                   background: C.s1, borderRadius: 20, padding:"16px 8px 12px",
                   border:`1px solid ${b.unlocked ?"rgba(60,91,255,0.25)" : C.bd}`,
                   boxShadow: b.unlocked ?"0 3px 14px rgba(60,91,255,0.12)" :"0 1px 5px rgba(20,20,50,0.05)",
                   display:"flex", flexDirection:"column", alignItems:"center", gap: 8,
                   position:"relative",
+                  animation:"badge-in .38s cubic-bezier(.22,1,.36,1) both",
+                  animationDelay:`${Math.min(idx,8)*45}ms`,
                 }}>
                   <div style={{ position:"relative", width: 62, height: 66 }}>
                     <img
@@ -85,7 +90,7 @@ export default function BadgesPage({ onBack, calObj, pObj }) {
                         width: 22, height: 22, borderRadius: 8,
                         background:"#1A1F27", border:"1px solid rgba(255,255,255,0.18)",
                         display:"grid", placeItems:"center", fontSize: 11,
-                      }}></div>
+                      }}><I name="lock" size={12} color={C.dim}/></div>
 )}
                   </div>
                   <div style={{
@@ -100,7 +105,7 @@ export default function BadgesPage({ onBack, calObj, pObj }) {
                       fontSize: 10, fontWeight: 700, color: C.green,
                       letterSpacing:"0.1em", fontFamily: FONT,
                     }}>
-                       DÉBLOQUÉ
+                      <I name="check" size={11} color={C.green} style={{display:"inline",verticalAlign:"middle",marginRight:3}}/> DÉBLOQUÉ
                     </div>
 ) : (
                     <div style={{ width:"100%", padding:"0 4px" }}>

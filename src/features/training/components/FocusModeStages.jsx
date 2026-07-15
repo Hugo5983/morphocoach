@@ -581,13 +581,13 @@ function DoneStage({ loggedSets, onNextExercise, coachMsg, premium }) {
               color:T.t1, fontFamily:F, fontSize:14, fontWeight:700, cursor:'pointer',
               boxShadow:'0 6px 20px rgba(45,93,201,0.5),inset 0 1px 0 rgba(255,255,255,0.25)',
               marginBottom:8 }}>
-              Valider & continuer ›
+              <>Valider & continuer <I name="chevronRight" size={14}/></>
             </button>
             <button className="fm-tap" onClick={validate} style={{
               width:'100%', background:'none', border:'none',
               fontFamily:F, fontSize:13, fontWeight:600, color:T.t4, cursor:'pointer',
               padding:'8px' }}>
-              Passer →
+              <>Passer <I name="arrowRight" size={14}/></>
             </button>
           </div>
         </div>

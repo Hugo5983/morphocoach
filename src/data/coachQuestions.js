@@ -9,7 +9,7 @@ export const QUESTIONS_COACH = {
 
   morphologie: {
     titre:"Morphologie & leviers",
-    emoji:"",
+    emoji:"·",
     questions: [
 "Comment savoir si j'ai les fémurs longs et qu'est-ce que ça change pour le squat ?",
 "J'ai les bras longs, quels exercices de pectoraux me conviennent le mieux ?",
@@ -27,7 +27,7 @@ export const QUESTIONS_COACH = {
 
   insertions: {
     titre:"Insertions musculaires",
-    emoji:"",
+    emoji:"·",
     questions: [
 "C'est quoi une insertion musculaire haute ou basse et pourquoi c'est si important ?",
 "J'ai des biceps courts avec un trou au niveau du coude, je peux le combler ?",
@@ -43,7 +43,7 @@ export const QUESTIONS_COACH = {
 
   materiel: {
     titre:"Choix du matériel",
-    emoji:"",
+    emoji:"·",
     questions: [
 "Pourquoi la barre droite me fait mal aux poignets sur les curls ?",
 "C'est quoi le valgus du coude et comment savoir si j'en ai un ?",
@@ -57,7 +57,7 @@ export const QUESTIONS_COACH = {
 
   pectoraux: {
     titre:"Pectoraux",
-    emoji:"",
+    emoji:"·",
     questions: [
 "Pourquoi mes pectoraux ne se développent pas malgré le développé couché ?",
 "Est-ce que je dois toucher la poitrine à chaque répétition au développé ?",
@@ -72,7 +72,7 @@ export const QUESTIONS_COACH = {
 
   dos: {
     titre:"Dos",
-    emoji:"",
+    emoji:"·",
     questions: [
 "Quelle est la différence entre la largeur et l'épaisseur du dos ?",
 "Tirage devant ou tirage nuque, lequel est le meilleur pour le dos ?",
@@ -87,7 +87,7 @@ export const QUESTIONS_COACH = {
 
   jambes: {
     titre:"Jambes",
-    emoji:"",
+    emoji:"·",
     questions: [
 "Pourquoi mon buste plonge en avant quand je squatte ?",
 "Hack squat ou presse à 45°, lequel choisir si le squat barre ne me convient pas ?",
@@ -103,7 +103,7 @@ export const QUESTIONS_COACH = {
 
   bras_epaules: {
     titre:"Bras & épaules",
-    emoji:"",
+    emoji:"·",
     questions: [
 "Pourquoi mes biceps ne poussent pas malgré tous mes curls ?",
 "Curl pupitre ou curl incliné, lequel cible quel chef du biceps ?",
@@ -118,7 +118,7 @@ export const QUESTIONS_COACH = {
 
   securite: {
     titre:"Sécurité & douleurs",
-    emoji:"",
+    emoji:"·",
     questions: [
 "J'ai mal à l'épaule quand je pousse au-dessus de la tête, qu'est-ce que je peux faire ?",
 "C'est quoi le conflit sous-acromial dont tout le monde parle ?",
@@ -137,7 +137,7 @@ export const QUESTIONS_COACH = {
 
   progression: {
     titre:"Progression & stagnation",
-    emoji:"",
+    emoji:"·",
     questions: [
 "Je stagne au développé couché depuis 6 séances, qu'est-ce que je fais ?",
 "Comment savoir si un exercice ne fonctionne plus pour moi ?",
@@ -154,7 +154,7 @@ export const QUESTIONS_COACH = {
 
   volume: {
     titre:"Volume, séries & repos",
-    emoji:"",
+    emoji:"·",
     questions: [
 "Combien de séries par muscle et par semaine selon mon niveau ?",
 "C'est quoi le MEV et le MRV dont parlent les coachs ?",
@@ -170,7 +170,7 @@ export const QUESTIONS_COACH = {
 
   periodisation: {
     titre:"Périodisation & planification",
-    emoji:"",
+    emoji:"·",
     questions: [
 "C'est quoi un mésocycle et comment il se structure ?",
 "C'est quoi la périodisation par blocs ?",
@@ -186,7 +186,7 @@ export const QUESTIONS_COACH = {
 
   recuperation: {
     titre:"Récupération & sommeil",
-    emoji:"",
+    emoji:"·",
     questions: [
 "Les courbatures veulent dire que ma séance était efficace ?",
 "Pourquoi le sommeil est la variable la plus importante de la récupération ?",
@@ -201,7 +201,7 @@ export const QUESTIONS_COACH = {
 
   techniques: {
     titre:"Techniques avancées",
-    emoji:"",
+    emoji:"·",
     questions: [
 "C'est quoi l'électrostimulation et à quoi ça sert vraiment ?",
 "L'entraînement sous occlusion, ça marche vraiment avec des charges légères ?",
@@ -216,7 +216,7 @@ export const QUESTIONS_COACH = {
 
   combat: {
     titre:"Sports de combat",
-    emoji:"",
+    emoji:"·",
     questions: [
 "La musculation rend-elle vraiment plus lent en boxe ?",
 "Pourquoi la vitesse de relâchement musculaire différencie les experts ?",
@@ -231,7 +231,7 @@ export const QUESTIONS_COACH = {
 
   nutrition: {
     titre:"Nutrition",
-    emoji:"",
+    emoji:"·",
     questions: [
 "Combien de protéines par jour selon mon poids et mon objectif ?",
 "Dans quel ordre construire mes macros ?",
@@ -248,7 +248,7 @@ export const QUESTIONS_COACH = {
 
   complements: {
     titre:"Compléments",
-    emoji:"",
+    emoji:"·",
     questions: [
 "La créatine est-elle dangereuse et comment la prendre ?",
 "Whey, caséine ou protéines végétales : que choisir ?",
@@ -263,7 +263,7 @@ export const QUESTIONS_COACH = {
 
   mental: {
     titre:"Mental & motivation",
-    emoji:"",
+    emoji:"·",
     questions: [
 "Comment rester motivé quand les résultats sont lents ?",
 "Pourquoi se comparer aux autres est le meilleur moyen d'abandonner ?",

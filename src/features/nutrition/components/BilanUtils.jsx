@@ -82,14 +82,14 @@ export function computeCriteria(items) {
   const fv   = a.legumes + a.fruits;
 
   return [
-    { key:"fruits_veg",  icon:"", name:"Fruits & légumes",   pts: score(fv,         { good:5,  ok:3,  max:18 }),            max:18, val:`${fv} portion${fv>1?"s":""}` },
-    { key:"fibres",      icon:"", name:"Fibres",             pts: score(a.fibres,   { good:25, ok:15, max:16 }),            max:16, val:`${Math.round(a.fibres)}g · objectif 25g` },
-    { key:"omega3",      icon:"", name:"Bonnes graisses",    pts: score(a.omega3,   { good:2,  ok:1,  max:14 }),            max:14, val:`${a.omega3} source${a.omega3>1?"s":""} d'oméga-3` },
-    { key:"qual_prot",   icon:"", name:"Protéines de qualité",pts: score(a.qualProt,{ good:2,  ok:1,  max:14 }),            max:14, val:`${a.qualProt} source${a.qualProt>1?"s":""} complète${a.qualProt>1?"s":""}` },
-    { key:"sucres",      icon:"", name:"Sucres",             pts: score(a.sucres,   { good:25, ok:40, max:12, lower:true }),max:12, val:`${Math.round(a.sucres)}g · OMS < 25g` },
-    { key:"sel",         icon:"", name:"Sel",                pts: score(selG,       { good:5,  ok:7,  max:12, lower:true }),max:12, val:`${selG.toFixed(1)}g · OMS < 5g` },
-    { key:"saturees",    icon:"", name:"Graisses saturées",  pts: score(a.saturees, { good:15, ok:22, max:8,  lower:true }), max:8,  val:`${Math.round(a.saturees)}g · viser < 15g` },
-    { key:"transformes", icon:"", name:"Aliments transformés",pts: score(a.transformes,{ good:0, ok:1, max:6,  lower:true }), max:6,  val:`${a.transformes} produit${a.transformes>1?"s":""} transformé${a.transformes>1?"s":""}` },
+    { key:"fruits_veg",  icon:"·", name:"Fruits & légumes",   pts: score(fv,         { good:5,  ok:3,  max:18 }),            max:18, val:`${fv} portion${fv>1?"s":""}` },
+    { key:"fibres",      icon:"·", name:"Fibres",             pts: score(a.fibres,   { good:25, ok:15, max:16 }),            max:16, val:`${Math.round(a.fibres)}g · objectif 25g` },
+    { key:"omega3",      icon:"·", name:"Bonnes graisses",    pts: score(a.omega3,   { good:2,  ok:1,  max:14 }),            max:14, val:`${a.omega3} source${a.omega3>1?"s":""} d'oméga-3` },
+    { key:"qual_prot",   icon:"·", name:"Protéines de qualité",pts: score(a.qualProt,{ good:2,  ok:1,  max:14 }),            max:14, val:`${a.qualProt} source${a.qualProt>1?"s":""} complète${a.qualProt>1?"s":""}` },
+    { key:"sucres",      icon:"·", name:"Sucres",             pts: score(a.sucres,   { good:25, ok:40, max:12, lower:true }),max:12, val:`${Math.round(a.sucres)}g · OMS < 25g` },
+    { key:"sel",         icon:"·", name:"Sel",                pts: score(selG,       { good:5,  ok:7,  max:12, lower:true }),max:12, val:`${selG.toFixed(1)}g · OMS < 5g` },
+    { key:"saturees",    icon:"·", name:"Graisses saturées",  pts: score(a.saturees, { good:15, ok:22, max:8,  lower:true }), max:8,  val:`${Math.round(a.saturees)}g · viser < 15g` },
+    { key:"transformes", icon:"·", name:"Aliments transformés",pts: score(a.transformes,{ good:0, ok:1, max:6,  lower:true }), max:6,  val:`${a.transformes} produit${a.transformes>1?"s":""} transformé${a.transformes>1?"s":""}` },
   ];
 }
 
@@ -127,12 +127,12 @@ export function computeCategories(loggedDays) {
   });
   const tot = sum(Object.values(totals)) || 1;
   const cats = [
-    { key:"legumes",            label:"Légumes",            icon:"", color:"#12B76A" },
-    { key:"proteines_animales", label:"Protéines animales", icon:"", color:DARK.accent },
-    { key:"cereales",           label:"Céréales complètes", icon:"", color:"#F59E0B" },
-    { key:"fruits",             label:"Fruits",             icon:"", color:"#C9D3FF" },
-    { key:"sucres_snacks",      label:"Sucres / Snacks",    icon:"", color:"#E5484D" },
-    { key:"bonnes_graisses",    label:"Bonnes graisses",    icon:"", color:"#3C5BFF" },
+    { key:"legumes",            label:"Légumes",            icon:"·", color:"#12B76A" },
+    { key:"proteines_animales", label:"Protéines animales", icon:"·", color:DARK.accent },
+    { key:"cereales",           label:"Céréales complètes", icon:"·", color:"#F59E0B" },
+    { key:"fruits",             label:"Fruits",             icon:"·", color:"#C9D3FF" },
+    { key:"sucres_snacks",      label:"Sucres / Snacks",    icon:"·", color:"#E5484D" },
+    { key:"bonnes_graisses",    label:"Bonnes graisses",    icon:"·", color:"#3C5BFF" },
   ];
   return cats.map(c => ({ ...c, pct: Math.round((totals[c.key] / tot) * 100) }));
 }

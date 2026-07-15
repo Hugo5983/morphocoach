@@ -4,6 +4,7 @@
 // Limite gratuit : FREE_MSG_LIMIT questions/mois. PRO : illimité.
 
 import { useState, useRef, useEffect, useCallback } from"react";
+import useScrollTop from"../../hooks/useScrollTop.js";
 import { C, DARK, FONT, SERIF } from"../../data/constants.js";
 import { useSwipeBack } from"../../hooks/useSwipeBack.js";
 
@@ -83,6 +84,7 @@ export default function CoachPage({
   setPaywall,  // setPaywallNutrition
   push,
 }) {
+  useScrollTop();
   const [messages, setMessages] = useState([
     {
       role:"assistant",
@@ -360,7 +362,7 @@ export default function CoachPage({
                     cursor:"pointer", textAlign:"left",
                     display:"flex", alignItems:"center", gap: 8,
                     transition:"border-color .15s" }}>
-                  <span style={{ color:`${VIO}80`, fontSize: 13 }}>→</span>
+                  <span style={{ color:`${VIO}80`, fontSize: 13 }}><I name="arrowRight" size={14}/></span>
                   {s}
                 </button>
 ))}

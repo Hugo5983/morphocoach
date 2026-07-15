@@ -1,4 +1,5 @@
 import { useState, useMemo } from"react";
+import { I } from"../../components/ui/Icon.jsx";
 import { createPortal } from"react-dom";
 import {
   BL, BLD, BLS, BLBR, BG, S1, S2, BD, TEXT, MID, DIM, GRN, RED, F, SF,
@@ -136,7 +137,7 @@ export default function Creer(props) {
             style={{ width:44, height:44, borderRadius:16, border:`1px solid ${BD}`,
               background:S1, display:"grid", placeItems:"center", color:TEXT,
               cursor:"pointer", fontSize:20, flexShrink:0, transition:".15s" }}>
-            {step>1 ?"‹" :""}
+            {step>1 ?"·" :""}
           </button>
           <div style={{ display:"flex", gap:8, flex:1 }}>
             {[1,2,3].map(n=>(
@@ -355,7 +356,7 @@ export default function Creer(props) {
                         <span key={d} onClick={() => setActiveDay(d)}
                           style={{ fontSize:13, fontWeight:700, color:"#E5484D",
                             background:"rgba(255,90,90,0.12)", border:"1px solid rgba(255,90,90,0.25)",
-                            padding:"4px 12px", borderRadius:8, cursor:"pointer" }}>{d} →</span>
+                            padding:"4px 12px", borderRadius:8, cursor:"pointer" }}>{d}</span>
 ))}
                     </div>
                   </div>
@@ -408,8 +409,8 @@ export default function Creer(props) {
                   <div style={{ display:"flex", gap:8, flexWrap:"wrap" }}>
                     {[
                       { icon:"◐", val:activeSplit?.name||"Personnalisé" },
-                      { icon:"", val:`${sortedDays.length} séances/sem` },
-                      { icon:"", val:`${totalEx} exercices` },
+                      { icon:"·", val:`${sortedDays.length} séances/sem` },
+                      { icon:"·", val:`${totalEx} exercices` },
                     ].map((p,i) => (
                       <span key={i} style={{ display:"inline-flex", alignItems:"center", gap:4,
                         fontSize:13, fontWeight:600, color:MID,
@@ -535,7 +536,7 @@ export default function Creer(props) {
                   boxShadow:canNext1?"0 12px 30px -10px rgba(60,91,255,0.85)":"none",
                   display:"flex", alignItems:"center", justifyContent:"center", gap:8,
                   transition:"all .25s" }}>
-                Suivant →
+                <>Suivant <I name="arrowRight" size={14}/></>
               </button>
             </>
 )}
@@ -544,7 +545,7 @@ export default function Creer(props) {
               <button onClick={() => goStep(1)} style={{ flexShrink:0, padding:"16px 24px",
                 borderRadius:16, background:S1, border:`1px solid ${BD}`,
                 color:MID, fontSize:16, fontWeight:700, cursor:"pointer", fontFamily:F }}>
-                ← Retour
+                <><I name="chevronLeft" size={14}/> Retour</>
               </button>
               <button onClick={() => goStep(3)} className="mc-shine"
                 style={{ flex:1, padding:"16px", borderRadius:16, border:"none", cursor:"pointer",
@@ -552,7 +553,7 @@ export default function Creer(props) {
                   fontSize:16, fontWeight:700, fontFamily:F,
                   boxShadow:"0 12px 30px -10px rgba(60,91,255,0.85)",
                   display:"flex", alignItems:"center", justifyContent:"center", gap:8 }}>
-                Voir le récap · {totalEx} ex. →
+                <>Voir le récap · {totalEx} ex. <I name="arrowRight" size={14}/></>
               </button>
             </>
 )}
@@ -561,7 +562,7 @@ export default function Creer(props) {
               <button onClick={() => goStep(2)} style={{ flexShrink:0, padding:"16px 24px",
                 borderRadius:16, background:S1, border:`1px solid ${BD}`,
                 color:MID, fontSize:16, fontWeight:700, cursor:"pointer", fontFamily:F }}>
-                ← Retour
+                <><I name="chevronLeft" size={14}/> Retour</>
               </button>
               <button disabled={!allComplete} onClick={handleSave} className="mc-shine"
                 style={{ flex:1, padding:"16px", borderRadius:16, border:"none", cursor:"pointer",

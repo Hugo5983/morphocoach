@@ -1,4 +1,5 @@
 import { C } from"../../data/constants.js";
+import { I } from"./Icon.jsx";
 import { useState, useEffect } from"react";
 import { getXPState, getLevelInfo } from"../../services/xpService.js";
 import { getLevelBadge } from"../../data/levelBadges.js";
@@ -85,7 +86,7 @@ export function XPBar() {
             marginTop: 4, fontWeight: 500,
           }}>
             <span style={{ color: GOLDTX, fontWeight: 700 }}>{info.toNext} XP</span>
-            {" → Niv."}{info.next.level} · {info.next.name}
+            {" · Niv."}{info.next.level} · {info.next.name}
           </div>
 ) : (
           <div style={{
