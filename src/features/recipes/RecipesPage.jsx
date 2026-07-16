@@ -7,11 +7,13 @@ import { C, FONT, NUM } from"../../data/constants.js";
 import { I } from"../../components/ui/Icon.jsx";
 
 // ─── Carte recette (rail horizontal, 178px) ──────────────────────────────────
-function RecipeCard({ r, liked, onLike, onOpen }) {
+function RecipeCard({ r, liked, onLike, onOpen, fluid }) {
   const { src:photo } = useRecipePhoto(r.id, r.img,"card");
+  const prix = prixEuros(r);
   return (
     <div onClick={() => onOpen(r)} className="tap" style={{
-      flex:"none", width:178, background:C.s1,
+      ...(fluid ? { width:"100%" } : { flex:"none", width:178 }),
+      background:C.s1,
       border:`1px solid ${C.bd}`, borderRadius:16,
       overflow:"hidden", cursor:"pointer",
       display:"flex", flexDirection:"column",
@@ -23,19 +25,28 @@ function RecipeCard({ r, liked, onLike, onOpen }) {
           style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }}
           onError={e => { if (e.target.src !== r.img) e.target.src = r.img;
                           else e.target.style.display="none"; }}/>
+        <div style={{ position:"absolute", inset:0,
+          background:"linear-gradient(to top,rgba(16,19,24,0.55) 0%,transparent 45%)" }}/>
+        {prix && (
+          <div style={{ position:"absolute", left:8, bottom:8,
+            padding:"4px 8px", borderRadius:8,
+            background:"rgba(16,19,24,0.72)",
+            color:"#FFF", fontSize:11, fontWeight:700, fontFamily:FONT,
+            ...NUM, whiteSpace:"nowrap", letterSpacing:0.1 }}>{prix}</div>
+        )}
         <button onClick={e => { e.stopPropagation(); onLike(r.id); }}
           aria-label={liked ?"Retirer des favoris" :"Ajouter aux favoris"}
           style={{ position:"absolute", top:8, right:8,
-            width:30, height:30, borderRadius:"50%",
-            background: liked ?"rgba(229,72,77,0.95)" :"rgba(255,255,255,0.88)",
-            border: liked ?"1px solid rgba(229,72,77,0.65)" :"1px solid rgba(255,255,255,0.5)",
-            boxShadow:"0 2px 8px rgba(16,19,24,0.15)",
+            width:32, height:32, borderRadius:"50%",
+            background: liked ?"rgba(229,72,77,0.95)" :"rgba(255,255,255,0.92)",
+            border: liked ?"1px solid rgba(229,72,77,0.65)" :"1px solid rgba(255,255,255,0.65)",
+            boxShadow: liked ?"0 3px 10px rgba(229,72,77,0.5)" :"0 2px 8px rgba(16,19,24,0.18)",
             display:"grid", placeItems:"center", cursor:"pointer",
             transition:"all .2s ease" }}>
           <svg width="15" height="15" viewBox="0 0 24 24"
-            fill={liked ?"#FFF" :"none"} stroke={liked ?"#FFF" :"#98A2B3"}
-            strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M12 20s-7-4.4-9.2-8.6C1.2 8 2.6 5 5.6 5 7.7 5 9 6.3 12 9c3-2.7 4.3-4 6.4-4 3 0 4.4 3 2.8 6.4C19 15.6 12 20 12 20Z"/>
+            fill={liked ?"#FFF" :"none"} stroke={liked ?"#FFF" :"#E5484D"}
+            strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/>
           </svg>
         </button>
       </div>
@@ -174,10 +185,8 @@ export default function Recipes(props) {
         <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr",
           gap:12, padding:"16px 20px" }}>
           {sec.recettes.map(r => (
-            <div key={r.id} style={{ minWidth:0 }}>
-              <RecipeCard r={r} liked={!!liked[r.id]}
-                onLike={toggleLike} onOpen={openRecipe}/>
-            </div>
+            <RecipeCard key={r.id} r={r} liked={!!liked[r.id]}
+              onLike={toggleLike} onOpen={openRecipe} fluid/>
           ))}
         </div>
       </div>
@@ -278,7 +287,7 @@ export default function Recipes(props) {
       )}
 
       {/* ── CTA Premium ── */}
-      {!premium && showHome && (
+      {!premium && (
         <div style={{ margin:"32px 20px 0", display:"flex", flexDirection:"column",
           alignItems:"center", gap:16 }}>
           <span style={{ fontSize:21, fontWeight:800, letterSpacing:"-.02em",
