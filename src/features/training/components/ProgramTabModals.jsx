@@ -5,7 +5,6 @@ import { C, DARK, FONT, INT } from"../../../data/constants.js";
 import { EX } from"../../../data/exercises.js";
 import { Card, Eyebrow, Lbl, Btn, Row } from"../../../components/ui/index.jsx";
 import Calendar from"../Calendar.jsx";
-import TodayView from"../TodayView.jsx";
 import Creer from"../Creer.jsx";
 import AnalyseIA from"../../ai/AnalyseIA.jsx";
 

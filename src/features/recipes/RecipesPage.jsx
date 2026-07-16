@@ -116,7 +116,6 @@ function SectionRail({ label, recettes, liked, onLike, onOpen, onVoirTout }) {
 
 // ─── RECIPES PAGE ─────────────────────────────────────────────────────────────
 export default function Recipes(props) {
-  useScrollTop();
   const push       = props?.push;
   const premium    = props?.premium || false;
   const setPaywall = props?.setPaywall;
@@ -130,6 +129,7 @@ export default function Recipes(props) {
   const [selected,  setSelected]  = useState(null);
   const [showFavs,  setShowFavs]  = useState(false);
   const [voirTout,  setVoirTout]  = useState(null);   // id de la section dépliée
+  useScrollTop(voirTout);
 
   const toggleLike = (id) => setLiked(p => ({ ...p, [id]: !p[id] }));
   const openRecipe = (r) => {
@@ -235,16 +235,23 @@ export default function Recipes(props) {
               placeItems:"center" }}>{filtres.length}</div>
           )}
         </button>
-        {/* Bouton favoris */}
-        <button onClick={() => setShowFavs(v => !v)} className="tap"
-          style={{ width:44, height:44, flex:"none", display:"grid",
-            placeItems:"center", background:"none", border:"none",
-            cursor:"pointer" }}>
-          <svg width="22" height="22" viewBox="0 0 24 24"
-            fill={showFavs ? C.red :"none"} stroke={showFavs ? C.red :"#98A2B3"}
-            strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M12 20s-7-4.4-9.2-8.6C1.2 8 2.6 5 5.6 5 7.7 5 9 6.3 12 9c3-2.7 4.3-4 6.4-4 3 0 4.4 3 2.8 6.4C19 15.6 12 20 12 20Z"/>
+        {/* Bouton favoris — ancien modèle pill */}
+        <button onClick={() => setShowFavs(v => !v)}
+          aria-label="Mes favoris"
+          style={{ height:44, padding:"0 16px", borderRadius:12, flex:"none",
+            background: showFavs ?"rgba(229,72,77,0.95)" :"#FFFFFF",
+            border:`1px solid ${showFavs ?"rgba(229,72,77,0.65)" : C.bd}`,
+            boxShadow: showFavs ?"0 3px 10px rgba(229,72,77,0.35)" :"none",
+            display:"flex", alignItems:"center", gap:8, cursor:"pointer",
+            transition:"all .2s ease" }}>
+          <svg width="15" height="15" viewBox="0 0 24 24"
+               fill={showFavs ?"#FFF" :"none"}
+               stroke={showFavs ?"#FFF" :"#E5484D"}
+               strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/>
           </svg>
+          <span style={{ fontSize:13, fontWeight:700, fontFamily:FONT,
+            color: showFavs ?"#FFF" : C.mid }}>Favoris</span>
         </button>
       </div>
 

@@ -1,7 +1,9 @@
 import { useState, useMemo } from"react";
+import useScrollTop from"../../../hooks/useScrollTop.js";
 import { C, DARK, FONT } from"../../../data/constants.js";
 
 export default function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, curVol, currentWeek, WEEKS, cycleStart, checkedEx, onClose, mode ="analyse" }) {
+  useScrollTop();
   const isForce   = mode ==="force";
   const [exMenu, setExMenu] = useState(false);   // dropdown sélecteur d'exercice (mode force)
   const DISP_F = FONT;

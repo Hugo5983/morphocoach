@@ -4,6 +4,7 @@
 // Validée sur maquette v4.
 
 import { useState, useMemo } from"react";
+import useScrollTop from"../../../hooks/useScrollTop.js";
 import { calc1RM } from"../../../utils/training.js";
 import { C, DARK, FONT, NUM, SERIF } from"../../../data/constants.js";
 
@@ -105,6 +106,7 @@ function RMChart({ data, objectifKg }) {
 
 // ── Composant principal ───────────────────────────────────────────────────────
 export default function RecordDetailPage({ exData, prog, setProg, push, onClose }) {
+  useScrollTop();
   const [kg,         setKg]         = useState("");
   const [reps,       setReps]       = useState("");
   const [focusField, setFocusField] = useState(null);

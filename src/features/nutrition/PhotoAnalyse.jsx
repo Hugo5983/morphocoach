@@ -4,6 +4,7 @@
 // Flow : Upload photo → Claude Vision → Résultat macros → Choix repas → Ajout journal
 
 import { useState, useRef, useCallback } from"react";
+import useScrollTop from"../../hooks/useScrollTop.js";
 import { C, DARK, FONT, SERIF } from"../../data/constants.js";
 
 // ─── Constantes ───────────────────────────────────────────────────────────────
@@ -140,6 +141,7 @@ function FiabiliteBadge({ niveau }) {
  * }} props
  */
 export default function PhotoAnalyse({ onClose, onAdd, premium, setPaywall, push }) {
+  useScrollTop();
   const [step,       setStep]    = useState("upload"); // upload | loading | result | confirm
   const [preview,    setPreview] = useState(/** @type {string|null} */ (null));
   const [base64,     setBase64]  = useState(/** @type {string|null} */ (null));

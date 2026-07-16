@@ -4,7 +4,6 @@ import { calc1RM, calcKgFor, findExInDB , catColor } from"../../../utils/trainin
 import { C, DARK, FONT, INT, SERIF } from"../../../data/constants.js";
 import { EX } from"../../../data/exercises.js";
 import { GuideExModal } from"./ProgramTabModals.jsx";
-import SeanceDetail from"../SeanceDetail.jsx";
 
 const DISP_F  = FONT;
 const SERIF_F = SERIF;
