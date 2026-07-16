@@ -1,5 +1,5 @@
-/**
 import { I } from"../../../components/ui/Icon.jsx";
+/**
  * CreerKit.jsx — Tokens, constantes & composants du créateur de programme.
  * Extrait de Creer.jsx sans aucune modification de code.
  */
