@@ -13,10 +13,10 @@ import {
 } from"./components/NutritionKit.jsx";
 
 export default function Nutrition(props){
-  useScrollTop(nView);
   const { profil, prog, push, repas, setRepas, repasLog, setRepasLog, myFoods, setMyFoods, eau, setEau, scanRes, setScanRes, obj, calObj, pObj, lObj, gObj, totR, handleScan, FOODS, premium, setPaywall } = props;
 
   const [nView,   setNView]   = useState("journal");
+  useScrollTop(nView);
   const [repasSheet, setRepasSheet] = useState(null);  // id du repas ouvert
   const [showPhoto, setShowPhoto] = useState(false);
   const [search,  setSearch]  = useState("");
