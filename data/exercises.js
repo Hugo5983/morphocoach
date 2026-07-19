@@ -4,7 +4,7 @@
 export const EX={
 "Pectoraux":[
 {n:"Développé haltères incliné 30°",s:"4",r:"8-10",rest:"90s",ch:"60-70%",cat:"principal",mat:"haltères",
-morpho:" Humérus longs : haltères indispensables — la barre impose une trajectoire fixe incompatible avec les bras longs et crée un conflit sous-acromial. Les haltères permettent une rotation naturelle du poignet tout au long du mouvement.\nHumérus courts : haltères ou barre possible. La barre est plus stable pour charger lourd.\nCage plate/étroite : préférer l'incliné à 30-45° pour cibler les fibres claviculaires et donner de l'épaisseur visuelle au haut du torse.\nCage large/bombée : le plat ou le décliné conviendront mieux pour le volume global.\nClavicules larges : excellent exercice — le levier naturel favorise l'amplitude et le recrutement musculaire.\nClavicules courtes : réduire légèrement l'écartement pour plus d'activation.",
+morpho:"🦴 Humérus longs : haltères indispensables — la barre impose une trajectoire fixe incompatible avec les bras longs et crée un conflit sous-acromial. Les haltères permettent une rotation naturelle du poignet tout au long du mouvement.\n🦴 Humérus courts : haltères ou barre possible. La barre est plus stable pour charger lourd.\n🫁 Cage plate/étroite : préférer l'incliné à 30-45° pour cibler les fibres claviculaires et donner de l'épaisseur visuelle au haut du torse.\n🫁 Cage large/bombée : le plat ou le décliné conviendront mieux pour le volume global.\n📐 Clavicules larges : excellent exercice — le levier naturel favorise l'amplitude et le recrutement musculaire.\n📐 Clavicules courtes : réduire légèrement l'écartement pour plus d'activation.",
 tips:["Omoplates pressées et rétractées sur le banc du début à la fin — ne jamais les laisser décoller","Rotation des poignets de pronation vers semi-supination pendant la montée pour suivre la trajectoire naturelle","Descendre jusqu'à ressentir l'étirement des pectoraux — coudes à environ 45° du torse","Expirer à la poussée, inspirer en descendant lentement 2-3 secondes","Contraction 1 seconde en haut sans verrouiller les coudes pour maintenir la tension"],
 variantes:[
 {nom:"Développé haltères plat",note:"Banc horizontal — la trajectoire perpendiculaire au buste déplace le travail vers le chef sternal",muscles:"Pectoraux portion moyenne",niveau:"Débutant"},
@@ -16,7 +16,7 @@ variantes:[
 erreurs:["Arquer excessivement le bas du dos pour soulever plus lourd — perd le travail pectoral","Verrouiller les coudes en haut — supprime la tension et fragilise l'articulation","Descente incontrôlée et rapide — risque tendineux important","Coudes perpendiculaires au torse (à 90°) — conflit sous-acromial garanti"]},
 
 {n:"Pull-over haltère couché",s:"4",r:"12-15",rest:"60s",ch:"Léger-modéré",cat:"isolation",mat:"haltères",
-morpho:" Cage plate ou étroite : exercice PRIORITAIRE — c'est l'un des seuls mouvements capable d'élargir la cage thoracique sur le long terme si pratiqué régulièrement avec une inspiration profonde. Intégrer systématiquement.\nCage large/bombée : exercice utile pour le grand dorsal et les pectoraux mais l'effet d'expansion est moindre.\nBras longs : amplitude naturellement grande — descendre progressivement pour éviter le stress à l'épaule.\nBras courts : moins d'étirement naturel — compenser en descendant encore plus loin derrière la tête.\nÉpaules fragiles ou antépulsion : commencer très léger et privilégier la sensation d'étirement plutôt que la charge.",
+morpho:"🫁 Cage plate ou étroite : exercice PRIORITAIRE — c'est l'un des seuls mouvements capable d'élargir la cage thoracique sur le long terme si pratiqué régulièrement avec une inspiration profonde. Intégrer systématiquement.\n🫁 Cage large/bombée : exercice utile pour le grand dorsal et les pectoraux mais l'effet d'expansion est moindre.\n🦴 Bras longs : amplitude naturellement grande — descendre progressivement pour éviter le stress à l'épaule.\n🦴 Bras courts : moins d'étirement naturel — compenser en descendant encore plus loin derrière la tête.\n📐 Épaules fragiles ou antépulsion : commencer très léger et privilégier la sensation d'étirement plutôt que la charge.",
 tips:["Bras légèrement fléchis et angle FIXE tout au long — ne jamais les plier davantage en cours de mouvement","Descendre le plus bas possible derrière la tête pour maximiser l'étirement thoracique","Inspirer profondément en bas et retenir l'air brièvement pour l'expansion costale","Remonter lentement en arc de cercle en soufflant progressivement","La sensation d'ouverture de la cage est le critère de qualité de l'exercice"],
 variantes:[
 {nom:"Pull-over en travers du banc",note:"Épaules seules posées, bassin bas — amplitude thoracique et étirement accrus",muscles:"Grand pectoral, grand dorsal, dentelé",niveau:"Intermédiaire"},
@@ -26,7 +26,7 @@ variantes:[
 erreurs:["Charger trop lourd — les épaules compensent et les pectoraux ne travaillent plus","Fléchir les coudes en cours de mouvement — l'exercice devient une extension des triceps","Amplitude insuffisante en bas — perte du bénéfice d'expansion thoracique","Vitesse trop rapide — c'est la sensation d'étirement qui produit les résultats"]},
 
 {n:"Écarté poulie basse croisée",s:"3",r:"12-15",rest:"60s",ch:"Léger-40%",cat:"isolation",mat:"poulie",
-morpho:" Bras longs : tension constante de la poulie est supérieure aux haltères car elle neutralise le désavantage biomécanique du bras long en bas du mouvement.\nBras courts : haltères ou poulie indifféremment, les deux fonctionnent bien.\nCage plate : angle bas (poulie au sol) pour cibler les fibres inférieures et donner du volume au bas des pecs.\nCage large : angle intermédiaire ou écarté haltères suffisent.\nAntépulsion épaules : vérifier que les omoplates restent rétractées tout au long — ne jamais laisser les épaules avancer.",
+morpho:"🦴 Bras longs : tension constante de la poulie est supérieure aux haltères car elle neutralise le désavantage biomécanique du bras long en bas du mouvement.\n🦴 Bras courts : haltères ou poulie indifféremment, les deux fonctionnent bien.\n🫁 Cage plate : angle bas (poulie au sol) pour cibler les fibres inférieures et donner du volume au bas des pecs.\n🫁 Cage large : angle intermédiaire ou écarté haltères suffisent.\n📐 Antépulsion épaules : vérifier que les omoplates restent rétractées tout au long — ne jamais laisser les épaules avancer.",
 tips:["Légère flexion des coudes fixe et constante tout au long — angle immuable","Contraction de 1-2 secondes en haut avant de redescendre — c'est là que le muscle travaille le plus","Angle de la poulie détermine la zone ciblée : bas = chef inférieur / horizontal = chef moyen / haut = chef supérieur","Trajectoire en arc de cercle — imaginer enserrer un tonneau avec les bras","La poussée vient de l'épaule et du pectoral, pas du bras"],
 variantes:[
 {nom:"Écarté poulie mi-hauteur",note:"Câbles à hauteur d'épaules — trajectoire horizontale ciblant la portion moyenne",muscles:"Pectoraux portion moyenne",niveau:"Débutant"},
@@ -36,7 +36,7 @@ variantes:[
 erreurs:["Trop lourd — les épaules compensent et les pectoraux ne sont plus mobilisés","Coudes qui changent d'angle en cours de mouvement — perd l'isolation","Croiser trop les bras en haut — perte de tension et stress articulaire inutile"]},
 
 {n:"Dips buste incliné",s:"4",r:"8-12",rest:"90s",ch:"Corps + lest",cat:"principal",mat:"poids de corps",
-morpho:" Bras longs : amplitude naturellement grande — descendre progressivement et contrôler soigneusement l'excentrique.\nBras courts : amplitude réduite — accentuer l'inclinaison du buste pour compenser.\nÉpaules fragiles / antépulsion : éviter ou remplacer par le développé haltères incliné — risque de conflit antérieur d'épaule.\nÉpaules saines et solides : excellent exercice polyarticulaire pour le bas des pectoraux.\nInclinaison = résultat : 15-20° en avant = pectoraux / buste vertical = triceps — ajuster selon l'objectif.",
+morpho:"🦴 Bras longs : amplitude naturellement grande — descendre progressivement et contrôler soigneusement l'excentrique.\n🦴 Bras courts : amplitude réduite — accentuer l'inclinaison du buste pour compenser.\n📐 Épaules fragiles / antépulsion : éviter ou remplacer par le développé haltères incliné — risque de conflit antérieur d'épaule.\n📐 Épaules saines et solides : excellent exercice polyarticulaire pour le bas des pectoraux.\n💡 Inclinaison = résultat : 15-20° en avant = pectoraux / buste vertical = triceps — ajuster selon l'objectif.",
 tips:["Incliner le buste vers l'avant de 15 à 20° pour cibler les pectoraux — plus d'inclinaison = moins de triceps","Descendre jusqu'à ce que les bras soient parallèles au sol minimum — amplitude complète","Excentrique 3 secondes, pause 1 seconde en bas, puis poussée explosive","Coudes légèrement écartés dans le plan du mouvement — pas serrés comme pour les triceps","Rentrer légèrement le menton pour garder l'alignement cervical"],
 variantes:[
 {nom:"Dips buste vertical prise serrée",note:"Buste droit, coudes qui restent près du corps — la charge bascule des pectoraux vers les triceps",muscles:"Triceps dominants",niveau:"Intermédiaire"},
@@ -46,7 +46,7 @@ variantes:[
 erreurs:["Descente insuffisante — amplitude partielle = développement partiel des pectoraux","Balancement du corps pour tricher avec l'élan","Les épaules qui remontent vers les oreilles en bas — risque articulaire","Poignets trop fléchis sous la prise — stress poignet"]},
 
 {n:"Développé couché barre",s:"4",r:"6-8",rest:"120s",ch:"75-80%",cat:"principal",mat:"barre",
-morpho:" Humérus courts + cage large : exercice idéal — amplitude courte, bon levier, charge maximale possible.\nHumérus longs : exercice difficile et risqué — la trajectoire fixe de la barre force un étirement excessif à l'épaule. Préférer les haltères si la moindre douleur apparaît.\nClavicules larges : peut créer un conflit sous-acromial — réduire légèrement l'écartement de la prise.\nClavicules courtes : exercice confortable et efficace.\nCage plate : amplitude grande en bas — attention au tendon du grand pectoral en position étirée.",
+morpho:"🦴 Humérus courts + cage large : exercice idéal — amplitude courte, bon levier, charge maximale possible.\n🦴 Humérus longs : exercice difficile et risqué — la trajectoire fixe de la barre force un étirement excessif à l'épaule. Préférer les haltères si la moindre douleur apparaît.\n📐 Clavicules larges : peut créer un conflit sous-acromial — réduire légèrement l'écartement de la prise.\n📐 Clavicules courtes : exercice confortable et efficace.\n🫁 Cage plate : amplitude grande en bas — attention au tendon du grand pectoral en position étirée.",
 tips:["Prise légèrement plus large que les épaules — ni trop large (épaules) ni trop serrée (triceps)","Rétracter les omoplates AVANT de débarrer la barre — position scapulaire clé","Descente contrôlée 2-3 secondes vers la poitrine basse (au niveau des mamelons)","Pont lombaire naturel maintenu — fesses sur le banc en permanence","Pousser la barre vers le haut ET légèrement vers la tête pour suivre la trajectoire naturelle"],
 variantes:[
 {nom:"Développé couché haltères",note:"Trajectoire libre et rotation des poignets possible — amplitude accrue et épaules préservées",muscles:"Pectoraux avec étirement accru",niveau:"Débutant"},
@@ -58,7 +58,7 @@ variantes:[
 erreurs:["Rebond de la barre sur la poitrine — risque de déchirure tendon du grand pectoral","Décoller les fesses du banc pour soulever plus lourd — invalidant la technique","Poignets fléchis sous la barre — risque de blessure au poignet","Prise trop large — amplifie le conflit sous-acromial"]},
 
 {n:"Écarté haltères plat",s:"3",r:"12-15",rest:"60s",ch:"Léger-40%",cat:"isolation",mat:"haltères",
-morpho:" Bras longs : excellente amplitude d'étirement en bas — poids modéré pour protéger les tendons en position étirée.\nBras courts : moins d'étirement naturel — descendre encore plus loin pour compenser.\nCage plate : combiné au pull-over pour maximiser l'expansion thoracique.\nL'étirement en bas est la clé de l'exercice — la contraction en haut est secondaire.",
+morpho:"🦴 Bras longs : excellente amplitude d'étirement en bas — poids modéré pour protéger les tendons en position étirée.\n🦴 Bras courts : moins d'étirement naturel — descendre encore plus loin pour compenser.\n🫁 Cage plate : combiné au pull-over pour maximiser l'expansion thoracique.\n💡 L'étirement en bas est la clé de l'exercice — la contraction en haut est secondaire.",
 tips:["Légère flexion des coudes fixe tout au long — ne jamais les plier davantage","Descendre jusqu'à ressentir un étirement profond dans les pectoraux","Remonter en arc de cercle comme si on enserrait un tonneau","Contraction 1s en haut avant de redescendre","Excentrique très lent 3-4s — c'est là que l'étirement travaille"],
 variantes:[
 {nom:"Écarté haltères incliné",note:"Banc à 30° — l'arc de cercle se déplace vers les fibres claviculaires",muscles:"Haut des pectoraux",niveau:"Débutant"},
@@ -68,7 +68,7 @@ variantes:[
 erreurs:["Trop lourd — les épaules compensent et les pecs ne travaillent plus","Plier les coudes en cours de mouvement — l'exercice devient un développé","Amplitude insuffisante en bas — perd le bénéfice de l'étirement"]},
 
 {n:"Pompes lestées",s:"4",r:"10-20",rest:"90s",ch:"Corps + lest",cat:"principal",mat:"poids de corps",
-morpho:" Tous morphotypes : exercice universel adapté à tous. Lester avec gilet ou sac si trop facile.\nBras longs : amplitude naturellement grande — descente lente et contrôlée indispensable.\nAntépulsion épaules : version mains larges plus adaptée que mains serrées.\nMains larges = pectoraux / mains à largeur épaules = équilibré / mains serrées = triceps + pec interne.",
+morpho:"🦴 Tous morphotypes : exercice universel adapté à tous. Lester avec gilet ou sac si trop facile.\n🦴 Bras longs : amplitude naturellement grande — descente lente et contrôlée indispensable.\n📐 Antépulsion épaules : version mains larges plus adaptée que mains serrées.\n💡 Mains larges = pectoraux / mains à largeur épaules = équilibré / mains serrées = triceps + pec interne.",
 tips:["Corps aligné de la tête aux talons — gainage actif","Descendre jusqu'à frôler le sol du torse","Coudes à 45° du corps — pas perpendiculaires","Poussée explosive en montant","Respiration : inspirer en descendant, expirer en poussant"],
 variantes:[
 {nom:"Pompes déficit sur poignées",note:"Mains surélevées sur poignées — la poitrine descend sous le niveau des mains, étirement maximal",muscles:"Pectoraux en amplitude complète",niveau:"Intermédiaire"},
@@ -78,7 +78,7 @@ variantes:[
 erreurs:["Hanches qui montent ou descendent — perd le gainage","Amplitude insuffisante — ne pas toucher le sol","Coudes perpendiculaires — conflit sous-acromial"]},
 
 {n:"Machine convergente pectoraux",s:"3",r:"12-15",rest:"60s",ch:"60-70%",cat:"isolation",mat:"machine",
-morpho:" Tous morphotypes : trajectoire guidée qui s'adapte à la plupart des morphologies.\nBras longs : très bonne option car la machine suit une trajectoire en arc naturel.\nCage plate : angle de la machine ajusté pour cibler les fibres claviculaires en priorité.\nIdéal pour débuter et apprendre la sensation de contraction pectorale.",
+morpho:"🦴 Tous morphotypes : trajectoire guidée qui s'adapte à la plupart des morphologies.\n🦴 Bras longs : très bonne option car la machine suit une trajectoire en arc naturel.\n🫁 Cage plate : angle de la machine ajusté pour cibler les fibres claviculaires en priorité.\n💡 Idéal pour débuter et apprendre la sensation de contraction pectorale.",
 tips:["Régler les bras à hauteur des épaules pour le chef moyen — plus bas pour le chef inférieur","Contraction maximale 2s en position fermée","Excentrique contrôlé 2-3s — résister à la machine","Coudes légèrement fléchis et fixes","Penser à pousser avec les pectoraux, pas avec les bras"],
 variantes:[
 {nom:"Développé machine verticale assis",note:"Poussée horizontale à trajectoire strictement guidée — isolation maximale sans équilibre",muscles:"Pectoraux portion moyenne",niveau:"Débutant"},
@@ -88,7 +88,7 @@ variantes:[
 erreurs:["Régler trop large — stress articulaire en position ouverte","Ne pas aller en extension complète — perd l'étirement","Trop de charge — les épaules avancent"]},
 
 {n:"Développé haltères décliné",s:"4",r:"10-12",rest:"75s",ch:"60-70%",cat:"principal",mat:"haltères",
-morpho:" Bras longs : haltères indispensables — même logique qu'en plat, rotation naturelle du poignet.\nCage plate : moins prioritaire que l'incliné — à ajouter une fois le pull-over intégré.\nCage large/épaisse : excellent pour finir le bas des pectoraux.\nLe décliné cible le chef sternal inférieur — donne l'aspect de la séparation pectorale.",
+morpho:"🦴 Bras longs : haltères indispensables — même logique qu'en plat, rotation naturelle du poignet.\n🫁 Cage plate : moins prioritaire que l'incliné — à ajouter une fois le pull-over intégré.\n🫁 Cage large/épaisse : excellent pour finir le bas des pectoraux.\n💡 Le décliné cible le chef sternal inférieur — donne l'aspect de la séparation pectorale.",
 tips:["Banc à 15-30° de déclin maximum — trop incliné = épaules","Omoplates rétractées et pressées sur le banc","Coudes à 45° du torse, jamais perpendiculaires","Contrôle excentrique 2-3s","Contraction maximale en haut sans verrouillage"],
 variantes:[
 {nom:"Développé décliné barre",note:"Version barre — charge supérieure sur une amplitude naturellement courte",muscles:"Bas des pectoraux, triceps",niveau:"Intermédiaire"},
@@ -98,7 +98,7 @@ variantes:[
 erreurs:["Trop de déclin : épaules et triceps dominent","Amplitude insuffisante en bas","Rebond"]},
 
 {n:"Câble croisé debout",s:"3",r:"15",rest:"60s",ch:"Léger",cat:"isolation",mat:"poulie",
-morpho:" Tous morphotypes : tension constante sur TOUT l'arc — supérieur aux haltères pour la contraction finale.\nCroiser les bras devant le sternum = contraction maximale des fibres internes. Ne pas dépasser la ligne médiane.",
+morpho:"🦴 Tous morphotypes : tension constante sur TOUT l'arc — supérieur aux haltères pour la contraction finale.\n💡 Croiser les bras devant le sternum = contraction maximale des fibres internes. Ne pas dépasser la ligne médiane.",
 tips:["Légère inclinaison du buste vers l'avant","Poignets légèrement fléchis vers l'intérieur en fin de mouvement","Contraction 2s au croisement","Excentrique lent 3s — résister à la tension","Garder la même légère flexion des coudes tout au long"],
 variantes:[
 {nom:"Croisé poulie mi-hauteur",note:"Câbles réglés à hauteur d'épaules — adduction horizontale pure",muscles:"Pectoraux portion moyenne",niveau:"Débutant"},
@@ -108,7 +108,7 @@ variantes:[
 erreurs:["Trop lourd — les épaules compensent","Pas de croisement en haut — perd la contraction maximale","Coudes qui bougent"]},
 
 {n:"Pompes bulgares (pieds surélevés)",s:"4",r:"15-20",rest:"60s",ch:"Corps",cat:"principal",mat:"poids de corps",
-morpho:" Tous morphotypes : pieds surélevés = angle développé incliné — cible le chef supérieur des pectoraux.\nPlus fonctionnel et accessible que la machine — force le gainage simultanément.",
+morpho:"🦴 Tous morphotypes : pieds surélevés = angle développé incliné — cible le chef supérieur des pectoraux.\n💡 Plus fonctionnel et accessible que la machine — force le gainage simultanément.",
 tips:["Pieds sur banc (30-40cm), mains à largeur des épaules","Corps en ligne droite — gainage actif tout au long","Descendre au maximum, menton vers le sol","Explosion à la montée","Variante avancée : lester avec gilet"],
 variantes:[
 {nom:"Pompes pieds surélevés prise large",note:"Mains bien au-delà des épaules — l'adduction domine, coudes plus sollicités en ouverture",muscles:"Pectoraux externes, haut des pectoraux",niveau:"Intermédiaire"},
@@ -118,7 +118,7 @@ variantes:[
 erreurs:["Hanches qui montent — perd le gainage","Amplitude insuffisante — ne touche pas le sol","Coudes perpendiculaires au torse"]},
 
 {n:"Pompes standards",s:"3-4",r:"10-20",rest:"60-90s",ch:"Corps",cat:"principal",mat:"poids de corps",
-morpho:" Tous morphotypes : exercice fondamental universel, échelle de progression complète du débutant à l'avancé.\nBras longs : amplitude naturellement grande — descente contrôlée 2-3s pour protéger l'épaule.\nCage plate/étroite : surélever les pieds pour recruter davantage les fibres claviculaires.\nProgression : pompes murales → genoux → standards → pieds surélevés → lestées.",
+morpho:"🦴 Tous morphotypes : exercice fondamental universel, échelle de progression complète du débutant à l'avancé.\n🦴 Bras longs : amplitude naturellement grande — descente contrôlée 2-3s pour protéger l'épaule.\n🫁 Cage plate/étroite : surélever les pieds pour recruter davantage les fibres claviculaires.\n💡 Progression : pompes murales → genoux → standards → pieds surélevés → lestées.",
 tips:["Corps aligné de la tête aux talons — bassin ni cambré ni relevé","Mains légèrement plus larges que les épaules, doigts vers l'avant","Coudes à 45° du torse pendant la descente — jamais perpendiculaires","Poitrine qui frôle le sol à chaque répétition","Gainage abdominal et fessier actif du début à la fin"],
 variantes:[
 {nom:"Pompes prise large",note:"Mains bien au-delà des épaules — course des coudes raccourcie, adduction d'épaule dominante",muscles:"Pectoraux externes",niveau:"Débutant"},
@@ -135,7 +135,7 @@ variantes:[
 erreurs:["Bassin qui s'affaisse — lombaires en danger","Amplitude partielle — la poitrine ne descend pas assez","Tête qui plonge vers le sol au lieu de rester alignée"]},
 
 {n:"Pompes archer",s:"3",r:"6-10/côté",rest:"90s",ch:"Corps",cat:"principal",mat:"poids de corps",
-morpho:" Bras longs : excellent transfert — le grand bras de levier renforce le travail unilatéral.\nBras courts : réduire l'écartement des mains pour garder une trajectoire confortable.\nDéséquilibre gauche/droite : exercice correctif de référence en poids de corps — chaque côté travaille quasi seul.\nÉtape clé vers la pompe à un bras.",
+morpho:"🦴 Bras longs : excellent transfert — le grand bras de levier renforce le travail unilatéral.\n🦴 Bras courts : réduire l'écartement des mains pour garder une trajectoire confortable.\n📐 Déséquilibre gauche/droite : exercice correctif de référence en poids de corps — chaque côté travaille quasi seul.\n💡 Étape clé vers la pompe à un bras.",
 tips:["Mains très écartées, pointées légèrement vers l'extérieur","Descendre vers une main, l'autre bras reste tendu comme un arc","Garder les hanches parallèles au sol — ne pas pivoter","Pousser fort sur le bras plié pour remonter au centre","Alterner les côtés ou faire toutes les reps d'un côté puis l'autre"],
 variantes:[
 {nom:"Pompe à un bras",note:"Le bras libre quitte le sol — l'aboutissement du travail unilatéral en poussée",muscles:"Pectoral, triceps, gainage anti-rotation",niveau:"Avancé",tips:["Écarter largement les jambes pour compenser la base réduite"]},
@@ -145,7 +145,7 @@ variantes:[
 erreurs:["Rotation du bassin vers le bras tendu","Bras tendu qui plie et vole du travail","Amplitude réduite par peur de l'instabilité"]},
 
 {n:"Développé élastique debout",s:"4",r:"12-15",rest:"60s",ch:"Élastique moyen/fort",cat:"principal",mat:"élastique",
-morpho:" Humérus longs : trajectoire totalement libre — aucun conflit sous-acromial contrairement à la barre.\nÉpaules fragiles : la résistance progressive de l'élastique décharge le point bas, zone la plus risquée.\nTous types de cage : l'angle de poussée s'ajuste librement selon la morphologie.\nRésistance croissante = contraction maximale en fin de mouvement, idéal pour la connexion neuromusculaire.",
+morpho:"🦴 Humérus longs : trajectoire totalement libre — aucun conflit sous-acromial contrairement à la barre.\n🦴 Épaules fragiles : la résistance progressive de l'élastique décharge le point bas, zone la plus risquée.\n🫁 Tous types de cage : l'angle de poussée s'ajuste librement selon la morphologie.\n💡 Résistance croissante = contraction maximale en fin de mouvement, idéal pour la connexion neuromusculaire.",
 tips:["Élastique ancré derrière le dos ou dans un ancrage à hauteur d'épaules","Pousser vers l'avant en rapprochant légèrement les mains en fin de course","Buste gainé, léger pas d'écart pour la stabilité","Résister au retour 2-3s — l'excentrique est la clé avec l'élastique","Choisir une tension qui rend les 3 dernières reps difficiles"],
 variantes:[
 {nom:"Développé élastique unilatéral",note:"Un bras à la fois — le buste lutte contre la rotation à chaque poussée",muscles:"Pectoral ciblé, obliques",niveau:"Intermédiaire"},
@@ -156,7 +156,7 @@ variantes:[
 erreurs:["Élastique trop faible — aucune tension en début de mouvement","Épaules qui remontent vers les oreilles","Buste qui pivote pendant la poussée"]},
 
 {n:"Écarté élastique debout",s:"3",r:"15-20",rest:"45-60s",ch:"Élastique léger/moyen",cat:"isolation",mat:"élastique",
-morpho:" Bras longs : bras de levier important — rester sur élastique léger et amplitude contrôlée.\nCage plate : ancrage bas et écarté montant pour cibler les fibres claviculaires.\nÉpaules enroulées : ouvrir grand en phase excentrique étire les pectoraux raides.\nTension constante impossible à obtenir avec des haltères en fin de course.",
+morpho:"🦴 Bras longs : bras de levier important — rester sur élastique léger et amplitude contrôlée.\n🫁 Cage plate : ancrage bas et écarté montant pour cibler les fibres claviculaires.\n📐 Épaules enroulées : ouvrir grand en phase excentrique étire les pectoraux raides.\n💡 Tension constante impossible à obtenir avec des haltères en fin de course.",
 tips:["Coudes légèrement fléchis et verrouillés dans cet angle","Rapprocher les mains devant le sternum en serrant les pectoraux","Contraction volontaire 1-2s bras rapprochés","Contrôler le retour — ne jamais laisser l'élastique claquer","Varier la hauteur d'ancrage pour cibler haut, milieu ou bas des pectoraux"],
 variantes:[
 {nom:"Écarté élastique ancrage haut",note:"Trajectoire descendante des mains — fibres abdominales du pectoral",muscles:"Bas des pectoraux",niveau:"Débutant"},
@@ -166,7 +166,7 @@ variantes:[
 erreurs:["Plier les coudes pendant le mouvement — devient un développé","Trop de tension — amplitude sacrifiée","Épaules qui partent en avant en fin de contraction"]},
 
 {n:"Pompes sur bosu",s:"3",r:"8-15",rest:"60-90s",ch:"Corps",cat:"gainage",mat:"bosu",
-morpho:" Tous morphotypes : le recrutement des stabilisateurs (coiffe des rotateurs, dentelé) profite à toutes les structures.\nPoignets sensibles : mains sur les bords du dôme retourné = position neutre du poignet, souvent plus confortable.\nÉpaules instables : renforcement proprioceptif ciblé — usage correctif avant retour aux charges lourdes.\nL'instabilité réduit la charge maximale : c'est un outil de stabilité et de rééducation, pas de force max.",
+morpho:"🦴 Tous morphotypes : le recrutement des stabilisateurs (coiffe des rotateurs, dentelé) profite à toutes les structures.\n🦴 Poignets sensibles : mains sur les bords du dôme retourné = position neutre du poignet, souvent plus confortable.\n📐 Épaules instables : renforcement proprioceptif ciblé — usage correctif avant retour aux charges lourdes.\n💡 L'instabilité réduit la charge maximale : c'est un outil de stabilité et de rééducation, pas de force max.",
 tips:["Bosu côté plat vers le haut, mains sur les bords de la plateforme","Descendre plus lentement qu'une pompe classique — 3s","Gainage total : le bosu révèle immédiatement toute perte d'alignement","Stabiliser 1s en haut avant la répétition suivante","Maîtriser les pompes standards avant de passer à l'instable"],
 variantes:[
 {nom:"Pompes bosu dôme vers le haut",note:"Mains sur le dôme souple — instabilité modérée, bon point d'entrée",muscles:"Pectoraux, stabilisateurs",niveau:"Intermédiaire"},
@@ -176,7 +176,7 @@ variantes:[
 erreurs:["Vitesse trop élevée — l'instabilité devient dangereuse","Bassin qui compense les oscillations","Passer au bosu sans maîtriser les pompes au sol"]},
 
 {n:"Écarté TRX (chest fly)",s:"3",r:"8-12",rest:"90s",ch:"Corps (angle réglable)",cat:"principal",mat:"TRX",
-morpho:" Bras longs : étirement profond en position ouverte — descendre progressivement, le levier est très défavorable.\nÉpaules saines requises : forte contrainte en position étirée, réserver aux pratiquants sans antécédent.\nCharge auto-ajustable : plus les pieds avancent sous l'ancrage, plus c'est dur — précision impossible avec des haltères.\nUn des rares exercices poids de corps qui reproduit l'écarté avec étirement complet.",
+morpho:"🦴 Bras longs : étirement profond en position ouverte — descendre progressivement, le levier est très défavorable.\n🦴 Épaules saines requises : forte contrainte en position étirée, réserver aux pratiquants sans antécédent.\n📐 Charge auto-ajustable : plus les pieds avancent sous l'ancrage, plus c'est dur — précision impossible avec des haltères.\n💡 Un des rares exercices poids de corps qui reproduit l'écarté avec étirement complet.",
 tips:["Corps rigide en planche inclinée, sangles tendues en permanence","Ouvrir les bras en arc jusqu'à l'étirement des pectoraux","Coudes légèrement fléchis, angle constant tout le mouvement","Refermer en serrant les pectoraux comme pour écraser un ballon","Régler la difficulté en avançant ou reculant les pieds"],
 variantes:[
 {nom:"Développé TRX (push-up sangles)",note:"Poussée bras qui fléchissent — la version pressée, plus accessible que l'écarté",muscles:"Pectoraux, triceps",niveau:"Intermédiaire"},
@@ -188,7 +188,7 @@ erreurs:["Descendre trop bas dès les premières séances — épaule en danger"
 
 "Dos":[
 {n:"Tractions pronation prise large",s:"4",r:"6-10",rest:"120s",ch:"Corps + lest",cat:"principal",mat:"poids de corps",
-morpho:" Clavicules larges : avantage mécanique majeur sur les tractions — la largeur naturelle des épaules crée un levier favorable pour l'écartement dorsal.\nClavicules étroites : réduire légèrement la prise pour garder une trajectoire confortable.\nBras longs : étirement dorsal maximal en bas du mouvement — grande amplitude naturelle.\nBras courts : moins d'étirement en bas — compenser par une extension quasi-complète avant chaque répétition.\nMoins de 5 tractions propres : commencer par le tirage poulie haute avec exactement le même pattern, puis progresser vers les tractions.",
+morpho:"📐 Clavicules larges : avantage mécanique majeur sur les tractions — la largeur naturelle des épaules crée un levier favorable pour l'écartement dorsal.\n📐 Clavicules étroites : réduire légèrement la prise pour garder une trajectoire confortable.\n🦴 Bras longs : étirement dorsal maximal en bas du mouvement — grande amplitude naturelle.\n🦴 Bras courts : moins d'étirement en bas — compenser par une extension quasi-complète avant chaque répétition.\n💡 Moins de 5 tractions propres : commencer par le tirage poulie haute avec exactement le même pattern, puis progresser vers les tractions.",
 tips:["Initier le mouvement par la DÉPRESSION des omoplates vers les hanches AVANT de plier les coudes — règle fondamentale","Tirer les coudes vers les hanches, pas les mains vers soi — le dos travaille, pas les biceps","Excentrique 3-4 secondes pour maximiser le recrutement des dorsaux","Straps si la prise lâche avant les dorsaux — prioriser le muscle cible","Regarder légèrement vers le haut pour une trajectoire optimale"],
 variantes:[
 {nom:"Tractions supination (chin-up)",note:"Paumes vers soi — les biceps participent pleinement, le coude fléchit dans un plan plus favorable",muscles:"Grand dorsal, biceps",niveau:"Débutant"},
@@ -203,7 +203,7 @@ variantes:[
 erreurs:["Tirer avec les bras sans dépression scapulaire initiale — biceps dominent, dorsaux sous-sollicités","Amplitude partielle en bas — ne pas profiter de l'étirement qui active les dorsaux","Balancement du corps pour se propulser — exclut l'adaptation musculaire","Traction derrière la nuque : risque cervical et sous-acromial grave — à proscrire absolument"]},
 
 {n:"Rowing haltère unilatéral",s:"4",r:"10-12",rest:"60s",ch:"60-70%",cat:"principal",mat:"haltères",
-morpho:" Bras longs : amplitude de tirage naturellement plus grande qu'avec la barre — exploiter pleinement l'étirement en bas.\nBras courts : plier davantage le coude en haut pour atteindre la contraction maximale.\nAsymétries : exercice idéal pour corriger les déséquilibres gauche/droite — commencer toujours par le côté faible.\nTirage coude vers la hanche = grand dorsal / Tirage coude vers le plafond = trapèzes moyens — ajuster selon la zone à développer.",
+morpho:"🦴 Bras longs : amplitude de tirage naturellement plus grande qu'avec la barre — exploiter pleinement l'étirement en bas.\n🦴 Bras courts : plier davantage le coude en haut pour atteindre la contraction maximale.\n📐 Asymétries : exercice idéal pour corriger les déséquilibres gauche/droite — commencer toujours par le côté faible.\n🔩 Tirage coude vers la hanche = grand dorsal / Tirage coude vers le plafond = trapèzes moyens — ajuster selon la zone à développer.",
 tips:["Focus sur le COUDE qui remonte vers la hanche — penser à l'épaule qui descend, pas à la main qui monte","Amplitude complète : étirement maximal en bas, contraction forte en haut avec pause 1 seconde","Ne pas pivoter le buste — seul le bras travaille, le dos reste immobile","Genou et main ipsilatérale appuyés sur le banc pour une stabilité lombaire maximale","Excentrique contrôlé 2-3 secondes avant la prochaine répétition"],
 variantes:[
 {nom:"Rowing haltère coude ouvert",note:"Coude écarté à 60-80° du buste — le tirage remonte vers le haut du dos",muscles:"Trapèzes moyens, deltoïde postérieur",niveau:"Débutant"},
@@ -213,7 +213,7 @@ variantes:[
 erreurs:["Rotation excessive du buste — les lombaires travaillent, pas le dos","Amplitude partielle en haut ou en bas — perd les bénéfices de l'exercice","Coudes trop écartés — les trapèzes prennent le dessus sur les dorsaux","Vitesse trop rapide — perte totale du contrôle excentrique"]},
 
 {n:"Tirage poulie haute prise large",s:"4",r:"10-12",rest:"90s",ch:"60%",cat:"principal",mat:"poulie",
-morpho:" Bras courts : exercice très efficace — moins de fatigue des biceps que les tractions, angle et charge facilement ajustables.\nBras longs : préférer les tractions ou réduire légèrement la prise pour une meilleure trajectoire.\nÉpaules fragiles : exercice plus sûr que les tractions — charge contrôlable à tout moment.\nTous morphotypes : prise pronation large = grand dorsal / prise serrée neutre = grand rond + teres major.",
+morpho:"🦴 Bras courts : exercice très efficace — moins de fatigue des biceps que les tractions, angle et charge facilement ajustables.\n🦴 Bras longs : préférer les tractions ou réduire légèrement la prise pour une meilleure trajectoire.\n📐 Épaules fragiles : exercice plus sûr que les tractions — charge contrôlable à tout moment.\n🫁 Tous morphotypes : prise pronation large = grand dorsal / prise serrée neutre = grand rond + teres major.",
 tips:["Légère inclinaison du buste en arrière (10-15°) pour une trajectoire descendante naturelle","Tirer vers la clavicule — pas vers le sternum ni derrière la nuque","Contraction des dorsaux en position basse avant l'excentrique — ne pas relâcher immédiatement","Contrôle excentrique lent 2-3 secondes","Maintenir les coudes sous les mains tout au long du mouvement"],
 variantes:[
 {nom:"Tirage prise neutre serrée (V-bar)",note:"Coudes devant le corps, amplitude allongée — les fibres basses du dorsal dominent",muscles:"Grand dorsal (portion basse)",niveau:"Débutant"},
@@ -224,7 +224,7 @@ variantes:[
 erreurs:["Tirer derrière la nuque — risque cervical et sous-acromial grave, à proscrire","Élan du corps pour compenser la fatigue en fin de série","Coudes qui remontent trop haut — les épaules prennent le relais sur les dorsaux","Ne pas aller en extension quasi-complète en haut — perd l'étirement activateur"]},
 
 {n:"Face pull poulie haute corde",s:"4",r:"15-20",rest:"45s",ch:"Léger",cat:"correctif",mat:"poulie",
-morpho:" Antépulsion d'épaules (épaules qui partent en avant) : exercice CORRECTIF PRIORITAIRE — renforce les rotateurs externes et le deltoïde postérieur systématiquement sous-développés. À intégrer en début de séance de tirage ET en fin de séance de poussée.\nÉpaules équilibrées : exercice préventif excellent — maintenir l'équilibre antérieur/postérieur.\nTous morphotypes : exercice universel adapté à toutes les configurations. La charge doit rester très légère.",
+morpho:"📐 Antépulsion d'épaules (épaules qui partent en avant) : exercice CORRECTIF PRIORITAIRE — renforce les rotateurs externes et le deltoïde postérieur systématiquement sous-développés. À intégrer en début de séance de tirage ET en fin de séance de poussée.\n📐 Épaules équilibrées : exercice préventif excellent — maintenir l'équilibre antérieur/postérieur.\n🦴 Tous morphotypes : exercice universel adapté à toutes les configurations. La charge doit rester très légère.",
 tips:["Tirer vers le front — coudes hauts à hauteur des oreilles voire légèrement au-dessus","Rotation externe maximale à la fin : doigts qui pointent vers le plafond","Poids TRÈS léger — c'est la rotation externe qui produit le résultat, pas la charge","Séparer les cordes au maximum en fin de mouvement pour l'ouverture scapulaire","2 secondes de contraction en fin de mouvement pour l'effet correctif maximal"],
 variantes:[
 {nom:"Face pull poulie basse montant",note:"Tirage en diagonale du bas vers le visage — les trapèzes inférieurs entrent dans l'équation",muscles:"Trapèzes inférieurs, deltoïde postérieur",niveau:"Débutant"},
@@ -233,7 +233,7 @@ variantes:[
 erreurs:["Trop lourd — le dos et les trapèzes prennent le relais, les rotateurs ne travaillent pas","Coudes qui descendent sous les épaules — perd la rotation externe","Ne pas terminer la rotation externe — exercice incomplet et inefficace","Buste qui se penche en arrière pour compenser le poids"]},
 
 {n:"Rowing barre 45°",s:"4",r:"8-10",rest:"90s",ch:"65%",cat:"principal",mat:"barre",
-morpho:" Fémurs longs : difficile de maintenir la position sans compenser avec le bas du dos — préférer le chest supported row ou le rowing haltère.\nFémurs courts : exercice confortable, bonne position naturelle.\nTirage vers le nombril = dorsaux prioritaires / Tirage vers la poitrine = trapèzes moyens et rhomboïdes — à adapter selon la zone à développer.\nAntépulsion épaules : veiller à ne jamais laisser les épaules rouler en avant pendant l'excentrique.",
+morpho:"🦴 Fémurs longs : difficile de maintenir la position sans compenser avec le bas du dos — préférer le chest supported row ou le rowing haltère.\n🦴 Fémurs courts : exercice confortable, bonne position naturelle.\n🔩 Tirage vers le nombril = dorsaux prioritaires / Tirage vers la poitrine = trapèzes moyens et rhomboïdes — à adapter selon la zone à développer.\n📐 Antépulsion épaules : veiller à ne jamais laisser les épaules rouler en avant pendant l'excentrique.",
 tips:["Lordose naturelle maintenue ABSOLUMENT — le risque lombaire est majeur si le dos s'arrondit","Barbell tracé vers le nombril pour cibler les dorsaux en priorité","Cheating contrôlé acceptable uniquement en toute fin de série, jamais au début","Excentrique 2-3 secondes pour maximiser le recrutement musculaire","Visualiser les coudes qui remontent vers les hanches — pas les mains vers la poitrine"],
 variantes:[
 {nom:"Rowing Pendlay",note:"La barre repose au sol entre chaque répétition, buste horizontal — explosivité et remise à zéro du dos",muscles:"Dos complet, érecteurs",niveau:"Avancé"},
@@ -244,7 +244,7 @@ variantes:[
 erreurs:["Arrondir le dos sous la charge — blessure lombaire grave et immédiate","Élan excessif dès le début de la série — annule le travail musculaire","Tirage trop haut vers le menton — les trapèzes supérieurs dominent","Amplitude partielle — ne profite pas de l'étirement en bas"]},
 
 {n:"Pull-over poulie basse debout",s:"3",r:"12-15",rest:"60s",ch:"Léger",cat:"isolation",mat:"poulie",
-morpho:" Tous morphotypes : tension constante sur tout l'arc de mouvement — supérieur au pull-over haltère pour cibler le grand dorsal.\nBras longs : amplitude maximale vers le haut — exploiter la longueur naturelle.\nÉpaules fragiles : version plus douce que les tirages — charge légère et contrôlée.\nGrand dorsal court : excellent exercice pour sentir le grand dorsal travailler en étirement complet.",
+morpho:"🦴 Tous morphotypes : tension constante sur tout l'arc de mouvement — supérieur au pull-over haltère pour cibler le grand dorsal.\n🦴 Bras longs : amplitude maximale vers le haut — exploiter la longueur naturelle.\n📐 Épaules fragiles : version plus douce que les tirages — charge légère et contrôlée.\n🫁 Grand dorsal court : excellent exercice pour sentir le grand dorsal travailler en étirement complet.",
 tips:["Bras tendus ou légèrement fléchis — angle fixe tout au long","Tirer vers les cuisses en expirant progressivement","Amplitude maximale vers le haut pour l'étirement complet du grand dorsal","Légère inclinaison du buste vers l'avant pour une meilleure activation","Contraction 1 seconde en bas avant de remonter lentement"],
 variantes:[
 {nom:"Pull-over poulie à la corde",note:"Prise neutre sur corde — rotation libre des poignets et contraction finale plus marquée",muscles:"Grand dorsal",niveau:"Débutant"},
@@ -253,7 +253,7 @@ variantes:[
 erreurs:["Trop fléchir les coudes en cours de mouvement — les triceps prennent le travail","Amplitude insuffisante vers le haut — perd l'étirement activateur","Buste qui compense par flexion excessive du tronc"]},
 
 {n:"Soulevé de terre roumain",s:"4",r:"6-8",rest:"120s",ch:"75-80%",cat:"principal",mat:"barre",
-morpho:" Fémurs courts : exercice confortable — position naturellement verticale, bon levier.\nFémurs longs : difficile de garder le dos plat — Romanian deadlift haltères ou trap bar recommandés.\nChaîne postérieure complète : grand dorsal + trapèzes + érecteurs + ischios + fessiers — l'exercice le plus complet de la musculation.",
+morpho:"🦴 Fémurs courts : exercice confortable — position naturellement verticale, bon levier.\n🦴 Fémurs longs : difficile de garder le dos plat — Romanian deadlift haltères ou trap bar recommandés.\n💪 Chaîne postérieure complète : grand dorsal + trapèzes + érecteurs + ischios + fessiers — l'exercice le plus complet de la musculation.",
 tips:["Lordose naturelle OBLIGATOIRE — si le dos s'arrondit, charge trop lourde","Barre au ras des tibias sur tout le trajet — ne pas l'éloigner du corps","Pieds à largeur des hanches, prise en pronation ou mixte","Engagement des dorsaux avant de tirer — penser à rentrer les omoplates","Poussée des jambes dans le sol plutôt que tirage vers le haut"],
 variantes:[
 {nom:"Soulevé de terre classique",note:"Départ barre au sol, genoux plus fléchis — les quadriceps participent au décollage",muscles:"Chaîne postérieure complète, quadriceps",niveau:"Intermédiaire"},
@@ -265,7 +265,7 @@ variantes:[
 erreurs:["Arrondir le dos — blessure lombaire certaine","Barre qui s'éloigne du corps — levier défavorable","Hyperextension lombaire en haut — verrouiller les hanches suffit"]},
 
 {n:"Tirage horizontal câble assis",s:"4",r:"10-12",rest:"75s",ch:"65%",cat:"principal",mat:"poulie",
-morpho:" Fémurs longs : meilleure option que le rowing barre car la position assise neutralise les compensations du bas du dos.\nTous morphotypes : exercice complet pour les dorsaux moyens et inférieurs.\nPrise serrée neutre = grand dorsal + grand rond / prise large = trapèzes moyens + rhomboïdes.",
+morpho:"🦴 Fémurs longs : meilleure option que le rowing barre car la position assise neutralise les compensations du bas du dos.\n🦴 Tous morphotypes : exercice complet pour les dorsaux moyens et inférieurs.\n🔩 Prise serrée neutre = grand dorsal + grand rond / prise large = trapèzes moyens + rhomboïdes.",
 tips:["Dos droit, légère inclinaison arrière en tirant — pas de bascule excessive","Tirer vers le nombril avec les coudes bien le long du corps","Etirement complet en avant — laisser les omoplates s'écarter","Contraction maximale en fin de mouvement — serrer les omoplates","Excentrique contrôlé 2-3s"],
 variantes:[
 {nom:"Tirage horizontal prise large pronation",note:"Barre large, coudes ouverts vers la poitrine — épaisseur du haut du dos",muscles:"Trapèzes moyens, deltoïde postérieur",niveau:"Débutant"},
@@ -275,7 +275,7 @@ variantes:[
 erreurs:["Bascule excessive du buste pour prendre de l'élan","Coudes trop écartés — trapèzes supérieurs dominent","Amplitude insuffisante en avant — perd l'étirement activateur"]},
 
 {n:"Tractions supination",s:"4",r:"6-10",rest:"120s",ch:"Corps + lest",cat:"principal",mat:"poids de corps",
-morpho:" Bras longs : meilleur recrutement biceps qui aide à compléter le mouvement malgré la longueur.\nBras courts : biceps moins impliqués — dorsaux plus isolés.\nClavicules larges : prise légèrement plus étroite que les tractions pronation pour optimiser la trajectoire.\nHybride biceps + grand dorsal — plus accessible que les tractions pronation pour progresser.",
+morpho:"🦴 Bras longs : meilleur recrutement biceps qui aide à compléter le mouvement malgré la longueur.\n🦴 Bras courts : biceps moins impliqués — dorsaux plus isolés.\n📐 Clavicules larges : prise légèrement plus étroite que les tractions pronation pour optimiser la trajectoire.\n💡 Hybride biceps + grand dorsal — plus accessible que les tractions pronation pour progresser.",
 tips:["Prise supination à largeur des épaules ou légèrement plus étroite","Initier par la dépression scapulaire avant de plier les coudes","Tirer les coudes vers les hanches — pas vers l'arrière","Chin above bar = amplitude complète — ne pas tricher avec un demi-mouvement","Excentrique 3-4s"],
 variantes:[
 {nom:"Tractions prise neutre",note:"Paumes face à face — coudes et poignets dans leur plan le plus naturel",muscles:"Dorsaux, brachial",niveau:"Débutant"},
@@ -285,7 +285,7 @@ variantes:[
 erreurs:["Amplitude partielle — menton doit dépasser la barre","Balancement pour se propulser","Ne pas aller en extension complète en bas"]},
 
 {n:"Deadlift roumain barre",s:"4",r:"6-8",rest:"120s",ch:"70-80%",cat:"principal",mat:"barre",
-morpho:" Fémurs courts : exercice confortable — levier naturellement bon.\nFémurs longs : amplitude plus grande — descendre prudement et surveiller la lordose.\nLe grand dorsal est fortement activé comme stabilisateur. L'exercice le plus complet pour la chaîne postérieure.",
+morpho:"🦴 Fémurs courts : exercice confortable — levier naturellement bon.\n🦴 Fémurs longs : amplitude plus grande — descendre prudement et surveiller la lordose.\n💪 Le grand dorsal est fortement activé comme stabilisateur. L'exercice le plus complet pour la chaîne postérieure.",
 tips:["Lordose naturelle OBLIGATOIRE — si dos arrondi : trop lourd","Barre rase les tibias sur tout le trajet","Descendre jusqu'à mi-tibia maximum","Genoux légèrement fléchis et FIXES","Monter en poussant les hanches vers l'avant"],
 variantes:[
 {nom:"Romanian deadlift haltères",note:"Deux haltères le long des cuisses — trajectoire libre qui longe les jambes",muscles:"Ischios, fessiers",niveau:"Débutant"},
@@ -295,7 +295,7 @@ variantes:[
 erreurs:["Arrondir le dos — blessure certaine","Barre qui s'éloigne du corps","Hyperextension lombaire en haut"]},
 
 {n:"Tirage coude au corps poulie basse",s:"4",r:"12-15",rest:"60s",ch:"Modéré",cat:"isolation",mat:"poulie",
-morpho:" Tous morphotypes : cible le grand dorsal inférieur et les lombaires basses.\nTirage vers le ventre coudes serrés = grand dorsal pur. Un des meilleurs exercices de finition dorsale.",
+morpho:"🦴 Tous morphotypes : cible le grand dorsal inférieur et les lombaires basses.\n💡 Tirage vers le ventre coudes serrés = grand dorsal pur. Un des meilleurs exercices de finition dorsale.",
 tips:["Assis droit, dos légèrement incliné arrière en fin de mouvement","Coudes serrés le long du corps — pas écartés","Contraction maximale et scapulaire en fin de mouvement","Etirement complet — laisser les omoplates s'écarter","Excentrique 2-3s"],
 variantes:[
 {nom:"Tirage coude au corps unilatéral",note:"Une poignée — rotation du buste contrôlée et étirement complet du dorsal",muscles:"Dorsal ciblé",niveau:"Débutant"},
@@ -304,7 +304,7 @@ variantes:[
 erreurs:["Balancement du buste","Coudes trop écartés — trapèzes dominent","Amplitude insuffisante"]},
 
 {n:"Traction lestée prise neutre",s:"4",r:"6-8",rest:"120s",ch:"Corps + lest",cat:"principal",mat:"poids de corps",
-morpho:" Bras longs : prise neutre = meilleure tolérance articulaire à l'épaule — à privilégier si inconfort en pronation.\nÉpaules fragiles : la prise neutre réduit significativement le conflit sous-acromial par rapport à la prise large.",
+morpho:"🦴 Bras longs : prise neutre = meilleure tolérance articulaire à l'épaule — à privilégier si inconfort en pronation.\n📐 Épaules fragiles : la prise neutre réduit significativement le conflit sous-acromial par rapport à la prise large.",
 tips:["Même initiation que les tractions : dépression scapulaire avant de plier les coudes","Tirer les coudes vers les hanches","Menton au-dessus des mains minimum","Excentrique 3-4s","Barre d'haltères ou poignées parallèles si disponible"],
 variantes:[
 {nom:"Traction lestée pronation",note:"Paumes vers l'avant sous charge — le schéma de force pur sur les dorsaux",muscles:"Grand dorsal, grand rond",niveau:"Avancé"},
@@ -313,7 +313,7 @@ variantes:[
 erreurs:["Amplitude partielle","Balancement pour se propulser","Ne pas aller en extension en bas"]},
 
 {n:"Shrug barre derrière le dos",s:"4",r:"15",rest:"60s",ch:"Lourd",cat:"isolation",mat:"barre",
-morpho:" Tous morphotypes : trapèzes supérieurs + moyens.\nLa position derrière le dos modifie légèrement l'angle d'activation — cible davantage les fibres moyennes des trapèzes que le shrug classique.",
+morpho:"🦴 Tous morphotypes : trapèzes supérieurs + moyens.\n💡 La position derrière le dos modifie légèrement l'angle d'activation — cible davantage les fibres moyennes des trapèzes que le shrug classique.",
 tips:["Barre derrière les cuisses, prise pronation","Mouvement VERTICAL UNIQUEMENT — pas de rotation","Contraction 1-2s en haut","Descente lente — étirement complet","Utiliser des straps si la prise est limitante"],
 variantes:[
 {nom:"Shrug barre devant",note:"Barre devant les cuisses — position classique, trajectoire verticale simple",muscles:"Trapèzes supérieurs",niveau:"Débutant"},
@@ -322,7 +322,7 @@ variantes:[
 erreurs:["Rotation des épaules","Amplitude insuffisante en bas","Utiliser l'élan des jambes"]},
 
 {n:"Rowing inversé (body row)",s:"3-4",r:"8-15",rest:"90s",ch:"Corps (angle réglable)",cat:"principal",mat:"poids de corps",
-morpho:" Bras longs : le meilleur point d'entrée vers les tractions — amplitude complète sans la charge du corps entier.\nLombaires fragiles : alternative au rowing barre sans aucune compression vertébrale.\nProgression naturelle : plus le corps est horizontal, plus c'est dur — réglage au centimètre.\nRatio tirage/poussée déséquilibré chez la plupart des pratiquants : cet exercice corrige la balance posturale.",
+morpho:"🦴 Bras longs : le meilleur point d'entrée vers les tractions — amplitude complète sans la charge du corps entier.\n🦴 Lombaires fragiles : alternative au rowing barre sans aucune compression vertébrale.\n📐 Progression naturelle : plus le corps est horizontal, plus c'est dur — réglage au centimètre.\n💡 Ratio tirage/poussée déséquilibré chez la plupart des pratiquants : cet exercice corrige la balance posturale.",
 tips:["Barre fixe à hauteur de hanches ou anneaux/table solide","Corps rigide comme une planche des talons à la tête","Tirer la poitrine vers la barre en serrant les omoplates","Pause 1s en haut, coudes le long du corps","Descendre en 2-3s sans casser le gainage"],
 variantes:[
 {nom:"Rowing inversé supination",note:"Paumes vers soi — biceps engagés, coudes qui longent le corps",muscles:"Dorsaux, biceps",niveau:"Débutant"},
@@ -333,7 +333,7 @@ variantes:[
 erreurs:["Bassin qui s'affaisse pendant la série","Tirer avec les bras sans rétracter les omoplates","Amplitude partielle — la poitrine ne touche pas la barre"]},
 
 {n:"Rowing élastique assis",s:"4",r:"12-15",rest:"60s",ch:"Élastique moyen/fort",cat:"principal",mat:"élastique",
-morpho:" Bras longs : trajectoire libre — les coudes trouvent naturellement leur couloir contrairement aux machines guidées.\nLombaires sensibles : position assise jambes tendues = zéro cisaillement lombaire si le buste reste vertical.\nDos rond chronique : la résistance croissante force la rétraction scapulaire complète en fin de tirage.\nRéplique fidèle du tirage horizontal câble, transportable partout.",
+morpho:"🦴 Bras longs : trajectoire libre — les coudes trouvent naturellement leur couloir contrairement aux machines guidées.\n🦴 Lombaires sensibles : position assise jambes tendues = zéro cisaillement lombaire si le buste reste vertical.\n📐 Dos rond chronique : la résistance croissante force la rétraction scapulaire complète en fin de tirage.\n💡 Réplique fidèle du tirage horizontal câble, transportable partout.",
 tips:["Assis jambes semi-tendues, élastique autour des pieds","Buste vertical et fixe — seuls les bras et omoplates bougent","Tirer les coudes vers l'arrière en serrant les omoplates","Contraction 1-2s en position finale","Retour contrôlé 2-3s en résistant à l'élastique"],
 variantes:[
 {nom:"Rowing élastique unilatéral",note:"Un bras à la fois — anti-rotation du tronc et correction d'asymétrie",muscles:"Dorsal ciblé, obliques",niveau:"Débutant"},
@@ -343,7 +343,7 @@ variantes:[
 erreurs:["Buste qui balance d'avant en arrière pour tricher","Épaules qui remontent vers les oreilles","Élastique détendu en début de mouvement — tension nulle"]},
 
 {n:"Tirage vertical élastique",s:"4",r:"12-15",rest:"60s",ch:"Élastique fort",cat:"principal",mat:"élastique",
-morpho:" Bras longs : simulateur de traction avec charge réduite — construit le schéma moteur exact.\nÉpaules raides : l'élastique pardonne les trajectoires imparfaites, contrairement à la barre de tirage guidée.\nGrand dorsal dominant recherché : ancrage haut + tirage coudes vers les hanches = activation maximale.\nComplément idéal aux tractions les jours de fatigue ou en fin de séance.",
+morpho:"🦴 Bras longs : simulateur de traction avec charge réduite — construit le schéma moteur exact.\n🦴 Épaules raides : l'élastique pardonne les trajectoires imparfaites, contrairement à la barre de tirage guidée.\n📐 Grand dorsal dominant recherché : ancrage haut + tirage coudes vers les hanches = activation maximale.\n💡 Complément idéal aux tractions les jours de fatigue ou en fin de séance.",
 tips:["Élastique ancré en hauteur (porte, barre fixe)","À genoux ou assis, tirer les coudes vers les hanches","Penser à tirer avec les coudes, pas avec les mains","Serrer les omoplates vers le bas et l'arrière en fin de tirage","Excentrique lent 3s — laisser l'étirement complet en haut"],
 variantes:[
 {nom:"Traction assistée élastique",note:"Bande accrochée à la barre sous les pieds — la vraie progression vers la traction stricte",muscles:"Dorsaux, biceps",niveau:"Débutant"},
@@ -353,7 +353,7 @@ variantes:[
 erreurs:["Buste qui recule pour compenser une tension trop forte","Épaules haussées pendant le tirage","Amplitude haute incomplète — perdre l'étirement du dorsal"]},
 
 {n:"Rowing TRX",s:"3-4",r:"10-15",rest:"60-90s",ch:"Corps (angle réglable)",cat:"principal",mat:"TRX",
-morpho:" Tous morphotypes : la rotation libre des poignées suit la pronation/supination naturelle de chaque bras.\nPoignets ou coudes sensibles : prise neutre rotative = contrainte articulaire minimale.\nInstabilité modérée : recrute les stabilisateurs scapulaires sans limiter la charge autant qu'un bosu.\nLe réglage de difficulté au pas près en fait l'outil de rowing le plus progressif qui existe.",
+morpho:"🦴 Tous morphotypes : la rotation libre des poignées suit la pronation/supination naturelle de chaque bras.\n🦴 Poignets ou coudes sensibles : prise neutre rotative = contrainte articulaire minimale.\n📐 Instabilité modérée : recrute les stabilisateurs scapulaires sans limiter la charge autant qu'un bosu.\n💡 Le réglage de difficulté au pas près en fait l'outil de rowing le plus progressif qui existe.",
 tips:["Sangles courtes, corps incliné en planche rigide","Commencer bras tendus, poignées en prise neutre","Tirer la poitrine entre les poignées en rotation externe","Finir en supination légère pour maximiser la rétraction","Reculer les pieds pour durcir, avancer pour faciliter"],
 variantes:[
 {nom:"Rowing TRX pronation",note:"Paumes vers le sol tout le tirage — coudes ouverts, haut du dos dominant",muscles:"Trapèzes moyens, deltoïde postérieur",niveau:"Débutant"},
@@ -365,7 +365,7 @@ variantes:[
 erreurs:["Hanches qui cassent l'alignement en fin de série","Départ omoplates déjà serrées — perdre la protraction initiale","Sangles qui frottent les bras — mauvais réglage de longueur"]},
 
 {n:"Rowing kettlebell unilatéral",s:"4",r:"8-12/côté",rest:"75s",ch:"12-24 kg",cat:"principal",mat:"kettlebell",
-morpho:" Bras longs : le centre de gravité déporté de la kettlebell accentue le travail en fin de tirage — amplitude complète facilitée.\nLombaires fragiles : appui main libre sur banc ou genou = colonne déchargée.\nAsymétrie dos : l'unilatéral révèle et corrige les différences gauche/droite invisibles à la barre.\nLa poignée épaisse de la kettlebell ajoute un travail de grip gratuit.",
+morpho:"🦴 Bras longs : le centre de gravité déporté de la kettlebell accentue le travail en fin de tirage — amplitude complète facilitée.\n🦴 Lombaires fragiles : appui main libre sur banc ou genou = colonne déchargée.\n📐 Asymétrie dos : l'unilatéral révèle et corrige les différences gauche/droite invisibles à la barre.\n💡 La poignée épaisse de la kettlebell ajoute un travail de grip gratuit.",
 tips:["Appui main et genou opposés sur un banc, dos plat","Laisser la kettlebell étirer le dorsal en bas — épaule qui descend","Tirer le coude vers la hanche, pas vers le plafond","Contraction 1s coude au corps sans rotation du buste","Regard vers le sol — nuque neutre alignée avec la colonne"],
 variantes:[
 {nom:"Gorilla row kettlebells",note:"Penché au-dessus de deux KB posées, tirage alterné — rythme et gainage de hanche",muscles:"Dos, érecteurs, grip",niveau:"Intermédiaire"},
@@ -375,7 +375,7 @@ variantes:[
 erreurs:["Buste qui pivote pour monter plus haut","Coude qui s'écarte — devient un travail d'épaule","Dos rond en position penchée"]},
 
 {n:"Scapular pull-up",s:"3",r:"8-12",rest:"60s",ch:"Corps",cat:"correctif",mat:"poids de corps",
-morpho:" Bras longs : prérequis absolu avant les tractions — apprend à engager les omoplates avant les bras.\nÉpaules instables : renforce le trapèze inférieur et le dentelé, les deux maillons faibles classiques.\nÉpaules enroulées vers l'avant : rééducation posturale directe de la ceinture scapulaire.\nLe mouvement le plus sous-coté pour débloquer une stagnation aux tractions.",
+morpho:"🦴 Bras longs : prérequis absolu avant les tractions — apprend à engager les omoplates avant les bras.\n🦴 Épaules instables : renforce le trapèze inférieur et le dentelé, les deux maillons faibles classiques.\n📐 Épaules enroulées vers l'avant : rééducation posturale directe de la ceinture scapulaire.\n💡 Le mouvement le plus sous-coté pour débloquer une stagnation aux tractions.",
 tips:["Suspendu bras tendus, prise pronation largeur épaules","Sans plier les coudes : abaisser les omoplates pour monter de quelques centimètres","Imaginer glisser les omoplates dans les poches arrière","Tenir 2s en haut, redescendre lentement en suspension complète","Bras strictement tendus du début à la fin"],
 variantes:[
 {nom:"Scapular push-up",note:"En planche, protraction/rétraction des omoplates bras tendus — le miroir en poussée",muscles:"Dentelé antérieur",niveau:"Débutant"},
@@ -386,7 +386,7 @@ erreurs:["Plier les coudes — devient une mini-traction","Hausser les épaules 
 
 "Épaules":[
 {n:"Développé haltères assis",s:"4",r:"8-10",rest:"90s",ch:"55-65%",cat:"principal",mat:"haltères",
-morpho:" Bras longs : haltères indispensables — la barre impose une trajectoire fixe qui crée un conflit sous-acromial incompatible avec des humérus longs. Les haltères permettent la rotation naturelle.\nBras courts : barre ou haltères fonctionnent — la barre permet des charges plus lourdes.\nClavicules larges : excellent exercice — le levier naturel est favorable, amplitude et recrutement optimaux.\nÉpaules fragiles ou antépulsion : effectuer un demi-développé (arrêt à 90°) ou remplacer par les élévations latérales en priorité.",
+morpho:"🦴 Bras longs : haltères indispensables — la barre impose une trajectoire fixe qui crée un conflit sous-acromial incompatible avec des humérus longs. Les haltères permettent la rotation naturelle.\n🦴 Bras courts : barre ou haltères fonctionnent — la barre permet des charges plus lourdes.\n📐 Clavicules larges : excellent exercice — le levier naturel est favorable, amplitude et recrutement optimaux.\n📐 Épaules fragiles ou antépulsion : effectuer un demi-développé (arrêt à 90°) ou remplacer par les élévations latérales en priorité.",
 tips:["Coudes alignés avec les épaules à la montée — ne pas les laisser partir en avant du plan frontal","Arrêter à 90-95% de l'extension — ne pas verrouiller en haut pour maintenir la tension","Descendre jusqu'à l'horizontale des bras pour une amplitude complète","Contrôle excentrique 2-3 secondes","Coudes légèrement en avant du plan frontal — protège l'articulation acromio-claviculaire"],
 variantes:[
 {nom:"Développé militaire barre debout",note:"Barre et position debout — le corps entier stabilise, gainage anti-extension permanent",muscles:"Deltoïdes, trapèzes, gainage",niveau:"Intermédiaire"},
@@ -398,7 +398,7 @@ variantes:[
 erreurs:["Verrouiller les coudes en haut — perte de tension + risque articulaire","Descente insuffisante — amplitude partielle = développement partiel","Arquer le dos pour compenser — surcharge lombaire et perte d'isolation","Coudes trop en arrière du plan frontal — conflit sous-acromial"]},
 
 {n:"Élévations latérales poulie basse",s:"4",r:"15-20",rest:"45s",ch:"Très léger",cat:"isolation",mat:"poulie",
-morpho:" Avant-bras longs : lever les COUDES et non les mains — les avant-bras longs créent un levier défavorable si l'on pense à la main. Les machines avec appui coudes résolvent ce problème mécaniquement.\nAvant-bras courts : haltères ou poulie fonctionnent de façon similaire.\nTrapèzes dominants : effectuer l'exercice légèrement penché vers l'avant pour réduire l'activation des trapèzes.\nArrêt OBLIGATOIRE à 90° — au-delà c'est le trapèze supérieur qui prend le relais, pas le deltoïde moyen.",
+morpho:"🦴 Avant-bras longs : lever les COUDES et non les mains — les avant-bras longs créent un levier défavorable si l'on pense à la main. Les machines avec appui coudes résolvent ce problème mécaniquement.\n🦴 Avant-bras courts : haltères ou poulie fonctionnent de façon similaire.\n📐 Trapèzes dominants : effectuer l'exercice légèrement penché vers l'avant pour réduire l'activation des trapèzes.\n💡 Arrêt OBLIGATOIRE à 90° — au-delà c'est le trapèze supérieur qui prend le relais, pas le deltoïde moyen.",
 tips:["Lever les COUDES — pas les mains : penser à ce que ce sont les coudes qui montent","90° MAXIMUM — au-delà le trapèze prend complètement le relais du deltoïde","Légère inclinaison du pouce vers le bas pour cibler spécifiquement le deltoïde moyen","Légère inclinaison du buste vers l'avant améliore significativement l'activation","Excentrique contrôlé 2 secondes — résister à la gravité"],
 variantes:[
 {nom:"Élévations latérales haltères",note:"Résistance libre — le pic de difficulté se déplace en haut du mouvement",muscles:"Deltoïde moyen",niveau:"Débutant"},
@@ -408,7 +408,7 @@ variantes:[
 erreurs:["Trop lourd — les trapèzes prennent le dessus dès 60-70° d'élévation","Dépasser 90° — l'exercice cible les trapèzes, plus le deltoïde moyen","Balancement du corps — perd l'isolation du deltoïde","Poignets fléchis — mauvaise répartition de la charge"]},
 
 {n:"Oiseau haltères penché",s:"4",r:"15-20",rest:"45s",ch:"Très léger",cat:"correctif",mat:"haltères",
-morpho:" Antépulsion d'épaules : exercice CORRECTIF ESSENTIEL — renforce le deltoïde postérieur et les rhomboïdes qui tirent les épaules en arrière. À associer systématiquement au face pull.\nÉpaules équilibrées : excellent exercice préventif — le deltoïde postérieur est sous-développé chez la quasi-totalité des pratiquants.\nTous morphotypes : exercice universel. Le poids doit rester très léger — la connexion neuromusculaire prime sur la charge.",
+morpho:"📐 Antépulsion d'épaules : exercice CORRECTIF ESSENTIEL — renforce le deltoïde postérieur et les rhomboïdes qui tirent les épaules en arrière. À associer systématiquement au face pull.\n📐 Épaules équilibrées : excellent exercice préventif — le deltoïde postérieur est sous-développé chez la quasi-totalité des pratiquants.\n🦴 Tous morphotypes : exercice universel. Le poids doit rester très léger — la connexion neuromusculaire prime sur la charge.",
 tips:["Buste penché à l'horizontale — dos plat, regard vers le sol","Légère flexion des coudes fixe et constante tout au long du mouvement","Montée contrôlée jusqu'à l'horizontale — ne pas aller au-delà","Penser à écarter les coudes vers l'arrière et le haut — et non vers les côtés","Poids très léger — c'est la connexion neuromusculaire qui produit les résultats"],
 variantes:[
 {nom:"Oiseau assis penché",note:"Assis buste sur les cuisses — l'élan des jambes et du dos disparaît",muscles:"Deltoïde postérieur isolé",niveau:"Débutant"},
@@ -418,7 +418,7 @@ variantes:[
 erreurs:["Trop lourd — les trapèzes et les bras prennent le relais","Monter trop haut — les trapèzes dominent au-delà de l'horizontale","Dos arrondi — perd l'alignement et l'isolation du deltoïde postérieur","Coudes qui bougent en cours de mouvement"]},
 
 {n:"Rotation externe poulie basse",s:"3",r:"15-20",rest:"45s",ch:"Élastique léger",cat:"correctif",mat:"poulie",
-morpho:" Antépulsion d'épaules : exercice PRÉVENTIF INDISPENSABLE — renforce le supraépineux et les rotateurs externes. Le déséquilibre rotateurs internes/externes est à l'origine de la majorité des blessures d'épaule en musculation.\nÉpaules saines : exercice préventif — maintenir l'équilibre rotateur interne/externe.\nBras longs : exercice particulièrement important car l'amplitude plus grande des mouvements de poussée sollicite davantage les rotateurs.",
+morpho:"📐 Antépulsion d'épaules : exercice PRÉVENTIF INDISPENSABLE — renforce le supraépineux et les rotateurs externes. Le déséquilibre rotateurs internes/externes est à l'origine de la majorité des blessures d'épaule en musculation.\n📐 Épaules saines : exercice préventif — maintenir l'équilibre rotateur interne/externe.\n🦴 Bras longs : exercice particulièrement important car l'amplitude plus grande des mouvements de poussée sollicite davantage les rotateurs.",
 tips:["Coude collé au corps à 90° — position stricte maintenue tout au long","Rotation externe lente et contrôlée — ne pas aller trop vite","Pause 1-2 secondes en fin de rotation externe maximale","Poids MINIMAL — l'amplitude et la rotation comptent, pas la charge","À effectuer en échauffement ou en finition — jamais en milieu de séance"],
 variantes:[
 {nom:"Rotation externe élastique",note:"Version bande — réalisable à chaque échauffement, n'importe où",muscles:"Infra-épineux, petit rond",niveau:"Débutant"},
@@ -428,7 +428,7 @@ variantes:[
 erreurs:["Coude qui décolle du corps — l'exercice perd complètement son intérêt","Trop lourd — les compensations musculaires prennent le dessus","Amplitude incomplète — travail insuffisant des rotateurs externes"]},
 
 {n:"Élévations frontales haltères",s:"3",r:"12-15",rest:"60s",ch:"Très léger",cat:"isolation",mat:"haltères",
-morpho:" Tous morphotypes : deltoïde antérieur. Souvent surdéveloppé par les exercices de poussée — à ne pas surcharger si antépulsion.\nAntépulsion épaules : à éviter ou remplacer par l'oiseau penché — renforce une dominance déjà présente.\nSi les épaules compensent dès le premier reps : charge trop lourde.",
+morpho:"🦴 Tous morphotypes : deltoïde antérieur. Souvent surdéveloppé par les exercices de poussée — à ne pas surcharger si antépulsion.\n📐 Antépulsion épaules : à éviter ou remplacer par l'oiseau penché — renforce une dominance déjà présente.\n💡 Si les épaules compensent dès le premier reps : charge trop lourde.",
 tips:["Mouvement vers l'avant et légèrement vers l'intérieur","Arrêt à hauteur des épaules — pas plus haut","Excentrique contrôlé 2-3s","Alternativement pour plus de concentration","Prise pronation ou en pince selon préférence"],
 variantes:[
 {nom:"Élévation frontale disque",note:"Un disque tenu à deux mains — trajectoire centrale symétrique",muscles:"Deltoïde antérieur",niveau:"Débutant"},
@@ -438,7 +438,7 @@ variantes:[
 erreurs:["Balancement du corps pour se propulser","Dépasser la hauteur des épaules — trapèzes prennent le relais","Trop lourd — compensation lombaire"]},
 
 {n:"Shrug d'isolation haut pectoraux",s:"3",r:"15",rest:"60s",ch:"Léger",cat:"isolation",mat:"haltères",
-morpho:" Cage plate : exercice de ciblant le haut des pectoraux via l'angle d'élévation de l'épaule. Excellent pour les morphotypes à cage plate qui peinent à développer le haut du torse.\nÉpaules saines obligatoires — douleur = arrêt immédiat.",
+morpho:"🫁 Cage plate : exercice de ciblant le haut des pectoraux via l'angle d'élévation de l'épaule. Excellent pour les morphotypes à cage plate qui peinent à développer le haut du torse.\n📐 Épaules saines obligatoires — douleur = arrêt immédiat.",
 tips:["Bras tendus devant soi, penché légèrement vers la machine","Élever l'épaule vers la tête en gardant le bras tendu","Contraction 1-2s en position haute","Amplitude de seulement quelques centimètres — mouvement d'épaule pur","Poids très léger — c'est la connexion neuromusculaire qui compte"],
 variantes:[
 {nom:"Shrug incliné haltères",note:"Ventre sur banc incliné, haussement vers l'arrière — les trapèzes moyens rejoignent le mouvement",muscles:"Trapèzes moyens et supérieurs",niveau:"Débutant"},
@@ -447,7 +447,7 @@ variantes:[
 erreurs:["Amplitude trop grande — trapèzes prennent le relais","Trop lourd — perd l'isolation du haut pectoral","Ne pas sentir la contraction = mauvaise position"]},
 
 {n:"Arnold press haltères assis",s:"4",r:"10-12",rest:"90s",ch:"55%",cat:"principal",mat:"haltères",
-morpho:" Bras longs : haltères permettent la rotation naturelle des poignets.\nClavicules larges : excellente option — le mouvement de rotation recrute tous les faisceaux du deltoïde.\nL'Arnold press recrute les 3 faisceaux du deltoïde grâce à la rotation en supination/pronation.",
+morpho:"🦴 Bras longs : haltères permettent la rotation naturelle des poignets.\n📐 Clavicules larges : excellente option — le mouvement de rotation recrute tous les faisceaux du deltoïde.\n💡 L'Arnold press recrute les 3 faisceaux du deltoïde grâce à la rotation en supination/pronation.",
 tips:["Démarrer paumes vers le visage (supination), tourner vers l'extérieur en montant","Arriver en pronation en extension","Descendre en inversant la rotation","Amplitude complète — revenir à la supination totale en bas","Pas de verrouillage en haut"],
 variantes:[
 {nom:"Arnold press debout",note:"Sans dossier — la rotation se fait en pleine stabilisation du tronc",muscles:"Deltoïdes, gainage",niveau:"Intermédiaire"},
@@ -457,7 +457,7 @@ variantes:[
 erreurs:["Rotation incomplète — perd le bénéfice de l'exercice","Trop lourd — la rotation devient impossible","Coudes trop en arrière du plan frontal"]},
 
 {n:"W-raise haltères penché",s:"3",r:"15",rest:"45s",ch:"Très léger",cat:"correctif",mat:"haltères",
-morpho:" Antépulsion épaules : exercice CORRECTIF avancé — combine l'oiseau + rotation externe. Renforce simultanément le deltoïde postérieur et les rotateurs externes.\nTous morphotypes : très léger, qualité de contraction prioritaire.",
+morpho:"📐 Antépulsion épaules : exercice CORRECTIF avancé — combine l'oiseau + rotation externe. Renforce simultanément le deltoïde postérieur et les rotateurs externes.\n🦴 Tous morphotypes : très léger, qualité de contraction prioritaire.",
 tips:["Buste penché horizontal, bras en W (coudes fléchis à 90°)","Lever les coudes en gardant l'angle","Rotation externe maximale en haut — doigts vers le plafond","Poids TRÈS léger — 2-4kg maximum","Mouvement lent et contrôlé"],
 variantes:[
 {nom:"Y-raise penché",note:"Bras montés en diagonale haute pouces vers le ciel — le trapèze inférieur prioritaire",muscles:"Trapèzes inférieurs, deltoïde postérieur",niveau:"Débutant"},
@@ -466,7 +466,7 @@ variantes:[
 erreurs:["Trop lourd — trapèzes dominent","Pas de rotation externe en haut","Coudes qui descendent"]},
 
 {n:"Élévation latérale unilatérale câble",s:"3",r:"20",rest:"45s",ch:"Très léger",cat:"isolation",mat:"poulie",
-morpho:" Tous morphotypes : tension constante du câble sur TOUT l'arc — supérieur aux haltères pour l'activation du deltoïde moyen.\nUnilatéral = correction des asymétries gauche/droite fréquentes sur les épaules.",
+morpho:"🦴 Tous morphotypes : tension constante du câble sur TOUT l'arc — supérieur aux haltères pour l'activation du deltoïde moyen.\n💡 Unilatéral = correction des asymétries gauche/droite fréquentes sur les épaules.",
 tips:["Poulie au niveau des hanches côté opposé — bras croisé devant le corps","Lever latéralement — 90° maximum","Excentrique contrôlé 2-3s","Incliner légèrement le buste vers l'avant","Pied opposé légèrement en avant pour la stabilité"],
 variantes:[
 {nom:"Élévation câble derrière le dos",note:"Le câble longe l'arrière du corps — abduction dégagée et trajectoire pure",muscles:"Deltoïde moyen",niveau:"Intermédiaire"},
@@ -475,7 +475,7 @@ variantes:[
 erreurs:["Dépasser 90° — trapèzes prennent le relais","Balancement du corps","Trop lourd"]},
 
 {n:"Pompes piquées (pike push-up)",s:"3-4",r:"6-12",rest:"90s",ch:"Corps",cat:"principal",mat:"poids de corps",
-morpho:" Bras longs : trajectoire verticale libre — les coudes choisissent leur couloir, contrairement au développé barre.\nBras courts : excellent ratio force/difficulté, progression rapide vers le handstand push-up.\nIschio-jambiers raides : plier légèrement les genoux pour garder le bassin haut sans arrondir le dos.\nLe seul développé épaules complet réalisable sans aucun matériel.",
+morpho:"🦴 Bras longs : trajectoire verticale libre — les coudes choisissent leur couloir, contrairement au développé barre.\n🦴 Bras courts : excellent ratio force/difficulté, progression rapide vers le handstand push-up.\n📐 Ischio-jambiers raides : plier légèrement les genoux pour garder le bassin haut sans arrondir le dos.\n💡 Le seul développé épaules complet réalisable sans aucun matériel.",
 tips:["Position en V inversé, bassin le plus haut possible","Regard entre les mains, tête qui descend vers le sol","Coudes à 45° — trajectoire légèrement vers l'avant, jamais droite","Front qui frôle le sol avant de repousser","Surélever les pieds pour verticaliser et durcir progressivement"],
 variantes:[
 {nom:"Handstand push-up contre mur",note:"Corps vertical en équilibre facial — la poussée d'épaule complète au poids de corps",muscles:"Deltoïdes, trapèzes, triceps",niveau:"Avancé"},
@@ -485,7 +485,7 @@ variantes:[
 erreurs:["Bassin trop bas — devient une pompe déclinée pour pectoraux","Coudes qui s'écartent perpendiculairement","Descente incomplète — le front ne s'approche pas du sol"]},
 
 {n:"Élévations latérales élastique",s:"3-4",r:"15-20",rest:"45s",ch:"Élastique léger",cat:"isolation",mat:"élastique",
-morpho:" Clavicules courtes : la résistance progressive épargne le point bas et concentre l'effort dans la zone efficace 30-90°.\nConflit sous-acromial : monter pouce légèrement vers le haut avec l'élastique = trajectoire plus tolérante qu'avec haltères.\nÉpaules étroites : le deltoïde moyen répond très bien au volume élevé que permet l'élastique.\nLa tension maximale arrive exactement où le deltoïde moyen est le plus actif — biomécanique idéale.",
+morpho:"🦴 Clavicules courtes : la résistance progressive épargne le point bas et concentre l'effort dans la zone efficace 30-90°.\n🦴 Conflit sous-acromial : monter pouce légèrement vers le haut avec l'élastique = trajectoire plus tolérante qu'avec haltères.\n📐 Épaules étroites : le deltoïde moyen répond très bien au volume élevé que permet l'élastique.\n💡 La tension maximale arrive exactement où le deltoïde moyen est le plus actif — biomécanique idéale.",
 tips:["Élastique sous les pieds, poignées en mains le long du corps","Monter les coudes jusqu'à l'horizontale, pas plus haut","Coudes légèrement fléchis, poignets neutres","Redescendre en 2-3s en résistant à la traction","Buste immobile — aucun élan des jambes ou du dos"],
 variantes:[
 {nom:"Élévation latérale élastique unilatérale",note:"Un bras — tension calibrée précisément sur chaque côté",muscles:"Deltoïde moyen ciblé",niveau:"Débutant"},
@@ -494,7 +494,7 @@ variantes:[
 erreurs:["Hausser les trapèzes en fin de montée","Monter au-dessus de l'horizontale — le trapèze prend le relais","Élastique trop fort — amplitude sacrifiée et triche généralisée"]},
 
 {n:"Développé militaire élastique",s:"4",r:"10-15",rest:"60-75s",ch:"Élastique moyen/fort",cat:"principal",mat:"élastique",
-morpho:" Bras longs : trajectoire libre autour du visage — aucun compromis cervical contrairement à la barre.\nLombaires sensibles : la résistance croissante limite la charge en bas, là où la cambrure de compensation apparaît.\nÉpaules raides en élévation : possibilité de finir légèrement devant sans surcharge, angle auto-ajusté.\nLe gainage anti-extension est sollicité en continu — un développé qui muscle aussi la sangle abdominale.",
+morpho:"🦴 Bras longs : trajectoire libre autour du visage — aucun compromis cervical contrairement à la barre.\n🦴 Lombaires sensibles : la résistance croissante limite la charge en bas, là où la cambrure de compensation apparaît.\n📐 Épaules raides en élévation : possibilité de finir légèrement devant sans surcharge, angle auto-ajusté.\n💡 Le gainage anti-extension est sollicité en continu — un développé qui muscle aussi la sangle abdominale.",
 tips:["Debout sur l'élastique, poignées à hauteur d'épaules","Pousser vers le haut en rentrant légèrement la tête entre les bras en fin de course","Gainage abdominal et fessier verrouillé — aucune cambrure","Verrouiller les coudes 1s en haut sous tension maximale","Descendre lentement jusqu'aux épaules à chaque rep"],
 variantes:[
 {nom:"Développé élastique unilatéral",note:"Un bras — anti-flexion latérale du tronc pendant la poussée",muscles:"Deltoïde, obliques",niveau:"Intermédiaire"},
@@ -503,7 +503,7 @@ variantes:[
 erreurs:["Cambrure lombaire qui augmente à chaque répétition","Poussée devant le corps au lieu de verticale","Tension de départ nulle — élastique mal dimensionné"]},
 
 {n:"Pull-apart élastique",s:"3",r:"15-25",rest:"30-45s",ch:"Élastique léger",cat:"correctif",mat:"élastique",
-morpho:" Épaules enroulées : LE correctif postural de référence — renforce rhomboïdes, trapèzes moyens et deltoïde postérieur.\nAntécédents de conflit sous-acromial : rééquilibre le ratio rotateurs externes/internes, quasi toujours déficitaire.\nPosture bureau/téléphone : à prescrire quotidiennement, même hors séance.\n2 minutes par jour changent la posture en quelques semaines — le meilleur retour sur investissement en prévention.",
+morpho:"🦴 Épaules enroulées : LE correctif postural de référence — renforce rhomboïdes, trapèzes moyens et deltoïde postérieur.\n🦴 Antécédents de conflit sous-acromial : rééquilibre le ratio rotateurs externes/internes, quasi toujours déficitaire.\n📐 Posture bureau/téléphone : à prescrire quotidiennement, même hors séance.\n💡 2 minutes par jour changent la posture en quelques semaines — le meilleur retour sur investissement en prévention.",
 tips:["Bras tendus devant, élastique tenu largeur d'épaules","Écarter les mains jusqu'à ce que l'élastique touche la poitrine","Serrer les omoplates comme pour pincer un crayon entre elles","Épaules basses en permanence — ne jamais hausser","Retour lent et contrôlé sans relâcher la tension"],
 variantes:[
 {nom:"Pull-apart supination",note:"Paumes vers le ciel — la rotation externe s'ajoute à la rétraction",muscles:"Coiffe des rotateurs, rhomboïdes",niveau:"Débutant"},
@@ -513,7 +513,7 @@ variantes:[
 erreurs:["Plier les coudes — les bras volent le travail","Hausser les épaules vers les oreilles","Aller trop vite — c'est un exercice de qualité, pas de quantité"]},
 
 {n:"Y-T-W TRX",s:"3",r:"6-8 par lettre",rest:"60s",ch:"Corps (angle réglable)",cat:"correctif",mat:"TRX",
-morpho:" Épaules instables ou opérées : renforcement complet de la coiffe et des fixateurs d'omoplates en un seul enchaînement.\nTrapèze supérieur dominant : le Y et le T réactivent trapèzes inférieur et moyen, chroniquement endormis.\nPosture cyphotique : traction arrière du corps entier = extension thoracique active.\nTrois exercices correctifs en un — l'échauffement d'épaules le plus complet qui soit.",
+morpho:"🦴 Épaules instables ou opérées : renforcement complet de la coiffe et des fixateurs d'omoplates en un seul enchaînement.\n📐 Trapèze supérieur dominant : le Y et le T réactivent trapèzes inférieur et moyen, chroniquement endormis.\n📐 Posture cyphotique : traction arrière du corps entier = extension thoracique active.\n💡 Trois exercices correctifs en un — l'échauffement d'épaules le plus complet qui soit.",
 tips:["Corps incliné en arrière, sangles tendues, bras devant","Y : monter les bras en diagonale haute, pouces vers le ciel","T : ouvrir les bras à l'horizontale en serrant les omoplates","W : tirer coudes fléchis vers le bas en rotation externe","Corps rigide — seuls les bras bougent, le gainage fait le reste"],
 variantes:[
 {nom:"Y-T-W au sol",note:"Allongé sur le ventre — la gravité seule résiste, version accessible partout",muscles:"Trapèzes inférieurs et moyens, coiffe",niveau:"Débutant"},
@@ -522,7 +522,7 @@ variantes:[
 erreurs:["Angle trop incliné dès le départ — la forme s'effondre","Hausser les épaules pendant le Y","Casser les poignets au lieu de garder l'alignement bras-main"]},
 
 {n:"Développé kettlebell unilatéral",s:"4",r:"6-10/côté",rest:"75-90s",ch:"8-20 kg",cat:"principal",mat:"kettlebell",
-morpho:" Bras longs : la kettlebell posée sur l'avant-bras suit la rotation naturelle de l'humérus — trajectoire spiralée introuvable ailleurs.\nÉpaules capricieuses : le centre de gravité derrière la main force une position empilée très saine.\nAsymétries de force : l'unilatéral strict révèle immédiatement le côté faible.\nLe gainage anti-flexion latérale travaille autant que l'épaule — un développé qui construit le tronc.",
+morpho:"🦴 Bras longs : la kettlebell posée sur l'avant-bras suit la rotation naturelle de l'humérus — trajectoire spiralée introuvable ailleurs.\n🦴 Épaules capricieuses : le centre de gravité derrière la main force une position empilée très saine.\n📐 Asymétries de force : l'unilatéral strict révèle immédiatement le côté faible.\n💡 Le gainage anti-flexion latérale travaille autant que l'épaule — un développé qui construit le tronc.",
 tips:["Kettlebell en position rack : coude collé, poignet neutre, boule sur l'avant-bras","Pousser en laissant le bras tourner naturellement vers l'extérieur","Gainer le côté opposé pour rester parfaitement vertical","Verrouiller le coude en haut, biceps près de l'oreille","Redescendre en rack contrôlé — l'excentrique construit l'épaule"],
 variantes:[
 {nom:"Développé bottoms-up",note:"Boule à l'envers au-dessus du poing — la coiffe stabilise en réflexe permanent",muscles:"Coiffe des rotateurs, avant-bras",niveau:"Avancé"},
@@ -533,7 +533,7 @@ variantes:[
 erreurs:["Flexion latérale du buste pendant la poussée","Poignet cassé en arrière sous la boule","Coude qui s'ouvre en position rack avant la poussée"]},
 
 {n:"Kettlebell halo",s:"3",r:"8-10/sens",rest:"45s",ch:"8-12 kg",cat:"correctif",mat:"kettlebell",
-morpho:" Épaules raides : mobilisation active de la coiffe dans toutes les amplitudes sous charge légère.\nThoracique verrouillé : la rotation de la charge autour du crâne déverrouille les épaules ET le haut du dos.\nÉchauffement pré-développé : prépare exactement les amplitudes qui seront chargées ensuite.\nMobilité sous charge = gains durables, contrairement aux étirements passifs.",
+morpho:"🦴 Épaules raides : mobilisation active de la coiffe dans toutes les amplitudes sous charge légère.\n📐 Thoracique verrouillé : la rotation de la charge autour du crâne déverrouille les épaules ET le haut du dos.\n📐 Échauffement pré-développé : prépare exactement les amplitudes qui seront chargées ensuite.\n💡 Mobilité sous charge = gains durables, contrairement aux étirements passifs.",
 tips:["Kettlebell tenue à deux mains par la poignée, boule vers le haut","Dessiner un cercle serré autour de la tête, au ras du crâne","Coudes qui frôlent les oreilles au passage arrière","Gainage abdominal — le buste ne bouge pas d'un millimètre","Alterner les sens de rotation à chaque série"],
 variantes:[
 {nom:"Halo à genoux",note:"Position agenouillée — les jambes ne compensent plus, le tronc seul stabilise",muscles:"Épaules, gainage",niveau:"Débutant"},
@@ -545,7 +545,7 @@ erreurs:["Cercle trop large loin de la tête — levier dangereux","Cambrure lom
 
 "Biceps":[
 {n:"Curl haltères supination alternés",s:"4",r:"10-12",rest:"60s",ch:"65%",cat:"principal",mat:"haltères",
-morpho:" Humérus longs : le pic visuel du biceps sera naturellement moins prononcé — compenser par une contraction maximale et une supination complète à chaque répétition.\nHumérus courts : développement du pic plus facile — bon levier naturel pour la contraction en haut.\nLa supination (rotation externe du poignet) est ce qui différencie un curl efficace d'un curl ordinaire — elle maximise le recrutement du chef long.",
+morpho:"🦴 Humérus longs : le pic visuel du biceps sera naturellement moins prononcé — compenser par une contraction maximale et une supination complète à chaque répétition.\n🦴 Humérus courts : développement du pic plus facile — bon levier naturel pour la contraction en haut.\n💡 La supination (rotation externe du poignet) est ce qui différencie un curl efficace d'un curl ordinaire — elle maximise le recrutement du chef long.",
 tips:["Supiner progressivement pendant la montée — le pouce sort vers l'extérieur","Coude fixe et collé au corps tout au long — ne jamais le laisser partir en avant","Contraction maximale 2 secondes en haut — serrer fort en supination","Excentrique 2-3 secondes — résister à la gravité","Alterner les bras pour une concentration maximale sur chaque côté"],
 variantes:[
 {nom:"Curl haltères simultané",note:"Les deux bras montent ensemble — plus de charge totale mais gainage lombaire accru",muscles:"Biceps, gainage",niveau:"Débutant"},
@@ -556,7 +556,7 @@ variantes:[
 erreurs:["Balancer le corps pour compenser en fin de série — les lombaires ne doivent pas participer","Coudes qui avancent — le deltoïde antérieur prend le relais des biceps","Amplitude insuffisante en bas — ne pas aller en extension quasi-complète","Ne pas supiner — le chef long reste sous-sollicité"]},
 
 {n:"Curl incliné haltères 45°",s:"3",r:"10-12",rest:"60s",ch:"50%",cat:"isolation",mat:"haltères",
-morpho:" Humérus longs : MEILLEUR exercice biceps — le banc incliné + bras tendus vers l'arrière créent un étirement maximal en position basse qui maximise l'activation musculaire. Compense le manque de pic naturel.\nHumérus courts : exercice utile mais l'avantage de l'étirement est moins prononcé.\nL'étirement en bas est le bénéfice clé de cet exercice — si le poids empêche de descendre correctement, il est trop lourd.",
+morpho:"🦴 Humérus longs : MEILLEUR exercice biceps — le banc incliné + bras tendus vers l'arrière créent un étirement maximal en position basse qui maximise l'activation musculaire. Compense le manque de pic naturel.\n🦴 Humérus courts : exercice utile mais l'avantage de l'étirement est moins prononcé.\n💡 L'étirement en bas est le bénéfice clé de cet exercice — si le poids empêche de descendre correctement, il est trop lourd.",
 tips:["Banc à 45-50° — avant-bras qui tombent librement vers le bas","Supination progressive PENDANT la montée pour maximiser le recrutement","Pause de 2 secondes en contraction maximale en haut — serrer fort","Poids modéré — c'est l'étirement en bas qui produit les résultats","Ne pas décoller les épaules du banc — elles restent en contact permanent"],
 variantes:[
 {nom:"Curl incliné prise marteau",note:"Prise neutre sur banc incliné — l'étirement se transfère au brachial",muscles:"Brachial, longue portion du biceps",niveau:"Intermédiaire"},
@@ -565,7 +565,7 @@ variantes:[
 erreurs:["Épaules qui décollent du banc — perd l'étirement clé et le bénéfice de l'exercice","Amplitude insuffisante en bas — le bénéfice vient précisément de l'étirement","Trop lourd — le dos et les épaules compensent","Vitesse trop rapide — perd la sensation d'étirement"]},
 
 {n:"Curl marteau",s:"3",r:"12",rest:"60s",ch:"65%",cat:"principal",mat:"haltères",
-morpho:" Humérus longs : développe le brachial qui épaissit le bras vu de face — compensatoire au manque de pic naturel. Excellent choix de volume.\nHumérus courts : volume et largeur supplémentaires — bonne complémentarité avec le curl supination.\nLe curl marteau cible le chef long du biceps + le brachioradial + le brachial — il donne de la largeur au bras, pas du pic.",
+morpho:"🦴 Humérus longs : développe le brachial qui épaissit le bras vu de face — compensatoire au manque de pic naturel. Excellent choix de volume.\n🦴 Humérus courts : volume et largeur supplémentaires — bonne complémentarité avec le curl supination.\n💡 Le curl marteau cible le chef long du biceps + le brachioradial + le brachial — il donne de la largeur au bras, pas du pic.",
 tips:["Poignets neutres — pas de rotation, c'est ce qui distingue cet exercice du curl classique","Coudes fixes — pas de balancement même en fin de série","Amplitude complète — extension en bas et flexion maximale en haut","Peut s'effectuer alternativement ou simultanément selon la préférence","Concentration sur la contraction du brachioradial"],
 variantes:[
 {nom:"Cross-body curl (pinwheel)",note:"L'haltère monte en travers vers l'épaule opposée — le brachial en recrutement maximal",muscles:"Brachial dominant",niveau:"Débutant"},
@@ -575,7 +575,7 @@ variantes:[
 erreurs:["Rotation des poignets en cours de mouvement — devient un curl classique","Balancement du corps","Amplitude partielle en haut"]},
 
 {n:"Curl pupitre barre EZ",s:"4",r:"10-12",rest:"60s",ch:"60%",cat:"isolation",mat:"barre",
-morpho:" Tous morphotypes : isolation maximale — le pupitre supprime tout élan possible. La barre EZ réduit le stress sur les poignets par rapport à la barre droite.\nHumérus longs : l'amplitude naturellement grande crée un excellent étirement en bas — exploiter pleinement.\nExercice de connexion neuromusculaire — l'objectif n'est pas de soulever lourd mais de sentir le biceps travailler de façon isolée.",
+morpho:"🦴 Tous morphotypes : isolation maximale — le pupitre supprime tout élan possible. La barre EZ réduit le stress sur les poignets par rapport à la barre droite.\n🦴 Humérus longs : l'amplitude naturellement grande crée un excellent étirement en bas — exploiter pleinement.\n💡 Exercice de connexion neuromusculaire — l'objectif n'est pas de soulever lourd mais de sentir le biceps travailler de façon isolée.",
 tips:["Coudes bien calés sur le pupitre — ne jamais les décoller","Amplitude complète — extension quasi-totale en bas sans relâcher la tension","Excentrique très lent 3-4 secondes — le temps sous tension est la clé","Garder une légère tension en bas — ne pas aller en extension totale","Contraction 1-2 secondes en haut"],
 variantes:[
 {nom:"Curl pupitre haltère unilatéral",note:"Un bras sur le pupitre — concentration et correction d'asymétrie",muscles:"Biceps ciblé",niveau:"Débutant"},
@@ -585,7 +585,7 @@ variantes:[
 erreurs:["Décoller les coudes du pupitre — tout le bénéfice de l'isolation disparaît","Amplitude insuffisante en bas","Vitesse trop rapide — perd le bénéfice du temps sous tension"]},
 
 {n:"Curl barre EZ debout",s:"4",r:"8-10",rest:"75s",ch:"70%",cat:"principal",mat:"barre",
-morpho:" Humérus longs : la barre EZ réduit le stress sur les poignets et les coudes vs barre droite — fortement recommandée.\nHumérus courts : barre droite ou EZ — les deux fonctionnent bien.\nPosition debout permet de charger plus lourd que le pupitre — bonne option pour la force pure.",
+morpho:"🦴 Humérus longs : la barre EZ réduit le stress sur les poignets et les coudes vs barre droite — fortement recommandée.\n🦴 Humérus courts : barre droite ou EZ — les deux fonctionnent bien.\n💡 Position debout permet de charger plus lourd que le pupitre — bonne option pour la force pure.",
 tips:["Coudes fixes le long du corps tout au long","Amplitude complète — extension quasi-totale en bas","Prise en semi-supination sur la barre EZ","Excentrique 2-3s","Éviter tout balancement même en fin de série"],
 variantes:[
 {nom:"Curl barre droite",note:"Supination complète imposée — recrutement biceps maximal, poignets plus exigés",muscles:"Biceps en supination totale",niveau:"Intermédiaire"},
@@ -595,7 +595,7 @@ variantes:[
 erreurs:["Balancement du buste pour compenser","Coudes qui avancent en montant","Amplitude partielle en bas"]},
 
 {n:"Curl concentration haltère",s:"3",r:"12-15",rest:"60s",ch:"50%",cat:"isolation",mat:"haltères",
-morpho:" Tous morphotypes : isolation maximale — aucun élan possible grâce à l'appui sur la cuisse.\nHumérus longs : étirement en bas encore plus prononcé — excellent recrutement du chef long.\nExercice de finition — qualité et connexion neuromusculaire avant la charge.",
+morpho:"🦴 Tous morphotypes : isolation maximale — aucun élan possible grâce à l'appui sur la cuisse.\n🦴 Humérus longs : étirement en bas encore plus prononcé — excellent recrutement du chef long.\n💡 Exercice de finition — qualité et connexion neuromusculaire avant la charge.",
 tips:["Coude appuyé contre la cuisse intérieure — position fixe stricte","Supination en montant — rotation externe du poignet","Contraction maximale 2s en haut — visualiser le muscle","Excentrique très lent 3-4s","Un bras à la fois pour une concentration totale"],
 variantes:[
 {nom:"Curl concentration debout penché",note:"Bras suspendu dans le vide buste penché — version Arnold, étirement sous tension",muscles:"Biceps isolé",niveau:"Intermédiaire"},
@@ -604,7 +604,7 @@ variantes:[
 erreurs:["Coude qui décolle de la cuisse","Amplitude insuffisante en bas","Ne pas supiner"]},
 
 {n:"Curl câble bilatéral debout",s:"4",r:"12",rest:"60s",ch:"65%",cat:"principal",mat:"poulie",
-morpho:" Humérus longs : tension constante en bas = compense le manque d'étirement naturel du biceps.\nTous morphotypes : tension sur tout l'arc de mouvement — aucun point mort comme avec les haltères.",
+morpho:"🦴 Humérus longs : tension constante en bas = compense le manque d'étirement naturel du biceps.\n🦴 Tous morphotypes : tension sur tout l'arc de mouvement — aucun point mort comme avec les haltères.",
 tips:["Barre droite ou EZ attachée à la poulie basse","Coudes fixes le long du corps","Amplitude complète — extension quasi-totale en bas","Excentrique 3s","Contraction 2s en haut"],
 variantes:[
 {nom:"Curl câble barre EZ",note:"Prise semi-pronée sur barre coudée — poignets soulagés sous charge lourde",muscles:"Biceps",niveau:"Débutant"},
@@ -614,7 +614,7 @@ variantes:[
 erreurs:["Coudes qui avancent","Amplitude insuffisante en bas — perd la tension","Balancement"]},
 
 {n:"Spider curl banc incliné inversé",s:"3",r:"12",rest:"60s",ch:"50%",cat:"isolation",mat:"haltères",
-morpho:" Humérus longs : coudes DEVANT le corps = étirement maximal du chef long en bas + contraction maximale en haut. Un des meilleurs exercices pour compenser le manque de pic naturel.\nLe banc incliné inversé fixe les coudes — aucun élan possible.",
+morpho:"🦴 Humérus longs : coudes DEVANT le corps = étirement maximal du chef long en bas + contraction maximale en haut. Un des meilleurs exercices pour compenser le manque de pic naturel.\n💡 Le banc incliné inversé fixe les coudes — aucun élan possible.",
 tips:["Banc incliné à 45°, allongé sur le ventre, coudes dépassant le banc","Amplitude complète — extension totale en bas","Supination progressive pendant la montée","Contraction 2s en haut","Poids modéré — la position amplifie l'effort"],
 variantes:[
 {nom:"Spider curl barre EZ",note:"Barre coudée à la place des haltères — charge bilatérale symétrique",muscles:"Biceps chef court",niveau:"Intermédiaire"},
@@ -623,7 +623,7 @@ variantes:[
 erreurs:["Coudes qui remontent sur le banc — perd l'isolation","Amplitude insuffisante","Trop lourd"]},
 
 {n:"Curl barre EZ inversé (reverse)",s:"3",r:"12",rest:"60s",ch:"50%",cat:"isolation",mat:"barre",
-morpho:" Tous morphotypes : extenseurs des avant-bras + brachioradial.\nÉquilibre fléchisseurs/extenseurs des avant-bras. Prévient les épicondylites et améliore la force de prise. Souvent négligé.",
+morpho:"🦴 Tous morphotypes : extenseurs des avant-bras + brachioradial.\n💡 Équilibre fléchisseurs/extenseurs des avant-bras. Prévient les épicondylites et améliore la force de prise. Souvent négligé.",
 tips:["Prise pronation sur barre EZ","Amplitude complète","Poignets en position neutre ou légèrement fléchis vers le haut","Coudes fixes","Mouvement lent et contrôlé"],
 variantes:[
 {nom:"Reverse curl barre droite",note:"Pronation complète — les extenseurs et le long supinateur au maximum",muscles:"Long supinateur, extenseurs",niveau:"Intermédiaire"},
@@ -633,7 +633,7 @@ variantes:[
 erreurs:["Poignets qui fléchissent vers le bas — risque épicondylite","Amplitude insuffisante","Trop lourd"]},
 
 {n:"Curl élastique debout",s:"3-4",r:"12-20",rest:"45-60s",ch:"Élastique léger/moyen",cat:"isolation",mat:"élastique",
-morpho:" Avant-bras longs : la résistance croissante compense le bras de levier défavorable en fin de flexion.\nCoudes sensibles : tension quasi nulle bras tendu = zéro stress sur le tendon distal, contrairement à la barre.\nPic de contraction recherché : la tension maximale arrive pile en flexion complète — idéal pour la portion haute du biceps.\nParfait en finisher haute répétition ou en séance à domicile.",
+morpho:"🦴 Avant-bras longs : la résistance croissante compense le bras de levier défavorable en fin de flexion.\n🦴 Coudes sensibles : tension quasi nulle bras tendu = zéro stress sur le tendon distal, contrairement à la barre.\n📐 Pic de contraction recherché : la tension maximale arrive pile en flexion complète — idéal pour la portion haute du biceps.\n💡 Parfait en finisher haute répétition ou en séance à domicile.",
 tips:["Debout sur l'élastique, pieds largeur de hanches pour régler la tension","Coudes collés aux flancs et immobiles — seuls les avant-bras bougent","Supination complète en montant, petit doigt qui tourne vers l'extérieur","Serrer fort le biceps 1s en haut","Descente 3s en résistant — l'excentrique élastique est très efficace"],
 variantes:[
 {nom:"Curl élastique prise marteau",note:"Prise neutre — brachial et long supinateur sous résistance progressive",muscles:"Brachial, avant-bras",niveau:"Débutant"},
@@ -642,7 +642,7 @@ variantes:[
 erreurs:["Coudes qui avancent — l'épaule vole le travail","Buste qui se penche en arrière pour tricher","Élastique trop court sous les pieds — tension excessive dès le départ"]},
 
 {n:"Curl marteau élastique",s:"3",r:"12-15",rest:"45s",ch:"Élastique léger/moyen",cat:"isolation",mat:"élastique",
-morpho:" Avant-bras fins : le brachial et le long supinateur épaississent visuellement le bras entier, de face comme de profil.\nPoignets fragiles : la prise neutre est la position la plus tolérante pour l'articulation.\nVallée biceps/avant-bras creuse : le brachial pousse le biceps vers le haut — épaisseur du bras garantie.\nLe complément systématique du curl supination pour un développement complet.",
+morpho:"🦴 Avant-bras fins : le brachial et le long supinateur épaississent visuellement le bras entier, de face comme de profil.\n🦴 Poignets fragiles : la prise neutre est la position la plus tolérante pour l'articulation.\n📐 Vallée biceps/avant-bras creuse : le brachial pousse le biceps vers le haut — épaisseur du bras garantie.\n💡 Le complément systématique du curl supination pour un développement complet.",
 tips:["Prise neutre pouces vers le haut du début à la fin","Coudes verrouillés contre les flancs","Monter jusqu'à la contraction complète sans rotation du poignet","Contrôler la descente en 2-3s","Possibilité d'alterner les bras pour se concentrer sur chaque côté"],
 variantes:[
 {nom:"Cross-body curl élastique",note:"Flexion en travers du corps — le brachial en première ligne",muscles:"Brachial",niveau:"Débutant"},
@@ -651,7 +651,7 @@ variantes:[
 erreurs:["Rotation du poignet en cours de mouvement","Balancier des épaules","Descente relâchée sans résistance"]},
 
 {n:"Curl TRX",s:"3",r:"8-15",rest:"60s",ch:"Corps (angle réglable)",cat:"isolation",mat:"TRX",
-morpho:" Coudes sensibles : la charge s'auto-régule avec l'angle du corps — impossible de dépasser sa capacité du jour.\nUn des seuls curls stricts au poids de corps : le biceps travaille contre le corps entier.\nGainage simultané : le tronc reste rigide pendant toute la flexion — double travail.\nIdéal en superset après des tractions supination pour finir les biceps sans matériel.",
+morpho:"🦴 Coudes sensibles : la charge s'auto-régule avec l'angle du corps — impossible de dépasser sa capacité du jour.\n📐 Un des seuls curls stricts au poids de corps : le biceps travaille contre le corps entier.\n📐 Gainage simultané : le tronc reste rigide pendant toute la flexion — double travail.\n💡 Idéal en superset après des tractions supination pour finir les biceps sans matériel.",
 tips:["Face à l'ancrage, corps incliné en arrière, bras tendus devant","Paumes vers le ciel, tirer les mains vers le front en pliant uniquement les coudes","Coudes qui restent hauts et fixes pendant toute la flexion","Corps rigide en planche inversée — hanches verrouillées","Reculer les pieds pour durcir l'exercice"],
 variantes:[
 {nom:"Curl TRX prise marteau",note:"Poignées neutres pendant la flexion — brachial et confort articulaire",muscles:"Brachial",niveau:"Intermédiaire"},
@@ -660,7 +660,7 @@ variantes:[
 erreurs:["Coudes qui tombent vers le bas — devient un rowing","Hanches qui cassent pour faciliter la remontée","Amplitude partielle en fin de série au lieu de changer d'angle"]},
 
 {n:"Curl kettlebell",s:"3",r:"10-12",rest:"60s",ch:"8-16 kg",cat:"isolation",mat:"kettlebell",
-morpho:" Avant-bras courts : le centre de gravité déporté sous la main déplace la difficulté vers la fin de flexion — courbe de résistance unique.\nPoignets solides requis : la boule tire le poignet en extension, ce qui renforce les fléchisseurs en isométrie.\nGrip faible : la poignée épaisse recrute davantage les fléchisseurs des doigts qu'un haltère classique.\nLe déport de charge rend chaque kilo de kettlebell plus difficile qu'un kilo d'haltère.",
+morpho:"🦴 Avant-bras courts : le centre de gravité déporté sous la main déplace la difficulté vers la fin de flexion — courbe de résistance unique.\n🦴 Poignets solides requis : la boule tire le poignet en extension, ce qui renforce les fléchisseurs en isométrie.\n📐 Grip faible : la poignée épaisse recrute davantage les fléchisseurs des doigts qu'un haltère classique.\n💡 Le déport de charge rend chaque kilo de kettlebell plus difficile qu'un kilo d'haltère.",
 tips:["Tenir la poignée en supination, boule sous l'avant-bras","Poignet verrouillé neutre malgré la traction de la boule","Coudes collés au buste, flexion stricte","Contraction 1s en haut, la boule touche presque l'épaule","Descente contrôlée sans laisser la boule tirer le poignet"],
 variantes:[
 {nom:"Goblet curl (par les cornes)",note:"Boule tenue à deux mains contre soi — flexion bilatérale et congestion rapide",muscles:"Biceps, brachial",niveau:"Débutant"},
@@ -672,7 +672,7 @@ erreurs:["Poignet qui casse en extension sous le poids de la boule","Élan du bu
 
 "Triceps":[
 {n:"Extension poulie haute corde",s:"4",r:"12-15",rest:"60s",ch:"Brûlure",cat:"principal",mat:"poulie",
-morpho:" Tous morphotypes : exercice universel et très efficace — la corde permet une rotation externe en bas qui maximise le pic de contraction. Tension constante sur tout l'arc.\nBras longs : amplitude naturellement grande en bas — exploiter l'étirement du chef long.\nLa séparation des cordes en bas est ce qui distingue cet exercice — elle est indispensable pour la contraction maximale.",
+morpho:"🦴 Tous morphotypes : exercice universel et très efficace — la corde permet une rotation externe en bas qui maximise le pic de contraction. Tension constante sur tout l'arc.\n🦴 Bras longs : amplitude naturellement grande en bas — exploiter l'étirement du chef long.\n💡 La séparation des cordes en bas est ce qui distingue cet exercice — elle est indispensable pour la contraction maximale.",
 tips:["Buste légèrement incliné en avant pour maintenir la tension à travers l'arc entier","Séparer les cordes en bas en pronant — rotation externe maximale pour le pic de contraction","Coudes fixes collés aux flancs — ils ne bougent pas","Excentrique 2 secondes","Contraction 1-2 secondes en extension complète"],
 variantes:[
 {nom:"Extension poulie barre droite",note:"Prise pronation rigide — charge supérieure, sans l'écartement final de la corde",muscles:"Triceps chef latéral",niveau:"Débutant"},
@@ -683,7 +683,7 @@ variantes:[
 erreurs:["Coudes qui avancent — les pectoraux et dorsaux prennent le relais","Ne pas aller en extension complète — perd le pic de contraction","Trop de charge — le contrôle de l'excentrique disparaît"]},
 
 {n:"French press barre EZ couché",s:"4",r:"10-12",rest:"75s",ch:"55%",cat:"principal",mat:"barre",
-morpho:" Bras longs : chef long en étirement maximal — excellente activation. L'amplitude naturellement grande demande une progression prudente des charges.\nBras courts : exercice confortable — peut charger plus vite.\nLa barre EZ est recommandée par vs barre droite — elle réduit le stress sur les poignets et les coudes tout en maintenant un excellent recrutement.",
+morpho:"🦴 Bras longs : chef long en étirement maximal — excellente activation. L'amplitude naturellement grande demande une progression prudente des charges.\n🦴 Bras courts : exercice confortable — peut charger plus vite.\n💡 La barre EZ est recommandée par vs barre droite — elle réduit le stress sur les poignets et les coudes tout en maintenant un excellent recrutement.",
 tips:["Coudes pointent vers le plafond — ils ne s'écartent pas pendant le mouvement","Descendre vers le front (haut de la tête) — pas vers le nez ni la poitrine","Excentrique très lent 3-4 secondes — maximise l'étirement du chef long","Extension quasi-complète en haut sans verrouillage final","Inspirer en descendant, expirer en montant"],
 variantes:[
 {nom:"Skull crusher haltères prise neutre",note:"Deux haltères paumes face à face — coudes libres, trajectoire individualisée",muscles:"Triceps, coudes préservés",niveau:"Débutant"},
@@ -693,7 +693,7 @@ variantes:[
 erreurs:["Coudes qui s'écartent — perd l'isolation du chef long","Descente trop rapide — risque tendineux au niveau du coude","Ne pas aller en extension quasi-complète — perd le bénéfice","Trop de charge — la technique est compromise"]},
 
 {n:"Extension haltère nuque assis",s:"3",r:"12",rest:"60s",ch:"50%",cat:"isolation",mat:"haltères",
-morpho:" Bras longs : chef long en étirement complet — amplitude naturellement grande, excellent recrutement.\nBras courts : moins d'étirement naturel — descendre encore plus loin derrière la tête.\nLe chef long est le plus grand des 3 chefs du triceps — son développement donne du volume au bras entier vu de côté et de dos.",
+morpho:"🦴 Bras longs : chef long en étirement complet — amplitude naturellement grande, excellent recrutement.\n🦴 Bras courts : moins d'étirement naturel — descendre encore plus loin derrière la tête.\n💡 Le chef long est le plus grand des 3 chefs du triceps — son développement donne du volume au bras entier vu de côté et de dos.",
 tips:["Bras vertical — coude pointant vers le plafond","Descendre l'haltère derrière la tête en amplitude maximale","Coude fixe — il ne bouge pas latéralement","Excentrique 3 secondes puis extension contrôlée","Utiliser l'autre main sur le coude pour maintenir l'alignement"],
 variantes:[
 {nom:"Extension un haltère à deux mains",note:"Les deux paumes sous le plateau d'un seul haltère — stabilité et charge accrues",muscles:"Triceps longue portion",niveau:"Débutant"},
@@ -702,7 +702,7 @@ variantes:[
 erreurs:["Coude qui s'écarte vers l'extérieur","Amplitude insuffisante en bas — perd l'étirement du chef long","Vitesse excessive"]},
 
 {n:"Dips prise serrée",s:"4",r:"8-12",rest:"90s",ch:"Corps + lest",cat:"principal",mat:"poids de corps",
-morpho:" Bras longs : amplitude naturellement grande — descendre progressivement et contrôler l'excentrique.\nBras courts : amplitude plus réduite — accentuer la contraction en haut.\nBuste VERTICAL = triceps / Buste incliné = pectoraux. La verticalité du buste est le paramètre clé de cet exercice.",
+morpho:"🦴 Bras longs : amplitude naturellement grande — descendre progressivement et contrôler l'excentrique.\n🦴 Bras courts : amplitude plus réduite — accentuer la contraction en haut.\n💡 Buste VERTICAL = triceps / Buste incliné = pectoraux. La verticalité du buste est le paramètre clé de cet exercice.",
 tips:["Buste VERTICAL — c'est ce qui cible les triceps et non les pectoraux","Prise à largeur des épaules maximum — pas plus large","Excentrique 3 secondes","Extension complète en haut sans verrouillage total","Genoux croisés en arrière pour maintenir la verticalité du buste"],
 variantes:[
 {nom:"Dips aux anneaux",note:"Appuis instables en rotation libre — stabilisation permanente pendant la poussée",muscles:"Triceps, pectoraux, coiffe",niveau:"Avancé"},
@@ -712,7 +712,7 @@ variantes:[
 erreurs:["Incliner le buste — les pectoraux prennent le relais","Amplitude insuffisante","Coudes trop écartés"]},
 
 {n:"Kickback haltère",s:"3",r:"12-15",rest:"60s",ch:"Léger",cat:"isolation",mat:"haltères",
-morpho:" Tous morphotypes : chef long + latéral en contraction maximale.\nBras longs : amplitude plus grande — excellent étirement en bas.\nExercice de finition — qualité absolue. Jamais lourd.",
+morpho:"🦴 Tous morphotypes : chef long + latéral en contraction maximale.\n🦴 Bras longs : amplitude plus grande — excellent étirement en bas.\n💡 Exercice de finition — qualité absolue. Jamais lourd.",
 tips:["Buste horizontal — haltère part vers l'arrière","Coude fixe à hauteur de l'épaule ou au-dessus","Extension complète — pause 1s en contraction maximale","Excentrique 2s contrôlé","Un bras à la fois"],
 variantes:[
 {nom:"Kickback poulie basse",note:"Câble à la place de l'haltère — la tension existe enfin sur toute la course",muscles:"Triceps en tension continue",niveau:"Débutant"},
@@ -722,7 +722,7 @@ variantes:[
 erreurs:["Coude qui descend en cours de mouvement","Amplitude insuffisante","Balancement du corps"]},
 
 {n:"Extension nuque câble haut",s:"3",r:"12-15",rest:"60s",ch:"Léger",cat:"isolation",mat:"poulie",
-morpho:" Tous morphotypes : chef long en étirement et tension constants.\nBras longs : amplitude naturellement grande — excellent recrutement.\nTension constante du câble supérieure aux haltères.",
+morpho:"🦴 Tous morphotypes : chef long en étirement et tension constants.\n🦴 Bras longs : amplitude naturellement grande — excellent recrutement.\n💡 Tension constante du câble supérieure aux haltères.",
 tips:["Dos à la poulie — câble au-dessus de la tête","Extension du coude vers l'avant et le bas","Coude fixe et haut","Contraction 1s en extension complète","Excentrique 2-3s"],
 variantes:[
 {nom:"Extension overhead barre EZ câble",note:"Barre coudée à la place de la corde — prise fixe et charge supérieure",muscles:"Triceps longue portion",niveau:"Intermédiaire"},
@@ -731,7 +731,7 @@ variantes:[
 erreurs:["Coude qui descend","Amplitude partielle","Corps qui se balance"]},
 
 {n:"Barre au front incliné (incline skull crusher)",s:"4",r:"10-12",rest:"75s",ch:"55%",cat:"isolation",mat:"barre",
-morpho:" Bras longs : banc légèrement incliné (+15°) créé un étirement supérieur du chef long par rapport au plat.\nL'inclinaison réduit aussi le stress sur les coudes par rapport au French press couché plat.",
+morpho:"🦴 Bras longs : banc légèrement incliné (+15°) créé un étirement supérieur du chef long par rapport au plat.\n💡 L'inclinaison réduit aussi le stress sur les coudes par rapport au French press couché plat.",
 tips:["Banc incliné 15-20° — pas plus","Descendre la barre vers le front en contrôlant","Coudes pointent strictement vers le plafond — ne s'écartent pas","Excentrique 3-4s","Extension sans verrouillage final"],
 variantes:[
 {nom:"Skull crusher banc plat",note:"Version horizontale classique — équilibre entre étirement et charge",muscles:"Triceps",niveau:"Débutant"},
@@ -741,7 +741,7 @@ variantes:[
 erreurs:["Coudes qui s'écartent","Descente vers le nez (risque)","Trop de charge — technique compromise"]},
 
 {n:"Close grip bench press",s:"4",r:"8-10",rest:"90s",ch:"70%",cat:"principal",mat:"barre",
-morpho:" Bras courts : exercice confortable — bon levier.\nBras longs : amplitude grande — progression prudente.\nDéveloppé prise serrée = triceps (60%) + pectoraux internes (40%). Permet de charger lourd en sécurité.",
+morpho:"🦴 Bras courts : exercice confortable — bon levier.\n🦴 Bras longs : amplitude grande — progression prudente.\n💡 Développé prise serrée = triceps (60%) + pectoraux internes (40%). Permet de charger lourd en sécurité.",
 tips:["Prise à largeur des épaules (pas plus serrée)","Descente contrôlée vers le bas de la poitrine","Coudes légèrement serrés contre le corps","Poussée explosive","Pont lombaire naturel — fesses sur le banc"],
 variantes:[
 {nom:"Floor press prise serrée",note:"Au sol — course raccourcie par la butée des coudes, moitié haute surchargée",muscles:"Triceps (verrouillage)",niveau:"Intermédiaire"},
@@ -751,7 +751,7 @@ variantes:[
 erreurs:["Prise trop serrée — stress poignet","Laisser les coudes s'écarter","Rebond sur la poitrine"]},
 
 {n:"Overhead triceps extension câble",s:"3",r:"15",rest:"60s",ch:"Léger",cat:"isolation",mat:"poulie",
-morpho:" Bras longs : amplitude naturellement grande — excellent étirement du chef long.\nExtension au-dessus de la tête = chef long en étirement constant TOUT au long du mouvement. Supérieur aux haltères pour ce chef.",
+morpho:"🦴 Bras longs : amplitude naturellement grande — excellent étirement du chef long.\n💡 Extension au-dessus de la tête = chef long en étirement constant TOUT au long du mouvement. Supérieur aux haltères pour ce chef.",
 tips:["Dos à la poulie, câble au-dessus de la tête","Coudes pointent vers le plafond — ne bougent pas","Extension complète vers l'avant et le bas","Excentrique 2-3s","Gainage actif — ne pas cambrer"],
 variantes:[
 {nom:"Extension overhead à la barre EZ",note:"Prise rigide semi-pronée — plus lourd que la corde",muscles:"Triceps longue portion",niveau:"Intermédiaire"},
@@ -760,7 +760,7 @@ variantes:[
 erreurs:["Coudes qui descendent","Corps qui se balance","Amplitude partielle"]},
 
 {n:"Pompes diamant",s:"3-4",r:"8-15",rest:"60-90s",ch:"Corps",cat:"principal",mat:"poids de corps",
-morpho:" Bras longs : amplitude de flexion importante — descendre contrôlé pour protéger coudes et poignets.\nPoignets sensibles : écarter légèrement les mains (triangle ouvert) ou utiliser des poignées de pompes.\nTriceps dominants recherchés : la prise serrée transfère la majorité de la charge des pectoraux vers les triceps.\nLe meilleur exercice triceps au poids de corps pur, validé par les études EMG.",
+morpho:"🦴 Bras longs : amplitude de flexion importante — descendre contrôlé pour protéger coudes et poignets.\n🦴 Poignets sensibles : écarter légèrement les mains (triangle ouvert) ou utiliser des poignées de pompes.\n📐 Triceps dominants recherchés : la prise serrée transfère la majorité de la charge des pectoraux vers les triceps.\n💡 Le meilleur exercice triceps au poids de corps pur, validé par les études EMG.",
 tips:["Mains sous la poitrine, pouces et index formant un triangle","Coudes qui restent près du corps pendant la descente","Poitrine qui descend vers les mains, pas le menton","Extension complète des coudes en haut à chaque rep","Corps gainé rigide de la tête aux talons"],
 variantes:[
 {nom:"Pompes prise serrée",note:"Mains largeur d'épaules sans triangle — presque autant de triceps, poignets soulagés",muscles:"Triceps, pectoraux internes",niveau:"Débutant"},
@@ -770,7 +770,7 @@ variantes:[
 erreurs:["Coudes qui s'évasent vers l'extérieur","Bassin qui monte pour raccourcir l'amplitude","Mains trop jointes créant une douleur de poignet"]},
 
 {n:"Dips entre bancs",s:"3",r:"10-20",rest:"60s",ch:"Corps (+ lest sur cuisses)",cat:"principal",mat:"poids de corps",
-morpho:" Épaules saines requises : l'extension d'épaule derrière le corps est contraignante — amplitude à limiter si antécédents.\nBras courts : très bon rendement, la trajectoire courte permet du volume lourd.\nAlternative aux dips complets : charge réduite car les pieds portent une partie du poids.\nProgression simple : pieds au sol → pieds surélevés → lest sur les cuisses.",
+morpho:"🦴 Épaules saines requises : l'extension d'épaule derrière le corps est contraignante — amplitude à limiter si antécédents.\n🦴 Bras courts : très bon rendement, la trajectoire courte permet du volume lourd.\n📐 Alternative aux dips complets : charge réduite car les pieds portent une partie du poids.\n💡 Progression simple : pieds au sol → pieds surélevés → lest sur les cuisses.",
 tips:["Mains sur le bord du banc, doigts vers l'avant, jambes tendues devant","Descendre jusqu'à 90° de flexion de coude, pas plus bas","Coudes qui pointent vers l'arrière, jamais vers l'extérieur","Dos qui frôle le banc pendant la descente","Épaules basses et poitrine ouverte tout le mouvement"],
 variantes:[
 {nom:"Dips barres parallèles",note:"Corps entier suspendu entre les barres — la version complète du mouvement",muscles:"Triceps, pectoraux",niveau:"Intermédiaire"},
@@ -779,7 +779,7 @@ variantes:[
 erreurs:["Descendre trop bas — capsule antérieure de l'épaule en danger","Fesses qui s'éloignent du banc","Épaules qui remontent vers les oreilles en bas"]},
 
 {n:"Extension triceps élastique",s:"3-4",r:"12-20",rest:"45s",ch:"Élastique léger/moyen",cat:"isolation",mat:"élastique",
-morpho:" Coudes sensibles : la tension progressive épargne la position étirée, là où le tendon souffre à la poulie.\nAvant-bras longs : la résistance croissante correspond exactement à la courbe de force du triceps en extension.\nRéplique fidèle du pushdown poulie : ancrage haut, mêmes consignes, transportable partout.\nVolume de qualité illimité pour les triceps sans surcharge articulaire.",
+morpho:"🦴 Coudes sensibles : la tension progressive épargne la position étirée, là où le tendon souffre à la poulie.\n🦴 Avant-bras longs : la résistance croissante correspond exactement à la courbe de force du triceps en extension.\n📐 Réplique fidèle du pushdown poulie : ancrage haut, mêmes consignes, transportable partout.\n💡 Volume de qualité illimité pour les triceps sans surcharge articulaire.",
 tips:["Élastique ancré en hauteur, dos droit légèrement penché","Coudes collés aux flancs et strictement immobiles","Étendre les bras jusqu'au verrouillage complet","Contraction 1s bras tendus, triceps serrés","Remonter lentement sans laisser les coudes avancer"],
 variantes:[
 {nom:"Extension nuque élastique",note:"Ancrage bas, bras au-dessus de la tête — la longue portion en étirement",muscles:"Triceps longue portion",niveau:"Débutant"},
@@ -789,7 +789,7 @@ variantes:[
 erreurs:["Coudes qui s'écartent des flancs","Épaules qui participent au mouvement","Retour trop rapide sans contrôle excentrique"]},
 
 {n:"Extension triceps TRX",s:"3",r:"8-12",rest:"60s",ch:"Corps (angle réglable)",cat:"isolation",mat:"TRX",
-morpho:" Coudes fragiles : commencer très vertical — la charge augmente au degré près en reculant les pieds.\nLongue portion ciblée : les bras au-dessus de la tête en position basse étirent complètement le chef long.\nGainage intégré : le corps reste planche pendant toute l'extension.\nL'équivalent du skull crusher au poids de corps — sans barre ni banc.",
+morpho:"🦴 Coudes fragiles : commencer très vertical — la charge augmente au degré près en reculant les pieds.\n📐 Longue portion ciblée : les bras au-dessus de la tête en position basse étirent complètement le chef long.\n📐 Gainage intégré : le corps reste planche pendant toute l'extension.\n💡 L'équivalent du skull crusher au poids de corps — sans barre ni banc.",
 tips:["Dos à l'ancrage, poignées en mains, corps incliné vers l'avant","Plier les coudes pour amener les mains derrière la tête","Coudes qui pointent devant, serrés largeur d'épaules","Étendre les bras pour repousser le corps en position de départ","Plus les pieds reculent, plus l'exercice est difficile"],
 variantes:[
 {nom:"Extension TRX à genoux",note:"Appui genoux — bras de levier raccourci pour apprendre le schéma",muscles:"Triceps",niveau:"Débutant"},
@@ -798,7 +798,7 @@ variantes:[
 erreurs:["Coudes qui s'évasent pendant la flexion","Hanches qui cassent pour faciliter le retour","Angle trop incliné avant de maîtriser la technique"]},
 
 {n:"Extension nuque kettlebell",s:"3",r:"10-15",rest:"60s",ch:"8-16 kg",cat:"isolation",mat:"kettlebell",
-morpho:" Bras longs : la longue portion du triceps répond fortement au travail étiré au-dessus de la tête — priorité morphologique.\nÉpaules raides : tenir la boule à deux mains stabilise la trajectoire par rapport à l'haltère.\nPrise naturelle : la poignée verticale place les poignets en position neutre confortable.\nLa forme de la kettlebell rend cette version plus stable et plus sûre que l'haltère derrière la nuque.",
+morpho:"🦴 Bras longs : la longue portion du triceps répond fortement au travail étiré au-dessus de la tête — priorité morphologique.\n🦴 Épaules raides : tenir la boule à deux mains stabilise la trajectoire par rapport à l'haltère.\n📐 Prise naturelle : la poignée verticale place les poignets en position neutre confortable.\n💡 La forme de la kettlebell rend cette version plus stable et plus sûre que l'haltère derrière la nuque.",
 tips:["Kettlebell tenue à deux mains par les cornes de la poignée, boule vers le bas","Coudes serrés qui pointent vers le plafond","Descendre la boule derrière la nuque en flexion complète","Étendre sans bouger les bras — seuls les avant-bras travaillent","Gainage abdominal pour éviter la cambrure compensatoire"],
 variantes:[
 {nom:"Extension nuque kettlebell assis",note:"Dossier vertical — la compensation lombaire disparaît",muscles:"Triceps longue portion",niveau:"Débutant"},
@@ -809,7 +809,7 @@ erreurs:["Coudes qui s'écartent en descente","Cambrure lombaire quand la charge
 
 "Quadriceps":[
 {n:"Presse à jambes 45° pieds hauts",s:"4",r:"10-15",rest:"90s",ch:"70%",cat:"principal",mat:"machine",
-morpho:" Fémurs longs : MEILLEUR exercice jambes — le squat force un buste trop incliné vers l'avant avec des fémurs longs, créant une surcharge lombaire. La presse supprime ce problème anatomique.\nFémurs courts : squat ou presse fonctionnent — les deux sont appropriés.\nPosition des pieds : hauts = fessiers+ischios+quadriceps / bas = quadriceps isolés / écartés = adducteurs + fessiers.",
+morpho:"🦴 Fémurs longs : MEILLEUR exercice jambes — le squat force un buste trop incliné vers l'avant avec des fémurs longs, créant une surcharge lombaire. La presse supprime ce problème anatomique.\n🦴 Fémurs courts : squat ou presse fonctionnent — les deux sont appropriés.\n🔩 Position des pieds : hauts = fessiers+ischios+quadriceps / bas = quadriceps isolés / écartés = adducteurs + fessiers.",
 tips:["Pieds à hauteur des épaules ou légèrement plus écartés","Amplitude complète — descendre jusqu'à 90° minimum","Genoux dans l'axe des pieds — ne jamais les laisser rentrer","Excentrique 3 secondes — pas de rebond en bas","Ne jamais décoller le bas du dos de la plateforme"],
 variantes:[
 {nom:"Presse pieds bas sur le plateau",note:"Appuis descendus — la flexion de genou domine, quadriceps en première ligne",muscles:"Quadriceps",niveau:"Débutant"},
@@ -820,7 +820,7 @@ variantes:[
 erreurs:["Décoller le bas du dos — risque lombaire grave","Genoux qui rentrent","Verrouiller les genoux en haut","Rebond en bas"]},
 
 {n:"Leg extension machine",s:"3",r:"15",rest:"60s",ch:"60%",cat:"isolation",mat:"machine",
-morpho:" Tous morphotypes : isolation pure des quadriceps.\nFémurs longs : amplitude de flexion naturellement plus grande — exploiter pleinement.\nContraction isométrique 1-2s en extension complète indispensable pour la connexion neuromusculaire.",
+morpho:"🦴 Tous morphotypes : isolation pure des quadriceps.\n🦴 Fémurs longs : amplitude de flexion naturellement plus grande — exploiter pleinement.\n💡 Contraction isométrique 1-2s en extension complète indispensable pour la connexion neuromusculaire.",
 tips:["Dos appuyé sur le dossier — lombaires en contact","Contraction 1-2s en extension complète","Excentrique 3s","Pointe des pieds vers soi pour plus d'activation du droit fémoral","15-20 reps léger en finisseur"],
 variantes:[
 {nom:"Leg extension unilatérale",note:"Une jambe — le côté fort ne masque plus le côté faible",muscles:"Quadriceps ciblé",niveau:"Débutant"},
@@ -830,7 +830,7 @@ variantes:[
 erreurs:["Amplitude insuffisante en bas","Pas de contraction en haut","Trop lourd — compensation avec le buste"]},
 
 {n:"Squat goblet haltère",s:"3",r:"12",rest:"90s",ch:"Modéré",cat:"principal",mat:"haltères",
-morpho:" Fémurs longs : l'haltère tenu devant contrebalance et permet de rester plus vertical — version accessible.\nFémurs courts : exercice confortable — position naturellement favorable.\nVersion d'apprentissage ou échauffement avant la presse.",
+morpho:"🦴 Fémurs longs : l'haltère tenu devant contrebalance et permet de rester plus vertical — version accessible.\n🦴 Fémurs courts : exercice confortable — position naturellement favorable.\n💡 Version d'apprentissage ou échauffement avant la presse.",
 tips:["Haltère tenu verticalement contre la poitrine","Descente contrôlée — cuisses parallèles au sol minimum","Genoux dans l'axe des pieds, légèrement en dehors","Talon bien ancré au sol","Dos droit, regard frontal"],
 variantes:[
 {nom:"Goblet squat kettlebell",note:"KB tenue par les cornes — prise plus naturelle et boule calée contre le buste",muscles:"Quadriceps, fessiers",niveau:"Débutant"},
@@ -841,7 +841,7 @@ variantes:[
 erreurs:["Talons qui décollent — manque de mobilité cheville","Genoux qui rentrent","Dos qui s'arrondit — charge trop lourde"]},
 
 {n:"Hack squat machine",s:"4",r:"10-12",rest:"90s",ch:"65-70%",cat:"principal",mat:"machine",
-morpho:" Fémurs longs : meilleure option que le squat classique — machine réduit la compensation du dos.\nFémurs courts : exercice confortable et très efficace.\nPlus de quadriceps que la presse grâce à l'angle de la machine.",
+morpho:"🦴 Fémurs longs : meilleure option que le squat classique — machine réduit la compensation du dos.\n🦴 Fémurs courts : exercice confortable et très efficace.\n💡 Plus de quadriceps que la presse grâce à l'angle de la machine.",
 tips:["Pieds à largeur des hanches","Descente jusqu'à 90° minimum","Genoux dans l'axe des pieds","Dos plaqué contre le dossier","Ne pas verrouiller les genoux en haut"],
 variantes:[
 {nom:"Hack squat inversé (face à la machine)",note:"Poitrine contre le dossier — la poussée bascule vers les fessiers et ischios",muscles:"Fessiers, ischio-jambiers",niveau:"Intermédiaire"},
@@ -851,7 +851,7 @@ variantes:[
 erreurs:["Genoux qui rentrent","Amplitude insuffisante","Fesses qui décollent du siège"]},
 
 {n:"Fentes avant haltères",s:"4",r:"10/jambe",rest:"75s",ch:"Modéré",cat:"principal",mat:"haltères",
-morpho:" Fémurs longs : pas long pour maximiser l'activation des fessiers.\nFémurs courts : quadriceps davantage sollicités avec un pas normal.\nGrand pas = fessiers / Petit pas = quadriceps.",
+morpho:"🦴 Fémurs longs : pas long pour maximiser l'activation des fessiers.\n🦴 Fémurs courts : quadriceps davantage sollicités avec un pas normal.\n💡 Grand pas = fessiers / Petit pas = quadriceps.",
 tips:["Pas long — genou avant dans l'axe du pied","Buste droit, regard frontal","Genou avant ne dépasse pas la pointe du pied","Pied arrière bien ancré sur la pointe","Descendre sans toucher le genou arrière au sol"],
 variantes:[
 {nom:"Fentes arrière",note:"Le pas part vers l'arrière — genou avant stable, version la plus douce articulairement",muscles:"Fessiers, quadriceps",niveau:"Débutant"},
@@ -862,7 +862,7 @@ variantes:[
 erreurs:["Genou avant qui dépasse les orteils","Buste qui s'incline","Pas trop court"]},
 
 {n:"Bulgarian split squat barre",s:"4",r:"8/jambe",rest:"90s",ch:"Modéré-lourd",cat:"principal",mat:"barre",
-morpho:" Fémurs longs : excellent — la position unilatérale permet au fémur de rester plus vertical.\nFémurs courts : quadriceps très sollicités.\nConsidéré par beaucoup comme supérieur au squat bilatéral pour l'hypertrophie des jambes.",
+morpho:"🦴 Fémurs longs : excellent — la position unilatérale permet au fémur de rester plus vertical.\n🦴 Fémurs courts : quadriceps très sollicités.\n💡 Considéré par beaucoup comme supérieur au squat bilatéral pour l'hypertrophie des jambes.",
 tips:["Barre basse sur les trapèzes","Pied arrière sur banc","Pied avant assez loin — genou ne dépasse pas les orteils","Descente quasi-verticale — buste droit","Pause 1s en bas"],
 variantes:[
 {nom:"Bulgares haltères",note:"Charges le long du corps — équilibre facilité et prise limitante en moins",muscles:"Quadriceps, fessiers",niveau:"Intermédiaire"},
@@ -872,7 +872,7 @@ variantes:[
 erreurs:["Pied avant trop près","Buste trop incliné","Trop lourd avant maîtrise technique"]},
 
 {n:"Sissy squat",s:"3",r:"12-15",rest:"60s",ch:"Corps",cat:"isolation",mat:"poids de corps",
-morpho:" Tous morphotypes : quadriceps en étirement MAXIMAL — les genoux dépassent largement la ligne des orteils intentionnellement.\nExercice d'isolation pure des quadriceps souvent mal compris. Pas dangereux si progression graduelle.",
+morpho:"🦴 Tous morphotypes : quadriceps en étirement MAXIMAL — les genoux dépassent largement la ligne des orteils intentionnellement.\n💡 Exercice d'isolation pure des quadriceps souvent mal compris. Pas dangereux si progression graduelle.",
 tips:["Tenir un appui, monter sur la pointe des pieds","Genoux vers l'avant en descendant — le corps forme une ligne droite genoux-hanches-épaules","Descendre jusqu'à l'inconfort musculaire (pas articulaire)","Remonter lentement","Progresser avec haltère sur la poitrine"],
 variantes:[
 {nom:"Sissy squat assisté",note:"Une main sur un montant — l'équilibre sort de l'équation, le quadriceps reste",muscles:"Quadriceps",niveau:"Intermédiaire"},
@@ -882,7 +882,7 @@ variantes:[
 erreurs:["Aller trop vite avant d'avoir la mobilité","Douleur articulaire (arrêter immédiatement)","Amplitude insuffisante"]},
 
 {n:"Squat au poids de corps",s:"3-4",r:"15-25",rest:"60s",ch:"Corps",cat:"principal",mat:"poids de corps",
-morpho:" Fémurs longs : buste qui penche naturellement — écarter les pieds et ouvrir les pointes pour rester plus vertical.\nFémurs courts : squat profond très accessible, amplitude complète recommandée dès le début.\nChevilles raides : talons légèrement surélevés (petite cale) pour descendre sans compensation lombaire.\nLe mouvement de référence pour évaluer et enseigner le schéma moteur avant toute charge.",
+morpho:"🦴 Fémurs longs : buste qui penche naturellement — écarter les pieds et ouvrir les pointes pour rester plus vertical.\n🦴 Fémurs courts : squat profond très accessible, amplitude complète recommandée dès le début.\n📐 Chevilles raides : talons légèrement surélevés (petite cale) pour descendre sans compensation lombaire.\n💡 Le mouvement de référence pour évaluer et enseigner le schéma moteur avant toute charge.",
 tips:["Pieds largeur d'épaules, pointes légèrement ouvertes","Descendre en poussant les genoux vers l'extérieur, dans l'axe des pieds","Cuisses au moins parallèles au sol, plus bas si la mobilité le permet","Poids réparti sur tout le pied — talons ancrés au sol","Buste fier, regard horizontal, bras devant en contrepoids"],
 variantes:[
 {nom:"Squat sumo poids de corps",note:"Pieds très écartés pointes ouvertes — adducteurs recrutés et buste plus vertical",muscles:"Adducteurs, fessiers",niveau:"Débutant"},
@@ -895,7 +895,7 @@ variantes:[
 erreurs:["Genoux qui rentrent vers l'intérieur en remontant","Talons qui décollent du sol","Dos qui s'arrondit en bas de squat"]},
 
 {n:"Chaise au mur (wall sit)",s:"3",r:"30-90s",rest:"60s",ch:"Corps",cat:"gainage",mat:"poids de corps",
-morpho:" Genoux sensibles : isométrie sans impact ni cisaillement dynamique — souvent le premier exercice toléré en reprise.\nFémurs longs : vérifier que les genoux restent à la verticale des chevilles en reculant assez les pieds.\nTous niveaux : la durée remplace la charge — progression infinie sans matériel.\nRenforcement tendineux et endurance de force — la base avant les mouvements dynamiques chargés.",
+morpho:"🦴 Genoux sensibles : isométrie sans impact ni cisaillement dynamique — souvent le premier exercice toléré en reprise.\n🦴 Fémurs longs : vérifier que les genoux restent à la verticale des chevilles en reculant assez les pieds.\n📐 Tous niveaux : la durée remplace la charge — progression infinie sans matériel.\n💡 Renforcement tendineux et endurance de force — la base avant les mouvements dynamiques chargés.",
 tips:["Dos entièrement plaqué contre le mur, des épaules au bassin","Cuisses parallèles au sol, genoux à 90°","Genoux à la verticale des chevilles, jamais au-delà des pointes","Poids dans les talons, mains libres ou croisées sur la poitrine","Respiration continue — ne jamais bloquer en isométrie"],
 variantes:[
 {nom:"Chaise unilatérale",note:"Une jambe tendue devant — toute la charge sur une seule cuisse",muscles:"Quadriceps unilatéral",niveau:"Avancé"},
@@ -904,7 +904,7 @@ variantes:[
 erreurs:["Position trop haute — cuisses au-dessus de la parallèle","Bas du dos qui décolle du mur","Mains posées sur les cuisses pour s'aider"]},
 
 {n:"Fentes sautées",s:"3",r:"8-12/jambe",rest:"90s",ch:"Corps",cat:"principal",mat:"poids de corps",
-morpho:" Genoux sains requis : impact pliométrique — maîtriser la fente classique avant toute version sautée.\nFémurs longs : grand pas d'écart pour absorber la réception avec le tibia vertical.\nSports avec changements d'appuis : transfert direct vers la course, les sports collectifs et de combat.\nPuissance unilatérale + coordination + cardio — un exercice trois-en-un pour athlètes.",
+morpho:"🦴 Genoux sains requis : impact pliométrique — maîtriser la fente classique avant toute version sautée.\n🦴 Fémurs longs : grand pas d'écart pour absorber la réception avec le tibia vertical.\n📐 Sports avec changements d'appuis : transfert direct vers la course, les sports collectifs et de combat.\n💡 Puissance unilatérale + coordination + cardio — un exercice trois-en-un pour athlètes.",
 tips:["Partir en fente stable, genou arrière proche du sol","Sauter en poussant fort sur les deux jambes","Changer de jambe en l'air, réception amortie en fente opposée","Buste vertical pendant tout l'enchaînement","Réception silencieuse — absorber avec les jambes, pas les articulations"],
 variantes:[
 {nom:"Fentes alternées dynamiques",note:"Changement de jambe au sol sans phase aérienne — le pont entre fente et pliométrie",muscles:"Quadriceps, fessiers",niveau:"Débutant"},
@@ -913,7 +913,7 @@ variantes:[
 erreurs:["Réception genou rentré vers l'intérieur","Pas d'écart trop court — genou avant qui file au-delà de la pointe","Buste qui s'effondre vers l'avant à la réception"]},
 
 {n:"Pistol squat assisté TRX",s:"3",r:"5-8/jambe",rest:"90s",ch:"Corps (assistance réglable)",cat:"principal",mat:"TRX",
-morpho:" Fémurs longs : le contrepoids des sangles permet de rester vertical là où le pistol libre est quasi impossible.\nChevilles raides : l'assistance compense le manque de dorsiflexion, principal facteur limitant du pistol.\nDéséquilibre jambes : révélateur et correctif absolu des asymétries membres inférieurs.\nLa progression la plus intelligente vers le pistol squat libre — l'aide diminue au fil des semaines.",
+morpho:"🦴 Fémurs longs : le contrepoids des sangles permet de rester vertical là où le pistol libre est quasi impossible.\n🦴 Chevilles raides : l'assistance compense le manque de dorsiflexion, principal facteur limitant du pistol.\n📐 Déséquilibre jambes : révélateur et correctif absolu des asymétries membres inférieurs.\n💡 La progression la plus intelligente vers le pistol squat libre — l'aide diminue au fil des semaines.",
 tips:["Face à l'ancrage, sangles tendues bras semi-fléchis","Une jambe tendue devant, descendre en squat complet sur l'autre","Tirer sur les sangles uniquement quand nécessaire","Talon de la jambe d'appui ancré au sol tout le mouvement","Réduire l'aide des bras semaine après semaine"],
 variantes:[
 {nom:"Pistol box (sur banc)",note:"Descente contrôlée jusqu'au banc — l'amplitude se règle à la hauteur du support",muscles:"Quadriceps, fessier",niveau:"Intermédiaire"},
@@ -924,7 +924,7 @@ variantes:[
 erreurs:["Se hisser aux sangles au lieu de pousser sur la jambe","Genou qui s'effondre vers l'intérieur","Descente précipitée sans contrôle excentrique"]},
 
 {n:"Squat élastique",s:"4",r:"12-20",rest:"60s",ch:"Élastique fort",cat:"principal",mat:"élastique",
-morpho:" Lombaires sensibles : la résistance croissante charge le haut du mouvement en épargnant la position basse, l'inverse exact de la barre.\nFémurs longs : aucune barre sur le dos = liberté totale d'inclinaison du buste selon la morphologie.\nVerrouillage faible en haut de squat : l'élastique surcharge précisément cette zone.\nComplément parfait du squat barre : il renforce là où la barre ne résiste plus.",
+morpho:"🦴 Lombaires sensibles : la résistance croissante charge le haut du mouvement en épargnant la position basse, l'inverse exact de la barre.\n🦴 Fémurs longs : aucune barre sur le dos = liberté totale d'inclinaison du buste selon la morphologie.\n📐 Verrouillage faible en haut de squat : l'élastique surcharge précisément cette zone.\n💡 Complément parfait du squat barre : il renforce là où la barre ne résiste plus.",
 tips:["Élastique sous les deux pieds, passé sur les épaules ou tenu aux épaules","Descendre en squat complet, l'élastique se détend en bas","Remonter en accélérant contre la résistance croissante","Genoux poussés vers l'extérieur pendant toute la montée","Verrouillage complet des hanches en haut contre tension maximale"],
 variantes:[
 {nom:"Squat sumo élastique",note:"Pieds écartés sur la bande — adducteurs et fessiers face à la résistance croissante",muscles:"Adducteurs, fessiers",niveau:"Débutant"},
@@ -933,7 +933,7 @@ variantes:[
 erreurs:["Élastique mal centré sous les pieds — traction asymétrique","Remontée ralentie au lieu d'accélérer contre la résistance","Buste qui s'effondre quand la tension augmente"]},
 
 {n:"Squat sur bosu",s:"3",r:"10-15",rest:"60-90s",ch:"Corps",cat:"gainage",mat:"bosu",
-morpho:" Chevilles fragiles ou post-entorse : renforcement proprioceptif de référence — les stabilisateurs travaillent en continu.\nGenoux instables : recrutement accru des muscles péri-articulaires en conditions contrôlées.\nSports de terrain : réactivité des appuis directement transférable aux surfaces instables du jeu.\nOutil de prévention et de rééducation — la charge reste volontairement légère, la qualité prime.",
+morpho:"🦴 Chevilles fragiles ou post-entorse : renforcement proprioceptif de référence — les stabilisateurs travaillent en continu.\n🦴 Genoux instables : recrutement accru des muscles péri-articulaires en conditions contrôlées.\n📐 Sports de terrain : réactivité des appuis directement transférable aux surfaces instables du jeu.\n💡 Outil de prévention et de rééducation — la charge reste volontairement légère, la qualité prime.",
 tips:["Bosu dôme vers le haut, monter un pied après l'autre au centre","Pieds largeur de hanches, orteils qui agrippent la surface","Descendre lentement en squat partiel puis complet avec la maîtrise","Fixer un point devant soi pour l'équilibre","Regagner la stabilité 1s en haut entre chaque répétition"],
 variantes:[
 {nom:"Squat bosu côté plat vers le haut",note:"Debout sur la plateforme rigide qui oscille — le niveau d'instabilité maximal",muscles:"Quadriceps, stabilisateurs de cheville",niveau:"Avancé"},
@@ -942,7 +942,7 @@ variantes:[
 erreurs:["Monter sur le bosu d'un saut sans contrôle","Regard au sol qui dégrade l'équilibre","Chercher la profondeur avant la stabilité"]},
 
 {n:"Fente arrière sur bosu",s:"3",r:"8-12/jambe",rest:"75s",ch:"Corps",cat:"principal",mat:"bosu",
-morpho:" Genoux sensibles : la fente arrière est déjà la version la plus douce pour le genou — le bosu sous le pied avant ajoute la proprioception sans impact.\nChevilles instables : renforcement dynamique dans un mouvement fonctionnel complet.\nDéficit d'équilibre unilatéral : chaque répétition est un test d'appui — parfait pour sportifs en prévention.\nCombine force unilatérale et proprioception, deux qualités clés du sportif de terrain.",
+morpho:"🦴 Genoux sensibles : la fente arrière est déjà la version la plus douce pour le genou — le bosu sous le pied avant ajoute la proprioception sans impact.\n🦴 Chevilles instables : renforcement dynamique dans un mouvement fonctionnel complet.\n📐 Déficit d'équilibre unilatéral : chaque répétition est un test d'appui — parfait pour sportifs en prévention.\n💡 Combine force unilatérale et proprioception, deux qualités clés du sportif de terrain.",
 tips:["Pied avant au centre du dôme, bien ancré avant de bouger","Grand pas en arrière, genou arrière qui descend vers le sol","Tibia avant vertical, poids dans le talon du pied avant","Remonter en poussant sur la jambe avant uniquement","Stabiliser complètement avant la répétition suivante"],
 variantes:[
 {nom:"Fente avant sur bosu",note:"Réception du pas sur le dôme — la coordination à l'impact, plus exigeante",muscles:"Quadriceps, stabilisateurs",niveau:"Avancé"},
@@ -951,7 +951,7 @@ variantes:[
 erreurs:["Genou avant qui oscille latéralement","Pas arrière trop court — équilibre précaire","Pousser sur la jambe arrière pour remonter"]},
 
 {n:"Front squat kettlebell",s:"4",r:"8-12",rest:"90s",ch:"2×12-24 kg",cat:"principal",mat:"kettlebell",
-morpho:" Fémurs longs : la charge devant le corps contrebalance et permet un buste bien plus vertical qu'au back squat.\nPoignets raides : la position rack kettlebell est plus tolérante que le front squat barre à coudes hauts.\nGainage prioritaire : la sangle abdominale lutte contre la flexion pendant tout le mouvement.\nLe squat le plus rentable à la maison : charge devant, dos protégé, gainage intégré.",
+morpho:"🦴 Fémurs longs : la charge devant le corps contrebalance et permet un buste bien plus vertical qu'au back squat.\n🦴 Poignets raides : la position rack kettlebell est plus tolérante que le front squat barre à coudes hauts.\n🫁 Gainage prioritaire : la sangle abdominale lutte contre la flexion pendant tout le mouvement.\n💡 Le squat le plus rentable à la maison : charge devant, dos protégé, gainage intégré.",
 tips:["Deux kettlebells en position rack : coudes bas, boules sur les avant-bras","Descendre en squat complet en gardant les coudes devant","Buste le plus vertical possible — la charge devant l'exige","Genoux dans l'axe des pointes de pieds","Expirer en remontant sans laisser les coudes tomber"],
 variantes:[
 {nom:"Goblet squat",note:"Une seule KB contre la poitrine — la porte d'entrée du squat charge devant",muscles:"Quadriceps, fessiers",niveau:"Débutant"},
@@ -963,8 +963,8 @@ erreurs:["Coudes qui tombent — les kettlebells tirent le buste en avant","Talo
 
 "Ischio-jambiers":[
 {n:"Leg curl allongé excentrique",s:"4",r:"10-12",rest:"75s",ch:"Modéré",cat:"principal",mat:"machine",
-morpho:" Fémurs longs : renforcement ischios particulièrement important pour l'équilibre quadriceps/ischios — les fémurs longs créent un bras de levier plus important sur le genou.\nFémurs courts : exercice utile pour le volume et la force.\nPhase excentrique 3-4 secondes = méthode excentrique — maximise le recrutement musculaire, le gain de masse et la prévention tendinaire proximale.",
-tips:["Phase excentrique de 3-4 secondes ABSOLUMENT — c'est le principe fondamental de","Contraction maximale en haut — serrer les fessiers","Ne pas laisser les hanches se soulever en cours de mouvement","Amplitude complète — extension quasi-totale en bas","Pause 1 seconde en haut avant l'excentrique"],
+morpho:"🦴 Fémurs longs : renforcement ischios particulièrement important pour l'équilibre quadriceps/ischios — les fémurs longs créent un bras de levier plus important sur le genou.\n🦴 Fémurs courts : exercice utile pour le volume et la force.\n💡 Phase excentrique 3-4 secondes = méthode excentrique — maximise le recrutement musculaire, le gain de masse et la prévention tendinaire proximale.",
+tips:["Phase excentrique de 3-4 secondes ABSOLUMENT — c'est le principe fondamental de ","Contraction maximale en haut — serrer les fessiers","Ne pas laisser les hanches se soulever en cours de mouvement","Amplitude complète — extension quasi-totale en bas","Pause 1 seconde en haut avant l'excentrique"],
 variantes:[
 {nom:"Leg curl assis",note:"Hanche fléchie sur la machine assise — les ischios travaillent plus étirés, recrutement supérieur",muscles:"Ischio-jambiers en position allongée",niveau:"Débutant"},
 {nom:"Leg curl debout unilatéral",note:"Une jambe à la machine verticale — flexion isolée côté par côté",muscles:"Ischio ciblé",niveau:"Débutant"},
@@ -973,7 +973,7 @@ variantes:[
 erreurs:["Excentrique trop rapide — perd le principal bénéfice de l'exercice","Hanches qui se soulèvent — compensation lombaire","Amplitude partielle","Rebond en bas"]},
 
 {n:"Romanian deadlift haltères",s:"3",r:"10-12",rest:"90s",ch:"60%",cat:"principal",mat:"haltères",
-morpho:" Fémurs longs : amplitude naturellement grande — l'étirement des ischios est ressenti plus tôt dans le mouvement. Progression prudente des charges.\nFémurs courts : amplitude plus réduite — descendre légèrement plus bas pour atteindre l'étirement optimal.\nLordose naturelle OBLIGATOIRE — si le dos s'arrondit, la charge est trop lourde ou la souplesse insuffisante.",
+morpho:"🦴 Fémurs longs : amplitude naturellement grande — l'étirement des ischios est ressenti plus tôt dans le mouvement. Progression prudente des charges.\n🦴 Fémurs courts : amplitude plus réduite — descendre légèrement plus bas pour atteindre l'étirement optimal.\n💡 Lordose naturelle OBLIGATOIRE — si le dos s'arrondit, la charge est trop lourde ou la souplesse insuffisante.",
 tips:["Dos PLAT — lordose naturelle maintenue tout au long du mouvement","Haltères glissent le long des jambes — rester proche du corps","Descendre jusqu'à sentir l'étirement des ischios — mi-tibia maximum","Genoux légèrement fléchis et FIXES — ils ne bougent pas","Remonter en poussant les hanches vers l'avant — pas en tirant avec le dos"],
 variantes:[
 {nom:"RDL barre",note:"Barre unique qui longe les cuisses — la charge lourde de référence sur la charnière",muscles:"Ischios, fessiers, érecteurs",niveau:"Intermédiaire"},
@@ -983,7 +983,7 @@ variantes:[
 erreurs:["Arrondir le dos — blessure lombaire grave et certaine","Descendre trop bas — perd la lordose naturelle","Genoux qui bougent en cours de mouvement","Regarder vers le bas — le cou se fléchit"]},
 
 {n:"Hip thrust barre",s:"4",r:"10-15",rest:"90s",ch:"Charge lourde",cat:"principal",mat:"barre",
-morpho:" Fémurs longs : avantage mécanique sur cet exercice — le levier naturel favorise l'extension complète de la hanche.\nFémurs courts : exercice confortable et efficace — position naturellement bonne.\nDébutant : commencer sans barre, puis haltère sur le ventre, puis barre. L'extension de hanche et non l'hyperextension lombaire est l'objectif.",
+morpho:"🦴 Fémurs longs : avantage mécanique sur cet exercice — le levier naturel favorise l'extension complète de la hanche.\n🦴 Fémurs courts : exercice confortable et efficace — position naturellement bonne.\n💡 Débutant : commencer sans barre, puis haltère sur le ventre, puis barre. L'extension de hanche et non l'hyperextension lombaire est l'objectif.",
 tips:["Omoplates sur le banc — pas les cervicales","Poussée explosive vers le haut — contraction maximale des fessiers en haut","Menton rentré, regard vers le plafond pendant le mouvement","Pieds à largeur des hanches, pointe légèrement vers l'extérieur","Contraction isométrique 1-2 secondes en haut"],
 variantes:[
 {nom:"Hip thrust unilatéral",note:"Une jambe — le côté paresseux ne peut plus se cacher",muscles:"Fessier ciblé",niveau:"Intermédiaire"},
@@ -993,7 +993,7 @@ variantes:[
 erreurs:["Hyperextension lombaire en haut — les lombaires travaillent au lieu des fessiers","Poussée insuffisante — ne pas aller en extension complète de hanche","Pieds trop proches ou trop loin — modifie l'activation musculaire"]},
 
 {n:"Nordic curl au sol",s:"3",r:"5-8",rest:"120s",ch:"Corps",cat:"principal",mat:"poids de corps",
-morpho:" Tous morphotypes : excentrique pur des ischio-jambiers. Le plus efficace pour prévenir les déchirures musculaires des ischios. Exercice avancé.\nFémurs longs : amplitude maximale — progression très progressive obligatoire.",
+morpho:"🦴 Tous morphotypes : excentrique pur des ischio-jambiers. Le plus efficace pour prévenir les déchirures musculaires des ischios. Exercice avancé.\n🦴 Fémurs longs : amplitude maximale — progression très progressive obligatoire.",
 tips:["Partenaire ou barre fixe pour les pieds","Descendre le plus lentement possible vers le sol","Utiliser les mains pour absorber l'impact en bas","Remonter en s'aidant des bras au début","Progression : bande élastique d'aide"],
 variantes:[
 {nom:"Nordic curl assisté élastique",note:"Bande accrochée devant qui retient la chute — la progression calibrée du mouvement complet",muscles:"Ischio-jambiers",niveau:"Intermédiaire"},
@@ -1003,16 +1003,16 @@ variantes:[
 erreurs:["Progresser trop vite — risque de déchirure","Hanche qui fléchit","Amplitude insuffisante"]},
 
 {n:"Glute ham raise machine",s:"3",r:"10",rest:"90s",ch:"Corps",cat:"principal",mat:"machine",
-morpho:" Fémurs longs : excellent exercice — l'amplitude naturelle est exploitée pleinement.\nCombine extension de hanche + flexion du genou = travaille les ischios sur les 2 fonctions simultanément. Un des meilleurs exercices pour les ischios.",
+morpho:"🦴 Fémurs longs : excellent exercice — l'amplitude naturelle est exploitée pleinement.\n💡 Combine extension de hanche + flexion du genou = travaille les ischios sur les 2 fonctions simultanément. Un des meilleurs exercices pour les ischios.",
 tips:["Hanches au niveau du pad — pas plus haut ni plus bas","Extension complète en bas","Flexion complète en haut — fléchir les genoux jusqu'à 90°","Contrôle total tout au long","Progresser avec les bras si trop difficile"],
 variantes:[
 {nom:"Nordic curl",note:"Au sol chevilles bloquées — la version sans machine du même excentrique",muscles:"Ischio-jambiers",niveau:"Avancé"},
 {nom:"Razor curl sur GHD",note:"Hanches fléchies maintenues — l'isolement de la flexion de genou sur le banc",muscles:"Ischios",niveau:"Intermédiaire"},
 {nom:"Extension de hanche sur GHD",note:"Buste qui remonte genoux tendus — la charnière pure, ischios et fessiers en extenseurs",muscles:"Fessiers, ischios, érecteurs",niveau:"Intermédiaire"}],
-erreurs:["Amplitude insuffisante","Hanches qui fléchissent en bas","Trop rapide"]},
+erreurs:["Amplitude insuffisante", "Hanches qui fléchissent en bas","Trop rapide"]},
 
 {n:"Pont fessier sumo (sumo hip thrust)",s:"3",r:"15",rest:"75s",ch:"Modéré",cat:"isolation",mat:"barre",
-morpho:" Fémurs longs : les pieds écartés en sumo permettent une meilleure activation des fessiers et ischios avec des fémurs longs.\nPieds écartés + pointes tournées vers l'extérieur = plus d'ischios et adducteurs.",
+morpho:"🦴 Fémurs longs : les pieds écartés en sumo permettent une meilleure activation des fessiers et ischios avec des fémurs longs.\n💡 Pieds écartés + pointes tournées vers l'extérieur = plus d'ischios et adducteurs.",
 tips:["Pieds plus larges que les hanches, pointes à 45°","Même pattern que le hip thrust classique","Contraction maximale en haut — garder 2s","Descente contrôlée","Menton rentré — regard plafond"],
 variantes:[
 {nom:"Hip thrust classique",note:"Pieds largeur de hanches — le grand fessier sans l'accent adducteurs",muscles:"Grand fessier",niveau:"Débutant"},
@@ -1021,7 +1021,7 @@ variantes:[
 erreurs:["Hyperextension lombaire","Pieds trop écartés — instabilité","Amplitude insuffisante"]},
 
 {n:"Leg curl glissé (sliders)",s:"3",r:"8-15",rest:"75s",ch:"Corps",cat:"principal",mat:"poids de corps",
-morpho:" Ischios courts ou raides : double fonction travaillée (extension de hanche + flexion de genou) — le schéma complet du muscle.\nGenoux sensibles : aucune charge externe, résistance auto-générée par le poids du bassin.\nPrévention claquage : l'excentrique glissé est l'un des meilleurs protecteurs des ischios chez le sportif.\nServiette sur parquet ou sliders : l'exercice ischios maison le plus efficace, proche du curl machine.",
+morpho:"🦴 Ischios courts ou raides : double fonction travaillée (extension de hanche + flexion de genou) — le schéma complet du muscle.\n🦴 Genoux sensibles : aucune charge externe, résistance auto-générée par le poids du bassin.\n📐 Prévention claquage : l'excentrique glissé est l'un des meilleurs protecteurs des ischios chez le sportif.\n💡 Serviette sur parquet ou sliders : l'exercice ischios maison le plus efficace, proche du curl machine.",
 tips:["Allongé sur le dos, talons sur les sliders ou une serviette","Monter le bassin en pont fessier — position de départ","Étendre lentement les jambes en gardant les hanches hautes","Ramener les talons vers les fesses en contractant les ischios","Le bassin ne touche jamais le sol pendant la série"],
 variantes:[
 {nom:"Leg curl glissé unilatéral",note:"Un talon sur le patin — la progression majeure du mouvement",muscles:"Ischio ciblé",niveau:"Avancé"},
@@ -1030,7 +1030,7 @@ variantes:[
 erreurs:["Bassin qui s'effondre pendant l'extension des jambes","Mouvement précipité sans contrôle excentrique","Cambrure lombaire pour compenser des ischios faibles"]},
 
 {n:"Good morning élastique",s:"3-4",r:"12-15",rest:"60s",ch:"Élastique fort",cat:"principal",mat:"élastique",
-morpho:" Lombaires fragiles : la résistance progressive épargne la position penchée, exactement là où la barre est la plus dangereuse.\nFémurs longs : la charnière de hanche est le schéma roi — l'élastique permet de la répéter en volume sans risque.\nIschios raides : étirement actif sous tension légère à chaque répétition — mobilité et force ensemble.\nL'outil parfait pour enseigner le hip hinge avant tout soulevé de terre.",
+morpho:"🦴 Lombaires fragiles : la résistance progressive épargne la position penchée, exactement là où la barre est la plus dangereuse.\n🦴 Fémurs longs : la charnière de hanche est le schéma roi — l'élastique permet de la répéter en volume sans risque.\n📐 Ischios raides : étirement actif sous tension légère à chaque répétition — mobilité et force ensemble.\n💡 L'outil parfait pour enseigner le hip hinge avant tout soulevé de terre.",
 tips:["Debout sur l'élastique, bande passée derrière la nuque ou sur les trapèzes","Pousser les hanches vers l'arrière, genoux à peine fléchis","Descendre le buste jusqu'à sentir l'étirement des ischios","Dos plat verrouillé du bassin à la nuque","Remonter en contractant fessiers et ischios, hanches en avant"],
 variantes:[
 {nom:"Good morning barre légère",note:"Barre sur trapèzes — la version chargée classique du même schéma",muscles:"Ischios, érecteurs",niveau:"Avancé"},
@@ -1040,7 +1040,7 @@ variantes:[
 erreurs:["Dos qui s'arrondit en position basse","Genoux qui plient trop — devient un squat","Remontée en tirant avec les lombaires au lieu des hanches"]},
 
 {n:"Leg curl TRX",s:"3",r:"8-15",rest:"75s",ch:"Corps",cat:"principal",mat:"TRX",
-morpho:" Ischios faibles en flexion : cible spécifiquement la fonction fléchisseur de genou, souvent négligée au profit du hip hinge.\nGenoux post-blessure : renforcement sans compression ni charge externe, apprécié en réathlétisation.\nInstabilité des sangles : les ischios stabilisent en plus de fléchir — recrutement supérieur au curl machine.\nLe curl allongé version suspension : intensité surprenante dès les premières répétitions.",
+morpho:"🦴 Ischios faibles en flexion : cible spécifiquement la fonction fléchisseur de genou, souvent négligée au profit du hip hinge.\n🦴 Genoux post-blessure : renforcement sans compression ni charge externe, apprécié en réathlétisation.\n📐 Instabilité des sangles : les ischios stabilisent en plus de fléchir — recrutement supérieur au curl machine.\n💡 Le curl allongé version suspension : intensité surprenante dès les premières répétitions.",
 tips:["Allongé sur le dos, talons dans les cradles des sangles","Monter le bassin en position de pont — corps aligné","Ramener les talons vers les fesses en fléchissant les genoux","Hanches qui restent hautes pendant toute la flexion","Étendre lentement en 2-3s sans poser le bassin"],
 variantes:[
 {nom:"Leg curl TRX unilatéral",note:"Un talon dans la sangle — la charge double sur une jambe",muscles:"Ischio ciblé",niveau:"Avancé"},
@@ -1049,7 +1049,7 @@ variantes:[
 erreurs:["Bassin qui touche le sol entre les répétitions","Balancement des sangles par manque de contrôle","Pousser sur la nuque au lieu de gainer"]},
 
 {n:"Soulevé de terre unilatéral kettlebell",s:"3",r:"8-10/jambe",rest:"75s",ch:"12-24 kg",cat:"principal",mat:"kettlebell",
-morpho:" Fémurs longs : l'amplitude unilatérale s'auto-régule — chacun descend selon sa mobilité réelle sans compensation.\nLombaires sensibles : charge divisée par deux ou trois par rapport au deadlift barre, pour un stimulus ischios équivalent.\nDéséquilibres bassin : le travail unipodal renforce les stabilisateurs de hanche (moyen fessier) en même temps que les ischios.\nL'exercice préféré des préparateurs physiques : force, équilibre et prévention en un seul geste.",
+morpho:"🦴 Fémurs longs : l'amplitude unilatérale s'auto-régule — chacun descend selon sa mobilité réelle sans compensation.\n🦴 Lombaires sensibles : charge divisée par deux ou trois par rapport au deadlift barre, pour un stimulus ischios équivalent.\n📐 Déséquilibres bassin : le travail unipodal renforce les stabilisateurs de hanche (moyen fessier) en même temps que les ischios.\n💡 L'exercice préféré des préparateurs physiques : force, équilibre et prévention en un seul geste.",
 tips:["Kettlebell dans la main opposée à la jambe d'appui","Charnière de hanche : la jambe libre part en arrière, le buste descend","Hanches qui restent parallèles au sol — ne pas ouvrir le bassin","Dos plat, kettlebell qui descend le long du tibia","Remonter en serrant le fessier de la jambe d'appui"],
 variantes:[
 {nom:"SDT unilatéral en béquille (B-stance)",note:"Le pied libre reste posé en appui léger derrière — l'équilibre facilité, la charge reste unilatérale",muscles:"Ischios, fessier",niveau:"Débutant"},
@@ -1059,7 +1059,7 @@ variantes:[
 erreurs:["Bassin qui s'ouvre vers l'extérieur pendant la descente","Dos rond quand la charge devient lourde","Genou d'appui verrouillé en hyperextension"]},
 
 {n:"Kettlebell swing",s:"4-5",r:"12-20",rest:"60-90s",ch:"12-32 kg",cat:"principal",mat:"kettlebell",
-morpho:" Ischios/fessiers dominants recherchés : le swing est une extension de hanche explosive pure — zéro quadriceps si bien exécuté.\nLombaires solides requises : le dos travaille en isométrie stricte — technique de hinge parfaite obligatoire avant de charger.\nSports explosifs : le transfert puissance de hanche (sprint, sauts, combat) est le meilleur de tous les exercices kettlebell.\nCardio + puissance + chaîne postérieure : l'exercice signature de la kettlebell, inimitable avec un autre outil.",
+morpho:"🦴 Ischios/fessiers dominants recherchés : le swing est une extension de hanche explosive pure — zéro quadriceps si bien exécuté.\n🦴 Lombaires solides requises : le dos travaille en isométrie stricte — technique de hinge parfaite obligatoire avant de charger.\n📐 Sports explosifs : le transfert puissance de hanche (sprint, sauts, combat) est le meilleur de tous les exercices kettlebell.\n💡 Cardio + puissance + chaîne postérieure : l'exercice signature de la kettlebell, inimitable avec un autre outil.",
 tips:["Charnière de hanche : la kettlebell recule entre les cuisses, haut près de l'aine","Extension explosive des hanches — ce sont elles qui projettent la charge","La kettlebell flotte à hauteur de poitrine, bras relâchés","Fessiers serrés et corps vertical en haut du swing","Laisser la charge redescendre et recharger les hanches en ressort"],
 variantes:[
 {nom:"Swing américain",note:"La KB finit au-dessus de la tête — amplitude d'épaule complète, style CrossFit",muscles:"Chaîne postérieure, épaules",niveau:"Avancé",erreurs:["Finir en cambrure lombaire pour monter la charge — l'extension doit venir des hanches"]},
@@ -1072,7 +1072,7 @@ erreurs:["Squatter au lieu de faire une charnière de hanche","Tirer avec les br
 
 "Fessiers":[
 {n:"Fentes marchées haltères",s:"4",r:"12/jambe",rest:"60s",ch:"Modéré",cat:"principal",mat:"haltères",
-morpho:" Fémurs longs : foulée longue pour maximiser l'activation des fessiers — les fémurs longs créent un avantage naturel sur la longueur de foulée.\nFémurs courts : foulée normale — les quadriceps seront davantage sollicités.\nLongueur de foulée = résultat : pas long = fessiers / pas court = quadriceps.",
+morpho:"🦴 Fémurs longs : foulée longue pour maximiser l'activation des fessiers — les fémurs longs créent un avantage naturel sur la longueur de foulée.\n🦴 Fémurs courts : foulée normale — les quadriceps seront davantage sollicités.\n💡 Longueur de foulée = résultat : pas long = fessiers / pas court = quadriceps.",
 tips:["Pas long pour maximiser l'activation des fessiers","Genou avant ne dépasse pas la pointe du pied","Buste droit, regard fixe devant","Pied avant bien ancré avant de pousser pour avancer","Alterner les jambes ou faire une jambe complète puis l'autre"],
 variantes:[
 {nom:"Fentes arrière",note:"Le pas recule — le genou avant reste stable, la version articulairement douce",muscles:"Fessiers, quadriceps",niveau:"Débutant"},
@@ -1082,7 +1082,7 @@ variantes:[
 erreurs:["Genou avant qui dépasse les orteils — stress sur la rotule","Buste qui s'incline vers l'avant","Pas trop court — quadriceps dominent au détriment des fessiers"]},
 
 {n:"Abduction hanche poulie basse",s:"3",r:"15-20",rest:"45s",ch:"Léger",cat:"isolation",mat:"poulie",
-morpho:" Tous morphotypes : fessier moyen et petit fessier — souvent négligés mais essentiels pour la stabilité du bassin lors de tous les exercices unilatéraux.\nHanches larges : le fessier moyen est souvent naturellement développé — exercice de maintien plutôt que de construction.\nHanches étroites : exercice constructif important pour l'équilibre visuel et la stabilité.",
+morpho:"🦴 Tous morphotypes : fessier moyen et petit fessier — souvent négligés mais essentiels pour la stabilité du bassin lors de tous les exercices unilatéraux.\n📐 Hanches larges : le fessier moyen est souvent naturellement développé — exercice de maintien plutôt que de construction.\n📐 Hanches étroites : exercice constructif important pour l'équilibre visuel et la stabilité.",
 tips:["Mouvement en arc dans le plan frontal strict","Contraction 1 seconde en haut","Excentrique contrôlé — résister à la gravité","Corps légèrement incliné vers l'avant pour cibler davantage le fessier moyen","Amplitude maximale dans l'axe — pas en avant"],
 variantes:[
 {nom:"Abduction élastique debout",note:"Bande aux chevilles — la même abduction réalisable partout",muscles:"Moyen fessier",niveau:"Débutant"},
@@ -1092,7 +1092,7 @@ variantes:[
 erreurs:["Compenser avec le buste","Amplitude en avant du plan frontal — hip flexors au lieu des fessiers","Trop lourd — perd le contrôle"]},
 
 {n:"Fentes bulgares haltères",s:"4",r:"10/jambe",rest:"90s",ch:"Modéré",cat:"principal",mat:"haltères",
-morpho:" Fémurs longs : foulée longue = plus d'activation fessiers. Un des meilleurs exercices unilatéraux.\nFémurs courts : exercice confortable — quadriceps très sollicités.\nMeilleur exercice unilatéral pour l'hypertrophie fessière selon de nombreux experts.",
+morpho:"🦴 Fémurs longs : foulée longue = plus d'activation fessiers. Un des meilleurs exercices unilatéraux.\n🦴 Fémurs courts : exercice confortable — quadriceps très sollicités.\n💡 Meilleur exercice unilatéral pour l'hypertrophie fessière selon de nombreux experts.",
 tips:["Pied arrière sur banc (30-40cm), pied avant assez loin","Descendre quasi verticalement — buste droit","Genou arrière vers le sol sans le toucher","Pousse avec le talon avant pour remonter","Haltères aux côtés ou goblet devant"],
 variantes:[
 {nom:"Bulgares goblet",note:"Charge unique contre la poitrine — le contrepoids redresse le buste",muscles:"Quadriceps",niveau:"Débutant"},
@@ -1102,7 +1102,7 @@ variantes:[
 erreurs:["Pied avant trop près — genou dépasse les orteils","Buste qui s'incline en avant","Pas assez de profondeur"]},
 
 {n:"Cable kickback fessier",s:"4",r:"15-20",rest:"45s",ch:"Léger",cat:"isolation",mat:"poulie",
-morpho:" Tous morphotypes : isolation fessière pure. Tension constante du câble supérieure aux exercices au sol.\nExtension de hanche avec genou fléchi = Grand fessier isolé. Extension genou tendu = ischio aussi.",
+morpho:"🦴 Tous morphotypes : isolation fessière pure. Tension constante du câble supérieure aux exercices au sol.\n💡 Extension de hanche avec genou fléchi = Grand fessier isolé. Extension genou tendu = ischio aussi.",
 tips:["Poulie basse attachée à la cheville","Légère inclinaison vers l'avant, appui sur un support","Extension de hanche vers l'arrière — mouvement pur de la hanche","Contraction maximale en haut 1-2s","Genou légèrement fléchi pour isoler le fessier"],
 variantes:[
 {nom:"Kickback élastique",note:"Bande à la cheville — la version nomade du même geste",muscles:"Grand fessier",niveau:"Débutant"},
@@ -1112,7 +1112,7 @@ variantes:[
 erreurs:["Extension lombaire au lieu de hanche","Amplitude insuffisante","Trop de charge — compensation"]},
 
 {n:"Step-up haltères",s:"4",r:"12/jambe",rest:"60s",ch:"Modéré",cat:"principal",mat:"haltères",
-morpho:" Fémurs longs : marche plus haute = plus d'activation fessière — exploiter la longueur naturelle.\nFonctionnel, unilatéral, préventif du genou. Hauteur de marche = paramètre clé.",
+morpho:"🦴 Fémurs longs : marche plus haute = plus d'activation fessière — exploiter la longueur naturelle.\n💡 Fonctionnel, unilatéral, préventif du genou. Hauteur de marche = paramètre clé.",
 tips:["Marche à hauteur du genou ou légèrement en dessous","Appuyer fort avec tout le pied sur la marche","Monter en poussant avec la jambe avant (pas en sautant)","Contrôle en descendant — excentrique","Alterner les jambes ou finir une jambe puis l'autre"],
 variantes:[
 {nom:"Step-up latéral",note:"Montée par le côté de la caisse — le plan frontal et le moyen fessier",muscles:"Moyen fessier, quadriceps",niveau:"Intermédiaire"},
@@ -1122,7 +1122,7 @@ variantes:[
 erreurs:["Pousser avec la jambe arrière — perd l'isolation","Marche trop basse","Pas de contrôle en descendant"]},
 
 {n:"Hip thrust unilatéral au sol",s:"3",r:"10-15/jambe",rest:"60s",ch:"Corps",cat:"principal",mat:"poids de corps",
-morpho:" Lombaires sensibles : version au sol = amplitude réduite mais activation fessière quasi identique au hip thrust chargé.\nFémurs longs : ajuster la distance talon-fesse jusqu'à sentir le fessier plutôt que l'ischio.\nAsymétrie fessière : l'unilatéral révèle immédiatement le côté paresseux — fréquent après blessure.\nAucun matériel, activation maximale : l'exercice fessier de base à maîtriser avant toute charge.",
+morpho:"🦴 Lombaires sensibles : version au sol = amplitude réduite mais activation fessière quasi identique au hip thrust chargé.\n🦴 Fémurs longs : ajuster la distance talon-fesse jusqu'à sentir le fessier plutôt que l'ischio.\n📐 Asymétrie fessière : l'unilatéral révèle immédiatement le côté paresseux — fréquent après blessure.\n💡 Aucun matériel, activation maximale : l'exercice fessier de base à maîtriser avant toute charge.",
 tips:["Allongé, un pied au sol proche de la fesse, l'autre jambe tendue ou genou vers la poitrine","Pousser dans le talon pour décoller le bassin","Monter jusqu'à l'alignement épaules-hanche-genou","Serrer le fessier 2s en haut — c'est là que tout se joue","Redescendre lentement sans poser complètement le bassin"],
 variantes:[
 {nom:"Pont fessier bilatéral",note:"Les deux pieds au sol — la brique d'apprentissage de la contraction",muscles:"Grand fessier",niveau:"Débutant"},
@@ -1132,7 +1132,7 @@ variantes:[
 erreurs:["Pousser avec les lombaires — cambrure au lieu d'extension de hanche","Pied trop loin — les ischios prennent le relais","Bassin qui penche du côté de la jambe libre"]},
 
 {n:"Marche latérale élastique",s:"3",r:"12-20 pas/sens",rest:"45s",ch:"Élastique léger/moyen",cat:"correctif",mat:"élastique",
-morpho:" Genoux valgus (qui rentrent) : LE correctif de référence — le moyen fessier faible est la cause n°1 du valgus dynamique.\nCoureurs et sportifs de terrain : prévention directe du syndrome de l'essuie-glace et des douleurs rotuliennes.\nHanche qui tombe en appui unipodal : signe d'un moyen fessier déficient, corrigé par ce travail en abduction.\nEn activation pré-séance jambes : 2 séries suffisent à réveiller les fessiers avant de charger.",
+morpho:"🦴 Genoux valgus (qui rentrent) : LE correctif de référence — le moyen fessier faible est la cause n°1 du valgus dynamique.\n🦴 Coureurs et sportifs de terrain : prévention directe du syndrome de l'essuie-glace et des douleurs rotuliennes.\n📐 Hanche qui tombe en appui unipodal : signe d'un moyen fessier déficient, corrigé par ce travail en abduction.\n💡 En activation pré-séance jambes : 2 séries suffisent à réveiller les fessiers avant de charger.",
 tips:["Élastique autour des genoux ou des chevilles (plus dur)","Position quart de squat, buste légèrement penché","Pas latéraux contrôlés sans jamais rapprocher complètement les pieds","Tension constante dans l'élastique du premier au dernier pas","Pointes de pieds qui restent parallèles, jamais ouvertes"],
 variantes:[
 {nom:"Monster walk",note:"Pas en diagonale avant — les fléchisseurs de hanche rejoignent l'abduction",muscles:"Moyen fessier, fléchisseurs de hanche",niveau:"Débutant"},
@@ -1142,7 +1142,7 @@ variantes:[
 erreurs:["Se redresser complètement — la tension fessière disparaît","Pieds qui se touchent entre les pas","Buste qui se balance latéralement à chaque pas"]},
 
 {n:"Kickback élastique",s:"3",r:"15-20/jambe",rest:"45s",ch:"Élastique léger/moyen",cat:"isolation",mat:"élastique",
-morpho:" Grand fessier peu réactif : l'isolation en extension pure reconnecte le muscle sans que les ischios ou lombaires compensent.\nFessier plat morphologiquement : le volume à haute répétition avec pic de contraction est la stratégie la plus payante.\nAmnésie fessière (position assise prolongée) : la contraction volontaire répétée restaure le schéma d'activation.\nRéplique fidèle du kickback poulie, réalisable partout.",
+morpho:"🦴 Grand fessier peu réactif : l'isolation en extension pure reconnecte le muscle sans que les ischios ou lombaires compensent.\n📐 Fessier plat morphologiquement : le volume à haute répétition avec pic de contraction est la stratégie la plus payante.\n📐 Amnésie fessière (position assise prolongée) : la contraction volontaire répétée restaure le schéma d'activation.\n💡 Réplique fidèle du kickback poulie, réalisable partout.",
 tips:["Élastique ancré bas ou autour des chevilles, en quadrupédie ou debout","Étendre la jambe vers l'arrière sans cambrer le dos","Contraction volontaire du fessier 1-2s en fin d'extension","Bassin fixe et carré — seule la hanche bouge","Revenir sous contrôle sans relâcher totalement la tension"],
 variantes:[
 {nom:"Kickback jambe fléchie 90°",note:"Genou verrouillé en flexion — les ischios hors-jeu, fessier isolé",muscles:"Grand fessier isolé",niveau:"Intermédiaire"},
@@ -1152,7 +1152,7 @@ variantes:[
 erreurs:["Cambrure lombaire pour monter la jambe plus haut","Élan et balancement au lieu de contraction contrôlée","Rotation du bassin qui ouvre la hanche"]},
 
 {n:"Hip thrust élastique",s:"4",r:"15-20",rest:"60s",ch:"Élastique fort",cat:"principal",mat:"élastique",
-morpho:" Grand fessier : la résistance croissante colle parfaitement à la courbe de force — maximale en extension complète, là où le fessier est roi.\nLombaires sensibles : charge nulle en position basse, contrairement à la barre qui écrase dès le départ.\nDifficulté d'activation fessière : le pic de tension en haut force une contraction volontaire impossible à esquiver.\nLa version élastique surpasse la barre pour le pic de contraction — les deux sont complémentaires.",
+morpho:"🦴 Grand fessier : la résistance croissante colle parfaitement à la courbe de force — maximale en extension complète, là où le fessier est roi.\n🦴 Lombaires sensibles : charge nulle en position basse, contrairement à la barre qui écrase dès le départ.\n📐 Difficulté d'activation fessière : le pic de tension en haut force une contraction volontaire impossible à esquiver.\n💡 La version élastique surpasse la barre pour le pic de contraction — les deux sont complémentaires.",
 tips:["Dos sur un banc ou au sol, élastique ancré de chaque côté et passé sur les hanches","Pieds ancrés proches des fesses, largeur de hanches","Pousser dans les talons jusqu'à l'extension complète des hanches","Menton rentré, côtes basses — pas de cambrure","Tenir 2s en haut contre la tension maximale"],
 variantes:[
 {nom:"Hip thrust élastique unilatéral",note:"Une jambe contre la bande — l'asymétrie révélée sous tension progressive",muscles:"Fessier ciblé",niveau:"Intermédiaire"},
@@ -1162,7 +1162,7 @@ variantes:[
 erreurs:["Amplitude haute incomplète — l'extension finale est tout l'intérêt","Cambrure lombaire en fin de montée","Pieds trop loin — transfert vers les ischios"]},
 
 {n:"Pont fessier sur bosu",s:"3",r:"12-15",rest:"60s",ch:"Corps",cat:"gainage",mat:"bosu",
-morpho:" Chevilles ou genoux post-blessure : le pont instable renforce la chaîne d'appui complète sans charge verticale.\nFessiers et stabilisateurs de hanche ensemble : l'instabilité recrute le moyen fessier en continu pendant l'extension.\nSportifs de pivot : le contrôle du bassin sur surface instable transfère aux appuis du jeu.\nLa version bosu transforme un exercice simple en défi de coordination bassin-hanche.",
+morpho:"🦴 Chevilles ou genoux post-blessure : le pont instable renforce la chaîne d'appui complète sans charge verticale.\n📐 Fessiers et stabilisateurs de hanche ensemble : l'instabilité recrute le moyen fessier en continu pendant l'extension.\n📐 Sportifs de pivot : le contrôle du bassin sur surface instable transfère aux appuis du jeu.\n💡 La version bosu transforme un exercice simple en défi de coordination bassin-hanche.",
 tips:["Allongé au sol, les deux pieds sur le dôme du bosu","Pousser dans les talons pour monter le bassin","Bassin strictement horizontal — l'instabilité veut le faire pencher","Serrer les fessiers 1-2s en haut","Descente lente en gardant le contrôle latéral"],
 variantes:[
 {nom:"Pont bosu unilatéral",note:"Une jambe sur le dôme — force et contrôle latéral au maximum",muscles:"Fessier, stabilisateurs de hanche",niveau:"Avancé"},
@@ -1171,7 +1171,7 @@ variantes:[
 erreurs:["Bassin qui penche d'un côté pendant la montée","Pousser sur les pointes au lieu des talons","Vitesse excessive qui masque le déficit de contrôle"]},
 
 {n:"Squat sumo kettlebell",s:"4",r:"10-15",rest:"75s",ch:"16-32 kg",cat:"principal",mat:"kettlebell",
-morpho:" Fémurs longs : la position sumo écartée + charge basse entre les jambes = le squat le plus vertical qui existe pour cette morphologie.\nHanches ouvertes naturellement : la position écartée exploite cette facilité — profondeur immédiate.\nAdducteurs et fessiers prioritaires : l'écartement déplace le travail des quadriceps vers l'intérieur et l'arrière de la cuisse.\nLe squat le plus accessible pour apprendre la profondeur avec un dos parfaitement neutre.",
+morpho:"🦴 Fémurs longs : la position sumo écartée + charge basse entre les jambes = le squat le plus vertical qui existe pour cette morphologie.\n🦴 Hanches ouvertes naturellement : la position écartée exploite cette facilité — profondeur immédiate.\n📐 Adducteurs et fessiers prioritaires : l'écartement déplace le travail des quadriceps vers l'intérieur et l'arrière de la cuisse.\n💡 Le squat le plus accessible pour apprendre la profondeur avec un dos parfaitement neutre.",
 tips:["Pieds bien plus larges que les épaules, pointes ouvertes à 30-45°","Kettlebell tenue à deux mains entre les jambes, bras relâchés","Descendre entre les jambes, genoux qui suivent les pointes","Buste vertical — la charge basse le permet naturellement","Serrer les fessiers en remontant, hanches complètement tendues en haut"],
 variantes:[
 {nom:"Sumo deadlift kettlebell",note:"Départ charge posée au sol — la charnière s'ajoute à l'écartement",muscles:"Fessiers, adducteurs, ischios",niveau:"Débutant"},
@@ -1182,7 +1182,7 @@ erreurs:["Genoux qui rentrent à la remontée","Buste qui plonge en avant — la
 
 "Abdominaux":[
 {n:"Planche avant isométrique",s:"4",r:"30-60s",rest:"45s",ch:"Corps",cat:"gainage",mat:"poids de corps",
-morpho:" Tous morphotypes : exercice fondamental universel — le transverse profond est indispensable pour la protection lombaire lors de tous les exercices lourds. Base absolue avant d'augmenter les volumes.\nProgresser en soulevant successivement un bras ou une jambe une fois les 60 secondes atteintes facilement.",
+morpho:"🦴 Tous morphotypes : exercice fondamental universel — le transverse profond est indispensable pour la protection lombaire lors de tous les exercices lourds. Base absolue avant d'augmenter les volumes.\n💡 Progresser en soulevant successivement un bras ou une jambe une fois les 60 secondes atteintes facilement.",
 tips:["Corps aligné — tête, épaules, hanches et chevilles en ligne droite","Contracter l'abdomen comme si on allait recevoir un coup de poing","Ne pas retenir sa respiration — respiration diaphragmatique maintenue","Ne pas laisser les hanches monter ou descendre","Progresser en soulevant un bras ou une jambe"],
 variantes:[
 {nom:"Planche haute bras tendus",note:"Appui sur les mains — les épaules et le dentelé rejoignent le gainage",muscles:"Grand droit, dentelé, épaules",niveau:"Débutant"},
@@ -1193,7 +1193,7 @@ variantes:[
 erreurs:["Hanches qui montent — n'est plus un gainage mais une pirouette","Corps en angle au niveau des hanches","Retenir sa respiration sous effort"]},
 
 {n:"Crunch contrôlé",s:"4",r:"15-20",rest:"45s",ch:"Corps",cat:"principal",mat:"poids de corps",
-morpho:" Tous morphotypes : technique universelle. BAS DU DOS AU SOL est le critère absolu — si le bas du dos décolle, c'est le PSOAS qui travaille et non les abdominaux (erreur fondamentale des crunches mal exécutés).\nMains aux tempes, jamais sur la nuque.",
+morpho:"🦴 Tous morphotypes : technique universelle. BAS DU DOS AU SOL est le critère absolu — si le bas du dos décolle, c'est le PSOAS qui travaille et non les abdominaux (erreur fondamentale des crunches mal exécutés).\n💡 Mains aux tempes, jamais sur la nuque.",
 tips:["Bas du dos COLLÉ au sol — critère absolu de bonne exécution","Souffler fort à la contraction pour vider les poumons","Enrouler vertèbre par vertèbre — pas une bascule de bassin","Regarder vers le plafond, pas vers les genoux","Genoux fléchis à 90°, pieds à plat sur le sol"],
 variantes:[
 {nom:"Crunch câble agenouillé",note:"Corde tenue derrière la tête face à la poulie — la flexion de tronc enfin chargeable",muscles:"Grand droit sous charge",niveau:"Intermédiaire"},
@@ -1203,7 +1203,7 @@ variantes:[
 erreurs:["Bas du dos qui décolle — psoas travaille au lieu des abdominaux","Tirer sur la nuque avec les mains — risque cervical","Amplitude excessive avec lombaires décollées","Vitesse trop rapide — perd le contrôle excentrique"]},
 
 {n:"Relevé de jambes suspendu",s:"3",r:"12-15",rest:"60s",ch:"Corps",cat:"principal",mat:"poids de corps",
-morpho:" Tous morphotypes : bas abdominaux + iliopsoas. SUSPENDU à une barre ou lombaires collées au sol OBLIGATOIREMENT — jambes en l'air librement sans enroulement du bassin = le psoas travaille, pas les abdominaux.\nBras longs : prise facile sur barre fixe — bonne option suspension.",
+morpho:"🦴 Tous morphotypes : bas abdominaux + iliopsoas. SUSPENDU à une barre ou lombaires collées au sol OBLIGATOIREMENT — jambes en l'air librement sans enroulement du bassin = le psoas travaille, pas les abdominaux.\n🦴 Bras longs : prise facile sur barre fixe — bonne option suspension.",
 tips:["Enrouler le BASSIN en montant — c'est ce mouvement qui active les bas-abdominaux","Descente contrôlée 3 secondes — ne pas laisser tomber les jambes","Jambes tendues si niveau avancé, genoux fléchis si débutant","Ne pas se balancer pour se propulser","Regard fixe devant pour la stabilité"],
 variantes:[
 {nom:"Relevé de genoux suspendu",note:"Genoux fléchis vers la poitrine — le levier raccourci, la régression directe",muscles:"Grand droit, fléchisseurs de hanche",niveau:"Débutant"},
@@ -1214,7 +1214,7 @@ variantes:[
 erreurs:["Pas d'enroulement du bassin — psoas travaille seul","Balancement du corps pour se propulser","Amplitude insuffisante"]},
 
 {n:"Gainage latéral",s:"3",r:"30-45s",rest:"45s",ch:"Corps",cat:"gainage",mat:"poids de corps",
-morpho:" Tous morphotypes : obliques + stabilisateurs latéraux. Indispensable pour la stabilité du bassin lors des exercices unilatéraux et la prévention des blessures lombaires.\nÀ combiner avec la planche frontale pour un gainage complet.",
+morpho:"🦴 Tous morphotypes : obliques + stabilisateurs latéraux. Indispensable pour la stabilité du bassin lors des exercices unilatéraux et la prévention des blessures lombaires.\n💡 À combiner avec la planche frontale pour un gainage complet.",
 tips:["Corps en ligne droite de la tête aux pieds","La hanche ne doit pas descendre ou monter","Regard fixe devant pour maintenir l'alignement","Progresser en soulevant le bras ou la jambe supérieure","Version débutant : genoux au sol"],
 variantes:[
 {nom:"Gainage latéral genou posé",note:"Appui sur le genou inférieur — le levier raccourci pour construire la base",muscles:"Obliques",niveau:"Débutant"},
@@ -1224,7 +1224,7 @@ variantes:[
 erreurs:["Hanche qui descend — compensation courante","Corps en angle au niveau des hanches","Retenir la respiration sous effort"]},
 
 {n:"Hollow body hold",s:"3",r:"30-45s",rest:"60s",ch:"Corps",cat:"gainage",mat:"poids de corps",
-morpho:" Tous morphotypes : position fondamentale de la gymnastique. Active le transverse + obliques + psoas + quadriceps simultanément. Gainage anti-extension le plus complet.\nBase de nombreux exercices avancés (L-sit, handstand).",
+morpho:"🦴 Tous morphotypes : position fondamentale de la gymnastique. Active le transverse + obliques + psoas + quadriceps simultanément. Gainage anti-extension le plus complet.\n💡 Base de nombreux exercices avancés (L-sit, handstand).",
 tips:["Allongé sur le dos — creuser le nombril vers le sol","Bras tendus derrière la tête, jambes tendues à 20-30° du sol","Corps en forme de « banane inversée »","Ne jamais laisser le bas du dos décoller","Progression : genoux fléchis → jambes tendues hautes → jambes tendues basses"],
 variantes:[
 {nom:"Tuck hold",note:"Genoux ramenés vers la poitrine — le levier minimal pour apprendre le plaquage lombaire",muscles:"Grand droit, transverse",niveau:"Débutant"},
@@ -1233,7 +1233,7 @@ variantes:[
 erreurs:["Bas du dos qui décolle — perd le gainage","Jambes trop hautes — trop facile","Retenir la respiration"]},
 
 {n:"Pallof press câble",s:"3",r:"12/côté",rest:"60s",ch:"Léger-modéré",cat:"gainage",mat:"poulie",
-morpho:" Tous morphotypes : gainage ANTI-ROTATION — souvent négligé mais fondamental pour la stabilité du tronc.\nSimule les contraintes rotationnelles de la vie quotidienne et du sport. Protège les lombaires.",
+morpho:"🦴 Tous morphotypes : gainage ANTI-ROTATION — souvent négligé mais fondamental pour la stabilité du tronc.\n💡 Simule les contraintes rotationnelles de la vie quotidienne et du sport. Protège les lombaires.",
 tips:["Poulie à hauteur du sternum — côté au câble","Tenir les mains devant la poitrine, pousser vers l'avant sans rotation","Corps immobile — tout le travail est dans le gainage","Revenir lentement","Pieds à largeur des épaules, genoux légèrement fléchis"],
 variantes:[
 {nom:"Pallof press à genoux",note:"Base agenouillée — les jambes ne compensent plus la rotation",muscles:"Obliques, transverse",niveau:"Intermédiaire"},
@@ -1243,7 +1243,7 @@ variantes:[
 erreurs:["Rotation du corps","Trop lourd — rotation inévitable","Amplitude insuffisante"]},
 
 {n:"Bicycle crunch",s:"4",r:"20/côté",rest:"45s",ch:"Corps",cat:"principal",mat:"poids de corps",
-morpho:" Tous morphotypes : obliques + grand droit.\nSi bien exécuté (lentement, rotation réelle du buste), c'est un des meilleurs exercices pour les obliques. Si trop rapide = momentum, pas de gainage.",
+morpho:"🦴 Tous morphotypes : obliques + grand droit.\n💡 Si bien exécuté (lentement, rotation réelle du buste), c'est un des meilleurs exercices pour les obliques. Si trop rapide = momentum, pas de gainage.",
 tips:["Lentement ! Le tempo est la clé — 2s par répétition","Rotation réelle du buste — pas juste le coude qui avance","Jambe opposée s'étend en même temps","Bas du dos collé au sol en permanence","Mains aux tempes — ne pas tirer sur la nuque"],
 variantes:[
 {nom:"Crunch oblique",note:"Coude vers le genou opposé sans pédalage — la rotation isolée un côté à la fois",muscles:"Obliques",niveau:"Débutant"},
@@ -1252,7 +1252,7 @@ variantes:[
 erreurs:["Trop rapide — momentum remplace le gainage","Pas de rotation réelle du buste","Nuque tirée avec les mains"]},
 
 {n:"Mountain climbers",s:"3-4",r:"20-40s",rest:"45s",ch:"Corps",cat:"gainage",mat:"poids de corps",
-morpho:" Tous morphotypes : gainage dynamique universel — la planche reste stable pendant que les jambes pédalent.\nPoignets sensibles : réaliser sur les poings ou sur un support surélevé.\nSportifs : conditionnement métabolique + gainage anti-extension simultanés — parfait en circuit.\nLa vitesse est un piège : lent et gainé vaut mieux que rapide et désarticulé.",
+morpho:"🦴 Tous morphotypes : gainage dynamique universel — la planche reste stable pendant que les jambes pédalent.\n🦴 Poignets sensibles : réaliser sur les poings ou sur un support surélevé.\n📐 Sportifs : conditionnement métabolique + gainage anti-extension simultanés — parfait en circuit.\n💡 La vitesse est un piège : lent et gainé vaut mieux que rapide et désarticulé.",
 tips:["Position de planche haute, mains sous les épaules","Ramener un genou vers la poitrine sans lever les fesses","Alterner les jambes en gardant le bassin parfaitement stable","Épaules qui restent au-dessus des mains tout le long","Abdominaux verrouillés — le bas du dos ne bouge jamais"],
 variantes:[
 {nom:"Mountain climbers croisés",note:"Genou vers le coude opposé — la diagonale recrute les obliques",muscles:"Obliques, fléchisseurs de hanche",niveau:"Intermédiaire"},
@@ -1262,7 +1262,7 @@ variantes:[
 erreurs:["Fesses qui montent en pique","Rebond du bassin à chaque changement de jambe","Épaules qui reculent derrière les mains"]},
 
 {n:"Dead bug",s:"3",r:"8-12/côté",rest:"45s",ch:"Corps",cat:"correctif",mat:"poids de corps",
-morpho:" Lombaires fragiles : LE gainage le plus sûr qui existe — le dos est plaqué au sol pendant tout l'exercice.\nCambrure lombaire excessive : apprend la dissociation bassin/jambes, compétence clé avant squat et soulevé de terre.\nDébutants et reprise post-blessure : la première brique du gainage avant la planche.\nSimple en apparence, exigeant en exécution : la qualité du plaquage lombaire fait tout.",
+morpho:"🦴 Lombaires fragiles : LE gainage le plus sûr qui existe — le dos est plaqué au sol pendant tout l'exercice.\n📐 Cambrure lombaire excessive : apprend la dissociation bassin/jambes, compétence clé avant squat et soulevé de terre.\n📐 Débutants et reprise post-blessure : la première brique du gainage avant la planche.\n💡 Simple en apparence, exigeant en exécution : la qualité du plaquage lombaire fait tout.",
 tips:["Allongé sur le dos, bras vers le plafond, hanches et genoux à 90°","Plaquer le bas du dos au sol AVANT de bouger — et le garder plaqué","Étendre lentement une jambe et le bras opposé","Revenir sans jamais laisser le lombaire décoller","Expirer pendant l'extension pour renforcer le verrouillage"],
 variantes:[
 {nom:"Dead bug jambes seules",note:"Bras immobiles vers le plafond — la moitié du schéma pour débuter",muscles:"Transverse",niveau:"Débutant"},
@@ -1271,7 +1271,7 @@ variantes:[
 erreurs:["Bas du dos qui se cambre pendant l'extension","Mouvement rapide qui masque la perte de contrôle","Respiration bloquée pendant tout l'exercice"]},
 
 {n:"V-ups",s:"3",r:"10-15",rest:"60s",ch:"Corps",cat:"principal",mat:"poids de corps",
-morpho:" Buste long : bras de levier important — commencer par la version tuck (genoux fléchis).\nFléchisseurs de hanche dominants : penser à enrouler la colonne, pas à lever les jambes tendues.\nGrand droit complet : sollicite simultanément les portions hautes et basses — rare en un seul exercice.\nVersion avancée du crunch : réservée à ceux qui contrôlent déjà le hollow body.",
+morpho:"🦴 Buste long : bras de levier important — commencer par la version tuck (genoux fléchis).\n🦴 Fléchisseurs de hanche dominants : penser à enrouler la colonne, pas à lever les jambes tendues.\n📐 Grand droit complet : sollicite simultanément les portions hautes et basses — rare en un seul exercice.\n💡 Version avancée du crunch : réservée à ceux qui contrôlent déjà le hollow body.",
 tips:["Allongé bras tendus derrière la tête, jambes tendues","Monter simultanément buste et jambes pour former un V","Toucher les pieds ou les tibias en haut du mouvement","Redescendre lentement sans reposer complètement bras et talons","Garder le bas du dos en contact avec le sol au retour"],
 variantes:[
 {nom:"Tuck-up",note:"Genoux fléchis ramenés — le levier court du même schéma",muscles:"Grand droit",niveau:"Débutant"},
@@ -1281,7 +1281,7 @@ variantes:[
 erreurs:["À-coups de nuque pour lancer le mouvement","Bas du dos qui décolle en position basse","Jambes qui plient de plus en plus au fil de la série"]},
 
 {n:"Planche sur bosu",s:"3",r:"30-60s",rest:"45-60s",ch:"Corps",cat:"gainage",mat:"bosu",
-morpho:" Épaules à renforcer : l'instabilité recrute la coiffe et le dentelé en plus du tronc.\nPlanche classique trop facile : le bosu prolonge la progression sans ajouter de lest.\nSportifs : les micro-corrections permanentes reproduisent les perturbations du jeu réel.\nUne planche 30s sur bosu vaut une planche 60s au sol en recrutement des stabilisateurs.",
+morpho:"🦴 Épaules à renforcer : l'instabilité recrute la coiffe et le dentelé en plus du tronc.\n📐 Planche classique trop facile : le bosu prolonge la progression sans ajouter de lest.\n📐 Sportifs : les micro-corrections permanentes reproduisent les perturbations du jeu réel.\n💡 Une planche 30s sur bosu vaut une planche 60s au sol en recrutement des stabilisateurs.",
 tips:["Avant-bras sur le dôme (ou mains sur le plat retourné)","Corps aligné tête-épaules-bassin-talons","Résister aux oscillations sans bloquer la respiration","Nombril aspiré vers la colonne, fessiers serrés","Arrêter la série dès que le bassin commence à s'affaisser"],
 variantes:[
 {nom:"Planche bosu + levée de jambe",note:"Trois appuis sur surface instable — l'anti-rotation au carré",muscles:"Transverse, obliques, fessiers",niveau:"Avancé"},
@@ -1291,7 +1291,7 @@ variantes:[
 erreurs:["Bassin qui s'affaisse quand la fatigue arrive","Épaules crispées remontées vers les oreilles","Retenir sa respiration pendant la tenue"]},
 
 {n:"Pallof press élastique",s:"3",r:"10-12/côté",rest:"45s",ch:"Élastique moyen",cat:"gainage",mat:"élastique",
-morpho:" Lombaires fragiles : gainage anti-rotation sans aucune flexion de colonne — le plus sûr des exercices d'obliques.\nSports de rotation (combat, raquette, golf) : apprend à résister puis transférer la rotation — la base de la puissance rotationnelle.\nTronc instable sous charge unilatérale : correctif direct pour porter, pousser et tirer asymétrique.\nLa version élastique de l'exercice câble : identique en efficacité, réalisable partout.",
+morpho:"🦴 Lombaires fragiles : gainage anti-rotation sans aucune flexion de colonne — le plus sûr des exercices d'obliques.\n📐 Sports de rotation (combat, raquette, golf) : apprend à résister puis transférer la rotation — la base de la puissance rotationnelle.\n📐 Tronc instable sous charge unilatérale : correctif direct pour porter, pousser et tirer asymétrique.\n💡 La version élastique de l'exercice câble : identique en efficacité, réalisable partout.",
 tips:["Élastique ancré à hauteur de poitrine, se placer de profil","Tenir la poignée à deux mains contre le sternum","Tendre les bras devant soi sans laisser le buste tourner","Tenir 2s bras tendus — le moment le plus dur","Ramener au sternum sous contrôle, buste toujours face devant"],
 variantes:[
 {nom:"Pallof press à genoux",note:"Base agenouillée — la compensation des jambes disparaît",muscles:"Obliques, transverse",niveau:"Intermédiaire"},
@@ -1301,7 +1301,7 @@ variantes:[
 erreurs:["Buste qui pivote vers l'ancrage","Bras qui dévient au lieu de rester dans l'axe du sternum","Distance à l'ancrage trop faible — tension insuffisante"]},
 
 {n:"Body saw TRX",s:"3",r:"8-12",rest:"60s",ch:"Corps",cat:"gainage",mat:"TRX",
-morpho:" Lombaires solides requises : l'anti-extension dynamique est intense — maîtriser la planche 60s avant.\nGrand droit et transverse profonds : le recul du corps allonge le bras de levier à chaque répétition.\nProgression au-delà de la planche : l'un des rares gainages qui reste difficile pour les athlètes confirmés.\nQuelques centimètres de va-et-vient suffisent — l'amplitude se gagne sur des semaines.",
+morpho:"🦴 Lombaires solides requises : l'anti-extension dynamique est intense — maîtriser la planche 60s avant.\n📐 Grand droit et transverse profonds : le recul du corps allonge le bras de levier à chaque répétition.\n📐 Progression au-delà de la planche : l'un des rares gainages qui reste difficile pour les athlètes confirmés.\n💡 Quelques centimètres de va-et-vient suffisent — l'amplitude se gagne sur des semaines.",
 tips:["Pieds dans les sangles, avant-bras au sol en planche","Pousser le corps vers l'arrière avec les avant-bras","Reculer seulement tant que le bassin reste aligné","Revenir en position de planche en tirant des épaules","Mouvement lent et continu, sans à-coups"],
 variantes:[
 {nom:"Planche pieds TRX",note:"La version statique suspendue — déjà plus dure que la planche au sol",muscles:"Grand droit, transverse",niveau:"Intermédiaire"},
@@ -1311,7 +1311,7 @@ variantes:[
 erreurs:["Reculer trop loin dès les premières séances — lombaires en danger","Bassin qui se cambre au point le plus éloigné","Épaules qui s'effondrent entre les omoplates"]},
 
 {n:"Pike TRX",s:"3",r:"8-12",rest:"60-75s",ch:"Corps",cat:"principal",mat:"TRX",
-morpho:" Ischios raides : plier légèrement les genoux au sommet — la mobilité arrière ne doit pas limiter le travail abdominal.\nFlexion de hanche + enroulement du tronc : le pike combine les deux fonctions du caisson abdominal.\nÉpaules engagées : la position de planche renversée renforce aussi le haut du corps.\nL'un des exercices d'abdominaux suspendus les plus complets, transition vers les mouvements de gymnastique.",
+morpho:"🦴 Ischios raides : plier légèrement les genoux au sommet — la mobilité arrière ne doit pas limiter le travail abdominal.\n📐 Flexion de hanche + enroulement du tronc : le pike combine les deux fonctions du caisson abdominal.\n📐 Épaules engagées : la position de planche renversée renforce aussi le haut du corps.\n💡 L'un des exercices d'abdominaux suspendus les plus complets, transition vers les mouvements de gymnastique.",
 tips:["Pieds dans les sangles, position de planche haute mains au sol","Monter les fesses vers le plafond en gardant les jambes tendues","Le regard passe vers les pieds au sommet du V inversé","Redescendre en planche parfaitement alignée, sans creux lombaire","Épaules actives qui repoussent le sol en permanence"],
 variantes:[
 {nom:"Tuck TRX",note:"Genoux fléchis ramenés — le levier court du pike",muscles:"Grand droit",niveau:"Intermédiaire"},
@@ -1321,7 +1321,7 @@ variantes:[
 erreurs:["Creux lombaire au retour en planche","Genoux qui plient complètement — devient un tuck","Élan et balancier au lieu d'une montée contrôlée"]},
 
 {n:"Russian twist kettlebell",s:"3",r:"10-16 rotations",rest:"60s",ch:"8-16 kg",cat:"principal",mat:"kettlebell",
-morpho:" Lombaires sensibles : rester sur une amplitude courte et un dos long — la rotation lombaire pure est à proscrire.\nObliques marqués recherchés : la rotation chargée est le stimulus direct des obliques externes.\nSports de frappe : renforce la capacité à créer et transférer la rotation buste/hanches.\nLa qualité de rotation thoracique prime sur la vitesse et la charge — c'est un exercice technique.",
+morpho:"🦴 Lombaires sensibles : rester sur une amplitude courte et un dos long — la rotation lombaire pure est à proscrire.\n📐 Obliques marqués recherchés : la rotation chargée est le stimulus direct des obliques externes.\n📐 Sports de frappe : renforce la capacité à créer et transférer la rotation buste/hanches.\n💡 La qualité de rotation thoracique prime sur la vitesse et la charge — c'est un exercice technique.",
 tips:["Assis, buste incliné à 45°, dos long, kettlebell tenue à deux mains","Pieds au sol au début — les décoller est une progression","Tourner les épaules d'un côté à l'autre, la KB suit le buste","La rotation vient du thorax, pas des bras qui balancent","Chaque rotation contrôlée — la charge ne touche pas le sol"],
 variantes:[
 {nom:"Russian twist sans charge",note:"Mains jointes — l'apprentissage de la rotation thoracique propre",muscles:"Obliques",niveau:"Débutant"},
@@ -1333,7 +1333,7 @@ erreurs:["Bras qui balancent la charge sans rotation du buste","Dos qui s'arrond
 
 "Lombaires":[
 {n:"Hyperextension 45°",s:"4",r:"15",rest:"60s",ch:"Corps",cat:"correctif",mat:"poids de corps",
-morpho:" Tous morphotypes : érecteurs spinaux + ischios + fessiers. Lien fondamental de la chaîne postérieure. Toujours avec abdos actifs. Limite à l'HORIZONTALE ABSOLUMENT — dépasser crée une compression discale.\nFémurs longs : très bonne amplitude naturelle sur cet exercice.",
+morpho:"🦴 Tous morphotypes : érecteurs spinaux + ischios + fessiers. Lien fondamental de la chaîne postérieure. Toujours avec abdos actifs. Limite à l'HORIZONTALE ABSOLUMENT — dépasser crée une compression discale.\n🦴 Fémurs longs : très bonne amplitude naturelle sur cet exercice.",
 tips:["Lordose naturelle maintenue — ne pas arrondir le dos","Amplitude JUSQU'À L'HORIZONTAL UNIQUEMENT — jamais au-delà","Tempo lent — pas d'élan en bas","Haltère sur la poitrine pour progresser quand le poids du corps devient trop facile","Contracter les abdominaux pour protéger les lombaires"],
 variantes:[
 {nom:"Extension horizontale sur GHD",note:"Banc à l'horizontale — le bras de levier maximal en bas de course",muscles:"Érecteurs, fessiers, ischios",niveau:"Intermédiaire"},
@@ -1342,7 +1342,7 @@ variantes:[
 erreurs:["Dépasser l'horizontal — compression discale grave","Élan en bas — perte du contrôle excentrique","Arrondir le dos en bas"]},
 
 {n:"Good morning barre légère",s:"3",r:"12",rest:"90s",ch:"Très léger",cat:"correctif",mat:"barre",
-morpho:" Tous morphotypes : ischios + lombaires + érecteurs. Lordose naturelle OBLIGATOIRE. Jamais lourd avant maîtrise complète. Excellent renforcement préventif de la chaîne postérieure.\nFémurs longs : amplitude naturellement grande — attention à la lordose en position basse.",
+morpho:"🦴 Tous morphotypes : ischios + lombaires + érecteurs. Lordose naturelle OBLIGATOIRE. Jamais lourd avant maîtrise complète. Excellent renforcement préventif de la chaîne postérieure.\n🦴 Fémurs longs : amplitude naturellement grande — attention à la lordose en position basse.",
 tips:["Barre basse sur les trapèzes — pas sur la nuque","Genoux légèrement fléchis et FIXES pendant tout le mouvement","Incliner le buste à 45° maximum — lordose conservée","Dos PLAT — regard vers l'horizon","Remonter en poussant les hanches vers l'avant"],
 variantes:[
 {nom:"Good morning assis",note:"Assis à cheval sur un banc — les ischios sortent, les érecteurs restent seuls",muscles:"Érecteurs isolés",niveau:"Intermédiaire"},
@@ -1352,7 +1352,7 @@ variantes:[
 erreurs:["Arrondir le dos — blessure lombaire grave certaine","Trop de charge avant maîtrise","Genoux verrouillés — risque tendineux","Descente au-delà de 45° — perd la lordose"]},
 
 {n:"Superman",s:"3",r:"10-15",rest:"45s",ch:"Corps",cat:"correctif",mat:"poids de corps",
-morpho:" Lombaires faibles : renforcement des érecteurs sans aucune charge externe — la porte d'entrée du travail lombaire.\nPosture effondrée : renforce toute la chaîne postérieure d'extension, des fessiers aux trapèzes inférieurs.\nDébutants : à maîtriser avant toute hyperextension chargée ou good morning.\nL'amplitude est volontairement petite : quelques centimètres suffisent, l'hyperextension excessive est contre-productive.",
+morpho:"🦴 Lombaires faibles : renforcement des érecteurs sans aucune charge externe — la porte d'entrée du travail lombaire.\n📐 Posture effondrée : renforce toute la chaîne postérieure d'extension, des fessiers aux trapèzes inférieurs.\n📐 Débutants : à maîtriser avant toute hyperextension chargée ou good morning.\n💡 L'amplitude est volontairement petite : quelques centimètres suffisent, l'hyperextension excessive est contre-productive.",
 tips:["Allongé sur le ventre, bras tendus devant, jambes tendues","Décoller simultanément bras, poitrine et cuisses de quelques centimètres","Regard vers le sol — nuque alignée avec la colonne","Tenir 2s en haut en serrant fessiers et lombaires","Redescendre lentement sans relâcher brutalement"],
 variantes:[
 {nom:"Superman alterné",note:"Bras et jambe opposés seulement — la diagonale contralatérale plus accessible",muscles:"Érecteurs, fessiers",niveau:"Débutant"},
@@ -1361,7 +1361,7 @@ variantes:[
 erreurs:["Hyperextension cervicale — regarder devant au lieu du sol","Chercher la hauteur maximale au lieu de la contraction","À-coups au lieu d'un mouvement contrôlé"]},
 
 {n:"Bird dog",s:"3",r:"8-10/côté",rest:"45s",ch:"Corps",cat:"correctif",mat:"poids de corps",
-morpho:" Lombaires douloureuses ou en reprise : l'exercice de stabilisation validé par la recherche en rééducation du dos.\nInstabilité du tronc en gainage croisé : apprend à verrouiller la colonne pendant que les membres bougent.\nTous les sportifs : la dissociation membre/colonne est la compétence de base de tous les mouvements chargés.\nEn apparence facile, révélateur impitoyable : le bassin qui bascule trahit immédiatement le déficit de contrôle.",
+morpho:"🦴 Lombaires douloureuses ou en reprise : l'exercice de stabilisation validé par la recherche en rééducation du dos.\n📐 Instabilité du tronc en gainage croisé : apprend à verrouiller la colonne pendant que les membres bougent.\n📐 Tous les sportifs : la dissociation membre/colonne est la compétence de base de tous les mouvements chargés.\n💡 En apparence facile, révélateur impitoyable : le bassin qui bascule trahit immédiatement le déficit de contrôle.",
 tips:["En quadrupédie, mains sous les épaules, genoux sous les hanches","Étendre simultanément bras et jambe opposés à l'horizontale","Le bassin reste parfaitement horizontal — poser un objet dessus pour vérifier","Tenir 2-3s en extension, revenir sans toucher le sol","Nuque neutre, regard vers le sol"],
 variantes:[
 {nom:"Bird dog coude-genou",note:"Coude et genou se rejoignent sous le ventre entre les extensions — flexion et extension enchaînées",muscles:"Transverse, érecteurs",niveau:"Intermédiaire"},
@@ -1371,7 +1371,7 @@ variantes:[
 erreurs:["Bassin qui bascule quand la jambe se lève","Cambrure lombaire en fin d'extension","Vitesse qui masque le manque de stabilité"]},
 
 {n:"Soulevé de terre kettlebell",s:"4",r:"8-12",rest:"90s",ch:"16-32 kg",cat:"principal",mat:"kettlebell",
-morpho:" Fémurs longs : la charge entre les pieds raccourcit le bras de levier — le soulevé le plus vertical et le plus sûr pour apprendre.\nLombaires à renforcer progressivement : charge intermédiaire idéale entre le poids de corps et la barre.\nDébutants au hip hinge : la kettlebell posée au sol entre les pieds guide naturellement le placement.\nL'outil pédagogique parfait pour enseigner le soulevé de terre avant de passer à la barre.",
+morpho:"🦴 Fémurs longs : la charge entre les pieds raccourcit le bras de levier — le soulevé le plus vertical et le plus sûr pour apprendre.\n🦴 Lombaires à renforcer progressivement : charge intermédiaire idéale entre le poids de corps et la barre.\n📐 Débutants au hip hinge : la kettlebell posée au sol entre les pieds guide naturellement le placement.\n💡 L'outil pédagogique parfait pour enseigner le soulevé de terre avant de passer à la barre.",
 tips:["Kettlebell entre les pieds, à l'aplomb du milieu du pied","Charnière de hanche : fesses en arrière, dos plat, bras tendus","Poitrine fière, omoplates verrouillées avant de décoller la charge","Pousser le sol avec les jambes puis tendre les hanches","Redescendre par la charnière — la KB reprend sa place entre les pieds"],
 variantes:[
 {nom:"Soulevé de terre sumo kettlebell",note:"Pieds très écartés — le buste se verticalise encore davantage",muscles:"Fessiers, adducteurs",niveau:"Débutant"},
@@ -1381,7 +1381,7 @@ variantes:[
 erreurs:["Dos qui s'arrondit au décollage","Squatter la charge au lieu de faire la charnière","Hyperextension lombaire exagérée en fin de montée"]},
 
 {n:"Extension lombaire sur ballon",s:"3",r:"12-15",rest:"60s",ch:"Corps",cat:"principal",mat:"bosu",
-morpho:" Lombaires en renforcement : le ballon (ou bosu) épouse le ventre et répartit l'appui — plus confortable que le banc 45°.\nAmplitude ajustable : le placement du ballon sous les hanches ou le ventre module la difficulté.\nÉrecteurs + fessiers + ischios : toute la chaîne postérieure d'extension travaille en synergie.\nVersion accessible de l'hyperextension quand aucun banc n'est disponible.",
+morpho:"🦴 Lombaires en renforcement : le ballon (ou bosu) épouse le ventre et répartit l'appui — plus confortable que le banc 45°.\n📐 Amplitude ajustable : le placement du ballon sous les hanches ou le ventre module la difficulté.\n📐 Érecteurs + fessiers + ischios : toute la chaîne postérieure d'extension travaille en synergie.\n💡 Version accessible de l'hyperextension quand aucun banc n'est disponible.",
 tips:["Ventre sur le ballon ou le bosu, pieds calés contre un mur ou au sol","Mains derrière la tête ou croisées sur la poitrine","Dérouler le buste vers le bas puis remonter jusqu'à l'alignement","S'arrêter à l'horizontale — pas d'hyperextension au-delà","Mouvement lent : 2s de montée, 3s de descente"],
 variantes:[
 {nom:"Hyperextension 45°",note:"Le banc dédié — hanches calées et trajectoire reproductible",muscles:"Érecteurs, fessiers",niveau:"Débutant"},
@@ -1392,7 +1392,7 @@ erreurs:["Hyperextension au-delà de l'alignement naturel","Élan des bras pour 
 
 "Mollets":[
 {n:"Extension mollets debout machine",s:"5",r:"15-20",rest:"60s",ch:"Modéré",cat:"principal",mat:"machine",
-morpho:" Tous morphotypes : volume ÉLEVÉ obligatoire pour les mollets — fibres lentes à résistance élevée. Étirement COMPLET en bas est le facteur clé. 5 séries minimum pour un stimulus suffisant.\nMollets courts naturellement : travailler en amplitude maximale et varier la position des pieds systématiquement.",
+morpho:"🦴 Tous morphotypes : volume ÉLEVÉ obligatoire pour les mollets — fibres lentes à résistance élevée. Étirement COMPLET en bas est le facteur clé. 5 séries minimum pour un stimulus suffisant.\n🦴 Mollets courts naturellement : travailler en amplitude maximale et varier la position des pieds systématiquement.",
 tips:["Amplitude TOTALE — talon le plus bas possible en bas de chaque répétition","Pause 2 secondes en bas (étirement maximal) + 1-2 secondes en haut (contraction)","Varier la position des pieds — neutres / en dehors / en dedans — pour varier l'activation","15-25 répétitions = zone optimale pour les fibres lentes des mollets","Pas de rebond en bas — travail excentrique pur"],
 variantes:[
 {nom:"Extension unilatérale sur marche",note:"Une jambe au poids de corps — l'asymétrie corrigée avec amplitude complète",muscles:"Gastrocnémien ciblé",niveau:"Débutant"},
@@ -1402,7 +1402,7 @@ variantes:[
 erreurs:["Amplitude partielle — le bénéfice vient de l'étirement complet","Rebond en bas — perd l'excentrique et les résultats","Vitesse excessive — les fibres lentes nécessitent du tempo"]},
 
 {n:"Extension mollets assis machine",s:"4",r:"15-20",rest:"60s",ch:"Modéré",cat:"isolation",mat:"machine",
-morpho:" Tous morphotypes : SOLÉAIRE (mollet profond). Un mollet ne sera jamais complet sans cet exercice — les fibres lentes du soléaire ne répondent qu'au travail genoux fléchis à 90°. L'exercice debout ne le cible pas.",
+morpho:"🦴 Tous morphotypes : SOLÉAIRE (mollet profond). Un mollet ne sera jamais complet sans cet exercice — les fibres lentes du soléaire ne répondent qu'au travail genoux fléchis à 90°. L'exercice debout ne le cible pas.",
 tips:["Genoux à 90° en position assise — position stricte","Amplitude complète en bas et en haut","Pause en bas et en haut identique à l'exercice debout","Tempo lent — les fibres lentes du soléaire ont besoin de temps sous tension","Progresser doucement — le soléaire est résistant à l'hypertrophie"],
 variantes:[
 {nom:"Extension assis élastique",note:"Bande sous l'avant-pied — la même flexion plantaire genou plié, partout",muscles:"Soléaire",niveau:"Débutant"},
@@ -1411,7 +1411,7 @@ variantes:[
 erreurs:["Amplitude partielle — le soléaire nécessite l'étirement complet","Négliger cet exercice — les mollets resteront visuellement incomplets"]},
 
 {n:"Tibia raises debout",s:"3",r:"20-25",rest:"45s",ch:"Corps",cat:"correctif",mat:"poids de corps",
-morpho:" Tous morphotypes : tibial antérieur — souvent complètement négligé.\nÉquilibre mollets/tibial. Prévient les periostites et les douleurs de shin splints. Important pour la santé du genou et de la cheville.",
+morpho:"🦴 Tous morphotypes : tibial antérieur — souvent complètement négligé.\n💡 Équilibre mollets/tibial. Prévient les periostites et les douleurs de shin splints. Important pour la santé du genou et de la cheville.",
 tips:["Dos contre un mur, talons à 30cm du mur","Lever les pointes des pieds le plus haut possible","Contraction maximale en haut","Descente contrôlée","Progresser avec haltère sur les pieds"],
 variantes:[
 {nom:"Dorsiflexion élastique assis",note:"Bande ancrée devant tirée vers soi avec le pied — le tibial antérieur sous résistance réglable",muscles:"Tibial antérieur",niveau:"Débutant"},
@@ -1420,7 +1420,7 @@ variantes:[
 erreurs:["Amplitude insuffisante","Vitesse trop rapide","Négliger cet exercice"]},
 
 {n:"Sauts de mollets explosifs",s:"4",r:"20",rest:"60s",ch:"Corps",cat:"principal",mat:"poids de corps",
-morpho:" Tous morphotypes : fibres rapides des mollets — rarement entraînées.\nLe travail explosif des mollets est différent du travail lent. Les deux sont nécessaires pour un développement complet.",
+morpho:"🦴 Tous morphotypes : fibres rapides des mollets — rarement entraînées.\n💡 Le travail explosif des mollets est différent du travail lent. Les deux sont nécessaires pour un développement complet.",
 tips:["Sauts légers sur la pointe des pieds — élan minimal","Amplitude complète : talons qui touchent le sol entre chaque saut","Rythme régulier et contrôlé","Genoux légèrement fléchis pour amortir","Peut se faire sur une marche pour plus d'amplitude"],
 variantes:[
 {nom:"Corde à sauter",note:"Le volume pliométrique continu — des centaines de contacts légers",muscles:"Mollets, coordination",niveau:"Débutant"},
@@ -1429,7 +1429,7 @@ variantes:[
 erreurs:["Genoux verrouillés","Amplitude nulle — sauts sur place sans extension","Trop d'élan"]},
 
 {n:"Extension mollets unilatérale sur marche",s:"4",r:"10-15/jambe",rest:"60s",ch:"Corps (+ haltère main)",cat:"principal",mat:"poids de corps",
-morpho:" Mollets récalcitrants : l'unilatéral double l'intensité sans matériel et corrige les asymétries invisibles en bilatéral.\nTendon d'Achille : l'amplitude complète sur marche (étirement bas + contraction haute) est le meilleur stimulus tendineux.\nMollets courts (insertion haute) : privilégier l'amplitude maximale et le tempo lent — la génétique limite le volume, pas la qualité.\nL'exercice mollets le plus rentable à domicile : une marche d'escalier suffit.",
+morpho:"🦴 Mollets récalcitrants : l'unilatéral double l'intensité sans matériel et corrige les asymétries invisibles en bilatéral.\n🦴 Tendon d'Achille : l'amplitude complète sur marche (étirement bas + contraction haute) est le meilleur stimulus tendineux.\n📐 Mollets courts (insertion haute) : privilégier l'amplitude maximale et le tempo lent — la génétique limite le volume, pas la qualité.\n💡 L'exercice mollets le plus rentable à domicile : une marche d'escalier suffit.",
 tips:["Avant-pied sur le bord de la marche, talon dans le vide","Descendre le talon le plus bas possible — étirement complet 1s","Monter sur la pointe le plus haut possible","Pause 2s en contraction maximale en haut","Genou tendu pour le gastrocnémien, tenir un appui léger pour l'équilibre"],
 variantes:[
 {nom:"Extension unilatérale genou fléchi",note:"Le genou plié désactive le jumeau — le soléaire travaille seul",muscles:"Soléaire",niveau:"Débutant"},
@@ -1438,7 +1438,7 @@ variantes:[
 erreurs:["Rebond en bas au lieu d'un étirement contrôlé","Amplitude partielle en haut comme en bas","S'aider de la main d'appui pour monter"]},
 
 {n:"Corde à sauter",s:"4-6",r:"45-90s",rest:"45-60s",ch:"Corps",cat:"principal",mat:"poids de corps",
-morpho:" Chevilles et mollets réactifs recherchés : le cycle étirement-détente à haute fréquence développe la raideur élastique du tendon.\nGenoux ou impact sensibles : commencer sur surface souple avec des blocs courts.\nSportifs : coordination, jeu de jambes et conditionnement — l'outil cardio le plus complet au poids du corps.\nDes milliers de contacts par séance : le volume pliométrique mollets le plus élevé de tous les exercices.",
+morpho:"🦴 Chevilles et mollets réactifs recherchés : le cycle étirement-détente à haute fréquence développe la raideur élastique du tendon.\n🦴 Genoux ou impact sensibles : commencer sur surface souple avec des blocs courts.\n📐 Sportifs : coordination, jeu de jambes et conditionnement — l'outil cardio le plus complet au poids du corps.\n💡 Des milliers de contacts par séance : le volume pliométrique mollets le plus élevé de tous les exercices.",
 tips:["Sauts minimalistes : 2-3 cm du sol suffisent","Réception sur l'avant-pied, talons qui ne claquent jamais au sol","Coudes près du corps — la rotation vient des poignets","Buste droit, regard devant","Progresser en durée avant de progresser en vitesse"],
 variantes:[
 {nom:"Sauts alternés (boxer step)",note:"Le poids passe d'un pied à l'autre — l'impact divisé, l'endurance allongée",muscles:"Mollets, coordination",niveau:"Débutant"},
@@ -1448,7 +1448,7 @@ variantes:[
 erreurs:["Sauter trop haut — gaspillage et impact inutile","Réception talons — tout l'intérêt pliométrique disparaît","Bras qui tournent depuis les épaules"]},
 
 {n:"Extension mollets élastique assis",s:"3",r:"15-25",rest:"45s",ch:"Élastique fort",cat:"isolation",mat:"élastique",
-morpho:" Soléaire ciblé : genou fléchi = le gastrocnémien est désactivé, le soléaire travaille seul — indispensable pour le galbe complet.\nImpact interdit (reprise, tendinopathie) : résistance progressive sans aucune charge de compression.\nMollets endurants : le soléaire est majoritairement composé de fibres lentes — les hautes répétitions lui correspondent.\nRéplique fidèle de la machine mollets assis, transportable partout.",
+morpho:"🦴 Soléaire ciblé : genou fléchi = le gastrocnémien est désactivé, le soléaire travaille seul — indispensable pour le galbe complet.\n🦴 Impact interdit (reprise, tendinopathie) : résistance progressive sans aucune charge de compression.\n📐 Mollets endurants : le soléaire est majoritairement composé de fibres lentes — les hautes répétitions lui correspondent.\n💡 Réplique fidèle de la machine mollets assis, transportable partout.",
 tips:["Assis, élastique passé sous l'avant-pied, tenu en tension dans les mains","Genoux fléchis à 90° pendant tout l'exercice","Pousser la pointe de pied contre l'élastique en extension complète","Pause 1-2s en contraction maximale","Revenir lentement en flexion dorsale complète"],
 variantes:[
 {nom:"Extension élastique jambe tendue",note:"Genou verrouillé — le gastrocnémien réintègre la flexion plantaire",muscles:"Gastrocnémiens",niveau:"Débutant"},
@@ -1457,7 +1457,7 @@ variantes:[
 erreurs:["Élastique trop faible — aucune difficulté en fin de série","Amplitude raccourcie sans étirement en flexion","Genoux qui se tendent en cours de série"]},
 
 {n:"Équilibre unipodal sur bosu",s:"3",r:"30-45s/jambe",rest:"30s",ch:"Corps",cat:"correctif",mat:"bosu",
-morpho:" Chevilles post-entorse : LE protocole de référence en rééducation — les péroniers et le tibial postérieur se renforcent en continu.\nAppuis fragiles chez le sportif : la prévention des entorses passe par la proprioception, pas seulement la force.\nMollets stabilisateurs : le travail permanent de micro-corrections renforce les muscles profonds de la jambe.\n3 minutes par jambe en fin de séance suffisent — la régularité prime sur la durée.",
+morpho:"🦴 Chevilles post-entorse : LE protocole de référence en rééducation — les péroniers et le tibial postérieur se renforcent en continu.\n🦴 Appuis fragiles chez le sportif : la prévention des entorses passe par la proprioception, pas seulement la force.\n📐 Mollets stabilisateurs : le travail permanent de micro-corrections renforce les muscles profonds de la jambe.\n💡 3 minutes par jambe en fin de séance suffisent — la régularité prime sur la durée.",
 tips:["Un pied au centre du dôme, l'autre décollé","Genou d'appui légèrement fléchi, jamais verrouillé","Orteils qui agrippent activement la surface","Regard fixe devant soi — fermer les yeux est la progression ultime","Bras libres pour équilibrer, puis croisés quand le niveau monte"],
 variantes:[
 {nom:"Équilibre unipodal + extension mollet",note:"Monter sur la pointe en tenant l'équilibre — cheville et mollet dans le même défi",muscles:"Mollet, stabilisateurs de cheville",niveau:"Avancé"},
@@ -1469,7 +1469,7 @@ erreurs:["Genou verrouillé en hyperextension","Fixer ses pieds au lieu de regar
 
 "Avant-bras":[
 {n:"Curl poignet barre",s:"3",r:"15-20",rest:"45s",ch:"Léger",cat:"isolation",mat:"barre",
-morpho:" Tous morphotypes : fléchisseurs du poignet — sous-développés si les straps sont utilisés systématiquement sans travail spécifique. L'usage permanent des straps retarde le développement de la force de prise et des avant-bras.\nÀ alterner avec les extensions de poignet pour un équilibre fléchisseurs/extenseurs.",
+morpho:"🦴 Tous morphotypes : fléchisseurs du poignet — sous-développés si les straps sont utilisés systématiquement sans travail spécifique. L'usage permanent des straps retarde le développement de la force de prise et des avant-bras.\n💡 À alterner avec les extensions de poignet pour un équilibre fléchisseurs/extenseurs.",
 tips:["Avant-bras posés sur les cuisses ou un banc — position stable","Amplitude complète — extension totale du poignet en bas","Mouvement lent et contrôlé","Alterner avec les extensions de poignet pour l'équilibre"],
 variantes:[
 {nom:"Extension poignet barre (reverse wrist curl)",note:"Paumes vers le bas — les extenseurs, l'autre moitié de l'avant-bras",muscles:"Extenseurs des poignets",niveau:"Débutant"},
@@ -1479,7 +1479,7 @@ variantes:[
 erreurs:["Trop lourd — le coude compense","Amplitude insuffisante"]},
 
 {n:"Farmer walk",s:"3",r:"30-40m",rest:"90s",ch:"Lourd",cat:"principal",mat:"haltères",
-morpho:" Tous morphotypes : force de préhension + avant-bras + trapèzes. Meilleur exercice fonctionnel pour les avant-bras. Améliore la prise pour tous les exercices de tirage. Résultats visibles en 4-6 semaines.\nBras longs : prise naturellement longue — amplitude de tenue favorable.",
+morpho:"🦴 Tous morphotypes : force de préhension + avant-bras + trapèzes. Meilleur exercice fonctionnel pour les avant-bras. Améliore la prise pour tous les exercices de tirage. Résultats visibles en 4-6 semaines.\n🦴 Bras longs : prise naturellement longue — amplitude de tenue favorable.",
 tips:["Haltères aussi lourds que ta limite de prise le permet","Pas réguliers et équilibrés — sans balancement du corps","Dos droit, épaules hautes et stables","Respiration régulière tout au long","Progresser en distance ou en charge"],
 variantes:[
 {nom:"Suitcase carry",note:"Une seule charge d'un côté — le tronc lutte contre la flexion latérale à chaque pas",muscles:"Carré des lombes, obliques, poigne",niveau:"Intermédiaire"},
@@ -1489,7 +1489,7 @@ variantes:[
 erreurs:["Trop léger — pas de stimulus suffisant sur la prise","Dos qui s'incline latéralement — risque lombaire"]},
 
 {n:"Dead hang barre fixe",s:"4",r:"30-60s",rest:"60s",ch:"Corps",cat:"principal",mat:"poids de corps",
-morpho:" Bras longs : tenue naturellement plus facile grâce à l'amplitude de prise.\nForce de prise isométrique + décompression de la colonne vertébrale + étirement des épaules. Exercice multi-bénéfices souvent sous-estimé.",
+morpho:"🦴 Bras longs : tenue naturellement plus facile grâce à l'amplitude de prise.\n💡 Force de prise isométrique + décompression de la colonne vertébrale + étirement des épaules. Exercice multi-bénéfices souvent sous-estimé.",
 tips:["Prise pronation ou supination selon préférence","Corps détendu — laisser la gravité décompresser","Épaules légèrement rétractées — ne pas laisser totalement relâcher","Respiration profonde et régulière","Progresser en durée"],
 variantes:[
 {nom:"Suspension une main",note:"Tout le poids sur une seule prise — l'objectif grip du calisthenics",muscles:"Poigne, avant-bras",niveau:"Avancé"},
@@ -1498,7 +1498,7 @@ variantes:[
 erreurs:["Laisser les épaules totalement relâchées en hypermobilité","Gripper trop fort — muscles des avant-bras non en endurance","Durée trop courte pour développer la prise"]},
 
 {n:"Wrist roller",s:"3",r:"3 montées/descentes",rest:"60s",ch:"Léger",cat:"principal",mat:"accessoire",
-morpho:" Tous morphotypes : enroulage et déroulage = fléchisseurs + extenseurs complets.\nUn des seuls exercices qui travaille les avant-bras en amplitude COMPLÈTE dans les deux directions.",
+morpho:"🦴 Tous morphotypes : enroulage et déroulage = fléchisseurs + extenseurs complets.\n💡 Un des seuls exercices qui travaille les avant-bras en amplitude COMPLÈTE dans les deux directions.",
 tips:["Bras tendus devant soi à hauteur des épaules","Enrouler la corde vers le haut en alternant les poignets","Contrôler la descente — ne pas laisser tomber","Charge légère — la fatigue vient vite","Peut se faire bras le long du corps pour moins d'effort des épaules"],
 variantes:[
 {nom:"Wrist roller déroulé inversé",note:"Enrouler dans l'autre sens paumes vers le bas — les extenseurs à la manœuvre",muscles:"Extenseurs des poignets",niveau:"Intermédiaire"},
@@ -1507,7 +1507,7 @@ variantes:[
 erreurs:["Trop lourd — les épaules fatiguent avant les avant-bras","Vitesse trop rapide — perd le travail excentrique","Bras non tendus"]},
 
 {n:"Extension poignets élastique",s:"3",r:"15-20",rest:"45s",ch:"Élastique léger",cat:"correctif",mat:"élastique",
-morpho:" Épicondylite (tennis elbow) : le renforcement des extenseurs est le traitement actif de référence — toujours négligés face aux fléchisseurs.\nRatio fléchisseurs/extenseurs déséquilibré : tout pratiquant qui tire et porte développe ce déséquilibre — le correctif est obligatoire.\nPoignets douloureux aux pompes et au front squat : des extenseurs forts stabilisent l'articulation.\n2 séries en fin de séance protègent des mois de tendinite.",
+morpho:"🦴 Épicondylite (tennis elbow) : le renforcement des extenseurs est le traitement actif de référence — toujours négligés face aux fléchisseurs.\n📐 Ratio fléchisseurs/extenseurs déséquilibré : tout pratiquant qui tire et porte développe ce déséquilibre — le correctif est obligatoire.\n📐 Poignets douloureux aux pompes et au front squat : des extenseurs forts stabilisent l'articulation.\n💡 2 séries en fin de séance protègent des mois de tendinite.",
 tips:["Avant-bras posé sur la cuisse ou une table, paume vers le bas","Élastique sous le pied, tenu dans la main","Relever le dos de la main vers le haut, amplitude complète","Descendre lentement en 2-3s","Seul le poignet bouge — l'avant-bras reste collé au support"],
 variantes:[
 {nom:"Curl poignet élastique",note:"Paume vers le haut — les fléchisseurs, l'autre face du travail",muscles:"Fléchisseurs des poignets",niveau:"Débutant"},
@@ -1516,7 +1516,7 @@ variantes:[
 erreurs:["Charge trop forte — les extenseurs sont des petits muscles","Avant-bras qui décolle du support","Amplitude réduite par précipitation"]},
 
 {n:"Bottoms-up carry kettlebell",s:"3",r:"20-30m/bras",rest:"60s",ch:"8-12 kg",cat:"gainage",mat:"kettlebell",
-morpho:" Grip faible : la boule à l'envers exige une pression d'écrasement maximale et continue sur la poignée — le crush grip pur.\nÉpaules instables : la coiffe des rotateurs travaille en stabilisation réflexe permanente — outil de rééducation reconnu.\nAvant-bras fins : la tenue isométrique sous instabilité est un stimulus unique que ni la barre ni l'haltère ne reproduisent.\nSi la kettlebell bascule, tout recommence : le feedback est immédiat et impitoyable.",
+morpho:"🦴 Grip faible : la boule à l'envers exige une pression d'écrasement maximale et continue sur la poignée — le crush grip pur.\n🦴 Épaules instables : la coiffe des rotateurs travaille en stabilisation réflexe permanente — outil de rééducation reconnu.\n📐 Avant-bras fins : la tenue isométrique sous instabilité est un stimulus unique que ni la barre ni l'haltère ne reproduisent.\n💡 Si la kettlebell bascule, tout recommence : le feedback est immédiat et impitoyable.",
 tips:["Kettlebell tenue boule vers le haut, poignée écrasée dans le poing","Coude à 90°, avant-bras vertical comme un serveur portant un plateau","Marcher lentement en lignes droites contrôlées","Épaule basse, omoplate verrouillée","Regard devant — sentir l'équilibre plutôt que le regarder"],
 variantes:[
 {nom:"Bottoms-up press",note:"Développé boule à l'envers — l'écrasement de poignée pendant la poussée verticale",muscles:"Coiffe, avant-bras, deltoïde",niveau:"Avancé"},
@@ -1525,7 +1525,7 @@ variantes:[
 erreurs:["Charge trop lourde — la boule bascule dès les premiers pas","Coude qui s'écarte du corps","Marcher vite au détriment du contrôle"]},
 
 {n:"Suspension serviette (towel hang)",s:"3",r:"15-40s",rest:"90s",ch:"Corps",cat:"principal",mat:"poids de corps",
-morpho:" Grip limitant aux tractions et soulevés : la prise sur serviette est l'outil de grip le plus dur au poids de corps.\nSports de préhension (escalade, combat, rugby) : la prise sur textile reproduit la saisie d'un adversaire ou d'un vêtement.\nAvant-bras massifs recherchés : la tenue en pince épaisse recrute les fléchisseurs à intensité maximale.\nDeux serviettes sur une barre fixe : le matériel de grip le plus économique qui existe.",
+morpho:"🦴 Grip limitant aux tractions et soulevés : la prise sur serviette est l'outil de grip le plus dur au poids de corps.\n🦴 Sports de préhension (escalade, combat, rugby) : la prise sur textile reproduit la saisie d'un adversaire ou d'un vêtement.\n📐 Avant-bras massifs recherchés : la tenue en pince épaisse recrute les fléchisseurs à intensité maximale.\n💡 Deux serviettes sur une barre fixe : le matériel de grip le plus économique qui existe.",
 tips:["Une ou deux serviettes passées sur la barre fixe","Saisir à pleines mains le plus haut possible","Épaules actives, omoplates engagées — pas de suspension passive","Tenir le plus longtemps possible en gardant la qualité de prise","Progresser vers une seule main quand 40s deviennent faciles"],
 variantes:[
 {nom:"Tractions sur serviettes",note:"La version dynamique — le dos tire pendant que la pince tient",muscles:"Dorsaux, poigne",niveau:"Avancé"},
@@ -1536,7 +1536,7 @@ erreurs:["Suspension passive épaules aux oreilles","Serviette trop épaisse pli
 
 "Trapèzes":[
 {n:"Haussements épaules haltères",s:"4",r:"12-15",rest:"60s",ch:"70%",cat:"principal",mat:"haltères",
-morpho:" Tous morphotypes : chef supérieur des trapèzes. À équilibrer ABSOLUMENT avec le face pull et l'oiseau pour éviter de renforcer une antépulsion. Hypertrophie rapide et visible.\nÉpaules avec antépulsion : à modérer — les trapèzes supérieurs participent à l'antépulsion si surentraînés sans correctifs.",
+morpho:"🦴 Tous morphotypes : chef supérieur des trapèzes. À équilibrer ABSOLUMENT avec le face pull et l'oiseau pour éviter de renforcer une antépulsion. Hypertrophie rapide et visible.\n📐 Épaules avec antépulsion : à modérer — les trapèzes supérieurs participent à l'antépulsion si surentraînés sans correctifs.",
 tips:["Mouvement VERTICAL PUR — aucune rotation des épaules (risque articulaire sous-acromial)","Contraction isométrique 1-2 secondes en haut","Descente lente — étirement complet en bas","Haltères préférés pour la liberté de mouvement"],
 variantes:[
 {nom:"Shrug barre",note:"Prise bilatérale devant — la charge totale maximale",muscles:"Trapèzes supérieurs",niveau:"Débutant"},
@@ -1546,7 +1546,7 @@ variantes:[
 erreurs:["Rotation des épaules — risque articulaire sous-acromial","Amplitude partielle en bas — perd l'étirement","Utiliser l'élan des genoux pour compenser"]},
 
 {n:"Rowing barre debout (upright row)",s:"4",r:"12",rest:"60s",ch:"55%",cat:"principal",mat:"barre",
-morpho:" Épaules saines obligatoires — à éviter en cas de conflit sous-acromial.\nClavicules larges : peut créer un conflit — utiliser une prise légèrement plus large.\nTrapèzes supérieurs + deltoïde moyen. Tirer vers le menton — coudes TOUJOURS au-dessus des mains.",
+morpho:"📐 Épaules saines obligatoires — à éviter en cas de conflit sous-acromial.\n📐 Clavicules larges : peut créer un conflit — utiliser une prise légèrement plus large.\n💡 Trapèzes supérieurs + deltoïde moyen. Tirer vers le menton — coudes TOUJOURS au-dessus des mains.",
 tips:["Prise légèrement plus large que les épaules sur barre EZ","Tirer vers le menton — coudes remontent au-dessus des mains","Maintenir 1s en haut","Descente contrôlée 2-3s","Arrêt si douleur à l'épaule — exercice individuel"],
 variantes:[
 {nom:"Upright row haltères",note:"Deux charges indépendantes — chaque poignet trouve sa trajectoire",muscles:"Trapèzes, deltoïde moyen",niveau:"Débutant"},
@@ -1556,7 +1556,7 @@ variantes:[
 erreurs:["Prise trop serrée — conflit sous-acromial certain","Coudes sous les mains — perd l'exercice","Trop lourd"]},
 
 {n:"Face pull corde + shrug combiné",s:"3",r:"15",rest:"60s",ch:"Léger",cat:"correctif",mat:"poulie",
-morpho:" Antépulsion épaules : version combinée — face pull correctif + activation des trapèzes moyens.\nL'ajout du shrug léger à la fin du face pull permet de recruter les trapèzes moyens en plus des rotateurs externes.",
+morpho:"📐 Antépulsion épaules : version combinée — face pull correctif + activation des trapèzes moyens.\n💡 L'ajout du shrug léger à la fin du face pull permet de recruter les trapèzes moyens en plus des rotateurs externes.",
 tips:["Face pull classique jusqu'à la rotation externe maximale","Ajouter un léger haussement d'épaules en fin de mouvement","Pause 2s en contraction maximale","Descente contrôlée","Poids très léger — qualité de mouvement prioritaire"],
 variantes:[
 {nom:"Face pull simple",note:"Sans le haussement final — la rétraction et la rotation externe seules",muscles:"Deltoïde postérieur, coiffe",niveau:"Débutant"},
@@ -1565,7 +1565,7 @@ variantes:[
 erreurs:["Trop lourd — perd la rotation externe","Shrug trop prononcé — devient un shrug pur","Vitesse trop rapide"]},
 
 {n:"Shrug kettlebell",s:"4",r:"12-15",rest:"60s",ch:"2×16-32 kg",cat:"isolation",mat:"kettlebell",
-morpho:" Cou long et épaules tombantes : les trapèzes supérieurs répondent vite au shrug chargé — impact visuel rapide sur la carrure.\nPrise épaisse de la kettlebell : le grip travaille autant que les trapèzes — deux muscles pour un exercice.\nCharge le long du corps : la kettlebell pend naturellement dans l'axe, sans frotter les cuisses comme la barre.\nLe shrug le plus confortable mécaniquement : bras relâchés, trajectoire verticale pure.",
+morpho:"🦴 Cou long et épaules tombantes : les trapèzes supérieurs répondent vite au shrug chargé — impact visuel rapide sur la carrure.\n🦴 Prise épaisse de la kettlebell : le grip travaille autant que les trapèzes — deux muscles pour un exercice.\n📐 Charge le long du corps : la kettlebell pend naturellement dans l'axe, sans frotter les cuisses comme la barre.\n💡 Le shrug le plus confortable mécaniquement : bras relâchés, trajectoire verticale pure.",
 tips:["Une kettlebell dans chaque main, bras relâchés le long du corps","Hausser les épaules verticalement vers les oreilles","Pause 2s en contraction haute","Descendre lentement jusqu'à l'étirement complet des trapèzes","Bras tendus passifs — ils ne participent jamais"],
 variantes:[
 {nom:"Shrug kettlebell unilatéral",note:"Une charge d'un seul côté — le tronc résiste à la flexion latérale",muscles:"Trapèze ciblé, obliques",niveau:"Intermédiaire"},
@@ -1575,7 +1575,7 @@ variantes:[
 erreurs:["Rouler les épaules d'avant en arrière — inutile et risqué","Plier les coudes pour monter plus haut","Rebond en bas sans étirement contrôlé"]},
 
 {n:"Face pull élastique",s:"3-4",r:"15-20",rest:"45s",ch:"Élastique léger/moyen",cat:"correctif",mat:"élastique",
-morpho:" Épaules enroulées et cyphose : le tirage vers le visage combine rétraction, rotation externe et trapèzes moyens/inférieurs — le correctif postural complet.\nAntécédents de conflit sous-acromial : renforce la coiffe dans sa fonction exacte de recentrage de la tête humérale.\nDominance des trapèzes supérieurs : réapprend à tirer avec le milieu du dos plutôt qu'en haussant.\nLa version élastique permet de le faire chaque jour, même hors salle — la fréquence fait le résultat postural.",
+morpho:"🦴 Épaules enroulées et cyphose : le tirage vers le visage combine rétraction, rotation externe et trapèzes moyens/inférieurs — le correctif postural complet.\n🦴 Antécédents de conflit sous-acromial : renforce la coiffe dans sa fonction exacte de recentrage de la tête humérale.\n📐 Dominance des trapèzes supérieurs : réapprend à tirer avec le milieu du dos plutôt qu'en haussant.\n💡 La version élastique permet de le faire chaque jour, même hors salle — la fréquence fait le résultat postural.",
 tips:["Élastique ancré à hauteur du visage, une extrémité dans chaque main","Tirer vers le front en écartant les mains de part et d'autre de la tête","Coudes hauts qui finissent en arrière des épaules","Rotation externe finale : les poings pointent vers le plafond","Épaules basses malgré la hauteur des coudes"],
 variantes:[
 {nom:"Face pull ancrage bas",note:"Tirage montant vers le visage — les trapèzes inférieurs rejoignent la rotation externe",muscles:"Trapèzes inférieurs, coiffe",niveau:"Débutant"},
@@ -1584,7 +1584,7 @@ variantes:[
 erreurs:["Hausser les épaules pendant le tirage","Tirer vers le cou ou la poitrine au lieu du visage","Coudes qui tombent — la rotation externe disparaît"]},
 
 {n:"Wall slide",s:"3",r:"10-12",rest:"45s",ch:"Corps",cat:"correctif",mat:"poids de corps",
-morpho:" Trapèze inférieur endormi : le glissement des bras contre le mur force sa participation — le muscle postural le plus déficitaire.\nÉpaules raides en élévation : gagne de l'amplitude au-dessus de la tête sans charge, prérequis au développé militaire.\nPosture d'écran (tête avancée, épaules enroulées) : l'exercice de bureau par excellence, réalisable partout.\nLe test et le correctif en un : si les bras décollent du mur, le déficit est identifié.",
+morpho:"🦴 Trapèze inférieur endormi : le glissement des bras contre le mur force sa participation — le muscle postural le plus déficitaire.\n🦴 Épaules raides en élévation : gagne de l'amplitude au-dessus de la tête sans charge, prérequis au développé militaire.\n📐 Posture d'écran (tête avancée, épaules enroulées) : l'exercice de bureau par excellence, réalisable partout.\n💡 Le test et le correctif en un : si les bras décollent du mur, le déficit est identifié.",
 tips:["Dos au mur : tête, haut du dos et sacrum en contact","Bras en position de W contre le mur, coudes et poignets plaqués","Glisser les bras vers le haut en gardant le contact maximal","Monter aussi haut que possible sans cambrer ni décoller","Redescendre en tirant les coudes vers le bas et l'arrière"],
 variantes:[
 {nom:"Floor slide (au sol)",note:"Allongé sur le dos — la gravité aide à maintenir les contacts",muscles:"Trapèzes inférieurs, coiffe",niveau:"Débutant"},
