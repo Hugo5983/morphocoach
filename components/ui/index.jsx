@@ -1,0 +1,173 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// DESIGN SYSTEM — Composants UI réutilisables de MorphoCoach
+// Source unique de vérité pour l'UI. Importer ces composants au lieu de
+// réécrire des styles inline. Pour changer l'apparence de l'app : modifier ICI.
+// ═══════════════════════════════════════════════════════════════════════════
+import { C, FONT, NUM } from"../../data/constants.js";
+
+export { FONT, NUM };
+
+// ─── BOX — carte de base (conservé pour compatibilité) ──────────────────────
+export const Box = ({ children, style, onClick, className }) => (
+  <div onClick={onClick} className={className} style={{
+    background: C.s1,
+    border:`1px solid ${C.bd}`,
+    borderRadius: 16,
+    padding:"16px",
+    marginBottom: 12,
+    cursor: onClick ?"pointer" :"default",
+    boxShadow: C.shadow,
+    ...style,
+  }}>{children}</div>
+);
+
+// ─── CARD — carte avec variantes (default / accent / success / danger / ghost) ─
+const CARD_VARIANTS = {
+  default: { background: C.s1, border:`1px solid ${C.bd}`, boxShadow: C.shadow },
+  accent:  { background: C.s1, border:`1px solid rgba(60,91,255,0.25)`, boxShadow:"0 4px 20px rgba(60,91,255,0.12)" },
+  success: { background:"rgba(18,183,106,0.05)", border:"1px solid rgba(18,183,106,0.18)" },
+  danger:  { background:"rgba(229,72,77,0.05)",  border:"1px solid rgba(229,72,77,0.18)" },
+  ghost:   { background:"transparent", border:`1px solid ${C.bd}` },
+};
+const CARD_PADDINGS = { sm:"12px 16px", md:"16px", lg:"20px", xl:"24px 20px", none:"0" };
+
+export const Card = ({ children, variant ="default", padding ="md", onClick, style, className }) => {
+  const v = CARD_VARIANTS[variant] || CARD_VARIANTS.default;
+  return (
+    <div onClick={onClick} className={className} style={{
+      ...v,
+      borderRadius: 20,
+      padding: CARD_PADDINGS[padding] ?? CARD_PADDINGS.md,
+      marginBottom: 12,
+      cursor: onClick ?"pointer" :"default",
+      ...style,
+    }}>{children}</div>
+);
+};
+
+// ─── EYEBROW — petit label majuscule au-dessus d'un titre ───────────────────
+export const Eyebrow = ({ children, color = C.dim, style }) => (
+  <div style={{
+    fontSize: 10, fontWeight: 700, color,
+    letterSpacing:"0.1em", textTransform:"uppercase",
+    fontFamily: FONT, marginBottom: 4, ...style,
+  }}>{children}</div>
+);
+
+// ─── LBL — label de formulaire (conservé pour compatibilité) ────────────────
+export const Lbl = ({ children, style }) => (
+  <div style={{
+    fontSize: 10, color: C.dim, letterSpacing:"0.1em",
+    textTransform:"uppercase", fontWeight: 600,
+    fontFamily: FONT, marginBottom: 12, ...style,
+  }}>{children}</div>
+);
+
+// ─── SECTION TITLE — titre de section avec eyebrow + action optionnelle ─────
+// ─── INPUT (conservé pour compatibilité) ────────────────────────────────────
+export const Inp = ({ style, ...p }) => (
+  <input style={{
+    width:"100%", padding:"12px 16px",
+    background: C.s2, border:`1px solid ${C.bd}`,
+    borderRadius: 12, color: C.text, fontSize: 14,
+    marginBottom: 8, fontFamily: FONT,
+    boxShadow:"inset 0 1px 3px rgba(0,0,0,0.05)",
+    ...style,
+  }} {...p}/>
+);
+
+// ─── BUTTON (conservé pour compatibilité) ───────────────────────────────────
+export const Btn = ({ children, onClick, disabled, v ="fill", sm, style }) => {
+  const variants = {
+    fill:  { bg: C.accent, color:"#FFFFFF", border:"none", shadow:"0 2px 8px rgba(60,91,255,0.25)" },
+    out:   { bg:"transparent", color: C.accent, border:`1px solid rgba(60,91,255,0.35)`, shadow:"none" },
+    ghost: { bg: C.s2, color: C.mid, border:`1px solid ${C.bd}`, shadow:"none" },
+    danger:{ bg:"rgba(229,72,77,0.08)", color: C.red, border:"1px solid rgba(229,72,77,0.25)", shadow:"none" },
+  };
+  const s = variants[v] || variants.fill;
+  return (
+    <button onClick={onClick} disabled={disabled} style={{
+      display:"block", width:"100%",
+      padding: sm ?"9px 14px" :"13px 16px",
+      background: disabled ?"rgba(0,0,0,0.05)" : s.bg,
+      color: disabled ? C.dim : s.color,
+      border: disabled ?`1px solid ${C.bd}` : s.border,
+      borderRadius: 12, fontSize: sm ? 12.5 : 14, fontWeight: 600,
+      fontFamily: FONT, cursor: disabled ?"not-allowed" :"pointer",
+      marginBottom: 8, letterSpacing: 0.2,
+      boxShadow: disabled ?"none" : s.shadow,
+      transition:"opacity .15s, transform .12s", ...style,
+    }}>{children}</button>
+);
+};
+
+// ─── BAR — barre de progression ─────────────────────────────────────────────
+export const Bar = ({ pct, color = C.accent, h = 4 }) => (
+  <div style={{ height: h, background: C.s3, borderRadius: h / 2, overflow:"hidden", marginTop: 4 }}>
+    <div style={{
+      height:"100%", width:`${Math.min(100, pct || 0)}%`,
+      background: pct > 100 ? C.red : color,
+      borderRadius: h / 2, transition:"width .5s ease",
+    }}/>
+  </div>
+);
+
+// ─── ROW — ligne flex centrée ───────────────────────────────────────────────
+export const Row = ({ children, style }) => (
+  <div style={{ display:"flex", alignItems:"center", ...style }}>{children}</div>
+);
+
+// ─── G2 — grille 2 colonnes ─────────────────────────────────────────────────
+export const G2 = ({ children, gap = 8, style }) => (
+  <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap, marginBottom: 12, ...style }}>
+    {children}
+  </div>
+);
+
+// ─── TAG — étiquette/chip (conservé pour compatibilité) ─────────────────────
+// ─── PILL — badge arrondi (statut, info) ────────────────────────────────────
+export const Pill = ({ children, color = C.accent, dot = false, style }) => (
+  <span style={{
+    display:"inline-flex", alignItems:"center", gap: 4,
+    padding:"4px 12px", borderRadius: 999,
+    background:`${color}1A`, border:`1px solid ${color}33`,
+    fontSize: 11, fontWeight: 600, color,
+    fontFamily: FONT, ...style,
+  }}>
+    {dot && <span style={{ width: 6, height: 6, borderRadius:"50%", background: color, display:"inline-block" }}/>}
+    {children}
+  </span>
+);
+
+// ─── STAT — grand chiffre avec unité + label ────────────────────────────────
+export const Stat = ({ value, unit, label, color = C.text, style }) => (
+  <div style={style}>
+    {label && <Eyebrow>{label}</Eyebrow>}
+    <div style={{ display:"flex", alignItems:"baseline", gap: 4 }}>
+      <span style={{ fontSize: 34, fontWeight: 700, color, fontFamily: FONT, letterSpacing: -1, lineHeight: 1, ...NUM }}>{value}</span>
+      {unit && <span style={{ fontSize: 13, color: C.dim, fontWeight: 500 }}>{unit}</span>}
+    </div>
+  </div>
+);
+
+// ─── MINI CHART supprimé (non utilisé) ──────────────────────────────────────
+
+// ─── LIST ITEM — ligne de liste standard (icône + titre + méta + action) ────
+export const ListItem = ({ icon, title, meta, right, onClick, style }) => (
+  <div onClick={onClick} className={onClick ?"tap" : undefined} style={{
+    display:"flex", alignItems:"center", gap: 12,
+    padding:"12px 4px", minHeight: 44,
+    borderBottom:`1px solid ${C.bd}`,
+    cursor: onClick ?"pointer" :"default", ...style,
+  }}>
+    {icon && <div style={{
+      width: 36, height: 36, borderRadius: 12, flexShrink: 0,
+      background: C.s2, display:"grid", placeItems:"center",
+    }}>{icon}</div>}
+    <div style={{ flex: 1, minWidth: 0 }}>
+      <div style={{ fontSize: 14, fontWeight: 600, color: C.text, fontFamily: FONT }}>{title}</div>
+      {meta && <div style={{ fontSize: 11, color: C.dim, fontFamily: FONT, marginTop: 2 }}>{meta}</div>}
+    </div>
+    {right}
+  </div>
+);
