@@ -1,6 +1,7 @@
 import { useState } from"react";
 import useScrollTop from"../../hooks/useScrollTop.js";
 import { C, DARK, FONT, NUM, SERIF } from"../../data/constants.js";
+import { IDuo } from"../../components/ui/Icon.jsx";
 import { Card, Eyebrow, Btn } from"../../components/ui/index.jsx";
 import SeanceDetail from"./SeanceDetail.jsx";
 import { calc1RM, calcKgFor, catColor as cc, toDateKey } from"../../utils/training.js";
@@ -261,12 +262,12 @@ export default function TodayView(props) {
 
           {/* Gestes récup */}
           {[
-            { ic:"", bg:"rgba(18,183,106,0.12)",  bd:"rgba(18,183,106,0.25)",  t:"Hydratation · 2,5 L", s:"Clé de la récupération musculaire" },
-            { ic:"", bg:"rgba(157,176,255,0.12)", bd:"rgba(157,176,255,0.25)", t:"Sommeil · cible 8 h",   s:"80% des gains se font la nuit" },
-            { ic:"", bg:"rgba(60,91,255,0.12)",  bd:"rgba(60,91,255,0.25)",  t:"Mobilité · 10 min",     s:"Hanches & thoracique" },
+            { duo:"hydration", t:"Hydratation · 2,5 L", s:"Clé de la récupération musculaire" },
+            { duo:"sleep",     t:"Sommeil · cible 8 h",   s:"80% des gains se font la nuit" },
+            { duo:"recovery",  t:"Mobilité · 10 min",     s:"Hanches & thoracique" },
           ].map((g,i) => (
             <div key={i} style={{ display:"flex",alignItems:"center",gap:12,padding:"12px 0",borderTop:"1px solid rgba(0,0,0,0.05)" }}>
-              <div style={{ width:44,height:44,borderRadius:12,background:g.bg,border:`1px solid ${g.bd}`,display:"grid",placeItems:"center",flexShrink:0,fontSize:20 }}>{g.ic}</div>
+              <div style={{ width:44,height:44,borderRadius:12,background:C.s2,border:`1px solid ${C.bd}`,display:"grid",placeItems:"center",flexShrink:0 }}><IDuo name={g.duo} size={24}/></div>
               <div style={{ flex:1,minWidth:0 }}>
                 <div style={{ fontSize:14,fontWeight:700,color:"${C.text}",fontFamily:DISP,letterSpacing:-0.2 }}>{g.t}</div>
                 <div style={{ fontSize:11,color:C.mid,fontFamily:DISP,marginTop:1 }}>{g.s}</div>
