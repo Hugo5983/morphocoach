@@ -3,12 +3,9 @@
 // Design aligné avec BiblioSheet de Creer.jsx : même overlay, handle, typo, etc.
 
 import { useState, useRef, useCallback, useEffect } from"react";
+import { ID } from"../../components/ui/Icon.jsx";
 import { C, FONT, SERIF } from"../../data/constants.js";
-import { IDuo } from"../../components/ui/Icon.jsx";
 import { searchProducts, cachedForPrefix } from"../../services/offSearch.js";
-
-// Icônes « Noir & Bleu plein » par repas (fallback si meal.duo absent)
-const MEAL_DUO = { matin:"coffee", snack:"apple", midi:"bowl", soir:"cloche" };
 
 const F   = FONT;
 const SF  = SERIF;
@@ -184,17 +181,22 @@ export default function RepasSheet({
 
         {/* Icône + Titre repas */}
         <div style={{ display:"flex", alignItems:"center", gap: 16, marginBottom: 20 }}>
-          <div style={{ width: 48, height: 48, borderRadius: 15,
-            background: S2, border:`1px solid ${BD}`,
-            display:"grid", placeItems:"center" }}>
-            <IDuo name={meal.duo || MEAL_DUO[meal.id] || "bowl"} size={26}/>
+          <div style={{ width: 48, height: 48, borderRadius: 16,
+            background:`linear-gradient(145deg,${meal.accent},${meal.accentDk})`,
+            display:"grid", placeItems:"center",
+            boxShadow:`0 6px 16px ${meal.accent}50, inset 0 1px 0 rgba(0,0,0,0.12)`,
+            position:"relative", overflow:"hidden" }}>
+            <div style={{ position:"absolute", inset: 0,
+              background:"radial-gradient(110% 60% at 30% 10%,rgba(0,0,0,0.12),transparent 60%)",
+              pointerEvents:"none" }}/>
+            <ID name={meal.icon} size={22}/>
           </div>
           <div>
             <div style={{ fontFamily: SF, fontSize: 26, fontWeight: 700, color: TEXT,
               letterSpacing: -0.5, lineHeight: 1.1 }}>{meal.l}</div>
             {mealTotal.cal > 0 && (
               <div style={{ fontSize: 13, color: MID, fontFamily: F, marginTop: 4 }}>
-                <span style={{ color: C.accent, fontWeight: 700 }}>{mealTotal.cal}</span> kcal ·
+                <span style={{ color: meal.accent, fontWeight: 700 }}>{mealTotal.cal}</span> kcal ·
                 P {mealTotal.p}g · G {mealTotal.g}g · L {mealTotal.l}g
               </div>
 )}
@@ -265,7 +267,7 @@ export default function RepasSheet({
                 padding:"12px 12px", background: S1, border:`1px solid ${BD}`,
                 borderRadius: 16, marginBottom: 8 }}>
                 <div style={{ width: 4, height: 32, borderRadius: 2,
-                  background: C.accent, flexShrink: 0 }}/>
+                  background: meal.accent, flexShrink: 0 }}/>
                 <div onClick={() => editItem(item, i)} style={{ flex: 1, minWidth: 0, cursor:"pointer" }}>
                   <div style={{ fontSize: 13, fontWeight: 600, color: TEXT, fontFamily: F, display:"flex", alignItems:"center", gap: 8 }}>
                     {item.n}
@@ -430,7 +432,7 @@ export default function RepasSheet({
                     fontFamily: F, fontWeight: 600, transition:"all .16s",
                     display:"inline-flex", alignItems:"center", gap: 4 }}>
                   {f.n.split("(")[0].trim()}
-                  <span style={{ color: C.accent, fontWeight: 700 }}>{f.c}</span>
+                  <span style={{ color: meal.accent, fontWeight: 700 }}>{f.c}</span>
                 </button>
 ))}
             </div>

@@ -1,4 +1,5 @@
 import { useState } from"react";
+import { ID } from"../../components/ui/Icon.jsx";
 import useScrollTop from"../../hooks/useScrollTop.js";
 import { C, INT, FONT } from"../../data/constants.js";
 import Calendar from"./Calendar.jsx";
@@ -134,13 +135,13 @@ export default function ProgramTab(props){
             <div style={{fontFamily:FONT,fontSize:34,fontWeight:700,letterSpacing:-1,color:C.text,lineHeight:1,marginTop:16}}>L'expérience<br/><span style={{fontStyle:"italic",color:C.blueLt}}>complète.</span></div>
             <div style={{marginTop:20,display:"flex",flexDirection:"column",gap:12}}>
               {[
-                {i:"·",t:"Coach morphologique",s:"Programme adapté à ta morphologie précise"},
+                {i:"coachDuo",t:"Coach morphologique",s:"Programme adapté à ta morphologie précise"},
                 {i:"◎",t:"Exercices correctifs",s:"Compensation des asymétries & déséquilibres"},
-                {i:"·",t:"Cycle 6 semaines",s:"Périodisation pro pour des gains durables"},
+                {i:"calendarDuo",t:"Cycle 6 semaines",s:"Périodisation pro pour des gains durables"},
                 {i:"⊙",t:"Suivi 3D",s:"Mesures corporelles et photo-progression"},
               ].map(f=>(
                 <div key={f.t} style={{display:"flex",alignItems:"flex-start",gap:12}}>
-                  <div style={{width:32,height:32,borderRadius:12,flexShrink:0,background:`${C.accent}18`,border:`1px solid ${C.accent}35`,color:C.blueLt,display:"grid",placeItems:"center",fontSize:14}}>{f.i}</div>
+                  <div style={{width:32,height:32,borderRadius:12,flexShrink:0,background:`${C.accent}18`,border:`1px solid ${C.accent}35`,color:C.blueLt,display:"grid",placeItems:"center"}}><ID name={f.i} size={18}/></div>
                   <div>
                     <div style={{fontSize:13,fontWeight:700,color:C.text,fontFamily:FONT,letterSpacing:-0.2}}>{f.t}</div>
                     <div style={{fontSize:11,color:C.mid,fontWeight:500,marginTop:2,lineHeight:1.4}}>{f.s}</div>

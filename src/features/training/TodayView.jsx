@@ -1,6 +1,5 @@
 import { useState } from"react";
 import { I } from"../../components/ui/Icon.jsx";
-import { IDuo } from"../../components/ui/Icon.jsx";
 import { C, DARK, FONT, NUM, SERIF } from"../../data/constants.js";
 import { Card, Eyebrow, Btn } from"../../components/ui/index.jsx";
 import SeanceDetail from"./SeanceDetail.jsx";
@@ -135,9 +134,9 @@ export default function TodayView(props) {
   };
 
   const REST_TIPS = [
-    { icon:"·", title:"Hydrate-toi bien", desc:"La récupération musculaire dépend de ton hydratation. Vise 2,5L aujourd'hui." },
-    { icon:"·", title:"Protéines++", desc:"Un apport élevé en protéines aujourd'hui accélère la reconstruction musculaire." },
-    { icon:"·", title:"8h de sommeil", desc:"80% des gains se font la nuit. Dors tôt, ton corps travaille pour toi." },
+    { icon:"hydration", title:"Hydrate-toi bien", desc:"La récupération musculaire dépend de ton hydratation. Vise 2,5L aujourd'hui." },
+    { icon:"protein", title:"Protéines++", desc:"Un apport élevé en protéines aujourd'hui accélère la reconstruction musculaire." },
+    { icon:"sleep", title:"8h de sommeil", desc:"80% des gains se font la nuit. Dors tôt, ton corps travaille pour toi." },
   ];
 
   const rmData       = prog ? getRM() : [];
@@ -434,7 +433,7 @@ export default function TodayView(props) {
           {/* Gestes récup */}
           {[
             {
-              duo:"hydration",
+              ic:"",
               bg:"linear-gradient(135deg,#12B76A,#12B76A)", bd:"rgba(255,255,255,0.25)",
               glow:"0 4px 14px rgba(18,183,106,0.5)",
               t:"Hydratation · 2,5 L",
@@ -443,7 +442,9 @@ export default function TodayView(props) {
               arrow: true,
             },
             {
-              duo:"sleep",
+              ic: todaySleepLogged !== null
+                ? todaySleepLogged >= sleepTarget ?"" : todaySleepLogged >= sleepTarget - 1.5 ?"" :""
+                :"",
               bg: todaySleepLogged !== null
                 ? todaySleepLogged >= sleepTarget ?"linear-gradient(135deg,#12B76A,#12B76A)" : todaySleepLogged >= sleepTarget-1.5 ?"linear-gradient(135deg,#F59E0B,#F59E0B)" :"linear-gradient(135deg,#E5484D,#E5484D)"
                 :"linear-gradient(135deg,#9DB0FF,#3C5BFF)",
@@ -461,7 +462,7 @@ export default function TodayView(props) {
               arrow: true,
             },
             {
-              duo:"recovery",
+              ic: todayMobilite ?"" :"",
               bg: todayMobilite ?"linear-gradient(135deg,#12B76A,#12B76A)" :"linear-gradient(135deg,#9DB0FF,#2E48D9)",
               bd:"rgba(255,255,255,0.25)",
               glow: todayMobilite ?"0 4px 14px rgba(18,183,106,0.5)" :"0 4px 14px rgba(46,72,217,0.5)",
@@ -481,12 +482,12 @@ export default function TodayView(props) {
             }}>
               <div style={{
                 width:44, height:44, borderRadius:12,
-                background: g.flash ?"linear-gradient(135deg,#12B76A,#12B76A)" :"rgba(255,255,255,0.08)",
-                border:`1px solid ${g.flash ?"rgba(255,255,255,0.5)" :"rgba(255,255,255,0.18)"}`,
-                display:"grid", placeItems:"center", flexShrink:0,
+                background: g.flash ?"linear-gradient(135deg,#12B76A,#12B76A)" : g.bg,
+                border:`1px solid ${g.flash ?"rgba(255,255,255,0.5)" : g.bd}`,
+                display:"grid", placeItems:"center", flexShrink:0, fontSize:20,
                 transition:"background .3s, border .3s, box-shadow .3s",
                 boxShadow: g.flash ?"0 0 18px rgba(18,183,106,0.65)" : (g.glow ||"none"),
-              }}><IDuo name={g.duo} size={24} onDark/></div>
+              }}>{g.ic}</div>
               <div style={{ flex:1, minWidth:0 }}>
                 <div style={{ fontSize:14, fontWeight:700, color:"#FFFFFF", fontFamily:DISP, letterSpacing:-0.2 }}>{g.t}</div>
                 <div style={{ fontSize:11, color:"#98A2B3", fontFamily:DISP, marginTop:1 }}>{g.s}</div>

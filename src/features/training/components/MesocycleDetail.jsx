@@ -1,7 +1,6 @@
 import { useState, useMemo } from"react";
 import useScrollTop from"../../../hooks/useScrollTop.js";
 import { C, DARK, FONT } from"../../../data/constants.js";
-import { IDuo } from"../../../components/ui/Icon.jsx";
 
 export default function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, curVol, currentWeek, WEEKS, cycleStart, checkedEx, onClose, mode ="analyse" }) {
   useScrollTop();
@@ -355,10 +354,10 @@ export default function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, cu
           const perfBadge  = !perfData||perfTrend===null ? ["rgba(138,148,166,0.12)","#888","–"] : perfStatus==='ok' ? ["rgba(18,183,106,0.12)","#12B76A","OK"] : perfStatus==='warn' ? ["rgba(245,158,11,0.12)","#F59E0B","À surveiller"] : ["rgba(229,72,77,0.12)","#E5484D","Alerte"];
 
           const signals = [
-            { duo:"progress", t:"Performance", s:perfLabel, st:perfBadge[2], col:perfBadge[1], bg:perfBadge[0] },
-            { duo:"sleep",    t:"Sommeil",     s:slpLabel,  st:slpBadge[2],  col:slpBadge[1],  bg:slpBadge[0]  },
-            { duo:"cardio",   t:"FC repos",    s:"Connecte une app santé",   st:"–", col:"#888", bg:"rgba(138,148,166,0.12)" },
-            { duo:"energy",   t:"Motivation",  s:"Check-in hebdo à venir",   st:"–", col:"#888", bg:"rgba(138,148,166,0.12)" },
+            { ic:"", t:"Performance", s:perfLabel, st:perfBadge[2], col:perfBadge[1], bg:perfBadge[0] },
+            { ic:"", t:"Sommeil",     s:slpLabel,  st:slpBadge[2],  col:slpBadge[1],  bg:slpBadge[0]  },
+            { ic:"", t:"FC repos",    s:"Connecte une app santé",   st:"–", col:"#888", bg:"rgba(138,148,166,0.12)" },
+            { ic:"", t:"Motivation",  s:"Check-in hebdo à venir",   st:"–", col:"#888", bg:"rgba(138,148,166,0.12)" },
           ];
           const alertCount = signals.filter(s=>s.col==='#E5484D').length;
           const warnCount  = signals.filter(s=>s.col==='#F59E0B').length;
@@ -375,9 +374,9 @@ export default function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, cu
               {badge(`${statusColor}20`,statusColor,statusLabel)}
             </div>
             <div style={{marginTop:16}}>
-              {signals.map(({duo,t,s,st,col,bg},k)=>(
+              {signals.map(({ic,t,s,st,col,bg},k)=>(
                 <div key={k} style={{display:"flex",alignItems:"center",gap:12,padding:"8px 0",borderBottom:k<3?"1px solid rgba(0,0,0,0.05)":"none"}}>
-                  <div style={{width:34,height:34,borderRadius:12,background:bg,display:"grid",placeItems:"center",flexShrink:0}}><IDuo name={duo} size={18}/></div>
+                  <div style={{width:34,height:34,borderRadius:12,background:bg,display:"grid",placeItems:"center",flexShrink:0,fontSize:14}}>{ic}</div>
                   <div style={{flex:1}}>
                     <div style={{fontSize:13,fontWeight:600,color:C.text,fontFamily:DISP_F}}>{t}</div>
                     <div style={{fontSize:11,color:C.dim,marginTop:1,fontFamily:DISP_F}}>{s}</div>

@@ -4,7 +4,6 @@
  */
 
 import { C, FONT, SERIF, NUM } from"../../../data/constants.js";
-import { IDuo } from"../../../components/ui/Icon.jsx";
 
 
 // Alias locaux → tokens centraux
@@ -109,10 +108,10 @@ function MacroCard({label,value,goal,color,colorDk}){
 
 // ─── Config repas ─────────────────────────────────────────────────────────────
 const MEALS=[
-  {id:"matin", l:"Petit-déjeuner", icon:"sun",    duo:"coffee", accent:"#F59E0B", accentDk:"#F59E0B", dark:"#101318"},
-  {id:"snack", l:"Collation",      icon:"coffee",  duo:"apple",  accent:"#E5484D", accentDk:C.red, dark:"#101318"},
-  {id:"midi",  l:"Déjeuner",       icon:"apple",   duo:"bowl",   accent:C.accent, accentDk:C.accentDk, dark:"#101318"},
-  {id:"soir",  l:"Dîner",          icon:"moon",    duo:"cloche", accent:"#9DB0FF", accentDk:"#3C5BFF", dark:"#101318"},
+  {id:"matin", l:"Petit-déjeuner", icon:"coffee",    accent:"#F59E0B", accentDk:"#F59E0B", dark:"#101318"},
+  {id:"snack", l:"Collation",      icon:"apple",  accent:"#E5484D", accentDk:C.red, dark:"#101318"},
+  {id:"midi",  l:"Déjeuner",       icon:"bowl",   accent:C.accent, accentDk:C.accentDk, dark:"#101318"},
+  {id:"soir",  l:"Dîner",          icon:"cloche",    accent:"#9DB0FF", accentDk:"#3C5BFF", dark:"#101318"},
 ];
 
 // ─── Formatage date ───────────────────────────────────────────────────────────
@@ -127,4 +126,4 @@ function formatDate(offset){
 
 // ─── NUTRITION ────────────────────────────────────────────────────────────────
 
-export { DISPLAY, eyebrowS, I, IDuo, CalorieRing, HeroStat, MacroCard, MEALS, formatDate };
+export { DISPLAY, eyebrowS, I, CalorieRing, HeroStat, MacroCard, MEALS, formatDate };

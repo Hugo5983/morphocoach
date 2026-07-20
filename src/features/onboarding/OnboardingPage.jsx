@@ -1,4 +1,5 @@
 import { useState } from"react";
+import { ID } from"../../components/ui/Icon.jsx";
 import useScrollTop from"../../hooks/useScrollTop.js";
 import { C, FONT, SERIF, NUM as NUM_TOKEN } from"../../data/constants.js";
 
@@ -219,11 +220,11 @@ export default function Onboarding(props){
                 <div>
                   <FieldLabel label="Sexe" required/>
                   <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}}>
-                    {[{id:"homme",l:"Homme",i:"H"},{id:"femme",l:"Femme",i:"F"}].map(s=>{
+                    {[{id:"homme",l:"Homme",i:"userDuo"},{id:"femme",l:"Femme",i:"userDuo"}].map(s=>{
                       const on=oData.sexe===s.id;
                       return(
                         <div key={s.id} onClick={()=>setOData({...oData,sexe:s.id})} className="tap" style={{...selectCard(on,C.blue),padding:'20px 16px',textAlign:'center',borderRadius:16}}>
-                          <div style={{fontSize:26,marginBottom:8,color:on?C.blue:C.mid}}>{s.i}</div>
+                          <div style={{marginBottom:8,display:"flex",justifyContent:"center"}}><ID name={s.i} size={30}/></div>
                           <div style={{fontSize:13,fontWeight:700,fontFamily:DISPLAY,color:on?C.blue:C.text}}>{s.l}</div>
                         </div>
 );
@@ -275,17 +276,17 @@ export default function Onboarding(props){
               <div style={{display:'flex',flexDirection:'column',gap:16}}>
                 <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}}>
                   {[
-                    {id:"hypertrophie",l:"Prise de muscle",i:"M",d:"Volume musculaire",c:C.blue},
-                    {id:"force",l:"Force",i:"F",d:"Performances",c:C.accent},
-                    {id:"poids",l:"Perte de poids",i:"P",d:"Sèche & tonicité",c:C.coral},
-                    {id:"sante",l:"Santé générale",i:"S",d:"Bien-être",c:C.mint},
-                    {id:"prep_physique",l:"Prépa physique",i:"A",d:"Sport & condition",c:C.accent},
+                    {id:"hypertrophie",l:"Prise de muscle",i:"gym",d:"Volume musculaire",c:C.blue},
+                    {id:"force",l:"Force",i:"energy",d:"Performances",c:C.accent},
+                    {id:"poids",l:"Perte de poids",i:"calories",d:"Sèche & tonicité",c:C.coral},
+                    {id:"sante",l:"Santé générale",i:"cardio",d:"Bien-être",c:C.mint},
+                    {id:"prep_physique",l:"Prépa physique",i:"hiit",d:"Sport & condition",c:C.accent},
                   ].map(g=>{
                     const on=oData.objectif===g.id;
                     return(
                       <div key={g.id} onClick={()=>setOData({...oData,objectif:g.id})} className="tap" style={{...selectCard(on,g.c),padding:'16px 12px',textAlign:'center',borderRadius:16,position:'relative',overflow:'hidden'}}>
                         {on&&<div style={{position:'absolute',top:-20,right:-20,width:70,height:70,borderRadius:'50%',background:`radial-gradient(closest-side, ${g.c}30, transparent 70%)`,pointerEvents:'none'}}/>}
-                        <div style={{fontSize:26,marginBottom:8}}>{g.i}</div>
+                        <div style={{marginBottom:8,display:"flex",justifyContent:"center"}}><ID name={g.i} size={30}/></div>
                         <div style={{fontSize:13,fontWeight:700,fontFamily:DISPLAY,color:on?g.c:C.text,marginBottom:2}}>{g.l}</div>
                         <div style={{fontSize:10,color:C.mid}}>{g.d}</div>
                       </div>

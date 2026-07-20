@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect } from"react";
 import useScrollTop from"../../hooks/useScrollTop.js";
+import { ID } from"../../components/ui/Icon.jsx";
 import { C, DARK, FONT, NUM, SERIF } from"../../data/constants.js";
 import { Card, Eyebrow, Btn, Inp, G2 } from"../../components/ui/index.jsx";
 import BilanNutrition from"./BilanNutrition.jsx";
@@ -9,14 +10,14 @@ import BarcodeScanner from"./BarcodeScanner.jsx";
 import PhotoAnalyse from"./PhotoAnalyse.jsx";
 import { addXPNutrition } from"../../services/xpService.js";
 import {
-  DISPLAY, I, IDuo, CalorieRing, HeroStat, MacroCard, MEALS, formatDate,
+  DISPLAY, I, CalorieRing, HeroStat, MacroCard, MEALS, formatDate,
 } from"./components/NutritionKit.jsx";
 
 export default function Nutrition(props){
+  useScrollTop(nView);
   const { profil, prog, push, repas, setRepas, repasLog, setRepasLog, myFoods, setMyFoods, eau, setEau, scanRes, setScanRes, obj, calObj, pObj, lObj, gObj, totR, handleScan, FOODS, premium, setPaywall } = props;
 
   const [nView,   setNView]   = useState("journal");
-  useScrollTop(nView);
   const [repasSheet, setRepasSheet] = useState(null);  // id du repas ouvert
   const [showPhoto, setShowPhoto] = useState(false);
   const [search,  setSearch]  = useState("");
@@ -286,16 +287,18 @@ export default function Nutrition(props){
                   const isEmpty=rTot.cal===0;
                   return(
                     <button key={m.id} className="tap" onClick={()=>setRepasSheet(m.id)}
-                      style={{background:C.s1,
-                        border:`1px solid ${C.bd}`,borderRadius:16,
+                      style={{background:`linear-gradient(145deg,${m.accent}22,${m.accentDk}10)`,
+                        border:`1px solid ${m.accent}35`,borderRadius:16,
                         padding:'12px 16px',textAlign:'left',cursor:'pointer',
                         display:'flex',alignItems:'center',gap:12,
-                        boxShadow:'0 1px 3px rgba(16,19,24,0.04)',
                         transition:'box-shadow .2s'}}>
-                      <div style={{width:44,height:44,borderRadius:13,
-                        background:C.s2,border:`1px solid ${C.bd}`,
-                        display:'grid',placeItems:'center',flexShrink:0}}>
-                        <IDuo name={m.duo} size={24}/>
+                      <div style={{width:44,height:44,borderRadius:12,
+                        background:`linear-gradient(145deg,${m.accent},${m.accentDk})`,
+                        display:'grid',placeItems:'center',flexShrink:0,
+                        boxShadow:`0 4px 10px ${m.accent}50, inset 0 1px 0 rgba(0,0,0,0.12)`,
+                        position:'relative',overflow:'hidden'}}>
+                        <div style={{position:'absolute',inset:0,background:'radial-gradient(110% 60% at 30% 10%,rgba(0,0,0,0.12),transparent 60%)',pointerEvents:'none'}}/>
+                        <ID name={m.icon} size={22}/>
                       </div>
                       <div style={{flex:1,minWidth:0}}>
                         <div style={{fontSize:14,fontWeight:700,color:C.text,fontFamily:DISPLAY,letterSpacing:-0.2}}>
@@ -308,7 +311,7 @@ export default function Nutrition(props){
                       <div style={{display:'flex',alignItems:'center',gap:8,flexShrink:0}}>
                         <div style={{textAlign:'right'}}>
                           <div style={{display:'flex',alignItems:'baseline',gap:4,justifyContent:'flex-end'}}>
-                            <span style={{fontSize:16,fontWeight:700,color:isEmpty?C.dim:C.accent,fontFamily:DISPLAY,...NUM}}>{rTot.cal}</span>
+                            <span style={{fontSize:16,fontWeight:700,color:isEmpty?C.dim:m.accent,fontFamily:DISPLAY,...NUM}}>{rTot.cal}</span>
                             <span style={{fontSize:10,color:C.dim,fontWeight:700}}>KCAL</span>
                           </div>
                         </div>
@@ -326,9 +329,12 @@ export default function Nutrition(props){
                 <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:12}}>
                   <div style={{display:'flex',alignItems:'center',gap:12}}>
                     <div style={{width:40,height:40,borderRadius:12,
-                      background:C.s2,border:`1px solid ${C.bd}`,
-                      display:'grid',placeItems:'center'}}>
-                      <IDuo name="hydration" size={22}/>
+                      background:'linear-gradient(145deg,#12B76A,#12B76A)',
+                      color:'#101318',display:'grid',placeItems:'center',
+                      boxShadow:'0 4px 10px rgba(18,183,106,0.35), inset 0 1px 0 rgba(0,0,0,0.12)',
+                      position:'relative',overflow:'hidden'}}>
+                      <div style={{position:'absolute',inset:0,background:'radial-gradient(110% 60% at 30% 10%,rgba(0,0,0,0.12),transparent 60%)',pointerEvents:'none'}}/>
+                      <I name="drop" size={18} stroke={2} color="#101318"/>
                     </div>
                     <div>
                       <div style={{fontSize:14,fontWeight:700,color:C.text,fontFamily:DISPLAY}}>Hydratation</div>

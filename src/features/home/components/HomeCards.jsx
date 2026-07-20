@@ -5,7 +5,6 @@
 
 import { useMemo } from"react";
 import { C, DARK, FONT, NUM } from"../../../data/constants.js";
-import { IDuo } from"../../../components/ui/Icon.jsx";
 import { getLevelInfo } from"../../../services/xpService.js";
 import { toDateKey } from"../../../utils/training.js";
 
@@ -519,7 +518,7 @@ function StreakCard({ streak }) {
       <div style={{
         position:"absolute", top: -34, right: -30,
         width: 170, height: 170, borderRadius:"50%",
-        background:"radial-gradient(circle,rgba(60,91,255,0.10),rgba(60,91,255,0) 70%)",
+        background:"radial-gradient(circle,rgba(249,115,22,0.12),rgba(249,115,22,0) 70%)",
         pointerEvents:"none",
       }} />
       {/* Header */}
@@ -533,7 +532,7 @@ function StreakCard({ streak }) {
         </span>
         <span style={{
           display:"flex", alignItems:"center", gap: 4,
-          background:"#E8EBFF", color:"#3C5BFF",
+          background:"#E8EBFF", color:"#F59E0B",
           fontSize: 11, fontWeight: 700,
           padding:"4px 12px", borderRadius: 20, fontFamily: FONT,
         }}>
@@ -548,14 +547,15 @@ function StreakCard({ streak }) {
         <div style={{
           width: 56, height: 56, flexShrink: 0,
           borderRadius: 16,
-          background: C.s2, border:`1px solid ${C.bd}`,
+          background:"linear-gradient(160deg,#F59E0B,#F59E0B)",
           display:"flex", alignItems:"center", justifyContent:"center",
+          boxShadow:"0 8px 18px rgba(249,115,22,0.35)",
         }}>
-          <IDuo name="streak" size={30}/>
+          <span style={{ fontSize: 26 }}></span>
         </div>
         <div>
           <div style={{ display:"flex", alignItems:"baseline", gap: 8 }}>
-            <span style={{ fontSize: 44, fontWeight: 700, letterSpacing: -1, lineHeight: 1, color:"#3C5BFF", fontFamily: FONT, ...NUM }}>
+            <span style={{ fontSize: 44, fontWeight: 700, letterSpacing: -1, lineHeight: 1, color:"#F59E0B", fontFamily: FONT, ...NUM }}>
               {streak}
             </span>
             <span style={{ fontSize: 14, fontWeight: 700, color: C.text, fontFamily: FONT }}>jours</span>
@@ -576,18 +576,18 @@ function StreakCard({ streak }) {
                 width: 33, height: 33, margin:"0 auto",
                 borderRadius: 12,
                 background: isDone
-                  ?"linear-gradient(160deg,#3C5BFF,#2E48D9)"
+                  ?"linear-gradient(160deg,#F59E0B,#F59E0B)"
                   : isToday ?"transparent" : C.s2,
-                border: isToday ?"2px solid #3C5BFF" :"none",
+                border: isToday ?"2px solid #F59E0B" :"none",
                 display:"flex", alignItems:"center", justifyContent:"center",
-                boxShadow: isDone ?"0 5px 11px rgba(60,91,255,0.35)" :"none",
+                boxShadow: isDone ?"0 5px 11px rgba(249,115,22,0.35)" :"none",
               }}>
                 {isDone ? (
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FFF" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M5 12l5 5L20 6"/>
                   </svg>
 ) : isToday ? (
-                  <span style={{ width: 8, height: 8, borderRadius:"50%", background:"#3C5BFF", display:"block" }} />
+                  <span style={{ width: 8, height: 8, borderRadius:"50%", background:"#F59E0B", display:"block" }} />
 ) : null}
               </div>
               <div style={{ fontSize: 13, fontWeight: 700, color: C.dim, marginTop: 8, fontFamily: FONT }}>{d}</div>

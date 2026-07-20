@@ -1,5 +1,5 @@
 import { useState, useMemo } from"react";
-import { I } from"../../components/ui/Icon.jsx";
+import { I, ID } from"../../components/ui/Icon.jsx";
 import { createPortal } from"react-dom";
 import {
   BL, BLD, BLS, BLBR, BG, S1, S2, BD, TEXT, MID, DIM, GRN, RED, F, SF,
@@ -408,15 +408,15 @@ export default function Creer(props) {
                   </div>
                   <div style={{ display:"flex", gap:8, flexWrap:"wrap" }}>
                     {[
-                      { icon:"◐", val:activeSplit?.name||"Personnalisé" },
-                      { icon:"·", val:`${sortedDays.length} séances/sem` },
-                      { icon:"·", val:`${totalEx} exercices` },
+                      { icon:"plan", val:activeSplit?.name||"Personnalisé" },
+                      { icon:"calendarDuo", val:`${sortedDays.length} séances/sem` },
+                      { icon:"gym", val:`${totalEx} exercices` },
                     ].map((p,i) => (
                       <span key={i} style={{ display:"inline-flex", alignItems:"center", gap:4,
                         fontSize:13, fontWeight:600, color:MID,
                         background:"rgba(255,255,255,0.05)", padding:"4px 12px",
                         borderRadius:8, border:`1px solid ${BD}` }}>
-                        {p.icon} {p.val}
+                        <ID name={p.icon} size={14} style={{display:"inline-block",verticalAlign:"-2px"}}/> {p.val}
                       </span>
 ))}
                   </div>

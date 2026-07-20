@@ -1,5 +1,5 @@
 import { useState } from"react";
-import { I } from"../../../components/ui/Icon.jsx";
+import { I, ID } from"../../../components/ui/Icon.jsx";
 import { findExInDB , catColor } from"../../../utils/training.js";
 import { C, DARK, FONT, INT } from"../../../data/constants.js";
 import { EX } from"../../../data/exercises.js";
@@ -9,40 +9,40 @@ import { MonthCal } from"../../../components/ui/MonthCal.jsx";
 
 // ─── ERGOMÈTRES — définitions + calculs calories ─────────────────────────────
 const ERGOS = [
-  { id:"tapis",     l:"Tapis roulant",    i:"T",  color:"#3C5BFF",
+  { id:"tapis",     l:"Tapis roulant",    i:"run",  color:"#3C5BFF",
     params:[{k:"vitesse",l:"Vitesse",unit:"km/h",def:"10"},{k:"pente",l:"Pente",unit:"%",def:"1"}],
     kcal:(p,kg,min)=>{ const v=parseFloat(p.vitesse)||8,pnt=parseFloat(p.pente)||0; return Math.round((v*0.82+pnt*0.5)*kg*min/60); } },
-  { id:"marche",    l:"Marche rapide",    i:"M",  color:"#12B76A",
+  { id:"marche",    l:"Marche rapide",    i:"steps",  color:"#12B76A",
     params:[{k:"vitesse",l:"Vitesse",unit:"km/h",def:"5"},{k:"pente",l:"Pente",unit:"%",def:"3"}],
     kcal:(p,kg,min)=>{ const v=parseFloat(p.vitesse)||5,pnt=parseFloat(p.pente)||0; return Math.round((2.5+v*0.4+pnt*0.4)*kg*min/60); } },
-  { id:"velo",      l:"Vélo stationnaire",i:"V",  color:"#3C5BFF",
+  { id:"velo",      l:"Vélo stationnaire",i:"bike",  color:"#3C5BFF",
     params:[{k:"resistance",l:"Résistance",unit:"/20",def:"12"},{k:"cadence",l:"Cadence",unit:"RPM",def:"80"},{k:"watts",l:"Puissance",unit:"W",def:""}],
     kcal:(p,kg,min)=>{ const w=parseFloat(p.watts),res=parseFloat(p.resistance)||10; return Math.round((w?w*0.014+2:3+res*0.5)*kg*min/60); } },
-  { id:"elliptique",l:"Elliptique",       i:"E",  color:"#9DB0FF",
+  { id:"elliptique",l:"Elliptique",       i:"steps",  color:"#9DB0FF",
     params:[{k:"resistance",l:"Résistance",unit:"/20",def:"10"},{k:"cadence",l:"Cadence",unit:"SPM",def:"70"}],
     kcal:(p,kg,min)=>{ const res=parseFloat(p.resistance)||8; return Math.round((4+res*0.4)*kg*min/60); } },
-  { id:"rameur",    l:"Rameur",           i:"R",  color:"#3C5BFF",
+  { id:"rameur",    l:"Rameur",           i:"rower",  color:"#3C5BFF",
     params:[{k:"split",l:"Split 500m",unit:"ex: 2:10",def:""},{k:"watts",l:"Puissance",unit:"W",def:""}],
     kcal:(p,kg,min)=>{ const w=parseFloat(p.watts); if(w) return Math.round(w*min/60*0.86*0.24); const sp=p.split||"2:15"; const parts=sp.split(":"); const sec=(parseInt(parts[0])||2)*60+(parseInt(parts[1])||15); const pw=Math.pow(2.8/(sec/500),3); return Math.round(pw*min/60*0.86*0.24); } },
-  { id:"stairmaster",l:"StairMaster",     i:"S",  color:"#3C5BFF",
+  { id:"stairmaster",l:"StairMaster",     i:"steps",  color:"#3C5BFF",
     params:[{k:"vitesse",l:"Vitesse",unit:"étages/min",def:"60"}],
     kcal:(p,kg,min)=>{ const v=parseFloat(p.vitesse)||60; return Math.round((6+v/40)*kg*min/60); } },
-  { id:"skierg",    l:"Ski Erg",          i:"S",  color:"#3C5BFF",
+  { id:"skierg",    l:"Ski Erg",          i:"rower",  color:"#3C5BFF",
     params:[{k:"split",l:"Split 500m",unit:"ex: 2:20",def:""},{k:"watts",l:"Puissance",unit:"W",def:""}],
     kcal:(p,kg,min)=>{ const w=parseFloat(p.watts)||100; return Math.round(w*min/60*0.7*0.24); } },
-  { id:"assault",   l:"Assault Bike",     i:"A",  color:"#3C5BFF",
+  { id:"assault",   l:"Assault Bike",     i:"bike",  color:"#3C5BFF",
     params:[{k:"rpm",l:"RPM",unit:"tr/min",def:"70"},{k:"watts",l:"Puissance",unit:"W",def:""}],
     kcal:(p,kg,min)=>{ const w=parseFloat(p.watts),rpm=parseFloat(p.rpm)||70; return Math.round((w?w*0.75*0.24:rpm*0.3+5)*kg*min/60); } },
-  { id:"airrunner", l:"Air Runner",       i:"A",  color:"#3C5BFF",
+  { id:"airrunner", l:"Air Runner",       i:"run",  color:"#3C5BFF",
     params:[{k:"vitesse",l:"Vitesse",unit:"km/h",def:"12"}],
     kcal:(p,kg,min)=>{ const v=parseFloat(p.vitesse)||10; return Math.round(v*1.1*kg*min/60); } },
-  { id:"corde",     l:"Corde à sauter",   i:"C",  color:"#12B76A",
+  { id:"corde",     l:"Corde à sauter",   i:"jumprope",  color:"#12B76A",
     params:[{k:"rpm",l:"Sauts/min",unit:"s/min",def:"120"}],
     kcal:(p,kg,min)=>{ const rpm=parseFloat(p.rpm)||100; return Math.round((8+rpm/100)*kg*min/60); } },
-  { id:"velo_ext",  l:"Vélo extérieur",   i:"V",  color:"#3C5BFF",
+  { id:"velo_ext",  l:"Vélo extérieur",   i:"bike",  color:"#3C5BFF",
     params:[{k:"vitesse",l:"Vitesse moy.",unit:"km/h",def:"25"},{k:"denivele",l:"Dénivelé+",unit:"m",def:"0"}],
     kcal:(p,kg,min)=>{ const v=parseFloat(p.vitesse)||20,d=parseFloat(p.denivele)||0; return Math.round((2+v*0.3+d/100)*kg*min/60); } },
-  { id:"course",    l:"Course à pied",    i:"C",  color:"#3C5BFF",
+  { id:"course",    l:"Course à pied",    i:"run",  color:"#3C5BFF",
     params:[{k:"vitesse",l:"Vitesse",unit:"km/h",def:"10"},{k:"denivele",l:"Dénivelé+",unit:"m",def:"0"}],
     kcal:(p,kg,min)=>{ const v=parseFloat(p.vitesse)||10,d=parseFloat(p.denivele)||0; return Math.round((v*0.82+d/100+2)*kg*min/60); } },
 ];
@@ -116,7 +116,7 @@ export function CardioModal({ onClose, onSave, poids, C }) {
                     style={{padding:"16px 12px",background:C.s1,border:"0.5px solid rgba(190,180,255,0.08)",borderRadius:12,cursor:"pointer",display:"flex",alignItems:"center",gap:12,transition:"border-color .15s"}}
                     onMouseEnter={ev=>ev.currentTarget.style.borderColor=e.color}
                     onMouseLeave={ev=>ev.currentTarget.style.borderColor="rgba(190,180,255,0.08)"}>
-                    <div style={{width:28,height:28,borderRadius:6,background:e.color+"18",display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,fontWeight:700,color:e.color,flexShrink:0}}>{e.i}</div>
+                    <div style={{width:28,height:28,borderRadius:6,background:e.color+"18",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}><ID name={e.i} size={18}/></div>
                     <div>
                       <div style={{fontSize:13,fontWeight:500,color:"#F6F7F9",lineHeight:1.2}}>{e.l}</div>
                       <div style={{fontSize:10,color:e.color,fontWeight:600,marginTop:2}}>{e.params.map(p=>p.unit).filter(Boolean).slice(0,2).join(" ·")}</div>
@@ -239,35 +239,35 @@ export function CardioModal({ onClose, onSave, poids, C }) {
 
 // ─── SPORTS — 30 activités sportives + MET ───────────────────────────────────
 const SPORTS = [
-  {id:"football",   l:"Football",          i:"F", color:"#12B76A", met:8.5},
-  {id:"basketball", l:"Basketball",        i:"B", color:"#3C5BFF", met:7.0},
-  {id:"tennis",     l:"Tennis",            i:"T", color:"#F59E0B", met:7.5},
-  {id:"padel",      l:"Padel",             i:"P", color:"#12B76A", met:7.0},
-  {id:"rugby",      l:"Rugby",             i:"R", color:"#F59E0B", met:8.5},
-  {id:"volleyball", l:"Volleyball",        i:"V", color:"#3C5BFF", met:5.0},
-  {id:"handball",   l:"Handball",          i:"H", color:"#3C5BFF", met:8.0},
-  {id:"badminton",  l:"Badminton",         i:"B", color:"#3C5BFF", met:6.5},
-  {id:"pingpong",   l:"Tennis de table",   i:"T", color:"#3C5BFF", met:4.5},
-  {id:"squash",     l:"Squash",            i:"S", color:"#3C5BFF", met:12.0},
-  {id:"boxe",       l:"Boxe",              i:"B", color:"#3C5BFF", met:9.5},
-  {id:"mma",        l:"MMA / Kickboxing",  i:"M", color:"#E5484D", met:10.5},
-  {id:"judo",       l:"Judo / Jiu-jitsu",  i:"J", color:"#2438B8", met:9.0},
-  {id:"karate",     l:"Karaté / Arts mart.",i:"K", color:"#3C5BFF", met:8.5},
-  {id:"escalade",   l:"Escalade",          i:"E", color:"#F59E0B", met:8.0},
-  {id:"yoga",       l:"Yoga",              i:"Y", color:"#9DB0FF", met:3.0},
-  {id:"pilates",    l:"Pilates",           i:"P", color:"#3C5BFF", met:3.5},
-  {id:"crossfit",   l:"CrossFit",          i:"C", color:"#3C5BFF", met:10.0},
-  {id:"surf",       l:"Surf",              i:"S", color:"#2E48D9", met:6.0},
-  {id:"ski",        l:"Ski / Snowboard",   i:"S", color:"#DCE2FF", met:7.5},
-  {id:"golf",       l:"Golf",              i:"G", color:"#12B76A", met:4.5},
-  {id:"cyclisme",   l:"Cyclisme route",    i:"C", color:"#3C5BFF", met:9.0},
-  {id:"triathlon",  l:"Triathlon",         i:"T", color:"#3C5BFF", met:11.0},
-  {id:"athletisme", l:"Athlétisme",        i:"A", color:"#3C5BFF", met:10.0},
-  {id:"danse",      l:"Danse / Zumba",     i:"D", color:"#3C5BFF", met:6.0},
-  {id:"hockey",     l:"Hockey",            i:"H", color:"rgba(245,241,232,0.5)", met:8.0},
-  {id:"equitation", l:"Équitation",        i:"É", color:"#F59E0B", met:5.0},
-  {id:"roller",     l:"Roller / Skate",    i:"R", color:"#3C5BFF", met:8.0},
-  {id:"petanque",   l:"Pétanque",          i:"P", color:C.dim, met:2.5},
+  {id:"football",   l:"Football",          i:"ball", color:"#12B76A", met:8.5},
+  {id:"basketball", l:"Basketball",        i:"ball", color:"#3C5BFF", met:7.0},
+  {id:"tennis",     l:"Tennis",            i:"racket", color:"#F59E0B", met:7.5},
+  {id:"padel",      l:"Padel",             i:"racket", color:"#12B76A", met:7.0},
+  {id:"rugby",      l:"Rugby",             i:"ball", color:"#F59E0B", met:8.5},
+  {id:"volleyball", l:"Volleyball",        i:"ball", color:"#3C5BFF", met:5.0},
+  {id:"handball",   l:"Handball",          i:"ball", color:"#3C5BFF", met:8.0},
+  {id:"badminton",  l:"Badminton",         i:"racket", color:"#3C5BFF", met:6.5},
+  {id:"pingpong",   l:"Tennis de table",   i:"racket", color:"#3C5BFF", met:4.5},
+  {id:"squash",     l:"Squash",            i:"racket", color:"#3C5BFF", met:12.0},
+  {id:"boxe",       l:"Boxe",              i:"fight", color:"#3C5BFF", met:9.5},
+  {id:"mma",        l:"MMA / Kickboxing",  i:"fight", color:"#E5484D", met:10.5},
+  {id:"judo",       l:"Judo / Jiu-jitsu",  i:"fight", color:"#2438B8", met:9.0},
+  {id:"karate",     l:"Karaté / Arts mart.",i:"fight", color:"#3C5BFF", met:8.5},
+  {id:"escalade",   l:"Escalade",          i:"energy", color:"#F59E0B", met:8.0},
+  {id:"yoga",       l:"Yoga",              i:"yoga", color:"#9DB0FF", met:3.0},
+  {id:"pilates",    l:"Pilates",           i:"yoga", color:"#3C5BFF", met:3.5},
+  {id:"crossfit",   l:"CrossFit",          i:"hiit", color:"#3C5BFF", met:10.0},
+  {id:"surf",       l:"Surf",              i:"swim", color:"#2E48D9", met:6.0},
+  {id:"ski",        l:"Ski / Snowboard",   i:"ski", color:"#DCE2FF", met:7.5},
+  {id:"golf",       l:"Golf",              i:"ball", color:"#12B76A", met:4.5},
+  {id:"cyclisme",   l:"Cyclisme route",    i:"bike", color:"#3C5BFF", met:9.0},
+  {id:"triathlon",  l:"Triathlon",         i:"run", color:"#3C5BFF", met:11.0},
+  {id:"athletisme", l:"Athlétisme",        i:"run", color:"#3C5BFF", met:10.0},
+  {id:"danse",      l:"Danse / Zumba",     i:"yoga", color:"#3C5BFF", met:6.0},
+  {id:"hockey",     l:"Hockey",            i:"ball", color:"rgba(245,241,232,0.5)", met:8.0},
+  {id:"equitation", l:"Équitation",        i:"energy", color:"#F59E0B", met:5.0},
+  {id:"roller",     l:"Roller / Skate",    i:"steps", color:"#3C5BFF", met:8.0},
+  {id:"petanque",   l:"Pétanque",          i:"ball", color:C.dim, met:2.5},
 ];
 
 // ─── SPORT MODAL ──────────────────────────────────────────────────────────────
@@ -314,7 +314,7 @@ export function SportModal({ onClose, onSave, poids, C }) {
                     style={{padding:"12px 12px",background:C.s1,border:"0.5px solid rgba(190,180,255,0.08)",borderRadius:12,cursor:"pointer",display:"flex",alignItems:"center",gap:8,transition:"border-color .15s"}}
                     onMouseEnter={ev => ev.currentTarget.style.borderColor = s.color}
                     onMouseLeave={ev => ev.currentTarget.style.borderColor ="rgba(190,180,255,0.08)"}>
-                    <div style={{width:28,height:28,borderRadius:6,background:s.color+"18",display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,fontWeight:700,color:s.color,flexShrink:0}}>{s.i}</div>
+                    <div style={{width:28,height:28,borderRadius:6,background:s.color+"18",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}><ID name={s.i} size={18}/></div>
                     <div style={{flex:1,minWidth:0}}>
                       <div style={{fontSize:11,fontWeight:500,color:"#F6F7F9",lineHeight:1.3}}>{s.l}</div>
                       <div style={{fontSize:10,color:"rgba(245,241,232,0.5)",marginTop:1}}>~{Math.round(s.met*70)} kcal/h</div>
@@ -332,7 +332,7 @@ export function SportModal({ onClose, onSave, poids, C }) {
 
               {/* Sport sélectionné */}
               <div style={{display:"flex",alignItems:"center",gap:12,padding:"12px 16px",background:`${sport.color}10`,border:`0.5px solid ${sport.color}30`,borderRadius:12,marginBottom:12}}>
-                <div style={{width:36,height:36,borderRadius:8,background:sport.color+"18",display:"flex",alignItems:"center",justifyContent:"center",fontSize:15,fontWeight:700,color:sport.color}}>{sport.i}</div>
+                <div style={{width:36,height:36,borderRadius:8,background:sport.color+"18",display:"flex",alignItems:"center",justifyContent:"center"}}><ID name={sport.i} size={22}/></div>
                 <div>
                   <div style={{fontFamily:"'Archivo',system-ui,sans-serif",fontSize:16,fontWeight:400,color:"#F6F7F9"}}>{sport.l}</div>
                   <div style={{fontSize:10,color:"rgba(245,241,232,0.5)",marginTop:2}}>MET {sport.met} · Intensité {sport.met>=10?"élevée":sport.met>=6?"modérée":"faible"}</div>
