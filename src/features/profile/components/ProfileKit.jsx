@@ -4,32 +4,18 @@
  */
 
 import { useState } from"react";
+import { Ico as UIco } from"../../../components/ui/Icon.jsx";
 import { C, DARK, FONT, NUM } from"../../../data/constants.js";
 
 // ─── Icônes SVG inline ────────────────────────────────────────────────────────
-function I({ d, size = 18, color ="currentColor", sw = 1.8, fill ="none" }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24"
-      fill={fill} stroke={color} strokeWidth={sw}
-      strokeLinecap="round" strokeLinejoin="round">
-      {d}
-    </svg>
-);
+function I({ d, size = 18, color = "currentColor", sw = 1.8 }) {
+  return <UIco name={d} size={size} color={color} stroke={sw}/>;
 }
 
 const ic = {
-  flame:    <path d="M12 2c0 6-6 8-6 14a6 6 0 0 0 12 0c0-6-6-8-6-14z"/>,
-  dumbbell: <path d="M6.5 6.5 17.5 17.5M4 8l4-4M16 20l4-4M2 10l2-2M20 16l2-2M9 4l3 3M15 17l3 3"/>,
-  bone:     <><path d="M17 10c.7-.7 1.69-.9 2.5-.5.8.4 1.4 1.3 1.4 2.2s-.6 1.8-1.4 2.2c-.8.4-1.8.2-2.5-.5l-7-7c-.7-.7-.9-1.69-.5-2.5.4-.8 1.3-1.4 2.2-1.4s1.8.6 2.2 1.4c.4.81.2 1.81-.5 2.5M7 14c-.7.7-1.69.9-2.5.5-.8-.4-1.4-1.3-1.4-2.2s.6-1.8 1.4-2.2c.8-.4 1.8-.2 2.5.5l7 7c.7.7.9 1.69.5 2.5-.4.8-1.3 1.4-2.2 1.4s-1.8-.6-2.2-1.4c-.4-.81-.2-1.81.5-2.5"/></>,
-  drop:     <path d="M12 3s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11z"/>,
-  heart:    <><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></>,
-  ruler:    <><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.4 2.4 0 0 1 0-3.4l2.6-2.6a2.4 2.4 0 0 1 3.4 0z"/><path d="m14.5 12.5 2-2M11.5 9.5l2-2M8.5 6.5l2-2"/></>,
-  target:   <><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></>,
-  zap:      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>,
-  activity: <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>,
-  crown:    <path d="M2 20h20M5 20 3 7l7 5 4-8 4 8 7-5-2 13"/>,
-  upload:   <><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></>,
-  chev:     <path d="m9 18 6-6-6-6"/>,
+  flame:"streak", dumbbell:"gym", bone:"bone", drop:"hydration",
+  heart:"cardio", ruler:"ruler", target:"goal", zap:"energy",
+  activity:"progress", crown:"crown", upload:"progress", chev:"chevronRight",
 };
 
 // ─── Carte Glass ──────────────────────────────────────────────────────────────

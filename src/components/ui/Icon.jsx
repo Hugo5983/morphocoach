@@ -254,3 +254,110 @@ export function ID({ name, size = 24, dark = false, style, ...rest }) {
       dangerouslySetInnerHTML={{ __html: html }} />
   );
 }
+
+
+// ── Compléments duo : profil, analyse morpho, outils ──
+Object.assign(DUO, {
+  bone:{ fl:'<path d="M15.9 5.3a2.3 2.3 0 0 1 3.3 3.2l-.7.6.7.6a2.3 2.3 0 1 1-3.3 3.2l-7.1 2.4-.2.9a2.3 2.3 0 1 1-3.2-3.3l.6-.7-.6-.6A2.3 2.3 0 1 1 8.6 8.9l.2-.9 7.1-2.7Z"/>',
+    s:'<path d="M15.9 5.3a2.3 2.3 0 0 1 3.3 3.2l-.7.6.7.6a2.3 2.3 0 1 1-3.3 3.2L8.8 15.3l-.2.9a2.3 2.3 0 1 1-3.2-3.3l.6-.7-.6-.6A2.3 2.3 0 1 1 8.6 8.9l.2-.9 7.1-2.7Z"/>',
+    sw:'<path d="M9.4 10.2l5.2-1.9"/>' },
+  ruler:{ fl:'<rect x="2.6" y="9.8" width="18.8" height="4.4" rx="1.2" transform="rotate(-32 12 12)"/>',
+    s:'<rect x="2.6" y="9.8" width="18.8" height="4.4" rx="1.2" transform="rotate(-32 12 12)"/>',
+    sw:'<path d="M7.5 12.9l1-1.6M10.6 11l1-1.6M13.7 9.1l1-1.6M16.8 7.2l1-1.6" transform="rotate(0)"/>' },
+  crown:{ fl:'<path d="M4.2 17.4 3 7.6l4.9 3.4L12 5.4l4.1 5.6L21 7.6l-1.2 9.8H4.2Z"/>',
+    s:'<path d="M4.2 17.4 3 7.6l4.9 3.4L12 5.4l4.1 5.6L21 7.6l-1.2 9.8H4.2Z"/><path d="M4.6 20.2h14.8"/>',
+    dw:'<circle cx="8.2" cy="14.4" r=".62"/><circle cx="12" cy="13.6" r=".62"/><circle cx="15.8" cy="14.4" r=".62"/>' },
+  cameraDuo:{ fl:'<path d="M4 8.5a2 2 0 0 1 2-2h1.6l1-1.6h6.8l1 1.6H18a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8Z"/>',
+    s:'<path d="M4 8.5a2 2 0 0 1 2-2h1.6l1-1.6h6.8l1 1.6H18a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8Z"/><circle cx="12" cy="12.4" r="3.3"/>',
+    sw:'<path d="M10.4 11.1a2.1 2.1 0 0 1 1.6-.8"/>',
+    dw:'<circle cx="16.9" cy="8.9" r=".6"/>' },
+  scanDuo:{ fl:'<rect x="7.6" y="8" width="8.8" height="8" rx="1"/>',
+    s:'<path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2"/>',
+    sw:'<path d="M9.4 9.6v4.8M11.4 9.6v4.8M13.2 9.6v4.8M14.8 9.6v4.8"/>' },
+  searchDuo:{ fl:'<circle cx="11" cy="11" r="6.2"/>',
+    s:'<circle cx="11" cy="11" r="6.2"/><path d="M15.6 15.6l4.4 4.4"/>',
+    sw:'<path d="M8.2 9.4a3.4 3.4 0 0 1 2-1.7"/>' },
+  gear:{ fl:'<circle cx="12" cy="12" r="6.6"/>',
+    s:'<circle cx="12" cy="12" r="6.6"/><path d="M12 2.8v2.4M12 18.8v2.4M2.8 12h2.4M18.8 12h2.4M5.5 5.5l1.7 1.7M16.8 16.8l1.7 1.7M5.5 18.5l1.7-1.7M16.8 7.2l1.7-1.7"/>',
+    sw:'<circle cx="12" cy="12" r="2.6"/>' },
+  bellDuo:{ fl:'<path d="M6 9.5a6 6 0 0 1 12 0c0 4.5 1.8 5.5 1.8 5.5H4.2S6 14 6 9.5Z"/>',
+    s:'<path d="M6 9.5a6 6 0 0 1 12 0c0 4.5 1.8 5.5 1.8 5.5H4.2S6 14 6 9.5Z"/><path d="M10 19a2 2 0 0 0 4 0"/>',
+    sw:'<path d="M8.4 9.2a3.7 3.7 0 0 1 2-3.2"/>' },
+  bookDuo:{ fl:'<path d="M5 5.6A1.6 1.6 0 0 1 6.6 4H18a1 1 0 0 1 1 1v12.4H6.9A1.9 1.9 0 0 0 5 19.3V5.6Z"/>',
+    s:'<path d="M5 5.6A1.6 1.6 0 0 1 6.6 4H18a1 1 0 0 1 1 1v12.4H6.9A1.9 1.9 0 0 0 5 19.3V5.6ZM5 19.3A1.9 1.9 0 0 0 6.9 21H19"/>',
+    sw:'<path d="M8.4 8h7.2M8.4 11h5.2"/>' },
+  sunDuo:{ fl:'<circle cx="12" cy="12" r="4.4"/>',
+    s:'<circle cx="12" cy="12" r="4.4"/><path d="M12 2.8v2.2M12 19v2.2M2.8 12H5M19 12h2.2M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M5.2 18.8l1.6-1.6M17.2 6.8l1.6-1.6"/>',
+    sw:'<path d="M10 10.6a2.4 2.4 0 0 1 1.4-1"/>' },
+  spark:{ fl:'<path d="M12 3.4l1.9 5.2 5.2 1.9-5.2 1.9L12 17.6l-1.9-5.2-5.2-1.9 5.2-1.9L12 3.4Z"/>',
+    s:'<path d="M12 3.4l1.9 5.2 5.2 1.9-5.2 1.9L12 17.6l-1.9-5.2-5.2-1.9 5.2-1.9L12 3.4Z"/>',
+    sx:'<path d="M18.6 16.2l.55 1.5 1.5.55-1.5.55-.55 1.5-.55-1.5-1.5-.55 1.5-.55.55-1.5Z"/>',
+    sw:'<path d="M10.6 9.3l1.4-.5"/>' },
+  send:{ fl:'<path d="M4.2 4.6 20 12 4.2 19.4l2.3-7.4-2.3-7.4Z"/>',
+    s:'<path d="M4.2 4.6 20 12 4.2 19.4l2.3-7.4-2.3-7.4Z"/>',
+    sw:'<path d="M6.5 12H20"/>' },
+  infoDuo:{ fl:'<circle cx="12" cy="12" r="7.6"/>',
+    s:'<circle cx="12" cy="12" r="7.6"/>',
+    sw:'<path d="M12 11v5"/>',
+    dw:'<circle cx="12" cy="8" r=".9"/>' },
+  scale:{ fl:'<rect x="4.5" y="4.5" width="15" height="15" rx="3"/>',
+    s:'<rect x="4.5" y="4.5" width="15" height="15" rx="3"/>',
+    sw:'<path d="M8.5 9.5a5 5 0 0 1 7 0l-1.8 1.9a2.4 2.4 0 0 0-3.4 0L8.5 9.5Z"/><path d="M12 13.4v2.4"/>' },
+});
+
+// ── Alias : anciens noms des jeux locaux → duo ──
+const DUO_ALIAS = {
+  dumbbell:"gym", barbell:"gym", muscle:"gym",
+  flame:"streak", fire:"streak",
+  drop:"hydration", droplet:"hydration", waterDrop:"hydration",
+  heart:"cardio", moon:"sleep", sun:"sunDuo",
+  target:"goal", zap:"energy", bolt:"energy",
+  activity:"progress", chart:"progress", trend:"progress",
+  person:"userDuo", user:"userDuo",
+  chat:"coachDuo", coach:"coachDuo",
+  trophy:"trophyDuo", medal:"badgeDuo",
+  calendar:"calendarDuo", clock:"timer",
+  book:"bookDuo", cookie:"apple",
+  bell:"bellDuo", settings:"gear", info:"infoDuo",
+  search:"searchDuo", camera:"cameraDuo", scan:"scanDuo",
+  brain:"coachDuo", arch:"plan", barbell:"gym", shield:"recovery",
+  upload:"progress", weight:"scale", ruler:"ruler", bone:"bone", crown:"crown",
+  alert:"infoDuo", cake:"apple", meal:"bowl", food:"bowl", water:"hydration",
+  recipes:"bookDuo", sparkles:"spark",
+  fire:"streak", award:"trophyDuo", note:"bookDuo", list:"plan", stats:"progress",
+};
+const MONO_ALIAS = {
+  chevL:"chevronLeft", chevR:"chevronRight", chev:"chevronRight",
+  x:"close", pencil:"edit", send:"arrowRight", arrowR:"arrowRight", arrowL:"arrowLeft",
+};
+
+function lum(color) {
+  if (!color || typeof color !== "string") return null;
+  const c = color.trim().toLowerCase();
+  if (c === "currentcolor") return null;
+  if (c.startsWith("rgba(255") || c.startsWith("rgb(255") || c === "white" || c === "#fff" || c === "#ffffff") return 1;
+  const m = c.match(/^#([0-9a-f]{6})/);
+  if (!m) return null;
+  const n = parseInt(m[1], 16);
+  return (0.299*((n>>16)&255) + 0.587*((n>>8)&255) + 0.114*(n&255)) / 255;
+}
+
+// ── Ico — composant universel : duo d'abord, mono en secours ──
+// Règles : icône posée sur fond coloré (color clair) → mono blanc conservé ;
+// contexte sombre (color très sombre passé pour surface ink) → duo dark.
+export function Ico({ name, size = 24, color, stroke = 1.8, dark, style, ...rest }) {
+  const duoName = DUO[name] ? name : DUO_ALIAS[name];
+  if (duoName && DUO[duoName]) {
+    const L = lum(color);
+    if (L !== null && L > 0.86) {
+      // icône sur fond accent/coloré → version mono claire lisible
+      const monoName = MONO_ALIAS[name] || name;
+      return <I name={P[monoName] ? monoName : "check"} size={size} color={color} stroke={stroke} style={style} {...rest}/>;
+    }
+    const isDark = dark !== undefined ? dark : (L !== null && L < 0.35 && String(color).toLowerCase() !== "#101318" ? false : dark);
+    return <ID name={duoName} size={size} dark={!!dark} style={style} {...rest}/>;
+  }
+  const monoName = MONO_ALIAS[name] || name;
+  if (!P[monoName]) return null;
+  return <I name={monoName} size={size} color={color} stroke={stroke} style={style} {...rest}/>;
+}

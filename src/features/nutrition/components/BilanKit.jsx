@@ -4,6 +4,7 @@
  */
 
 import { C, FONT, SERIF, NUM } from"../../../data/constants.js";
+import { Ico as UIco } from"../../../components/ui/Icon.jsx";
 import { MIN_DAYS_FULL_BILAN } from"./BilanUtils.jsx";
 
 // ─── Palette ───────────────────────────────────────────────────────────────
@@ -42,23 +43,8 @@ const MCFG = {
 };
 
 // ─── Icônes inline ─────────────────────────────────────────────────────────
-function I({ name, size=16, color="currentColor", stroke=2 }) {
-  const p = { width:size, height:size, viewBox:"0 0 24 24", fill:"none",
-    stroke:color, strokeWidth:stroke, strokeLinecap:"round", strokeLinejoin:"round" };
-  const paths = {
-    chart:    <><path d="M3 3v18h18"/><path d="M7 14l4-4 4 2 5-7"/></>,
-    brain:    <><path d="M9 3a4 4 0 0 0-4 4v2.5A4.5 4.5 0 0 0 5 18a4 4 0 0 0 4 4 4 4 0 0 0 4-4V7a4 4 0 0 0-4-4z"/><path d="M15 3a4 4 0 0 1 4 4v2.5A4.5 4.5 0 0 1 19 18a4 4 0 0 1-4 4 4 4 0 0 1-4-4V7a4 4 0 0 1 4-4z"/></>,
-    alert:    <><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></>,
-    calendar: <><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></>,
-    chevR:    <path d="m9 18 6-6-6-6"/>,
-    chevL:    <path d="m15 18-6-6 6-6"/>,
-    drop:     <path d="M12 3s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11Z"/>,
-    arch:     <><path d="M21 8v13H3V8M1 3h22v5H1zM10 12h4"/></>,
-    trend:    <><path d="M3 17 9 11l4 4 8-8M15 7h6v6"/></>,
-    lock:     <><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></>,
-    info:     <><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8v.5" strokeWidth="2.2"/></>,
-  };
-  return <svg {...p}>{paths[name]}</svg>;
+function I({name,size=18,color="currentColor",stroke=1.8,...r}){
+  return <UIco name={name} size={size} color={color} stroke={stroke} {...r}/>;
 }
 
 // ─── Mini-ring animé (par macro) ───────────────────────────────────────────

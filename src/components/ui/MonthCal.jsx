@@ -1,4 +1,5 @@
 import { catColor } from"../../utils/training.js";
+import { Ico as UIco } from"./Icon.jsx";
 import { useState, memo, useMemo } from"react";
 import { C, DARK, INT, SERIF, SESS_COLORS } from"../../data/constants.js";
 import { EX } from"../../data/exercises.js";
@@ -8,21 +9,8 @@ const DISPLAY ="'Archivo',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',
 const NUM     = { fontVariantNumeric:'tabular-nums', fontFeatureSettings:'"tnum"' };
 const ey      = { fontSize:10, fontWeight:700, letterSpacing:"0.1em", textTransform:'uppercase', color:C.accent, fontFamily:DISPLAY };
 
-function I({name,size=18,color='currentColor',stroke=1.7}){
-  const p={width:size,height:size,viewBox:'0 0 24 24',fill:'none',stroke:color,strokeWidth:stroke,strokeLinecap:'round',strokeLinejoin:'round'};
-  const paths={
-    chevL:<path d="m15 18-6-6 6-6"/>,
-    chevR:<path d="m9 6 6 6-6 6"/>,
-    x:<path d="M18 6 6 18M6 6l12 12"/>,
-    check:<path d="M20 6 9 17l-5-5"/>,
-    plus:<path d="M12 5v14M5 12h14"/>,
-    dumbbell:<><path d="M6.5 6.5 17.5 17.5M4 8l4-4M16 20l4-4M2 10l2-2M20 16l2-2M9 4l3 3M15 17l3 3"/></>,
-    run:<><path d="M13 4a1 1 0 1 0 2 0 1 1 0 0 0-2 0"/><path d="M7.5 17.5 9 13l2.5 2.5L14 10l3.5 5"/><path d="M6 13l1-4 3 1"/></>,
-    yoga:<><circle cx="12" cy="4" r="1"/><path d="M4 17c3-1 5-3 8-3s5 2 8 3M12 5v6l3 3-3 3-3-3 3-3"/></>,
-    trophy:<><path d="M6 9H4a2 2 0 0 0 0 4h2M18 9h2a2 2 0 0 0 0-4h-2M8 21h8M12 17v4M6 3h12v10a6 6 0 0 1-12 0V3Z"/></>,
-    trash:<><path d="M3 6h18M8 6V4h8v2M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></>,
-  };
-  return <svg {...p}>{paths[name]}</svg>;
+function I({name,size=18,color="currentColor",stroke=1.7,...r}){
+  return <UIco name={name} size={size} color={color} stroke={stroke} {...r}/>;
 }
 
 // ─── MUSCULATION PICKER ───────────────────────────────────────────────────────

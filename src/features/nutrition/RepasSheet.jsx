@@ -3,6 +3,7 @@
 // Design aligné avec BiblioSheet de Creer.jsx : même overlay, handle, typo, etc.
 
 import { useState, useRef, useCallback, useEffect } from"react";
+import { Ico as UIco } from"../../components/ui/Icon.jsx";
 import { ID } from"../../components/ui/Icon.jsx";
 import { C, FONT, SERIF } from"../../data/constants.js";
 import { searchProducts, cachedForPrefix } from"../../services/offSearch.js";
@@ -27,24 +28,8 @@ const per100Test = (f) => /100\s*g/i.test((f && f.n) ||"");
 const NUTRI_COLORS = { A:"#12B76A", B:"#12B76A", C:"#F59E0B", D:"#F59E0B", E:"#E5484D" };
 
 // ─── Icônes ──────────────────────────────────────────────────────────────────
-function Ico({name,size=18,color="currentColor",stroke=1.6}){
-  const p={width:size,height:size,viewBox:"0 0 24 24",fill:"none",stroke:color,strokeWidth:stroke,strokeLinecap:"round",strokeLinejoin:"round"};
-  const paths={
-    search:<><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></>,
-    scan:<><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M7 12h10"/></>,
-    camera:<><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></>,
-    x:<path d="M18 6 6 18M6 6l12 12"/>,
-    plus:<path d="M12 5v14M5 12h14"/>,
-    chevL:<path d="m15 18-6-6 6-6"/>,
-    trash:<><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></>,
-    sun:<><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M5 12H3M21 12h-2M5.6 5.6 7 7M17 17l1.4 1.4M5.6 18.4 7 17M17 7l1.4-1.4"/></>,
-    coffee:<><path d="M6 9h11v6a4 4 0 0 1-4 4H10a4 4 0 0 1-4-4V9Z"/><path d="M17 11h2a2 2 0 0 1 0 4h-2"/><path d="M9 3v3M13 3v3"/></>,
-    moon:<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/>,
-    apple:<><path d="M16 4c-1.5 0-3 1-3 2.5"/><path d="M19 14c0 4-2 7-4 7-1.5 0-2-1-3-1s-1.5 1-3 1c-2 0-4-3-4-7s2-7 4-7c1.5 0 2 1 3 1s1.5-1 3-1c2 0 4 3 4 7Z"/></>,
-    spark:<path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z" fill="currentColor" stroke="none"/>,
-    pencil:<><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></>,
-  };
-  return <svg {...p}>{paths[name]}</svg>;
+function Ico({name,size=18,color="currentColor",stroke=1.8,...r}){
+  return <UIco name={name} size={size} color={color} stroke={stroke} {...r}/>;
 }
 
 // ─── CSS ─────────────────────────────────────────────────────────────────────

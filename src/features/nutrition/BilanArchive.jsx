@@ -3,6 +3,7 @@
 // Liste consultable avec score lettre + graphique d'évolution sur les 6 derniers.
 
 import { useMemo, useEffect } from"react";
+import { Ico as UIco } from"../../components/ui/Icon.jsx";
 import useScrollTop from"../../hooks/useScrollTop.js";
 import { useSwipeBack } from"../../hooks/useSwipeBack.js";
 import { C, FONT, SERIF, NUM } from"../../data/constants.js";
@@ -18,14 +19,8 @@ const GRN  ="#12B76A";
 const AMB  ="#F59E0B";
 const RED  ="#E5484D";
 
-function I({ name, size=16, color="currentColor", stroke=2 }) {
-  const p = { width:size, height:size, viewBox:"0 0 24 24", fill:"none",
-    stroke:color, strokeWidth:stroke, strokeLinecap:"round", strokeLinejoin:"round" };
-  const paths = {
-    chevL: <path d="m15 18-6-6 6-6"/>,
-    chevR: <path d="m9 18 6-6-6-6"/>,
-  };
-  return <svg {...p}>{paths[name]}</svg>;
+function I({name,size=18,color="currentColor",stroke=1.8,...r}){
+  return <UIco name={name} size={size} color={color} stroke={stroke} {...r}/>;
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────

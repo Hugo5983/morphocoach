@@ -1,4 +1,5 @@
 import { C, DARK, FONT } from"../../../data/constants.js";
+import { Ico as UIco } from"../../../components/ui/Icon.jsx";
 /**
  * AnalyseIAKit.jsx — Tokens & composants UI du wizard AnalyseIA.
  * Extrait de AnalyseIA.jsx sans aucune modification de code.
@@ -50,38 +51,8 @@ function InjectCSS() {
 }
 
 // ── Icônes SVG (line, pas d'emoji) ───────────────────────────────────────────
-function OI({ n, sz=18, c='currentColor', s=1.6 }) {
-  const p = { width:sz, height:sz, viewBox:'0 0 24 24', fill:'none',
-    stroke:c, strokeWidth:s, strokeLinecap:'round', strokeLinejoin:'round' };
-  const P = {
-    check:   <path d="m4 12 5 5 11-12"/>,
-    arrowR:  <><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></>,
-    arrowL:  <><path d="M19 12H5"/><path d="m11 18-6-6 6-6"/></>,
-    camera:  <><path d="M3 8a2 2 0 0 1 2-2h2l1.5-2h7L19 6h2a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2Z" transform="translate(0 -1)"/><circle cx="12" cy="12" r="3.5"/></>,
-    shield:  <><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6Z"/><path d="m9 12 2 2 4-4"/></>,
-    info:    <><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v5h1"/></>,
-    sparkles:<><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><path d="M7 7l2 2M15 15l2 2M7 17l2-2M15 9l2-2"/><circle cx="12" cy="12" r="2"/></>,
-    muscle:  <><path d="M13.6 3.4a2 2 0 0 0-3.3 1.5v3.4L7 11.5a3 3 0 0 0-1 2.2V19a2 2 0 0 0 2 2h6.5a2 2 0 0 0 2-1.6l.8-4.6a6 6 0 0 0-3.7-6.6"/><path d="M10.3 8.3a5 5 0 0 1 4.4 2.7"/></>,
-    barbell: <><path d="M4 9v6M7 7v10M17 7v10M20 9v6M7 12h10"/></>,
-    flame:   <path d="M12 3c1 3 4 4 4 8a4 4 0 0 1-8 0c0-2 1-3 1-5M12 21a6 6 0 0 0 6-6c0-3-2-5-3-6 0 3-2 4-3 4s-3-1-3-4c-1 1-3 3-3 6a6 6 0 0 0 6 6Z"/>,
-    zap:     <path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/>,
-    pulse:   <path d="M3 12h4l2-6 4 14 2-8h6"/>,
-    heart:   <path d="M12 21s-7-4.5-9.5-9.5C1 8 3 4 6.5 4 9 4 11 6 12 8c1-2 3-4 5.5-4C21 4 23 8 21.5 11.5 19 16.5 12 21 12 21Z"/>,
-    building:<><rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M8 7h2M14 7h2M8 11h2M14 11h2M8 15h2M14 15h2M10 21v-3h4v3"/></>,
-    dumbbell:<><path d="M6.5 6.5 17.5 17.5M3.5 9.5 9.5 3.5M14.5 20.5 20.5 14.5M2 11l2-2M22 13l-2 2M9 17l-2 2M17 7l-2-2"/></>,
-    band:    <><path d="M5 6c4 4 10 4 14 0M5 18c4-4 10-4 14 0M5 6v12M19 6v12"/></>,
-    pullup:  <><path d="M4 4h16M7 4v3M17 4v3M12 7v8"/><path d="M10 15a2 2 0 1 0 4 0"/></>,
-    person:  <><circle cx="12" cy="5" r="2"/><path d="M12 7v6M8 9h8M9 21l3-8 3 8"/></>,
-    gear:    <><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v2.6M12 18.9v2.6M21.5 12h-2.6M5.1 12H2.5M18.7 5.3l-1.8 1.8M7.1 16.9l-1.8 1.8M18.7 18.7l-1.8-1.8M7.1 7.1 5.3 5.3"/></>,
-    // ── Zones corps — icônes anatomiques lisibles ─────────────────────────────
-    spine:   <><path d="M12 2.5v19"/><path d="M8.5 4.5h7M8 8h8M8 11.5h8M8 15h8M8.5 18.5h7"/></>,
-    shoulder:<><circle cx="8" cy="7" r="3.2"/><path d="M9.5 9.6c2.5 1 4.5 3.2 5.2 6l.8 3.4"/><path d="M5 10c-1.5 1.5-2 3.5-2 5.5V19"/></>,
-    knee:    <><path d="M9 2.5v6.5a3.5 3.5 0 0 0 3.5 3.5H16"/><path d="M9 12.5V21.5"/><circle cx="9" cy="10.5" r="2.6"/></>,
-    bone:    <><path d="m9.5 14.5 5-5"/><path d="M8.2 15.8a2.3 2.3 0 1 1-2-2 2.3 2.3 0 1 1 2 2Z"/><path d="M15.8 8.2a2.3 2.3 0 1 0 2 2 2.3 2.3 0 1 0-2-2Z"/></>,
-    more:    <><circle cx="5" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="19" cy="12" r="1.7"/></>,
-    target:  <><circle cx="12" cy="12" r="10"/><path d="M12 6v12M6 12h12"/></>,
-  };
-  return <svg {...p}>{P[n]||null}</svg>;
+function OI({ n, sz=18, c="currentColor", s=1.6 }) {
+  return <UIco name={n} size={sz} color={c} stroke={s}/>;
 }
 
 // ── Silhouette : vraies photos de référence (issues de l'infographie) ──────────

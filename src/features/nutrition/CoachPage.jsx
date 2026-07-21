@@ -4,6 +4,7 @@
 // Limite gratuit : FREE_MSG_LIMIT questions/mois. PRO : illimité.
 
 import { useState, useRef, useEffect, useCallback } from"react";
+import { Ico as UIco } from"../../components/ui/Icon.jsx";
 import useScrollTop from"../../hooks/useScrollTop.js";
 import { C, DARK, FONT, SERIF } from"../../data/constants.js";
 import { useSwipeBack } from"../../hooks/useSwipeBack.js";
@@ -38,21 +39,8 @@ const SUGGESTIONS = [
 ];
 
 // ─── Icônes ───────────────────────────────────────────────────────────────────
-function I({ name, size = 18, color ="currentColor", stroke = 1.8 }) {
-  const p = {
-    width: size, height: size, viewBox:"0 0 24 24",
-    fill:"none", stroke: color, strokeWidth: stroke,
-    strokeLinecap:"round", strokeLinejoin:"round",
-  };
-  const paths = {
-    chevL:  <path d="m15 18-6-6 6-6"/>,
-    send:   <><path d="m22 2-7 20-4-9-9-4 20-7z"/><path d="M22 2 11 13"/></>,
-    spark:  <path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z" fill="currentColor" stroke="none"/>,
-    refresh:<><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/></>,
-    lock:   <><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></>,
-    chat:   <><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></>,
-  };
-  return <svg {...p}>{paths[name]}</svg>;
+function I({name,size=18,color="currentColor",stroke=1.8,...r}){
+  return <UIco name={name} size={size} color={color} stroke={stroke} {...r}/>;
 }
 
 // ─── Usage mensuel (localStorage) ─────────────────────────────────────────────
