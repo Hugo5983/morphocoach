@@ -4,6 +4,7 @@
  */
 
 import { useMemo } from"react";
+import { ID } from"../../../components/ui/Icon.jsx";
 import { C, DARK, FONT, NUM } from"../../../data/constants.js";
 import { getLevelInfo } from"../../../services/xpService.js";
 import { toDateKey } from"../../../utils/training.js";
@@ -527,8 +528,8 @@ function StreakCard({ streak }) {
         display:"flex", alignItems:"center", justifyContent:"space-between",
         marginBottom: 20,
       }}>
-        <span style={{ fontSize: 14, fontWeight: 700, letterSpacing:"0.1em", fontFamily: FONT, color: C.text }}>
-          SÉRIE EN COURS
+        <span style={{ display:"flex", alignItems:"center", gap:8, fontSize: 14, fontWeight: 700, letterSpacing:"0.1em", fontFamily: FONT, color: C.text }}>
+          <ID name="streak" size={22}/> SÉRIE EN COURS
         </span>
         <span style={{
           display:"flex", alignItems:"center", gap: 4,
@@ -536,7 +537,7 @@ function StreakCard({ streak }) {
           fontSize: 11, fontWeight: 700,
           padding:"4px 12px", borderRadius: 20, fontFamily: FONT,
         }}>
-           Record {streak > 0 ? streak * 2 : 18} j
+          <ID name="trophyDuo" size={14}/> Record {streak > 0 ? streak * 2 : 18} j
         </span>
       </div>
       {/* Chiffre */}
@@ -551,7 +552,7 @@ function StreakCard({ streak }) {
           display:"flex", alignItems:"center", justifyContent:"center",
           boxShadow:"0 8px 18px rgba(249,115,22,0.35)",
         }}>
-          <span style={{ fontSize: 26 }}></span>
+          <ID name="streak" size={32}/>
         </div>
         <div>
           <div style={{ display:"flex", alignItems:"baseline", gap: 8 }}>

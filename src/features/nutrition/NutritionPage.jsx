@@ -287,18 +287,15 @@ export default function Nutrition(props){
                   const isEmpty=rTot.cal===0;
                   return(
                     <button key={m.id} className="tap" onClick={()=>setRepasSheet(m.id)}
-                      style={{background:`linear-gradient(145deg,${m.accent}22,${m.accentDk}10)`,
-                        border:`1px solid ${m.accent}35`,borderRadius:16,
-                        padding:'12px 16px',textAlign:'left',cursor:'pointer',
-                        display:'flex',alignItems:'center',gap:12,
+                      style={{background:C.s1,
+                        border:`1px solid ${C.bd}`,borderRadius:16,
+                        padding:'14px 16px',textAlign:'left',cursor:'pointer',
+                        display:'flex',alignItems:'center',gap:14,
                         transition:'box-shadow .2s'}}>
-                      <div style={{width:44,height:44,borderRadius:12,
-                        background:`linear-gradient(145deg,${m.accent},${m.accentDk})`,
-                        display:'grid',placeItems:'center',flexShrink:0,
-                        boxShadow:`0 4px 10px ${m.accent}50, inset 0 1px 0 rgba(0,0,0,0.12)`,
-                        position:'relative',overflow:'hidden'}}>
-                        <div style={{position:'absolute',inset:0,background:'radial-gradient(110% 60% at 30% 10%,rgba(0,0,0,0.12),transparent 60%)',pointerEvents:'none'}}/>
-                        <ID name={m.icon} size={22}/>
+                      <div style={{width:52,height:52,borderRadius:14,
+                        background:C.s2,
+                        display:'grid',placeItems:'center',flexShrink:0}}>
+                        <ID name={m.icon} size={34}/>
                       </div>
                       <div style={{flex:1,minWidth:0}}>
                         <div style={{fontSize:14,fontWeight:700,color:C.text,fontFamily:DISPLAY,letterSpacing:-0.2}}>
@@ -311,7 +308,7 @@ export default function Nutrition(props){
                       <div style={{display:'flex',alignItems:'center',gap:8,flexShrink:0}}>
                         <div style={{textAlign:'right'}}>
                           <div style={{display:'flex',alignItems:'baseline',gap:4,justifyContent:'flex-end'}}>
-                            <span style={{fontSize:16,fontWeight:700,color:isEmpty?C.dim:m.accent,fontFamily:DISPLAY,...NUM}}>{rTot.cal}</span>
+                            <span style={{fontSize:16,fontWeight:700,color:isEmpty?C.dim:C.text,fontFamily:DISPLAY,...NUM}}>{rTot.cal}</span>
                             <span style={{fontSize:10,color:C.dim,fontWeight:700}}>KCAL</span>
                           </div>
                         </div>
@@ -328,13 +325,13 @@ export default function Nutrition(props){
               <div style={{background:C.s1, border:`1px solid ${C.bd}`, borderRadius:16, boxShadow:'0 1px 3px rgba(0,0,0,0.25), inset 0 1px 0 rgba(0,0,0,0.05)', padding:16}}>
                 <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:12}}>
                   <div style={{display:'flex',alignItems:'center',gap:12}}>
-                    <div style={{width:40,height:40,borderRadius:12,
-                      background:'linear-gradient(145deg,#12B76A,#12B76A)',
+                    <div style={{width:52,height:52,borderRadius:14,
+                      background:C.s2,
                       color:'#101318',display:'grid',placeItems:'center',
                       boxShadow:'0 4px 10px rgba(18,183,106,0.35), inset 0 1px 0 rgba(0,0,0,0.12)',
                       position:'relative',overflow:'hidden'}}>
                       <div style={{position:'absolute',inset:0,background:'radial-gradient(110% 60% at 30% 10%,rgba(0,0,0,0.12),transparent 60%)',pointerEvents:'none'}}/>
-                      <I name="drop" size={18} stroke={2} color="#101318"/>
+                      <ID name="hydration" size={34}/>
                     </div>
                     <div>
                       <div style={{fontSize:14,fontWeight:700,color:C.text,fontFamily:DISPLAY}}>Hydratation</div>
@@ -373,8 +370,8 @@ export default function Nutrition(props){
               <div style={{background:C.s1, border:`1px solid ${C.bd}`, borderRadius:16, boxShadow:'0 1px 3px rgba(0,0,0,0.25), inset 0 1px 0 rgba(0,0,0,0.05)', padding:16}}>
                 <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:12}}>
                   <div style={{display:'flex',alignItems:'center',gap:12}}>
-                    <div style={{width:40,height:40,borderRadius:12,
-                      background:'linear-gradient(145deg,#12B76A,#12B76A)',
+                    <div style={{width:52,height:52,borderRadius:14,
+                      background:C.s2,
                       display:'grid',placeItems:'center',fontSize:20,
                       boxShadow:'0 4px 10px rgba(18,183,106,0.35), inset 0 1px 0 rgba(0,0,0,0.12)',
                       position:'relative',overflow:'hidden'}}>
@@ -390,13 +387,13 @@ export default function Nutrition(props){
                     </div>
                   </div>
                   <div style={{fontSize:10,color:C.dim,fontFamily:DISPLAY,textAlign:'right',lineHeight:1.5}}>
-                     {fruitsV.fruits}<br/> {fruitsV.legumes}
+                     {fruitsV.fruits} · {fruitsV.legumes}
                   </div>
                 </div>
                 {/* Ligne fruits */}
                 <div style={{marginBottom:12}}>
                   <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:8}}>
-                    <span style={{fontSize:11,color:C.mid,fontFamily:DISPLAY,fontWeight:600}}> Fruits</span>
+                    <span style={{fontSize:11,color:C.mid,fontFamily:DISPLAY,fontWeight:600,display:"flex",alignItems:"center",gap:6}}><ID name="fruit" size={20}/> Fruits</span>
                     <div style={{display:'flex',gap:4}}>
                       <button onClick={()=>setFruitsV(f=>({...f,fruits:Math.max(0,f.fruits-1)}))} style={{width:24,height:24,borderRadius:8,background:'rgba(0,0,0,0.05)',border:`1px solid ${C.bd}`,color:C.mid,cursor:'pointer',fontSize:14,display:'grid',placeItems:'center'}}>−</button>
                       <span style={{width:22,textAlign:'center',fontSize:13,fontWeight:700,color:C.text,fontFamily:DISPLAY,...NUM}}>{fruitsV.fruits}</span>
@@ -413,7 +410,7 @@ export default function Nutrition(props){
                 {/* Ligne légumes */}
                 <div>
                   <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:8}}>
-                    <span style={{fontSize:11,color:C.mid,fontFamily:DISPLAY,fontWeight:600}}> Légumes</span>
+                    <span style={{fontSize:11,color:C.mid,fontFamily:DISPLAY,fontWeight:600,display:"flex",alignItems:"center",gap:6}}><ID name="fiber" size={20}/> Légumes</span>
                     <div style={{display:'flex',gap:4}}>
                       <button onClick={()=>setFruitsV(f=>({...f,legumes:Math.max(0,f.legumes-1)}))} style={{width:24,height:24,borderRadius:8,background:'rgba(0,0,0,0.05)',border:`1px solid ${C.bd}`,color:C.mid,cursor:'pointer',fontSize:14,display:'grid',placeItems:'center'}}>−</button>
                       <span style={{width:22,textAlign:'center',fontSize:13,fontWeight:700,color:C.text,fontFamily:DISPLAY,...NUM}}>{fruitsV.legumes}</span>

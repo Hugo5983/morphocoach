@@ -1,4 +1,5 @@
 import { useState } from"react";
+import { ID } from"../../components/ui/Icon.jsx";
 import useScrollTop from"../../hooks/useScrollTop.js";
 import { ACTIVITE_FACTOR, C, DARK, FONT, NUM, OBJ, SERIF } from"../../data/constants.js";
 import {
@@ -192,7 +193,7 @@ export default function Profile(props) {
                 </div>
 )}
               <div style={{ marginTop: 12, fontSize: 11, color:"#98A2B3", lineHeight: 1.5, fontFamily: FONT }}>
-                ℹ L'IMC ne distingue pas muscle et graisse : il surestime souvent le « surpoids » chez les sportifs. Fie-toi davantage à ta <b>masse grasse</b> ci-dessus.
+                L'IMC ne distingue pas muscle et graisse : il surestime souvent le « surpoids » chez les sportifs. Fie-toi davantage à ta <b>masse grasse</b> ci-dessus.
               </div>
             </div>
           </Glass>

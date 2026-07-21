@@ -1,4 +1,5 @@
 import { useState } from"react";
+import { I } from"../../components/ui/Icon.jsx";
 import useScrollTop from"../../hooks/useScrollTop.js";
 import { C, DARK, FONT, NUM, SERIF } from"../../data/constants.js";
 import { Card, Eyebrow, Btn } from"../../components/ui/index.jsx";
@@ -243,7 +244,7 @@ export default function TodayView(props) {
           {/* Badge + date */}
           <div style={{ display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:16 }}>
             <div style={{ display:"inline-flex",alignItems:"center",gap:8,padding:"8px 12px",borderRadius:999,background:"rgba(18,183,106,0.12)",border:"1px solid rgba(18,183,106,0.25)" }}>
-              <span style={{ fontSize:13 }}></span>
+              <span style={{ fontSize:13 }}><I name="check" size={12}/></span>
               <span style={{ fontSize:10,fontWeight:700,color:"#12B76A",letterSpacing:"0.1em",fontFamily:DISP }}>JOUR DE RÉCUPÉRATION</span>
             </div>
             <div style={{ fontSize:11,color:"${C.dim}",fontWeight:600,fontFamily:DISP }}>
@@ -313,7 +314,7 @@ export default function TodayView(props) {
             <div style={{ background: C.s1, border:`1px solid ${C.bd}`, borderRadius: 20, overflow:"hidden" }}>
               {/* Empty state avec CTA visible */}
               <div style={{ padding:"24px 20px 20px", textAlign:"center" }}>
-                <div style={{ fontSize:26,marginBottom:8 }}></div>
+                <div style={{ fontSize:26,marginBottom:8 }}><I name="check" size={12}/></div>
                 <div style={{ fontFamily:DISP,fontSize:14,fontWeight:700,color:"${C.text}",marginBottom:8 }}>Pas encore de données</div>
                 <div style={{ fontSize:11,color:C.mid,lineHeight:1.6,marginBottom:16,fontFamily:DISP }}>
                   Enregistre tes charges pendant les séances pour voir tes records et tes 1RM estimés.

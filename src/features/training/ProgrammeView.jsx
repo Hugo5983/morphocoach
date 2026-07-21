@@ -1,4 +1,5 @@
 import { catColor } from"../../utils/training.js";
+import { I } from"../../components/ui/Icon.jsx";
 import useScrollTop from"../../hooks/useScrollTop.js";
 import { useState } from"react";
 import { C, DARK } from"../../data/constants.js";
@@ -214,7 +215,7 @@ export default function ProgrammeView(props) {
                   padding:"4px 12px",borderRadius:28,marginBottom:12,
                   background:"linear-gradient(135deg,rgba(109,40,217,0.25),rgba(60,91,255,0.18))",
                   border:"1px solid rgba(60,91,255,0.35)",backdropFilter:"blur(6px)"}}>
-                  <span style={{fontSize:10}}></span>
+                  <span style={{fontSize:10}}><I name="check" size={12}/></span>
                   <span style={{fontSize:10,fontWeight:700,color:"#C9D3FF",fontFamily:F2,letterSpacing:"0.1em"}}>PRO · IA Coach</span>
                   <div style={{width:3.5,height:3.5,borderRadius:"50%",background:"#3C5BFF",boxShadow:"0 0 5px #3C5BFF"}}/>
                 </div>
@@ -482,7 +483,7 @@ export default function ProgrammeView(props) {
                   <div style={{fontSize:11,color:C.mid,marginTop:1}}>{p.jours?.length||0} séances</div>
                 </div>
                 <button onClick={()=>{setProg(p);push("","Programme activé",p.titre);}} style={{padding:"8px 12px",background:"rgba(18,183,106,0.12)",border:"1px solid rgba(18,183,106,0.25)",borderRadius:8,color:"#12B76A",cursor:"pointer",fontSize:10,fontWeight:700,fontFamily:DISP_F}}>Activer</button>
-                <button onClick={()=>setConfirmDel({type:"prog",pIdx})} style={{padding:"8px 8px",background:"rgba(229,72,77,0.08)",border:"1px solid rgba(229,72,77,0.18)",borderRadius:8,color:"#3C5BFF",cursor:"pointer",fontSize:11}}></button>
+                <button onClick={()=>setConfirmDel({type:"prog",pIdx})} style={{padding:"8px 8px",background:"rgba(229,72,77,0.08)",border:"1px solid rgba(229,72,77,0.18)",borderRadius:8,color:"#3C5BFF",cursor:"pointer",fontSize:11}}><I name="trash" size={13}/></button>
               </div>
 );
           })}

@@ -46,7 +46,7 @@ export function GuideExModal({ exData, exSerie, onClose, C }) {
           {tab==="variantes"&&(<div>{(exData.variantes||[]).map((v,i)=>(<div key={i} style={{background:C.s1,border:"0.5px solid rgba(0,0,0,0.05)",borderRadius:12,padding:"16px 16px",marginBottom:8}}><div style={{fontSize:13,fontWeight:500,color:"${C.text}",marginBottom:4}}>{v.nom||v}</div>{v.note&&<div style={{fontSize:11,color:C.mid,lineHeight:1.5}}>{v.note}</div>}</div>))}</div>)}
           {tab==="erreurs"&&(<div style={{background:C.s1,border:"0.5px solid rgba(0,0,0,0.05)",borderRadius:12,padding:"16px 16px"}}>
             <div style={{fontSize:10,color:C.mid,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",marginBottom:12}}>Erreurs à éviter</div>
-            {(exData.erreurs||[]).map((e,i)=>(<div key={i} style={{display:"flex",gap:12,marginBottom:12,alignItems:"flex-start"}}><div style={{width:20,height:20,borderRadius:"50%",background:"rgba(229,72,77,0.12)",border:"0.5px solid rgba(229,72,77,0.25)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:10,color:"#3C5BFF"}}></div><div style={{fontSize:13,color:"${C.text}",lineHeight:1.5}}>{e}</div></div>))}
+            {(exData.erreurs||[]).map((e,i)=>(<div key={i} style={{display:"flex",gap:12,marginBottom:12,alignItems:"flex-start"}}><div style={{width:20,height:20,borderRadius:"50%",background:"rgba(229,72,77,0.12)",border:"0.5px solid rgba(229,72,77,0.25)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:10,color:"#3C5BFF"}}><I name="close" size={12}/></div><div style={{fontSize:13,color:"${C.text}",lineHeight:1.5}}>{e}</div></div>))}
           </div>)}
           {tab==="morpho"&&(<div style={{background:C.s1,border:"0.5px solid rgba(0,0,0,0.05)",borderRadius:12,padding:"16px 16px"}}>
             <div style={{fontSize:10,color:C.mid,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",marginBottom:12}}>Adaptation morphologique</div>
@@ -291,7 +291,7 @@ export function SeanceDetailModal({ jour, jourIdx, prog, setProg, onClose, C, IN
 
           {/* Renommer la séance */}
           <div style={{background:C.s1,border:`1px solid ${C.bd}`,borderRadius:16,padding:"12px 16px",marginBottom:16,display:"flex",alignItems:"center",gap:12}}>
-            <span style={{fontSize:14,flexShrink:0}}></span>
+            <span style={{fontSize:14,flexShrink:0}}><I name="edit" size={12}/></span>
             <div style={{flex:1}}>
               <div style={{fontSize:10,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",color:"${C.dim}",marginBottom:4,fontFamily:DISP_F}}>Nom de la séance</div>
               <input value={localName} onChange={e=>updateName(e.target.value)}
@@ -336,7 +336,7 @@ export function SeanceDetailModal({ jour, jourIdx, prog, setProg, onClose, C, IN
                       {findExInDB(ex.nom) && (
                         <button onClick={()=>{const d=findExInDB(ex.nom);if(d)setGuideEx({dbEx:d,serieEx:ex});}} style={{padding:"4px 8px",background:"rgba(60,91,255,0.05)",border:"0.5px solid rgba(60,91,255,0.18)",borderRadius:8,color:DARK.accent,cursor:"pointer",fontSize:10,fontWeight:700,fontFamily:DISP_F}}><>Guide <I name="chevronRight" size={12}/></></button>
 )}
-                      <button onClick={()=>setEditEx(m=>({...m,[k]:!m[k]}))} style={{width:30,height:30,borderRadius:8,background:"rgba(60,91,255,0.08)",border:"0.5px solid rgba(60,91,255,0.18)",color:DARK.accent,cursor:"pointer",fontSize:13,display:"grid",placeItems:"center"}}></button>
+                      <button onClick={()=>setEditEx(m=>({...m,[k]:!m[k]}))} style={{width:30,height:30,borderRadius:8,background:"rgba(60,91,255,0.08)",border:"0.5px solid rgba(60,91,255,0.18)",color:DARK.accent,cursor:"pointer",fontSize:13,display:"grid",placeItems:"center"}}><I name="edit" size={12}/></button>
                       <button onClick={()=>deleteEx(k)} style={{width:30,height:30,borderRadius:8,background:"rgba(229,72,77,0.08)",border:"0.5px solid rgba(229,72,77,0.25)",color:"#E5484D",cursor:"pointer",fontSize:13,display:"grid",placeItems:"center"}}>×</button>
                     </div>
                   </div>

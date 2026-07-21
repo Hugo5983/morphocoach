@@ -181,7 +181,7 @@ function ExCard({ ex, onUpdate, onRemove }) {
         </div>
         <button onClick={onRemove} style={{ width:40, height:40, borderRadius:12, flexShrink:0,
           border:"1px solid rgba(229,72,77,0.25)", background:"rgba(229,72,77,0.08)",
-          display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer", color:RED, fontSize:16 }}></button>
+          display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer", color:RED, fontSize:16 }}><I name="close" size={14}/></button>
       </div>
 
       <div style={{ display:"flex", gap:8, marginTop:12 }}>
@@ -214,7 +214,7 @@ function ExCard({ ex, onUpdate, onRemove }) {
       </div>
 
       <button className={`mc-tempo${open?" open":""}`} onClick={() => setOpen(o=>!o)}>
-        <span style={{ fontSize:14 }}></span>
+        <span style={{ fontSize:14 }}><I name="settings" size={14}/></span>
         {ex.methode && ex.methode!=="Standard"
           ? <span style={{ color:BL, fontWeight:700 }}>{ex.methode}{ex.tempo?` · ${ex.tempo}`:""}</span>
           :"Tempo & intensité"}
@@ -300,7 +300,7 @@ function BiblioSheet({ onClose, onAdd, addedNoms }) {
             <div key={i} style={{ display:"flex", gap:12, marginBottom:12, alignItems:"flex-start" }}>
               <div style={{ width:20, height:20, borderRadius:"50%", background:"rgba(229,72,77,0.12)",
                 border:"1px solid rgba(229,72,77,0.25)", display:"grid", placeItems:"center",
-                flexShrink:0, fontSize:10, color:RED }}></div>
+                flexShrink:0, fontSize:10, color:RED }}><I name="close" size={11} color={RED}/></div>
               <div style={{ fontSize:13, color:TEXT, lineHeight:1.6 }}>{e}</div>
             </div>
 ))}

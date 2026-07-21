@@ -1,4 +1,6 @@
 import { C, FONT, SERIF } from"../../data/constants.js";
+import { I } from"../ui/Icon.jsx";
+import { ID } from"../ui/Icon.jsx";
 import { Card, Eyebrow } from"../../components/ui/index.jsx";
 
 const FEATURES = [
@@ -53,7 +55,7 @@ export function Paywall({ onSubscribe, onClose }) {
             fontSize:11, fontWeight:700, color:"#2438B8",
             fontFamily:FONT, letterSpacing:"0.1em", textTransform:"uppercase",
             marginBottom:16,
-          }}> Entraînement PRO</div>
+          }}><ID name="gym" size={20}/> Entraînement PRO</div>
 
           <div style={{ fontFamily:SERIF, fontSize:26, color:C.text, letterSpacing:-0.5, lineHeight:1.3, marginBottom:8 }}>
             Entraîne-toi smarter,<br/>
@@ -83,7 +85,7 @@ export function Paywall({ onSubscribe, onClose }) {
                 border:"1px solid rgba(60,91,255,0.25)",
                 display:"grid", placeItems:"center",
                 fontSize:11, color:"#2438B8", fontWeight:700,
-              }}></div>
+              }}><I name="check" size={13} color="#FFF"/></div>
             </div>
 ))}
         </Card>

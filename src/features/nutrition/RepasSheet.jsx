@@ -3,6 +3,7 @@
 // Design aligné avec BiblioSheet de Creer.jsx : même overlay, handle, typo, etc.
 
 import { useState, useRef, useCallback, useEffect } from"react";
+import { I } from"../../components/ui/Icon.jsx";
 import { Ico as UIco } from"../../components/ui/Icon.jsx";
 import { ID } from"../../components/ui/Icon.jsx";
 import { C, FONT, SERIF } from"../../data/constants.js";
@@ -316,7 +317,7 @@ export default function RepasSheet({
                     </div>
                   </div>
                   {alreadyAdded ? (
-                    <span style={{ fontSize: 11, fontWeight: 700, color: GRN, fontFamily: F }}> Ajouté</span>
+                    <span style={{ fontSize: 11, fontWeight: 700, color: GRN, fontFamily: F }}><UIco name="check" size={12} color={GRN}/> Ajouté</span>
 ) : (
                     <div style={{ width: 34, height: 34, borderRadius: 12,
                       background:`linear-gradient(135deg,${BL},${BLD})`,
@@ -377,7 +378,7 @@ export default function RepasSheet({
                   </div>
 
                   {alreadyAdded ? (
-                    <span style={{ fontSize: 11, fontWeight: 700, color: GRN, fontFamily: F }}></span>
+                    <span style={{ fontSize: 11, fontWeight: 700, color: GRN, fontFamily: F }}><I name="check" size={12}/></span>
 ) : (
                     <div style={{ width: 30, height: 30, borderRadius: 10, flexShrink: 0,
                       background:`linear-gradient(135deg,${BL},${BLD})`,

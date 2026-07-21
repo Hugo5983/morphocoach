@@ -7,6 +7,7 @@
 // ═══════════════════════════════════════════════════════════════════════════
 
 import { C, SPACE, RADIUS, SHADOW, Z, TYPE } from"../../styles/tokens.js";
+import { I } from"./Icon.jsx";
 import { Row } from"../primitives/index.jsx";
 
 // ─── Backdrop commun ─────────────────────────────────────────────────────────
@@ -98,6 +99,6 @@ function CloseBtn({ onClose }) {
       background: C.s2, border:"none", cursor:"pointer",
       display:"grid", placeItems:"center", flexShrink: 0,
       color: C.dim, fontSize: 14, lineHeight: 1,
-    }}></button>
+    }}><I name="close" size={16}/></button>
 );
 }

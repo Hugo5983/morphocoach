@@ -1,4 +1,6 @@
 import { C, FONT, SERIF } from"../../data/constants.js";
+import { I } from"../ui/Icon.jsx";
+import { ID } from"../ui/Icon.jsx";
 import { Card, Eyebrow } from"../../components/ui/index.jsx";
 
 const FEATURES = [
@@ -54,7 +56,7 @@ export function PaywallNutrition({ onSubscribe, onClose }) {
             fontSize:11, fontWeight:700, color:"#12B76A",
             fontFamily:FONT, letterSpacing:"0.1em", textTransform:"uppercase",
             marginBottom:16,
-          }}> Nutrition PRO</div>
+          }}><ID name="bowl" size={20}/> Nutrition PRO</div>
 
           <div style={{ fontFamily:SERIF, fontSize:26, color:C.text, letterSpacing:-0.5, lineHeight:1.3, marginBottom:8 }}>
             Mange mieux,<br/>
@@ -84,7 +86,7 @@ export function PaywallNutrition({ onSubscribe, onClose }) {
                 border:"1px solid rgba(5,150,105,0.25)",
                 display:"grid", placeItems:"center",
                 fontSize:11, color:"#12B76A", fontWeight:700,
-              }}></div>
+              }}><I name="check" size={13} color="#FFF"/></div>
             </div>
 ))}
         </Card>

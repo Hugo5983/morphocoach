@@ -251,7 +251,7 @@ export default function Onboarding(props){
                         <span style={{fontSize:11,color:C.mid,fontWeight:600,fontFamily:DISPLAY}}>IMC estimé</span>
                         <span style={{fontFamily:SERIF,fontSize:20,color:C.blue,...NUM}}>{imc}</span>
                       </div>
-                      <div style={{fontSize:10,color:C.dim,marginTop:4}}>ℹ L'IMC ne distingue pas muscle et graisse</div>
+                      <div style={{fontSize:10,color:C.dim,marginTop:4,display:"flex",alignItems:"center",gap:5}}><ID name="infoDuo" size={13}/> L'IMC ne distingue pas muscle et graisse</div>
                     </div>
 );
                 })()}

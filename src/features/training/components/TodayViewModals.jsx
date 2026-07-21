@@ -658,7 +658,7 @@ export function RMCard({ exData, objectif, C, onEdit }) {
         </div>
 
         <div style={{display:"flex",alignItems:"center",gap:8,marginLeft:8,flexShrink:0}}>
-          {onEdit && <button onClick={e=>{e.stopPropagation();onEdit(exData);}} style={{padding:"4px 8px",background:"rgba(60,91,255,0.12)",border:"1px solid rgba(60,91,255,0.25)",borderRadius:8,color:"#3C5BFF",cursor:"pointer",fontSize:10,fontWeight:600}}></button>}
+          {onEdit && <button onClick={e=>{e.stopPropagation();onEdit(exData);}} style={{padding:"4px 8px",background:"rgba(60,91,255,0.12)",border:"1px solid rgba(60,91,255,0.25)",borderRadius:8,color:"#3C5BFF",cursor:"pointer",fontSize:10,fontWeight:600}}><I name="edit" size={12}/></button>}
           <div style={{color:"rgba(245,241,232,0.5)",fontSize:14,transition:"transform .15s",transform:expanded?"rotate(90deg)":"rotate(0)"}}><I name="chevronRight" size={14}/></div>
         </div>
       </div>

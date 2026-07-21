@@ -2,6 +2,7 @@
 // Helpers de calcul OBJECTIF (somme des aliments rentrés, pas d'IA interprétative)
 
 import { C, DARK, FONT, NUM, SERIF } from"../../../data/constants.js";
+import { ID } from"../../../components/ui/Icon.jsx";
 
 // ─── Helpers généraux ──────────────────────────────────────────────────────
 export function avg(arr) { return arr.length ? arr.reduce((a,b) => a+b, 0) / arr.length : 0; }
@@ -272,10 +273,10 @@ export function CritRow({ crit }) {
   return (
     <div style={{ padding:"16px 0", borderBottom:"1px solid rgba(0,0,0,0.05)",
       display:"flex", alignItems:"flex-start", gap:12 }}>
-      <div style={{ width:40, height:40, borderRadius:12, display:"grid",
-        placeItems:"center", flexShrink:0, fontSize:16,
-        background:palette.bg, border:`1px solid ${palette.bd}` }}>
-        {crit.icon}
+      <div style={{ width:48, height:48, borderRadius:14, display:"grid",
+        placeItems:"center", flexShrink:0,
+        background:C.s2 }}>
+        <ID name={crit.icon} size={32}/>
       </div>
       <div style={{ flex:1, minWidth:0 }}>
         <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:4 }}>

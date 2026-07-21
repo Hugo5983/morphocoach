@@ -4,6 +4,7 @@
 // Flow : Upload photo → Claude Vision → Résultat macros → Choix repas → Ajout journal
 
 import { useState, useRef, useCallback } from"react";
+import { ID } from"../../components/ui/Icon.jsx";
 import useScrollTop from"../../hooks/useScrollTop.js";
 import { C, DARK, FONT, SERIF } from"../../data/constants.js";
 
@@ -576,7 +577,7 @@ export default function PhotoAnalyse({ onClose, onAdd, premium, setPaywall, push
                   fontSize: 11, color:"${C.dim}", fontFamily: FONT,
                   fontStyle:"italic", lineHeight: 1.5,
                   borderTop:"1px solid rgba(0,0,0,0.05)", paddingTop: 12,
-                }}> {res.note}</div>
+                }}><ID name="spark" size={16}/> {res.note}</div>
 )}
             </div>
 

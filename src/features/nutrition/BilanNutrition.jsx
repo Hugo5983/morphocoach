@@ -6,6 +6,7 @@
 //   • Onglet"Analyse détaillée" inchangé
 
 import { useState, useMemo, useEffect, useRef } from"react";
+import { ID } from"../../components/ui/Icon.jsx";
 import useScrollTop from"../../hooks/useScrollTop.js";
 import { C, FONT, SERIF, NUM } from"../../data/constants.js";
 import { useSwipeBack } from"../../hooks/useSwipeBack.js";
@@ -112,7 +113,7 @@ export default function BilanNutrition({
       <div style={{ margin:"8px 16px 16px" }}>
         <div style={{ background:S1,border:`1px solid ${BD}`,borderRadius:20,
           padding:"32px 24px",textAlign:"center" }}>
-          <div style={{ fontSize:34,marginBottom:12 }}></div>
+          <div style={{marginBottom:12,display:"flex",justifyContent:"center"}}><ID name="cloche" size={42}/></div>
           <div style={{ fontSize:16,fontWeight:700,color:TEXT,fontFamily:FONT,marginBottom:8 }}>
             En attente de ton premier jour
           </div>
@@ -380,7 +381,7 @@ export default function BilanNutrition({
           borderRadius:20,padding:"24px 20px",textAlign:"center" }}>
           <div style={{ width:48,height:48,borderRadius:16,margin:"0 auto 12px",
             background:"rgba(60,91,255,0.08)",border:"1px solid rgba(60,91,255,0.18)",
-            display:"grid",placeItems:"center",fontSize:20 }}></div>
+            display:"grid",placeItems:"center" }}><ID name="bowl" size={28}/></div>
           <div style={{ fontSize:14,fontWeight:700,color:TEXT,fontFamily:FONT,marginBottom:4 }}>
             Aucun aliment saisi
           </div>

@@ -291,7 +291,7 @@ function WeightChart({ log }) {
     return (
       <Glass pad={0} style={{ animation:"rise .4s .05s both" }}>
         <div style={{ padding:"24px 20px", textAlign:"center" }}>
-          <div style={{ fontSize: 26, marginBottom: 8 }}></div>
+          <div style={{ marginBottom: 8, display:"flex", justifyContent:"center" }}><UIco name="scale" size={32}/></div>
           <div style={{ fontSize: 14, fontWeight: 700, color: C.text, fontFamily: FONT, marginBottom: 4 }}>
             Suivi du poids
           </div>

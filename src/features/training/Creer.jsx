@@ -189,7 +189,7 @@ export default function Creer(props) {
                       background:on?BL:"transparent",
                       display:"flex", alignItems:"center", justifyContent:"center",
                       transition:"all .2s" }}>
-                      {on && <span style={{ color:"#FFF", fontSize:13, fontWeight:700 }}></span>}
+                      {on && <span style={{ color:"#FFF", fontSize:13, fontWeight:700 }}><I name="check" size={13} color="#FFF"/></span>}
                     </span>
                     <div style={{ flex:1 }}>
                       <div style={{ fontSize:16, fontWeight:700, letterSpacing:-0.2 }}>{sp.name}</div>
@@ -343,7 +343,7 @@ export default function Creer(props) {
 
               {missingDays.length>0 && (
                 <div className="mc-warn" style={{ marginTop:20 }}>
-                  <span style={{ color:RED, fontSize:20, flexShrink:0 }}></span>
+                  <ID name="infoDuo" size={20} style={{flexShrink:0}}/>
                   <div>
                     <div style={{ fontSize:14, fontWeight:700, color:"#E5484D", marginBottom:4 }}>
                       {missingDays.length} séance{missingDays.length>1?"s":""} à compléter
@@ -382,7 +382,7 @@ export default function Creer(props) {
               {/* Alerte si incomplet */}
               {!allComplete && (
                 <div className="mc-warn" style={{ marginBottom:20 }}>
-                  <span style={{ color:RED, fontSize:20 }}></span>
+                  <ID name="infoDuo" size={20}/>
                   <div>
                     <div style={{ fontSize:14, fontWeight:700, color:"#E5484D", marginBottom:4 }}>
                       Validation impossible
@@ -506,7 +506,7 @@ export default function Creer(props) {
               <div style={{ display:"flex", gap:12, alignItems:"flex-start",
                 padding:"16px 16px", borderRadius:16,
                 background:BLS, border:`1px solid ${BLBR}` }}>
-                <span style={{ fontSize:20, flexShrink:0 }}></span>
+                <ID name="spark" size={20} style={{flexShrink:0}}/>
                 <span style={{ fontSize:13, color:MID, lineHeight:1.6 }}>
                   Tu pourras ajuster charges, tempo et méthodes à tout moment depuis le planning.
                 </span>

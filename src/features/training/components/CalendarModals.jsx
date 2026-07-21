@@ -449,7 +449,7 @@ export function GuideExModal({ exData, exSerie, onClose, C, INT }) {
               <div style={{fontSize:10,color:"rgba(245,241,232,0.5)",fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",marginBottom:12}}>Erreurs à éviter</div>
               {(exData.erreurs||[]).map((e,i) => (
                 <div key={i} style={{display:"flex",gap:12,marginBottom:12,alignItems:"flex-start"}}>
-                  <div style={{width:20,height:20,borderRadius:"50%",background:"rgba(229,72,77,0.12)",border:"0.5px solid rgba(229,72,77,0.25)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:10,color:"#3C5BFF"}}></div>
+                  <div style={{width:20,height:20,borderRadius:"50%",background:"rgba(229,72,77,0.12)",border:"0.5px solid rgba(229,72,77,0.25)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:10,color:"#3C5BFF"}}><I name="close" size={11} color="#E5484D"/></div>
                   <div style={{fontSize:13,color:"#F6F7F9",lineHeight:1.5}}>{e}</div>
                 </div>
 ))}
@@ -488,7 +488,7 @@ export function InfoExModal({ ex, dbEx, onClose, onOpenGuide }) {
 
         {!dbEx && (
           <div style={{padding:"16px 16px",background:C.s1,border:"0.5px solid rgba(190,180,255,0.08)",borderRadius:12,textAlign:"center"}}>
-            <div style={{fontSize:26,marginBottom:8}}></div>
+            <div style={{fontSize:26,marginBottom:8}}><div style={{display:"flex",justifyContent:"center"}}><ID name="bookDuo" size={32}/></div></div>
             <div style={{fontSize:13,color:"rgba(245,241,232,0.5)",lineHeight:1.5,marginBottom:8}}>Aucune information détaillée n'est disponible pour cet exercice dans la bibliothèque.</div>
             <div style={{fontSize:11,color:"rgba(245,241,232,0.5)"}}>Exercice personnalisé ou nom non reconnu.</div>
           </div>
@@ -515,7 +515,7 @@ export function InfoExModal({ ex, dbEx, onClose, onOpenGuide }) {
                 <div style={{fontSize:10,color:"#3C5BFF",fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",marginBottom:12}}> Erreurs à éviter</div>
                 {dbEx.erreurs.map((err,i) => (
                   <div key={i} style={{display:"flex",gap:12,marginBottom:8,alignItems:"flex-start"}}>
-                    <div style={{width:18,height:18,borderRadius:"50%",background:"rgba(229,72,77,0.12)",border:"0.5px solid rgba(229,72,77,0.25)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:10,color:"#3C5BFF",marginTop:1}}></div>
+                    <div style={{width:18,height:18,borderRadius:"50%",background:"rgba(229,72,77,0.12)",border:"0.5px solid rgba(229,72,77,0.25)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:10,color:"#3C5BFF",marginTop:1}}><I name="close" size={10} color="#E5484D"/></div>
                     <div style={{fontSize:13,color:"#F6F7F9",lineHeight:1.5,flex:1}}>{err}</div>
                   </div>
 ))}
@@ -561,7 +561,7 @@ export function ExerciceEditable({ ex, exIdx, jourIdx, prog, setProg, cc, METHOD
        <div style={{display:"flex",gap:4,flexShrink:0}}>
         {onInfo && <button onClick={(e)=>{e.stopPropagation();onInfo(ex);}} title="Infos" style={{padding:"4px 8px",background:"rgba(60,91,255,0.05)",border:"0.5px solid rgba(60,91,255,0.25)",borderRadius:8,color:"#3C5BFF",cursor:"pointer",fontSize:10,fontWeight:700,fontFamily:"'Archivo',sans-serif"}}>i</button>}
         {dbEx && onGuide && <button onClick={(e)=>{e.stopPropagation();onGuide(dbEx,ex);}} style={{padding:"4px 8px",background:"rgba(60,91,255,0.05)",border:"0.5px solid rgba(60,91,255,0.18)",borderRadius:8,color:"#3C5BFF",cursor:"pointer",fontSize:10,fontWeight:600,fontFamily:"'Archivo',sans-serif"}}><>Guide <I name="chevronRight" size={12}/></></button>}
-        <button onClick={(e)=>{e.stopPropagation();setEditing(ed=>!ed);}} style={{padding:"4px 8px",background:"rgba(60,91,255,0.08)",border:"0.5px solid rgba(60,91,255,0.18)",borderRadius:8,color:"#3C5BFF",cursor:"pointer",fontSize:10}}></button>
+        <button onClick={(e)=>{e.stopPropagation();setEditing(ed=>!ed);}} style={{padding:"4px 8px",background:"rgba(60,91,255,0.08)",border:"0.5px solid rgba(60,91,255,0.18)",borderRadius:8,color:"#3C5BFF",cursor:"pointer",fontSize:10}}><I name="edit" size={12}/></button>
        </div>
       </div>
       {editing && (

@@ -101,7 +101,7 @@ export default function ProgramTab(props){
                 boxShadow:on?"0 1px 4px rgba(0,0,0,0.08)":"none",cursor:"pointer",
                 display:"flex",alignItems:"center",justifyContent:"center",gap:4,
               }}>
-                {s.prem&&<span style={{color:on?C.accent:C.blueLt,fontSize:11}}></span>}
+                {s.prem&&<span style={{color:on?C.accent:C.blueLt,fontSize:11}}><ID name="crown" size={13}/></span>}
                 {s.l}
               </button>
 );

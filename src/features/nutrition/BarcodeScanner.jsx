@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from"react";
+import { I } from"../../components/ui/Icon.jsx";
+import { ID } from"../../components/ui/Icon.jsx";
 import { BrowserMultiFormatReader } from"@zxing/browser";
 import { NotFoundException, DecodeHintType, BarcodeFormat } from"@zxing/library";
 import { C, FONT } from"../../data/constants.js";
@@ -212,7 +214,7 @@ export default function BarcodeScanner({ onDetected, onClose }) {
               background:"rgba(18,183,106,0.12)",
               border:"2px solid rgba(18,183,106,0.5)",
               display:"grid", placeItems:"center", fontSize:34,
-            }}></div>
+            }}><I name="check" size={12}/></div>
             <div style={{ fontSize:16, fontWeight:600, color:"#12B76A", fontFamily:FONT }}>
               Produit détecté !
             </div>
@@ -226,7 +228,7 @@ export default function BarcodeScanner({ onDetected, onClose }) {
             flexDirection:"column", alignItems:"center", justifyContent:"center",
             padding:32, gap:16, textAlign:"center",
           }}>
-            <div style={{ fontSize:44 }}></div>
+            <div style={{display:"flex",justifyContent:"center"}}><ID name="cameraDuo" size={48}/></div>
             <div style={{ fontSize:14, fontWeight:600, color:"#E5484D", fontFamily:FONT }}>
               Caméra indisponible
             </div>
