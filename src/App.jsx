@@ -7,7 +7,6 @@ import { MOTIVATIONS } from"./data/motivations.js";
 
 import { Notif }           from"./components/ui/Notif.jsx";
 import { Spinner }         from"./components/ui/Loader.jsx";
-import { XPBar }           from"./components/ui/XPBar.jsx";
 import { LevelUpModal }    from"./components/ui/LevelUpModal.jsx";
 import { Header }          from"./components/layout/Header.jsx";
 import { BottomNav }       from"./components/layout/BottomNav.jsx";
@@ -268,9 +267,6 @@ export default function App() {
         <style>{CSS}</style>
         <Notif n={notif} onClose={dismiss} />
         <Header premium={premium} cycleStart={cycleStart} jR={jR} tab={tab} setTab={setTab} />
-
-        {/* ── Barre XP Momentum — visible sur Entraînement + Nutrition ── */}
-        <XPBar />
 
         {showOnboarding && (
           <Suspense fallback={<PageLoader />}>

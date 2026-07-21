@@ -1,4 +1,5 @@
 import { C, FONT } from"../../data/constants.js";
+import { HeaderXP } from"../ui/HeaderXP.jsx";
 
 
 export function Header({ premium, cycleStart, jR, tab, setTab }) {
@@ -33,6 +34,7 @@ export function Header({ premium, cycleStart, jR, tab, setTab }) {
         <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: 14, color: C.text, letterSpacing: -0.3, lineHeight: 1 }}>
           Morpho<span style={{ color: C.accent }}>Coach</span>
         </span>
+        <HeaderXP onTap={() => setTab?.("profile")}/>
       </div>
 
       {/* Right actions */}
