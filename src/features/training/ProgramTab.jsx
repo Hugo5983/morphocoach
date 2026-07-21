@@ -136,9 +136,9 @@ export default function ProgramTab(props){
             <div style={{marginTop:20,display:"flex",flexDirection:"column",gap:12}}>
               {[
                 {i:"coachDuo",t:"Coach morphologique",s:"Programme adapté à ta morphologie précise"},
-                {i:"◎",t:"Exercices correctifs",s:"Compensation des asymétries & déséquilibres"},
+                {i:"scale",t:"Exercices correctifs",s:"Compensation des asymétries & déséquilibres"},
                 {i:"calendarDuo",t:"Cycle 6 semaines",s:"Périodisation pro pour des gains durables"},
-                {i:"⊙",t:"Suivi 3D",s:"Mesures corporelles et photo-progression"},
+                {i:"scanDuo",t:"Suivi 3D",s:"Mesures corporelles et photo-progression"},
               ].map(f=>(
                 <div key={f.t} style={{display:"flex",alignItems:"flex-start",gap:12}}>
                   <div style={{width:32,height:32,borderRadius:12,flexShrink:0,background:`${C.accent}18`,border:`1px solid ${C.accent}35`,color:C.blueLt,display:"grid",placeItems:"center"}}><ID name={f.i} size={18}/></div>

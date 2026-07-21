@@ -201,9 +201,9 @@ function NutritionCard({ calObj, pObj, gObj, lObj, totR, setTab, setPaywallNutri
     { label:"PROTÉINES", letter:"P", value: Math.round(pCons), goal: Math.round(pObj || 198), pct: pPct,
       grad:"linear-gradient(150deg,#3C5BFF,#2E48D9)" },
     { label:"GLUCIDES",  letter:"G", value: Math.round(gCons), goal: Math.round(gObj || 426), pct: gPct,
-      grad:"linear-gradient(150deg,#12B76A,#12B76A)" },
+      grad:"linear-gradient(150deg,#F59E0B,#D97706)" },
     { label:"LIPIDES",   letter:"L", value: Math.round(lCons), goal: Math.round(lObj || 90),  pct: lPct,
-      grad:"linear-gradient(150deg,#F59E0B,#F59E0B)" },
+      grad:"linear-gradient(150deg,#E5484D,#C53030)" },
   ];
 
   const handleAdd = () => {

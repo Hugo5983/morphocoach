@@ -222,9 +222,9 @@ export function MacroRow({ label, color, value, goal, pct, partial }) {
   const delta = pct - 100;
   const ICONS = { Protéines:"P", Glucides:"G", Lipides:"L" };
   const COLORS = {
-    Protéines: { bg:"rgba(157,176,255,0.12)",  fg:DARK.accent, bd:"rgba(157,176,255,0.25)",  fillFrom:DARK.accent, fillTo:C.accent },
-    Glucides:  { bg:"rgba(34,211,238,0.12)",  fg:"#3C5BFF", bd:"rgba(34,211,238,0.25)",  fillFrom:"#3C5BFF", fillTo:"#3C5BFF" },
-    Lipides:   { bg:"rgba(18,183,106,0.12)",  fg:"#12B76A", bd:"rgba(18,183,106,0.25)",  fillFrom:"#12B76A", fillTo:C.green },
+    Protéines: { bg:"rgba(60,91,255,0.12)",  fg:"#3C5BFF", bd:"rgba(60,91,255,0.25)",  fillFrom:"#9DB0FF", fillTo:"#3C5BFF" },
+    Glucides:  { bg:"rgba(245,158,11,0.12)", fg:"#F59E0B", bd:"rgba(245,158,11,0.25)", fillFrom:"#FCD34D", fillTo:"#F59E0B" },
+    Lipides:   { bg:"rgba(229,72,77,0.12)",  fg:"#E5484D", bd:"rgba(229,72,77,0.25)",  fillFrom:"#F1A8AB", fillTo:"#E5484D" },
   };
   const c = COLORS[label] || COLORS.Protéines;
 
