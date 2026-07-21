@@ -1,8 +1,16 @@
 import { C, FONT } from"../../data/constants.js";
-import { HeaderXP } from"../ui/HeaderXP.jsx";
-
+import { useState, useEffect } from"react";
+import { getXPState, getLevelInfo } from"../../services/xpService.js";
 
 export function Header({ premium, cycleStart, jR, tab, setTab }) {
+  const [xpState, setXpState] = useState(() => getXPState());
+  useEffect(() => {
+    const handler = () => setXpState(getXPState());
+    window.addEventListener("morpho_xp_update", handler);
+    return () => window.removeEventListener("morpho_xp_update", handler);
+  }, []);
+  const info = getLevelInfo(xpState.xp || 0);
+
   return (
     <div className="np" style={{
       background:"rgba(246,248,251,0.97)",
@@ -34,7 +42,6 @@ export function Header({ premium, cycleStart, jR, tab, setTab }) {
         <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: 14, color: C.text, letterSpacing: -0.3, lineHeight: 1 }}>
           Morpho<span style={{ color: C.accent }}>Coach</span>
         </span>
-        <HeaderXP onTap={() => setTab?.("profile")}/>
       </div>
 
       {/* Right actions */}
@@ -48,6 +55,37 @@ export function Header({ premium, cycleStart, jR, tab, setTab }) {
             letterSpacing: 0.2,
           }}>J-{jR}</div>
 )}
+
+        {/* Pilule niveau + mini-barre XP */}
+        <div
+          onClick={() => setTab("profile")}
+          className="tap-sm"
+          style={{
+            display:"flex", alignItems:"center", gap: 6,
+            background: C.s1, border:`1px solid ${C.bd}`,
+            borderRadius: 9, padding:"6px 10px 6px 9px",
+            cursor:"pointer", flexShrink: 0,
+          }}
+        >
+          <span style={{
+            fontSize: 11, fontWeight: 700, color: C.text,
+            fontFamily: FONT, fontVariantNumeric:"tabular-nums",
+          }}>
+            {info.cur.level}
+          </span>
+          <span style={{
+            width: 32, height: 4, borderRadius: 99,
+            background: C.s3, position:"relative",
+            display:"inline-block", overflow:"hidden",
+          }}>
+            <span style={{
+              position:"absolute", inset: 0, width:`${info.pct}%`,
+              background: C.accent, borderRadius: 99,
+              transition:"width .6s ease",
+            }} />
+          </span>
+        </div>
+
         {premium && (
           <div style={{
             padding:"4px 12px", borderRadius: 8,
