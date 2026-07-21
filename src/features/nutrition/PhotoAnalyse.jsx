@@ -513,9 +513,9 @@ export default function PhotoAnalyse({ onClose, onAdd, premium, setPaywall, push
               <div style={{ display:"grid", gridTemplateColumns:"repeat(4, 1fr)", gap: 8, marginBottom: 12 }}>
                 {[
                   { l:"Calories", v: res.calories * facteur, u:"kcal", c:"#F59E0B" },
-                  { l:"Protéines", v: res.proteines * facteur, u:"g", c: DARK.accent },
-                  { l:"Glucides",  v: res.glucides * facteur,  u:"g", c:"#3C5BFF" },
-                  { l:"Lipides",   v: res.lipides * facteur,   u:"g", c:"#12B76A" },
+                  { l:"Protéines", v: res.proteines * facteur, u:"g", c:"#3C5BFF" },
+                  { l:"Glucides",  v: res.glucides * facteur,  u:"g", c:"#F59E0B" },
+                  { l:"Lipides",   v: res.lipides * facteur,   u:"g", c:"#E5484D" },
                 ].map(m => (
                   <div key={m.l} style={{
                     background:`${m.c}12`, border:`1px solid ${m.c}25`,

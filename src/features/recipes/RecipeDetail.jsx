@@ -227,9 +227,9 @@ export default function RecipeDetail({ recipe, onBack, liked, onLike, push, repa
           {/* Macros */}
           <div style={{ display:"flex", gap:8 }}>
             {[
-              { l:"Protéines", v:macros.prot, c:DARK.accent, bg:"rgba(60,91,255,0.12)", bd:"rgba(60,91,255,0.18)" },
-              { l:"Glucides",  v:macros.gluc, c:"#3C5BFF", bg:"rgba(34,211,238,0.12)", bd:"rgba(34,211,238,0.18)" },
-              { l:"Lipides",   v:macros.lip,  c:"#12B76A", bg:"rgba(18,183,106,0.12)", bd:"rgba(18,183,106,0.18)" },
+              { l:"Protéines", v:macros.prot, c:"#3C5BFF", bg:"rgba(60,91,255,0.12)", bd:"rgba(60,91,255,0.18)" },
+              { l:"Glucides",  v:macros.gluc, c:"#F59E0B", bg:"rgba(245,158,11,0.12)", bd:"rgba(245,158,11,0.18)" },
+              { l:"Lipides",   v:macros.lip,  c:"#E5484D", bg:"rgba(229,72,77,0.12)", bd:"rgba(229,72,77,0.18)" },
             ].map(m => (
               <div key={m.l} style={{ flex:1, background:m.bg,
                 border:`1px solid ${m.bd}`, borderRadius:12, padding:"12px 8px",

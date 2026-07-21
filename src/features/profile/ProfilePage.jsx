@@ -38,9 +38,9 @@ export default function Profile(props) {
 
   // Macros cibles
   const macros = [
-    { label:"Protéines", value: pObj || 0, max: Math.round((pObj || 0) * 1.2), color:"#E5484D" },
-    { label:"Glucides",  value: gObj || 0, max: Math.round((gObj || 0) * 1.2), color:"#3C5BFF" },
-    { label:"Lipides",   value: lObj || 0, max: Math.round((lObj || 0) * 1.2), color:"#12B76A" },
+    { label:"Protéines", value: pObj || 0, max: Math.round((pObj || 0) * 1.2), color:"#3C5BFF" },
+    { label:"Glucides",  value: gObj || 0, max: Math.round((gObj || 0) * 1.2), color:"#F59E0B" },
+    { label:"Lipides",   value: lObj || 0, max: Math.round((lObj || 0) * 1.2), color:"#E5484D" },
   ];
 
   // Compo bars pct estimé

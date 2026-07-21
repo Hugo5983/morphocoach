@@ -30,15 +30,15 @@ const MCFG = {
   },
   Glucides: {
     L:"G", sq:"linear-gradient(135deg,#F59E0B,#D97706)", sqS:"rgba(245,158,11,0.25)",
-    bar:"linear-gradient(90deg,#9DB0FF,#3C5BFF)", barG:"rgba(60,91,255,0.35)",
-    color:"#3C5BFF", roleC:"#2E48D9", roleBg:"#E8EBFF",
-    role:"Carburant sport", brd:"rgba(18,26,48,0.08)",
+    bar:"linear-gradient(90deg,#FCD34D,#F59E0B)", barG:"rgba(245,158,11,0.35)",
+    color:"#F59E0B", roleC:"#D97706", roleBg:"rgba(245,158,11,0.12)",
+    role:"Carburant sport", brd:"rgba(245,158,11,0.25)",
   },
   Lipides: {
     L:"L", sq:"linear-gradient(135deg,#E5484D,#C53030)", sqS:"rgba(229,72,77,0.25)",
-    bar:"linear-gradient(90deg,#F59E0B,#F59E0B)", barG:"rgba(249,115,22,0.35)",
-    color:"#F59E0B", roleC:"#F59E0B", roleBg:"#E8EBFF",
-    role:"Récupération", brd:"rgba(249,115,22,0.25)",
+    bar:"linear-gradient(90deg,#F1A8AB,#E5484D)", barG:"rgba(229,72,77,0.35)",
+    color:"#E5484D", roleC:"#C53030", roleBg:"rgba(229,72,77,0.12)",
+    role:"Récupération", brd:"rgba(229,72,77,0.25)",
   },
 };
 

@@ -560,8 +560,8 @@ export default function RepasSheet({
 
               {/* Aperçu macros live */}
               <div style={{ display:"flex", gap: 8, marginBottom: 20 }}>
-                {[{ l:"kcal", v: kcal, c:"#F59E0B" }, { l:"P", v: P +"g", c:"#9DB0FF" },
-                  { l:"G", v: G +"g", c:"#3C5BFF" }, { l:"L", v: L +"g", c:"#12B76A" }].map(s => (
+                {[{ l:"kcal", v: kcal, c:"#F59E0B" }, { l:"P", v: P +"g", c:"#3C5BFF" },
+                  { l:"G", v: G +"g", c:"#F59E0B" }, { l:"L", v: L +"g", c:"#E5484D" }].map(s => (
                   <div key={s.l} style={{ flex: 1, textAlign:"center", padding:"12px 0", borderRadius: 12,
                     background:`${s.c}12`, border:`1px solid ${s.c}30` }}>
                     <div style={{ fontSize: 16, fontWeight:700, color: s.c, fontFamily: F }}>{s.v}</div>
