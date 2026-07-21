@@ -43,6 +43,10 @@ export default function App() {
   const { user, loading: authLoading } = useAuth();
 
   const [tab,              setTab]              = useState("home");
+  const [subViewHome,      setSubViewHome]      = useState("today");
+  const [subViewTraining,  setSubViewTraining]  = useState("today");
+  const [subViewNutrition, setSubViewNutrition] = useState("journal");
+  const [subViewRecipes,   setSubViewRecipes]   = useState("all");
 
   // ── Système XP Momentum ───────────────────────────────────────────────────
   const [lvlUp, setLvlUp] = useState(null); // { levelInfo, amount, reason }
@@ -220,6 +224,7 @@ export default function App() {
     FOODS,
     premium: premiumNutrition,
     setPaywall: setPaywallNutrition,
+    subView: subViewNutrition, setSubView: setSubViewNutrition,
     ...commonProps,
   };
 
@@ -266,7 +271,23 @@ export default function App() {
       <Screen>
         <style>{CSS}</style>
         <Notif n={notif} onClose={dismiss} />
-        <Header premium={premium} cycleStart={cycleStart} jR={jR} tab={tab} setTab={setTab} />
+        {(() => {
+          const NAVS = {
+            home:      { items:[{id:"today",label:"Aujourd'hui"},{id:"stats",label:"Progression"},{id:"pro",label:"Coach",pro:true}], view:subViewHome, set:setSubViewHome },
+            training:  { items:[{id:"today",label:"Aujourd'hui"},{id:"programme",label:"Programme"},{id:"planning",label:"Planning"},{id:"pro",label:"Analyse",pro:true}], view:subViewTraining, set:setSubViewTraining },
+            nutrition: { items:[{id:"journal",label:"Journal"},{id:"bilan",label:"Bilan",pro:true},{id:"coach",label:"Coach",pro:true}], view:subViewNutrition, set:setSubViewNutrition },
+            recipes:   { items:[{id:"all",label:"Toutes"},{id:"favorites",label:"Favoris"},{id:"pro",label:"Premium",pro:true}], view:subViewRecipes, set:setSubViewRecipes },
+          };
+          const nav = NAVS[tab];
+          return (
+            <Header
+              premium={premium} cycleStart={cycleStart} jR={jR}
+              tab={tab} setTab={setTab}
+              subNav={nav?.items} subView={nav?.view} setSubView={nav?.set}
+              setPaywall={setPaywall}
+            />
+          );
+        })()}
 
         {showOnboarding && (
           <Suspense fallback={<PageLoader />}>

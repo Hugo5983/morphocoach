@@ -42,10 +42,13 @@ export default function HomePage({
       fontFamily: FONT,
       WebkitFontSmoothing:"antialiased",
     }}>
-      {/* Entraînement du jour */}
+      {/* 1. Entraînement du jour */}
       <HeroCard prog={prog} calSess={calSess} setTab={setTab} />
 
-      {/* Nutrition */}
+      {/* 2. Série en cours — remontée juste après le hero */}
+      <StreakCard streak={streak} />
+
+      {/* 3. Nutrition */}
       <NutritionCard
         calObj={calObj}
         pObj={pObj}
@@ -57,21 +60,18 @@ export default function HomePage({
         premium={premium}
       />
 
-      {/* Packs PRO — masqué si premium */}
+      {/* 4. Mes Badges — avant la vente */}
+      <BadgesCard badgeStates={badgeStates} onVoirTout={() => setShowBadges(true)} />
+
+      {/* 5. Coach IA — bandeau compact */}
+      <CoachIACard />
+
+      {/* 6+7. Packs PRO — Entraînement + Nutrition en bas */}
       <PacksCard
         premium={premium}
         setPaywall={setPaywall}
         setPaywallNutrition={setPaywallNutrition}
       />
-
-      {/* Mes Badges */}
-      <BadgesCard badgeStates={badgeStates} onVoirTout={() => setShowBadges(true)} />
-
-      {/* Série en cours */}
-      <StreakCard streak={streak} />
-
-      {/* Coach IA */}
-      <CoachIACard />
     </div>
 );
 }

@@ -1,8 +1,14 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// HEADER — design 12A/13A « nav unifiée »
+// Logo + wordmark à gauche · pilule niveau/XP + badge PRO + bouton profil à
+// droite · sous-onglets soulignés SUR LA MÊME SURFACE BLANCHE. La séparation
+// avec le contenu se fait par le changement de fond (blanc → gris), zéro trait.
+// ═══════════════════════════════════════════════════════════════════════════
 import { C, FONT } from"../../data/constants.js";
 import { useState, useEffect } from"react";
 import { getXPState, getLevelInfo } from"../../services/xpService.js";
 
-export function Header({ premium, cycleStart, jR, tab, setTab }) {
+export function Header({ premium, cycleStart, jR, tab, setTab, subNav, subView, setSubView, setPaywall }) {
   const [xpState, setXpState] = useState(() => getXPState());
   useEffect(() => {
     const handler = () => setXpState(getXPState());
@@ -13,106 +19,127 @@ export function Header({ premium, cycleStart, jR, tab, setTab }) {
 
   return (
     <div className="np" style={{
-      background:"rgba(246,248,251,0.97)",
-      backdropFilter:"blur(24px)", WebkitBackdropFilter:"blur(24px)",
-      borderBottom:`1px solid ${C.bd}`,
+      background:"#FFFFFF",
       paddingTop:"calc(8px + env(safe-area-inset-top, 0px))",
-      paddingBottom:"8px",
-      paddingLeft:"16px",
-      paddingRight:"16px",
       position:"sticky", top: 0, zIndex: 100,
-      display:"flex", alignItems:"center", justifyContent:"space-between",
-      gap: 12,
     }}>
-      {/* Logo */}
-      <div style={{ display:"flex", alignItems:"center", gap: 8, flexShrink: 0 }}>
+      {/* Ligne principale : logo + niveau + PRO + profil */}
+      <div style={{
+        display:"flex", alignItems:"center", justifyContent:"space-between",
+        gap: 10, padding:"14px 20px 16px",
+      }}>
+        <div style={{ display:"flex", alignItems:"center", gap: 8, flexShrink: 0 }}>
+          <div style={{
+            width: 32, height: 32, borderRadius: 11, background: C.accent,
+            display:"grid", placeItems:"center", flexShrink: 0,
+          }}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFF" strokeWidth="2.2" strokeLinecap="round">
+              <rect x="3" y="3" width="5" height="18" rx="1.2"/>
+              <rect x="10" y="6" width="5" height="15" rx="1.2"/>
+              <rect x="17" y="1" width="5" height="20" rx="1.2"/>
+            </svg>
+          </div>
+          <span style={{ fontSize:16, fontWeight:700, letterSpacing:"-.02em",
+            fontFamily:FONT, color:C.text, whiteSpace:"nowrap" }}>
+            Morpho<span style={{ color: C.accent }}>Coach</span>
+          </span>
+        </div>
+        <div style={{ display:"flex", alignItems:"center", gap: 7 }}>
+          {cycleStart && jR !== null && jR <= 7 && (
+            <div style={{
+              padding:"7px 11px", borderRadius:10,
+              background:"rgba(229,72,77,0.12)",
+              fontSize:11, color:C.red, fontWeight:700, fontFamily:FONT,
+            }}>J-{jR}</div>
+          )}
+          <div onClick={() => setTab?.("profile")} className="tap-sm" style={{
+            display:"flex", alignItems:"center", gap:6, cursor:"pointer",
+            background: C.s2, borderRadius:10, padding:"7px 11px 7px 10px",
+          }}>
+            <span style={{ fontSize:12, fontWeight:700, color:C.text,
+              fontFamily:FONT, fontVariantNumeric:"tabular-nums" }}>
+              {info.cur.level}
+            </span>
+            <span style={{ width:30, height:4, borderRadius:99,
+              background:"#E2E6EE", position:"relative",
+              display:"inline-block", overflow:"hidden" }}>
+              <span style={{ position:"absolute", inset:0, width:`${info.pct}%`,
+                background: C.accent, borderRadius:99,
+                transition:"width .6s ease" }}/>
+            </span>
+          </div>
+          {premium && (
+            <div style={{
+              padding:"7px 11px", borderRadius:10,
+              background:"rgba(60,91,255,0.12)",
+              fontSize:11, color:C.accentDk, fontWeight:700,
+              letterSpacing:".03em", fontFamily:FONT,
+            }}>PRO</div>
+          )}
+          <button
+            onClick={() => setTab(tab ==="profile" ?"home" :"profile")}
+            className="tap-icon"
+            style={{
+              width:34, height:34, borderRadius:10,
+              background: tab ==="profile" ?"rgba(60,91,255,0.12)" : C.s2,
+              display:"grid", placeItems:"center",
+              cursor:"pointer", flexShrink: 0, border:"none",
+              color: tab ==="profile" ? C.accent : C.mid,
+            }}
+          >
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="8" r="4"/>
+              <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      {/* Sous-onglets soulignés — même surface blanche, pas de trait de séparation */}
+      {subNav && subNav.length > 0 && (
         <div style={{
-          width: 32, height: 32, borderRadius: 12,
-          background:`linear-gradient(145deg, ${C.accent}, #2E48D9)`,
-          display:"grid", placeItems:"center",
-          boxShadow:"0 3px 10px rgba(60,91,255,0.35), inset 0 1px 0 rgba(0,0,0,0.12)",
-          flexShrink: 0,
+          display:"flex", alignItems:"stretch", gap:26,
+          padding:"0 20px", overflowX:"auto", scrollbarWidth:"none",
         }}>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFF" strokeWidth="2.2" strokeLinecap="round">
-            <rect x="3" y="3" width="5" height="18" rx="1.2"/>
-            <rect x="10" y="6" width="5" height="15" rx="1.2"/>
-            <rect x="17" y="1" width="5" height="20" rx="1.2"/>
-          </svg>
+          {subNav.map(item => {
+            const on = subView === item.id;
+            const isPro = item.pro && !premium;
+            return (
+              <button key={item.id}
+                onClick={() => {
+                  if (isPro) { setPaywall?.(true); return; }
+                  setSubView?.(item.id);
+                }}
+                style={{
+                  display:"flex", flexDirection:"column", alignItems:"center",
+                  gap:9, paddingBottom:12, background:"none", border:"none",
+                  cursor:"pointer", flexShrink:0,
+                }}>
+                <span style={{
+                  fontSize:14, fontFamily:FONT,
+                  fontWeight: on ? 700 : 600,
+                  color: on ? C.text : C.dim,
+                  display:"flex", alignItems:"center", gap:4,
+                  whiteSpace:"nowrap",
+                }}>
+                  {item.label}
+                  {item.pro && (
+                    <span style={{
+                      fontSize:9, fontWeight:700, letterSpacing:".05em",
+                      color: on ? C.accent : C.dim,
+                    }}>PRO</span>
+                  )}
+                </span>
+                <span style={{
+                  width:"100%", height:2, borderRadius:2,
+                  background: on ? C.accent :"transparent",
+                }}/>
+              </button>
+            );
+          })}
         </div>
-        <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: 14, color: C.text, letterSpacing: -0.3, lineHeight: 1 }}>
-          Morpho<span style={{ color: C.accent }}>Coach</span>
-        </span>
-      </div>
-
-      {/* Right actions */}
-      <div style={{ display:"flex", gap: 8, alignItems:"center" }}>
-        {cycleStart && jR !== null && jR <= 7 && (
-          <div style={{
-            padding:"4px 12px", borderRadius: 8,
-            background:"rgba(229,72,77,0.12)",
-            border:"1px solid rgba(229,72,77,0.25)",
-            fontSize: 11, color: C.red, fontWeight: 700, fontFamily: FONT,
-            letterSpacing: 0.2,
-          }}>J-{jR}</div>
-)}
-
-        {/* Pilule niveau + mini-barre XP */}
-        <div
-          onClick={() => setTab("profile")}
-          className="tap-sm"
-          style={{
-            display:"flex", alignItems:"center", gap: 6,
-            background: C.s1, border:`1px solid ${C.bd}`,
-            borderRadius: 9, padding:"6px 10px 6px 9px",
-            cursor:"pointer", flexShrink: 0,
-          }}
-        >
-          <span style={{
-            fontSize: 11, fontWeight: 700, color: C.text,
-            fontFamily: FONT, fontVariantNumeric:"tabular-nums",
-          }}>
-            {info.cur.level}
-          </span>
-          <span style={{
-            width: 32, height: 4, borderRadius: 99,
-            background: C.s3, position:"relative",
-            display:"inline-block", overflow:"hidden",
-          }}>
-            <span style={{
-              position:"absolute", inset: 0, width:`${info.pct}%`,
-              background: C.accent, borderRadius: 99,
-              transition:"width .6s ease",
-            }} />
-          </span>
-        </div>
-
-        {premium && (
-          <div style={{
-            padding:"4px 12px", borderRadius: 8,
-            background:"rgba(60,91,255,0.12)",
-            border:"1px solid rgba(60,91,255,0.25)",
-            fontSize: 10, color: C.accent, fontWeight: 700,
-            letterSpacing:"0.1em", fontFamily: FONT, textTransform:"uppercase",
-          }}>Pro</div>
-)}
-        <button
-          onClick={() => setTab(tab ==="profile" ?"home" :"profile")}
-          className="tap-icon"
-          style={{
-            width: 36, height: 36, borderRadius: 12,
-            background: tab ==="profile" ?"rgba(60,91,255,0.12)" : C.s1,
-            border:`1px solid ${tab ==="profile" ?"rgba(60,91,255,0.35)" : C.bd}`,
-            display:"grid", placeItems:"center",
-            cursor:"pointer", color: tab ==="profile" ? C.accent : C.mid,
-            transition:"all .15s", flexShrink: 0,
-          }}
-        >
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none"
-               stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-            <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
-          </svg>
-        </button>
-      </div>
+      )}
     </div>
-);
+  );
 }

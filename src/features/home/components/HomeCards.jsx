@@ -318,126 +318,77 @@ function NutritionCard({ calObj, pObj, gObj, lObj, totR, setTab, setPaywallNutri
 }
 
 /** Carte Packs PRO */
-function PacksCard({ premium, setPaywall, setPaywallNutrition }) {
-  if (premium) return null; // masquer si déjà PRO
-
-  const packs = [
-    {
-      accentColor:"#3C5BFF",
-      accentLt:"#E8EBFF",
-      topBorder:"linear-gradient(90deg,#2E48D9,#3C5BFF)",
-      title:"Entraînement Pro",
-      features: [
-"Programme sur mesure selon ta morphologie",
-"Planification 6 semaines optimisée",
-"Analyse morphologique complète",
-"Bilan de progression toutes les 2 semaines",
-      ],
-      btnBg:"linear-gradient(180deg,#3C5BFF,#2438B8)",
-      btnShadow:"0 8px 18px rgba(46,72,217,0.35)",
-      onUnlock: () => setPaywall(true),
-    },
-    {
-      accentColor: C.green,
-      accentLt:"#E8EBFF",
-      topBorder:"linear-gradient(90deg,#12B76A,#12B76A)",
-      title:"Nutrition Pro",
-      features: [
-"+500 recettes premium complètes",
-"Conseils nutritionnels personnalisés",
-"Estimation macros par photo de repas",
-"Bilan nutritionnel bi-mensuel",
-      ],
-      btnBg:"linear-gradient(180deg,#12B76A,#12B76A)",
-      btnShadow:"0 8px 18px rgba(5,150,105,0.35)",
-      onUnlock: () => setPaywallNutrition(true),
-    },
-  ];
-
+function ProPackBanner({ variant, onUnlock }) {
+  const V = variant ==="entrainement"
+    ? {
+        title:"Entraînement Pro",
+        subtitle:"Programme sur-mesure selon ta morphologie",
+        icon:(
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={C.accent}
+            strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4Z"/>
+          </svg>
+        ),
+        iconBg:"#E4ECFF",
+        topBorder:"linear-gradient(90deg,#2E48D9,#3C5BFF)",
+        border:"rgba(60,91,255,0.18)",
+        btnBg: C.accent,
+      }
+    : {
+        title:"Nutrition Pro",
+        subtitle:"Recettes premium, analyse photo, bilan bi-mensuel",
+        icon:(
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={C.green}
+            strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 7c-1.2-1.6-3-2.2-4.8-1.6C4.6 6.3 3.2 9 3.8 12c.7 3.6 3 7.4 5.5 8.6.9.4 1.6.4 2.7-.1 1.1.5 1.8.5 2.7.1 2.5-1.2 4.8-5 5.5-8.6.6-3-.8-5.7-3.4-6.6C15 4.8 13.2 5.4 12 7Z"/>
+            <path d="M12 6.5c0-2 1.3-3.5 3.2-3.9"/>
+          </svg>
+        ),
+        iconBg:"rgba(18,183,106,0.12)",
+        topBorder:"linear-gradient(90deg,#0F9553,#12B76A)",
+        border:"rgba(18,183,106,0.22)",
+        btnBg: C.green,
+      };
   return (
-    <div style={{ display:"flex", gap: 12, margin:"0 20px 12px" }}>
-      {packs.map((pack) => (
-        <div key={pack.title} style={{
-          flex: 1,
-          display:"flex", flexDirection:"column",
-          background:"#FFF",
-          border:`1px solid ${pack.accentLt}`,
-          borderTop:`3px solid transparent`,
-          borderRadius: 20,
-          padding:"16px 16px",
-          boxShadow: C.shadow,
-          position:"relative",
-          overflow:"hidden",
-        }}>
-          {/* Bande colorée en haut */}
-          <div style={{
-            position:"absolute", top: 0, left: 0, right: 0, height: 3,
-            background: pack.topBorder,
-            borderRadius:"20px 20px 0 0",
-          }} />
-          {/* Icône */}
-          <div style={{
-            width: 48, height: 48, borderRadius: 12,
-            background: pack.accentLt,
-            display:"flex", alignItems:"center", justifyContent:"center",
-            marginBottom: 12, marginTop: 4,
-          }}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={pack.accentColor} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-              {pack.title.includes("Entraînement")
-                ? <path d="M4 15l5-6 4 4 7-8"/>
-                : <><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></>
-              }
-            </svg>
-          </div>
-          <div style={{ fontSize: 11, fontWeight: 700, letterSpacing:"0.1em", color: pack.accentColor, fontFamily: FONT }}>PACK</div>
-          <div style={{ fontSize: 20, fontWeight: 700, letterSpacing: -0.3, lineHeight: 1.1, margin:"2px 0 12px", fontFamily: FONT, color: C.text }}>
-            {pack.title}
-          </div>
-          {/* Badge Premium */}
-          <div style={{
-            alignSelf:"flex-start",
-            display:"flex", alignItems:"center", gap: 4,
-            background: pack.accentLt, color: pack.accentColor,
-            fontSize: 13, fontWeight: 700, padding:"8px 12px",
-            borderRadius: 20, marginBottom: 16, fontFamily: FONT,
-          }}>
-             Premium
-          </div>
-          {/* Features */}
-          <div style={{ display:"flex", flexDirection:"column", gap: 12, flex: 1 }}>
-            {pack.features.map((f) => (
-              <div key={f} style={{ display:"flex", alignItems:"flex-start", gap: 8 }}>
-                <div style={{
-                  flexShrink: 0, width: 26, height: 26, borderRadius: 8,
-                  background: pack.accentLt,
-                  display:"flex", alignItems:"center", justifyContent:"center",
-                }}>
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={pack.accentColor} strokeWidth="2">
-                    <rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/>
-                  </svg>
-                </div>
-                <span style={{ fontSize: 13, fontWeight: 600, color: C.mid, lineHeight: 1.3, fontFamily: FONT }}>{f}</span>
-              </div>
-))}
-          </div>
-          {/* CTA */}
-          <button onClick={pack.onUnlock} style={{
-            marginTop: 16, width:"100%", cursor:"pointer",
-            border:"none", background: pack.btnBg,
-            color:"#FFF", fontFamily: FONT, fontWeight: 700, fontSize: 14,
-            padding:"16px 8px", borderRadius: 16,
-            display:"flex", alignItems:"center", justifyContent:"center", gap: 8,
-            boxShadow: pack.btnShadow,
-          }}>
-            Débloquer le pack
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FFF" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M9 6l6 6-6 6"/>
-            </svg>
-          </button>
+    <div style={{
+      margin:"12px 20px 0", background:"#FFFFFF",
+      border:`1px solid ${V.border}`, borderRadius:16,
+      padding:16, position:"relative", overflow:"hidden",
+    }}>
+      <div style={{ position:"absolute", top:0, left:0, right:0, height:3,
+        background: V.topBorder }}/>
+      <div style={{ display:"flex", alignItems:"center", gap:12 }}>
+        <div style={{ width:40, height:40, borderRadius:11, background: V.iconBg,
+          display:"grid", placeItems:"center", flexShrink:0 }}>
+          {V.icon}
         </div>
-))}
+        <div style={{ flex:1, display:"flex", flexDirection:"column", gap:1, minWidth:0 }}>
+          <span style={{ fontSize:14, fontWeight:700, fontFamily:FONT, color:C.text }}>
+            {V.title}
+          </span>
+          <span style={{ fontSize:11.5, fontWeight:500, color:C.dim, fontFamily:FONT,
+            overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>
+            {V.subtitle}
+          </span>
+        </div>
+        <button onClick={onUnlock} className="tap-sm" style={{
+          fontSize:12.5, fontWeight:700, color:"#FFF", background: V.btnBg,
+          padding:"8px 14px", borderRadius:10, whiteSpace:"nowrap",
+          border:"none", cursor:"pointer", fontFamily: FONT, flexShrink:0,
+        }}>Débloquer</button>
+      </div>
     </div>
-);
+  );
+}
+
+function PacksCard({ premium, setPaywall, setPaywallNutrition }) {
+  if (premium) return null;
+  return (
+    <>
+      <ProPackBanner variant="entrainement" onUnlock={() => setPaywall(true)}/>
+      <ProPackBanner variant="nutrition" onUnlock={() => setPaywallNutrition(true)}/>
+    </>
+  );
 }
 
 /** Mes Badges */
