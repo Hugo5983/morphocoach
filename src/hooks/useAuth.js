@@ -49,5 +49,13 @@ export function useAuth() {
     return { error };
   }, []);
 
-  return { user, loading, signUp, signIn, signOut, resetPassword };
+  const signInWithOAuth = useCallback(async (provider) => {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider,
+      options: { redirectTo: window.location.origin },
+    });
+    return { data, error };
+  }, []);
+
+  return { user, loading, signUp, signIn, signOut, resetPassword, signInWithOAuth };
 }
