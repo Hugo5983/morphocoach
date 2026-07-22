@@ -172,33 +172,7 @@ export default function Nutrition(props){
             </button>
           </div>
 
-          {/* Onglets Journal / Bilan PRO */}
-          <div style={{position:'relative',display:'flex',padding:4,borderRadius:12,
-            background:C.s2,border:'1px solid rgba(0,0,0,0.08)',marginBottom:2}}>
-            {[{id:"journal",l:"Journal"},{id:"bilan",l:"Bilan PRO"}].map(s=>{
-              const on=nView===s.id;
-              const isBilan=s.id==="bilan";
-              return(
-                <button key={s.id} onClick={()=>{
-                  if(isBilan){ if(!premium){ if(setPaywall)setPaywall(true); return; } }
-                  setNView(s.id);
-                }} style={{position:'relative',zIndex:1,flex:1,padding:'8px 0',borderRadius:8,
-                  background:on?'#FFFFFF':'transparent',
-                  border:on?(isBilan?'1px solid rgba(60,91,255,0.35)':'1px solid rgba(0,0,0,0.12)'):'1px solid transparent',
-                  color:on?(isBilan?C.accentDk:C.text):C.dim,
-                  fontSize:13,fontWeight:700,letterSpacing:0.2,fontFamily:DISPLAY,
-                  cursor:'pointer',transition:'all .25s ease',
-                  boxShadow:on?'0 1px 4px rgba(0,0,0,0.08)':'none'}}>
-                  {s.l}
-                  {isBilan&&!premium&&(
-                    <span style={{fontSize:8,marginLeft:4,padding:'1px 4px',borderRadius:3,
-                      background:'rgba(60,91,255,0.25)',color:C.blueLt,
-                      fontWeight:700,verticalAlign:'middle'}}>PRO</span>
-)}
-                </button>
-);
-            })}
-          </div>
+          {/* Onglets Journal / Tableau de bord / Analyse — pilotés par le Header */}
         </div>
 
         {/* ════ BILAN PRO ════ */}
@@ -221,6 +195,38 @@ export default function Nutrition(props){
             onOpenBilan={(b)=>console.log("bilan archivé:",b)}
           />
 )}
+
+        {/* ════ TABLEAU DE BORD ════ */}
+        {nView==="dashboard"&&(
+          <>
+            <div style={{padding:'16px 20px 0'}}>
+              <CalorieRing consumed={tot.cal} goal={calObj}/>
+              <div style={{display:'flex',justifyContent:'space-between',marginTop:24,padding:'0 8px'}}>
+                <HeroStat value={calObj}                     label="Objectif"  accent="#9DB0FF"/>
+                <HeroStat value={tot.cal}                    label="Consommé"  accent={C.accent}/>
+                <HeroStat value={Math.max(0,calObj-tot.cal)} label="Restant"   accent="#F59E0B"/>
+              </div>
+            </div>
+            <div style={{padding:'16px 20px 0'}}>
+              <div style={{display:'flex',gap:8}}>
+                <MacroCard label="Protéines" value={tot.p} goal={pObj} color={DARK.accent} colorDk="#2438B8"/>
+                <MacroCard label="Glucides"  value={tot.g} goal={gObj} color="#F59E0B" colorDk="#D97706"/>
+                <MacroCard label="Lipides"   value={tot.l} goal={lObj} color="#E5484D" colorDk="#C53030"/>
+              </div>
+            </div>
+            {/* Eau */}
+            <div style={{padding:'16px 20px 0'}}>
+              <div style={{...eyebrowS,marginBottom:12}}>HYDRATATION</div>
+              <div style={{display:'flex',alignItems:'center',gap:12}}>
+                <I name="droplet" size={20} color="#3B82F6"/>
+                <div style={{flex:1,height:6,background:C.s2,borderRadius:99,overflow:'hidden'}}>
+                  <div style={{height:'100%',width:`${Math.min(100,Math.round(((eau||0)/2500)*100))}%`,background:'#3B82F6',borderRadius:99,transition:'width .4s ease'}}/>
+                </div>
+                <span style={{fontSize:13,fontWeight:700,color:C.text,fontFamily:DISPLAY,...NUM}}>{((eau||0)/1000).toFixed(1)} / 2.5L</span>
+              </div>
+            </div>
+          </>
+        )}
 
         {/* ════ JOURNAL ════ */}
         {nView==="journal"&&(
