@@ -214,7 +214,9 @@ export default function App() {
     loadIA, setLoadIA, loadMsg, setLoadMsg,
     photos, setPhotos, readFile,
     corrigerFaibles, setCorrigerFaibles,
-    jR, semC, ...commonProps,
+    jR, semC,
+    subView: subViewTraining, setSubView: setSubViewTraining,
+    ...commonProps,
   };
 
   const nutritionProps = {
@@ -273,10 +275,10 @@ export default function App() {
         <Notif n={notif} onClose={dismiss} />
         {(() => {
           const NAVS = {
-            home:      { items:[{id:"today",label:"Aujourd'hui"},{id:"stats",label:"Progression"},{id:"pro",label:"Coach",pro:true}], view:subViewHome, set:setSubViewHome },
-            program:   { items:[{id:"today",label:"Aujourd'hui"},{id:"programme",label:"Programme"},{id:"planning",label:"Planning"},{id:"pro",label:"Analyse",pro:true}], view:subViewTraining, set:setSubViewTraining },
-            nutrition: { items:[{id:"journal",label:"Tableau de bord"},{id:"bilan",label:"Analyse détaillée",pro:true}], view:subViewNutrition, set:setSubViewNutrition },
-            recipes:   { items:[{id:"all",label:"Toutes"},{id:"favorites",label:"Favoris"},{id:"pro",label:"Premium",pro:true}], view:subViewRecipes, set:setSubViewRecipes },
+            home:      { items:[{id:"stats",label:"Progression"},{id:"coach",label:"Coach"}], view:subViewHome, set:(v)=>{ if(v==="coach"){setTab("coach");} else{setSubViewHome(v);} } },
+            program:   { items:[{id:"today",label:"Aujourd'hui"},{id:"creer",label:"Programme"},{id:"calendar",label:"Planning"},{id:"analyse",label:"Analyse",pro:true}], view:subViewTraining, set:setSubViewTraining },
+            nutrition: { items:[{id:"journal",label:"Journal"},{id:"dashboard",label:"Tableau de bord"},{id:"bilan",label:"Analyse détaillée",pro:true}], view:subViewNutrition, set:setSubViewNutrition },
+            recipes:   { items:null, view:subViewRecipes, set:setSubViewRecipes },
           };
           const nav = NAVS[tab];
           return (
