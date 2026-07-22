@@ -274,8 +274,8 @@ export default function App() {
         {(() => {
           const NAVS = {
             home:      { items:[{id:"today",label:"Aujourd'hui"},{id:"stats",label:"Progression"},{id:"pro",label:"Coach",pro:true}], view:subViewHome, set:setSubViewHome },
-            training:  { items:[{id:"today",label:"Aujourd'hui"},{id:"programme",label:"Programme"},{id:"planning",label:"Planning"},{id:"pro",label:"Analyse",pro:true}], view:subViewTraining, set:setSubViewTraining },
-            nutrition: { items:[{id:"journal",label:"Journal"},{id:"bilan",label:"Bilan",pro:true},{id:"coach",label:"Coach",pro:true}], view:subViewNutrition, set:setSubViewNutrition },
+            program:   { items:[{id:"today",label:"Aujourd'hui"},{id:"programme",label:"Programme"},{id:"planning",label:"Planning"},{id:"pro",label:"Analyse",pro:true}], view:subViewTraining, set:setSubViewTraining },
+            nutrition: { items:[{id:"journal",label:"Tableau de bord"},{id:"bilan",label:"Analyse détaillée",pro:true}], view:subViewNutrition, set:setSubViewNutrition },
             recipes:   { items:[{id:"all",label:"Toutes"},{id:"favorites",label:"Favoris"},{id:"pro",label:"Premium",pro:true}], view:subViewRecipes, set:setSubViewRecipes },
           };
           const nav = NAVS[tab];
