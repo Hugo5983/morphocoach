@@ -125,10 +125,13 @@ export function Header({ premium, cycleStart, jR, tab, setTab, subNav, subView, 
                 }}>
                   {item.label}
                   {item.pro && (
-                    <span style={{
-                      fontSize:9, fontWeight:700, letterSpacing:".05em",
-                      color: on ? C.accent : C.dim,
-                    }}>PRO</span>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                      stroke={on ? C.accent : C.dim} strokeWidth="2.2"
+                      strokeLinecap="round" strokeLinejoin="round"
+                      style={{ flexShrink:0 }}>
+                      <rect x="3" y="11" width="18" height="11" rx="2"/>
+                      <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                    </svg>
                   )}
                 </span>
                 <span style={{
