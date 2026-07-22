@@ -11,20 +11,9 @@ export default function ProgramTab(props){
   useScrollTop();
   const { prog, setProg, progs, setProgs, cycleStart, setCycleStart, premium, setPaywall, push, calSess, setCalSess, checkedEx, setCheckedEx, seance, setSeance, setChrono, setChronoSec, exDetails, setExDetails, exEdit, setExEdit, profil, cycles, EX, loadIA, setLoadIA, loadMsg, setLoadMsg, photos, setPhotos, readFile, corrigerFaibles, setCorrigerFaibles } = props;
 
-  // ─── State interne ───────────────────────────────────────────────────────
-  const getInitialView = () => {
-    try {
-      const v = localStorage.getItem("mc_progView");
-      if (v) { localStorage.removeItem("mc_progView"); return v; }
-    } catch {}
-    // Si un programme existe, afficher"today" par défaut; sinon"creer"
-    try {
-      const savedProg = localStorage.getItem("mc_prog");
-      if (savedProg && savedProg !=="null") return"today";
-    } catch {}
-    return"creer";
-  };
-  const [progView,   setProgView]   = useState(getInitialView);
+  // ─── Vue pilotée par le header (subView) ─────────────────────────────────
+  const progView = props.subView || "today";
+  const setProgView = (v) => { if (props.setSubView) props.setSubView(v); };
   const [createStep, setCS]         = useState(0);
   const [newP,       setNewP]       = useState({nom:"",jours:[],seances:{}});
   const [jourActif,  setJourActif]  = useState(null);
@@ -33,12 +22,7 @@ export default function ProgramTab(props){
   const [exModal,    setExModal]    = useState(null);
   const [exModalTab, setExModalTab] = useState("tips");
 
-  const subNav = [
-    {id:"today",    l:"Aujourd'hui"},
-    {id:"creer",    l:"Programme"},
-    {id:"calendar", l:"Planning"},
-    {id:"analyse",  l:"Pro", prem:true},
-  ];
+
 
   // Props partagés pour tous les sous-composants
   const sharedProps = {
@@ -86,29 +70,7 @@ export default function ProgramTab(props){
 
   return(
     <div style={{paddingBottom:32}}>
-      {/* ── Segmented TopTabs (mockup) ── */}
-      <div style={{padding:"16px 20px 0"}}>
-        <div style={{display:"flex",gap:8,padding:4,borderRadius:16,background:C.s2,border:`1px solid rgba(0,0,0,0.08)`}}>
-          {subNav.map(s=>{
-            const on=progView===s.id;
-            return(
-              <button key={s.id} onClick={()=>setProgView(s.id)} className="tap" style={{
-                flex:1,padding:"8px 8px",borderRadius:12,
-                background:on?"#FFFFFF":"transparent",
-                border:on?"1px solid rgba(60,91,255,0.25)":"1px solid transparent",
-                color:on?C.text:C.dim,
-                fontSize:11,fontWeight:700,fontFamily:FONT,letterSpacing:0.2,
-                boxShadow:on?"0 1px 4px rgba(0,0,0,0.08)":"none",cursor:"pointer",
-                display:"flex",alignItems:"center",justifyContent:"center",gap:4,
-              }}>
-                {s.prem&&<span style={{color:on?C.accent:C.blueLt,fontSize:11}}><ID name="crown" size={13}/></span>}
-                {s.l}
-              </button>
-);
-          })}
-        </div>
-      </div>
-      <div style={{height:14}}/>
+      {/* Navigation pilotée par le Header — onglets supprimés ici */}
 
       {/* ── Planification ── */}
       {progView==="calendar" && <Calendar {...sharedProps} />}
