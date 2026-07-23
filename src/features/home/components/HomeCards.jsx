@@ -410,7 +410,26 @@ function StreakCard({ streak }) {
 }
 
 /** Coach IA */
+// Messages motivants du Coach IA — rotation quotidienne, texte propre (pas de
+// symboles bruts, pas de fautes). Un message par jour, stable sur la journée.
+const COACH_MESSAGES = [
+  { titre:"Tu récupères bien.", texte:"Ton corps est prêt pour une séance plus intense aujourd'hui." },
+  { titre:"Belle régularité.", texte:"Continue sur ce rythme, les résultats arrivent avec la constance." },
+  { titre:"C'est le moment d'augmenter la charge.", texte:"Tes dernières séances montrent une bonne récupération." },
+  { titre:"Un jour à la fois.", texte:"Chaque séance compte, même les plus courtes." },
+  { titre:"Ta progression est solide.", texte:"Garde ce cap, tu es sur la bonne trajectoire." },
+  { titre:"Pense à bien t'hydrater aujourd'hui.", texte:"Ça t'aidera à mieux récupérer après l'entraînement." },
+  { titre:"Bravo pour ta régularité récente.", texte:"C'est souvent ce qui fait la différence sur le long terme." },
+  { titre:"Reste à l'écoute de ton corps.", texte:"Un jour de repos bien placé vaut parfois plus qu'une séance forcée." },
+];
+
+function todaysCoachMessage() {
+  const dayIndex = Math.floor(Date.now() / 86400000);
+  return COACH_MESSAGES[dayIndex % COACH_MESSAGES.length];
+}
+
 function CoachIACard() {
+  const msg = todaysCoachMessage();
   return (
     <div style={{
       margin:"0 20px 14px",
@@ -453,10 +472,10 @@ function CoachIACard() {
           </span>
         </div>
         <div style={{ fontSize: 20, fontWeight: 700, letterSpacing: -0.5, marginBottom: 8, lineHeight: 1.2, fontFamily: FONT, color: C.text }}>
-          Tu récupères bien.
+          {msg.titre}
         </div>
         <div style={{ fontSize: 14, color: C.dim, fontWeight: 600, lineHeight: 1.5, fontFamily: FONT }}>
-          Augmente ton volume de 8\u00a0% cette semaine pour continuer à progresser.
+          {msg.texte}
         </div>
       </div>
     </div>

@@ -16,7 +16,6 @@ import { Screen }          from"./components/layout/Screen.jsx";
 import { PageContainer }   from"./components/layout/PageContainer.jsx";
 import AppContext           from"./context/AppContext.jsx";
 import Home from"./features/home/HomePage.jsx";
-import { CoachFAB } from"./features/nutrition/CoachFAB.jsx";
 
 const CoachPage  = lazy(() => import("./features/nutrition/CoachPage.jsx"));
 const Onboarding = lazy(() => import("./features/onboarding/OnboardingPage.jsx"));
@@ -279,10 +278,10 @@ export default function App() {
         {(() => {
           const NAVS = {
             home:      { items:[{id:"today",label:"Aujourd'hui"},{id:"pro",label:"Pro"},{id:"coach",label:"Coach"}], view:subViewHome, set:(v)=>{ if(v==="coach"){setTab("coach");} else{setSubViewHome(v);} } },
-            program:   { items:[{id:"today",label:"Aujourd'hui"},{id:"creer",label:"Programme"},{id:"calendar",label:"Planning"},{id:"analyse",label:"Analyse",pro:true}], view:subViewTraining, set:setSubViewTraining },
-            nutrition: { items:[{id:"journal",label:"Journal"},{id:"dashboard",label:"Tableau de bord"},{id:"bilan",label:"Analyse détaillée",pro:true},{id:"coach",label:"Coach"}], view:subViewNutrition, set:(v)=>{ if(v==="coach"){setTab("coach");} else{setSubViewNutrition(v);} } },
-            recipes:   { items:[{id:"all",label:"Toutes"},{id:"favorites",label:"Favoris"},{id:"pro",label:"Premium",pro:true}], view:subViewRecipes, set:setSubViewRecipes },
-            profile:   { items:[{id:"Profil",label:"Profil"},{id:"Compo.",label:"Compo"},{id:"Mesures",label:"Mesures"}], view:subViewProfile, set:setSubViewProfile },
+            program:   { items:[{id:"today",label:"Aujourd'hui"},{id:"creer",label:"Programme"},{id:"calendar",label:"Planning"},{id:"analyse",label:"Analyse",pro:true},{id:"coach",label:"Coach"}], view:subViewTraining, set:(v)=>{ if(v==="coach"){setTab("coach");} else{setSubViewTraining(v);} } },
+            nutrition: { items:[{id:"journal",label:"Journal"},{id:"dashboard",label:"Bilan Pro"},{id:"bilan",label:"Analyse détaillée",pro:true},{id:"coach",label:"Coach"}], view:subViewNutrition, set:(v)=>{ if(v==="coach"){setTab("coach");} else{setSubViewNutrition(v);} } },
+            recipes:   { items:[{id:"all",label:"Toutes"},{id:"favorites",label:"Favoris"},{id:"pro",label:"Premium",pro:true},{id:"coach",label:"Coach"}], view:subViewRecipes, set:(v)=>{ if(v==="coach"){setTab("coach");} else{setSubViewRecipes(v);} } },
+            profile:   { items:[{id:"Profil",label:"Profil"},{id:"Compo.",label:"Compo"},{id:"Mesures",label:"Mesures"},{id:"coach",label:"Coach"}], view:subViewProfile, set:(v)=>{ if(v==="coach"){setTab("coach");} else{setSubViewProfile(v);} } },
           };
           const nav = NAVS[tab];
           return (
@@ -339,7 +338,6 @@ export default function App() {
 )}
 
         {tab !=="coach" && <BottomNav tab={tab} setTab={setTab} />}
-        <CoachFAB tab={tab} setTab={setTab} premium={premiumNutrition}/>
 
         {/* ── Modal Level-Up Momentum XP ── */}
         <LevelUpModal

@@ -99,12 +99,14 @@ export function Header({ premium, cycleStart, jR, tab, setTab, subNav, subView, 
       {/* Sous-onglets soulignés — même surface blanche, pas de trait de séparation */}
       {subNav && subNav.length > 0 && (
         <div style={{
-          display:"flex", alignItems:"stretch", gap:26,
-          padding:"0 20px", overflowX:"auto", scrollbarWidth:"none",
+          display:"flex", alignItems:"stretch",
+          gap: subNav.length > 3 ? 4 : 26,
+          padding:"0 20px",
         }}>
           {subNav.map(item => {
             const on = subView === item.id;
             const isPro = item.pro && !premium;
+            const compact = subNav.length > 3;
             return (
               <button key={item.id}
                 onClick={() => {
@@ -114,14 +116,16 @@ export function Header({ premium, cycleStart, jR, tab, setTab, subNav, subView, 
                 style={{
                   display:"flex", flexDirection:"column", alignItems:"center",
                   gap:9, paddingBottom:12, background:"none", border:"none",
-                  cursor:"pointer", flexShrink:0,
+                  cursor:"pointer",
+                  flex: compact ?"1 1 0" :"none", minWidth:0,
                 }}>
                 <span style={{
-                  fontSize:14, fontFamily:FONT,
+                  fontSize: compact ? 12.5 : 14, fontFamily:FONT,
                   fontWeight: on ? 700 : 600,
                   color: on ? C.text : C.dim,
-                  display:"flex", alignItems:"center", gap:4,
-                  whiteSpace:"nowrap",
+                  display:"flex", alignItems:"center", justifyContent:"center", gap:4,
+                  textAlign:"center", lineHeight:1.2,
+                  whiteSpace: compact ?"normal" :"nowrap",
                 }}>
                   {item.label}
                   {item.pro && (
