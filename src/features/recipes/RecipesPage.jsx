@@ -7,7 +7,7 @@ import { C, FONT, NUM } from"../../data/constants.js";
 import { I } from"../../components/ui/Icon.jsx";
 
 // ─── Carte recette (rail horizontal, 178px) ──────────────────────────────────
-function RecipeCard({ r, liked, onLike, onOpen, fluid }) {
+function RecipeCard({ r, liked, onLike, onOpen, fluid, locked }) {
   const { src:photo } = useRecipePhoto(r.id, r.img,"card");
   const prix = prixEuros(r);
   return (
@@ -18,9 +18,30 @@ function RecipeCard({ r, liked, onLike, onOpen, fluid }) {
       overflow:"hidden", cursor:"pointer",
       display:"flex", flexDirection:"column",
       contain:"layout paint",
+      position:"relative",
     }}>
+      {/* Lock overlay for premium recipes */}
+      {locked && (
+        <div style={{ position:"absolute", inset:0, zIndex:5,
+          background:"rgba(246,247,249,0.55)", backdropFilter:"blur(1px)",
+          display:"flex", alignItems:"center", justifyContent:"center",
+          borderRadius:16,
+        }}>
+          <div style={{ width:36, height:36, borderRadius:10,
+            background:"rgba(0,0,0,0.06)",
+            display:"grid", placeItems:"center" }}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+              stroke={C.dim} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+          </div>
+        </div>
+      )}
       <div style={{ position:"relative", width:"100%", aspectRatio:"4 / 3",
-        background:C.s2, flexShrink:0 }}>
+        background:C.s2, flexShrink:0,
+        ...(locked ? { filter:"grayscale(0.6) opacity(0.7)" } : {}),
+      }}>
         <img src={photo} alt={r.nom} loading="lazy" decoding="async"
           style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }}
           onError={e => { if (e.target.src !== r.img) e.target.src = r.img;
@@ -34,21 +55,23 @@ function RecipeCard({ r, liked, onLike, onOpen, fluid }) {
             color:"#FFF", fontSize:11, fontWeight:700, fontFamily:FONT,
             ...NUM, whiteSpace:"nowrap", letterSpacing:0.1 }}>{prix}</div>
         )}
-        <button onClick={e => { e.stopPropagation(); onLike(r.id); }}
-          aria-label={liked ?"Retirer des favoris" :"Ajouter aux favoris"}
-          style={{ position:"absolute", top:8, right:8,
-            width:32, height:32, borderRadius:"50%",
-            background: liked ?"rgba(229,72,77,0.95)" :"rgba(255,255,255,0.92)",
-            border: liked ?"1px solid rgba(229,72,77,0.65)" :"1px solid rgba(255,255,255,0.65)",
-            boxShadow: liked ?"0 3px 10px rgba(229,72,77,0.5)" :"0 2px 8px rgba(16,19,24,0.18)",
-            display:"grid", placeItems:"center", cursor:"pointer",
-            transition:"all .2s ease" }}>
-          <svg width="15" height="15" viewBox="0 0 24 24"
-            fill={liked ?"#FFF" :"none"} stroke={liked ?"#FFF" :"#E5484D"}
-            strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/>
-          </svg>
-        </button>
+        {!locked && (
+          <button onClick={e => { e.stopPropagation(); onLike(r.id); }}
+            aria-label={liked ?"Retirer des favoris" :"Ajouter aux favoris"}
+            style={{ position:"absolute", top:8, right:8,
+              width:32, height:32, borderRadius:"50%",
+              background: liked ?"rgba(229,72,77,0.95)" :"rgba(255,255,255,0.92)",
+              border: liked ?"1px solid rgba(229,72,77,0.65)" :"1px solid rgba(255,255,255,0.65)",
+              boxShadow: liked ?"0 3px 10px rgba(229,72,77,0.5)" :"0 2px 8px rgba(16,19,24,0.18)",
+              display:"grid", placeItems:"center", cursor:"pointer",
+              transition:"all .2s ease" }}>
+            <svg width="15" height="15" viewBox="0 0 24 24"
+              fill={liked ?"#FFF" :"none"} stroke={liked ?"#FFF" :"#E5484D"}
+              strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/>
+            </svg>
+          </button>
+        )}
       </div>
       <div style={{ padding:"12px 13px 13px", flex:1, display:"flex",
         flexDirection:"column", gap:8 }}>
@@ -88,7 +111,7 @@ function HeroCard({ r, onOpen }) {
 }
 
 // ─── Rail section ────────────────────────────────────────────────────────────
-function SectionRail({ label, recettes, liked, onLike, onOpen, onVoirTout }) {
+function SectionRail({ label, recettes, liked, onLike, onOpen, onVoirTout, premium }) {
   if (!recettes.length) return null;
   return (
     <div style={{ marginTop:26 }}>
@@ -107,7 +130,8 @@ function SectionRail({ label, recettes, liked, onLike, onOpen, onVoirTout }) {
         WebkitOverflowScrolling:"touch" }}>
         {recettes.map(r => (
           <RecipeCard key={r.id} r={r} liked={!!liked[r.id]}
-            onLike={onLike} onOpen={onOpen}/>
+            onLike={onLike} onOpen={onOpen}
+            locked={!premium && !r.free}/>
         ))}
       </div>
     </div>
@@ -151,7 +175,7 @@ export default function Recipes(props) {
   const matchSearch = (r) => !sl || r.nom.toLowerCase().includes(sl);
   const matchFiltre = (r) => filtres.every(f => r.tags?.includes(f));
   const matchFav    = (r) => !showFavs || !!liked[r.id];
-  const matchPro    = (r) => !showPro || r.tags?.includes("premium");
+  const matchPro    = (r) => !showPro || !r.free;
   const visible = RECIPES.filter(r => matchSearch(r) && matchFiltre(r) && matchFav(r) && matchPro(r));
 
   // Grouper par repas
@@ -189,7 +213,8 @@ export default function Recipes(props) {
           gap:12, padding:"16px 20px" }}>
           {sec.recettes.map(r => (
             <RecipeCard key={r.id} r={r} liked={!!liked[r.id]}
-              onLike={toggleLike} onOpen={openRecipe} fluid/>
+              onLike={toggleLike} onOpen={openRecipe} fluid
+              locked={!premium && !r.free}/>
           ))}
         </div>
       </div>
@@ -273,6 +298,7 @@ export default function Recipes(props) {
           <SectionRail key={sec.id} label={sec.label}
             recettes={showHome ? sec.recettes.slice(0, 8) : sec.recettes}
             liked={liked} onLike={toggleLike} onOpen={openRecipe}
+            premium={premium}
             onVoirTout={sec.recettes.length > 4
               ? () => { setVoirTout(sec.id); window.scrollTo(0,0); }
               : null}/>
