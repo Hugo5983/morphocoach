@@ -22,10 +22,13 @@ import {
 
 export default function BilanNutrition({
   onBack, repasHistory, repas, foods, calObj, pObj, gObj, lObj,
-  profil, obj, premium, onOpenArchive,
+  profil, obj, premium, onOpenArchive, forceTab,
 }) {
   useScrollTop();
-  const [activeTab, setActiveTab] = useState(0);
+  // Si forceTab est fourni (piloté par le Header), on l'utilise directement
+  const [localTab, setLocalTab] = useState(0);
+  const activeTab = forceTab != null ? forceTab : localTab;
+  const setActiveTab = setLocalTab;
   const [go, setGo] = useState(false);
   const scrollRef = useRef(null);
 
@@ -535,7 +538,7 @@ export default function BilanNutrition({
         </div>
       </div>
 
-      {renderHeader()}
+      {forceTab == null && renderHeader()}
       {activeTab === 0 ? renderDashboard() : renderDetailed()}
     </div>
 );

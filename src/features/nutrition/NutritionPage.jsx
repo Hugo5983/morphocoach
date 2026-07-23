@@ -175,7 +175,20 @@ export default function Nutrition(props){
           {/* Onglets Journal / Tableau de bord / Analyse — pilotés par le Header */}
         </div>
 
-        {/* ════ BILAN PRO ════ */}
+        {/* ════ TABLEAU DE BORD (BilanNutrition tab 0) ════ */}
+        {nView==="dashboard"&&(
+          <BilanNutrition
+            onBack={()=>setNView("journal")}
+            repasHistory={repasHistory}
+            repas={repas} foods={[...FOODS,...myFoods]}
+            calObj={calObj} pObj={pObj} gObj={gObj} lObj={lObj}
+            profil={profil} obj={obj} premium={premium}
+            onOpenArchive={()=>setShowArchive(true)}
+            forceTab={0}
+          />
+        )}
+
+        {/* ════ ANALYSE DÉTAILLÉE (BilanNutrition tab 1) ════ */}
         {nView==="bilan"&&premium&&!showArchive&&(
           <BilanNutrition
             onBack={()=>setNView("journal")}
@@ -184,8 +197,9 @@ export default function Nutrition(props){
             calObj={calObj} pObj={pObj} gObj={gObj} lObj={lObj}
             profil={profil} obj={obj} premium={premium}
             onOpenArchive={()=>setShowArchive(true)}
+            forceTab={1}
           />
-)}
+        )}
 
         {/* ════ ARCHIVE BILANS ════ */}
         {nView==="bilan"&&premium&&showArchive&&(
@@ -194,38 +208,6 @@ export default function Nutrition(props){
             bilans={[]}
             onOpenBilan={(b)=>console.log("bilan archivé:",b)}
           />
-)}
-
-        {/* ════ TABLEAU DE BORD ════ */}
-        {nView==="dashboard"&&(
-          <>
-            <div style={{padding:'16px 20px 0'}}>
-              <CalorieRing consumed={tot.cal} goal={calObj}/>
-              <div style={{display:'flex',justifyContent:'space-between',marginTop:24,padding:'0 8px'}}>
-                <HeroStat value={calObj}                     label="Objectif"  accent="#9DB0FF"/>
-                <HeroStat value={tot.cal}                    label="Consommé"  accent={C.accent}/>
-                <HeroStat value={Math.max(0,calObj-tot.cal)} label="Restant"   accent="#F59E0B"/>
-              </div>
-            </div>
-            <div style={{padding:'16px 20px 0'}}>
-              <div style={{display:'flex',gap:8}}>
-                <MacroCard label="Protéines" value={tot.p} goal={pObj} color={DARK.accent} colorDk="#2438B8"/>
-                <MacroCard label="Glucides"  value={tot.g} goal={gObj} color="#F59E0B" colorDk="#D97706"/>
-                <MacroCard label="Lipides"   value={tot.l} goal={lObj} color="#E5484D" colorDk="#C53030"/>
-              </div>
-            </div>
-            {/* Eau */}
-            <div style={{padding:'16px 20px 0'}}>
-              <div style={{...eyebrowS,marginBottom:12}}>HYDRATATION</div>
-              <div style={{display:'flex',alignItems:'center',gap:12}}>
-                <I name="droplet" size={20} color="#3B82F6"/>
-                <div style={{flex:1,height:6,background:C.s2,borderRadius:99,overflow:'hidden'}}>
-                  <div style={{height:'100%',width:`${Math.min(100,Math.round(((eau||0)/2500)*100))}%`,background:'#3B82F6',borderRadius:99,transition:'width .4s ease'}}/>
-                </div>
-                <span style={{fontSize:13,fontWeight:700,color:C.text,fontFamily:DISPLAY,...NUM}}>{((eau||0)/1000).toFixed(1)} / 2.5L</span>
-              </div>
-            </div>
-          </>
         )}
 
         {/* ════ JOURNAL ════ */}
