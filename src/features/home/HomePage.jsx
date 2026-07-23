@@ -114,8 +114,8 @@ export default function HomePage({
     return <BadgesPage onBack={() => setShowBadges(false)} calObj={calObj} pObj={pObj} />;
   }
 
-  // ── Vue Rapport ──
-  if (subView ==="rapport") {
+  // ── Vue Pro ──
+  if (subView ==="pro") {
     return (
       <RapportView
         premium={premium}
@@ -134,12 +134,12 @@ export default function HomePage({
       WebkitFontSmoothing:"antialiased",
     }}>
       <HeroCard prog={prog} calSess={calSess} setTab={setTab} />
-      <StreakCard streak={streak} />
       <NutritionCard
         calObj={calObj} pObj={pObj} gObj={gObj} lObj={lObj}
         totR={totR} setTab={setTab}
         setPaywallNutrition={setPaywallNutrition} premium={premium}
       />
+      <StreakCard streak={streak} />
       <BadgesCard badgeStates={badgeStates} onVoirTout={() => setShowBadges(true)} />
       <CoachIACard />
       <PacksCard premium={premium} setPaywall={setPaywall} setPaywallNutrition={setPaywallNutrition} />
