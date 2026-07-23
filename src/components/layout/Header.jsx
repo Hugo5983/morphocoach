@@ -60,7 +60,7 @@ export function Header({ premium, cycleStart, jR, tab, setTab, subNav, subView, 
               fontFamily:FONT, fontVariantNumeric:"tabular-nums" }}>
               {info.cur.level}
             </span>
-            <span style={{ width:30, height:4, borderRadius:99,
+            <span style={{ width:50, height:6, borderRadius:99,
               background:"#E2E6EE", position:"relative",
               display:"inline-block", overflow:"hidden" }}>
               <span style={{ position:"absolute", inset:0, width:`${info.pct}%`,
