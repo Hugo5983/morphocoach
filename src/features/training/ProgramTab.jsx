@@ -71,6 +71,7 @@ export default function ProgramTab(props){
   return(
     <div style={{paddingBottom:32}}>
       {/* Navigation pilotée par le Header — onglets supprimés ici */}
+      <div style={{height:20}}/>
 
       {/* ── Planification ── */}
       {progView==="calendar" && <Calendar {...sharedProps} />}
