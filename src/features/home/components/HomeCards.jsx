@@ -91,7 +91,7 @@ function HeroCard({ prog, calSess, setTab }) {
 )}
 
       <button
-        onClick={() => setTab && setTab("training")}
+        onClick={() => setTab && setTab("program")}
         className="tap"
         style={{
           border:"none", cursor:"pointer",

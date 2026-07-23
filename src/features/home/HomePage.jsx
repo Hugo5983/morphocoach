@@ -140,7 +140,6 @@ export default function HomePage({
       <StreakCard streak={streak} />
       <BadgesCard badgeStates={badgeStates} onVoirTout={() => setShowBadges(true)} />
       <CoachIACard />
-      <PacksCard premium={premium} setPaywall={setPaywall} setPaywallNutrition={setPaywallNutrition} />
     </div>
   );
 }
