@@ -30,7 +30,7 @@ function RapportView({ premium, setPaywall, setPaywallNutrition }) {
       title:"Nutrition Pro",
       subtitle:"Recettes premium, analyse photo, bilan bi-mensuel",
       features:[
-        {i:"nutrition", t:"Analyse macro avancée", s:"Répartition P/G/L personnalisée à tes objectifs"},
+        {i:"apple", t:"Analyse macro avancée", s:"Répartition P/G/L personnalisée à tes objectifs"},
         {i:"cameraDuo", t:"Scan photo", s:"Identifie les aliments en photo pour les logger"},
         {i:"bookDuo",   t:"Recettes premium", s:"500+ recettes adaptées à ton profil"},
         {i:"trophyDuo", t:"Bilan bi-mensuel", s:"Rapport détaillé de ta progression nutritive"},
@@ -86,16 +86,14 @@ function RapportView({ premium, setPaywall, setPaywallNutrition }) {
             ))}
           </div>
 
-          {!premium && (
-            <button onClick={card.onUnlock} className="tap" style={{
-              width:"100%", marginTop: 22, padding: 14, borderRadius: 14,
-              background: card.accent, color:"#FFF", border:"none",
-              fontSize: 15, fontWeight: 700, fontFamily: FONT, cursor:"pointer",
-              display:"flex", alignItems:"center", justifyContent:"center", gap: 8,
-            }}>
-              Débloquer
-            </button>
-          )}
+          <button onClick={card.onUnlock} className="tap" style={{
+            width:"100%", marginTop: 22, padding: 14, borderRadius: 14,
+            background: card.accent, color:"#FFF", border:"none",
+            fontSize: 15, fontWeight: 700, fontFamily: FONT, cursor:"pointer",
+            display:"flex", alignItems:"center", justifyContent:"center", gap: 8,
+          }}>
+            {premium ?"Gérer mon abonnement" :"Débloquer"}
+          </button>
         </div>
       ))}
     </div>

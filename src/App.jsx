@@ -280,7 +280,7 @@ export default function App() {
           const NAVS = {
             home:      { items:[{id:"today",label:"Aujourd'hui"},{id:"pro",label:"Pro"},{id:"coach",label:"Coach"}], view:subViewHome, set:(v)=>{ if(v==="coach"){setTab("coach");} else{setSubViewHome(v);} } },
             program:   { items:[{id:"today",label:"Aujourd'hui"},{id:"creer",label:"Programme"},{id:"calendar",label:"Planning"},{id:"analyse",label:"Analyse",pro:true}], view:subViewTraining, set:setSubViewTraining },
-            nutrition: { items:[{id:"journal",label:"Journal"},{id:"dashboard",label:"Tableau de bord"},{id:"bilan",label:"Analyse détaillée",pro:true}], view:subViewNutrition, set:setSubViewNutrition },
+            nutrition: { items:[{id:"journal",label:"Journal"},{id:"dashboard",label:"Tableau de bord"},{id:"bilan",label:"Analyse détaillée",pro:true},{id:"coach",label:"Coach"}], view:subViewNutrition, set:(v)=>{ if(v==="coach"){setTab("coach");} else{setSubViewNutrition(v);} } },
             recipes:   { items:[{id:"all",label:"Toutes"},{id:"favorites",label:"Favoris"},{id:"pro",label:"Premium",pro:true}], view:subViewRecipes, set:setSubViewRecipes },
             profile:   { items:[{id:"Profil",label:"Profil"},{id:"Compo.",label:"Compo"},{id:"Mesures",label:"Mesures"}], view:subViewProfile, set:setSubViewProfile },
           };
@@ -304,36 +304,39 @@ export default function App() {
         <PageContainer>
           <div className="page-enter">
             {tab ==="home" && <Home {...homeProps} />}
-            {tab !=="home" && (
+            {tab !=="home" && tab !=="coach" && (
               <Suspense fallback={<PageLoader />}>
                 {tab ==="program"   && <ProgramTab {...programProps} />}
                 {tab ==="nutrition" && <Nutrition  {...nutritionProps} />}
                 {tab ==="profile"   && <Profile    {...profileProps} />}
                 {tab ==="recipes"   && <Recipes    premium={premiumNutrition} setPaywall={setPaywallNutrition} push={push} repas={repas} setRepas={setRepas} subView={subViewRecipes} />}
-                {tab ==="coach"     && (
-                  <CoachPage
-                    onBack={() => setTab("home")}
-                    profil={profil} obj={obj}
-                    calObj={calObj} pObj={pObj} gObj={gObj} lObj={lObj}
-                    bilan={{
-                      avgKcal: totR.cal,
-                      avgProt: totR.p,
-                      avgGluc: totR.g,
-                      avgLip:  totR.l,
-                      pctKcal: calObj ? Math.round((totR.cal / calObj) * 100) : 0,
-                      nbLogged: Object.values(repas).some(arr => arr.length > 0) ? 1 : 0,
-                      totalDays: 14,
-                      score: cPct ? (cPct / 10).toFixed(1) :"—",
-                    }}
-                    premium={premiumNutrition}
-                    setPaywall={setPaywallNutrition}
-                    push={push}
-                  />
-)}
               </Suspense>
 )}
           </div>
         </PageContainer>
+
+        {tab ==="coach" && (
+          <Suspense fallback={<PageLoader />}>
+            <CoachPage
+              onBack={() => setTab("home")}
+              profil={profil} obj={obj}
+              calObj={calObj} pObj={pObj} gObj={gObj} lObj={lObj}
+              bilan={{
+                avgKcal: totR.cal,
+                avgProt: totR.p,
+                avgGluc: totR.g,
+                avgLip:  totR.l,
+                pctKcal: calObj ? Math.round((totR.cal / calObj) * 100) : 0,
+                nbLogged: Object.values(repas).some(arr => arr.length > 0) ? 1 : 0,
+                totalDays: 14,
+                score: cPct ? (cPct / 10).toFixed(1) :"—",
+              }}
+              premium={premiumNutrition}
+              setPaywall={setPaywallNutrition}
+              push={push}
+            />
+          </Suspense>
+)}
 
         {tab !=="coach" && <BottomNav tab={tab} setTab={setTab} />}
         <CoachFAB tab={tab} setTab={setTab} premium={premiumNutrition}/>
