@@ -106,7 +106,9 @@ export default function ProgressionPage({ EX, prog, setProg, push, onClose }) {
   const recordDate = filteredChart.length ? filteredChart.find(d=>d.rm===recordRM)?.date || "—" : "—";
 
   return (
-    <div style={{ minHeight:"100vh", background: C.bg, fontFamily: F }}>
+    <div style={{ position:"fixed", inset:0, zIndex:100,
+      background: C.bg, fontFamily: F, overflowY:"auto",
+      WebkitOverflowScrolling:"touch" }}>
 
       {/* ── Header ── */}
       <div style={{ background:"#FFF", padding:"14px 20px", display:"flex", alignItems:"center",
