@@ -259,8 +259,8 @@ export default function CoachPage({
 )}
 
       {/* ── Messages ───────────────────────────────────────────────────── */}
-      <div style={{ flex: 1, minHeight: 0, overflowY:"auto", padding:"16px 20px",
-        display:"flex", flexDirection:"column", gap: 12 }}>
+      <div style={{ flex: 1, minHeight: 0, overflowY:"auto", padding:"20px 20px",
+        display:"flex", flexDirection:"column", gap: 16 }}>
 
         {messages.map((m, i) => (
           <div key={i} style={{
@@ -346,7 +346,7 @@ export default function CoachPage({
                 <button key={i} onClick={() => sendMessage(s)}
                   style={{ padding:"8px 12px", background:`${VIO}08`,
                     border:`1px solid ${VIO}25`, borderRadius: 12,
-                    color:"#C9D3FF", fontSize: 13, fontFamily: FONT,
+                    color: TEXT, fontSize: 13, fontFamily: FONT,
                     cursor:"pointer", textAlign:"left",
                     display:"flex", alignItems:"center", gap: 8,
                     transition:"border-color .15s" }}>

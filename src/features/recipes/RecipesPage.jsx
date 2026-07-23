@@ -159,7 +159,7 @@ export default function Recipes(props) {
 
   const toggleLike = (id) => setLiked(p => ({ ...p, [id]: !p[id] }));
   const openRecipe = (r) => {
-    if (!premium) { if (setPaywall) setPaywall(true); return; }
+    if (!r.free && !premium) { if (setPaywall) setPaywall(true); return; }
     setSelected(r);
   };
 

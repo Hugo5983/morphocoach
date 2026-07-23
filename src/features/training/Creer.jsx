@@ -137,7 +137,7 @@ export default function Creer(props) {
             style={{ width:44, height:44, borderRadius:16, border:`1px solid ${BD}`,
               background:S1, display:"grid", placeItems:"center", color:TEXT,
               cursor:"pointer", fontSize:20, flexShrink:0, transition:".15s" }}>
-            {step>1 ?"·" :""}
+            {step>1 ? <I name="arrowLeft" size={18} color={TEXT}/> : <I name="close" size={18} color={TEXT}/>}
           </button>
           <div style={{ display:"flex", gap:8, flex:1 }}>
             {[1,2,3].map(n=>(
@@ -191,6 +191,12 @@ export default function Creer(props) {
                       transition:"all .2s" }}>
                       {on && <span style={{ color:"#FFF", fontSize:13, fontWeight:700 }}><I name="check" size={13} color="#FFF"/></span>}
                     </span>
+                    {/* Icon */}
+                    <div style={{ width:36, height:36, borderRadius:12, flexShrink:0,
+                      background:on?`${BL}20`:`${S2}`,
+                      display:"grid", placeItems:"center" }}>
+                      <I name={sp.icon||"dumbbell"} size={18} color={on?BL:DIM}/>
+                    </div>
                     <div style={{ flex:1 }}>
                       <div style={{ fontSize:16, fontWeight:700, letterSpacing:-0.2 }}>{sp.name}</div>
                       <div style={{ fontSize:13, color:MID, marginTop:4 }}>{sp.desc}</div>

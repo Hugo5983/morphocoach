@@ -47,6 +47,7 @@ export default function App() {
   const [subViewTraining,  setSubViewTraining]  = useState("today");
   const [subViewNutrition, setSubViewNutrition] = useState("journal");
   const [subViewRecipes,   setSubViewRecipes]   = useState("all");
+  const [subViewProfile,   setSubViewProfile]   = useState("Profil");
 
   // ── Système XP Momentum ───────────────────────────────────────────────────
   const [lvlUp, setLvlUp] = useState(null); // { levelInfo, amount, reason }
@@ -237,6 +238,7 @@ export default function App() {
     weightLog, setWeightLog, lastWeighIn, setLastWeighIn,
     checkedEx, setCheckedEx, imc, obj, calObj, pObj, lObj, gObj, getStreak,
     OBJ, ACTIVITE_FACTOR, EX,
+    subView: subViewProfile,
     setChrono, setChronoSec, seance, exDetails, setExDetails, exEdit, setExEdit,
     ...commonProps,
   };
@@ -280,6 +282,7 @@ export default function App() {
             program:   { items:[{id:"today",label:"Aujourd'hui"},{id:"creer",label:"Programme"},{id:"calendar",label:"Planning"},{id:"analyse",label:"Analyse",pro:true}], view:subViewTraining, set:setSubViewTraining },
             nutrition: { items:[{id:"journal",label:"Journal"},{id:"dashboard",label:"Tableau de bord"},{id:"bilan",label:"Analyse détaillée",pro:true}], view:subViewNutrition, set:setSubViewNutrition },
             recipes:   { items:[{id:"all",label:"Toutes"},{id:"favorites",label:"Favoris"},{id:"pro",label:"Premium",pro:true}], view:subViewRecipes, set:setSubViewRecipes },
+            profile:   { items:[{id:"Profil",label:"Profil"},{id:"Compo.",label:"Compo"},{id:"Mesures",label:"Mesures"}], view:subViewProfile, set:setSubViewProfile },
           };
           const nav = NAVS[tab];
           return (

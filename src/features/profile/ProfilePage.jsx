@@ -12,7 +12,7 @@ export default function Profile(props) {
   const { profil, setProfil, premium, premiumNutrition, setPremium, push,
     weightLog, setWeightLog, imc, obj, calObj, pObj, lObj, gObj } = props;
 
-  const [activeTab, setActiveTab] = useState("Profil");
+  const activeTab = props.subView || "Profil";
   const set = key => val => setProfil({ ...profil, [key]: val });
 
   // Enregistre une pesée datée (1 entrée / jour, la dernière valeur du jour gagne)
@@ -96,10 +96,8 @@ export default function Profile(props) {
         <StatCard value={imc}           unit=""   label="IMC"    color={imcColor}/>
       </div>
 
-      {/* ── Tabs ────────────────────────────────────────────────────── */}
-      <div style={{ marginBottom: 4, animation:"rise .4s .12s both" }}>
-        <Tabs active={activeTab} setActive={setActiveTab}/>
-      </div>
+      {/* ── Tabs pilotés par le Header ── */}
+      <div style={{ height: 20 }}/>
 
       {/* ══════ PROFIL ══════════════════════════════════════════════ */}
       {activeTab ==="Profil" && (

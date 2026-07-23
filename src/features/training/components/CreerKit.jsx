@@ -32,13 +32,13 @@ const SF   = SERIF;
 
 const DAYS_ALL   = ["Lun","Mar","Mer","Jeu","Ven","Sam","Dim"];
 const SPLITS = [
-  { id:"fullbody", name:"Full body",        desc:"Tout le corps à chaque séance",    days:3,
+  { id:"fullbody", name:"Full body",        desc:"Tout le corps à chaque séance",    days:3, icon:"dumbbell",
     preset:["Lun","Mer","Ven"], names:{Lun:"Full body A",Mer:"Full body B",Ven:"Full body C"} },
-  { id:"hautbas",  name:"Haut / Bas",       desc:"Alternance haut et bas du corps",  days:4,
+  { id:"hautbas",  name:"Haut / Bas",       desc:"Alternance haut et bas du corps",  days:4, icon:"gym",
     preset:["Lun","Mar","Jeu","Ven"], names:{Lun:"Haut du corps",Mar:"Bas du corps",Jeu:"Haut du corps",Ven:"Bas du corps"} },
-  { id:"ppl",      name:"Push · Pull · Legs",desc:"Poussée, tirage, jambes",         days:6,
+  { id:"ppl",      name:"Push · Pull · Legs",desc:"Poussée, tirage, jambes",         days:6, icon:"bolt",
     preset:["Lun","Mar","Mer","Ven","Sam","Dim"], names:{Lun:"Push",Mar:"Pull",Mer:"Legs",Ven:"Push",Sam:"Pull",Dim:"Legs"} },
-  { id:"custom",   name:"Personnalisé",      desc:"Tu organises tout toi-même",      days:0, preset:null, names:{} },
+  { id:"custom",   name:"Personnalisé",      desc:"Tu organises tout toi-même",      days:0, icon:"edit", preset:null, names:{} },
 ];
 const INTENSITIES = [
   {id:"leger",   label:"Léger",    color:GRN},

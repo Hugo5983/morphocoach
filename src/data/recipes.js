@@ -65,7 +65,7 @@ const IMG = {
 const RECIPES_BASE = [
   // ══ PETIT-DÉJEUNER ══════════════════════════════════════════════════════════
   {
-    id:1, nom:"Porridge doré avoine, curcuma & amande", repas:"pdej",
+    id:1, free:true, nom:"Porridge doré avoine, curcuma & amande", repas:"pdej",
     tags:["vegetarien","anti_inflammatoire","sante"], objectif:"Santé",
     kcal:392, prot:19, gluc:48, lip:14, temps:12, portions:1, difficulte:"Facile",
     img:IMG.porridge, imgQuery:"porridge oatmeal",
@@ -87,7 +87,7 @@ const RECIPES_BASE = [
     variantes:"Version vegan : remplacez le miel par du sirop d'érable. Ajoutez une banane écrasée pour plus de glucides.",
   },
   {
-    id:2, nom:"Skyr, granola maison & fruits rouges", repas:"pdej",
+    id:2, free:true, nom:"Skyr, granola maison & fruits rouges", repas:"pdej",
     tags:["vegetarien","proteine","rapide"], objectif:"Recomposition",
     kcal:318, prot:27, gluc:34, lip:9, temps:6, portions:1, difficulte:"Facile",
     img:IMG.yaourt, imgQuery:"skyr yogurt granola berries",
@@ -108,7 +108,7 @@ const RECIPES_BASE = [
     variantes:"Remplacez le skyr par du yaourt grec 0%. En hiver, utilisez des poires pochées à la place des fruits rouges.",
   },
   {
-    id:3, nom:"Pancakes moelleux avoine, ricotta & myrtilles", repas:"pdej",
+    id:3, free:true, nom:"Pancakes moelleux avoine, ricotta & myrtilles", repas:"pdej",
     tags:["vegetarien","proteine"], objectif:"Prise de masse",
     kcal:436, prot:29, gluc:44, lip:15, temps:18, portions:2, difficulte:"Moyen",
     img:IMG.pancakes, imgQuery:"pancakes oatmeal",
@@ -130,7 +130,7 @@ const RECIPES_BASE = [
     variantes:"Servez avec un yaourt grec et des fruits frais. Pour plus de protéines, ajoutez 20 g de whey vanille à la pâte.",
   },
   {
-    id:4, nom:"Smoothie bowl mangue, açaï & graines", repas:"pdej",
+    id:4, free:true, nom:"Smoothie bowl mangue, açaï & graines", repas:"pdej",
     tags:["vegan","anti_inflammatoire","sante"], objectif:"Performance",
     kcal:358, prot:13, gluc:56, lip:11, temps:10, portions:1, difficulte:"Facile",
     img:IMG.smoothieB, imgQuery:"smoothie bowl mango",
@@ -151,7 +151,7 @@ const RECIPES_BASE = [
     variantes:"Ajoutez une dose de protéine végétale pour un objectif recomposition. Remplacez l'açaï par de la pitaya rose.",
   },
   {
-    id:5, nom:"Shakshuka œufs pochés, tomates & feta", repas:"pdej",
+    id:5, free:true, nom:"Shakshuka œufs pochés, tomates & feta", repas:"pdej",
     tags:["vegetarien","proteine","sante"], objectif:"Recomposition",
     kcal:344, prot:23, gluc:18, lip:21, temps:25, portions:2, difficulte:"Moyen",
     img:IMG.shaksh, imgQuery:"shakshuka eggs",
@@ -173,7 +173,7 @@ const RECIPES_BASE = [
     variantes:"Ajoutez des épinards frais en fin de cuisson. Accompagnez de pain complet grillé pour un objectif prise de masse.",
   },
   {
-    id:6, nom:"Pudding de chia, lait de coco & fruit de la passion", repas:"pdej",
+    id:6, free:true, nom:"Pudding de chia, lait de coco & fruit de la passion", repas:"pdej",
     tags:["vegan","anti_inflammatoire","sante","rapide"], objectif:"Santé",
     kcal:286, prot:11, gluc:30, lip:15, temps:8, portions:1, difficulte:"Facile",
     img:IMG.chiapot, imgQuery:"chia pudding coconut",
@@ -196,7 +196,7 @@ const RECIPES_BASE = [
 
   // ══ DÉJEUNER ════════════════════════════════════════════════════════════════
   {
-    id:7, nom:"Bowl quinoa, avocat & œuf poché", repas:"dej",
+    id:7, free:true, nom:"Bowl quinoa, avocat & œuf poché", repas:"dej",
     tags:["vegetarien","proteine","sante"], objectif:"Recomposition",
     kcal:487, prot:31, gluc:44, lip:23, temps:25, portions:2, difficulte:"Facile",
     img:IMG.bowl, imgQuery:"bowl quinoa",
@@ -218,7 +218,7 @@ const RECIPES_BASE = [
     variantes:"Version prise de masse : doublez le quinoa. Ajoutez du saumon fumé pour plus de protéines.",
   },
   {
-    id:8, nom:"Poulet rôti au citron, riz complet & légumes", repas:"dej",
+    id:8, free:true, nom:"Poulet rôti au citron, riz complet & légumes", repas:"dej",
     tags:["proteine","sante"], objectif:"Prise de masse",
     kcal:548, prot:46, gluc:50, lip:16, temps:35, portions:2, difficulte:"Moyen",
     img:IMG.poulet, imgQuery:"chicken roasted lemon",
@@ -240,7 +240,7 @@ const RECIPES_BASE = [
     variantes:"Remplacez le riz par de la patate douce. Version perte de poids : réduisez le riz de moitié, doublez les légumes.",
   },
   {
-    id:9, nom:"Poke bowl saumon, edamame & sésame", repas:"dej",
+    id:9, free:true, nom:"Poke bowl saumon, edamame & sésame", repas:"dej",
     tags:["proteine","anti_inflammatoire","sante"], objectif:"Performance",
     kcal:472, prot:35, gluc:42, lip:18, temps:20, portions:1, difficulte:"Facile",
     img:IMG.poke, imgQuery:"poke bowl salmon",
@@ -262,7 +262,7 @@ const RECIPES_BASE = [
     variantes:"Remplacez le saumon par du thon rouge ou du tofu mariné pour une version vegan.",
   },
   {
-    id:10, nom:"Buddha bowl patate douce, kale & tahini", repas:"dej",
+    id:10, free:true, nom:"Buddha bowl patate douce, kale & tahini", repas:"dej",
     tags:["vegan","anti_inflammatoire","sante"], objectif:"Santé",
     kcal:438, prot:17, gluc:56, lip:17, temps:30, portions:1, difficulte:"Facile",
     img:IMG.buddha, imgQuery:"buddha bowl sweet potato",
@@ -284,7 +284,7 @@ const RECIPES_BASE = [
     variantes:"Ajoutez du quinoa pour une version prise de masse. Variez avec du potimarron en automne.",
   },
   {
-    id:11, nom:"Salade de lentilles, betterave & chèvre frais", repas:"dej",
+    id:11, free:true, nom:"Salade de lentilles, betterave & chèvre frais", repas:"dej",
     tags:["vegetarien","anti_inflammatoire","sante"], objectif:"Perte de poids",
     kcal:382, prot:21, gluc:40, lip:15, temps:20, portions:2, difficulte:"Facile",
     img:IMG.saladeQ, imgQuery:"salad lentils",
@@ -306,7 +306,7 @@ const RECIPES_BASE = [
     variantes:"Remplacez le chèvre par de la feta. Ajoutez un œuf mollet pour plus de protéines.",
   },
   {
-    id:12, nom:"Fattouche revisité, poulet grillé & sumac", repas:"dej",
+    id:12, free:true, nom:"Fattouche revisité, poulet grillé & sumac", repas:"dej",
     tags:["proteine","sante"], objectif:"Perte de poids",
     kcal:396, prot:38, gluc:24, lip:16, temps:25, portions:2, difficulte:"Moyen",
     img:IMG.fattouche, imgQuery:"fattoush salad grilled chicken",
@@ -330,7 +330,7 @@ const RECIPES_BASE = [
 
   // ══ DÎNER ═══════════════════════════════════════════════════════════════════
   {
-    id:13, nom:"Saumon rôti, brocoli & émulsion citron-aneth", repas:"din",
+    id:13, free:true, nom:"Saumon rôti, brocoli & émulsion citron-aneth", repas:"din",
     tags:["proteine","anti_inflammatoire","sante"], objectif:"Recomposition",
     kcal:418, prot:37, gluc:14, lip:25, temps:25, portions:2, difficulte:"Facile",
     img:IMG.saumon, imgQuery:"salmon roasted",
@@ -352,7 +352,7 @@ const RECIPES_BASE = [
     variantes:"Remplacez le brocoli par des asperges. Ajoutez du quinoa pour un objectif prise de masse.",
   },
   {
-    id:14, nom:"Cabillaud nacré, écrasé de panais & herbes", repas:"din",
+    id:14, free:true, nom:"Cabillaud nacré, écrasé de panais & herbes", repas:"din",
     tags:["proteine","sante"], objectif:"Perte de poids",
     kcal:336, prot:39, gluc:22, lip:10, temps:30, portions:2, difficulte:"Moyen",
     img:IMG.cabillaud, imgQuery:"cod fillet parsnip puree",
@@ -374,7 +374,7 @@ const RECIPES_BASE = [
     variantes:"Remplacez le panais par du céleri-rave. Le cabillaud peut être remplacé par du lieu noir.",
   },
   {
-    id:15, nom:"Dahl de lentilles corail, lait de coco & épinards", repas:"din",
+    id:15, free:true, nom:"Dahl de lentilles corail, lait de coco & épinards", repas:"din",
     tags:["vegan","anti_inflammatoire","sante"], objectif:"Santé",
     kcal:388, prot:18, gluc:48, lip:14, temps:30, portions:3, difficulte:"Facile",
     img:IMG.dahl, imgQuery:"dal lentils",
@@ -396,7 +396,7 @@ const RECIPES_BASE = [
     variantes:"Servez avec du riz basmati pour une prise de masse. Relevez d'une pointe de piment selon le goût.",
   },
   {
-    id:16, nom:"Soupe miso, tofu grillé & shiitakes", repas:"din",
+    id:16, free:true, nom:"Soupe miso, tofu grillé & shiitakes", repas:"din",
     tags:["vegan","anti_inflammatoire","sante","rapide"], objectif:"Perte de poids",
     kcal:212, prot:16, gluc:18, lip:9, temps:18, portions:2, difficulte:"Facile",
     img:IMG.miso, imgQuery:"miso soup tofu",
@@ -418,7 +418,7 @@ const RECIPES_BASE = [
     variantes:"Ajoutez des nouilles soba pour un repas plus consistant. Variez avec des champignons enoki.",
   },
   {
-    id:17, nom:"Steak de thon mi-cuit, sésame & légumes croquants", repas:"din",
+    id:17, free:true, nom:"Steak de thon mi-cuit, sésame & légumes croquants", repas:"din",
     tags:["proteine","anti_inflammatoire"], objectif:"Recomposition",
     kcal:362, prot:42, gluc:16, lip:15, temps:20, portions:2, difficulte:"Moyen",
     img:IMG.thon, imgQuery:"steak tuna",
@@ -440,7 +440,7 @@ const RECIPES_BASE = [
     variantes:"Remplacez le thon par du saumon. Servez sur un lit de riz noir pour plus de glucides.",
   },
   {
-    id:18, nom:"Curry de pois chiches, courge & lait de coco", repas:"din",
+    id:18, free:true, nom:"Curry de pois chiches, courge & lait de coco", repas:"din",
     tags:["vegan","anti_inflammatoire","sante"], objectif:"Santé",
     kcal:404, prot:16, gluc:52, lip:16, temps:35, portions:3, difficulte:"Facile",
     img:IMG.curry, imgQuery:"curry chickpea",
@@ -464,7 +464,7 @@ const RECIPES_BASE = [
 
   // ══ COLLATIONS ══════════════════════════════════════════════════════════════
   {
-    id:19, nom:"Smoothie mangue, gingembre & protéine", repas:"col",
+    id:19, free:true, nom:"Smoothie mangue, gingembre & protéine", repas:"col",
     tags:["proteine","anti_inflammatoire","rapide"], objectif:"Performance",
     kcal:234, prot:24, gluc:28, lip:4, temps:5, portions:1, difficulte:"Facile",
     img:IMG.smoothie, imgQuery:"mango smoothie ginger",
@@ -485,7 +485,7 @@ const RECIPES_BASE = [
     variantes:"Version vegan : utilisez une protéine végétale. Ajoutez une demi-banane pour plus de glucides.",
   },
   {
-    id:20, nom:"Energy balls dattes, cacao cru & noisettes", repas:"col",
+    id:20, free:true, nom:"Energy balls dattes, cacao cru & noisettes", repas:"col",
     tags:["vegan","rapide"], objectif:"Performance",
     kcal:158, prot:5, gluc:18, lip:9, temps:15, portions:8, difficulte:"Facile",
     img:IMG.energy, imgQuery:"energy balls",
@@ -1224,6 +1224,7 @@ export const REPAS = [
   { id:"col",     label:"Collations" },
   { id:"dessert", label:"Desserts sains" },
   { id:"boisson", label:"Boissons & shakes" },
+  { id:"fl",      label:"Fruits & légumes" },
 ];
 
 // ─── FILTRES ──────────────────────────────────────────────────────────────────

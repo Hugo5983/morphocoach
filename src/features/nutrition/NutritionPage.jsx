@@ -300,8 +300,8 @@ export default function Nutrition(props){
                       <div style={{display:'flex',alignItems:'center',gap:8,flexShrink:0}}>
                         <div style={{textAlign:'right'}}>
                           <div style={{display:'flex',alignItems:'baseline',gap:4,justifyContent:'flex-end'}}>
-                            <span style={{fontSize:16,fontWeight:700,color:isEmpty?C.dim:C.text,fontFamily:DISPLAY,...NUM}}>{rTot.cal}</span>
-                            <span style={{fontSize:10,color:C.dim,fontWeight:700}}>KCAL</span>
+                            <span style={{fontSize:16,fontWeight:700,color:C.text,fontFamily:DISPLAY,...NUM}}>{rTot.cal}</span>
+                            <span style={{fontSize:10,color:C.text,fontWeight:700}}>KCAL</span>
                           </div>
                         </div>
                         <I name="chevR" size={16} stroke={2} color={C.dim}/>
