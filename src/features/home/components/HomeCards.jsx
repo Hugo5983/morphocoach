@@ -220,7 +220,7 @@ function NutritionCard({ calObj, pObj, gObj, lObj, totR, setTab, setPaywallNutri
               <div style={{ height: 3, width:`${pct}%`, background:"#FFF", borderRadius: 2 }} />
             </div>
             <div style={{ fontSize: 10.5, fontWeight: 600, color:"rgba(255,255,255,.7)", fontFamily: FONT, whiteSpace:"nowrap" }}>
-              {pct}% · obj {goalVal}g
+              obj {goalVal}g
             </div>
           </div>
 ))}

@@ -320,7 +320,7 @@ export default function Nutrition(props){
                     <div style={{width:52,height:52,borderRadius:14,
                       background:C.s2,
                       color:'#101318',display:'grid',placeItems:'center',
-                      boxShadow:'0 4px 10px rgba(18,183,106,0.35), inset 0 1px 0 rgba(0,0,0,0.12)',
+                      boxShadow:'0 2px 6px rgba(0,0,0,0.15), inset 0 1px 0 rgba(0,0,0,0.12)',
                       position:'relative',overflow:'hidden'}}>
                       <div style={{position:'absolute',inset:0,background:'radial-gradient(110% 60% at 30% 10%,rgba(0,0,0,0.12),transparent 60%)',pointerEvents:'none'}}/>
                       <ID name="hydration" size={34}/>
@@ -365,10 +365,10 @@ export default function Nutrition(props){
                     <div style={{width:52,height:52,borderRadius:14,
                       background:C.s2,
                       display:'grid',placeItems:'center',fontSize:20,
-                      boxShadow:'0 4px 10px rgba(18,183,106,0.35), inset 0 1px 0 rgba(0,0,0,0.12)',
+                      boxShadow:'0 2px 6px rgba(0,0,0,0.15), inset 0 1px 0 rgba(0,0,0,0.12)',
                       position:'relative',overflow:'hidden'}}>
                       <div style={{position:'absolute',inset:0,background:'radial-gradient(110% 60% at 30% 10%,rgba(0,0,0,0.12),transparent 60%)',pointerEvents:'none'}}/>
-                      
+                      <ID name="fruit" size={30}/>
                     </div>
                     <div>
                       <div style={{fontSize:14,fontWeight:700,color:C.text,fontFamily:DISPLAY}}>Fruits & Légumes</div>
