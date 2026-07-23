@@ -202,7 +202,8 @@ export default function App() {
     profil, prog, cycleStart, setTab, premium, setPaywall, setPaywallNutrition,
     eau, setEau, weightLog, setWeightLog, lastWeighIn, setLastWeighIn,
     calSess, imc, obj, calObj, pObj, lObj, gObj, totR, jR, cPct, semC, getStreak,
-    MOTIVATIONS, ...commonProps,
+    MOTIVATIONS, subView: subViewHome,
+    ...commonProps,
   };
 
   const programProps = {
@@ -275,10 +276,10 @@ export default function App() {
         <Notif n={notif} onClose={dismiss} />
         {(() => {
           const NAVS = {
-            home:      { items:[{id:"stats",label:"Progression"},{id:"coach",label:"Coach"}], view:subViewHome, set:(v)=>{ if(v==="coach"){setTab("coach");} else{setSubViewHome(v);} } },
+            home:      { items:[{id:"today",label:"Aujourd'hui"},{id:"rapport",label:"Rapport"},{id:"coach",label:"Coach"}], view:subViewHome, set:(v)=>{ if(v==="coach"){setTab("coach");} else{setSubViewHome(v);} } },
             program:   { items:[{id:"today",label:"Aujourd'hui"},{id:"creer",label:"Programme"},{id:"calendar",label:"Planning"},{id:"analyse",label:"Analyse",pro:true}], view:subViewTraining, set:setSubViewTraining },
             nutrition: { items:[{id:"journal",label:"Journal"},{id:"dashboard",label:"Tableau de bord"},{id:"bilan",label:"Analyse détaillée",pro:true}], view:subViewNutrition, set:setSubViewNutrition },
-            recipes:   { items:null, view:subViewRecipes, set:setSubViewRecipes },
+            recipes:   { items:[{id:"all",label:"Toutes"},{id:"favorites",label:"Favoris"},{id:"pro",label:"Premium",pro:true}], view:subViewRecipes, set:setSubViewRecipes },
           };
           const nav = NAVS[tab];
           return (
@@ -305,7 +306,7 @@ export default function App() {
                 {tab ==="program"   && <ProgramTab {...programProps} />}
                 {tab ==="nutrition" && <Nutrition  {...nutritionProps} />}
                 {tab ==="profile"   && <Profile    {...profileProps} />}
-                {tab ==="recipes"   && <Recipes    premium={premiumNutrition} setPaywall={setPaywallNutrition} push={push} repas={repas} setRepas={setRepas} />}
+                {tab ==="recipes"   && <Recipes    premium={premiumNutrition} setPaywall={setPaywallNutrition} push={push} repas={repas} setRepas={setRepas} subView={subViewRecipes} />}
                 {tab ==="coach"     && (
                   <CoachPage
                     onBack={() => setTab("home")}
