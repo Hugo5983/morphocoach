@@ -7,6 +7,7 @@ import SeanceDetail from"./SeanceDetail.jsx";
 import { calc1RM, calcKgFor, catColor as cc, toDateKey } from"../../utils/training.js";
 import { ManualRMModal, CreateSeanceModal, EditRecordModal, RMCard, OBJ_TARGET, DEFAULT_TARGET } from"./components/TodayViewModals.jsx";
 import RecordDetailPage from"./components/RecordDetailPage.jsx";
+import ProgressionPage from"./ProgressionPage.jsx";
 import FocusMode from"./FocusMode.jsx";
 
 const DISP = FONT;
@@ -20,6 +21,7 @@ export default function TodayView(props) {
 
   const [viewSeance,       setViewSeance]       = useState(null);
   const [showManualRM,     setShowManualRM]      = useState(false);
+  const [showProgression,  setShowProgression]   = useState(false);
   const [showCreateSeance, setShowCreateSeance]  = useState(false);
   const [tipIdx,             setTipIdx]             = useState(0);
   const [editRecord,       setEditRecord]        = useState(null);
@@ -544,7 +546,7 @@ export default function TodayView(props) {
             <div style={{ fontFamily:SERIF_F, fontSize:20, fontWeight:400, color:C.text, letterSpacing:-0.3 }}>
               Records & Objectifs
             </div>
-            <button onClick={() => setShowManualRM(true)}
+            <button onClick={() => setShowProgression(true)}
               style={{ fontSize:11, fontWeight:600, color:C.mid,
                 background:C.s2, border:"none", borderRadius:12,
                 padding:"4px 12px", cursor:"pointer", fontFamily:DISP,
@@ -566,7 +568,7 @@ export default function TodayView(props) {
                 <div style={{ fontSize:11,color:C.mid,lineHeight:1.6,marginBottom:16,fontFamily:DISP }}>
                   Enregistre tes charges pendant les séances pour voir tes records et tes 1RM estimés.
                 </div>
-                <button onClick={() => setShowManualRM(true)} style={recBtn}>
+                <button onClick={() => setShowProgression(true)} style={recBtn}>
                   Saisir un record
                 </button>
               </div>
@@ -617,7 +619,7 @@ export default function TodayView(props) {
                 })}
               </div>
               {/* Saisie rapide banner */}
-              <div onClick={() => setShowManualRM(true)} style={{
+              <div onClick={() => setShowProgression(true)} style={{
                 background:"linear-gradient(135deg, #3C5BFF 0%, #2E48D9 100%)",
                 borderRadius:16, padding:"16px 16px",
                 display:"flex", alignItems:"center", justifyContent:"space-between",
@@ -683,6 +685,7 @@ export default function TodayView(props) {
 )}
       {showCreateSeance && <CreateSeanceModal onClose={() => setShowCreateSeance(false)} prog={prog} setProg={setProg} calSess={calSess} setCalSess={setCalSess} push={push} C={C} INT={INT} EX={EX} todayKey={todayKey}/>}
       {editRecord && <RecordDetailPage exData={editRecord} onClose={() => setEditRecord(null)} prog={prog} setProg={setProg} push={push}/>}
+      {showProgression && <ProgressionPage EX={EX} prog={prog} setProg={setProg} push={push} onClose={() => setShowProgression(false)}/>}
 
       {/* ── Modal Sommeil ─────────────────────────────────────────── */}
       {showSleepModal && (() => {
