@@ -66,6 +66,16 @@ export async function analyserMorpho(photos, profil) {
     }),
   });
   const data = await res.json().catch(() => ({}));
+
+  // ── Qualité photo insuffisante (422) ──
+  if (res.status === 422 && data.error === "qualite_insuffisante") {
+    const err = new Error(data.message || "La qualité des photos est insuffisante.");
+    err.qualite = data.qualite;
+    err.conseil = data.conseil;
+    err.type = "qualite_photo";
+    throw err;
+  }
+
   if (!res.ok) throw new Error(data.error ||`Analyse morpho: erreur ${res.status}`);
   if (!data.fiche) throw new Error("Fiche morphologique absente de la réponse");
   saveFicheMorpho(data.fiche);

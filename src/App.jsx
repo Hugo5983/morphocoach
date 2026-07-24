@@ -51,45 +51,90 @@ export default function App() {
 
   // ── Navigation gestuelle bidirectionnelle ──────────────────────────────────
   const TAB_ORDER = ["home","program","nutrition","recipes"];
-  const navHistory = useRef([{ tab:"home", sub:"today" }]);
-
-  // Quand tab/subView change, empile dans l'historique
+  const SUB_ORDER = {
+    home:      ["today","pro","coach"],
+    program:   ["today","creer","calendar","analyse"],
+    nutrition: ["journal","coach","dashboard","bilan"],
+    recipes:   ["all","favorites","coach","pro"],
+    profile:   ["Profil","Compo.","Mesures","coach"],
+  };
+  const SUB_SETTERS = useRef({});
+  SUB_SETTERS.current = {
+    home: setSubViewHome, program: setSubViewTraining,
+    nutrition: setSubViewNutrition, recipes: setSubViewRecipes, profile: setSubViewProfile,
+  };
   const SUBS = useRef({});
-  SUBS.current = { home: subViewHome, program: subViewTraining, nutrition: subViewNutrition, recipes: subViewRecipes, profile: subViewProfile };
-  const prevTabRef = useRef(tab);
-  const prevSubRef = useRef("today");
-  useEffect(() => {
-    const curSub = SUBS.current[tab] || "";
-    if (tab !== prevTabRef.current || curSub !== prevSubRef.current) {
-      navHistory.current.push({ tab, sub: curSub });
-      if (navHistory.current.length > 30) navHistory.current.shift();
-      prevTabRef.current = tab;
-      prevSubRef.current = curSub;
-    }
-  }, [tab, subViewHome, subViewTraining, subViewNutrition, subViewRecipes, subViewProfile]);
+  SUBS.current = {
+    home: subViewHome, program: subViewTraining,
+    nutrition: subViewNutrition, recipes: subViewRecipes, profile: subViewProfile,
+  };
 
-  // Retour d'un cran (historique)
+  // Retour d'un cran : sous-vue précédente, puis tab précédent
   const handleBack = useCallback(() => {
-    if (navHistory.current.length <= 1) return;
-    navHistory.current.pop(); // retire l'état actuel
-    const prev = navHistory.current[navHistory.current.length - 1];
-    if (!prev) return;
-    setTab(prev.tab);
-    const setters = { home: setSubViewHome, program: setSubViewTraining, nutrition: setSubViewNutrition, recipes: setSubViewRecipes, profile: setSubViewProfile };
-    setters[prev.tab]?.(prev.sub);
-    scrollTop();
-  }, []);
-
-  // Avancer vers le tab suivant
-  const handleForward = useCallback(() => {
-    const idx = TAB_ORDER.indexOf(tab);
-    if (idx < TAB_ORDER.length - 1) {
-      setTab(TAB_ORDER[idx + 1]);
+    if (tab ==="coach") { setTab("home"); scrollTop(); return; }
+    const order = SUB_ORDER[tab] || [];
+    const curSub = SUBS.current[tab];
+    const idx = order.indexOf(curSub);
+    if (idx > 0) {
+      // Sous-vue précédente
+      const prev = order[idx - 1];
+      if (prev ==="coach") { setTab("coach"); }
+      else { SUB_SETTERS.current[tab]?.(prev); }
       scrollTop();
+    } else {
+      // Première sous-vue → tab précédent
+      const tabIdx = TAB_ORDER.indexOf(tab);
+      if (tabIdx > 0) {
+        const prevTab = TAB_ORDER[tabIdx - 1];
+        const prevOrder = SUB_ORDER[prevTab] || [];
+        setTab(prevTab);
+        const lastSub = prevOrder[prevOrder.length - 1];
+        if (lastSub && lastSub !=="coach") SUB_SETTERS.current[prevTab]?.(lastSub);
+        else if (prevOrder.length > 1) SUB_SETTERS.current[prevTab]?.(prevOrder[prevOrder.length - 2]);
+        scrollTop();
+      }
+    }
+  }, [tab]);
+
+  // Avancer d'un cran : sous-vue suivante, puis tab suivant
+  const handleForward = useCallback(() => {
+    if (tab ==="coach") return;
+    const order = SUB_ORDER[tab] || [];
+    const curSub = SUBS.current[tab];
+    const idx = order.indexOf(curSub);
+    if (idx < order.length - 1) {
+      // Sous-vue suivante
+      const next = order[idx + 1];
+      if (next ==="coach") { setTab("coach"); }
+      else { SUB_SETTERS.current[tab]?.(next); }
+      scrollTop();
+    } else {
+      // Dernière sous-vue → tab suivant
+      const tabIdx = TAB_ORDER.indexOf(tab);
+      if (tabIdx < TAB_ORDER.length - 1) {
+        const nextTab = TAB_ORDER[tabIdx + 1];
+        const nextOrder = SUB_ORDER[nextTab] || [];
+        setTab(nextTab);
+        SUB_SETTERS.current[nextTab]?.(nextOrder[0] || "today");
+        scrollTop();
+      }
     }
   }, [tab]);
 
   const { swipeStyle: globalSwipe, onTouchStart: gTS, onTouchMove: gTM, onTouchEnd: gTE } = useSwipeNav(handleBack, handleForward);
+
+  // ── Notifications & rappel bilan morpho ────────────────────────────────────
+  useEffect(() => {
+    import("./services/notificationService.js").then(async ({ initNotifications, planifierRappelBilan }) => {
+      const granted = await initNotifications();
+      if (!granted) return;
+      // Programmer le rappel 6 semaines si une fiche morpho existe
+      try {
+        const fiche = JSON.parse(localStorage.getItem("morpho_fiche") || "null");
+        if (fiche?.date) planifierRappelBilan(fiche.date);
+      } catch { /* pas de fiche */ }
+    }).catch(() => { /* notifications non supportées */ });
+  }, []);
 
   // ── Système XP Momentum ───────────────────────────────────────────────────
   const [lvlUp, setLvlUp] = useState(null); // { levelInfo, amount, reason }
@@ -382,6 +427,9 @@ export default function App() {
           </Suspense>
 )}
 
+        </div>
+        {/* ── Fin zone swipable ── */}
+
         {tab !=="coach" && <BottomNav tab={tab} setTab={setTab} />}
 
         {/* ── Modal Level-Up Momentum XP ── */}
@@ -414,7 +462,6 @@ export default function App() {
             onClose={() => setPaywallNutrition(false)}
           />
 )}
-        </div>
       </Screen>
     </AppContext.Provider>
 );
