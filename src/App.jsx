@@ -71,10 +71,28 @@ export default function App() {
 
   // Retour d'un cran : sous-vue précédente, puis tab précédent
   const prevNonCoachTab = useRef("home");
-  useEffect(() => { if (tab !== "coach") prevNonCoachTab.current = tab; }, [tab]);
+  const prevNonCoachSub = useRef("today");
+  useEffect(() => {
+    if (tab !== "coach") {
+      prevNonCoachTab.current = tab;
+      // Mémorise la sous-vue par défaut du tab (pas "coach" qui est un lien vers page)
+      const subs = { home: subViewHome, program: subViewTraining, nutrition: subViewNutrition, recipes: subViewRecipes, profile: subViewProfile };
+      const curSub = subs[tab];
+      if (curSub && curSub !== "coach") prevNonCoachSub.current = curSub;
+    }
+  }, [tab, subViewHome, subViewTraining, subViewNutrition, subViewRecipes, subViewProfile]);
 
   const handleBack = useCallback(() => {
-    if (tab ==="coach") { setTab(prevNonCoachTab.current || "home"); scrollTop(); return; }
+    if (tab ==="coach") {
+      const targetTab = prevNonCoachTab.current || "home";
+      const targetSub = prevNonCoachSub.current || "today";
+      setTab(targetTab);
+      // Resetter la sous-vue du tab précédent à sa valeur d'avant
+      const setters = { home: setSubViewHome, program: setSubViewTraining, nutrition: setSubViewNutrition, recipes: setSubViewRecipes, profile: setSubViewProfile };
+      setters[targetTab]?.(targetSub);
+      scrollTop();
+      return;
+    }
     const order = SUB_ORDER[tab] || [];
     const curSub = SUBS.current[tab];
     const idx = order.indexOf(curSub);
@@ -410,7 +428,7 @@ export default function App() {
         {tab ==="coach" && (
           <Suspense fallback={<PageLoader />}>
             <CoachPage
-              onBack={() => setTab("home")}
+              onBack={handleBack}
               profil={profil} obj={obj}
               calObj={calObj} pObj={pObj} gObj={gObj} lObj={lObj}
               bilan={{

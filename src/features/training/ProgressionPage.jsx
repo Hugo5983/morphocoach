@@ -136,7 +136,9 @@ export default function ProgressionPage({ EX, prog, setProg, push, onClose }) {
   return (
     <div style={{ position:"fixed", inset:0, zIndex:100,
       background: C.bg, fontFamily: F }}
-      {...{ onTouchStart, onTouchMove, onTouchEnd }}>
+      onTouchStart={e => { e.stopPropagation(); onTouchStart(e); }}
+      onTouchMove={e => { e.stopPropagation(); onTouchMove(e); }}
+      onTouchEnd={e => { e.stopPropagation(); onTouchEnd(e); }}>
       <div style={{ ...swipeStyle, minHeight:"100%", overflowY:"auto",
         WebkitOverflowScrolling:"touch", background: C.bg }}>
 

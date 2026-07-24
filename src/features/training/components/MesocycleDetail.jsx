@@ -132,7 +132,12 @@ export default function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, cu
   const nearMRV = curVol >= MRV*0.9;
 
   return (
-    <div style={{position:"fixed",inset:0,zIndex:340,background:C.bg,overflowY:"auto",WebkitOverflowScrolling:"touch",touchAction:"pan-y",overscrollBehavior:"contain"}}>
+    <div
+      style={{position:"fixed",inset:0,zIndex:340,background:C.bg,overflowY:"auto",WebkitOverflowScrolling:"touch",touchAction:"pan-y",overscrollBehavior:"contain"}}
+      onTouchStart={e => e.stopPropagation()}
+      onTouchMove={e => e.stopPropagation()}
+      onTouchEnd={e => e.stopPropagation()}
+    >
       <div style={{padding:"0 16px 32px",maxWidth:480,margin:"0 auto"}}>
         {/* Header */}
         <div style={{position:"sticky",top:0,background:C.bg,paddingTop:20,paddingBottom:12,zIndex:2}}>
