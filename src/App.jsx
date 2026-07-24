@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, lazy, Suspense } from"react";
+import { useState, useCallback, useEffect, useRef, lazy, Suspense } from"react";
 import { scrollTop } from"./hooks/useScrollTop.js";
 import { C, OBJ, ACTIVITE_FACTOR, GLOBAL_CSS as CSS, INT } from"./data/constants.js";
 import { FOODS } from"./data/foods.js";
@@ -27,7 +27,7 @@ const Recipes    = lazy(() => import("./features/recipes/RecipesPage.jsx"));
 import { useAuth }          from"./hooks/useAuth.js";
 import AuthPage             from"./features/auth/AuthPage.jsx";
 import { useStorage }       from"./hooks/useStorage.js";
-import { useSwipeBack }     from"./hooks/useSwipeBack.js";
+import { useSwipeNav }      from"./hooks/useSwipeNav.js";
 import { useNotif }         from"./hooks/useNotif.js";
 import { useMacros }        from"./hooks/useMacros.js";
 import { useCycleProgress } from"./hooks/useCycleProgress.js";
@@ -49,19 +49,47 @@ export default function App() {
   const [subViewRecipes,   setSubViewRecipes]   = useState("all");
   const [subViewProfile,   setSubViewProfile]   = useState("Profil");
 
-  // ── Swipe-back global ─────────────────────────────────────────────────────
-  // Bord gauche → retour vers la page d'accueil ou la sous-vue par défaut
-  const DEFAULTS = { home:"today", program:"today", nutrition:"journal", recipes:"all", profile:"Profil" };
-  const handleSwipeBack = useCallback(() => {
-    if (tab ==="coach") { setTab("home"); return; }
-    const subs = { home: [subViewHome, setSubViewHome], program: [subViewTraining, setSubViewTraining],
-      nutrition: [subViewNutrition, setSubViewNutrition], recipes: [subViewRecipes, setSubViewRecipes],
-      profile: [subViewProfile, setSubViewProfile] };
-    const [cur, setter] = subs[tab] || [];
-    if (cur && cur !== DEFAULTS[tab]) { setter(DEFAULTS[tab]); scrollTop(); return; }
-    if (tab !=="home") { setTab("home"); setSubViewHome("today"); scrollTop(); }
+  // ── Navigation gestuelle bidirectionnelle ──────────────────────────────────
+  const TAB_ORDER = ["home","program","nutrition","recipes"];
+  const navHistory = useRef([{ tab:"home", sub:"today" }]);
+
+  // Quand tab/subView change, empile dans l'historique
+  const SUBS = useRef({});
+  SUBS.current = { home: subViewHome, program: subViewTraining, nutrition: subViewNutrition, recipes: subViewRecipes, profile: subViewProfile };
+  const prevTabRef = useRef(tab);
+  const prevSubRef = useRef("today");
+  useEffect(() => {
+    const curSub = SUBS.current[tab] || "";
+    if (tab !== prevTabRef.current || curSub !== prevSubRef.current) {
+      navHistory.current.push({ tab, sub: curSub });
+      if (navHistory.current.length > 30) navHistory.current.shift();
+      prevTabRef.current = tab;
+      prevSubRef.current = curSub;
+    }
   }, [tab, subViewHome, subViewTraining, subViewNutrition, subViewRecipes, subViewProfile]);
-  const { swipeStyle: globalSwipe, onTouchStart: gTS, onTouchMove: gTM, onTouchEnd: gTE } = useSwipeBack(handleSwipeBack);
+
+  // Retour d'un cran (historique)
+  const handleBack = useCallback(() => {
+    if (navHistory.current.length <= 1) return;
+    navHistory.current.pop(); // retire l'état actuel
+    const prev = navHistory.current[navHistory.current.length - 1];
+    if (!prev) return;
+    setTab(prev.tab);
+    const setters = { home: setSubViewHome, program: setSubViewTraining, nutrition: setSubViewNutrition, recipes: setSubViewRecipes, profile: setSubViewProfile };
+    setters[prev.tab]?.(prev.sub);
+    scrollTop();
+  }, []);
+
+  // Avancer vers le tab suivant
+  const handleForward = useCallback(() => {
+    const idx = TAB_ORDER.indexOf(tab);
+    if (idx < TAB_ORDER.length - 1) {
+      setTab(TAB_ORDER[idx + 1]);
+      scrollTop();
+    }
+  }, [tab]);
+
+  const { swipeStyle: globalSwipe, onTouchStart: gTS, onTouchMove: gTM, onTouchEnd: gTE } = useSwipeNav(handleBack, handleForward);
 
   // ── Système XP Momentum ───────────────────────────────────────────────────
   const [lvlUp, setLvlUp] = useState(null); // { levelInfo, amount, reason }
