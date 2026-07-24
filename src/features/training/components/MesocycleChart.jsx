@@ -1,8 +1,8 @@
 import { useState } from"react";
 import { C, DARK, FONT } from"../../../data/constants.js";
-import MesocycleDetail from"./MesocycleDetail.jsx";
+import ProgressionPage from"../ProgressionPage.jsx";
 
-export default function MesocycleChart({ prog, semC, checkedEx, cycleStart }) {
+export default function MesocycleChart({ prog, semC, checkedEx, cycleStart, EX }) {
   const DISP_F  = FONT;
   const SERIF_F = FONT;
   const [open, setOpen] = useState(false);
@@ -233,7 +233,7 @@ export default function MesocycleChart({ prog, semC, checkedEx, cycleStart }) {
     </div>
 
     {/* Overlay — mode FORCE (progression de force par exercice) */}
-    {open && <MesocycleDetail mode="force" prog={prog} semC={semC} baseVol={baseVol} MEV={MEV} MAV={MAV} MRV={MRV} curVol={curVol} currentWeek={currentWeek} WEEKS={WEEKS} cycleStart={cycleStart} checkedEx={checkedEx} onClose={()=>setOpen(false)}/>}
+    {open && <ProgressionPage EX={EX} prog={prog} onClose={()=>setOpen(false)}/>}
     </>
 );
 }

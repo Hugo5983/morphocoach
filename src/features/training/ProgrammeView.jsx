@@ -467,7 +467,7 @@ export default function ProgrammeView(props) {
       <div style={{fontSize:20,fontWeight:700,color:C.text,fontFamily:DISP_F,marginTop:20,marginBottom:12,letterSpacing:-0.3}}>
         Charge <span style={{fontStyle:"italic",color:C.accent}}>progressive</span>
       </div>
-      <MesocycleChart prog={prog} semC={semC} checkedEx={checkedEx} cycleStart={cycleStart}/>
+      <MesocycleChart prog={prog} semC={semC} checkedEx={checkedEx} cycleStart={cycleStart} EX={EX}/>
 
       {/* ── Autres programmes ── */}
       {allProgs.length > 1 && (
