@@ -1,8 +1,10 @@
 // ─── ProgressionPage.jsx ─────────────────────────────────────────────────────
-// Progression de charge avec sélection muscle → exercice (rail horizontal).
-// Réutilise RMChart et le système d'historique de RecordDetailPage.
+// Progression de charge : sélection muscle → exercice (rail) → graphe 1RM.
+// Données connectées à l'historique Focus Mode + records du programme.
+// Swipe-back depuis le bord gauche pour revenir.
 import { useState, useMemo } from"react";
 import useScrollTop from"../../hooks/useScrollTop.js";
+import { useSwipeBack } from"../../hooks/useSwipeBack.js";
 import { calc1RM } from"../../utils/training.js";
 import { C, FONT, NUM } from"../../data/constants.js";
 import { I, ID } from"../../components/ui/Icon.jsx";
@@ -11,9 +13,8 @@ const F = FONT;
 const BL = C.accent;
 const GRN = "#12B76A";
 const RED = "#E5484D";
-const AMB = "#F59E0B";
 
-// ── Groupes musculaires avec silhouette SVG ──────────────────────────────────
+// ── Groupes musculaires ──────────────────────────────────────────────────────
 const MUSCLES = [
   { id:"Pectoraux",       label:"Pectoraux",  icon:"gym" },
   { id:"Dos",             label:"Dos",         icon:"gym" },
@@ -30,7 +31,7 @@ const MUSCLES = [
   { id:"Trapèzes",        label:"Trapèzes",    icon:"gym" },
 ];
 
-// ── Mini graphe SVG pour une courbe de 1RM ───────────────────────────────────
+// ── Mini graphe SVG ──────────────────────────────────────────────────────────
 function MiniChart({ data }) {
   if (!data || data.length < 2) return null;
   const W=280, H=100, P=8;
@@ -58,30 +59,57 @@ function MiniChart({ data }) {
 // ── Page principale ──────────────────────────────────────────────────────────
 export default function ProgressionPage({ EX, prog, setProg, push, onClose }) {
   useScrollTop();
+  const { swipeStyle, onTouchStart, onTouchMove, onTouchEnd } = useSwipeBack(onClose);
   const [selMuscle, setSelMuscle] = useState(MUSCLES[0].id);
   const [selExIdx, setSelExIdx] = useState(0);
   const [period, setPeriod] = useState("3M");
 
-  // Exercices du muscle sélectionné
+  // Exercices du muscle sélectionné + données historiques connectées
   const exos = useMemo(() => (EX?.[selMuscle] || []).map(ex => {
     const nom = ex.n;
-    // Collect historique from prog
     let hist = [];
+    // Historique depuis les séances du programme (Focus Mode)
     (prog?.jours || []).forEach(j => (j.exercices || []).forEach(e => {
-      if (e.nom === nom) hist = [...hist, ...(e.historique || [])];
+      if (e.nom === nom) {
+        // Séries loggées en Focus Mode
+        (e.sets || []).forEach(s => {
+          if (s.poids && s.reps) {
+            hist.push({ poids: s.poids, reps: s.reps, date: s.date || e.lastDate || "" });
+          }
+        });
+        // Historique déjà agrégé
+        (e.historique || []).forEach(h => hist.push(h));
+      }
     }));
+    // Records manuels
     const recRaw = prog?.records?.[nom];
     const recHist = Array.isArray(recRaw) ? recRaw : (recRaw?.historique || []);
-    hist = [...hist, ...recHist]
-      .sort((a,b) => String(a.date||"").split("/").reverse().join("").localeCompare(String(b.date||"").split("/").reverse().join("")));
-    const chartData = hist.map(h => ({ rm: calc1RM(parseFloat(h.poids), parseInt(h.reps)), date: h.date }));
-    const currentRM = chartData.length ? Math.max(...chartData.map(d=>d.rm)) : 0;
+    recHist.forEach(h => hist.push(h));
+    // Dédoublonner par date+poids+reps
+    const seen = new Set();
+    hist = hist.filter(h => {
+      const k = `${h.date}-${h.poids}-${h.reps}`;
+      if (seen.has(k)) return false;
+      seen.add(k);
+      return true;
+    }).sort((a,b) =>
+      String(a.date||"").split("/").reverse().join("")
+        .localeCompare(String(b.date||"").split("/").reverse().join(""))
+    );
+    const chartData = hist.map(h => ({
+      rm: calc1RM(parseFloat(h.poids), parseInt(h.reps)),
+      date: h.date,
+      poids: parseFloat(h.poids),
+      reps: parseInt(h.reps),
+    })).filter(d => d.rm > 0);
+    const currentRM = chartData.length ? chartData[chartData.length-1].rm : 0;
+    const bestRM = chartData.length ? Math.max(...chartData.map(d=>d.rm)) : 0;
     const firstRM = chartData.length ? chartData[0].rm : 0;
     const pctProg = firstRM > 0 ? Math.round(((currentRM-firstRM)/firstRM)*100) : 0;
-    return { nom, mat: ex.mat, chartData, currentRM, pctProg, nbSeances: chartData.length };
+    const lastEntry = chartData.length ? chartData[chartData.length-1] : null;
+    return { nom, mat: ex.mat, chartData, currentRM, bestRM, pctProg, lastEntry, nbSeances: chartData.length };
   }), [EX, selMuscle, prog]);
 
-  // Reset sel index when muscle changes
   const selEx = exos[selExIdx] || exos[0] || null;
 
   const filterByPeriod = (data) => {
@@ -107,26 +135,28 @@ export default function ProgressionPage({ EX, prog, setProg, push, onClose }) {
 
   return (
     <div style={{ position:"fixed", inset:0, zIndex:100,
-      background: C.bg, fontFamily: F, overflowY:"auto",
-      WebkitOverflowScrolling:"touch" }}>
+      background: C.bg, fontFamily: F }}
+      {...{ onTouchStart, onTouchMove, onTouchEnd }}>
+      <div style={{ ...swipeStyle, minHeight:"100%", overflowY:"auto",
+        WebkitOverflowScrolling:"touch", background: C.bg }}>
 
-      {/* ── Header ── */}
-      <div style={{ background:"#FFF", padding:"14px 20px", display:"flex", alignItems:"center",
-        gap:10, borderBottom:"1px solid rgba(0,0,0,.04)" }}>
-        <button onClick={onClose} className="tap" style={{
-          background:"none", border:"none", cursor:"pointer", padding:0,
-          color: BL, fontSize:14, fontWeight:700, fontFamily: F,
-          display:"flex", alignItems:"center", gap:2 }}>
-          <I name="chevronLeft" size={16} color={BL} stroke={2.4}/>
-        </button>
-        <span style={{ fontSize:18, fontWeight:700, flex:1 }}>Progression de force</span>
+      {/* ── Titre section (pas dans le header) ── */}
+      <div style={{ padding:"24px 20px 4px" }}>
+        <div style={{ fontSize:10, fontWeight:700, letterSpacing:".1em", color: BL,
+          marginBottom:6 }}>SUIVI DE FORCE · 1RM ESTIMÉ</div>
+        <div style={{ fontSize:26, fontWeight:700, letterSpacing:-0.5, color: C.text }}>
+          Progression <span style={{ fontStyle:"italic", color: BL, fontWeight:400 }}>de force</span>
+        </div>
+        <div style={{ fontSize:13, color: C.dim, fontWeight:500, marginTop:4 }}>
+          1RM réel par exercice, séance après séance
+        </div>
       </div>
 
       {/* ── 1. Muscles ── */}
       <div style={{ fontSize:10, fontWeight:700, letterSpacing:".12em", color: C.dim,
-        padding:"18px 20px 10px" }}>1. GROUPE MUSCULAIRE</div>
+        padding:"20px 20px 10px" }}>GROUPE MUSCULAIRE</div>
       <div style={{ display:"flex", gap:10, padding:"0 20px", overflowX:"auto",
-        scrollbarWidth:"none", WebkitOverflowScrolling:"touch", paddingBottom:4 }}>
+        scrollbarWidth:"none", WebkitOverflowScrolling:"touch", paddingBottom:6 }}>
         {MUSCLES.map(m => {
           const on = selMuscle === m.id;
           return (
@@ -152,9 +182,9 @@ export default function ProgressionPage({ EX, prog, setProg, push, onClose }) {
 
       {/* ── 2. Exercices (rail horizontal) ── */}
       <div style={{ fontSize:10, fontWeight:700, letterSpacing:".12em", color: C.dim,
-        padding:"16px 20px 10px" }}>2. EXERCICE</div>
+        padding:"16px 20px 10px" }}>EXERCICE</div>
       <div style={{ display:"flex", gap:10, padding:"0 20px", overflowX:"auto",
-        scrollbarWidth:"none", WebkitOverflowScrolling:"touch", paddingBottom:4 }}>
+        scrollbarWidth:"none", WebkitOverflowScrolling:"touch", paddingBottom:6 }}>
         {exos.map((ex, idx) => {
           const on = selExIdx === idx;
           return (
@@ -170,7 +200,7 @@ export default function ProgressionPage({ EX, prog, setProg, push, onClose }) {
                 display:"-webkit-box", WebkitLineClamp:2, WebkitBoxOrient:"vertical",
                 overflow:"hidden" }}>{ex.nom}</div>
               <div style={{ fontSize:9.5, color: C.dim, fontWeight:600 }}>{ex.mat || "—"}</div>
-              {ex.currentRM > 0 && (
+              {ex.currentRM > 0 ? (
                 <>
                   <div style={{ display:"flex", alignItems:"baseline", gap:3, marginTop:2 }}>
                     <span style={{ fontSize:8, fontWeight:700, color: BL,
@@ -180,6 +210,11 @@ export default function ProgressionPage({ EX, prog, setProg, push, onClose }) {
                     </span>
                     <span style={{ fontSize:10, color: C.dim, fontWeight:600 }}>kg</span>
                   </div>
+                  {ex.lastEntry && (
+                    <div style={{ fontSize:9, color: C.dim, fontWeight:500 }}>
+                      Dernier : {ex.lastEntry.poids}kg × {ex.lastEntry.reps} reps
+                    </div>
+                  )}
                   {ex.pctProg !== 0 && (
                     <div style={{ fontSize:10, fontWeight:700,
                       color: ex.pctProg > 0 ? GRN : RED }}>
@@ -188,9 +223,8 @@ export default function ProgressionPage({ EX, prog, setProg, push, onClose }) {
                     </div>
                   )}
                 </>
-              )}
-              {ex.currentRM === 0 && (
-                <div style={{ fontSize:10, color: C.dim, fontStyle:"italic" }}>
+              ) : (
+                <div style={{ fontSize:10, color: C.dim, fontStyle:"italic", marginTop:2 }}>
                   Pas encore de données
                 </div>
               )}
@@ -203,7 +237,7 @@ export default function ProgressionPage({ EX, prog, setProg, push, onClose }) {
       {selEx && (
         <>
           <div style={{ fontSize:10, fontWeight:700, letterSpacing:".12em", color: C.dim,
-            padding:"14px 20px 8px" }}>3. TA PROGRESSION</div>
+            padding:"14px 20px 8px" }}>TA PROGRESSION</div>
           <div style={{ margin:"0 20px", background:"#FFF", border:"1px solid rgba(0,0,0,.06)",
             borderRadius:16, padding:"16px 16px 12px", overflow:"hidden" }}>
             <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between",
@@ -251,7 +285,8 @@ export default function ProgressionPage({ EX, prog, setProg, push, onClose }) {
         </>
       )}
 
-      <div style={{ height: 32 }}/>
+      <div style={{ height: 40 }}/>
+      </div>
     </div>
   );
 }

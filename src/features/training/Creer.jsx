@@ -195,7 +195,7 @@ export default function Creer(props) {
                     <div style={{ width:36, height:36, borderRadius:12, flexShrink:0,
                       background:on?`${BL}20`:`${S2}`,
                       display:"grid", placeItems:"center" }}>
-                      <I name={sp.icon||"dumbbell"} size={18} color={on?BL:DIM}/>
+                      <ID name={sp.icon||"dumbbell"} size={22}/>
                     </div>
                     <div style={{ flex:1 }}>
                       <div style={{ fontSize:16, fontWeight:700, letterSpacing:-0.2 }}>{sp.name}</div>
