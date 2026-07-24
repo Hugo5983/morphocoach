@@ -70,8 +70,11 @@ export default function App() {
   };
 
   // Retour d'un cran : sous-vue précédente, puis tab précédent
+  const prevNonCoachTab = useRef("home");
+  useEffect(() => { if (tab !== "coach") prevNonCoachTab.current = tab; }, [tab]);
+
   const handleBack = useCallback(() => {
-    if (tab ==="coach") { setTab("home"); scrollTop(); return; }
+    if (tab ==="coach") { setTab(prevNonCoachTab.current || "home"); scrollTop(); return; }
     const order = SUB_ORDER[tab] || [];
     const curSub = SUBS.current[tab];
     const idx = order.indexOf(curSub);

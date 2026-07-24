@@ -12,7 +12,7 @@
 
 import { useState, useRef, useCallback } from"react";
 
-export function useSwipeBack(onBack, { edgeOnly = true, threshold = 0.20 } = {}) {
+export function useSwipeBack(onBack, { edgeOnly = true, threshold = 0.15 } = {}) {
   const [translateX, setTranslateX] = useState(0);
   const [isSwipingBack, setSwiping] = useState(false);
   const startX = useRef(0);
@@ -22,7 +22,7 @@ export function useSwipeBack(onBack, { edgeOnly = true, threshold = 0.20 } = {})
   const onTouchStart = useCallback((e) => {
     const t = e.touches[0];
     // Native iOS : seul un swipe depuis le bord gauche (≤ 24px) déclenche
-    if (edgeOnly && t.clientX > 40) return;
+    if (edgeOnly && t.clientX > 80) return;
     startX.current = t.clientX;
     startY.current = t.clientY;
     active.current = true;

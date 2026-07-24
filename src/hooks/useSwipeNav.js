@@ -6,7 +6,7 @@
 
 import { useState, useRef, useCallback } from"react";
 
-export function useSwipeNav(onBack, onForward, { threshold = 0.20 } = {}) {
+export function useSwipeNav(onBack, onForward, { threshold = 0.15 } = {}) {
   const [translateX, setTranslateX] = useState(0);
   const [swiping, setSwiping] = useState(false);
   const startX = useRef(0);
@@ -14,7 +14,7 @@ export function useSwipeNav(onBack, onForward, { threshold = 0.20 } = {}) {
   const active = useRef(false);
   const dir = useRef(null); // "back" ou "forward"
 
-  const EDGE = 40;
+  const EDGE = 80;
 
   const onTouchStart = useCallback((e) => {
     const t = e.touches[0];
