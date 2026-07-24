@@ -1,4 +1,5 @@
 import { C, DARK, FONT } from"../../../data/constants.js";
+import { I } from"../../../components/ui/Icon.jsx";
 import { useMemo } from"react";
 
 // ─── CARD SEMAINE — VARIANTE B BLEU (design blanc + accent #3C5BFF) ─────────
@@ -94,6 +95,8 @@ export default function CoachWeekCard({ semC, semN, totalJours, onDetail, premiu
 );
   };
 
+  const METRIC_ICONS = { "Fatigue":"flame", "Récup.":"heart", "Risque":"alert" };
+
   // Métriques row (3 chips)
   const MetricsRow = ({ items }) => (
     <div style={{display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:8, marginBottom:16}}>
@@ -102,7 +105,10 @@ export default function CoachWeekCard({ semC, semN, totalJours, onDetail, premiu
           borderRadius:12, padding:"12px 8px", textAlign:"center",
           background:"#F6F7F9", border:"1px solid #F2F4F7",
         }}>
-          <div style={{fontSize:14, fontWeight:700, color:s.c, fontFamily:F, marginBottom:2, letterSpacing:-0.2}}>{s.v}</div>
+          <div style={{display:"flex", alignItems:"center", justifyContent:"center", gap:4, marginBottom:4}}>
+            <I name={METRIC_ICONS[s.l] || "chart"} size={14} color={s.c} stroke={2}/>
+            <span style={{fontSize:14, fontWeight:700, color:s.c, fontFamily:F, letterSpacing:-0.2}}>{s.v}</span>
+          </div>
           <div style={{height:3, borderRadius:2, background:"#EAECF0", overflow:"hidden", margin:"4px 0"}}>
             <div style={{width:`${s.bar*100}%`, height:"100%", borderRadius:2, background:s.c}}/>
           </div>

@@ -378,9 +378,6 @@ export default function Nutrition(props){
                       </div>
                     </div>
                   </div>
-                  <div style={{fontSize:10,color:C.dim,fontFamily:DISPLAY,textAlign:'right',lineHeight:1.5}}>
-                     {fruitsV.fruits} · {fruitsV.legumes}
-                  </div>
                 </div>
                 {/* Ligne fruits */}
                 <div style={{marginBottom:12}}>
