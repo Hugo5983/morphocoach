@@ -5,6 +5,7 @@
 
 import { guard, checkAccess } from "./_lib/security.js";
 import { callAnthropic, parseJSON } from "./_lib/anthropic.js";
+import { logMorphoEvent } from "./_lib/telemetry.js";
 import { SCHEMA_OBSERVATIONS, REPERES_VISUELS, validerObservations, deriverConsequences }
   from "./_knowledge/morphologie.js";
 
@@ -121,16 +122,16 @@ ${schemaToPrompt()}`,
     const observations = validerObservations(parsed);
     const consequences = deriverConsequences(observations);
 
-    return res.status(200).json({
-      fiche: {
-        version: FICHE_VERSION,
-        date: new Date().toISOString().split("T")[0],
-        observations,
-        consequences,
-        confiance: observations.confiance,
-        qualite_photo: qualite,
-      },
-    });
+    const fiche = {
+      version: FICHE_VERSION,
+      date: new Date().toISOString().split("T")[0],
+      observations,
+      consequences,
+      confiance: observations.confiance,
+      qualite_photo: qualite,
+    };
+    logMorphoEvent({ userId: access.userId, fiche, status: "ok" }); // fire-and-forget
+    return res.status(200).json({ fiche });
   } catch (e) {
     console.error("[analyze-morpho]", e.message);
     return res.status(e.status || 500).json({ error: e.message || "Erreur serveur" });

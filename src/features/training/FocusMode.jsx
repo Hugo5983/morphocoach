@@ -9,6 +9,8 @@ import useScrollTop from"../../hooks/useScrollTop.js";
 import { useState, useEffect, useRef, useCallback } from"react";
 import { createPortal }                 from"react-dom";
 import { addXP, XP }                   from"../../services/xpService.js";
+import { saveExoFeedback }             from"../../services/coachBrainService.js";
+import { syncWorkoutDay, syncExoFeedback } from"../../services/syncService.js";
 import {
   T, F, MON, NUM, GL, CSS, I,
   SetStage, RestStage, DoneStage,
@@ -86,6 +88,12 @@ export default function FocusMode({
     setSetIdx(next);
   }
 
+  const handleFeedback = useCallback((fb) => {
+    if (!ex?.nom) return;
+    saveExoFeedback(ex.nom, fb);
+    syncExoFeedback(ex.nom, fb);                  // journal Supabase — silencieux
+  }, [ex?.nom]);
+
   function nextExercise() {
     const n = exIdx + 1;
     if (n < exercices.length) { setExIdx(n); }
@@ -115,6 +123,7 @@ export default function FocusMode({
       completedAt: new Date().toISOString(),
     };
     localStorage.setItem('morpho_workout_log', JSON.stringify(existing));
+    syncWorkoutDay(dateKey, existing[dateKey]);   // journal Supabase — silencieux
   }, [seance]);
 
   const mm2 = String(Math.floor(elapsed/60)).padStart(2,'0');
@@ -362,6 +371,7 @@ export default function FocusMode({
         <DoneStage
           loggedSets={loggedSets}
           onNextExercise={nextExercise}
+          onFeedback={handleFeedback}
           coachMsg={coachMsg}
           premium={premium}
         />

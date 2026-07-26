@@ -16,6 +16,7 @@ import {
 } from"../../services/aiService.js";
 import { buildDossierAthlete } from"../../services/coachBrainService.js";
 import { analyserMorpho, getFicheMorpho, ficheEstValide } from"../../services/morphoService.js";
+import { syncCycleOutcome } from"../../services/syncService.js";
 import {
   T, F, SER, MON, CARD, InjectCSS, OI,
   PoseCard, Stepper, NavBtns, FL, SelRow,
@@ -77,10 +78,12 @@ export default function AnalyseIA(props) {
 
       const np = buildProgramFromAI(parsed, { form, cycles });
       if (prog && setCycles) {
-        setCycles(prev => [...prev, {
+        const archive = {
           ...prog, archiveDate: new Date().toLocaleDateString("fr-FR"),
           chargesResume: summarizeProgramLoads(prog),
-        }]);
+        };
+        setCycles(prev => [...prev, archive]);
+        syncCycleOutcome(archive);                 // journal Supabase — silencieux
       }
       setProg(np); setCycleStart(Date.now());
       setAStep(0); setPhotos({ face:null, dos:null, profil:null });

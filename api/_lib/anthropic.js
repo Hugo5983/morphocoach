@@ -56,6 +56,8 @@ export function parseJSON(rawText) {
   if (oB > cB) s +="}".repeat(oB - cB);
   const oA = (s.match(/\[/g) || []).length, cA = (s.match(/\]/g) || []).length;
   if (oA > cA) s +="]".repeat(oA - cA) +"}";
+  // Virgules terminales ("...2,]" / "...x,}") : mode d'échec fréquent des LLM.
+  s = s.replace(/,\s*([}\]])/g, "$1");
   return JSON.parse(s);
 }
 
@@ -64,7 +66,7 @@ export function normalizeExo(nom) {
   return String(nom ||"")
     .toLowerCase()
     .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
-    .replace(/[^a-z0-9 ]/g,"")
-    .replace(/\s+/g,"")
+    .replace(/[^a-z0-9 ]/g," ")
+    .replace(/\s+/g," ")
     .trim();
 }

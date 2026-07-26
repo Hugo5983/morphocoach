@@ -11,8 +11,8 @@ self.addEventListener("message", (e) => {
     setTimeout(() => {
       self.registration.showNotification(title, {
         body,
-        icon: "/icons/icon-192.png",
-        badge: "/icons/icon-72.png",
+        icon: "/icon-192.png",
+        badge: "/icon-192.png",
         tag: tag || "morpho-reminder",
         vibrate: [100, 50, 100],
         data: { url: "/" },

@@ -45,28 +45,6 @@ export async function callGenerateProgramAPI({ form, dossier, ficheMorpho }) {
   return data;
 }
 
-// ─── PARSE RÉPONSE IA (conservé pour compatibilité/outils) ──────────────────
-/**
- * @param {string} rawText
- * @returns {import('../types').AIRawResponse}
- */
-export function parseAIResponse(rawText) {
-  if (!rawText) throw new Error("Réponse vide de l'API");
-  let jsonStr = rawText.replace(/```json\s*/gi,"").replace(/```\s*/g,"").trim();
-  const jStart = jsonStr.indexOf("{");
-  const jEnd   = jsonStr.lastIndexOf("}");
-  if (jStart === -1 || jEnd === -1 || jEnd <= jStart) throw new Error("Pas de JSON dans la réponse");
-  jsonStr = jsonStr.substring(jStart, jEnd + 1);
-  const openB  = (jsonStr.match(/\{/g) || []).length;
-  const closeB = (jsonStr.match(/\}/g) || []).length;
-  if (openB > closeB) jsonStr +="}".repeat(openB - closeB);
-  const openBr  = (jsonStr.match(/\[/g) || []).length;
-  const closeBr = (jsonStr.match(/\]/g) || []).length;
-  if (openBr > closeBr) jsonStr +="]".repeat(openBr - closeBr) +"}";
-  try { return JSON.parse(jsonStr); }
-  catch (e) { throw new Error("JSON mal formé:" + e.message.substring(0, 50)); }
-}
-
 // ─── BUILD PROGRAMME DEPUIS RÉPONSE IA ───────────────────────────────────────
 /**
  * Construit un Programme complet depuis la réponse parsée de l'IA.
@@ -204,7 +182,7 @@ export function summarizeProgramLoads(prog) {
     j.exercices.forEach((ex) => {
       if (ex.historique?.length > 0) {
         const max = Math.max(...ex.historique.map((h) => parseFloat(h.poids) || 0));
-        if (max > 0) chargesResume.push(`${ex.nom.split("")[0]}: ${max}kg`);
+        if (max > 0) chargesResume.push(`${ex.nom.split(" ")[0]}: ${max}kg`);
       }
     })
 );

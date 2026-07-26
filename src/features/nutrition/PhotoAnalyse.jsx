@@ -7,6 +7,7 @@ import { useState, useRef, useCallback } from"react";
 import { ID } from"../../components/ui/Icon.jsx";
 import useScrollTop from"../../hooks/useScrollTop.js";
 import { C, DARK, FONT, SERIF } from"../../data/constants.js";
+import { authHeaders } from"../../services/morphoService.js";
 
 // ─── Constantes ───────────────────────────────────────────────────────────────
 const STORAGE_KEY_PREFIX ="mc_photoAnalyses_";
@@ -52,36 +53,6 @@ function fileToBase64(file) {
     reader.readAsDataURL(file);
   });
 }
-
-// ─── Prompt IA ────────────────────────────────────────────────────────────────
-
-const ANALYSE_PROMPT =`Tu es un nutritionniste expert en estimation visuelle des portions.
-
-MÉTHODE (dans cet ordre) :
-1. Identifie CHAQUE aliment visible séparément.
-2. Estime le poids de chacun en te servant des repères d'échelle visibles :
-   assiette standard = 26 cm, fourchette = 20 cm, cuillère à soupe = 15 g,
-   paume de main = ~100 g de viande, poing = ~150 g de féculents cuits.
-3. Donne les macros de CHAQUE aliment pour son poids estimé (pas pour 100 g).
-
-Réponds UNIQUEMENT avec un objet JSON valide, sans markdown ni backticks :
-{
-"nom":"Nom du plat (2-4 mots)",
-"description":"Ce que tu vois, en 1 phrase",
-"items": [
-    {"nom":"Riz basmati cuit","grammes": 180,"calories": 234,"proteines": 5,"glucides": 50,"lipides": 1 },
-    {"nom":"Blanc de poulet grillé","grammes": 140,"calories": 231,"proteines": 43,"glucides": 0,"lipides": 5 }
-  ],
-"fiabilite":"haute|moyenne|basse",
-"note":"Ce qui limite la précision (ex : sauce non identifiable, aliments cachés)"
-}
-
-Règles :
-- N'invente RIEN : uniquement ce qui est visible. Matières grasses de cuisson :
-  ajoute un item"Huile de cuisson (estimée)" ~10 g seulement si le plat brille.
-- fiabilite"basse" si l'échelle est incertaine ou des aliments sont cachés/mélangés.
-- Aucune nourriture visible →"items": [] et fiabilite"basse".
-- Nombres entiers uniquement.`;
 
 // ─── Icône ────────────────────────────────────────────────────────────────────
 function CameraIcon({ size = 20, color ="currentColor" }) {
@@ -189,35 +160,18 @@ export default function PhotoAnalyse({ onClose, onAdd, premium, setPaywall, push
     setError(null);
 
     try {
-      const res = await fetch("/api/generate", {
+      const res = await fetch("/api/analyze-meal", {
         method:"POST",
-        headers: {"Content-Type":"application/json" },
-        body: JSON.stringify({
-          model:"claude-sonnet-4-20250514",
-          max_tokens: 1000,
-          temperature: 0,
-          messages: [{
-            role:"user",
-            content: [
-              {
-                type:"image",
-                source: {
-                  type:"base64",
-                  media_type:"image/jpeg",
-                  data: base64,
-                },
-              },
-              { type:"text", text: ANALYSE_PROMPT },
-            ],
-          }],
-        }),
+        headers: await authHeaders(),
+        body: JSON.stringify({ image: base64 }),
       });
 
-      if (!res.ok) throw new Error(`Erreur API ${res.status}`);
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error ||`Erreur API ${res.status}`);
+      }
       const data = await res.json();
-      const text = data.content?.[0]?.text ||"";
-      const clean = text.replace(/```json\n?|\n?```/g,"").trim();
-      const parsed = JSON.parse(clean);
+      const parsed = data.result || {};
 
       // Totaux recalculés en JS depuis les items : le modèle est bien meilleur
       // pour identifier et peser chaque aliment que pour deviner un total —

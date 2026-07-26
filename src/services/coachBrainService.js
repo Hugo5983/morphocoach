@@ -281,64 +281,11 @@ export function buildExerciseMemory({ prog, cycles, verdicts, feedbacks }) {
   };
 }
 
-// ─── 6. DIRECTIVES DE VARIATION (rotation split / méthodes / reps) ──────────
-
-const SPLITS_PAR_JOURS = {
-  2: ["Corps entier ×2 (patterns différents chaque séance)","Haut / Bas"],
-  3: ["Push / Pull / Legs","Corps entier ×3 à dominantes différentes","Haut / Bas / Corps entier","Tirage-Postérieur / Poussée / Jambes-Gainage"],
-  4: ["Haut / Bas ×2 (intensité ≠ volume)","Push / Pull / Legs / Haut","Torse / Dos / Jambes / Bras-Épaules","Poussée / Tirage / Jambes / Points faibles"],
-  5: ["Push / Pull / Legs / Haut / Bas","Split spécialisation point faible (2 séances dédiées)","Torse / Dos / Jambes / Épaules-Bras / Full pump"],
-  6: ["Push / Pull / Legs ×2 (lourd puis volume)","Arnold split (Torse-Dos / Épaules-Bras / Jambes) ×2","Spécialisation : 2 séances point faible + PPL entretien"],
-};
-
-const ACCENTS_METHODE = [
-"Tempo contrôlé 3-1-3 sur toutes les isolations (connexion neuromusculaire)",
-"Travail unilatéral prioritaire (haltères/câble un bras-une jambe) sur les assistances",
-"Supersets antagonistes sur le milieu de séance (densité)",
-"Pré-fatigue du point faible avant le composé principal",
-"Rest-pause sur le DERNIER set de chaque composé",
-"Clusters 2×(3+3+3) sur les composés principaux",
-];
-
-const VAGUES_REPS = {
-  hypertrophie: ["6-8 composés / 10-12 assistance","8-12 partout, tempo strict","5-8 composés lourds / 12-15 isolations","10-15 métabolique, repos courts"],
-  force: ["3-5 composés / 6-8 assistance","5×5 linéaire","vague 5-3-1 / 8-10 assistance"],
-  poids: ["12-15 + circuits","10-12 supersets, repos 60s","15-20 métabolique + finishers"],
-  sante: ["12-15 confortable","10-12 varié machines/câbles","12-15 fonctionnel + gainage"],
-  prep_physique: ["5-8 force / 8-10 transfert","puissance 3-5 + conditionnement","contraste lourd-explosif"],
-};
-
-/**
- * Rotation déterministe MAIS dépendante du temps : le seed combine le numéro
- * de cycle ET la semaine de l'année. Résultat : regénérer 6 semaines plus
- * tard donne un split/accent/vague différents, même à profil identique.
- */
-export function getVariationDirectives({ cycleNum, nbJours, objectif, niveau }) {
-  const week = Math.floor(Date.now() / (7 * 864e5));   // semaine absolue
-  const seed = (cycleNum || 1) + week;
-
-  const pool = SPLITS_PAR_JOURS[Math.min(Math.max(nbJours || 3, 2), 6)] || SPLITS_PAR_JOURS[3];
-  const split = pool[seed % pool.length];
-
-  const accents = niveau ==="debutant" ? ACCENTS_METHODE.slice(0, 2) : ACCENTS_METHODE;
-  const accent = accents[(seed + 1) % accents.length];
-
-  const vagues = VAGUES_REPS[objectif] || VAGUES_REPS.hypertrophie;
-  const vague = vagues[(seed + 2) % vagues.length];
-
-  return {
-    split_impose: split,
-    accent_methode: accent,
-    vague_de_reps: vague,
-    regle_overlap:"MAXIMUM 40% des exercices peuvent provenir du cycle précédent. Les exercices repris doivent être EXCLUSIVEMENT ceux listés dans'exercices_a_conserver' (ils progressent). Tout le reste doit être renouvelé : autre variante du même pattern, autre angle, autre matériel.",
-  };
-}
-
 // ─── 7. DOSSIER ATHLÈTE COMPLET ─────────────────────────────────────────────
 
 /**
  * Assemble la Couche 0 complète.
- * @returns {{ dossier: object, directives: object }}
+ * @returns {{ dossier: object }}
  */
 export function buildDossierAthlete({ form, prog, cycles, corrigerFaibles }) {
   const detraining = analyzeDetraining({ prog, cycles });
@@ -346,12 +293,42 @@ export function buildDossierAthlete({ form, prog, cycles, corrigerFaibles }) {
   const adherence  = analyzeAdherence({ prog, form });
   const feedbacks  = analyzeFeedbacks();
   const memoire    = buildExerciseMemory({ prog, cycles, verdicts, feedbacks });
-  const directives = getVariationDirectives({
-    cycleNum: (cycles?.length || 0) + 1,
-    nbJours:  (form?.jours || []).length,
-    objectif: form?.objectif,
-    niveau:   form?.niveau,
-  });
+
+  // Tendance de poids corporel (30 derniers jours, si ≥ 2 pesées)
+  const weightLog = readJSON("mc_weightLog", []);
+  /** @type {Record<string, string|number>} */
+  let suiviPoids = { note:"Pas assez de pesées récentes." };
+  if (Array.isArray(weightLog)) {
+    const pts = /** @type {{d: Date, kg: number}[]} */ (weightLog
+      .map(e => ({ d: parseFrDate(e?.date), kg: parseFloat(e?.poids) }))
+      .filter(e => e.d && isFinite(e.kg) && daysSince(e.d) !== null && Number(daysSince(e.d)) <= 30))
+      .sort((a, b) => a.d.getTime() - b.d.getTime());
+    if (pts.length >= 2) {
+      const delta = Math.round((pts[pts.length - 1].kg - pts[0].kg) * 10) / 10;
+      suiviPoids = {
+        pesees_30j: pts.length,
+        delta_30j: (delta > 0 ?"+" :"") + delta +" kg",
+        dernier_poids: pts[pts.length - 1].kg +" kg",
+      };
+    }
+  }
+
+  // Nutrition réelle (journal des 14 derniers jours renseignés)
+  const repasLog = readJSON("mc_repasLog", {});
+  /** @type {Record<string, string|number>} */
+  let nutritionRecente = { note:"Pas de journal nutrition récent." };
+  {
+    const jours = Object.values(repasLog || {})
+      .filter(j => j && j.kcal > 0 && daysSince(j.date) !== null && Number(daysSince(j.date)) <= 14);
+    if (jours.length >= 3) {
+      const avg = (k) => Math.round(jours.reduce((a, j) => a + (j[k] || 0), 0) / jours.length);
+      nutritionRecente = {
+        jours_renseignes_14j: jours.length,
+        kcal_moyennes: avg("kcal"),
+        proteines_moyennes: avg("prot") +" g",
+      };
+    }
+  }
 
   // Récupération : sommeil moyen 7 derniers jours si loggé
   const sleepLog = readJSON("morpho_sleep_log", {});
@@ -369,13 +346,17 @@ export function buildDossierAthlete({ form, prog, cycles, corrigerFaibles }) {
     personnalite_sportive: adherence,
     feedback_corporel: feedbacks,
     memoire_exercices: memoire,
+    suivi_poids: suiviPoids,
+    nutrition_recente: nutritionRecente,
     recuperation: sommeilMoyen !== null
       ? { sommeil_moyen_7j: sommeilMoyen +"h", note: sommeilMoyen < 6.5 ?"Sommeil insuffisant → réduire le volume de 10-15%, éviter l'échec fréquent." :"Récupération correcte." }
       : { note:"Pas de données sommeil récentes." },
     priorite_points_faibles: !!corrigerFaibles,
   };
 
-  return { dossier, directives };
+  // Les directives de variation (split / accent / vague) sont recalculées
+  // CÔTÉ SERVEUR (couche0.js) — source unique de vérité depuis la V3.
+  return { dossier };
 }
 
 /** Sérialisation compacte pour injection dans le prompt (budget tokens). */

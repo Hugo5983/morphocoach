@@ -44,7 +44,14 @@ export default function Nutrition(props){
   };
 
   // ── Persistance du vrai jour dans repasLog (historique daté réel) ──────────
-  const todayISO = new Date().toISOString().split("T")[0];
+  // Date LOCALE (pas UTC) : avant ce correctif, une saisie entre minuit et
+  // ~2 h du matin (heure française) était archivée sur la clé de la VEILLE,
+  // car toISOString() renvoie la date UTC. Aligné sur la remise à zéro d'App.jsx.
+  const todayISO = (() => {
+    const d = new Date();
+    d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+    return d.toISOString().split("T")[0];
+  })();
   useEffect(() => {
     if (!setRepasLog) return;
     const hasFood = (tot.cal || 0) > 0;

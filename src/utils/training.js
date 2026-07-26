@@ -11,18 +11,24 @@ import { EX } from"../data/exercises.js";
  * @param {string | undefined} nom
  * @returns {Record<string, unknown> | null}
  */
+const normEx = (s) => String(s || "").toLowerCase().normalize("NFD")
+  .replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9 ]/g, " ").replace(/\s+/g, " ").trim();
+
 export function findExInDB(nom) {
   if (!nom) return null;
-  const n = nom.toLowerCase();
+  const n = normEx(nom);
+  if (!n) return null;
+  let fallback = null;
   for (const group of Object.values(EX)) {
-    const found = group.find(e =>
-      e.n.toLowerCase() === n ||
-      n.includes(e.n.toLowerCase().split("")[0]) ||
-      e.n.toLowerCase().includes(n.split("")[0])
-);
-    if (found) return found;
+    for (const e of group) {
+      const en = normEx(e.n);
+      if (en === n) return e;                       // 1. exact (accents ignorés)
+      if (!fallback && en.length >= 8 && (n.includes(en) || en.includes(n))) {
+        fallback = e;                               // 2. inclusion du nom complet
+      }
+    }
   }
-  return null;
+  return fallback;                                  // 3. sinon : null (pas de faux match)
 }
 
 /**

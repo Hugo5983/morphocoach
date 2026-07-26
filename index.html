@@ -37,7 +37,12 @@
       // On le désinstalle et on vide le cache automatiquement, une fois.
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.getRegistrations().then(function (regs) {
-          regs.forEach(function (r) { r.unregister(); });
+          regs.forEach(function (r) {
+            // Ne désinscrire QUE l'ancien sw.js (cache legacy) — jamais
+            // sw-morpho.js, qui porte les notifications de rappel.
+            var url = (r.active || r.waiting || r.installing || {}).scriptURL || '';
+            if (url.indexOf('sw-morpho') === -1) { r.unregister(); }
+          });
         }).catch(function () {});
       }
       if ('caches' in window) {

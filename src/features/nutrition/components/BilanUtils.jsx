@@ -27,8 +27,14 @@ for (const f of FOODS) FOODS_BY_NAME[(f.n||"").toLowerCase()] = f;
 export function enrichItem(item) {
   if (item.fi !== undefined && item.cat) return item;
   const key = (item.n || item.nom ||"").toLowerCase();
+  // Correspondance sur le PREMIER MOT significatif (≥ 4 lettres) uniquement —
+  // l'ancien code comparait à la première LETTRE, ce qui rattachait n'importe
+  // quel aliment au premier de la base contenant cette lettre.
+  const firstWord = key.split(" ")[0];
   const match = FOODS_BY_NAME[key] ||
-    FOODS.find(f => key && key.includes(f.n.toLowerCase().split("")[0]));
+    (firstWord.length >= 4
+      ? FOODS.find(f => f.n.toLowerCase().startsWith(firstWord))
+      : undefined);
   if (!match) return item;
   return { ...match, ...item, cat: item.cat || match.cat };
 }

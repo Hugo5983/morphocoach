@@ -321,7 +321,7 @@ function RestStage({ rest, total, nextKg, nextReps, nextNum, onSkip, onAdd }) {
 }
 
 // ── DoneStage avec bottom sheet feedback (facultatif, free + PRO) ────────────
-function DoneStage({ loggedSets, onNextExercise, coachMsg, premium }) {
+function DoneStage({ loggedSets, onNextExercise, onFeedback, coachMsg, premium }) {
   const vol = loggedSets.reduce((a,s) => a + s.kg * s.reps, 0);
   const pr  = loggedSets.reduce((a,s) => Math.max(a, s.kg), 0);
 
@@ -352,7 +352,11 @@ function DoneStage({ loggedSets, onNextExercise, coachMsg, premium }) {
     return coachMsg ||`${loggedSets.length} séries bouclées. Beau travail, continue.`;
   })();
 
-  const validate = () => { setSheetOpen(false); onNextExercise(); };
+  const validate = () => {
+    if (anyNote) onFeedback?.({ rpe, pain, feel });   // ← persiste le ressenti (Coach Brain)
+    setSheetOpen(false);
+    onNextExercise();
+  };
 
   return (
     <div style={{ flex:1, overflowY:'auto', WebkitOverflowScrolling:'touch',

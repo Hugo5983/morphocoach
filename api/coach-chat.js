@@ -7,6 +7,7 @@
 
 import { guard, checkAccess } from"./_lib/security.js";
 import { callAnthropic } from"./_lib/anthropic.js";
+import { checkAndCountUsage } from "./_lib/usage.js";
 import { BOT_EMS, BOT_OCCLUSION, BOT_POTENTIATION, BOT_ZONE_BRULE_GRAISSE,
          BOT_RECUP_SOMMEIL, BOT_TEMPERATURE } from"./_knowledge/bot/curiosites.js";
 import { BOT_COMPLEMENTS, BOT_NUTRITION } from"./_knowledge/bot/nutrition_complements.js";
@@ -28,12 +29,21 @@ const ROUTES = [
 function routeKnowledge(messages) {
   const lastUsers = (messages || [])
     .filter(m => m.role ==="user").slice(-2)
-    .map(m => String(m.content ||"")).join("")
+    .map(m => String(m.content ||"")).join(" ")
     .normalize("NFD").replace(/[\u0300-\u036f]/g,"");
   const mods = new Set();
   for (const r of ROUTES) if (r.re.test(lastUsers)) mods.add(r.mod);
   return [...mods].slice(0, 3).join("\n\n"); // 3 modules max → prompt maîtrisé
 }
+
+
+// ─── Sanitisation du contexte client ────────────────────────────────────────
+// prenom / objectif sont des chaînes libres fournies par le client et
+// interpolées dans le system prompt : on neutralise sauts de ligne et
+// longueur pour fermer le vecteur d'injection de prompt.
+const cleanStr = (v, max = 40) =>
+  String(v ?? "").replace(/[\r\n]+/g, " ").replace(/\s{2,}/g, " ").trim().slice(0, max);
+const cleanNum = (v) => (Number.isFinite(Number(v)) ? Number(v) : null);
 
 function buildSystem({ contexte, knowledge }) {
   const c = contexte || {};
@@ -41,8 +51,8 @@ function buildSystem({ contexte, knowledge }) {
   return`Tu es le Coach IA de MorphoCoach : spécialiste de la nutrition sportive ET des questions de science de l'entraînement (récupération, techniques, compléments, mythes du fitness).
 
 PROFIL DE L'UTILISATEUR :
-- Prénom : ${c.prenom ||"l'utilisateur"} | Objectif : ${c.objectif ||"non défini"}
-- Cible calorique : ${c.calObj ||"—"} kcal/j | Macros cibles : P ${c.pObj ||"—"}g · G ${c.gObj ||"—"}g · L ${c.lObj ||"—"}g
+- Prénom : ${cleanStr(c.prenom) || "l'utilisateur"} | Objectif : ${cleanStr(c.objectif) || "non défini"}
+- Cible calorique : ${cleanNum(c.calObj) ?? "—"} kcal/j | Macros cibles : P ${cleanNum(c.pObj) ?? "—"}g · G ${cleanNum(c.gObj) ?? "—"}g · L ${cleanNum(c.lObj) ?? "—"}g
 
 BILAN NUTRITION 14 JOURS : score ${b.score ??"—"}/10 · ${b.avgKcal ? Math.round(b.avgKcal) :"—"} kcal/j (${b.pctKcal ?? 0}% de la cible) · ${b.nbLogged ??"—"}/${b.totalDays ?? 14} jours loggés · P ${b.avgProt ? Math.round(b.avgProt) :"—"}g · G ${b.avgGluc ? Math.round(b.avgGluc) :"—"}g · L ${b.avgLip ? Math.round(b.avgLip) :"—"}g
 ${knowledge ?`\n═══ CONNAISSANCE MORPHOCOACH PERTINENTE POUR CETTE QUESTION ═══\n${knowledge}\n(Utilise cette connaissance en priorité : elle fait autorité chez MorphoCoach.)` :""}
@@ -61,6 +71,9 @@ export default async function handler(req, res) {
 
   const access = await checkAccess(req);
   if (!access.ok) return res.status(access.status).json({ error: access.error });
+
+  const quota = await checkAndCountUsage(access, "chat");
+  if (!quota.ok) return res.status(quota.status).json({ error: quota.error });
 
   const { messages, contexte } = req.body || {};
   if (!Array.isArray(messages) || messages.length === 0)
