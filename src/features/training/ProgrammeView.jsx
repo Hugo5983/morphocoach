@@ -341,31 +341,56 @@ export default function ProgrammeView(props) {
       {/* ── Programme actif — maquette 2a ── */}
       {prog && prog.jours?.length > 0 && (<>
 
-        {/* Hero — programme actif, semaine en cours, progression */}
+        {/* Hero — programme actif, même famille visuelle que le hero "pas de programme" */}
         <div style={{
-          borderRadius:22, overflow:"hidden", marginBottom:18,
-          background:"radial-gradient(120% 100% at 88% 0%,#4257E8 0%,#2C3BC4 45%,#1B268C 100%)",
-          padding:"18px 20px", display:"flex", flexDirection:"column", gap:14,
-          boxShadow:"0 16px 40px rgba(27,38,140,0.4)",
+          borderRadius:22, overflow:"hidden", marginBottom:18, position:"relative",
+          background:"linear-gradient(140deg,#101318 0%,#101318 30%,#101318 65%,#101318 100%)",
+          boxShadow:"0 16px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(60,91,255,0.18)",
         }}>
-          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-            <span style={{fontSize:11,fontWeight:800,letterSpacing:"0.1em",color:"rgba(255,255,255,0.72)",fontFamily:DISP_F}}>PROGRAMME ACTIF</span>
-            <span style={{fontSize:12,fontWeight:800,color:"#FFF",background:"rgba(255,255,255,0.16)",padding:"5px 11px",borderRadius:99,fontFamily:DISP_F}}>
-              Semaine {Math.min(semN, TOTAL_SEMAINES)} / {TOTAL_SEMAINES}
-            </span>
-          </div>
-          <span style={{fontSize:22,fontWeight:800,letterSpacing:-0.3,color:"#FFF",lineHeight:1.15,fontFamily:DISP_F}}>
-            {prog.titre || "Mon programme"}
-          </span>
-          <div style={{display:"flex",flexDirection:"column",gap:8}}>
+          {/* Glows */}
+          <div style={{position:"absolute",top:-50,left:-24,width:170,height:170,borderRadius:"50%",
+            background:"radial-gradient(circle,rgba(109,40,217,0.22),transparent 65%)",pointerEvents:"none"}}/>
+          <div style={{position:"absolute",bottom:-36,right:20,width:150,height:150,borderRadius:"50%",
+            background:"radial-gradient(circle,rgba(60,91,255,0.18),transparent 65%)",pointerEvents:"none"}}/>
+
+          {/* Grille abstraite en filigrane */}
+          <svg style={{position:"absolute",top:0,left:0,width:"100%",height:"100%",
+            opacity:0.05,pointerEvents:"none"}} viewBox="0 0 380 200" preserveAspectRatio="xMidYMid slice">
+            {[0,1,2,3,4].map(i=><line key={`h${i}`} x1="0" y1={i*44} x2="380" y2={i*44} stroke="#9DB0FF" strokeWidth="0.6"/>)}
+            {[0,1,2,3,4,5,6,7,8,9].map(i=><line key={`v${i}`} x1={i*40} y1="0" x2={i*40} y2="200" stroke="#9DB0FF" strokeWidth="0.6"/>)}
+          </svg>
+
+          {/* Ligne lumineuse top */}
+          <div style={{position:"absolute",top:0,left:0,right:0,height:1,
+            background:"linear-gradient(90deg,transparent,rgba(60,91,255,0.65),rgba(60,91,255,0.65),transparent)",
+            pointerEvents:"none"}}/>
+
+          <div style={{position:"relative",zIndex:1,padding:"18px 20px",display:"flex",flexDirection:"column",gap:14}}>
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-              <span style={{fontSize:12.5,fontWeight:600,color:"rgba(255,255,255,0.72)",fontFamily:DISP_F}}>Cette semaine</span>
-              <span style={{fontSize:12.5,fontWeight:800,color:"#FFF",fontFamily:DISP_F}}>
-                {Math.min(semC||0, prog.jours.length)} / {prog.jours.length} séance{prog.jours.length!==1?"s":""}
+              <span style={{display:"inline-flex",alignItems:"center",gap:5,
+                padding:"4px 11px",borderRadius:99,
+                background:"linear-gradient(135deg,rgba(109,40,217,0.25),rgba(60,91,255,0.18))",
+                border:"1px solid rgba(60,91,255,0.35)",
+                fontSize:10,fontWeight:800,letterSpacing:"0.08em",color:"#C9D3FF",fontFamily:DISP_F}}>
+                PROGRAMME ACTIF
+              </span>
+              <span style={{fontSize:11.5,fontWeight:800,color:"#FFF",background:"rgba(255,255,255,0.14)",padding:"5px 11px",borderRadius:99,fontFamily:DISP_F}}>
+                Semaine {Math.min(semN, TOTAL_SEMAINES)} / {TOTAL_SEMAINES}
               </span>
             </div>
-            <div style={{height:8,borderRadius:99,background:"rgba(255,255,255,0.18)",overflow:"hidden"}}>
-              <div style={{height:"100%",width:`${prog.jours.length?Math.round(Math.min(semC||0,prog.jours.length)/prog.jours.length*100):0}%`,background:"#FFF",borderRadius:99}}/>
+            <span style={{fontSize:21,fontWeight:800,letterSpacing:-0.3,color:"#FFF",lineHeight:1.2,fontFamily:DISP_F}}>
+              {prog.titre || "Mon programme"}
+            </span>
+            <div style={{display:"flex",flexDirection:"column",gap:8}}>
+              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                <span style={{fontSize:12,fontWeight:600,color:"rgba(255,255,255,0.6)",fontFamily:DISP_F}}>Cette semaine</span>
+                <span style={{fontSize:12,fontWeight:800,color:"#FFF",fontFamily:DISP_F}}>
+                  {Math.min(semC||0, prog.jours.length)} / {prog.jours.length} séance{prog.jours.length!==1?"s":""}
+                </span>
+              </div>
+              <div style={{height:7,borderRadius:99,background:"rgba(255,255,255,0.14)",overflow:"hidden"}}>
+                <div style={{height:"100%",width:`${prog.jours.length?Math.round(Math.min(semC||0,prog.jours.length)/prog.jours.length*100):0}%`,background:"linear-gradient(90deg,#9DB0FF,#3C5BFF)",borderRadius:99}}/>
+              </div>
             </div>
           </div>
         </div>
