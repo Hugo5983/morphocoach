@@ -24,6 +24,9 @@ export default function Nutrition(props){
   useScrollTop(nView);
   const [repasSheet, setRepasSheet] = useState(null);  // id du repas ouvert
   const [showPhoto, setShowPhoto] = useState(false);
+  // Repas depuis lequel l'analyse photo a été ouverte (null = depuis le journal).
+  // Sert uniquement à pré-sélectionner la bonne ligne dans ChoixRepasSheet.
+  const [photoRepas, setPhotoRepas] = useState(/** @type {string|null} */ (null));
   const [search,  setSearch]  = useState("");
   const [newFood, setNewFood] = useState({nom:"",cal:"",p:"",g:"",l:""});
   const [scanCode,setScan]    = useState("");
@@ -104,13 +107,15 @@ export default function Nutrition(props){
 )}
     {showPhoto && (
       <PhotoAnalyse
-        onClose={()=>setShowPhoto(false)}
+        onClose={()=>{ setShowPhoto(false); setPhotoRepas(null); }}
         onAdd={(aliment, repasId)=>{
           setRepas(rp=>({...rp,[repasId]:[...(rp[repasId]||[]),aliment]}));
         }}
         premium={premium}
         setPaywall={setPaywall}
         push={push}
+        repasId={photoRepas}
+        contenuRepas={repas}
       />
 )}
     {repasSheet && (()=>{
@@ -132,7 +137,7 @@ export default function Nutrition(props){
           onRemove={idx => setRepas(rp=>({...rp,[m.id]:rp[m.id].filter((_,j)=>j!==idx)}))}
           onClose={()=>setRepasSheet(null)}
           onScan={()=>setShowCamera(true)}
-          onPhoto={()=>setShowPhoto(true)}
+          onPhoto={()=>{ setPhotoRepas(m.id); setShowPhoto(true); }}
           premium={premium}
           scanRes={scanRes}
           setScanRes={setScanRes}
@@ -258,7 +263,7 @@ export default function Nutrition(props){
                     }}>
                       <I name="scan" size={13} stroke={2.2} color="#FFF"/> Scanner
                     </button>
-                    <button className="tap" onClick={()=>setShowPhoto(true)} style={{
+                    <button className="tap" onClick={()=>{ setPhotoRepas(null); setShowPhoto(true); }} style={{
                       display:'inline-flex',alignItems:'center',gap:8,
                       padding:'8px 16px',
                       background: premium ?'linear-gradient(145deg,#9DB0FF,#3C5BFF)' :'linear-gradient(145deg,#C9D3FF,#9DB0FF)',

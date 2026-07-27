@@ -55,7 +55,7 @@ export default function App() {
     home:      ["today","pro","coach"],
     program:   ["today","creer","calendar","analyse"],
     nutrition: ["journal","coach","dashboard","bilan"],
-    recipes:   ["all","favorites","coach","pro"],
+    recipes:   ["all","favorites","coach","liste"],
     profile:   ["Profil","Compo.","Mesures","coach"],
   };
   const SUB_SETTERS = useRef({});
@@ -391,7 +391,7 @@ export default function App() {
             home:      { items:[{id:"today",label:"Aujourd'hui"},{id:"pro",label:"Offre du moment"},{id:"coach",label:"Coach"}], view:subViewHome, set:(v)=>{ if(v==="coach"){setTab("coach");} else{setSubViewHome(v);} } },
             program:   { items:[{id:"today",label:"Aujourd'hui"},{id:"creer",label:"Programme"},{id:"calendar",label:"Planning"},{id:"analyse",label:"Analyse",pro:true}], view:subViewTraining, set:setSubViewTraining },
             nutrition: { items:[{id:"journal",label:"Journal"},{id:"coach",label:"Coach"},{id:"dashboard",label:"Bilan Pro",pro:true},{id:"bilan",label:"Analyse",pro:true}], view:subViewNutrition, set:(v)=>{ if(v==="coach"){setTab("coach");} else{setSubViewNutrition(v);} } },
-            recipes:   { items:[{id:"all",label:"Toutes"},{id:"favorites",label:"Favoris"},{id:"coach",label:"Coach"},{id:"pro",label:"Premium",pro:true}], view:subViewRecipes, set:(v)=>{ if(v==="coach"){setTab("coach");} else{setSubViewRecipes(v);} } },
+            recipes:   { items:[{id:"all",label:"Toutes"},{id:"favorites",label:"Favoris"},{id:"coach",label:"Coach"},{id:"liste",label:"Liste"}], view:subViewRecipes, set:(v)=>{ if(v==="coach"){setTab("coach");} else{setSubViewRecipes(v);} } },
             profile:   { items:[{id:"Profil",label:"Profil"},{id:"Compo.",label:"Compo"},{id:"Mesures",label:"Mesures"},{id:"coach",label:"Coach"}], view:subViewProfile, set:(v)=>{ if(v==="coach"){setTab("coach");} else{setSubViewProfile(v);} } },
           };
           const nav = NAVS[tab];

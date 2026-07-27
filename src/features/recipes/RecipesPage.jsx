@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from"react";
 import useScrollTop from"../../hooks/useScrollTop.js";
 import { RECIPES, REPAS, FILTRE_GROUPES, FILTRES, recipeBadge, prixEuros } from"../../data/recipes.js";
 import RecipeDetail from"./RecipeDetail.jsx";
+import ListeDeCourses from"./ListeDeCourses.jsx";
 import { useRecipePhoto } from"./useRecipePhoto.js";
 import { C, FONT, NUM } from"../../data/constants.js";
 import { I } from"../../components/ui/Icon.jsx";
@@ -153,7 +154,7 @@ export default function Recipes(props) {
   const [liked,     setLiked]     = useState({});
   const [selected,  setSelected]  = useState(null);
   const showFavs  = subView ==="favorites";
-  const showPro   = subView ==="pro";
+  const showListe = subView ==="liste";
   const [voirTout,  setVoirTout]  = useState(null);   // id de la section dépliée
   useScrollTop(voirTout);
 
@@ -170,13 +171,15 @@ export default function Recipes(props) {
       push={push} repas={repas} setRepas={setRepas}/>
   );
 
+  // ── Liste de courses (remplace l'ancien onglet Premium) ──
+  if (showListe) return <ListeDeCourses premium={premium}/>;
+
   // ── Filtrage ──
   const sl = search.toLowerCase();
   const matchSearch = (r) => !sl || r.nom.toLowerCase().includes(sl);
   const matchFiltre = (r) => filtres.every(f => r.tags?.includes(f));
   const matchFav    = (r) => !showFavs || !!liked[r.id];
-  const matchPro    = (r) => !showPro || !r.free;
-  const visible = RECIPES.filter(r => matchSearch(r) && matchFiltre(r) && matchFav(r) && matchPro(r));
+  const visible = RECIPES.filter(r => matchSearch(r) && matchFiltre(r) && matchFav(r));
 
   // Grouper par repas
   const sections = REPAS.map(rep => ({
@@ -185,7 +188,7 @@ export default function Recipes(props) {
 
   // Hero : 3 recettes récentes (ou les premières protéinées)
   const heroRecipes = RECIPES.filter(r => r.tags?.includes("proteine")).slice(0, 3);
-  const showHome = !search && filtres.length === 0 && !showFavs && !showPro && !voirTout;
+  const showHome = !search && filtres.length === 0 && !showFavs && !showListe && !voirTout;
 
   // ── Vue « Voir tout » d'une section ──
   if (voirTout) {

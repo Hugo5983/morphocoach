@@ -1,43 +1,63 @@
 // @ts-check
 // ─── PHOTO ANALYSE — Analyse macros par photo d'assiette ──────────────────────
 // Feature Premium : 5 analyses/mois gratuites, 180/mois pour les abonnés PRO.
-// Flow : Upload photo → Claude Vision → Résultat macros → Choix repas → Ajout journal
+// Flow : Cadrer → Analyser → Vérifier les portions → Choix du repas → Journal
+//
+// Refonte visuelle (juillet 2026) — ce qui change et pourquoi :
+//   1. Vue plein écran opaque montée en portal sur document.body. L'ancienne
+//      version se posait dans le flux de la page : l'en-tête et la barre
+//      d'onglets restaient visibles au-dessus du voile sombre.
+//   2. Thème clair, comme le reste de l'app. L'ancienne version peignait un
+//      fond sombre avec les tokens clairs (C.text sur rgba(5,8,18,.97)) :
+//      titres noirs sur fond noir, donc illisibles.
+//   3. Un seul déclencheur au lieu de trois éléments concurrents.
+//   4. Écran de vérification : les portions s'ajustent aliment par aliment
+//      (l'ancien curseur global appliquait le même facteur à tout le plat).
+//   5. Le choix du repas est demandé à l'enregistrement, via ChoixRepasSheet.
+//
+// Contrat inchangé : props identiques, onAdd(aliment, repasId) reçoit toujours
+// { n, c, p, g, l } et le compteur mensuel garde exactement la même logique.
 
-import { useState, useRef, useCallback } from"react";
-import { ID } from"../../components/ui/Icon.jsx";
-import useScrollTop from"../../hooks/useScrollTop.js";
-import { C, DARK, FONT, SERIF } from"../../data/constants.js";
-import { authHeaders } from"../../services/morphoService.js";
+import { useState, useRef, useCallback, useEffect } from "react";
+import { createPortal } from "react-dom";
+import { I, ID } from "../../components/ui/Icon.jsx";
+import { C, FONT, NUM, SPACE, TYPE, RADIUS, SHADOW, Z, MOTION } from "../../styles/tokens.js";
+import { authHeaders } from "../../services/morphoService.js";
+import ChoixRepasSheet from "./ChoixRepasSheet.jsx";
 
 // ─── Constantes ───────────────────────────────────────────────────────────────
-const STORAGE_KEY_PREFIX ="mc_photoAnalyses_";
+const STORAGE_KEY_PREFIX = "mc_photoAnalyses_";
 const FREE_LIMIT = 5;
-const PRO_LIMIT   = 180;
+const PRO_LIMIT  = 180;
 
-const MEALS = [
-  { id:"matin", l:"Petit-déj." },
-  { id:"midi",  l:"Déjeuner"   },
-  { id:"soir",  l:"Dîner"      },
-  { id:"snack", l:"Collation"  },
+const PAS_GRAMMES = 10;   // incrément du stepper de portion
+
+// Étapes annoncées pendant l'attente — elles décrivent le travail réellement
+// fait côté serveur (identification puis pesée puis macros).
+const ETAPES = [
+  "Lecture de la photo",
+  "Identification des aliments",
+  "Estimation des portions",
+  "Calcul des macros",
 ];
 
 // ─── Helpers compteur mensuel ─────────────────────────────────────────────────
 
 function getMonthKey() {
   const d = new Date();
-  return`${STORAGE_KEY_PREFIX}${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`;
+  return `${STORAGE_KEY_PREFIX}${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`;
 }
 
 function getUsedCount() {
   try {
-    return parseInt(localStorage.getItem(getMonthKey()) ||"0", 10);
+    return parseInt(localStorage.getItem(getMonthKey()) || "0", 10);
   } catch { return 0; }
 }
 
 function incrementUsedCount() {
   try {
     const key = getMonthKey();
-    const current = parseInt(localStorage.getItem(key) ||"0", 10);
+    const current = parseInt(localStorage.getItem(key) || "0", 10);
     localStorage.setItem(key, String(current + 1));
     return current + 1;
   } catch { return 1; }
@@ -54,54 +74,100 @@ function fileToBase64(file) {
   });
 }
 
-// ─── Icône ────────────────────────────────────────────────────────────────────
-function CameraIcon({ size = 20, color ="currentColor" }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
-      stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-      <circle cx="12" cy="13" r="4"/>
-    </svg>
-);
-}
+// ─── Marge d'erreur affichée selon la fiabilité annoncée par le modèle ────────
+const MARGE = { haute: "± 8 %", moyenne: "± 15 %", basse: "± 25 %" };
 
-function LockIcon({ size = 14 }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-      <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-    </svg>
-);
-}
-
-function SparkIcon({ size = 16 }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
-      <path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/>
-    </svg>
-);
-}
-
-// ─── Pastille fiabilité ───────────────────────────────────────────────────────
 function FiabiliteBadge({ niveau }) {
   const map = {
-    haute:   { label:"Fiabilité haute",   color:"#12B76A", bg:"rgba(18,183,106,0.12)",   bd:"rgba(18,183,106,0.25)"   },
-    moyenne: { label:"Fiabilité moyenne", color:"#F59E0B", bg:"rgba(245,158,11,0.12)",   bd:"rgba(245,158,11,0.25)"   },
-    basse:   { label:"Estimation approximative", color:"#E5484D", bg:"rgba(229,72,77,0.12)", bd:"rgba(229,72,77,0.25)" },
+    haute:   { label: "Estimation fiable",       color: C.green, bg: "rgba(18,183,106,0.10)" },
+    moyenne: { label: "Estimation moyenne",      color: C.amber, bg: "rgba(245,158,11,0.10)" },
+    basse:   { label: "Estimation approximative", color: C.red,   bg: "rgba(229,72,77,0.10)" },
   };
   const s = map[niveau] || map.moyenne;
   return (
     <span style={{
-      display:"inline-flex", alignItems:"center", gap: 4,
-      padding:"4px 8px", borderRadius: 20,
-      background: s.bg, border:`1px solid ${s.bd}`,
-      fontSize: 10, fontWeight: 700, color: s.color, fontFamily: FONT,
-    }}>{s.label}</span>
-);
+      display: "inline-flex", alignItems: "center", gap: SPACE.xs,
+      padding: "5px 9px", borderRadius: RADIUS.sm,
+      background: s.bg, ...TYPE.micro, color: s.color, letterSpacing: 0,
+      textTransform: "none", fontSize: 11.5,
+    }}>{s.label} · {MARGE[niveau] || MARGE.moyenne}</span>
+  );
 }
 
-// ─── COMPOSANT PRINCIPAL ──────────────────────────────────────────────────────
+// ─── Cadre de visée (état sans photo) ─────────────────────────────────────────
+function Viseur() {
+  const coin = /** @type {React.CSSProperties} */ ({
+    position: "absolute", width: 26, height: 26,
+    border: "2px solid rgba(255,255,255,0.55)",
+  });
+  return (
+    <div style={{
+      position: "relative", width: "100%", aspectRatio: "4 / 3.2",
+      borderRadius: RADIUS.xl, overflow: "hidden",
+      background: "radial-gradient(120% 100% at 50% 0%, #1C2436 0%, #0B1020 70%)",
+      display: "grid", placeItems: "center",
+    }}>
+      <span style={{ ...coin, top: 14, left: 14,  borderRight: 0, borderBottom: 0, borderRadius: "8px 0 0 0" }}/>
+      <span style={{ ...coin, top: 14, right: 14, borderLeft: 0,  borderBottom: 0, borderRadius: "0 8px 0 0" }}/>
+      <span style={{ ...coin, bottom: 14, left: 14,  borderRight: 0, borderTop: 0, borderRadius: "0 0 0 8px" }}/>
+      <span style={{ ...coin, bottom: 14, right: 14, borderLeft: 0,  borderTop: 0, borderRadius: "0 0 8px 0" }}/>
+      <div style={{ textAlign: "center" }}>
+        <div style={{
+          width: 64, height: 64, borderRadius: RADIUS.full,
+          border: "1.5px dashed rgba(255,255,255,0.4)",
+          display: "grid", placeItems: "center", margin: `0 auto ${SPACE.md}px`,
+        }}>
+          <I name="camera" size={26} color="#FFF"/>
+        </div>
+        <div style={{ ...TYPE.h3, color: "#FFF" }}>Cadre l'assiette entière</div>
+        <div style={{ ...TYPE.caption, color: "rgba(255,255,255,0.6)", marginTop: SPACE.xs }}>
+          Vue du dessus, à 30–40 cm
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Barre haute ──────────────────────────────────────────────────────────────
+// Définie hors du composant : une fonction recréée à chaque rendu remonterait
+// tout le sous-arbre à chaque appui sur un stepper.
+function Barre({ titre, sous, retour, icone, badge }) {
+  return (
+    <div style={{
+      display: "flex", alignItems: "flex-start", gap: SPACE.md,
+      padding: `${SPACE.md}px ${SPACE.lg}px`,
+      background: C.s1, borderBottom: `1px solid ${C.bd}`,
+      paddingTop: `calc(${SPACE.md}px + env(safe-area-inset-top, 0px))`,
+      flexShrink: 0,
+    }}>
+      <button className="tap-icon" onClick={retour} aria-label="Fermer" style={{
+        width: 38, height: 38, borderRadius: RADIUS.md,
+        background: C.s2, border: "none", cursor: "pointer",
+        display: "grid", placeItems: "center", flexShrink: 0, color: C.text,
+      }}>
+        <I name={icone} size={18}/>
+      </button>
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ ...TYPE.h3, color: C.text }}>{titre}</div>
+        <div style={{ ...TYPE.caption, color: C.dim, marginTop: 2 }}>{sous}</div>
+      </div>
+      {badge}
+    </div>
+  );
+}
+
+// ─── Carte standard ───────────────────────────────────────────────────────────
+function Carte({ children, style }) {
+  return (
+    <div style={{
+      background: C.s1, border: `1px solid ${C.bd}`,
+      borderRadius: RADIUS.xl, boxShadow: SHADOW.low,
+      padding: SPACE.lg, marginBottom: SPACE.md, ...style,
+    }}>{children}</div>
+  );
+}
+
+// ─── COMPOSANT PRINCIPAL ─────────────────────────────────────────────────────
 
 /**
  * @param {{
@@ -110,488 +176,560 @@ function FiabiliteBadge({ niveau }) {
  *   premium: boolean,
  *   setPaywall: (v: boolean) => void,
  *   push: (icon: string, titre: string, msg: string) => void,
+ *   repasId?: string|null,
+ *   contenuRepas?: Record<string, Array<object>>,
  * }} props
  */
-export default function PhotoAnalyse({ onClose, onAdd, premium, setPaywall, push }) {
-  useScrollTop();
-  const [step,       setStep]    = useState("upload"); // upload | loading | result | confirm
-  const [preview,    setPreview] = useState(/** @type {string|null} */ (null));
-  const [base64,     setBase64]  = useState(/** @type {string|null} */ (null));
-  /** @type {[{nom:string,description:string,calories:number,proteines:number,glucides:number,lipides:number,fiabilite:string,note:string}|null, Function]} */
-  const [result,     setResult]  = useState(null);
-  const [error,      setError]   = useState(/** @type {string|null} */ (null));
-  const [repasChoix, setRepas]   = useState("midi");
-  const inputRef = useRef(/** @type {HTMLInputElement|null} */ (null));
+export default function PhotoAnalyse({
+  onClose, onAdd, premium, setPaywall, push,
+  repasId = null, contenuRepas = {},
+}) {
+  const [step,    setStep]    = useState("cadrer");   // cadrer | analyse | verif
+  const [preview, setPreview] = useState(/** @type {string|null} */ (null));
+  const [base64,  setBase64]  = useState(/** @type {string|null} */ (null));
+  const [result,  setResult]  = useState(/** @type {any} */ (null));
+  const [items,   setItems]   = useState(/** @type {Array<any>} */ ([]));
+  const [error,   setError]   = useState(/** @type {string|null} */ (null));
+  const [etape,   setEtape]   = useState(0);
+  const [sheet,   setSheet]   = useState(false);
 
-  // Compteur mensuel
+  const camRef    = useRef(/** @type {HTMLInputElement|null} */ (null));
+  const galRef    = useRef(/** @type {HTMLInputElement|null} */ (null));
+  const abortRef  = useRef(/** @type {AbortController|null} */ (null));
+  const objUrlRef = useRef(/** @type {string|null} */ (null));
+
+  // Compteur mensuel — logique inchangée
   const usedCount  = getUsedCount();
   const remaining  = Math.max(0, FREE_LIMIT - usedCount);
-  const proUsed    = getUsedCount();
-  const canAnalyse = premium
-    ? proUsed < PRO_LIMIT          // PRO : limité à 180/mois
-    : remaining > 0;               // Gratuit : limité à 3/mois
+  const canAnalyse = premium ? usedCount < PRO_LIMIT : remaining > 0;
+
+  // Libération de l'URL d'aperçu + annulation d'une requête en vol
+  useEffect(() => () => {
+    if (objUrlRef.current) { try { URL.revokeObjectURL(objUrlRef.current); } catch {} }
+    try { abortRef.current?.abort(); } catch {}
+  }, []);
+
+  // Progression des étapes pendant l'attente réseau
+  useEffect(() => {
+    if (step !== "analyse") return;
+    setEtape(0);
+    const t1 = setTimeout(() => setEtape(1), 700);
+    const t2 = setTimeout(() => setEtape(2), 1800);
+    const t3 = setTimeout(() => setEtape(3), 3400);
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
+  }, [step]);
 
   // ── Sélection photo ──────────────────────────────────────────────────────
   const handleFile = useCallback(async (file) => {
     if (!file || !file.type.startsWith("image/")) return;
+    if (objUrlRef.current) { try { URL.revokeObjectURL(objUrlRef.current); } catch {} }
     const url = URL.createObjectURL(file);
+    objUrlRef.current = url;
     setPreview(url);
+    setError(null);
     const b64 = await fileToBase64(file);
     setBase64(b64);
-    setStep("upload");
+    setStep("cadrer");
   }, []);
 
   const onFileChange = (e) => {
     const file = e.target.files?.[0];
     if (file) handleFile(file);
+    e.target.value = ""; // permet de re-sélectionner le même fichier
   };
 
   // ── Lancer l'analyse ─────────────────────────────────────────────────────
   const analyser = async () => {
     if (!base64) return;
+    if (!canAnalyse) { setPaywall(true); return; }
 
-    // Vérification paywall
-    if (!canAnalyse) {
-      setPaywall(true);
-      return;
-    }
-
-    setStep("loading");
+    setStep("analyse");
     setError(null);
+
+    const ctrl = new AbortController();
+    abortRef.current = ctrl;
 
     try {
       const res = await fetch("/api/analyze-meal", {
-        method:"POST",
+        method: "POST",
         headers: await authHeaders(),
         body: JSON.stringify({ image: base64 }),
+        signal: ctrl.signal,
       });
 
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
-        throw new Error(err.error ||`Erreur API ${res.status}`);
+        throw new Error(err.error || `Erreur API ${res.status}`);
       }
-      const data = await res.json();
+      const data   = await res.json();
       const parsed = data.result || {};
 
       // Totaux recalculés en JS depuis les items : le modèle est bien meilleur
       // pour identifier et peser chaque aliment que pour deviner un total —
       // et l'arithmétique, c'est notre travail, pas le sien.
-      const items = Array.isArray(parsed.items) ? parsed.items.filter(i => i && i.grammes > 0) : [];
-      if (!items.length) {
+      const list = Array.isArray(parsed.items) ? parsed.items.filter(i => i && Number(i.grammes) > 0) : [];
+      if (!list.length) {
         setError("Aucun aliment identifiable sur la photo. Reprends-la de plus près, à la verticale.");
-        setStep("upload");
+        setStep("cadrer");
         return;
       }
-      const somme = k => items.reduce((t, i) => t + (Number(i[k]) || 0), 0);
-      parsed.items     = items;
-      parsed.calories  = somme("calories");
-      parsed.proteines = somme("proteines");
-      parsed.glucides  = somme("glucides");
-      parsed.lipides   = somme("lipides");
 
-      // Incrémenter le compteur si pas premium
+      // On mémorise la quantité d'origine pour pouvoir ajuster chaque portion
+      // sans perdre la référence du modèle.
+      setItems(list.map(i => ({
+        nom:       String(i.nom || "Aliment"),
+        base:      Math.max(1, Math.round(Number(i.grammes) || 0)),
+        grammes:   Math.max(1, Math.round(Number(i.grammes) || 0)),
+        calories:  Number(i.calories)  || 0,
+        proteines: Number(i.proteines) || 0,
+        glucides:  Number(i.glucides)  || 0,
+        lipides:   Number(i.lipides)   || 0,
+      })));
+
       if (!premium) incrementUsedCount();
-
-      setFacteur(1);
       setResult(parsed);
-      setStep("result");
+      setStep("verif");
 
     } catch (e) {
+      if (e?.name === "AbortError") return;      // annulation volontaire
       setError("L'analyse n'a pas pu être générée. Vérifie ta connexion et réessaie.");
-      setStep("upload");
+      setStep("cadrer");
+    } finally {
+      abortRef.current = null;
     }
   };
 
+  const annulerAnalyse = () => {
+    try { abortRef.current?.abort(); } catch {}
+    setStep("cadrer");
+  };
+
+  // ── Totaux courants (recalculés à chaque ajustement de portion) ──────────
+  const ratio = it => (it.base > 0 ? it.grammes / it.base : 1);
+  const somme = k => items.reduce((t, it) => t + (Number(it[k]) || 0) * ratio(it), 0);
+  const totaux = {
+    c: somme("calories"),
+    p: somme("proteines"),
+    g: somme("glucides"),
+    l: somme("lipides"),
+  };
+  const ajuste = items.some(it => it.grammes !== it.base);
+
+  const setGrammes = (idx, delta) => {
+    setItems(prev => prev.map((it, i) =>
+      i === idx ? { ...it, grammes: Math.max(0, it.grammes + delta) } : it
+    ));
+  };
+
+  const retirerItem = (idx) => setItems(prev => prev.filter((_, i) => i !== idx));
+
   // ── Ajouter au journal ───────────────────────────────────────────────────
-  const confirmer = () => {
+  const confirmer = (repasChoisi) => {
     if (!result) return;
-    const r = /** @type {{nom:string,calories:number,proteines:number,glucides:number,lipides:number}} */ (result);
+    const nom = String(result.nom || "Plat analysé");
     const aliment = {
-      n: facteur === 1 ? r.nom :`${r.nom} (portion ×${facteur.toFixed(2)})`,
-      c: Math.round(r.calories  * facteur),
-      p: Math.round(r.proteines * facteur),
-      g: Math.round(r.glucides  * facteur),
-      l: Math.round(r.lipides   * facteur),
+      n: ajuste ? `${nom} (portions ajustées)` : nom,
+      c: Math.round(totaux.c),
+      p: Math.round(totaux.p),
+      g: Math.round(totaux.g),
+      l: Math.round(totaux.l),
     };
-    onAdd(aliment, repasChoix);
-    const repasLabel = MEALS.find(m => m.id === repasChoix)?.l || repasChoix;
-    push("","Ajouté !",`${r.nom} ajouté au ${repasLabel.toLowerCase()}.`);
+    onAdd(aliment, repasChoisi);
+    push("", "Ajouté !", `${nom} ajouté au journal.`);
+    setSheet(false);
     onClose();
   };
 
-  // ── Compteur utilisations ────────────────────────────────────────────────
-  const newUsed   = getUsedCount();
-  const newRemain = Math.max(0, FREE_LIMIT - newUsed);
+  const reprendre = () => {
+    setStep("cadrer"); setResult(null); setItems([]); setPreview(null); setBase64(null);
+    if (objUrlRef.current) { try { URL.revokeObjectURL(objUrlRef.current); } catch {} }
+    objUrlRef.current = null;
+  };
 
-  return (
+  // ── Sous-blocs ───────────────────────────────────────────────────────────
+
+  // Pastille de quota — discrète, elle reprend de la couleur quand il reste peu
+  const quotaBadge = (
+    <span style={{
+      display: "inline-flex", alignItems: "center", gap: SPACE.xs,
+      padding: "7px 10px", borderRadius: RADIUS.full,
+      background: C.s1, border: `1px solid ${C.bd}`,
+      ...TYPE.caption, fontWeight: 600,
+      color: premium || remaining > 2 ? C.mid : C.amber,
+      whiteSpace: "nowrap", ...NUM, flexShrink: 0,
+    }}>
+      <span style={{
+        width: 6, height: 6, borderRadius: RADIUS.full,
+        background: premium || remaining > 2 ? C.green : C.amber,
+      }}/>
+      {premium ? `${PRO_LIMIT - usedCount} restantes` : `${remaining} restante${remaining > 1 ? "s" : ""}`}
+    </span>
+  );
+
+  // ── Rendu ────────────────────────────────────────────────────────────────
+
+  const contenu = (
     <div style={{
-      position:"fixed", inset: 0, zIndex: 360,
-      background:"rgba(5,8,18,0.97)",
-      display:"flex", flexDirection:"column",
+      position: "fixed", inset: 0, zIndex: Z.screen,
+      background: C.bg, fontFamily: FONT, color: C.text,
+      display: "flex", flexDirection: "column",
+      animation: `fadeIn ${MOTION.base} both`,
     }}>
 
-      {/* ── HEADER ─────────────────────────────────────────────────────── */}
-      <div style={{
-        display:"flex", alignItems:"center", justifyContent:"space-between",
-        padding:"20px 20px 0",
-      }}>
-        <button onClick={onClose} style={{
-          background:"transparent", border:"none",
-          color: C.accent, fontSize: 13, fontWeight: 700,
-          fontFamily: FONT, cursor:"pointer",
-          display:"flex", alignItems:"center", gap: 4,
-        }}>
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-            <path d="m15 18-6-6 6-6"/>
-          </svg>
-          Retour
-        </button>
+      {/* Entrées fichier : appareil photo et galerie séparés */}
+      <input ref={camRef} type="file" accept="image/*" capture="environment"
+        style={{ display: "none" }} onChange={onFileChange}/>
+      <input ref={galRef} type="file" accept="image/*"
+        style={{ display: "none" }} onChange={onFileChange}/>
 
-        <div style={{ display:"flex", alignItems:"center", gap: 8 }}>
-          {/* Badge premium ou compteur */}
-          {premium ? (
-            <span style={{
-              display:"inline-flex", alignItems:"center", gap: 4,
-              padding:"4px 12px", borderRadius: 20,
-              background:"rgba(60,91,255,0.12)", border:"1px solid rgba(60,91,255,0.25)",
-              fontSize: 10, fontWeight: 700, color: C.blueLt, fontFamily: FONT,
-            }}>
-              <SparkIcon size={10}/> {PRO_LIMIT - proUsed} photos restantes
-            </span>
-) : (
-            <span style={{
-              padding:"4px 12px", borderRadius: 20,
-              background: newRemain > 0 ?"rgba(245,158,11,0.12)" :"rgba(229,72,77,0.12)",
-              border:`1px solid ${newRemain > 0 ?"rgba(245,158,11,0.25)" :"rgba(229,72,77,0.25)"}`,
-              fontSize: 10, fontWeight: 700,
-              color: newRemain > 0 ?"#F59E0B" :"#E5484D",
-              fontFamily: FONT,
-            }}>
-              {newRemain > 0 ?`${newRemain} photo${newRemain > 1 ?"s" :""} restante${newRemain > 1 ?"s" :""}` :"Limite atteinte"}
-            </span>
-)}
-        </div>
-      </div>
+      {step === "cadrer"  && <Barre titre="Analyser un repas" sous="Estimation des macros par photo" retour={onClose} icone="close" badge={quotaBadge}/>}
+      {step === "analyse" && <Barre titre="Analyse en cours" sous="Environ 6 secondes" retour={annulerAnalyse} icone="close"/>}
+      {step === "verif"   && <Barre titre="Vérifie l'estimation" sous="Ajuste les portions avant d'enregistrer" retour={reprendre} icone="chevronLeft"/>}
 
-      {/* ── TITRE ──────────────────────────────────────────────────────── */}
-      <div style={{ padding:"20px 20px 0", textAlign:"center" }}>
-        <div style={{
-          width: 56, height: 56, borderRadius: 20,
-          background:"linear-gradient(135deg,#3C5BFF,#2E48D9)",
-          display:"grid", placeItems:"center",
-          margin:"0 auto 14px",
-          boxShadow:"0 8px 24px rgba(60,91,255,0.35)",
-        }}>
-          <CameraIcon size={26} color="#FFF"/>
-        </div>
-        <div style={{ fontFamily: SERIF, fontSize: 20, color: C.text, letterSpacing: -0.5, lineHeight: 1.2, marginBottom: 8 }}>
-          Analyse <span style={{ fontStyle:"italic" }}>photo</span>
-        </div>
-        <div style={{ fontSize: 13, color: C.mid, fontFamily: FONT }}>
-          Prends en photo ton repas pour estimer les macros
-        </div>
-      </div>
+      {/* ═══ CONTENU SCROLLABLE ═══ */}
+      <div style={{ flex: 1, overflowY: "auto", padding: `${SPACE.lg}px ${SPACE.lg}px ${SPACE.xxl}px` }}>
 
-      {/* ── CONTENU ────────────────────────────────────────────────────── */}
-      <div style={{ flex: 1, overflowY:"auto", padding:"20px 20px 32px" }}>
-
-        {/* ═══ ÉTAPE UPLOAD ═══ */}
-        {(step ==="upload" || step ==="loading") && (
+        {/* ─── ÉTAPE 1 : CADRER ─────────────────────────────────────────── */}
+        {step === "cadrer" && (
           <>
-            {/* Zone upload */}
-            <input
-              ref={inputRef} type="file" accept="image/*" capture="environment"
-              style={{ display:"none" }}
-              onChange={onFileChange}
-            />
-
             {preview ? (
-              /* Preview photo */
               <div style={{
-                position:"relative", borderRadius: 20, overflow:"hidden",
-                marginBottom: 16, border:`2px solid rgba(60,91,255,0.35)`,
+                position: "relative", borderRadius: RADIUS.xl, overflow: "hidden",
+                border: `1px solid ${C.bd}`,
               }}>
-                <img src={preview} alt="Aperçu repas"
-                  style={{ width:"100%", maxHeight: 260, objectFit:"cover", display:"block" }}/>
-                <button onClick={() => inputRef.current?.click()} style={{
-                  position:"absolute", bottom: 12, right: 12,
-                  background:"rgba(16,19,24,0.5)", backdropFilter:"blur(8px)",
-                  border:"1px solid rgba(0,0,0,0.08)", borderRadius: 12,
-                  color:"#FFF", fontSize: 11, fontWeight: 600, fontFamily: FONT,
-                  padding:"8px 12px", cursor:"pointer",
-                  display:"flex", alignItems:"center", gap: 4,
+                <img src={preview} alt="Aperçu du repas"
+                  style={{ width: "100%", maxHeight: 300, objectFit: "cover", display: "block" }}/>
+                <button className="tap" onClick={() => camRef.current?.click()} style={{
+                  position: "absolute", bottom: SPACE.md, right: SPACE.md,
+                  background: "rgba(16,19,24,0.6)", border: "none",
+                  borderRadius: RADIUS.md, color: "#FFF",
+                  ...TYPE.caption, fontWeight: 600,
+                  padding: `${SPACE.sm}px ${SPACE.md}px`, cursor: "pointer",
+                  display: "flex", alignItems: "center", gap: SPACE.xs,
                 }}>
-                  <CameraIcon size={12} color="#FFF"/> Changer
+                  <I name="camera" size={14} color="#FFF"/> Reprendre
                 </button>
               </div>
-) : (
-              /* Zone drag/click */
-              <button onClick={() => inputRef.current?.click()} style={{
-                width:"100%", borderRadius: 20, border:"2px dashed rgba(60,91,255,0.35)",
-                background:"rgba(60,91,255,0.05)", padding:"32px 20px",
-                cursor:"pointer", marginBottom: 16,
-                display:"flex", flexDirection:"column",
-                alignItems:"center", gap: 12,
-              }}>
-                <div style={{
-                  width: 48, height: 48, borderRadius: 16,
-                  background:"rgba(60,91,255,0.12)", border:"1px solid rgba(60,91,255,0.25)",
-                  display:"grid", placeItems:"center",
-                }}>
-                  <CameraIcon size={24} color={C.accent}/>
-                </div>
-                <div>
-                  <div style={{ fontSize: 14, fontWeight: 700, color: C.text, fontFamily: FONT, marginBottom: 4 }}>
-                    Prendre une photo
-                  </div>
-                  <div style={{ fontSize: 11, color: C.mid, fontFamily: FONT }}>
-                    Ou choisir depuis la galerie
-                  </div>
-                </div>
-              </button>
-)}
+            ) : <Viseur/>}
 
-            {/* Erreur */}
             {error && (
               <div style={{
-                padding:"12px 16px", borderRadius: 12, marginBottom: 16,
-                background:"rgba(229,72,77,0.12)", border:"1px solid rgba(229,72,77,0.25)",
-                fontSize: 13, color:"#E5484D", fontFamily: FONT,
+                marginTop: SPACE.md, padding: SPACE.md, borderRadius: RADIUS.lg,
+                background: "rgba(229,72,77,0.10)", ...TYPE.bodySmall, color: C.red,
               }}>{error}</div>
-)}
+            )}
 
-            {/* Bouton analyser */}
+            {/* Déclencheur + galerie */}
+            <div style={{ display: "flex", gap: SPACE.md, marginTop: SPACE.lg }}>
+              <button className="tap" onClick={() => camRef.current?.click()} style={{
+                flex: 1, padding: SPACE.lg, border: "none", borderRadius: RADIUS.lg,
+                background: `linear-gradient(135deg,${C.accent},${C.accentDk})`,
+                color: "#FFF", ...TYPE.h3,
+                display: "flex", alignItems: "center", justifyContent: "center", gap: SPACE.sm,
+                cursor: "pointer",
+              }}>
+                <I name="camera" size={19} color="#FFF"/>
+                {preview ? "Reprendre la photo" : "Prendre la photo"}
+              </button>
+              <button className="tap" onClick={() => galRef.current?.click()} style={{
+                flexShrink: 0, borderRadius: RADIUS.lg, padding: `0 ${SPACE.lg}px`,
+                background: C.s1, border: `1px solid ${C.bd}`,
+                cursor: "pointer", color: C.mid, ...TYPE.body, fontWeight: 600,
+              }}>
+                Galerie
+              </button>
+            </div>
+
+            {/* Analyse */}
             {!canAnalyse ? (
-              /* Paywall */
-              <button onClick={() => setPaywall(true)} style={{
-                width:"100%", padding:"16px",
-                background:"rgba(0,0,0,0.05)",
-                border:"1px solid rgba(0,0,0,0.08)",
-                borderRadius: 16, cursor:"pointer",
-                display:"flex", alignItems:"center", justifyContent:"center", gap: 8,
-                fontFamily: FONT, fontSize: 14, fontWeight: 700,
-                color:"${C.dim}",
+              <button className="tap" onClick={() => setPaywall(true)} style={{
+                width: "100%", marginTop: SPACE.md, padding: SPACE.lg,
+                background: C.s2, border: "none", borderRadius: RADIUS.lg,
+                cursor: "pointer", color: C.mid, ...TYPE.h3,
+                display: "flex", alignItems: "center", justifyContent: "center", gap: SPACE.sm,
               }}>
-                <LockIcon size={16}/> Limite atteinte · Passer au PRO
+                <I name="lock" size={16}/> Limite atteinte · Passer au PRO
               </button>
-) : (
-              <button
-                onClick={analyser}
-                disabled={!preview || step ==="loading"}
-                style={{
-                  width:"100%", padding:"16px",
-                  background: preview && step !=="loading"
-                    ?"linear-gradient(135deg,#2438B8,#3C5BFF)"
-                    :"rgba(0,0,0,0.05)",
-                  border:"none", borderRadius: 16,
-                  cursor: preview && step !=="loading" ?"pointer" :"not-allowed",
-                  display:"flex", alignItems:"center", justifyContent:"center", gap: 8,
-                  fontFamily: FONT, fontSize: 14, fontWeight: 700,
-                  color: preview && step !=="loading" ?"#FFF" : C.dim,
-                  boxShadow: preview && step !=="loading" ?"0 4px 16px rgba(60,91,255,0.35)" :"none",
-                  transition:"all 0.2s",
-                }}
-              >
-                {step ==="loading" ? (
-                  <>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-                      stroke="currentColor" strokeWidth="2" strokeLinecap="round"
-                      style={{ animation:"spin 1s linear infinite" }}>
-                      <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
-                    </svg>
-                    Analyse en cours…
-                  </>
-) : (
-                  <>
-                    <SparkIcon size={16}/> Analyser ce repas
-                  </>
-)}
+            ) : preview ? (
+              <button className="tap" onClick={analyser} style={{
+                width: "100%", marginTop: SPACE.md, padding: SPACE.lg,
+                background: C.ink, border: "none", borderRadius: RADIUS.lg,
+                cursor: "pointer", color: "#FFF", ...TYPE.h3,
+                display: "flex", alignItems: "center", justifyContent: "center", gap: SPACE.sm,
+              }}>
+                <I name="bolt" size={17} color="#FFF" fill/> Analyser ce repas
               </button>
-)}
+            ) : null}
 
-            {/* Info gratuité */}
-            {!premium && newRemain > 0 && (
-              <div style={{
-                marginTop: 12, textAlign:"center",
-                fontSize: 11, color:"${C.dim}", fontFamily: FONT,
-              }}>
-                {newRemain} photo{newRemain > 1 ?"s" :""} restante{newRemain > 1 ?"s" :""} ce mois · {PRO_LIMIT} photos/mois avec Nutrition PRO
+            {/* Conseil de cadrage — il sert la précision de l'estimation */}
+            <div style={{
+              marginTop: SPACE.lg, padding: SPACE.md, borderRadius: RADIUS.lg,
+              background: C.s1, border: `1px solid ${C.bd}`,
+              display: "flex", gap: SPACE.md, alignItems: "flex-start",
+            }}>
+              <span style={{ flexShrink: 0, marginTop: 1 }}><I name="target" size={17} color={C.accent}/></span>
+              <span style={{ ...TYPE.bodySmall, color: C.mid }}>
+                <b style={{ color: C.text, fontWeight: 600 }}>Pose un repère de taille.</b> Une fourchette
+                ou ta main dans le cadre, et l'estimation des portions gagne nettement en précision.
+              </span>
+            </div>
+
+            {!premium && (
+              <div style={{ ...TYPE.caption, color: C.dim, textAlign: "center", marginTop: SPACE.lg }}>
+                {remaining} analyse{remaining > 1 ? "s" : ""} restante{remaining > 1 ? "s" : ""} ce mois ·
+                {" "}{PRO_LIMIT}/mois avec Nutrition PRO
               </div>
-)}
+            )}
           </>
-)}
+        )}
 
-        {/* ═══ RÉSULTAT ═══ */}
-        {step ==="result" && result && (() => {
-          /** @type {{nom:string,description:string,calories:number,proteines:number,glucides:number,lipides:number,fiabilite:string,note:string}} */
-          const res = /** @type {any} */ (result);
-          return (<>
-            {/* Photo miniature */}
-            {preview && (
-              <div style={{
-                borderRadius: 16, overflow:"hidden",
-                marginBottom: 16, border:`1px solid rgba(0,0,0,0.05)`,
-                height: 140,
-              }}>
-                <img src={preview} alt="Repas analysé"
-                  style={{ width:"100%", height:"100%", objectFit:"cover" }}/>
-              </div>
-)}
-
-            {/* Résultat IA */}
+        {/* ─── ÉTAPE 2 : ANALYSE ────────────────────────────────────────── */}
+        {step === "analyse" && (
+          <>
             <div style={{
-              background: C.s1, border:`1px solid ${C.bd}`,
-              borderRadius: 20, padding:"20px 20px 16px",
-              marginBottom: 16,
+              position: "relative", borderRadius: RADIUS.xl, overflow: "hidden",
+              border: `1px solid ${C.bd}`, background: C.ink,
             }}>
-              {/* Nom + fiabilité */}
-              <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom: 12 }}>
-                <div>
-                  <div style={{ fontSize: 20, fontWeight: 700, color: C.text, fontFamily: FONT, letterSpacing: -0.3, marginBottom: 4 }}>
-                    {res.nom}
-                  </div>
-                  <FiabiliteBadge niveau={res.fiabilite}/>
-                </div>
-              </div>
+              {preview && (
+                <img src={preview} alt="Repas en cours d'analyse"
+                  style={{ width: "100%", maxHeight: 300, objectFit: "cover", display: "block", opacity: 0.9 }}/>
+              )}
+              <div style={{
+                position: "absolute", left: 0, right: 0, height: 110,
+                background: `linear-gradient(180deg, rgba(60,91,255,0) 0%, rgba(60,91,255,0.35) 60%, rgba(255,255,255,0.7) 100%)`,
+                animation: "mcScan 2.4s cubic-bezier(.55,0,.45,1) infinite",
+                pointerEvents: "none",
+              }}/>
+            </div>
 
-              {/* Description */}
-              {res.description && (
-                <div style={{
-                  fontSize: 13, color: C.mid, fontFamily: FONT,
-                  lineHeight: 1.5, marginBottom: 16,
-                }}>{res.description}</div>
-)}
-
-              {/* Macros */}
-              <div style={{ display:"grid", gridTemplateColumns:"repeat(4, 1fr)", gap: 8, marginBottom: 12 }}>
-                {[
-                  { l:"Calories", v: res.calories * facteur, u:"kcal", c:"#F59E0B" },
-                  { l:"Protéines", v: res.proteines * facteur, u:"g", c:"#3C5BFF" },
-                  { l:"Glucides",  v: res.glucides * facteur,  u:"g", c:"#F59E0B" },
-                  { l:"Lipides",   v: res.lipides * facteur,   u:"g", c:"#E5484D" },
-                ].map(m => (
-                  <div key={m.l} style={{
-                    background:`${m.c}12`, border:`1px solid ${m.c}25`,
-                    borderRadius: 12, padding:"12px 8px", textAlign:"center",
+            <div style={{
+              marginTop: SPACE.lg, background: C.s1, border: `1px solid ${C.bd}`,
+              borderRadius: RADIUS.xl, padding: SPACE.lg, boxShadow: SHADOW.low,
+            }}>
+              {ETAPES.map((t, i) => {
+                const fait  = i < etape;
+                const cours = i === etape;
+                return (
+                  <div key={t} style={{
+                    display: "flex", alignItems: "center", gap: SPACE.md,
+                    padding: `${SPACE.sm}px 0`,
                   }}>
-                    <div style={{
-                      fontSize: 16, fontWeight:700, color: m.c,
-                      fontFamily: FONT, letterSpacing: -0.5, lineHeight: 1,
-                    }}>{Math.round(m.v)}</div>
-                    <div style={{ fontSize: 10, color:"${C.dim}", marginTop: 4, fontFamily: FONT }}>{m.u}</div>
-                    <div style={{ fontSize: 10, color: C.dim, fontFamily: FONT }}>{m.l}</div>
+                    <span style={{
+                      width: 22, height: 22, borderRadius: RADIUS.full, flexShrink: 0,
+                      display: "grid", placeItems: "center",
+                      background: fait ? "rgba(18,183,106,0.12)" : cours ? C.accentLt : C.s2,
+                    }}>
+                      {fait && <I name="check" size={12} color={C.green} stroke={3}/>}
+                      {cours && (
+                        <span style={{
+                          width: 12, height: 12, borderRadius: RADIUS.full,
+                          border: `2px solid rgba(60,91,255,0.25)`, borderTopColor: C.accent,
+                          animation: "spin .8s linear infinite",
+                        }}/>
+                      )}
+                    </span>
+                    <span style={{
+                      ...TYPE.body,
+                      fontWeight: cours ? 600 : 500,
+                      color: fait || cours ? C.text : C.dim,
+                    }}>{t}</span>
                   </div>
-))}
-              </div>
-
-              {/* Détail aliment par aliment : c'est là que se juge la fiabilité */}
-              {res.items?.length > 0 && (
-                <div style={{ marginBottom: 14 }}>
-                  {res.items.map((it, i) => (
-                    <div key={i} style={{ display:"flex", justifyContent:"space-between",
-                      alignItems:"center", padding:"7px 2px",
-                      borderBottom: i < res.items.length - 1 ?`1px solid ${C.bd}` :"none" }}>
-                      <span style={{ fontSize: 12.5, color: C.mid, fontFamily: FONT }}>
-                        {it.nom}
-                      </span>
-                      <span style={{ fontSize: 12, color: C.dim, fontFamily: FONT,
-                        fontVariantNumeric:"tabular-nums", whiteSpace:"nowrap", marginLeft: 10 }}>
-                        {Math.round(it.grammes * facteur)} g · {Math.round(it.calories * facteur)} kcal
-                      </span>
-                    </div>
-))}
-                </div>
-)}
-
-              {/* Ajustement de portion : l'IA propose, TU décides */}
-              <div style={{ marginBottom: 4 }}>
-                <div style={{ display:"flex", justifyContent:"space-between",
-                  marginBottom: 6 }}>
-                  <span style={{ fontSize: 11, fontWeight: 600, color: C.mid, fontFamily: FONT }}>
-                    Ajuster la portion
-                  </span>
-                  <span style={{ fontSize: 11, fontWeight: 700, color: C.accent, fontFamily: FONT }}>
-                    ×{facteur.toFixed(2).replace(".",",")}
-                  </span>
-                </div>
-                <input type="range" min="0.5" max="1.5" step="0.05"
-                  value={facteur}
-                  onChange={e => setFacteur(Number(e.target.value))}
-                  style={{ width:"100%", accentColor: C.accent }}/>
-                <div style={{ display:"flex", justifyContent:"space-between",
-                  fontSize: 10, color: C.dim, fontFamily: FONT }}>
-                  <span>Moitié</span><span>Comme estimé</span><span>×1,5</span>
-                </div>
-              </div>
-
-              {/* Note IA */}
-              {res.note && (
-                <div style={{
-                  fontSize: 11, color:"${C.dim}", fontFamily: FONT,
-                  fontStyle:"italic", lineHeight: 1.5,
-                  borderTop:"1px solid rgba(0,0,0,0.05)", paddingTop: 12,
-                }}><ID name="spark" size={16}/> {res.note}</div>
-)}
+                );
+              })}
             </div>
 
-            {/* Choix repas */}
-            <div style={{
-              background: C.s1, border:`1px solid ${C.bd}`,
-              borderRadius: 16, padding:"16px 16px",
-              marginBottom: 16,
+            <button className="tap" onClick={annulerAnalyse} style={{
+              width: "100%", marginTop: SPACE.md, padding: SPACE.md,
+              background: C.s1, border: `1px solid ${C.bd}`, borderRadius: RADIUS.lg,
+              color: C.mid, ...TYPE.body, fontWeight: 600, cursor: "pointer",
             }}>
+              Annuler l'analyse
+            </button>
+          </>
+        )}
+
+        {/* ─── ÉTAPE 3 : VÉRIFICATION ───────────────────────────────────── */}
+        {step === "verif" && result && (
+          <>
+            {/* En-tête résultat */}
+            <div style={{ display: "flex", alignItems: "center", gap: SPACE.md, marginBottom: SPACE.lg }}>
+              {preview && (
+                <img src={preview} alt="" style={{
+                  width: 58, height: 58, borderRadius: RADIUS.lg,
+                  objectFit: "cover", flexShrink: 0, border: `1px solid ${C.bd}`,
+                }}/>
+              )}
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ ...TYPE.h3, color: C.text }}>{result.nom}</div>
+                <div style={{ ...TYPE.caption, color: C.dim, marginTop: 2 }}>
+                  {items.length} aliment{items.length > 1 ? "s" : ""} détecté{items.length > 1 ? "s" : ""}
+                </div>
+              </div>
+              <button className="tap" onClick={reprendre} style={{
+                border: "none", background: C.accentLt, color: C.accentDk,
+                ...TYPE.caption, fontWeight: 700,
+                padding: `${SPACE.sm}px ${SPACE.md}px`, borderRadius: RADIUS.full,
+                cursor: "pointer", flexShrink: 0,
+              }}>Reprendre</button>
+            </div>
+
+            {/* Totaux */}
+            <Carte>
+              <div style={{ display: "flex", alignItems: "baseline", gap: SPACE.sm, flexWrap: "wrap" }}>
+                <span style={{ ...TYPE.display, color: C.text, ...NUM }}>{Math.round(totaux.c)}</span>
+                <span style={{ ...TYPE.bodySmall, color: C.dim }}>kcal estimées</span>
+                <span style={{ marginLeft: "auto" }}><FiabiliteBadge niveau={result.fiabilite}/></span>
+              </div>
+
+              {/* Répartition */}
               <div style={{
-                fontSize: 10, fontWeight: 700, color:"${C.dim}",
-                letterSpacing:"0.09em", textTransform:"uppercase",
-                fontFamily: FONT, marginBottom: 12,
-              }}>Ajouter à…</div>
-              <div style={{ display:"grid", gridTemplateColumns:"repeat(4, 1fr)", gap: 8 }}>
-                {MEALS.map(m => (
-                  <button key={m.id} onClick={() => setRepas(m.id)} style={{
-                    padding:"8px 4px",
-                    background: repasChoix === m.id
-                      ?"rgba(60,91,255,0.12)"
-                      :"rgba(0,0,0,0.05)",
-                    border:`1px solid ${repasChoix === m.id ?"rgba(60,91,255,0.35)" :"rgba(0,0,0,0.05)"}`,
-                    borderRadius: 12, cursor:"pointer",
-                    fontSize: 11, fontWeight: 700,
-                    color: repasChoix === m.id ? C.blueLt : C.mid,
-                    fontFamily: FONT,
-                  }}>{m.l}</button>
-))}
+                display: "flex", gap: 3, height: 10, borderRadius: RADIUS.full,
+                overflow: "hidden", background: C.s3, margin: `${SPACE.lg}px 0 ${SPACE.md}px`,
+              }}>
+                <span style={{ flex: Math.max(totaux.p * 4, 1), background: C.accent }}/>
+                <span style={{ flex: Math.max(totaux.g * 4, 1), background: C.amber }}/>
+                <span style={{ flex: Math.max(totaux.l * 9, 1), background: C.red }}/>
               </div>
-            </div>
 
-            {/* CTA Confirmer */}
-            <button onClick={confirmer} style={{
-              width:"100%", padding:"16px",
-              background:"linear-gradient(135deg,#2438B8,#3C5BFF)",
-              border:"none", borderRadius: 16,
-              color:"#FFF", fontSize: 14, fontWeight: 700,
-              fontFamily: FONT, cursor:"pointer",
-              marginBottom: 8,
-              boxShadow:"0 4px 16px rgba(60,91,255,0.35)",
-            }}>
-               Ajouter à mon journal
-            </button>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: SPACE.sm }}>
+                {[
+                  { l: "Protéines", v: totaux.p, c: C.accent, ic: "protein" },
+                  { l: "Glucides",  v: totaux.g, c: C.amber,  ic: "carbs"   },
+                  { l: "Lipides",   v: totaux.l, c: C.red,    ic: "fat"     },
+                ].map(m => (
+                  <div key={m.l} style={{ background: C.s2, borderRadius: RADIUS.lg, padding: SPACE.md }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: SPACE.xs }}>
+                      <span style={{ width: 7, height: 7, borderRadius: RADIUS.full, background: m.c, flexShrink: 0 }}/>
+                      <span style={{ ...TYPE.micro, color: C.dim, letterSpacing: "0.04em" }}>{m.l}</span>
+                    </div>
+                    <div style={{ ...TYPE.h2, color: C.text, marginTop: SPACE.xs, ...NUM }}>
+                      {Math.round(m.v)}<span style={{ ...TYPE.caption, color: C.dim, marginLeft: 2 }}>g</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Carte>
 
-            {/* Nouvelle analyse */}
-            <button onClick={() => { setStep("upload"); setResult(null); setPreview(null); setBase64(null); }} style={{
-              width:"100%", padding:"12px",
-              background:"transparent", border:`1px solid ${C.bd}`,
-              borderRadius: 16, color: C.mid,
-              fontSize: 13, fontWeight: 500, fontFamily: FONT, cursor:"pointer",
-            }}>
-              Analyser une autre photo
-            </button>
-          </>);
-        })()}
+            {/* Aliments détectés + ajustement portion par portion */}
+            <Carte>
+              <div style={{
+                ...TYPE.micro, color: C.dim, marginBottom: SPACE.md,
+                display: "flex", justifyContent: "space-between", alignItems: "center",
+              }}>
+                <span>Aliments détectés</span>
+                <span style={{ letterSpacing: 0, textTransform: "none", fontWeight: 500 }}>
+                  ajuste les portions
+                </span>
+              </div>
+
+              {items.map((it, i) => (
+                <div key={`${it.nom}-${i}`} style={{
+                  display: "flex", alignItems: "center", gap: SPACE.md,
+                  padding: `${SPACE.md}px 0`,
+                  borderBottom: i < items.length - 1 ? `1px solid ${C.bd}` : "none",
+                }}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ ...TYPE.body, fontWeight: 600, color: C.text }}>{it.nom}</div>
+                    <div style={{ ...TYPE.caption, color: C.dim, marginTop: 2, ...NUM }}>
+                      {Math.round(it.calories * ratio(it))} kcal
+                      {it.proteines >= 1 && ` · P ${Math.round(it.proteines * ratio(it))}`}
+                      {it.glucides  >= 1 && ` · G ${Math.round(it.glucides  * ratio(it))}`}
+                      {it.lipides   >= 1 && ` · L ${Math.round(it.lipides   * ratio(it))}`}
+                    </div>
+                  </div>
+
+                  {it.grammes === 0 ? (
+                    <button className="tap" onClick={() => retirerItem(i)} style={{
+                      border: "none", background: C.s2, color: C.red,
+                      ...TYPE.caption, fontWeight: 700,
+                      padding: `${SPACE.sm}px ${SPACE.md}px`, borderRadius: RADIUS.md,
+                      cursor: "pointer", flexShrink: 0,
+                    }}>Retirer</button>
+                  ) : (
+                    <div style={{
+                      display: "flex", alignItems: "center", gap: 2, flexShrink: 0,
+                      background: C.s2, borderRadius: RADIUS.md, padding: 3,
+                    }}>
+                      <button className="tap-icon" aria-label="Moins"
+                        onClick={() => setGrammes(i, -PAS_GRAMMES)} style={{
+                          width: 30, height: 30, borderRadius: RADIUS.sm, border: "none",
+                          background: "transparent", cursor: "pointer", color: C.mid,
+                          display: "grid", placeItems: "center", lineHeight: 1,
+                          fontFamily: FONT, fontSize: 18, fontWeight: 700,
+                        }}>−</button>
+                      <span style={{
+                        minWidth: 46, textAlign: "center",
+                        ...TYPE.bodySmall, fontWeight: 700, color: C.text, ...NUM,
+                      }}>{it.grammes} g</span>
+                      <button className="tap-icon" aria-label="Plus"
+                        onClick={() => setGrammes(i, PAS_GRAMMES)} style={{
+                          width: 30, height: 30, borderRadius: RADIUS.sm, border: "none",
+                          background: "transparent", cursor: "pointer", color: C.mid,
+                          display: "grid", placeItems: "center", lineHeight: 1,
+                          fontFamily: FONT, fontSize: 18, fontWeight: 700,
+                        }}>+</button>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </Carte>
+
+            {/* Note du coach */}
+            {result.note && (
+              <Carte style={{ background: C.s2, border: "none" }}>
+                <div style={{ display: "flex", gap: SPACE.md, alignItems: "flex-start" }}>
+                  <span style={{ flexShrink: 0, marginTop: 1 }}><ID name="coachDuo" size={22}/></span>
+                  <span style={{ ...TYPE.bodySmall, color: C.mid }}>{result.note}</span>
+                </div>
+              </Carte>
+            )}
+          </>
+        )}
       </div>
 
+      {/* ═══ BARRE BASSE — étape de vérification ═══ */}
+      {step === "verif" && (
+        <div style={{
+          flexShrink: 0,
+          padding: `${SPACE.md}px ${SPACE.lg}px calc(${SPACE.xl}px + env(safe-area-inset-bottom, 0px))`,
+          background: C.bg, borderTop: `1px solid ${C.bd}`,
+        }}>
+          <button className="tap" onClick={() => setSheet(true)} disabled={!items.length} style={{
+            width: "100%", padding: SPACE.lg, border: "none", borderRadius: RADIUS.lg,
+            background: items.length
+              ? `linear-gradient(135deg,${C.accent},${C.accentDk})`
+              : C.s3,
+            color: items.length ? "#FFF" : C.dim, ...TYPE.h3,
+            display: "flex", alignItems: "center", justifyContent: "center", gap: SPACE.sm,
+            cursor: items.length ? "pointer" : "not-allowed",
+          }}>
+            Ajouter au journal
+            <I name="arrowRight" size={18} color={items.length ? "#FFF" : C.dim}/>
+          </button>
+        </div>
+      )}
+
+      {/* ═══ CHOIX DU REPAS ═══ */}
+      {sheet && (
+        <ChoixRepasSheet
+          totals={totaux}
+          contenu={contenuRepas}
+          defaultId={repasId}
+          onPick={confirmer}
+          onClose={() => setSheet(false)}
+        />
+      )}
+
       <style>{`
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-`}</style>
+        @keyframes mcScan { 0% { top: -110px } 100% { top: 100% } }
+        @media (prefers-reduced-motion: reduce) {
+          [style*="mcScan"] { animation: none !important; opacity: 0 }
+        }
+      `}</style>
     </div>
-);
+  );
+
+  // Portal sur document.body : indispensable pour passer au-dessus du header
+  // sticky et de la barre d'onglets, quel que soit le conteneur d'origine.
+  return createPortal(contenu, document.body);
 }
