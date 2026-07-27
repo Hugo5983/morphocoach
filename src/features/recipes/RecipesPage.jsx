@@ -172,7 +172,7 @@ export default function Recipes(props) {
   );
 
   // ── Liste de courses (remplace l'ancien onglet Premium) ──
-  if (showListe) return <ListeDeCourses premium={premium}/>;
+  if (showListe) return <ListeDeCourses premium={premium} push={push}/>;
 
   // ── Filtrage ──
   const sl = search.toLowerCase();
