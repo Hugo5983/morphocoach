@@ -42,12 +42,7 @@ export default function CoachWeekCard({ semC, semN, totalJours, premium, onUnloc
   // Métriques calculées depuis les vraies données
   const fatigueLbl = ratio < 0.35 ?"Basse"     : ratio < 0.70 ?"Modérée"   :"Élevée";
   const fatigueCol = ratio < 0.35 ? C.green   : ratio < 0.70 ?"#F59E0B"   : C.red;
-  const fatigueBar = ratio < 0.35 ? 0.20        : ratio < 0.70 ? 0.55        : 0.90;
   const recupPct   = Math.round(100 - ratio * 32);
-  const recupCol   = recupPct >= 80 ? C.accent : recupPct >= 60 ?"#F59E0B" : C.red;
-  const recupBar   = recupPct / 100;
-  const risqueLbl  = ratio < 0.35 ?"Faible"    : ratio < 0.70 ?"Vigilance" :"Élevé";
-  const risqueCol  = ratio < 0.35 ?"#F59E0B"   : ratio < 0.70 ?"#F59E0B"   : C.red;
   const risqueBar  = ratio < 0.35 ? 0.15        : ratio < 0.70 ? 0.55        : 0.90;
 
   // Styles partagés
@@ -234,72 +229,37 @@ export default function CoachWeekCard({ semC, semN, totalJours, premium, onUnloc
     </div>
 );
 
-  // ── ÉTAT 2 : PRO SANS DONNÉES — risque impossible à calculer ──────────────────
-  if (!hasRealData) return (
-    <div style={cardShell}>
-      <div style={{padding:"16px"}}>
-        {/* Header : titre + badge statut */}
-        <div style={{display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:14}}>
-          <span style={{fontSize:16, fontWeight:800, color:DARK.surface, fontFamily:F}}>État de forme</span>
-          <span style={{display:"flex", alignItems:"center", gap:5, fontSize:11, fontWeight:800, color:"#98A2B3", background:"#F6F7F9", padding:"5px 11px", borderRadius:99, fontFamily:F}}>
-            <span style={{width:7, height:7, borderRadius:"50%", background:"#98A2B3"}}/>
-            En attente
-          </span>
-        </div>
+  // ── ÉTAT 2/3 : UNE SEULE CARTE — jauge + 3 cases toujours visibles ────────────
+  // Sans données : jauge neutre grise (pas de curseur), valeurs à tiret, et le
+  // texte d'explication du risque de surentraînement prend la place du conseil.
+  // Avec données : jauge colorée + curseur, valeurs réelles, conseil du coach.
+  const risquePillLbl   = !hasRealData ?"En attente" : ratio < 0.35 ?"Risque faible" : ratio < 0.70 ?"Risque modéré" :"Risque élevé";
+  const risquePillColor = !hasRealData ?"#98A2B3" : ratio < 0.35 ? C.green : ratio < 0.70 ?"#F59E0B" : C.red;
+  const risquePillBg    = !hasRealData ?"#F6F7F9" : ratio < 0.35 ?"#E7F7F0" : ratio < 0.70 ?"rgba(245,158,11,0.12)" :"rgba(229,72,77,0.12)";
 
-        <div style={{textAlign:"center", padding:"8px 0 18px"}}>
-          <div style={{
-            width:58, height:58, borderRadius:16,
-            background:"#E8EBFF", border:"1px solid #E8EBFF",
-            display:"grid", placeItems:"center", margin:"0 auto 14px",
-          }}>
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none"
-              stroke={C.accent} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M3 3v18M7 16l4-8 4 5 3-3"/>
-            </svg>
-          </div>
-          <div style={{fontSize:17, fontWeight:800, color:DARK.surface, fontFamily:F, letterSpacing:-0.2, marginBottom:8}}>
-            Pas encore de données
-          </div>
-          <div style={{fontSize:13, color:C.dim, lineHeight:1.6, fontFamily:F, maxWidth:280, margin:"0 auto"}}>
-            Le coach évalue ton risque de surentraînement à partir de tes séances validées, charges, sommeil, alimentation et douleurs. Lance ta première séance pour activer l'analyse.
-          </div>
-        </div>
+  const gaugeTrack = hasRealData
+    ?`linear-gradient(90deg,${C.green} 0%,#F59E0B 55%,${C.red} 100%)`
+    :"#EAECF0";
 
-        <button onClick={onFirstSeance} style={{
-          width:"100%", padding:"16px", borderRadius:16, border:"none", cursor:"pointer",
-          background:"linear-gradient(135deg,#2E48D9,#3C5BFF)",
-          color:"#FFF", fontSize:14, fontWeight:700, fontFamily:F,
-          boxShadow:"0 6px 20px rgba(60,91,255,0.35)",
-          display:"flex", alignItems:"center", justifyContent:"center", gap:8,
-        }}>
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FFF" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-            <polygon points="5 3 19 12 5 21 5 3"/>
-          </svg>
-          Faire ma première séance
-        </button>
-      </div>
-    </div>
-);
+  const fatigueTxt = hasRealData ? fatigueLbl : "—";
+  const fatigueValColor = hasRealData ? fatigueCol : "#C3C9D4";
+  const recupTxt   = hasRealData ? `${recupPct}%` : "—";
+  const sommeilTxt = hasRealData && sommeilMoy != null ?`${sommeilMoy.toFixed(1).replace(".",",")}h` :"—";
+  const statValColor = hasRealData ? DARK.surface :"#C3C9D4";
 
-  // ── ÉTAT 3 : PRO AVEC DONNÉES — jauge de risque façon maquette 2a ─────────────
-  const risquePillLbl   = ratio < 0.35 ?"Risque faible" : ratio < 0.70 ?"Risque modéré" :"Risque élevé";
-  const risquePillColor = ratio < 0.35 ? C.green : ratio < 0.70 ?"#F59E0B" : C.red;
-  const risquePillBg    = ratio < 0.35 ?"#E7F7F0" : ratio < 0.70 ?"rgba(245,158,11,0.12)" :"rgba(229,72,77,0.12)";
-
-  const tip = ratio < 0.35
-    ?"Ta charge progresse sans accumuler de fatigue. Tu peux garder ce rythme cette semaine."
-    : ratio < 0.70
-    ?"Ta fatigue monte. Priorise le sommeil et garde une marge sur tes prochaines séries."
-    :"Fatigue élevée cette semaine. Envisage une séance plus légère ou un jour de repos supplémentaire.";
-
-  const sommeilTxt = sommeilMoy != null ?`${sommeilMoy.toFixed(1).replace(".",",")}h` :"—";
+  const bannerTxt = hasRealData
+    ? (ratio < 0.35
+        ?"Ta charge progresse sans accumuler de fatigue. Tu peux garder ce rythme cette semaine."
+        : ratio < 0.70
+        ?"Ta fatigue monte. Priorise le sommeil et garde une marge sur tes prochaines séries."
+        :"Fatigue élevée cette semaine. Envisage une séance plus légère ou un jour de repos supplémentaire.")
+    :"Le coach évalue ton risque de surentraînement à partir de tes séances validées, charges, sommeil, alimentation et douleurs. Lance ta première séance pour activer l'analyse.";
 
   return (
     <div style={cardShell}>
       <div style={{padding:"16px", display:"flex", flexDirection:"column", gap:14}}>
 
-        {/* Header : titre + badge risque */}
+        {/* Header : titre + badge risque / en attente */}
         <div style={{display:"flex", alignItems:"center", justifyContent:"space-between"}}>
           <span style={{fontSize:16, fontWeight:800, color:DARK.surface, fontFamily:F}}>État de forme</span>
           <span style={{display:"flex", alignItems:"center", gap:5, fontSize:11, fontWeight:800, color:risquePillColor, background:risquePillBg, padding:"5px 11px", borderRadius:99, fontFamily:F}}>
@@ -308,22 +268,24 @@ export default function CoachWeekCard({ semC, semN, totalJours, premium, onUnloc
           </span>
         </div>
 
-        {/* Jauge risque */}
+        {/* Jauge risque — toujours visible, neutre tant qu'il n'y a pas de données */}
         <div style={{display:"flex", flexDirection:"column", gap:6}}>
-          <div style={{position:"relative", height:9, borderRadius:99, background:`linear-gradient(90deg,${C.green} 0%,#F59E0B 55%,${C.red} 100%)`}}>
-            <span style={{position:"absolute", top:"50%", left:`${risqueBar*100}%`, transform:"translate(-50%,-50%)", width:16, height:16, borderRadius:99, background:"#fff", border:`3px solid ${DARK.surface}`, boxShadow:"0 1px 4px rgba(0,0,0,0.25)"}}/>
+          <div style={{position:"relative", height:9, borderRadius:99, background:gaugeTrack}}>
+            {hasRealData && (
+              <span style={{position:"absolute", top:"50%", left:`${risqueBar*100}%`, transform:"translate(-50%,-50%)", width:16, height:16, borderRadius:99, background:"#fff", border:`3px solid ${DARK.surface}`, boxShadow:"0 1px 4px rgba(0,0,0,0.25)"}}/>
+            )}
           </div>
           <div style={{display:"flex", justifyContent:"space-between", fontSize:9.5, fontWeight:800, letterSpacing:"0.03em", color:"#9AA3B2", fontFamily:F}}>
             <span>OPTIMAL</span><span>VIGILANCE</span><span>SURENTRAÎN.</span>
           </div>
         </div>
 
-        {/* Fatigue · Récup · Sommeil */}
+        {/* Fatigue · Récup · Sommeil — à tiret sans données */}
         <div style={{display:"flex", gap:9}}>
           {[
-            {l:"FATIGUE", v:fatigueLbl,   c:fatigueCol},
-            {l:"RÉCUP.",  v:`${recupPct}%`, c:DARK.surface},
-            {l:"SOMMEIL", v:sommeilTxt,   c:DARK.surface},
+            {l:"FATIGUE", v:fatigueTxt, c:fatigueValColor},
+            {l:"RÉCUP.",  v:recupTxt,   c:statValColor},
+            {l:"SOMMEIL", v:sommeilTxt, c:statValColor},
           ].map(m => (
             <div key={m.l} style={{flex:1, background:"#F6F7FB", borderRadius:14, padding:"12px 8px", display:"flex", flexDirection:"column", alignItems:"center", gap:3}}>
               <span style={{fontSize:9.5, fontWeight:800, letterSpacing:"0.04em", color:"#9AA3B2", fontFamily:F}}>{m.l}</span>
@@ -332,13 +294,29 @@ export default function CoachWeekCard({ semC, semN, totalJours, premium, onUnloc
           ))}
         </div>
 
-        {/* Conseil coach */}
+        {/* Conseil du coach, ou explication du risque de surentraînement si pas de données */}
         <div style={{display:"flex", alignItems:"flex-start", gap:9, background:"#EEF1FF", borderRadius:12, padding:"11px 13px"}}>
           <svg width="16" height="16" viewBox="0 0 24 24" fill={C.accent} style={{flexShrink:0, marginTop:1}}>
             <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm1 15h-2v-6h2Zm0-8h-2V7h2Z"/>
           </svg>
-          <span style={{fontSize:12.5, fontWeight:500, color:"#3949AB", lineHeight:1.5, fontFamily:F}}>{tip}</span>
+          <span style={{fontSize:12.5, fontWeight:500, color:"#3949AB", lineHeight:1.5, fontFamily:F}}>{bannerTxt}</span>
         </div>
+
+        {/* CTA — uniquement tant qu'il n'y a pas de données */}
+        {!hasRealData && (
+          <button onClick={onFirstSeance} style={{
+            width:"100%", padding:"15px", borderRadius:14, border:"none", cursor:"pointer",
+            background:"linear-gradient(135deg,#2E48D9,#3C5BFF)",
+            color:"#FFF", fontSize:14, fontWeight:700, fontFamily:F,
+            boxShadow:"0 6px 20px rgba(60,91,255,0.35)",
+            display:"flex", alignItems:"center", justifyContent:"center", gap:8,
+          }}>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FFF" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <polygon points="5 3 19 12 5 21 5 3"/>
+            </svg>
+            Faire ma première séance
+          </button>
+        )}
       </div>
     </div>
 );
