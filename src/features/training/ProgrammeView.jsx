@@ -1,4 +1,3 @@
-import { catColor } from"../../utils/training.js";
 import { I } from"../../components/ui/Icon.jsx";
 import useScrollTop from"../../hooks/useScrollTop.js";
 import { useState } from"react";
@@ -6,34 +5,20 @@ import { C, DARK } from"../../data/constants.js";
 import Creer from"./Creer.jsx";
 import { SeanceDetailModal } from"./components/ProgramTabModals.jsx";
 import CoachWeekCard from"./components/CoachWeekCard.jsx";
-import MesocycleChart from"./components/MesocycleChart.jsx";
-import MesocycleDetail from"./components/MesocycleDetail.jsx";
 
 export default function ProgrammeView(props) {
   useScrollTop();
-  const { prog, setProg, progs, setProgs, premium, setPaywall, push, calSess, setCalSess, checkedEx, createStep, setCS, newP, setNewP, jourActif, setJourActif, groupe, setGroupe, editExIdx, setEditExIdx, exModal, setExModal, exModalTab, setExModalTab, INT, EX, setProgView, cycleStart, setCycleStart, semC, jR, profil } = props;
+  const { prog, setProg, progs, setProgs, premium, setPaywall, push, calSess, setCalSess, createStep, setCS, newP, setNewP, jourActif, setJourActif, groupe, setGroupe, editExIdx, setEditExIdx, exModal, setExModal, exModalTab, setExModalTab, INT, setProgView, semC, jR, profil } = props;
 
   // vue interne :"creer" uniquement (seance detail → overlay fixe via selectedJour)
   const [innerView,    setInnerView]    = useState("list");  // gardé pour compatibilité Creer
   const [selectedJour, setSelectedJour] = useState(null);    // {jIdx} → ouvre SeanceDetailModal en overlay
   const [confirmDel, setConfirmDel] = useState(null); // {type:"prog"|"jour", progIdx, jourIdx}
   const [isCreating, setIsCreating] = useState(false);
-  const [openJour,   setOpenJour]   = useState(null);
-  const [showAnalyse, setShowAnalyse] = useState(false);  // overlay analyse de charge (depuis carte Coach IA)
 
-  // ── Valeurs mésocycle pour l'overlay analyse (depuis le bouton Coach IA) ──
-  const anaCurrentWeek = Math.min((semC||0), 5);
-  const anaWEEKS = [
-    {lbl:"S1", type:"Base",   m:1.00},{lbl:"S2", type:"Vol+",   m:1.10},
-    {lbl:"S3", type:"Vol+",   m:1.20},{lbl:"S4", type:"Vol+",   m:1.30},
-    {lbl:"S5", type:"Déload", m:0.70},{lbl:"S6", type:"Pic",    m:1.40},
-  ];
-  const anaBaseVol = (prog?.jours||[]).reduce((a,j) =>
-    a + (j.exercices||[]).reduce((b,ex) => b + (parseInt(ex.series)||4), 0), 0);
-  const anaMEV = Math.round(anaBaseVol*0.65);
-  const anaMAV = anaBaseVol;
-  const anaMRV = Math.round(anaBaseVol*1.35);
-  const anaCurVol = Math.round(anaBaseVol * anaWEEKS[anaCurrentWeek].m);
+  // Durée totale du mésocycle : 6 semaines (Base · Vol+ ×3 · Déload · Pic),
+  // même modèle que le reste de l'app — affichée dans le hero du programme.
+  const TOTAL_SEMAINES = 6;
 
   const allProgs = progs && progs.length > 0 ? progs : (prog ? [prog] : []);
 
@@ -98,7 +83,6 @@ export default function ProgrammeView(props) {
   const SERIF_F  ="'Archivo',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif";
   const DISP_F   ="'Archivo',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif";
   const semN     = (semC||0)+1;
-  const cc = catColor;
   const progIdx = Math.max(0, allProgs.findIndex(p => prog && (p.id===prog.id || p.titre===prog.titre)));
   const durOf = (j) => {
     const exs = j.exercices||[];
@@ -156,17 +140,6 @@ export default function ProgrammeView(props) {
       </div>
 
 
-      {/* ── Overlay Analyse de charge (depuis carte Coach IA) ── */}
-      {showAnalyse && (
-        <MesocycleDetail
-          mode="analyse"
-          prog={prog} semC={semC}
-          baseVol={anaBaseVol} MEV={anaMEV} MAV={anaMAV} MRV={anaMRV} curVol={anaCurVol}
-          currentWeek={anaCurrentWeek} WEEKS={anaWEEKS}
-          cycleStart={cycleStart} checkedEx={checkedEx}
-          onClose={()=>setShowAnalyse(false)}
-        />
-)}
 
       {/* ── Hero Card premium — entre les 2 blocs, visible sans programme ── */}
       {!prog && !showCreerForm && (() => {
@@ -365,109 +338,120 @@ export default function ProgrammeView(props) {
 );
       })()}
 
-      {/* ── Programme actif ── */}
+      {/* ── Programme actif — maquette 2a ── */}
       {prog && prog.jours?.length > 0 && (<>
 
-        {/* Label section */}
-        <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:12 }}>
-          <div style={{ fontSize:16, fontWeight:700, color:C.text, fontFamily:DISP_F }}>Programme</div>
-          <div style={{ fontSize:13, fontWeight:500, color:C.dim, fontFamily:DISP_F }}>
-            {prog?.jours?.length||0} séance{(prog?.jours?.length||0)!==1?"s":""} · Sem. {semN}
+        {/* Hero — programme actif, semaine en cours, progression */}
+        <div style={{
+          borderRadius:22, overflow:"hidden", marginBottom:18,
+          background:"radial-gradient(120% 100% at 88% 0%,#4257E8 0%,#2C3BC4 45%,#1B268C 100%)",
+          padding:"18px 20px", display:"flex", flexDirection:"column", gap:14,
+          boxShadow:"0 16px 40px rgba(27,38,140,0.4)",
+        }}>
+          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+            <span style={{fontSize:11,fontWeight:800,letterSpacing:"0.1em",color:"rgba(255,255,255,0.72)",fontFamily:DISP_F}}>PROGRAMME ACTIF</span>
+            <span style={{fontSize:12,fontWeight:800,color:"#FFF",background:"rgba(255,255,255,0.16)",padding:"5px 11px",borderRadius:99,fontFamily:DISP_F}}>
+              Semaine {Math.min(semN, TOTAL_SEMAINES)} / {TOTAL_SEMAINES}
+            </span>
+          </div>
+          <span style={{fontSize:22,fontWeight:800,letterSpacing:-0.3,color:"#FFF",lineHeight:1.15,fontFamily:DISP_F}}>
+            {prog.titre || "Mon programme"}
+          </span>
+          <div style={{display:"flex",flexDirection:"column",gap:8}}>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+              <span style={{fontSize:12.5,fontWeight:600,color:"rgba(255,255,255,0.72)",fontFamily:DISP_F}}>Cette semaine</span>
+              <span style={{fontSize:12.5,fontWeight:800,color:"#FFF",fontFamily:DISP_F}}>
+                {Math.min(semC||0, prog.jours.length)} / {prog.jours.length} séance{prog.jours.length!==1?"s":""}
+              </span>
+            </div>
+            <div style={{height:8,borderRadius:99,background:"rgba(255,255,255,0.18)",overflow:"hidden"}}>
+              <div style={{height:"100%",width:`${prog.jours.length?Math.round(Math.min(semC||0,prog.jours.length)/prog.jours.length*100):0}%`,background:"#FFF",borderRadius:99}}/>
+            </div>
           </div>
         </div>
 
-        {/* Séances accordion */}
+        {/* Tes séances — badge jour + statut, tap pour éditer */}
+        <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:12 }}>
+          <div style={{ fontSize:17, fontWeight:800, color:C.text, fontFamily:DISP_F }}>Tes séances</div>
+          <div style={{ fontSize:12.5, fontWeight:700, color:C.dim, fontFamily:DISP_F }}>
+            {prog.jours.length} / semaine
+          </div>
+        </div>
+
         {prog.jours.map((j, jIdx) => {
-          const int    = INT[j.intensite||"modere"];
-          const dur    = durOf(j);
-          const isOpen = openJour===jIdx;
-          const exos   = j.exercices||[];
-          // Status dynamique basé sur semC
+          const dur   = durOf(j);
+          const exos  = j.exercices||[];
           const jDone = jIdx < (semC||0);
           const jNext = jIdx === (semC||0);
-          const status     = jDone ?"FAIT"     : jNext ?"PROCHAIN"  :"PLANIFIÉ";
-          const statusColor = jDone ? C.green   : jNext ? C.blue      : C.dim;
-          const statusBg    = jDone ?`${C.green}18` : jNext ?`${C.blue}14` :"rgba(107,114,128,0.08)";
+          const jourLbl = (j.focus || j.nom || "—").slice(0,3).toUpperCase();
+
+          const badgeBg   = jDone ? `${C.green}18` : jNext ? C.accent : C.s2;
+          const badgeColor= jDone ? C.green : jNext ?"#FFF" : C.dim;
+          const cardBorder= jNext ? `1.5px solid ${C.accent}` : `1px solid ${C.bd}`;
+          const cardShadow= jNext ?"0 6px 18px rgba(60,91,255,0.18)" : C.shadow;
+
+          const dureeTxt = dur
+            ? (jDone ? `${dur} min réalisés` : `~${dur} min`)
+            : null;
+
           return (
-            <div key={jIdx} style={{
-              background:C.s1, border:`1px solid ${C.bd}`,
-              borderRadius:20, marginBottom:12, overflow:"hidden",
-              boxShadow: C.shadow,
-            }}>
-              <div style={{display:"flex",alignItems:"center",gap:12,padding:"16px 16px",cursor:"pointer"}}
-                onClick={()=>setOpenJour(isOpen?null:jIdx)}>
-                {/* Badge jour */}
-                <div style={{width:48,height:48,borderRadius:16,background:int.c,color:"#FFF",
-                  display:"grid",placeItems:"center",flexShrink:0,fontFamily:DISP_F,fontSize:13,fontWeight:700,
-                  boxShadow:`0 4px 14px ${int.c}55`}}>
-                  {j.focus||j.nom?.slice(0,3)||"—"}
-                </div>
-                {/* Infos */}
-                <div style={{flex:1,minWidth:0}}>
-                  <div style={{fontSize:14,fontWeight:700,color:C.text,letterSpacing:-0.2,fontFamily:DISP_F}}>{j.nom}</div>
-                  <div style={{fontSize:11,color:C.mid,marginTop:4,fontFamily:DISP_F}}>
-                    {int.l} · {exos.length} exercice{exos.length!==1?"s":""}{dur?` · ~${dur}min`:""}
-                  </div>
-                </div>
-                {/* Badge statut */}
-                <div style={{padding:"4px 12px",borderRadius:8,background:statusBg,flexShrink:0}}>
-                  <span style={{fontSize:10,fontWeight:700,letterSpacing:"0.1em",
-                    color:statusColor,fontFamily:DISP_F}}>{status}</span>
+            <div key={jIdx}
+              onClick={()=>setSelectedJour({jIdx})}
+              style={{
+                background:C.s1, border:cardBorder, borderRadius:16,
+                marginBottom:11, padding:"12px 14px",
+                display:"flex", alignItems:"center", gap:13,
+                boxShadow:cardShadow, cursor:"pointer",
+              }}>
+              {/* Badge jour */}
+              <div style={{width:46,height:46,borderRadius:13,background:badgeBg,color:badgeColor,
+                display:"grid",placeItems:"center",flexShrink:0,fontFamily:DISP_F,fontSize:12,fontWeight:800}}>
+                {jourLbl}
+              </div>
+              {/* Infos */}
+              <div style={{flex:1,minWidth:0}}>
+                <div style={{fontSize:15,fontWeight:800,color:C.text,letterSpacing:-0.2,fontFamily:DISP_F}}>{j.nom}</div>
+                <div style={{fontSize:11.5,fontWeight:600,color:C.dim,marginTop:2,fontFamily:DISP_F}}>
+                  {exos.length} exercice{exos.length!==1?"s":""}{dureeTxt?` · ${dureeTxt}`:""}
                 </div>
               </div>
-              {isOpen && (
-                <div style={{borderTop:`1px solid ${C.bd}`,padding:"8px 16px 16px"}}>
-                  {/* Bouton éditer séance */}
-                  <button onClick={e=>{e.stopPropagation();setSelectedJour({jIdx});}}
-                    style={{display:"flex",alignItems:"center",gap:8,padding:"8px 12px",
-                      background:"rgba(60,91,255,0.08)",border:"1px solid rgba(60,91,255,0.18)",
-                      borderRadius:12,cursor:"pointer",marginBottom:12,color:DARK.accent,
-                      fontSize:13,fontWeight:600,fontFamily:DISP_F}}>
-                    <span></span> Modifier la séance
-                  </button>
-                  {exos.length===0
-                    ? <div style={{textAlign:"center",padding:"12px 0",fontSize:11,color:C.dim,fontFamily:DISP_F}}>Aucun exercice — tape Modifier pour en ajouter</div>
-                    : exos.map((ex,k) => (
-                      <div key={k} style={{display:"flex",alignItems:"flex-start",gap:12,padding:"8px 0",borderBottom:k<exos.length-1?"1px solid rgba(0,0,0,0.05)":"none"}}>
-                        <div style={{width:30,height:30,borderRadius:8,background:`${cc(ex.cat)}20`,border:`1px solid ${cc(ex.cat)}35`,color:cc(ex.cat),display:"grid",placeItems:"center",fontFamily:DISP_F,fontSize:11,fontWeight:700,flexShrink:0}}>{k+1}</div>
-                        <div style={{flex:1,minWidth:0}}>
-                          <div style={{fontSize:14,fontWeight:700,color:C.text,fontFamily:DISP_F,letterSpacing:-0.2}}>{ex.nom}</div>
-                          <div style={{fontSize:10,fontWeight:700,letterSpacing:"0.1em",color:C.dim,textTransform:"uppercase",fontFamily:DISP_F,marginTop:2}}>{ex.cat||"Principal"}</div>
-                        </div>
-                        <div style={{fontSize:13,fontWeight:600,color:C.mid,fontFamily:DISP_F,flexShrink:0,marginTop:2,textAlign:"right",whiteSpace:"nowrap"}}>
-                          {ex.series}×{ex.reps} · {ex.repos}s
-                        </div>
-                      </div>
-))
-                  }
+              {/* Statut */}
+              {jDone ? (
+                <div style={{display:"flex",alignItems:"center",gap:5,background:`${C.green}18`,padding:"6px 10px",borderRadius:99,flexShrink:0}}>
+                  <I name="check" size={12} color={C.green} stroke={3}/>
+                  <span style={{fontSize:11,fontWeight:800,color:C.green,fontFamily:DISP_F}}>Fait</span>
                 </div>
-)}
+              ) : jNext ? (
+                <button
+                  onClick={e=>{ e.stopPropagation(); setProgView("today"); }}
+                  style={{display:"flex",alignItems:"center",gap:6,background:C.accent,border:"none",
+                    padding:"8px 13px",borderRadius:99,flexShrink:0,cursor:"pointer"}}>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="#FFF"><path d="M8 5v14l11-7z"/></svg>
+                  <span style={{fontSize:11.5,fontWeight:800,color:"#FFF",fontFamily:DISP_F}}>Démarrer</span>
+                </button>
+              ) : (
+                <span style={{fontSize:11,fontWeight:800,color:C.dim,background:C.s2,padding:"6px 11px",borderRadius:99,flexShrink:0,fontFamily:DISP_F}}>
+                  Planifié
+                </span>
+              )}
             </div>
-);
+          );
         })}
-
-        {/* CTAs supprimés — remplacés par la carte coach entre les 2 hero blocs */}
 
       </>)}
 
-
-      {/* ── Bilan semaine (Ta semaine est prête) ── */}
-      <div style={{marginTop:20}}>
-      <CoachWeekCard
-        semC={semC}
-        semN={semN}
-        totalJours={prog?.jours?.length||0}
-        onDetail={()=>setShowAnalyse(true)}
-        premium={premium}
-        onUnlock={()=>setPaywall(true)}
-      />
+      {/* ── État de forme ── */}
+      <div style={{marginTop:8}}>
+        <CoachWeekCard
+          semC={semC}
+          semN={semN}
+          totalJours={prog?.jours?.length||0}
+          premium={premium}
+          onUnlock={()=>setPaywall(true)}
+          onFirstSeance={()=>setProgView("today")}
+        />
       </div>
 
-      {/* ── Charge progressive — toujours visible ── */}
-      <div style={{fontSize:20,fontWeight:700,color:C.text,fontFamily:DISP_F,marginTop:20,marginBottom:12,letterSpacing:-0.3}}>
-        Charge <span style={{fontStyle:"italic",color:C.accent}}>progressive</span>
-      </div>
-      <MesocycleChart prog={prog} semC={semC} checkedEx={checkedEx} cycleStart={cycleStart} EX={EX}/>
 
       {/* ── Autres programmes ── */}
       {allProgs.length > 1 && (
