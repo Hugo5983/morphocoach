@@ -6,7 +6,7 @@ import { Card, Eyebrow, Lbl, Btn, Row } from"../../../components/ui/index.jsx";
 import Calendar from"../Calendar.jsx";
 import Creer from"../Creer.jsx";
 import AnalyseIA from"../../ai/AnalyseIA.jsx";
-import { ExCard, BiblioSheet, parseScheme } from"./CreerKit.jsx";
+import { ExCard, BiblioSheet, parseScheme, CSS as CREER_CSS } from"./CreerKit.jsx";
 
 // ─── HELPER : chercher un exercice dans la BDD ──────────────────────────────
 
@@ -116,6 +116,8 @@ export function SeanceDetailModal({ jour, jourIdx, prog, setProg, onClose, C, IN
 
   return (
     <div style={{ position:"fixed", inset:0, zIndex:320, background:C.bg, overflowY:"auto" }}>
+      {/* Styles des composants ExCard/BiblioSheet (définis dans CreerKit.jsx) */}
+      <style>{CREER_CSS}</style>
       <div style={{ maxWidth:500, margin:"0 auto", paddingBottom:32 }}>
 
         {/* Retour */}
