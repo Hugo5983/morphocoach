@@ -251,8 +251,9 @@ export default function TodayView(props) {
             </div>
             {streak > 0 && (
               <div style={{ display:"flex", flexDirection:"column", alignItems:"center",
-                background:"rgba(245,158,11,0.12)", border:"1px solid rgba(245,158,11,0.25)",
-                borderRadius:16, padding:"8px 12px", flexShrink:0 }}>
+                background:"#FFFFFF", border:"1px solid rgba(245,158,11,0.20)",
+                borderRadius:16, padding:"8px 12px", flexShrink:0,
+                boxShadow:"0 2px 8px rgba(245,158,11,0.12)" }}>
                 <div style={{ display:"flex", alignItems:"center", gap:4 }}>
                   <span style={{ fontSize:16 }}><ID name="streak" size={24}/></span>
                   <span style={{ fontSize:20, fontWeight:700, color:"#F59E0B", fontFamily:DISP, lineHeight:1 }}>{streak}</span>
@@ -354,21 +355,11 @@ export default function TodayView(props) {
             {/* HERO séance V5 */}
             <div style={{
               borderRadius: 24, overflow:"hidden", background:"#0E1220",
-              boxShadow:"0 20px 50px rgba(14,18,32,0.42)",
               marginBottom: 18,
               animation:"tdFadeUp .6s cubic-bezier(.22,1,.36,1) both",
               animationDelay:".16s",
             }}>
-              <div style={{ position:"relative", height: 210 }}>
-                {/* Aurora glow */}
-                <div style={{
-                  position:"absolute", top:-40, left:-30, width: 170, height: 170,
-                  borderRadius:"50%",
-                  background:"radial-gradient(circle,#3B5BFB,transparent 68%)",
-                  filter:"blur(16px)", opacity: 0.5,
-                  animation:"tdAurora 10s ease-in-out infinite",
-                  pointerEvents:"none", mixBlendMode:"screen",
-                }}/>
+              <div style={{ position:"relative", height: 160 }}>
                 {/* Dégradé bas */}
                 <div style={{
                   position:"absolute", inset: 0,
@@ -699,7 +690,7 @@ export default function TodayView(props) {
         <div style={{ marginBottom: 20 }}>
           {/* Header */}
           <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:12 }}>
-            <div style={{ fontFamily:SERIF_F, fontSize:20, fontWeight:400, color:C.text, letterSpacing:-0.3 }}>
+            <div style={{ fontFamily:DISP, fontSize:17, fontWeight:800, color:C.text, letterSpacing:-0.3 }}>
               Records & Objectifs
             </div>
             <button onClick={() => setShowProgression(true)}
@@ -774,44 +765,27 @@ export default function TodayView(props) {
 );
                 })}
               </div>
-              {/* Saisie rapide banner */}
-              <div onClick={() => setShowProgression(true)} style={{
-                background:"linear-gradient(135deg, #3C5BFF 0%, #2E48D9 100%)",
-                borderRadius:16, padding:"16px 16px",
-                display:"flex", alignItems:"center", justifyContent:"space-between",
-                cursor:"pointer", boxShadow:"0 8px 24px rgba(60,91,255,0.35)",
+              {/* Bouton Ajoute ton PR */}
+              <button onClick={() => setShowProgression(true)} style={{
+                width:"100%", padding:"16px", borderRadius:16,
+                background:"#3B5BFB", border:"none",
+                color:"#FFF", fontFamily:DISP, fontSize:15, fontWeight:800,
+                letterSpacing:-0.2, cursor:"pointer",
+                boxShadow:"0 8px 24px rgba(59,91,251,0.38)",
+                display:"flex", alignItems:"center", justifyContent:"center", gap:8,
               }}>
-                <div>
-                  <div style={{ fontSize:14, fontWeight:700, color:"#FFF", fontFamily:DISP }}>
-                    Saisie rapide
-                  </div>
-                  <div style={{ fontSize:11, color:"rgba(255,255,255,0.65)", fontFamily:DISP, marginTop:2 }}>
-                    Ajoute un nouveau record
-                  </div>
-                </div>
-                <div style={{ width:40, height:40, borderRadius:"50%",
-                  background:"rgba(255,255,255,0.12)", backdropFilter:"blur(8px)",
-                  display:"grid", placeItems:"center" }}>
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-                    stroke="#FFF" strokeWidth="2.2" strokeLinecap="round">
-                    <path d="M12 5v14M5 12h14"/>
-                  </svg>
-                </div>
-              </div>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round">
+                  <path d="M12 5v14M5 12h14"/>
+                </svg>
+                Ajoute ton PR
+              </button>
             </div>
 )}
         </div>
 );
       })()}
 
-      {/* Pas de programme */}
-      {!prog && (
-        <Card style={{ textAlign:"center", padding:"20px 16px", marginTop: 8 }}>
-          <div style={{ fontSize: 13, color: C.mid, marginBottom: 12 }}>Aucun programme actif</div>
-          <Btn onClick={() => setProgView("analyse")}> Générer mon programme</Btn>
-          <Btn v="out" onClick={() => setProgView("creer")}>Créer manuellement</Btn>
-        </Card>
-)}
+      {/* Aucun programme actif — supprimé, géré par Composer V4 */}
 
       {/* Modals */}
       {showManualRM && (
