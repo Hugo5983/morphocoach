@@ -259,7 +259,7 @@ export default function TodayView(props) {
                   <span style={{ fontSize:20, fontWeight:700, color:"#F59E0B", fontFamily:DISP, lineHeight:1 }}>{streak}</span>
                 </div>
                 <div style={{ fontSize:10, fontWeight:600, color:"#F59E0B", fontFamily:DISP,
-                  letterSpacing:"0.1em", marginTop:2, textAlign:"center" }}>
+                  letterSpacing:"0.1em", marginTop:2, textAlign:"center", color:"#0F1923" }}>
                   série
                 </div>
               </div>
@@ -589,33 +589,21 @@ export default function TodayView(props) {
               {[
                 {
                   label: "Muscu", sub: "à composer",
-                  iconBg: "rgba(91,141,255,0.16)",
-                  icon: (
-                    <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#AFC0FF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M4 9v6M7 7v10M17 7v10M20 9v6M7 12h10"/>
-                    </svg>
-                  ),
+                  iconBg: "rgba(91,141,255,0.22)",
+                  icon: <ID name="gym" size={24} dark/>,
                   onClick: () => setShowCreateSeance(true),
                 },
                 {
                   label: "Cardio", sub: "20 min",
-                  iconBg: "rgba(255,138,91,0.16)",
-                  icon: (
-                    <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#FFB79B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M3 12h3l2 5 4-11 2 6h7"/>
-                    </svg>
-                  ),
+                  iconBg: "rgba(255,138,91,0.22)",
+                  icon: <ID name="cardio" size={24} dark/>,
                   onClick: () => setShowCreateSeance(true),
                 },
                 {
                   label: "Étirement",
                   sub: todayMobilite ? "Fait ✓" : "10 min",
-                  iconBg: "rgba(124,92,255,0.18)",
-                  icon: (
-                    <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#C6B7FF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <circle cx="12" cy="4.5" r="2"/><path d="M12 7v6M12 9.5l-4 1.5M12 9.5l4 1.5M12 13l-3 6M12 13l3 6"/>
-                    </svg>
-                  ),
+                  iconBg: "rgba(124,92,255,0.24)",
+                  icon: <ID name="recovery" size={24} dark/>,
                   onClick: toggleMobilite,
                   flash: mobiliteFlash,
                 },
@@ -669,8 +657,8 @@ export default function TodayView(props) {
         </div>
       )}
 
-      {/* ── Records ─────────────────────────────────────────────── */}
-      {prog && (() => {
+      {/* ── Records & Objectifs (toujours visible) ────────────── */}
+      {(() => {
         const REC_PALETTE = [DARK.accent,"#12B76A","#F59E0B","#E5484D","#9DB0FF",C.accent];
         const trendOf = (hist) => {
           if (!hist || hist.length < 2) return null;

@@ -89,6 +89,11 @@ export default function ProgrammeView(props) {
 
   return (
     <div style={{padding:"0 20px"}}>
+      <style>{`
+        @keyframes tdAurora{0%{transform:translate(-6%,-4%) scale(1)}50%{transform:translate(7%,5%) scale(1.18)}100%{transform:translate(-6%,-4%) scale(1)}}
+        @keyframes pulseDot{0%,100%{opacity:1}50%{opacity:.4}}
+        @keyframes growW{from{width:0%}to{}}
+      `}</style>
 
       {/* ── Confirm delete modal ── */}
       {confirmDel && (
@@ -110,26 +115,23 @@ export default function ProgrammeView(props) {
         </div>
 )}
 
-      {/* ── Header ── */}
-      <div style={{ marginBottom:16, display:"flex", alignItems:"flex-start", justifyContent:"space-between" }}>
-        <div>
-          <div style={{ fontFamily:SERIF_F, fontSize:26, color:C.text, lineHeight:1.1, letterSpacing:-1 }}>
-            Ton <span style={{ fontStyle:"italic", color:C.blue }}>programme</span>
-          </div>
+      {/* ── Header V3 ── */}
+      <div style={{ marginBottom:16, display:"flex", alignItems:"flex-end", justifyContent:"space-between" }}>
+        <div style={{ fontFamily:DISP_F, fontSize:31, fontWeight:800, letterSpacing:"-0.03em", color:"#0F1923", lineHeight:1 }}>
+          Ton <span style={{ fontStyle:"italic", color:"#3B5BFB" }}>programme</span>
         </div>
         {prog && (
-          <button onClick={()=>setConfirmDel({type:"prog",pIdx:progIdx})}
-            style={{ padding:"8px 12px", borderRadius:12, background:C.s1,
-              border:`1px solid ${C.bd}`, display:"flex", alignItems:"center", gap:8,
-              cursor:"pointer", flexShrink:0, marginTop:4,
-              boxShadow: C.shadow }}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={C.dim}
-              strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5Z"/>
+          <div onClick={()=>setConfirmDel({type:"prog",pIdx:progIdx})}
+            style={{ display:"flex", alignItems:"center", gap:5,
+              background:"#fff", border:"1px solid rgba(15,25,35,0.1)",
+              borderRadius:11, padding:"8px 12px", cursor:"pointer" }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3B5BFB"
+              strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>
             </svg>
-            <span style={{ fontSize:13, fontWeight:600, color:C.dim, fontFamily:DISP_F }}>Éditer</span>
-          </button>
-)}
+            <span style={{ fontSize:13, fontWeight:700, color:"#0F1923", fontFamily:DISP_F }}>Éditer</span>
+          </div>
+        )}
       </div>
 
 
@@ -331,58 +333,58 @@ export default function ProgrammeView(props) {
 );
       })()}
 
-      {/* ── Programme actif — maquette 2a ── */}
+      {/* ── Programme actif — maquette V3b ── */}
       {prog && prog.jours?.length > 0 && (<>
 
-        {/* Hero — programme actif, même famille visuelle que le hero "pas de programme" */}
+        {/* Hero V3b — aurora + barre qui pousse */}
         <div style={{
-          borderRadius:22, overflow:"hidden", marginBottom:18, position:"relative",
-          background:"linear-gradient(140deg,#101318 0%,#101318 30%,#101318 65%,#101318 100%)",
-          boxShadow:"0 16px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(60,91,255,0.18)",
+          position:"relative", borderRadius:24, overflow:"hidden", marginBottom:18,
+          background:"#0B0E1A",
         }}>
-          {/* Glows */}
-          <div style={{position:"absolute",top:-50,left:-24,width:170,height:170,borderRadius:"50%",
-            background:"radial-gradient(circle,rgba(109,40,217,0.22),transparent 65%)",pointerEvents:"none"}}/>
-          <div style={{position:"absolute",bottom:-36,right:20,width:150,height:150,borderRadius:"50%",
-            background:"radial-gradient(circle,rgba(60,91,255,0.18),transparent 65%)",pointerEvents:"none"}}/>
+          {/* Aurora */}
+          <div style={{position:"absolute",top:-50,left:-30,width:200,height:200,borderRadius:"50%",
+            background:"radial-gradient(circle,#3B5BFB,transparent 66%)",filter:"blur(18px)",opacity:0.5,
+            animation:"tdAurora 11s ease-in-out infinite",pointerEvents:"none"}}/>
+          <div style={{position:"absolute",bottom:-60,right:-40,width:210,height:210,borderRadius:"50%",
+            background:"radial-gradient(circle,#7C5CFF,transparent 66%)",filter:"blur(22px)",opacity:0.36,
+            animation:"tdAurora 14s ease-in-out infinite reverse",pointerEvents:"none"}}/>
+          {/* Grille fine */}
+          <div style={{position:"absolute",inset:0,
+            backgroundImage:"linear-gradient(rgba(255,255,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.04) 1px,transparent 1px)",
+            backgroundSize:"32px 32px",pointerEvents:"none"}}/>
 
-          {/* Grille abstraite en filigrane */}
-          <svg style={{position:"absolute",top:0,left:0,width:"100%",height:"100%",
-            opacity:0.05,pointerEvents:"none"}} viewBox="0 0 380 200" preserveAspectRatio="xMidYMid slice">
-            {[0,1,2,3,4].map(i=><line key={`h${i}`} x1="0" y1={i*44} x2="380" y2={i*44} stroke="#9DB0FF" strokeWidth="0.6"/>)}
-            {[0,1,2,3,4,5,6,7,8,9].map(i=><line key={`v${i}`} x1={i*40} y1="0" x2={i*40} y2="200" stroke="#9DB0FF" strokeWidth="0.6"/>)}
-          </svg>
-
-          {/* Ligne lumineuse top */}
-          <div style={{position:"absolute",top:0,left:0,right:0,height:1,
-            background:"linear-gradient(90deg,transparent,rgba(60,91,255,0.65),rgba(60,91,255,0.65),transparent)",
-            pointerEvents:"none"}}/>
-
-          <div style={{position:"relative",zIndex:1,padding:"18px 20px",display:"flex",flexDirection:"column",gap:14}}>
+          <div style={{position:"relative",padding:"20px",display:"flex",flexDirection:"column",gap:16}}>
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-              <span style={{display:"inline-flex",alignItems:"center",gap:5,
-                padding:"4px 11px",borderRadius:99,
-                background:"linear-gradient(135deg,rgba(109,40,217,0.25),rgba(60,91,255,0.18))",
-                border:"1px solid rgba(60,91,255,0.35)",
-                fontSize:10,fontWeight:800,letterSpacing:"0.08em",color:"#C9D3FF",fontFamily:DISP_F}}>
+              <span style={{display:"inline-flex",alignItems:"center",gap:7,
+                background:"rgba(59,91,251,0.2)",border:"1px solid rgba(120,150,255,0.4)",
+                borderRadius:99,padding:"6px 12px",fontSize:11,fontWeight:800,
+                letterSpacing:"0.06em",color:"#B9C6FF",fontFamily:DISP_F}}>
+                <span style={{width:6,height:6,borderRadius:"50%",background:"#5B8DFF"}}/>
                 PROGRAMME ACTIF
               </span>
-              <span style={{fontSize:11.5,fontWeight:800,color:"#FFF",background:"rgba(255,255,255,0.14)",padding:"5px 11px",borderRadius:99,fontFamily:DISP_F}}>
+              <span style={{background:"rgba(255,255,255,0.1)",borderRadius:99,
+                padding:"6px 12px",fontSize:12,fontWeight:800,color:"#fff",fontFamily:DISP_F}}>
                 Semaine {Math.min(semN, TOTAL_SEMAINES)} / {TOTAL_SEMAINES}
               </span>
             </div>
-            <span style={{fontSize:21,fontWeight:800,letterSpacing:-0.3,color:"#FFF",lineHeight:1.2,fontFamily:DISP_F}}>
-              {prog.titre || "Mon programme"}
-            </span>
-            <div style={{display:"flex",flexDirection:"column",gap:8}}>
+            <div style={{display:"flex",flexDirection:"column",gap:3}}>
+              <span style={{fontSize:30,fontWeight:800,letterSpacing:"-0.03em",color:"#fff",lineHeight:1,fontFamily:DISP_F}}>
+                {prog.titre || "Mon programme"}
+              </span>
+              <span style={{fontSize:13,fontWeight:600,color:"rgba(255,255,255,0.6)",fontFamily:DISP_F}}>
+                {prog.objectif || "Hypertrophie"} · {prog.jours.length} séance{prog.jours.length!==1?"s":""}
+              </span>
+            </div>
+            <div style={{display:"flex",flexDirection:"column",gap:9}}>
               <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                <span style={{fontSize:12,fontWeight:600,color:"rgba(255,255,255,0.6)",fontFamily:DISP_F}}>Cette semaine</span>
-                <span style={{fontSize:12,fontWeight:800,color:"#FFF",fontFamily:DISP_F}}>
+                <span style={{fontSize:12.5,fontWeight:600,color:"rgba(255,255,255,0.6)",fontFamily:DISP_F}}>Cette semaine</span>
+                <span style={{fontSize:14,fontWeight:800,color:"#fff",fontFamily:DISP_F}}>
                   {Math.min(semC||0, prog.jours.length)} / {prog.jours.length} séance{prog.jours.length!==1?"s":""}
                 </span>
               </div>
-              <div style={{height:7,borderRadius:99,background:"rgba(255,255,255,0.14)",overflow:"hidden"}}>
-                <div style={{height:"100%",width:`${prog.jours.length?Math.round(Math.min(semC||0,prog.jours.length)/prog.jours.length*100):0}%`,background:"linear-gradient(90deg,#9DB0FF,#3C5BFF)",borderRadius:99}}/>
+              <div style={{position:"relative",height:9,borderRadius:99,background:"rgba(255,255,255,0.12)",overflow:"hidden"}}>
+                <div style={{height:"100%",width:`${prog.jours.length?Math.max(5,Math.round(Math.min(semC||0,prog.jours.length)/prog.jours.length*100)):5}%`,
+                  background:"linear-gradient(90deg,#5B8DFF,#3B5BFB)",borderRadius:99}}/>
               </div>
             </div>
           </div>
@@ -390,8 +392,8 @@ export default function ProgrammeView(props) {
 
         {/* Tes séances — badge jour + statut, tap pour éditer */}
         <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:12 }}>
-          <div style={{ fontSize:17, fontWeight:800, color:C.text, fontFamily:DISP_F }}>Tes séances</div>
-          <div style={{ fontSize:12.5, fontWeight:700, color:C.dim, fontFamily:DISP_F }}>
+          <div style={{ fontSize:17, fontWeight:800, color:"#0F1923", fontFamily:DISP_F }}>Tes séances</div>
+          <div style={{ fontSize:12, fontWeight:700, color:"#9AA3B2", fontFamily:DISP_F }}>
             {prog.jours.length} / semaine
           </div>
         </div>
@@ -403,10 +405,10 @@ export default function ProgrammeView(props) {
           const jNext = jIdx === (semC||0);
           const jourLbl = (j.focus || j.nom || "—").slice(0,3).toUpperCase();
 
-          const badgeBg   = jDone ? `${C.green}18` : jNext ? C.accent : C.s2;
-          const badgeColor= jDone ? C.green : jNext ?"#FFF" : C.dim;
-          const cardBorder= jNext ? `1.5px solid ${C.accent}` : `1px solid ${C.bd}`;
-          const cardShadow= jNext ?"0 6px 18px rgba(60,91,255,0.18)" : C.shadow;
+          const badgeBg   = jDone ? `${C.green}18` : jNext ? "#3B5BFB" : "#F1F3F8";
+          const badgeColor= jDone ? C.green : jNext ? "#FFF" : "#6B7486";
+          const cardBorder= jNext ? "1.5px solid #3B5BFB" : "1px solid rgba(15,25,35,0.06)";
+          const cardShadow= jNext ? "0 8px 22px rgba(59,91,251,0.16)" : "0 1px 3px rgba(15,25,35,0.04)";
 
           const dureeTxt = dur
             ? (jDone ? `${dur} min réalisés` : `~${dur} min`)
@@ -416,13 +418,13 @@ export default function ProgrammeView(props) {
             <div key={jIdx}
               onClick={()=>setSelectedJour({jIdx})}
               style={{
-                background:C.s1, border:cardBorder, borderRadius:16,
+                background:"#fff", border:cardBorder, borderRadius:18,
                 marginBottom:11, padding:"12px 14px",
                 display:"flex", alignItems:"center", gap:13,
                 boxShadow:cardShadow, cursor:"pointer",
               }}>
               {/* Badge jour */}
-              <div style={{width:46,height:46,borderRadius:13,background:badgeBg,color:badgeColor,
+              <div style={{width:52,height:52,borderRadius:15,background:badgeBg,color:badgeColor,
                 display:"grid",placeItems:"center",flexShrink:0,fontFamily:DISP_F,fontSize:12,fontWeight:800}}>
                 {jourLbl}
               </div>
