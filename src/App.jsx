@@ -414,44 +414,39 @@ export default function App() {
         <PageContainer>
           <div className="page-enter">
             {tab ==="home" && <Home {...homeProps} />}
-            {tab !=="home" && tab !=="coach" && (
+            {tab !=="home" && (
               <Suspense fallback={<PageLoader />}>
                 {tab ==="program"   && <ProgramTab {...programProps} />}
                 {tab ==="nutrition" && <Nutrition  {...nutritionProps} />}
                 {tab ==="profile"   && <Profile    {...profileProps} />}
                 {tab ==="recipes"   && <Recipes    premium={premiumNutrition} setPaywall={setPaywallNutrition} push={push} repas={repas} setRepas={setRepas} subView={subViewRecipes} />}
+                {tab ==="coach"     && <CoachPage
+                  onBack={handleBack}
+                  profil={profil} obj={obj}
+                  calObj={calObj} pObj={pObj} gObj={gObj} lObj={lObj}
+                  bilan={{
+                    avgKcal: totR.cal,
+                    avgProt: totR.p,
+                    avgGluc: totR.g,
+                    avgLip:  totR.l,
+                    pctKcal: calObj ? Math.round((totR.cal / calObj) * 100) : 0,
+                    nbLogged: Object.values(repas).some(arr => arr.length > 0) ? 1 : 0,
+                    totalDays: 14,
+                    score: cPct ? (cPct / 10).toFixed(1) :"\u2014",
+                  }}
+                  premium={premiumNutrition}
+                  setPaywall={setPaywallNutrition}
+                  push={push}
+                />}
               </Suspense>
 )}
           </div>
         </PageContainer>
 
-        {tab ==="coach" && (
-          <Suspense fallback={<PageLoader />}>
-            <CoachPage
-              onBack={handleBack}
-              profil={profil} obj={obj}
-              calObj={calObj} pObj={pObj} gObj={gObj} lObj={lObj}
-              bilan={{
-                avgKcal: totR.cal,
-                avgProt: totR.p,
-                avgGluc: totR.g,
-                avgLip:  totR.l,
-                pctKcal: calObj ? Math.round((totR.cal / calObj) * 100) : 0,
-                nbLogged: Object.values(repas).some(arr => arr.length > 0) ? 1 : 0,
-                totalDays: 14,
-                score: cPct ? (cPct / 10).toFixed(1) :"—",
-              }}
-              premium={premiumNutrition}
-              setPaywall={setPaywallNutrition}
-              push={push}
-            />
-          </Suspense>
-)}
-
         </div>
         {/* ── Fin zone swipable ── */}
 
-        {tab !=="coach" && <BottomNav tab={tab} setTab={setTab} />}
+        <BottomNav tab={tab} setTab={setTab} />
 
         {/* ── Modal Level-Up Momentum XP ── */}
         <LevelUpModal

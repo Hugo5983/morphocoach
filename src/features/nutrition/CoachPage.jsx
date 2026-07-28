@@ -192,13 +192,11 @@ export default function CoachPage({
   return (
     <div onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd}
       style={{
-      position:"fixed", inset: 0, zIndex: 200,
+      position:"relative",
       background: BG,
       display:"flex", flexDirection:"column",
       fontFamily: FONT,
-      paddingTop:"env(safe-area-inset-top, 0px)",
-      paddingBottom:"env(safe-area-inset-bottom, 0px)",
-      height:"100dvh",
+      minHeight:`calc(100dvh - 140px)`,
       boxSizing:"border-box",
       ...swipeStyle,
     }}>

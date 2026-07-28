@@ -507,7 +507,7 @@ export default function RepasSheet({
         const P = Math.round((qtyFood.p || 0) * factor);
         const G = Math.round((qtyFood.g || 0) * factor);
         const L = Math.round((qtyFood.l || 0) * factor);
-        const step = per100 ? 10 : 0.5;
+        const step = per100 ? 1 : 0.5;
         const presets = per100 ? [50, 100, 150, 200] : [0.5, 1, 1.5, 2];
         const baseName = (qtyFood.n ||"").replace(/\s*\(100\s*g\)/i,"").trim();
         return (
@@ -532,7 +532,14 @@ export default function RepasSheet({
                     background: S2, border:`1px solid ${BD}`, color: TEXT, fontSize: 26, fontWeight: 700,
                     display:"grid", placeItems:"center", lineHeight: 1 }}>−</button>
                 <div style={{ minWidth: 110, textAlign:"center" }}>
-                  <span style={{ fontFamily: SF, fontSize: 34, fontWeight: 700, color: BL }}>{amount}</span>
+                  <input
+                    type="number" inputMode="numeric" min={per100?1:0.5}
+                    value={amount}
+                    onChange={e=>{const v=parseFloat(e.target.value);if(Number.isFinite(v)&&v>0)setAmount(v);}}
+                    style={{ fontFamily: SF, fontSize: 34, fontWeight: 700, color: BL,
+                      width: 80, border:"none", background:"transparent", outline:"none",
+                      textAlign:"center", padding:0 }}
+                  />
                   <span style={{ fontSize: 14, color: MID, marginLeft: 4, fontWeight: 600 }}>{per100 ?"g" :"×"}</span>
                 </div>
                 <button onClick={() => setAmount(a => Math.round((a + step) * 10) / 10)}
