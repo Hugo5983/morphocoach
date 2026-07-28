@@ -115,25 +115,30 @@ export function SeanceDetailModal({ jour, jourIdx, prog, setProg, onClose, C, IN
   };
 
   return (
-    <div style={{ position:"fixed", inset:0, zIndex:320, background:C.bg, overflowY:"auto" }}>
+    <div style={{ position:"fixed", inset:0, zIndex:320, background:C.bg,
+      display:"flex", flexDirection:"column" }}>
       {/* Styles des composants ExCard/BiblioSheet (définis dans CreerKit.jsx) */}
       <style>{CREER_CSS}</style>
-      <div style={{ maxWidth:500, margin:"0 auto", paddingBottom:32 }}>
 
-        {/* Retour */}
-        <div style={{ display:"flex", alignItems:"center", gap:12, padding:"20px 16px 8px" }}>
-          <button onClick={onClose} style={{ width:38, height:38, borderRadius:12,
-            background:C.s1, border:`1px solid ${C.bd}`, display:"grid", placeItems:"center",
-            cursor:"pointer", flexShrink:0 }}>
-            <I name="chevronLeft" size={18}/>
-          </button>
-          <div>
-            <div style={{ fontSize:16, fontWeight:800, color:C.text, fontFamily:FONT }}>Modifier la séance</div>
-            <div style={{ fontSize:12, color:C.dim, marginTop:1, fontFamily:FONT }}>Programme · {prog.titre ||"Mon programme"}</div>
-          </div>
+      {/* Retour — fixe en haut, hors du scroll */}
+      <div style={{ display:"flex", alignItems:"center", gap:12,
+        padding:"20px 16px 8px", flexShrink:0 }}>
+        <button onClick={onClose} style={{ width:38, height:38, borderRadius:12,
+          background:C.s1, border:`1px solid ${C.bd}`, display:"grid", placeItems:"center",
+          cursor:"pointer", flexShrink:0 }}>
+          <I name="chevronLeft" size={18}/>
+        </button>
+        <div>
+          <div style={{ fontSize:16, fontWeight:800, color:C.text, fontFamily:FONT }}>Modifier la séance</div>
+          <div style={{ fontSize:12, color:C.dim, marginTop:1, fontFamily:FONT }}>Programme · {prog.titre ||"Mon programme"}</div>
         </div>
+      </div>
 
-        <div style={{ padding:"6px 16px 0" }}>
+      {/* Zone scrollable — minHeight:0 pour que le flex ne déborde pas sur iOS */}
+      <div style={{ flex:1, minHeight:0, overflowY:"auto",
+        WebkitOverflowScrolling:"touch", padding:"6px 16px 32px",
+        maxWidth:500, margin:"0 auto", width:"100%", boxSizing:"border-box" }}
+        className="mc-scroll">
 
           {/* Hero — même famille visuelle que ProgrammeView (Piste B) */}
           <div style={{ position:"relative", borderRadius:20, overflow:"hidden",
@@ -193,7 +198,7 @@ export function SeanceDetailModal({ jour, jourIdx, prog, setProg, onClose, C, IN
             </div>
           </div>
 
-          {/* Exercices — ExCard réel du créateur, sans aucune modification */}
+          {/* Exercices */}
           <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:10 }}>
             <div style={{ fontSize:13, fontWeight:800, color:C.text, fontFamily:FONT }}>Exercices</div>
             <div style={{ fontSize:11.5, fontWeight:700, color:C.dim, fontFamily:FONT }}>{exercices.length}</div>
@@ -212,15 +217,17 @@ export function SeanceDetailModal({ jour, jourIdx, prog, setProg, onClose, C, IN
               onRemove={() => removeExAt(k)}/>
 ))}
 
+          {/* Bouton Ajouter — bleu plein comme les CTA principaux de l'app */}
           <button onClick={() => setShowBiblio(true)} style={{
             width:"100%", cursor:"pointer", fontFamily:FONT, fontWeight:700, fontSize:14,
-            padding:16, borderRadius:16, border:"1.5px dashed rgba(60,91,255,0.35)",
-            background:"rgba(60,91,255,0.05)", color:DARK.accent,
-            display:"flex", alignItems:"center", justifyContent:"center", gap:8, marginTop:4,
+            padding:"16px", borderRadius:16, border:"none",
+            background:`linear-gradient(135deg,${C.accent},${C.accentDk || "#2E48D9"})`,
+            color:"#FFF",
+            display:"flex", alignItems:"center", justifyContent:"center", gap:8,
+            marginTop:4, boxShadow:"0 6px 18px rgba(60,91,255,0.3)",
           }}>
             <span style={{ fontSize:18, lineHeight:1 }}>+</span> Ajouter un exercice
           </button>
-        </div>
       </div>
 
       {/* Bibliothèque — BiblioSheet réel du créateur, sans aucune modification */}

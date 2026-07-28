@@ -43,7 +43,6 @@ export default function CoachWeekCard({ semC, semN, totalJours, premium, onUnloc
   const fatigueLbl = ratio < 0.35 ?"Basse"     : ratio < 0.70 ?"Modérée"   :"Élevée";
   const fatigueCol = ratio < 0.35 ? C.green   : ratio < 0.70 ?"#F59E0B"   : C.red;
   const recupPct   = Math.round(100 - ratio * 32);
-  const risqueBar  = ratio < 0.35 ? 0.15        : ratio < 0.70 ? 0.55        : 0.90;
 
   // Styles partagés
   const cardShell = {
@@ -268,27 +267,23 @@ export default function CoachWeekCard({ semC, semN, totalJours, premium, onUnloc
           </span>
         </div>
 
-        {/* Jauge risque — toujours visible, neutre tant qu'il n'y a pas de données */}
+        {/* Jauge risque — toujours visible, colorée pleine sans curseur */}
         <div style={{display:"flex", flexDirection:"column", gap:6}}>
-          <div style={{position:"relative", height:9, borderRadius:99, background:gaugeTrack}}>
-            {hasRealData && (
-              <span style={{position:"absolute", top:"50%", left:`${risqueBar*100}%`, transform:"translate(-50%,-50%)", width:16, height:16, borderRadius:99, background:"#fff", border:`3px solid ${DARK.surface}`, boxShadow:"0 1px 4px rgba(0,0,0,0.25)"}}/>
-            )}
-          </div>
+          <div style={{height:9, borderRadius:99, background:gaugeTrack}}/>
           <div style={{display:"flex", justifyContent:"space-between", fontSize:9.5, fontWeight:800, letterSpacing:"0.03em", color:"#9AA3B2", fontFamily:F}}>
             <span>OPTIMAL</span><span>VIGILANCE</span><span>SURENTRAÎN.</span>
           </div>
         </div>
 
-        {/* Fatigue · Récup · Sommeil — à tiret sans données */}
+        {/* Fatigue · Récup · Sommeil — cases colorées avec fond de la couleur de la valeur */}
         <div style={{display:"flex", gap:9}}>
           {[
-            {l:"FATIGUE", v:fatigueTxt, c:fatigueValColor},
-            {l:"RÉCUP.",  v:recupTxt,   c:statValColor},
-            {l:"SOMMEIL", v:sommeilTxt, c:statValColor},
+            {l:"FATIGUE", v:fatigueTxt, c:fatigueValColor, bg:hasRealData?`${fatigueCol}18`:"#F6F7FB", bc:hasRealData?`${fatigueCol}35`:"transparent"},
+            {l:"RÉCUP.",  v:recupTxt,   c:hasRealData?C.accent:"#C3C9D4", bg:hasRealData?`${C.accent}18`:"#F6F7FB", bc:hasRealData?`${C.accent}35`:"transparent"},
+            {l:"SOMMEIL", v:sommeilTxt, c:hasRealData?"#9B7BF0":"#C3C9D4", bg:hasRealData?"rgba(155,123,240,0.12)":"#F6F7FB", bc:hasRealData?"rgba(155,123,240,0.35)":"transparent"},
           ].map(m => (
-            <div key={m.l} style={{flex:1, background:"#F6F7FB", borderRadius:14, padding:"12px 8px", display:"flex", flexDirection:"column", alignItems:"center", gap:3}}>
-              <span style={{fontSize:9.5, fontWeight:800, letterSpacing:"0.04em", color:"#9AA3B2", fontFamily:F}}>{m.l}</span>
+            <div key={m.l} style={{flex:1, background:m.bg, border:`1px solid ${m.bc}`, borderRadius:14, padding:"12px 8px", display:"flex", flexDirection:"column", alignItems:"center", gap:3}}>
+              <span style={{fontSize:9.5, fontWeight:800, letterSpacing:"0.04em", color:hasRealData?m.c:"#9AA3B2", fontFamily:F}}>{m.l}</span>
               <span style={{fontSize:15, fontWeight:800, color:m.c, fontFamily:F}}>{m.v}</span>
             </div>
           ))}
