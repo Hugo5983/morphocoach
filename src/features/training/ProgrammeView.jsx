@@ -1,4 +1,5 @@
 import { I } from"../../components/ui/Icon.jsx";
+import { dureeSeance } from"../../utils/training.js";
 import useScrollTop from"../../hooks/useScrollTop.js";
 import { useState } from"react";
 import { C, DARK } from"../../data/constants.js";
@@ -84,15 +85,7 @@ export default function ProgrammeView(props) {
   const DISP_F   ="'Archivo',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif";
   const semN     = (semC||0)+1;
   const progIdx = Math.max(0, allProgs.findIndex(p => prog && (p.id===prog.id || p.titre===prog.titre)));
-  const durOf = (j) => {
-    const exs = j.exercices||[];
-    if (!exs.length) return null;
-    const secs = exs.reduce((sum,ex) => {
-      const s = parseInt(ex.series)||4, r = parseInt(String(ex.repos||"90").replace(/\D/g,""))||90;
-      return sum + s*(r+60);
-    },0);
-    return Math.round(secs/60);
-  };
+  const durOf = dureeSeance;
 
   return (
     <div style={{padding:"0 20px"}}>
@@ -503,18 +496,16 @@ export default function ProgrammeView(props) {
         <Creer {...creerProps} progs={allProgs} setProgsAll={(next)=>{ setProgs(next); if(next.length>0) setProg(next[next.length-1]); }}/>
 )}
 
-      {/* ── SeanceDetailModal en overlay fixe ── */}
+      {/* ── SeanceDetailModal en overlay fixe (gère son propre positionnement) ── */}
       {selectedJour !== null && prog?.jours?.[selectedJour.jIdx] && (
-        <div style={{position:"fixed",inset:0,zIndex:320,background:C.bg,overflowY:"auto",WebkitOverflowScrolling:"touch"}}>
-          <SeanceDetailModal
-            jour={prog.jours[selectedJour.jIdx]}
-            jourIdx={selectedJour.jIdx}
-            prog={prog}
-            setProg={(u) => updateProgAtIdx(progIdx, u)}
-            onClose={() => setSelectedJour(null)}
-            C={C} INT={INT}
-          />
-        </div>
+        <SeanceDetailModal
+          jour={prog.jours[selectedJour.jIdx]}
+          jourIdx={selectedJour.jIdx}
+          prog={prog}
+          setProg={(u) => updateProgAtIdx(progIdx, u)}
+          onClose={() => setSelectedJour(null)}
+          C={C} INT={INT}
+        />
 )}
     </div>
 );

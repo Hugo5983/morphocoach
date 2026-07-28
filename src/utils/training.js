@@ -65,6 +65,24 @@ export const calcKgFor = (rm1, reps) => {
 export const catColor = (cat) => CAT[cat ||"principal"] || CAT.principal;
 
 /**
+ * Durée estimée d'une séance en minutes, à partir de ses exercices
+ * (séries × (repos + ~60s de travail actif)). Retourne null si aucun exercice.
+ * Extrait de ProgrammeView.jsx — source unique de vérité, ne pas dupliquer.
+ * @param {{exercices?: Array<{series?:string|number, repos?:string|number}>}} jour
+ * @returns {number|null}
+ */
+export function dureeSeance(jour) {
+  const exs = jour?.exercices || [];
+  if (!exs.length) return null;
+  const secs = exs.reduce((sum, ex) => {
+    const s = parseInt(ex.series) || 4;
+    const r = parseInt(String(ex.repos ||"90").replace(/\D/g,"")) || 90;
+    return sum + s * (r + 60);
+  }, 0);
+  return Math.round(secs / 60);
+}
+
+/**
  * Formate une clé YYYY-MM-DD depuis une Date.
  * @param {Date} date
  * @returns {string}
