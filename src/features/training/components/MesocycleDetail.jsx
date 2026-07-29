@@ -1,10 +1,23 @@
-import { useState, useMemo } from"react";
+import { useState, useMemo, useEffect } from"react";
 import useScrollTop from"../../../hooks/useScrollTop.js";
 import { C, DARK, FONT } from"../../../data/constants.js";
 import { I } from"../../../components/ui/Icon.jsx";
 
 export default function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, curVol, currentWeek, WEEKS, cycleStart, checkedEx, onClose, mode ="analyse" }) {
   useScrollTop();
+
+  // Lock body scroll
+  useEffect(() => {
+    const scrollY = window.scrollY;
+    document.documentElement.style.overflow = "hidden";
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.documentElement.style.overflow = "";
+      document.body.style.overflow = "";
+      window.scrollTo(0, scrollY);
+    };
+  }, []);
+
   const isForce   = mode ==="force";
   const [exMenu, setExMenu] = useState(false);
   const F = FONT;
@@ -137,11 +150,15 @@ export default function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, cu
   const perfOK = perfTrend === null || perfTrend >= 0;
   const perfExName = perfData?.exNom || "—";
   const sleepOK = sleepData.avg !== null && sleepData.avg >= sTgt - 0.5;
-  const overLabel = perfOK && sleepOK ? "Récup bonne"
+  const hasAnyData = perfData !== null || sleepData.avg !== null;
+  const overLabel = !hasAnyData ? "En attente de données"
+    : perfOK && sleepOK ? "Récup bonne"
     : perfOK || sleepOK ? "À surveiller" : "Risque élevé";
-  const overColor = perfOK && sleepOK ? "#0B8A5F"
+  const overColor = !hasAnyData ? "#9AA3B2"
+    : perfOK && sleepOK ? "#0B8A5F"
     : perfOK || sleepOK ? "#F5A100" : "#EF4444";
-  const overBg = perfOK && sleepOK ? "#E7F7F0"
+  const overBg = !hasAnyData ? "#F6F7F9"
+    : perfOK && sleepOK ? "#E7F7F0"
     : perfOK || sleepOK ? "#FEF3E2" : "#FDECEC";
 
   // volume bar height
@@ -168,14 +185,14 @@ export default function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, cu
         @keyframes mPulseDot{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.5)}50%{box-shadow:0 0 0 7px rgba(239,68,68,0)}}
       `}</style>
 
-      <div style={{padding:"0 18px 40px",maxWidth:480,margin:"0 auto"}}>
+      <div style={{padding:"0 18px 140px",maxWidth:480,margin:"0 auto"}}>
 
         {/* ── Retour ── */}
         <div onClick={onClose} style={{
           display:"flex",alignItems:"center",gap:6,padding:"20px 0 8px",cursor:"pointer",
           animation:"mFadeUp .5s cubic-bezier(.22,1,.36,1) both",animationDelay:".02s",
         }}>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3B5BFB" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+          <I name="chevronLeft" size={18} color="#3B5BFB"/>
           <span style={{fontSize:15,fontWeight:700,color:"#3B5BFB",fontFamily:F}}>Retour</span>
         </div>
 
@@ -252,13 +269,23 @@ export default function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, cu
               </span>
             )}
           </div>
-          <div style={{display:"flex",alignItems:"baseline",gap:8,marginBottom:14}}>
-            <span style={{fontSize:46,fontWeight:800,letterSpacing:"-0.03em",color:acwrColor,lineHeight:0.9,
-              fontVariantNumeric:"tabular-nums",fontFamily:F}}>
-              {hasACWR ? acwrRatio.toFixed(2) : "—"}
-            </span>
-            <span style={{fontSize:15,fontWeight:800,color:"#6B7486",fontFamily:F}}>{acwrLabel}</span>
-          </div>
+          {hasACWR ? (
+            <div style={{display:"flex",alignItems:"baseline",gap:8,marginBottom:14}}>
+              <span style={{fontSize:46,fontWeight:800,letterSpacing:"-0.03em",color:acwrColor,lineHeight:0.9,
+                fontVariantNumeric:"tabular-nums",fontFamily:F}}>
+                {acwrRatio.toFixed(2)}
+              </span>
+              <span style={{fontSize:15,fontWeight:800,color:"#6B7486",fontFamily:F}}>{acwrLabel}</span>
+            </div>
+          ) : (
+            <div style={{display:"flex",flexDirection:"column",gap:6,marginBottom:14,padding:"12px 16px",
+              background:"linear-gradient(135deg,#F7F8FB,#EEF1FF)",borderRadius:16,border:"1px dashed rgba(59,91,251,0.2)"}}>
+              <span style={{fontSize:15,fontWeight:800,color:"#3B5BFB",fontFamily:F}}>Bientôt disponible</span>
+              <span style={{fontSize:12.5,fontWeight:500,color:"#6B7486",lineHeight:1.5,fontFamily:F}}>
+                Complète 3 semaines d'entraînement (encore {Math.max(0, 21 - acwrData.spanDays)} jours) pour activer cette analyse — plus tu logges, plus elle est précise.
+              </span>
+            </div>
+          )}
           {/* Jauge dégradée */}
           <div style={{display:"flex",flexDirection:"column",gap:8,marginBottom:14}}>
             <div style={{position:"relative",height:12,borderRadius:99,
@@ -330,11 +357,21 @@ export default function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, cu
               {nearMRV ? "Limite proche" : "Dans la zone"}
             </span>
           </div>
-          <div style={{display:"flex",alignItems:"baseline",gap:8,marginBottom:16}}>
-            <span style={{fontSize:40,fontWeight:800,letterSpacing:"-0.03em",color:volColor,lineHeight:0.9,
-              fontVariantNumeric:"tabular-nums",fontFamily:F}}>{curVol}</span>
-            <span style={{fontSize:15,fontWeight:800,color:"#6B7486",fontFamily:F}}>séries cette sem.</span>
-          </div>
+          {curVol > 0 ? (
+            <div style={{display:"flex",alignItems:"baseline",gap:8,marginBottom:16}}>
+              <span style={{fontSize:40,fontWeight:800,letterSpacing:"-0.03em",color:volColor,lineHeight:0.9,
+                fontVariantNumeric:"tabular-nums",fontFamily:F}}>{curVol}</span>
+              <span style={{fontSize:15,fontWeight:800,color:"#6B7486",fontFamily:F}}>séries cette sem.</span>
+            </div>
+          ) : (
+            <div style={{display:"flex",flexDirection:"column",gap:6,marginBottom:16,padding:"12px 16px",
+              background:"linear-gradient(135deg,#F7F8FB,#EEF1FF)",borderRadius:16,border:"1px dashed rgba(59,91,251,0.2)"}}>
+              <span style={{fontSize:15,fontWeight:800,color:"#3B5BFB",fontFamily:F}}>Aucune séance cette semaine</span>
+              <span style={{fontSize:12.5,fontWeight:500,color:"#6B7486",lineHeight:1.5,fontFamily:F}}>
+                Démarre une séance pour voir ton volume apparaître ici avec les seuils MEV / MAV / MRV.
+              </span>
+            </div>
+          )}
           {/* Barres + seuils */}
           <div style={{display:"flex",alignItems:"flex-end",gap:14,height:150,padding:"2px 2px 0",marginBottom:12}}>
             <div style={{flex:1,display:"flex",alignItems:"flex-end",height:"100%"}}>
@@ -394,7 +431,16 @@ export default function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, cu
               {sleepData.days > 0 ? "Données réelles · 7j" : "En attente"}
             </span>
           </div>
-          <div style={{display:"flex",alignItems:"center",gap:18}}>
+          {sleepData.days === 0 && mobData.count === 0 ? (
+            <div style={{display:"flex",flexDirection:"column",gap:6,padding:"12px 16px",
+              background:"linear-gradient(135deg,#F7F8FB,#EEF1FF)",borderRadius:16,border:"1px dashed rgba(59,91,251,0.2)"}}>
+              <span style={{fontSize:15,fontWeight:800,color:"#3B5BFB",fontFamily:F}}>Pas encore de données</span>
+              <span style={{fontSize:12.5,fontWeight:500,color:"#6B7486",lineHeight:1.5,fontFamily:F}}>
+                Logge ton sommeil et tes séances de mobilité pour calculer ton score de récupération.
+              </span>
+            </div>
+          ) : null}
+          {(sleepData.days > 0 || mobData.count > 0) && <div style={{display:"flex",alignItems:"center",gap:18}}>
             {/* Anneau */}
             <div style={{position:"relative",width:92,height:92,flex:"none"}}>
               <svg width="92" height="92" viewBox="0 0 36 36">
@@ -440,7 +486,7 @@ export default function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, cu
                 </div>
               </div>
             </div>
-          </div>
+          </div>}
           <div onClick={e=>{e.stopPropagation();setExp(exp==="recup"?null:"recup")}} style={{display:"flex",alignItems:"center",gap:6,cursor:"pointer",marginTop:14}}>
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#3B5BFB" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
               <path d={exp==="recup"?"M18 15l-6-6-6 6":"M6 9l6 6 6-6"}/>
@@ -481,28 +527,28 @@ export default function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, cu
                 label: "Performance",
                 sub: perfData ? `${perfTrend !== null ? (perfTrend >= 0 ? `+${perfTrend}%` : `${perfTrend}%`) : "—"} · ${perfExName}` : "Aucune donnée",
                 ok: perfOK && perfData,
-                icon: <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke={perfOK && perfData?"#12B981":"#B4BCCA"} strokeWidth="2.2" strokeLinecap="round"><rect x="3" y="10" width="3.5" height="8" rx="1"/><rect x="10.2" y="4" width="3.5" height="14" rx="1"/><rect x="17.5" y="7" width="3.5" height="11" rx="1"/></svg>,
+                icon: <I name="progress" size={19} color={perfOK && perfData?"#12B981":"#B4BCCA"}/>,
                 delay: ".46s",
               },
               {
                 label: "Sommeil",
                 sub: sleepData.avg !== null ? `${sleepData.avg}h moyenne (cible ${sTgt}h)` : "Aucune donnée",
                 ok: sleepOK,
-                icon: <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke={sleepOK?"#12B981":"#B4BCCA"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 13a8 8 0 1 1-9-8 6.2 6.2 0 0 0 9 8Z"/></svg>,
+                icon: <I name="sleep" size={19} color={sleepOK?"#12B981":"#B4BCCA"}/>,
                 delay: ".51s",
               },
               {
                 label: "FC repos",
                 sub: "Connecte une app santé",
                 ok: null,
-                icon: <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#B4BCCA" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12h4l2-6 4 12 2-6h5"/></svg>,
+                icon: <I name="cardio" size={19} color="#B4BCCA"/>,
                 delay: ".56s",
               },
               {
                 label: "Motivation",
                 sub: "Check-in hebdo à venir",
                 ok: null,
-                icon: <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#B4BCCA" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20.5S3.5 15 3.5 8.7A4.2 4.2 0 0 1 12 6a4.2 4.2 0 0 1 8.5 2.7C20.5 15 12 20.5 12 20.5Z"/></svg>,
+                icon: <I name="flame" size={19} color="#B4BCCA"/>,
                 delay: ".61s",
               },
             ].map((row, i, arr) => (
@@ -583,7 +629,7 @@ export default function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, cu
           )}
         </div>
 
-        <div style={{height:20}}/>
+        <div style={{height:40}}/>
       </div>
     </div>
   );
