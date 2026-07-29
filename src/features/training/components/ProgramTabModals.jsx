@@ -73,21 +73,14 @@ export function SeanceDetailModal({ jour, jourIdx, prog, setProg, onClose, C, IN
   const [localName,  setLocalName]  = useState(jour.nom ||"");
   const [showBiblio, setShowBiblio] = useState(false);
 
-  // Lock body scroll when modal is open
+  // Lock body scroll when modal is open — lightweight approach
   useEffect(() => {
-    const prev = document.body.style.overflow;
-    const prevPos = document.body.style.position;
-    const prevTop = document.body.style.top;
     const scrollY = window.scrollY;
-    document.body.style.position = "fixed";
-    document.body.style.top = `-${scrollY}px`;
+    document.documentElement.style.overflow = "hidden";
     document.body.style.overflow = "hidden";
-    document.body.style.width = "100%";
     return () => {
-      document.body.style.position = prevPos;
-      document.body.style.top = prevTop;
-      document.body.style.overflow = prev;
-      document.body.style.width = "";
+      document.documentElement.style.overflow = "";
+      document.body.style.overflow = "";
       window.scrollTo(0, scrollY);
     };
   }, []);
@@ -248,6 +241,29 @@ export function SeanceDetailModal({ jour, jourIdx, prog, setProg, onClose, C, IN
           }}>
             <span style={{ fontSize:18, lineHeight:1 }}>+</span> Ajouter un exercice
           </button>
+
+          {/* Saisir un record */}
+          <div style={{ marginTop:16, marginBottom:8 }}>
+            <div style={{ fontSize:13, fontWeight:800, color:C.text, fontFamily:FONT, marginBottom:10 }}>Records</div>
+            <button onClick={() => {
+              onClose();
+              // Small delay to let modal close, then the parent handles PR
+              setTimeout(() => window.dispatchEvent(new CustomEvent("morpho:openPR")), 180);
+            }} style={{
+              width:"100%", cursor:"pointer", fontFamily:FONT, fontWeight:800, fontSize:14,
+              padding:"15px", borderRadius:16, border:"none",
+              background:"#fff", border:"1px solid rgba(15,25,35,0.1)",
+              color:"#0F1923",
+              display:"flex", alignItems:"center", justifyContent:"center", gap:8,
+              boxShadow:"0 2px 8px rgba(15,25,35,0.06)",
+            }}>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#3B5BFB"
+                strokeWidth="2.5" strokeLinecap="round">
+                <path d="M12 5v14M5 12h14"/>
+              </svg>
+              Ajoute ton PR
+            </button>
+          </div>
       </div>
 
       {/* Bibliothèque — BiblioSheet réel du créateur, sans aucune modification */}
