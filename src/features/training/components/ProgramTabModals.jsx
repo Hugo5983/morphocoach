@@ -1,4 +1,4 @@
-import { useState } from"react";
+import { useState, useEffect } from"react";
 import { I } from"../../../components/ui/Icon.jsx";
 import { catColor, dureeSeance } from"../../../utils/training.js";
 import { C, DARK, FONT, INT } from"../../../data/constants.js";
@@ -72,6 +72,25 @@ export function GuideExModal({ exData, exSerie, onClose, C }) {
 export function SeanceDetailModal({ jour, jourIdx, prog, setProg, onClose, C, INT }) {
   const [localName,  setLocalName]  = useState(jour.nom ||"");
   const [showBiblio, setShowBiblio] = useState(false);
+
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    const prev = document.body.style.overflow;
+    const prevPos = document.body.style.position;
+    const prevTop = document.body.style.top;
+    const scrollY = window.scrollY;
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.overflow = "hidden";
+    document.body.style.width = "100%";
+    return () => {
+      document.body.style.position = prevPos;
+      document.body.style.top = prevTop;
+      document.body.style.overflow = prev;
+      document.body.style.width = "";
+      window.scrollTo(0, scrollY);
+    };
+  }, []);
 
   const exercices    = prog.jours[jourIdx]?.exercices || [];
   const int          = INT[jour.intensite ||"modere"];

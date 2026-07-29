@@ -6,7 +6,7 @@ import { useMemo } from"react";
 // État 1 : !premium         → verrouillé, flou, CTA conversion PRO
 // État 2 : premium && !data → déverrouillé, données insuffisantes
 // État 3 : premium && data  → expérience premium complète
-export default function CoachWeekCard({ semC, semN, totalJours, premium, onUnlock, onFirstSeance }) {
+export default function CoachWeekCard({ semC, semN, totalJours, premium, onUnlock, onFirstSeance, onDetails }) {
   const F = FONT;
   const done  = semC || 0;
   const total = totalJours || 0;
@@ -296,6 +296,23 @@ export default function CoachWeekCard({ semC, semN, totalJours, premium, onUnloc
           </svg>
           <span style={{fontSize:12.5, fontWeight:500, color:"#3949AB", lineHeight:1.5, fontFamily:F}}>{bannerTxt}</span>
         </div>
+
+        {/* Bouton Détails → MesocycleDetail */}
+        {onDetails && (
+          <button onClick={onDetails} style={{
+            width:"100%", padding:"13px", borderRadius:14, cursor:"pointer",
+            background:"#fff", border:"1px solid rgba(15,25,35,0.1)",
+            color:"#0F1923", fontSize:13.5, fontWeight:700, fontFamily:F,
+            display:"flex", alignItems:"center", justifyContent:"center", gap:8,
+            boxShadow:"0 2px 8px rgba(15,25,35,0.06)",
+          }}>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#3B5BFB"
+              strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M3 17 9 11 13 15 21 7"/><path d="M14 7h7v7"/>
+            </svg>
+            Détails & analyse complète
+          </button>
+        )}
 
         {/* CTA — uniquement tant qu'il n'y a pas de données */}
         {!hasRealData && (
