@@ -393,6 +393,7 @@ export default function App() {
             nutrition: { items:[{id:"journal",label:"Journal"},{id:"coach",label:"Coach"},{id:"dashboard",label:"Bilan Pro",pro:true},{id:"bilan",label:"Analyse",pro:true}], view:subViewNutrition, set:(v)=>{ if(v==="coach"){setTab("coach");} else{setSubViewNutrition(v);} } },
             recipes:   { items:[{id:"all",label:"Toutes"},{id:"favorites",label:"Favoris"},{id:"coach",label:"Coach"},{id:"liste",label:"Liste"}], view:subViewRecipes, set:(v)=>{ if(v==="coach"){setTab("coach");} else{setSubViewRecipes(v);} } },
             profile:   { items:[{id:"Profil",label:"Profil"},{id:"Compo.",label:"Compo"},{id:"Mesures",label:"Mesures"},{id:"coach",label:"Coach"}], view:subViewProfile, set:(v)=>{ if(v==="coach"){setTab("coach");} else{setSubViewProfile(v);} } },
+            coach:     { items:[{id:"journal",label:"Journal"},{id:"coach",label:"Coach"},{id:"dashboard",label:"Bilan Pro",pro:true},{id:"bilan",label:"Analyse",pro:true}], view:"coach", set:(v)=>{ if(v==="coach"){} else{setTab("nutrition");setSubViewNutrition(v);} } },
           };
           const nav = NAVS[tab];
           return (
