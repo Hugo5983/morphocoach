@@ -196,7 +196,7 @@ export default function CoachPage({
       background: BG,
       display:"flex", flexDirection:"column",
       fontFamily: FONT,
-      minHeight:`calc(100dvh - 140px)`,
+      minHeight:"100%",
       boxSizing:"border-box",
       ...swipeStyle,
     }}>
@@ -299,7 +299,7 @@ export default function CoachPage({
       </div>
 
       {/* ── Zone scrollable (strip + suggestions + messages) ─────────────── */}
-      <div style={{ flex: 1, minHeight: 0, overflowY:"auto", display:"flex", flexDirection:"column" }}>
+      <div style={{ flex: 1, minHeight: 0, overflowY:"auto", WebkitOverflowScrolling:"touch", overscrollBehavior:"contain", display:"flex", flexDirection:"column" }}>
 
       {/* ── Strip contexte ─────────────────────────────────────────────── */}
       {bilan && (
