@@ -66,7 +66,7 @@ export function useSwipeNav(onBack, onForward, { threshold = 0.15 } = {}) {
       setTimeout(() => {
         setTranslateX(0);
         cb?.();
-      }, 220);
+      }, 300);
     } else {
       setSwiping(false);
       setTranslateX(0);
@@ -80,14 +80,13 @@ export function useSwipeNav(onBack, onForward, { threshold = 0.15 } = {}) {
     onTouchStart, onTouchMove, onTouchEnd,
     swipeStyle: {
       transform:`translateX(${translateX}px)`,
-      transition: swiping ?"none" :"transform .28s cubic-bezier(.32,.72,0,1)",
+      transition: swiping ?"none" :"transform .35s cubic-bezier(.25,.46,.45,.94)",
       willChange:"transform",
       touchAction:"pan-y",
-      boxShadow: translateX > 0
-        ?"-8px 0 30px rgba(0,0,0,0.18)"
-        : translateX < 0
-          ?"8px 0 30px rgba(0,0,0,0.18)"
-          :"none",
+      boxShadow: Math.abs(translateX) > 10
+        ? `${translateX > 0 ? "-" : ""}6px 0 24px rgba(0,0,0,0.10)`
+        : "none",
+      opacity: Math.abs(translateX) > 10 ? Math.max(0.92, 1 - Math.abs(translateX) / 1200) : 1,
     },
   };
 }
