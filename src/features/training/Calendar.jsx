@@ -111,19 +111,34 @@ export default function Calendar(props) {
   return (
     <div style={{padding:"0 20px"}}>
 
-      {/* ── Header planning ── */}
-      <div style={{marginBottom:20,paddingTop:4}}>
-        <div style={{fontSize:10,fontWeight:700,letterSpacing:"0.1em",textTransform:'uppercase',color:C.accent,fontFamily:"'Archivo',system-ui,sans-serif",marginBottom:8}}>Planning</div>
-        <div style={{fontFamily:"'Archivo',system-ui,sans-serif",fontSize:34,fontWeight:400,letterSpacing:-1,color:'${C.text}',lineHeight:1.1,marginBottom:2}}>
-          Ton mois
-        </div>
-        <div style={{fontFamily:"'Archivo',system-ui,sans-serif",fontSize:34,fontWeight:400,letterSpacing:-1,color:C.accent,lineHeight:1.1,fontStyle:'italic',marginBottom:12}}>
-          en clair.
-        </div>
-        <div style={{fontSize:13,color:C.mid,lineHeight:1.6,fontFamily:"'Archivo',system-ui,sans-serif",fontWeight:400}}>
-          Densité d'effort, séances planifiées, jours de récupération.
-        </div>
-      </div>
+      {/* ── Header planning (même style TodayView) ── */}
+      {(() => {
+        const now = new Date();
+        const dateLabel = now.toLocaleDateString("fr-FR", {
+          weekday:"long", day:"numeric", month:"short",
+        }).toUpperCase().replace(".", "");
+        const DISP = "'Archivo',system-ui,-apple-system,sans-serif";
+        return (
+          <div style={{ marginBottom:20, paddingTop:4 }}>
+            <div style={{
+              fontSize:11, fontWeight:700, letterSpacing:"0.12em",
+              color:C.accent, fontFamily:DISP, marginBottom:6,
+            }}>{dateLabel}</div>
+            <div style={{
+              fontFamily:DISP, fontSize:31, fontWeight:800,
+              letterSpacing:"-0.03em", color:C.text, lineHeight:1,
+            }}>
+              Ton <span style={{ fontStyle:"italic", color:C.accent }}>planning</span>
+            </div>
+            <div style={{
+              fontSize:13.5, fontWeight:500, color:"#6B7486",
+              fontFamily:DISP, marginTop:6,
+            }}>
+              Densité d'effort, séances planifiées, jours de récupération
+            </div>
+          </div>
+        );
+      })()}
 
       <MonthCal sessions={calSess} semC={semC} currentWeek={currentWeek} onUpdate={(date,sess) => {
         if (sess) setCalSess(s => ({...s,[date]:sess}));

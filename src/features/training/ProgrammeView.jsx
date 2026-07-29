@@ -6,6 +6,7 @@ import { C, DARK } from"../../data/constants.js";
 import Creer from"./Creer.jsx";
 import { SeanceDetailModal } from"./components/ProgramTabModals.jsx";
 import CoachWeekCard from"./components/CoachWeekCard.jsx";
+import MesocycleDetail from"./components/MesocycleDetail.jsx";
 
 export default function ProgrammeView(props) {
   useScrollTop();
@@ -15,6 +16,7 @@ export default function ProgrammeView(props) {
   const [innerView,    setInnerView]    = useState("list");  // gardé pour compatibilité Creer
   const [selectedJour, setSelectedJour] = useState(null);    // {jIdx} → ouvre SeanceDetailModal en overlay
   const [confirmDel, setConfirmDel] = useState(null); // {type:"prog"|"jour", progIdx, jourIdx}
+  const [showMeso, setShowMeso] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
 
   // Durée totale du mésocycle : 6 semaines (Base · Vol+ ×3 · Déload · Pic),
@@ -496,6 +498,7 @@ export default function ProgrammeView(props) {
           premium={premium}
           onUnlock={()=>setPaywall(true)}
           onFirstSeance={()=>setProgView("today")}
+          onDetails={()=>setShowMeso(true)}
         />
       </div>
 
@@ -524,6 +527,32 @@ export default function ProgrammeView(props) {
       {showCreerForm && (
         <Creer {...creerProps} progs={allProgs} setProgsAll={(next)=>{ setProgs(next); if(next.length>0) setProg(next[next.length-1]); }}/>
 )}
+
+      {/* ── MesocycleDetail overlay ── */}
+      {showMeso && (
+        <MesocycleDetail
+          prog={prog}
+          semC={semC}
+          currentWeek={semN - 1}
+          WEEKS={[
+            {label:"Base",color:"#3B82F6"},
+            {label:"Vol+",color:"#3B82F6"},
+            {label:"Vol+",color:"#3B82F6"},
+            {label:"Vol+",color:"#3B82F6"},
+            {label:"Déload",color:"#F59E0B"},
+            {label:"Pic",color:"#12B76A"},
+          ]}
+          baseVol={prog?.jours?.reduce((t,j) => t + (j.exercices||[]).reduce((s,e) => s + (parseInt(e.series)||0) * (parseInt(e.reps)||0), 0), 0) || 40}
+          MEV={12}
+          MAV={20}
+          MRV={28}
+          curVol={prog?.jours?.reduce((t,j) => t + (j.exercices||[]).reduce((s,e) => s + (parseInt(e.series)||0) * (parseInt(e.reps)||0), 0), 0) || 0}
+          cycleStart={props.cycleStart}
+          checkedEx={props.checkedEx}
+          onClose={() => setShowMeso(false)}
+          mode="analyse"
+        />
+      )}
 
       {/* ── SeanceDetailModal en overlay fixe (gère son propre positionnement) ── */}
       {selectedJour !== null && prog?.jours?.[selectedJour.jIdx] && (
