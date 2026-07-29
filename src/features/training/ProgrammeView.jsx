@@ -115,24 +115,54 @@ export default function ProgrammeView(props) {
         </div>
 )}
 
-      {/* ── Header V3 ── */}
-      <div style={{ marginBottom:16, display:"flex", alignItems:"flex-end", justifyContent:"space-between" }}>
-        <div style={{ fontFamily:DISP_F, fontSize:31, fontWeight:800, letterSpacing:"-0.03em", color:"#0F1923", lineHeight:1 }}>
-          Ton <span style={{ fontStyle:"italic", color:"#3B5BFB" }}>programme</span>
-        </div>
-        {prog && (
-          <div onClick={()=>setConfirmDel({type:"prog",pIdx:progIdx})}
-            style={{ display:"flex", alignItems:"center", gap:5,
-              background:"#fff", border:"1px solid rgba(15,25,35,0.1)",
-              borderRadius:11, padding:"8px 12px", cursor:"pointer" }}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3B5BFB"
-              strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>
-            </svg>
-            <span style={{ fontSize:13, fontWeight:700, color:"#0F1923", fontFamily:DISP_F }}>Éditer</span>
+      {/* ── Header daté V3 (même style que TodayView) ── */}
+      {(() => {
+        const now = new Date();
+        const dateLabel = now.toLocaleDateString("fr-FR", {
+          weekday:"long", day:"numeric", month:"short",
+        }).toUpperCase().replace(".", "");
+        return (
+          <div style={{
+            marginBottom: 18,
+            display:"flex", alignItems:"flex-start", justifyContent:"space-between",
+            gap: 12,
+          }}>
+            <div style={{ flex:1, minWidth:0 }}>
+              <div style={{
+                fontSize:11, fontWeight:700, letterSpacing:"0.12em",
+                color:"#3B5BFB", fontFamily:DISP_F, marginBottom:6,
+              }}>{dateLabel}</div>
+              <div style={{
+                fontFamily:DISP_F, fontSize:31, fontWeight:800,
+                letterSpacing:"-0.03em", color:"#0F1923", lineHeight:1,
+              }}>
+                Ton <span style={{ fontStyle:"italic", color:"#3B5BFB" }}>programme</span>
+              </div>
+              <div style={{
+                fontSize:13.5, fontWeight:500, color:"#6B7486",
+                fontFamily:DISP_F, marginTop:6,
+              }}>
+                {prog
+                  ? "Suis ta progression et gère tes séances"
+                  : "Crée ton premier programme personnalisé"}
+              </div>
+            </div>
+            {prog && (
+              <div onClick={()=>setConfirmDel({type:"prog",pIdx:progIdx})}
+                style={{ display:"flex", alignItems:"center", gap:5,
+                  background:"#fff", border:"1px solid rgba(15,25,35,0.1)",
+                  borderRadius:11, padding:"8px 12px", cursor:"pointer",
+                  flexShrink:0, marginTop:20 }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3B5BFB"
+                  strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>
+                </svg>
+                <span style={{ fontSize:13, fontWeight:700, color:"#0F1923", fontFamily:DISP_F }}>Éditer</span>
+              </div>
+            )}
           </div>
-        )}
-      </div>
+        );
+      })()}
 
 
 
@@ -348,10 +378,7 @@ export default function ProgrammeView(props) {
           <div style={{position:"absolute",bottom:-60,right:-40,width:210,height:210,borderRadius:"50%",
             background:"radial-gradient(circle,#7C5CFF,transparent 66%)",filter:"blur(22px)",opacity:0.36,
             animation:"tdAurora 14s ease-in-out infinite reverse",pointerEvents:"none"}}/>
-          {/* Grille fine */}
-          <div style={{position:"absolute",inset:0,
-            backgroundImage:"linear-gradient(rgba(255,255,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.04) 1px,transparent 1px)",
-            backgroundSize:"32px 32px",pointerEvents:"none"}}/>
+
 
           <div style={{position:"relative",padding:"20px",display:"flex",flexDirection:"column",gap:16}}>
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
