@@ -116,7 +116,7 @@ export function SeanceDetailModal({ jour, jourIdx, prog, setProg, onClose, C, IN
 
   return (
     <div style={{ position:"fixed", inset:0, zIndex:320, background:C.bg,
-      display:"flex", flexDirection:"column" }}>
+      display:"flex", flexDirection:"column", overflow:"hidden" }}>
       {/* Styles des composants ExCard/BiblioSheet (définis dans CreerKit.jsx) */}
       <style>{CREER_CSS}</style>
 
@@ -136,8 +136,9 @@ export function SeanceDetailModal({ jour, jourIdx, prog, setProg, onClose, C, IN
 
       {/* Zone scrollable — minHeight:0 pour que le flex ne déborde pas sur iOS */}
       <div style={{ flex:1, minHeight:0, overflowY:"auto",
-        WebkitOverflowScrolling:"touch", padding:"6px 16px 32px",
-        maxWidth:500, margin:"0 auto", width:"100%", boxSizing:"border-box" }}
+        WebkitOverflowScrolling:"touch", padding:"6px 16px 120px",
+        maxWidth:500, margin:"0 auto", width:"100%", boxSizing:"border-box",
+        overscrollBehavior:"contain", touchAction:"pan-y" }}
         className="mc-scroll">
 
           {/* Hero — même famille visuelle que ProgrammeView (Piste B) */}

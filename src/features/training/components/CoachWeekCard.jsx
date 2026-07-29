@@ -238,7 +238,7 @@ export default function CoachWeekCard({ semC, semN, totalJours, premium, onUnloc
 
   const gaugeTrack = hasRealData
     ?`linear-gradient(90deg,${C.green} 0%,#F59E0B 55%,${C.red} 100%)`
-    :"#EAECF0";
+    :"linear-gradient(90deg,#12B981 0%,#F5B301 50%,#EF4444 100%)";
 
   const fatigueTxt = hasRealData ? fatigueLbl : "—";
   const fatigueValColor = hasRealData ? fatigueCol : "#C3C9D4";
