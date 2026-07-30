@@ -47,6 +47,10 @@ export default function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, cu
     const acute   = d7.reduce((s,d)  => s + (wLog[d]?.totalVolume||0), 0);
     const chronic = d28.reduce((s,d) => s + (wLog[d]?.totalVolume||0), 0) / 4;
     const ratio   = chronic > 0 ? Math.round((acute/chronic)*100)/100 : null;
+    // Si la base chronique est trop faible (< 4 séances en 28j), le ratio est trompeur
+    if (ratio !== null && chronic < 200) {
+      return { ratio: null, source:"insufficient", spanDays, need: 21, acute: Math.round(acute), chronic: Math.round(chronic) };
+    }
     return { ratio, acute: Math.round(acute), chronic: Math.round(chronic), source:"réel", spanDays };
   }, []);
 
@@ -185,7 +189,7 @@ export default function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, cu
         @keyframes mPulseDot{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.5)}50%{box-shadow:0 0 0 7px rgba(239,68,68,0)}}
       `}</style>
 
-      <div style={{padding:"0 18px 140px",maxWidth:480,margin:"0 auto"}}>
+      <div style={{padding:"0 18px 160px",maxWidth:480,margin:"0 auto"}}>
 
         {/* ── Retour ── */}
         <div onClick={onClose} style={{
@@ -282,7 +286,7 @@ export default function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, cu
               background:"linear-gradient(135deg,#F7F8FB,#EEF1FF)",borderRadius:16,border:"1px dashed rgba(59,91,251,0.2)"}}>
               <span style={{fontSize:15,fontWeight:800,color:"#3B5BFB",fontFamily:F}}>Bientôt disponible</span>
               <span style={{fontSize:12.5,fontWeight:500,color:"#6B7486",lineHeight:1.5,fontFamily:F}}>
-                Complète 3 semaines d'entraînement (encore {Math.max(0, 21 - acwrData.spanDays)} jours) pour activer cette analyse — plus tu logges, plus elle est précise.
+                Complète 3 semaines d'entraînement (encore {Math.max(0, 21 - acwrData.spanDays)} jours) pour activer cette analyse — plus tu t'entraînes, plus elle est précise.
               </span>
             </div>
           )}
@@ -349,7 +353,7 @@ export default function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, cu
                 VOLUME VS CAPACITÉ DE RÉCUPÉRATION
               </span>
               <span style={{fontSize:12,fontWeight:500,color:"#9AA3B2",fontFamily:F}}>
-                Séries totales de la semaine comparées à tes seuils
+                Séries totales de la semaine vs tes limites de récupération
               </span>
             </div>
             <span style={{background: nearMRV?"#FEF3E2":"#E7F7F0",borderRadius:99,padding:"5px 11px",fontSize:11,fontWeight:800,
@@ -436,7 +440,7 @@ export default function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, cu
               background:"linear-gradient(135deg,#F7F8FB,#EEF1FF)",borderRadius:16,border:"1px dashed rgba(59,91,251,0.2)"}}>
               <span style={{fontSize:15,fontWeight:800,color:"#3B5BFB",fontFamily:F}}>Pas encore de données</span>
               <span style={{fontSize:12.5,fontWeight:500,color:"#6B7486",lineHeight:1.5,fontFamily:F}}>
-                Logge ton sommeil et tes séances de mobilité pour calculer ton score de récupération.
+                Note ton sommeil et fais tes séances de mobilité pour calculer ton score de récupération.
               </span>
             </div>
           ) : null}
