@@ -589,20 +589,20 @@ export default function TodayView(props) {
               {[
                 {
                   label: "Muscu", sub: "à composer",
-                  iconBg: "rgba(91,141,255,0.22)",
+                  iconBg: "rgba(255,255,255,0.12)",
                   icon: <ID name="gym" size={24} dark/>,
                   onClick: () => setShowCreateSeance(true),
                 },
                 {
                   label: "Cardio", sub: "20 min",
-                  iconBg: "rgba(255,138,91,0.22)",
+                  iconBg: "rgba(255,255,255,0.12)",
                   icon: <ID name="cardio" size={24} dark/>,
                   onClick: () => setShowCreateSeance(true),
                 },
                 {
                   label: "Étirement",
                   sub: todayMobilite ? "Fait ✓" : "10 min",
-                  iconBg: "rgba(124,92,255,0.24)",
+                  iconBg: "rgba(255,255,255,0.12)",
                   icon: <ID name="recovery" size={24} dark/>,
                   onClick: toggleMobilite,
                   flash: mobiliteFlash,
