@@ -117,7 +117,7 @@ export default function ProgressionPage({ EX, prog, setProg, push, onClose }) {
   const objY = objKg > 0 ? PT + cH - ((objKg - minRM)/span)*cH : 0;
 
   return (
-    <div style={{ position:"fixed", inset:0, zIndex:100, background:"#E9EBF1", fontFamily:F }}
+    <div style={{ position:"fixed", inset:0, zIndex:100, background:"#E9EBF1", fontFamily:F, overflow:"hidden" }}
       onTouchStart={e => { e.stopPropagation(); onTouchStart(e); }}
       onTouchMove={e => { e.stopPropagation(); onTouchMove(e); }}
       onTouchEnd={e => { e.stopPropagation(); onTouchEnd(e); }}>
@@ -128,7 +128,7 @@ export default function ProgressionPage({ EX, prog, setProg, push, onClose }) {
         @keyframes prPulse{0%,100%{box-shadow:0 0 0 0 rgba(59,130,246,.4)}50%{box-shadow:0 0 0 6px rgba(59,130,246,0)}}
       `}</style>
 
-      <div style={{ ...swipeStyle, minHeight:"100%", overflowY:"auto",
+      <div style={{ ...swipeStyle, height:"100%", overflowY:"auto",
         WebkitOverflowScrolling:"touch", overscrollBehavior:"contain",
         padding:"20px 18px 120px", display:"flex", flexDirection:"column", gap:16 }}>
 
