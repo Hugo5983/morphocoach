@@ -657,364 +657,92 @@ export default function TodayView(props) {
         </div>
       )}
 
-      {/* ── Records & Objectifs V2 ────────────────────────────── */}
+      {/* ── Records & Objectifs ─────────────────────────────────── */}
       {(() => {
-        // ── Groupes musculaires des exercices loggés ──
-        const allMuscles = [];
-        const exByMuscle = {};
-        (prog?.jours || []).forEach(j =>
-          (j.exercices || []).forEach(ex => {
-            const grp = ex.groupe || "Autre";
-            if (!exByMuscle[grp]) { exByMuscle[grp] = []; allMuscles.push(grp); }
-            if (!exByMuscle[grp].find(e => e.nom === ex.nom)) {
-              // Merge historique from prog.records
-              const recRaw = prog?.records?.[ex.nom];
-              const recHist = Array.isArray(recRaw) ? recRaw : (recRaw?.historique || []);
-              const hist = [...(ex.historique || []), ...recHist];
-              const rm1 = hist.reduce((best, h) => {
-                const rm = Math.round(parseFloat(h.poids) * (1 + parseInt(h.reps)/30) * 10) / 10;
-                return rm > best ? rm : best;
-              }, 0);
-              exByMuscle[grp].push({ nom: ex.nom, rm1, historique: hist, equip: ex.equipement || "" });
-            }
-          })
-        );
-
-        const selMuscle = window.__recMuscle || allMuscles[0] || "";
-        const setSelMuscle = (m) => { window.__recMuscle = m; setProg(p => ({...p})); }; // force re-render
-        const exList = exByMuscle[selMuscle] || [];
-        const selExIdx = Math.min(window.__recExIdx || 0, Math.max(0, exList.length - 1));
-        const setSelExIdx = (i) => { window.__recExIdx = i; setProg(p => ({...p})); };
-        const selEx = exList[selExIdx] || null;
-
-        const epley = (kg,reps) => Math.round(kg*(1+reps/30)*10)/10;
-        const sessions = selEx?.historique?.length
-          ? (() => {
-              const byD = {};
-              selEx.historique.forEach(h => {
-                const d = h.date || "?";
-                const rm = epley(parseFloat(h.poids)||0, parseInt(h.reps)||1);
-                if (!byD[d] || rm > byD[d].rm) byD[d] = { ...h, rm, date: d };
-              });
-              return Object.values(byD).sort((a,b) => (a.date||"").localeCompare(b.date||""));
-            })()
-          : [];
-        const hasData = sessions.length > 0;
-        const best = hasData ? Math.max(...sessions.map(s=>s.rm)) : 0;
-        const first = hasData ? sessions[0].rm : 0;
-        const last  = hasData ? sessions[sessions.length-1].rm : 0;
-        const pctChange = first > 0 ? Math.round(((best - first) / first) * 100) : 0;
-
-        // Objectif from prog.objectifs
-        const obj = prog?.objectifs?.[selEx?.nom];
-        const objKg = obj?.cible || (best > 0 ? Math.round(best * 1.17) : 0);
-        const objPct = objKg > 0 && best > 0 ? Math.min(100, Math.round((best / objKg) * 100)) : 0;
-        const encore = objKg > 0 ? Math.max(0, objKg - best) : 0;
-
-        // SVG chart
-        const SVG_W = 312, SVG_H = 130, PT = 14, PB = 24, PL = 6, PR = 6;
-        const cH = SVG_H - PT - PB, cW = SVG_W - PL - PR;
-        const rms = sessions.map(s=>s.rm);
-        const maxRM = Math.max(...rms, objKg, 1), minRM = Math.min(...rms, first || 0);
-        const span = (maxRM - minRM) || 1;
-        const pts = sessions.map((s,i) => ({
-          x: PL + (sessions.length===1 ? cW/2 : (i/(sessions.length-1))*cW),
-          y: PT + cH - ((s.rm - minRM)/span)*cH,
-          ...s,
-        }));
-        const polyline = pts.map(p=>`${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
-        const fmtD = (d) => { if (!d || d === "?") return "—"; const p = d.split("-"); return `${p[2]||"?"}/${p[1]||"?"}`; };
-        const objY = objKg > 0 ? PT + cH - ((objKg - minRM)/span)*cH : 0;
-
+        const REC_PALETTE = [DARK.accent,"#12B76A","#F59E0B","#E5484D","#9DB0FF",C.accent];
+        const trendOf = (hist) => {
+          if (!hist || hist.length < 2) return null;
+          const rms = hist.map(h => calc1RM(parseFloat(h.poids), parseInt(h.reps)));
+          const last = rms[rms.length - 1];
+          const prevBest = Math.max(...rms.slice(0, -1));
+          const d = Math.round(last - prevBest);
+          return d > 0 ? d : null;
+        };
         return (
         <div style={{ marginBottom: 20 }}>
-          {/* Section header */}
-          <div style={{ display:"flex", flexDirection:"column", gap:5, marginBottom:16 }}>
-            <span style={{ fontSize:11, fontWeight:700, letterSpacing:"0.13em", color:"#9AA3B2", fontFamily:DISP }}>PROGRESSION DE FORCE</span>
-            <span style={{ fontSize:30, fontWeight:700, letterSpacing:"-0.03em", lineHeight:1.02, fontFamily:DISP, color:C.text }}>
-              Tes records & <span style={{ fontStyle:"italic", fontWeight:500, color:"#3B82F6" }}>objectifs</span>
-            </span>
-            <span style={{ fontSize:13.5, fontWeight:500, color:"#6B7280", lineHeight:1.45, fontFamily:DISP }}>
-              Bats ton max, puis vise la marche d'après
-            </span>
+          <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:12 }}>
+            <div style={{ fontFamily:DISP, fontSize:17, fontWeight:800, color:C.text, letterSpacing:-0.3 }}>
+              Records & Objectifs
+            </div>
+            <button onClick={() => setShowProgression(true)}
+              style={{ fontSize:11, fontWeight:600, color:C.mid,
+                background:C.s2, border:"none", borderRadius:12,
+                padding:"4px 12px", cursor:"pointer", fontFamily:DISP,
+                display:"flex", alignItems:"center", gap:4 }}>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <path d="M3 17 9 11 13 15 21 7"/><path d="M14 7h7v7"/>
+              </svg>
+              Historique
+            </button>
           </div>
 
-          {/* Muscle chips */}
-          {allMuscles.length > 0 && (
-            <div style={{ marginBottom:14 }}>
-              <span style={{ fontSize:11, fontWeight:700, letterSpacing:"0.1em", color:"#9AA3B2", fontFamily:DISP, display:"block", marginBottom:9 }}>GROUPE MUSCULAIRE</span>
-              <div style={{ display:"flex", gap:8, overflowX:"auto", paddingBottom:2 }} className="mc-scroll">
-                {allMuscles.map(m => (
-                  <button key={m} onClick={() => { setSelMuscle(m); setSelExIdx(0); }} style={{
-                    flex:"none", padding:"9px 16px", borderRadius:13, border: m === selMuscle ? "none" : "1px solid rgba(15,25,35,0.06)",
-                    background: m === selMuscle ? "#3B82F6" : "#fff",
-                    color: m === selMuscle ? "#fff" : "#6B7280",
-                    fontSize:13, fontWeight: m === selMuscle ? 700 : 600, fontFamily:DISP,
-                    cursor:"pointer",
-                    boxShadow: m === selMuscle ? "0 8px 18px rgba(59,130,246,0.35)" : "none",
-                  }}>{m}</button>
-                ))}
+          {rmData.length === 0 ? (
+            <div style={{ background:C.s1, border:`1px solid ${C.bd}`, borderRadius:20, padding:"24px 20px 20px", textAlign:"center" }}>
+              <div style={{ fontFamily:DISP, fontSize:14, fontWeight:700, color:C.text, marginBottom:8 }}>Pas encore de données</div>
+              <div style={{ fontSize:11, color:C.mid, lineHeight:1.6, marginBottom:16, fontFamily:DISP }}>
+                Enregistre tes charges pendant les séances pour voir tes records et tes 1RM estimés.
               </div>
+              <button onClick={() => setShowProgression(true)} style={{
+                width:"100%", padding:"16px", borderRadius:16,
+                background:"#3B5BFB", border:"none",
+                color:"#FFF", fontFamily:DISP, fontSize:14, fontWeight:700,
+                cursor:"pointer", boxShadow:"0 8px 24px rgba(60,91,255,0.35)",
+              }}>Saisir un record</button>
             </div>
-          )}
-
-          {/* Exercise cards — horizontal scroll */}
-          {exList.length > 0 && (
-            <div style={{ marginBottom:14 }}>
-              <span style={{ fontSize:11, fontWeight:700, letterSpacing:"0.1em", color:"#9AA3B2", fontFamily:DISP, display:"block", marginBottom:9 }}>EXERCICE</span>
-              <div style={{ display:"flex", gap:10, overflowX:"auto", padding:"2px 2px 4px" }} className="mc-scroll">
-                {exList.map((ex, i) => (
-                  <div key={ex.nom} onClick={() => setSelExIdx(i)} style={{
-                    flex:"none", width:172, boxSizing:"border-box", padding:15, borderRadius:20, cursor:"pointer",
-                    background:"#fff",
-                    border: i === selExIdx ? "1.5px solid #3B82F6" : "1px solid rgba(15,25,35,0.06)",
-                    boxShadow: i === selExIdx ? "0 10px 26px rgba(59,130,246,0.16)" : "0 2px 10px rgba(15,25,35,0.04)",
-                  }}>
-                    <div style={{ fontSize:14.5, fontWeight:700, lineHeight:1.18, fontFamily:DISP, color:C.text,
-                      display:"-webkit-box", WebkitLineClamp:2, WebkitBoxOrient:"vertical", overflow:"hidden" }}>{ex.nom}</div>
-                    <div style={{ fontSize:12, fontWeight:600, color:"#9AA3B2", marginTop:5, fontFamily:DISP }}>{ex.equip || "—"}</div>
-                    {ex.rm1 > 0
-                      ? <div style={{ fontSize:12, fontWeight:700, color:"#2563EB", marginTop:10, fontFamily:DISP }}>{ex.rm1} kg · record</div>
-                      : <div style={{ fontSize:12, fontWeight:500, fontStyle:"italic", color:"#B4BCCA", marginTop:10, fontFamily:DISP }}>Pas encore de données</div>}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* HERO RECORD */}
-          {selEx && hasData ? (
-            <div style={{
-              position:"relative", borderRadius:26, overflow:"hidden", background:"#0B0F1F",
-              marginBottom:14,
-            }}>
-              <div style={{position:"absolute",top:-70,left:-46,width:230,height:230,borderRadius:"50%",
-                background:"radial-gradient(circle,#3B82F6,transparent 66%)",filter:"blur(22px)",opacity:0.5,pointerEvents:"none"}}/>
-              <div style={{position:"absolute",bottom:-80,right:-56,width:250,height:250,borderRadius:"50%",
-                background:"radial-gradient(circle,#6366F1,transparent 66%)",filter:"blur(26px)",opacity:0.42,pointerEvents:"none"}}/>
-              <div style={{position:"relative",padding:"20px 20px 22px"}}>
-                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:16}}>
-                  <div style={{display:"inline-flex",alignItems:"center",gap:7,
-                    background:"rgba(245,158,11,0.15)",border:"1px solid rgba(245,158,11,0.35)",
-                    borderRadius:99,padding:"6px 12px 6px 10px"}}>
-                    <I name="trophyDuo" size={14} color="#F5A623"/>
-                    <span style={{fontSize:11,fontWeight:800,letterSpacing:"0.05em",color:"#FCD9A0",fontFamily:DISP}}>RECORD PERSONNEL</span>
-                  </div>
-                  <div onClick={() => setEditRecord(selEx)} style={{width:34,height:34,borderRadius:11,
-                    background:"rgba(255,255,255,0.08)",border:"1px solid rgba(255,255,255,0.1)",
-                    display:"grid",placeItems:"center",cursor:"pointer"}}>
-                    <I name="goal" size={16} color="#C6CEDE"/>
-                  </div>
-                </div>
-                <div style={{display:"flex",alignItems:"baseline",gap:8}}>
-                  <span style={{fontSize:66,fontWeight:700,letterSpacing:"-0.05em",lineHeight:0.9,color:"#fff",
-                    fontVariantNumeric:"tabular-nums",fontFamily:DISP}}>{Math.round(best)}</span>
-                  <span style={{fontSize:22,fontWeight:600,color:"rgba(255,255,255,0.55)",fontFamily:DISP}}>kg</span>
-                  {pctChange > 0 && (
-                    <span style={{marginLeft:2,padding:"5px 10px",borderRadius:99,
-                      background:"rgba(16,185,129,0.16)",border:"1px solid rgba(16,185,129,0.3)",
-                      fontSize:12,fontWeight:800,color:"#6EE7B7",whiteSpace:"nowrap",fontFamily:DISP}}>↗ +{pctChange}%</span>
-                  )}
-                </div>
-                <span style={{display:"block",fontSize:13,fontWeight:600,color:"rgba(255,255,255,0.55)",marginTop:6,fontFamily:DISP}}>
-                  1RM estimé · {sessions[sessions.length-1]?.poids || "?"} kg × {sessions[sessions.length-1]?.reps || "?"} · {fmtD(sessions[sessions.length-1]?.date)}
-                </span>
-              </div>
-            </div>
-          ) : selEx ? (
-            <div style={{
-              background:"linear-gradient(135deg,#F7F8FB,#EEF1FF)",border:"1px dashed rgba(59,91,251,0.2)",
-              borderRadius:22,padding:"24px 18px",marginBottom:14,textAlign:"center",
-            }}>
-              <div style={{fontSize:16,fontWeight:800,color:"#3B5BFB",fontFamily:DISP,marginBottom:6}}>Pas encore de record</div>
-              <div style={{fontSize:13,fontWeight:500,color:"#6B7486",lineHeight:1.5,fontFamily:DISP}}>
-                Logge tes charges en séance pour voir ton 1RM estimé et ta progression apparaître ici.
-              </div>
-            </div>
-          ) : null}
-
-          {/* OBJECTIF */}
-          {selEx && hasData && (
-            <div style={{
-              position:"relative",background:"#fff",border:"1px solid rgba(15,25,35,0.06)",
-              borderRadius:24,padding:18,marginBottom:14,overflow:"hidden",
-              boxShadow:"0 2px 12px rgba(15,25,35,0.05)",
-            }}>
-              <div style={{position:"absolute",top:-40,right:-30,width:150,height:150,borderRadius:"50%",
-                background:"radial-gradient(circle,rgba(16,185,129,0.14),transparent 70%)",pointerEvents:"none"}}/>
-              <div style={{position:"relative",display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:20}}>
-                <div style={{display:"flex",alignItems:"center",gap:9}}>
-                  <div style={{width:32,height:32,borderRadius:10,background:"#D1FAE5",display:"grid",placeItems:"center"}}>
-                    <I name="goal" size={17} color="#059669"/>
-                  </div>
-                  <div style={{display:"flex",flexDirection:"column"}}>
-                    <span style={{fontSize:16,fontWeight:700,lineHeight:1,fontFamily:DISP}}>Objectif</span>
-                    <span style={{fontSize:12,fontWeight:600,color:"#9AA3B2",fontFamily:DISP}}>cap {objKg} kg 1RM</span>
-                  </div>
-                </div>
-              </div>
-              {/* Journey bar */}
-              <div style={{position:"relative",padding:"26px 4px 4px",marginBottom:16}}>
-                <div style={{position:"relative",height:10,borderRadius:99,background:"#EEF0F5"}}>
-                  <div style={{position:"absolute",top:0,left:0,bottom:0,borderRadius:99,
-                    background:"linear-gradient(90deg,#3B82F6,#10B981)",width:`${objPct}%`,
-                    boxShadow:"0 2px 8px rgba(16,185,129,0.35)"}}/>
-                  <div style={{position:"absolute",top:"50%",left:0,transform:"translate(-50%,-50%)",
-                    width:14,height:14,borderRadius:"50%",background:"#fff",border:"3px solid #C6CEDE"}}/>
-                  <div style={{position:"absolute",top:-24,left:0,transform:"translateX(-2px)",
-                    fontSize:10.5,fontWeight:700,color:"#9AA3B2",whiteSpace:"nowrap",fontFamily:DISP}}>
-                    Départ <span style={{color:"#0F1923"}}>{Math.round(first)}</span>
-                  </div>
-                  <div style={{position:"absolute",top:"50%",left:`${objPct}%`,transform:"translate(-50%,-50%)",
-                    width:18,height:18,borderRadius:"50%",background:"#3B82F6",border:"3px solid #fff"}}/>
-                  <div style={{position:"absolute",top:-24,left:`${objPct}%`,transform:"translateX(-50%)",
-                    fontSize:10.5,fontWeight:800,color:"#2563EB",whiteSpace:"nowrap",fontFamily:DISP}}>
-                    Toi {Math.round(best)}
-                  </div>
-                  <div style={{position:"absolute",top:"50%",left:"100%",transform:"translate(-50%,-50%)",
-                    width:24,height:24,borderRadius:8,background:"#10B981",display:"grid",placeItems:"center",
-                    boxShadow:"0 4px 12px rgba(16,185,129,0.4)"}}>
-                    <I name="goal" size={13} color="#fff"/>
-                  </div>
-                  <div style={{position:"absolute",top:-24,right:0,transform:"translateX(6px)",
-                    fontSize:10.5,fontWeight:700,color:"#059669",whiteSpace:"nowrap",fontFamily:DISP}}>{objKg}</div>
-                </div>
-              </div>
-              <div style={{display:"flex",alignItems:"flex-end",justifyContent:"space-between",gap:12}}>
-                <div style={{display:"flex",flexDirection:"column",gap:2}}>
-                  <span style={{fontSize:11,fontWeight:700,letterSpacing:"0.06em",color:"#9AA3B2",fontFamily:DISP}}>ENCORE</span>
-                  <span style={{fontSize:26,fontWeight:700,letterSpacing:"-0.03em",lineHeight:1,fontFamily:DISP}}>{encore} kg</span>
-                </div>
-                {sessions.length >= 2 && (() => {
-                  const gain = Math.round(((best - first) / Math.max(1, sessions.length - 1)) * 10) / 10;
-                  const needed = gain > 0 ? Math.ceil(encore / gain) : "?";
+          ) : (
+            <div>
+              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:12 }}>
+                {rmData.map((ex, i) => {
+                  const col  = REC_PALETTE[i % REC_PALETTE.length];
+                  const tr   = trendOf(ex.historique);
                   return (
-                    <div style={{flex:1,background:"#F5F9F7",border:"1px solid rgba(16,185,129,0.16)",
-                      borderRadius:14,padding:"11px 13px"}}>
-                      <span style={{fontSize:12,fontWeight:600,color:"#4B5563",lineHeight:1.4,fontFamily:DISP}}>
-                        À ~{gain} kg/séance, il te reste environ {needed} séance{needed > 1 ? "s" : ""} pour y arriver.
-                      </span>
-                    </div>
-                  );
-                })()}
-              </div>
-            </div>
-          )}
-
-          {/* CHART 1RM */}
-          {selEx && hasData && sessions.length >= 2 && (
-            <div style={{
-              background:"#fff",border:"1px solid rgba(15,25,35,0.06)",borderRadius:24,
-              padding:"18px 18px 16px",marginBottom:14,boxShadow:"0 2px 12px rgba(15,25,35,0.05)",
-            }}>
-              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:16}}>
-                <span style={{fontSize:16,fontWeight:700,fontFamily:DISP}}>Évolution du 1RM</span>
-              </div>
-              <svg width="100%" height={SVG_H} viewBox={`0 0 ${SVG_W} ${SVG_H}`} preserveAspectRatio="none" style={{overflow:"visible",display:"block"}}>
-                <defs>
-                  <linearGradient id="rmg-tv" x1="0" x2="0" y1="0" y2="1">
-                    <stop offset="0%" stopColor="#3B82F6" stopOpacity="0.18"/>
-                    <stop offset="100%" stopColor="#3B82F6" stopOpacity="0.01"/>
-                  </linearGradient>
-                </defs>
-                {objKg > 0 && <>
-                  <line x1={PL} x2={PL+cW} y1={objY} y2={objY} stroke="rgba(16,185,129,0.45)" strokeWidth="1.2" strokeDasharray="5 4"/>
-                  <text x={PL+cW-2} y={objY-5} fontSize="9" fill="#059669" textAnchor="end" fontWeight="800" fontFamily="'Archivo',system-ui,sans-serif">Objectif {objKg}</text>
-                </>}
-                <polygon points={`${PL},${PT+cH} ${polyline} ${PL+cW},${PT+cH}`} fill="url(#rmg-tv)"/>
-                <polyline points={polyline} fill="none" stroke="#3B82F6" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"/>
-                {pts.map((p,k) => (
-                  <g key={k}>
-                    <circle cx={p.x} cy={p.y} r={k===pts.length-1?5.5:4}
-                      fill={k===pts.length-1?"#3B82F6":"#fff"} stroke={k===pts.length-1?"#fff":"#C6CEDE"} strokeWidth={k===pts.length-1?2.5:2}/>
-                    {k===pts.length-1 && <text x={p.x-8} y={p.y-10} fontSize="10" fontWeight="800" fill="#2563EB" textAnchor="end" fontFamily="'Archivo',system-ui,sans-serif">{Math.round(p.rm)} kg</text>}
-                  </g>
-                ))}
-                <text x={pts[0].x} y={SVG_H-4} fontSize="9" fill="#9AA3B2" textAnchor="start" fontFamily="'Archivo',system-ui,sans-serif">{fmtD(sessions[0].date)}</text>
-                <text x={pts[pts.length-1].x} y={SVG_H-4} fontSize="9" fill="#9AA3B2" textAnchor="end" fontFamily="'Archivo',system-ui,sans-serif">{fmtD(sessions[sessions.length-1].date)}</text>
-              </svg>
-            </div>
-          )}
-
-          {/* STAT TRIO */}
-          {selEx && hasData && (
-            <div style={{display:"flex",gap:10,marginBottom:14}}>
-              <div style={{flex:1,background:"#fff",border:"1px solid rgba(15,25,35,0.06)",borderRadius:18,
-                padding:"14px 12px",display:"flex",flexDirection:"column",gap:7,boxShadow:"0 2px 10px rgba(15,25,35,0.04)"}}>
-                <div style={{display:"flex",alignItems:"center",gap:6}}>
-                  <span style={{width:8,height:8,borderRadius:"50%",background:"#C6CEDE"}}/>
-                  <span style={{fontSize:10.5,fontWeight:700,letterSpacing:"0.05em",color:"#9AA3B2",fontFamily:DISP}}>DÉPART</span>
-                </div>
-                <span style={{fontSize:22,fontWeight:700,letterSpacing:"-0.02em",lineHeight:1,fontFamily:DISP}}>
-                  {Math.round(first)}<span style={{fontSize:12,fontWeight:600,color:"#9AA3B2"}}> kg</span>
-                </span>
-              </div>
-              <div style={{flex:1,background:"#fff",border:"1px solid rgba(245,158,11,0.22)",borderRadius:18,
-                padding:"14px 12px",display:"flex",flexDirection:"column",gap:7,boxShadow:"0 2px 10px rgba(245,158,11,0.08)"}}>
-                <div style={{display:"flex",alignItems:"center",gap:6}}>
-                  <span style={{width:8,height:8,borderRadius:"50%",background:"#F5A623"}}/>
-                  <span style={{fontSize:10.5,fontWeight:700,letterSpacing:"0.05em",color:"#C77E12",fontFamily:DISP}}>RECORD</span>
-                </div>
-                <span style={{fontSize:22,fontWeight:700,letterSpacing:"-0.02em",lineHeight:1,fontFamily:DISP}}>
-                  {Math.round(best)}<span style={{fontSize:12,fontWeight:600,color:"#9AA3B2"}}> kg</span>
-                </span>
-              </div>
-              <div style={{flex:1,background:"#fff",border:"1px solid rgba(16,185,129,0.22)",borderRadius:18,
-                padding:"14px 12px",display:"flex",flexDirection:"column",gap:7,boxShadow:"0 2px 10px rgba(16,185,129,0.08)"}}>
-                <div style={{display:"flex",alignItems:"center",gap:6}}>
-                  <span style={{width:8,height:8,borderRadius:"50%",background:"#10B981"}}/>
-                  <span style={{fontSize:10.5,fontWeight:700,letterSpacing:"0.05em",color:"#059669",fontFamily:DISP}}>ACTUEL</span>
-                </div>
-                <span style={{fontSize:22,fontWeight:700,letterSpacing:"-0.02em",lineHeight:1,fontFamily:DISP}}>
-                  {Math.round(last)}<span style={{fontSize:12,fontWeight:600,color:"#9AA3B2"}}> kg</span>
-                </span>
-              </div>
-            </div>
-          )}
-
-          {/* DERNIÈRES PERFS */}
-          {selEx && sessions.length > 0 && (
-            <div style={{
-              background:"#fff",border:"1px solid rgba(15,25,35,0.06)",borderRadius:22,
-              padding:"16px 18px",marginBottom:14,boxShadow:"0 2px 12px rgba(15,25,35,0.05)",
-            }}>
-              <span style={{fontSize:13,fontWeight:700,fontFamily:DISP}}>Dernières perfs</span>
-              <div style={{display:"flex",flexDirection:"column",marginTop:8}}>
-                {sessions.slice(-5).reverse().map((s, i) => {
-                  const isBest = Math.round(s.rm) === Math.round(best);
-                  return (
-                    <div key={i} style={{display:"flex",alignItems:"center",justifyContent:"space-between",
-                      padding:"9px 0",borderTop:"1px solid rgba(15,25,35,0.05)"}}>
-                      <div style={{display:"flex",alignItems:"center",gap:9}}>
-                        <span style={{fontSize:11,fontWeight:600,color:"#9AA3B2",fontVariantNumeric:"tabular-nums",
-                          minWidth:36,fontFamily:DISP}}>{fmtD(s.date)}</span>
-                        <span style={{fontSize:13.5,fontWeight:600,fontFamily:DISP}}>{s.poids} kg × {s.reps}</span>
-                        {isBest && <span style={{fontSize:9.5,fontWeight:800,color:"#C77E12",
-                          background:"rgba(245,158,11,0.14)",borderRadius:6,padding:"2px 6px",
-                          letterSpacing:"0.05em",fontFamily:DISP}}>PR</span>}
+                    <div key={i} onClick={() => setEditRecord(ex)} style={{
+                      background:C.s1, border:`1px solid ${C.bd}`, borderRadius:16,
+                      padding:"16px 16px 12px", cursor:"pointer", boxShadow:C.shadow,
+                    }}>
+                      <div style={{ width:36, height:36, borderRadius:12,
+                        background:`linear-gradient(135deg, #E8EBFF, ${col}33)`,
+                        border:`1px solid ${col}30`,
+                        display:"flex", alignItems:"center", justifyContent:"center", marginBottom:8 }}>
+                        <I name="gym" size={18} color={col}/>
                       </div>
-                      <span style={{fontSize:13,fontWeight:700,fontVariantNumeric:"tabular-nums",fontFamily:DISP,
-                        color: isBest ? "#C77E12" : C.text}}>{Math.round(s.rm)} kg</span>
+                      <div style={{ fontFamily:DISP, fontSize:26, fontWeight:700, color:col,
+                        letterSpacing:-1, lineHeight:1, ...NUM }}>{ex.rm1}</div>
+                      <div style={{ fontSize:10, color:"#98A2B3", fontWeight:600, marginTop:1, fontFamily:DISP }}>kg · 1RM</div>
+                      <div style={{ fontSize:13, color:C.text, fontWeight:600, marginTop:8,
+                        fontFamily:DISP, lineHeight:1.3, overflow:"hidden", textOverflow:"ellipsis",
+                        display:"-webkit-box", WebkitLineClamp:2, WebkitBoxOrient:"vertical" }}>{ex.nom}</div>
+                      {tr && <div style={{ fontSize:10, color:C.green, fontWeight:700, marginTop:4, fontFamily:DISP }}>+{tr} kg</div>}
                     </div>
                   );
                 })}
               </div>
+              <button onClick={() => setShowProgression(true)} style={{
+                width:"100%", padding:"16px", borderRadius:16,
+                background:"#3B5BFB", border:"none",
+                color:"#FFF", fontFamily:DISP, fontSize:15, fontWeight:800,
+                letterSpacing:-0.2, cursor:"pointer",
+                boxShadow:"0 8px 24px rgba(59,91,251,0.38)",
+                display:"flex", alignItems:"center", justifyContent:"center", gap:8,
+              }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round">
+                  <path d="M12 5v14M5 12h14"/>
+                </svg>
+                Ajoute ton PR
+              </button>
             </div>
           )}
-
-          {/* FLOATING CTA */}
-          <button onClick={() => setShowProgression(true)} style={{
-            position:"relative",overflow:"hidden",
-            width:"100%",display:"flex",alignItems:"center",justifyContent:"center",gap:10,
-            background:"#3B82F6",borderRadius:18,padding:16,border:"none",
-            boxShadow:"0 14px 34px rgba(59,130,246,0.5)",cursor:"pointer",
-          }}>
-            <span style={{position:"absolute",top:0,left:0,height:"100%",width:"35%",
-              background:"linear-gradient(90deg,transparent,rgba(255,255,255,0.28),transparent)",
-              animation:"tdShimmer 3.4s ease-in-out 1.4s infinite",pointerEvents:"none"}}/>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v14M5 12h14"/></svg>
-            <span style={{fontSize:16,fontWeight:700,color:"#fff",fontFamily:DISP}}>Ajouter un record</span>
-          </button>
         </div>
         );
       })()}
