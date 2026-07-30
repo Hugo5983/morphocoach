@@ -777,7 +777,7 @@ export default function TodayView(props) {
 )}
       {showCreateSeance && <CreateSeanceModal onClose={() => setShowCreateSeance(false)} prog={prog} setProg={setProg} calSess={calSess} setCalSess={setCalSess} push={push} C={C} INT={INT} EX={EX} todayKey={todayKey}/>}
       {editRecord && <RecordDetailPage exData={editRecord} onClose={() => setEditRecord(null)} prog={prog} setProg={setProg} push={push}/>}
-      {showProgression && <ProgressionPage EX={EX} prog={prog} setProg={setProg} push={push} onClose={() => setShowProgression(false)}/>}
+      {showProgression && <ProgressionPage EX={EX} prog={prog} setProg={setProg} push={push} onClose={() => setShowProgression(false)} onAddRecord={() => { setShowProgression(false); setTimeout(() => setShowManualRM(true), 200); }}/>}
 
       {/* ── Modal Sommeil ─────────────────────────────────────────── */}
       {showSleepModal && (() => {
