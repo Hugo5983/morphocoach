@@ -230,7 +230,7 @@ export default function ProgressionPage({ EX, prog, setProg, push, onClose }) {
             animation:"prFadeUp .55s cubic-bezier(.22,1,.36,1) .12s both" }}>
             <div style={{fontSize:16,fontWeight:800,color:BL,fontFamily:F,marginBottom:6}}>Pas encore de record</div>
             <div style={{fontSize:13,fontWeight:500,color:"#6B7486",lineHeight:1.5,fontFamily:F}}>
-              Logge tes charges en séance pour voir ton 1RM et ta progression.
+              Enregistre tes charges en séance pour voir ton 1RM et ta progression.
             </div>
           </div>
         ) : null}
