@@ -199,6 +199,14 @@ export default function TodayView(props) {
 );
   }
 
+  // ── Records & Objectifs (page pleine, remplace le contenu, garde header) ──
+  if (showProgression) {
+    return (
+      <ProgressionPage EX={EX} prog={prog} setProg={setProg} push={push}
+        onClose={() => setShowProgression(false)}/>
+);
+  }
+
   return (
     <div style={{ padding:"0 20px" }}>
 
@@ -777,7 +785,6 @@ export default function TodayView(props) {
 )}
       {showCreateSeance && <CreateSeanceModal onClose={() => setShowCreateSeance(false)} prog={prog} setProg={setProg} calSess={calSess} setCalSess={setCalSess} push={push} C={C} INT={INT} EX={EX} todayKey={todayKey}/>}
       {editRecord && <RecordDetailPage exData={editRecord} onClose={() => setEditRecord(null)} prog={prog} setProg={setProg} push={push}/>}
-      {showProgression && <ProgressionPage EX={EX} prog={prog} setProg={setProg} push={push} onClose={() => setShowProgression(false)}/>}
 
       {/* ── Modal Sommeil ─────────────────────────────────────────── */}
       {showSleepModal && (() => {
