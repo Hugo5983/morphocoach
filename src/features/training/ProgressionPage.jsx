@@ -26,18 +26,6 @@ export default function ProgressionPage({ EX, prog, setProg, push, onClose }) {
   const [confetti,  setConfetti]  = useState(false);
   const [toast,     setToast]     = useState("");
 
-  // Verrou du scroll de fond
-  useEffect(() => {
-    const y = window.scrollY;
-    document.documentElement.style.overflow = "hidden";
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.documentElement.style.overflow = "";
-      document.body.style.overflow = "";
-      window.scrollTo(0, y);
-    };
-  }, []);
-
   // ── Groupes musculaires ────────────────────────────────────────────────────
   const muscles = useMemo(
     () => (EX ? Object.keys(EX).filter(k => Array.isArray(EX[k]) && EX[k].length) : []),
@@ -159,8 +147,7 @@ export default function ProgressionPage({ EX, prog, setProg, push, onClose }) {
   const objY = objKg > 0 ? PT + cH - ((objKg - lo) / sp) * cH : 0;
 
   return (
-    <div style={{ position:"fixed", inset:0, zIndex:600, background:"#E9EBF1",
-      display:"flex", flexDirection:"column", fontFamily:F }}>
+    <div style={{ padding:"0 20px", fontFamily:F, position:"relative" }}>
 
       <style>{`
         @keyframes rpUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
@@ -178,10 +165,8 @@ export default function ProgressionPage({ EX, prog, setProg, push, onClose }) {
         .rp-nos{-ms-overflow-style:none;scrollbar-width:none}
       `}</style>
 
-      {/* ═══ SCROLL ═══ */}
-      <div className="rp-nos" style={{ flex:1, overflowY:"auto", WebkitOverflowScrolling:"touch", overscrollBehavior:"contain" }}>
-        <div style={{ padding:"max(16px, env(safe-area-inset-top)) 18px 150px", maxWidth:500, margin:"0 auto",
-          display:"flex", flexDirection:"column", gap:16 }}>
+      <div style={{ padding:"14px 0 130px", maxWidth:500, margin:"0 auto",
+        display:"flex", flexDirection:"column", gap:16 }}>
 
           {/* Retour */}
           <div onClick={onClose} style={{ display:"flex", alignItems:"center", gap:6, cursor:"pointer",
@@ -257,24 +242,19 @@ export default function ProgressionPage({ EX, prog, setProg, push, onClose }) {
           {/* ═══ HERO ═══ */}
           {sel && hasData ? (
             <div style={{ position:"relative", borderRadius:26, overflow:"hidden", background:"#0B0F1F",
-              boxShadow:"0 22px 55px rgba(11,15,31,.5)",
+              boxShadow:"0 22px 55px rgba(11,15,31,.5)", clipPath:"inset(0 round 26px)",
               animation:"rpUp .55s cubic-bezier(.22,1,.36,1) .12s both" }}>
               <div style={{ position:"absolute", top:-70, left:-46, width:230, height:230, borderRadius:"50%",
                 background:`radial-gradient(circle,${BL},transparent 66%)`, filter:"blur(22px)", opacity:.5 }}/>
               <div style={{ position:"absolute", bottom:-80, right:-56, width:250, height:250, borderRadius:"50%",
                 background:"radial-gradient(circle,#6366F1,transparent 66%)", filter:"blur(26px)", opacity:.42 }}/>
               <div style={{ position:"relative", padding:"20px 20px 22px" }}>
-                <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:16 }}>
+                <div style={{ display:"flex", alignItems:"center", marginBottom:16 }}>
                   <div style={{ display:"inline-flex", alignItems:"center", gap:7,
                     background:AMB, borderRadius:99, padding:"6px 12px 6px 10px",
                     boxShadow:"0 4px 14px rgba(245,166,35,.4)" }}>
                     <I name="trophy" size={14} color="#fff"/>
                     <span style={{ fontSize:11, fontWeight:800, letterSpacing:".05em", color:"#fff" }}>RECORD PERSONNEL</span>
-                  </div>
-                  <div onClick={openObjSheet} style={{ width:34, height:34, borderRadius:11, cursor:"pointer",
-                    background:"rgba(255,255,255,.08)", border:"1px solid rgba(255,255,255,.1)",
-                    display:"grid", placeItems:"center" }}>
-                    <I name="target" size={16} color="#C6CEDE"/>
                   </div>
                 </div>
                 <div style={{ display:"flex", alignItems:"baseline", gap:8 }}>
@@ -295,7 +275,7 @@ export default function ProgressionPage({ EX, prog, setProg, push, onClose }) {
           ) : sel ? (
             /* ═══ 15d — ÉTAT VIDE ═══ */
             <div style={{ position:"relative", borderRadius:26, overflow:"hidden", background:"#0B0F1F",
-              boxShadow:"0 22px 55px rgba(11,15,31,.5)",
+              boxShadow:"0 22px 55px rgba(11,15,31,.5)", clipPath:"inset(0 round 26px)",
               animation:"rpUp .55s cubic-bezier(.22,1,.36,1) .12s both" }}>
               <div style={{ position:"absolute", top:-70, left:-46, width:230, height:230, borderRadius:"50%",
                 background:`radial-gradient(circle,${BL},transparent 66%)`, filter:"blur(22px)", opacity:.5 }}/>
@@ -321,6 +301,7 @@ export default function ProgressionPage({ EX, prog, setProg, push, onClose }) {
           {sel && hasData ? (
             <div style={{ position:"relative", background:"#fff", border:"1px solid rgba(15,25,35,.06)",
               borderRadius:24, padding:18, overflow:"hidden", boxShadow:"0 2px 12px rgba(15,25,35,.05)",
+              clipPath:"inset(0 round 24px)",
               animation:"rpUp .55s cubic-bezier(.22,1,.36,1) .16s both" }}>
               <div style={{ position:"absolute", top:-40, right:-30, width:150, height:150, borderRadius:"50%",
                 background:"radial-gradient(circle,rgba(16,185,129,.14),transparent 70%)" }}/>
@@ -335,8 +316,8 @@ export default function ProgressionPage({ EX, prog, setProg, push, onClose }) {
                   </div>
                 </div>
                 <div onClick={openObjSheet} style={{ display:"inline-flex", alignItems:"center", gap:5, cursor:"pointer",
-                  background:"#F1F3F8", borderRadius:10, padding:"7px 11px", fontSize:12, fontWeight:700, color:"#4B5563" }}>
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4B5563" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  background:"rgba(59,130,246,.1)", borderRadius:10, padding:"7px 11px", fontSize:12, fontWeight:700, color:BL2 }}>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={BL2} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>
                   </svg>
                   Modifier
@@ -516,12 +497,11 @@ export default function ProgressionPage({ EX, prog, setProg, push, onClose }) {
             </div>
           )}
 
-        </div>
       </div>
 
-      {/* ═══ CTA FLOTTANT ═══ */}
-      <div style={{ position:"absolute", left:0, right:0, bottom:0, padding:"0 18px calc(22px + env(safe-area-inset-bottom))",
-        background:"linear-gradient(to top,#E9EBF1 62%,rgba(233,235,241,0))", pointerEvents:"none", zIndex:600 }}>
+      {/* ═══ CTA FLOTTANT (fixe, au-dessus de la BottomNav) ═══ */}
+      <div style={{ position:"fixed", left:0, right:0, bottom:"calc(64px + env(safe-area-inset-bottom))",
+        padding:"0 18px", pointerEvents:"none", zIndex:150 }}>
         <button onClick={openRecordSheet} style={{
           position:"relative", overflow:"hidden", width:"100%", pointerEvents:"auto", cursor:"pointer",
           display:"flex", alignItems:"center", justifyContent:"center", gap:10, fontFamily:F,
@@ -540,9 +520,9 @@ export default function ProgressionPage({ EX, prog, setProg, push, onClose }) {
       {/* ═══ 15b — FEUILLE RECORD ═══ */}
       {sheet === "record" && sel && (
         <>
-          <div onClick={() => setSheet(null)} style={{ position:"absolute", inset:0, zIndex:10,
+          <div onClick={() => setSheet(null)} style={{ position:"fixed", inset:0, zIndex:610,
             background:"rgba(11,15,31,.5)", backdropFilter:"blur(3px)", animation:"rpBackdrop .3s ease both" }}/>
-          <div style={{ position:"absolute", left:0, right:0, bottom:0, zIndex:11, background:"#fff",
+          <div style={{ position:"fixed", left:0, right:0, bottom:0, zIndex:611, background:"#fff",
             borderRadius:"28px 28px 0 0", padding:"8px 20px 26px", maxHeight:"88%", overflowY:"auto",
             boxShadow:"0 -12px 40px rgba(11,15,31,.28)", animation:"rpSheet .45s cubic-bezier(.22,1,.36,1) both" }}
             className="rp-nos">
@@ -625,9 +605,9 @@ export default function ProgressionPage({ EX, prog, setProg, push, onClose }) {
       {/* ═══ 15c — FEUILLE OBJECTIF ═══ */}
       {sheet === "objectif" && sel && (
         <>
-          <div onClick={() => setSheet(null)} style={{ position:"absolute", inset:0, zIndex:10,
+          <div onClick={() => setSheet(null)} style={{ position:"fixed", inset:0, zIndex:610,
             background:"rgba(11,15,31,.5)", backdropFilter:"blur(3px)", animation:"rpBackdrop .3s ease both" }}/>
-          <div style={{ position:"absolute", left:0, right:0, bottom:0, zIndex:11, background:"#fff",
+          <div style={{ position:"fixed", left:0, right:0, bottom:0, zIndex:611, background:"#fff",
             borderRadius:"28px 28px 0 0", padding:"8px 20px 26px", maxHeight:"88%", overflowY:"auto",
             boxShadow:"0 -12px 40px rgba(11,15,31,.28)", animation:"rpSheet .45s cubic-bezier(.22,1,.36,1) both" }}
             className="rp-nos">
@@ -709,7 +689,7 @@ export default function ProgressionPage({ EX, prog, setProg, push, onClose }) {
 
       {/* ═══ CONFETTIS ═══ */}
       {confetti && (
-        <div style={{ position:"absolute", inset:0, zIndex:20, pointerEvents:"none", overflow:"hidden" }}>
+        <div style={{ position:"fixed", inset:0, zIndex:620, pointerEvents:"none", overflow:"hidden" }}>
           {[
             { l:"14%", w:8, h:10, c:BL,        r:2,     d:".1s",  t:"1.6s" },
             { l:"28%", w:7, h:7,  c:GRN,       r:"50%", d:".25s", t:"1.9s" },
@@ -727,7 +707,7 @@ export default function ProgressionPage({ EX, prog, setProg, push, onClose }) {
 
       {/* ═══ TOAST ═══ */}
       {toast && (
-        <div style={{ position:"absolute", left:"50%", bottom:96, zIndex:30, transform:"translateX(-50%)",
+        <div style={{ position:"fixed", left:"50%", bottom:96, zIndex:630, transform:"translateX(-50%)",
           background:"#0F1923", color:"#fff", borderRadius:14, padding:"12px 18px",
           fontSize:13.5, fontWeight:700, whiteSpace:"nowrap", fontFamily:F,
           boxShadow:"0 12px 30px rgba(15,25,35,.3)", animation:"rpToast 2.6s ease both" }}>
