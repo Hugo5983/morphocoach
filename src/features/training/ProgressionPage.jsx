@@ -159,7 +159,7 @@ export default function ProgressionPage({ EX, prog, setProg, push, onClose }) {
   const objY = objKg > 0 ? PT + cH - ((objKg - lo) / sp) * cH : 0;
 
   return (
-    <div style={{ position:"fixed", inset:0, zIndex:500, background:"#E9EBF1",
+    <div style={{ position:"fixed", inset:0, zIndex:600, background:"#E9EBF1",
       display:"flex", flexDirection:"column", fontFamily:F }}>
 
       <style>{`
@@ -180,7 +180,7 @@ export default function ProgressionPage({ EX, prog, setProg, push, onClose }) {
 
       {/* ═══ SCROLL ═══ */}
       <div className="rp-nos" style={{ flex:1, overflowY:"auto", WebkitOverflowScrolling:"touch", overscrollBehavior:"contain" }}>
-        <div style={{ padding:"16px 18px 130px", maxWidth:500, margin:"0 auto",
+        <div style={{ padding:"max(16px, env(safe-area-inset-top)) 18px 150px", maxWidth:500, margin:"0 auto",
           display:"flex", flexDirection:"column", gap:16 }}>
 
           {/* Retour */}
@@ -266,15 +266,15 @@ export default function ProgressionPage({ EX, prog, setProg, push, onClose }) {
               <div style={{ position:"relative", padding:"20px 20px 22px" }}>
                 <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:16 }}>
                   <div style={{ display:"inline-flex", alignItems:"center", gap:7,
-                    background:"rgba(245,158,11,.15)", border:"1px solid rgba(245,158,11,.35)",
-                    borderRadius:99, padding:"6px 12px 6px 10px" }}>
-                    <I name="trophyDuo" size={14} color={AMB}/>
-                    <span style={{ fontSize:11, fontWeight:800, letterSpacing:".05em", color:"#FCD9A0" }}>RECORD PERSONNEL</span>
+                    background:AMB, borderRadius:99, padding:"6px 12px 6px 10px",
+                    boxShadow:"0 4px 14px rgba(245,166,35,.4)" }}>
+                    <I name="trophy" size={14} color="#fff"/>
+                    <span style={{ fontSize:11, fontWeight:800, letterSpacing:".05em", color:"#fff" }}>RECORD PERSONNEL</span>
                   </div>
                   <div onClick={openObjSheet} style={{ width:34, height:34, borderRadius:11, cursor:"pointer",
                     background:"rgba(255,255,255,.08)", border:"1px solid rgba(255,255,255,.1)",
                     display:"grid", placeItems:"center" }}>
-                    <I name="goal" size={16} color="#C6CEDE"/>
+                    <I name="target" size={16} color="#C6CEDE"/>
                   </div>
                 </div>
                 <div style={{ display:"flex", alignItems:"baseline", gap:8 }}>
@@ -305,7 +305,7 @@ export default function ProgressionPage({ EX, prog, setProg, push, onClose }) {
                 <div style={{ width:52, height:52, borderRadius:16, marginBottom:16,
                   background:"rgba(255,255,255,.08)", border:"1px solid rgba(255,255,255,.12)",
                   display:"grid", placeItems:"center", animation:"rpFloaty 3.4s ease-in-out infinite" }}>
-                  <I name="trophyDuo" size={26} color={AMB}/>
+                  <I name="trophy" size={26} color={AMB}/>
                 </div>
                 <span style={{ fontSize:26, fontWeight:700, letterSpacing:"-.03em", color:"#fff", lineHeight:1.1, display:"block" }}>
                   Ton premier record<br/>t'attend.
@@ -327,7 +327,7 @@ export default function ProgressionPage({ EX, prog, setProg, push, onClose }) {
               <div style={{ position:"relative", display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:20 }}>
                 <div style={{ display:"flex", alignItems:"center", gap:9 }}>
                   <div style={{ width:32, height:32, borderRadius:10, background:"#D1FAE5", display:"grid", placeItems:"center" }}>
-                    <I name="goal" size={17} color={GRN2}/>
+                    <I name="target" size={17} color={GRN2}/>
                   </div>
                   <div style={{ display:"flex", flexDirection:"column" }}>
                     <span style={{ fontSize:16, fontWeight:700, lineHeight:1, color:"#0F1923" }}>Objectif</span>
@@ -363,7 +363,7 @@ export default function ProgressionPage({ EX, prog, setProg, push, onClose }) {
                   <div style={{ position:"absolute", top:"50%", left:"100%", transform:"translate(-50%,-50%)",
                     width:24, height:24, borderRadius:8, background:GRN, display:"grid", placeItems:"center",
                     boxShadow:"0 4px 12px rgba(16,185,129,.4)" }}>
-                    <I name="goal" size={13} color="#fff"/>
+                    <I name="target" size={13} color="#fff"/>
                   </div>
                   <div style={{ position:"absolute", top:-24, right:0, transform:"translateX(6px)",
                     fontSize:10.5, fontWeight:700, color:GRN2, whiteSpace:"nowrap" }}>{objKg}</div>
@@ -395,7 +395,7 @@ export default function ProgressionPage({ EX, prog, setProg, push, onClose }) {
               boxShadow:"0 2px 12px rgba(15,25,35,.04)", display:"flex", alignItems:"center", gap:14,
               animation:"rpUp .55s cubic-bezier(.22,1,.36,1) .16s both" }}>
               <div style={{ width:46, height:46, borderRadius:14, background:"#D1FAE5", display:"grid", placeItems:"center", flex:"none" }}>
-                <I name="goal" size={22} color={GRN2}/>
+                <I name="target" size={22} color={GRN2}/>
               </div>
               <div style={{ flex:1, display:"flex", flexDirection:"column", gap:2 }}>
                 <span style={{ fontSize:16, fontWeight:700, color:"#0F1923" }}>Fixe-toi un cap</span>
@@ -520,8 +520,8 @@ export default function ProgressionPage({ EX, prog, setProg, push, onClose }) {
       </div>
 
       {/* ═══ CTA FLOTTANT ═══ */}
-      <div style={{ position:"absolute", left:0, right:0, bottom:0, padding:"0 18px 22px",
-        background:"linear-gradient(to top,#E9EBF1 62%,rgba(233,235,241,0))", pointerEvents:"none" }}>
+      <div style={{ position:"absolute", left:0, right:0, bottom:0, padding:"0 18px calc(22px + env(safe-area-inset-bottom))",
+        background:"linear-gradient(to top,#E9EBF1 62%,rgba(233,235,241,0))", pointerEvents:"none", zIndex:600 }}>
         <button onClick={openRecordSheet} style={{
           position:"relative", overflow:"hidden", width:"100%", pointerEvents:"auto", cursor:"pointer",
           display:"flex", alignItems:"center", justifyContent:"center", gap:10, fontFamily:F,
