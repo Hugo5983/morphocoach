@@ -6,18 +6,6 @@ import { I } from"../../../components/ui/Icon.jsx";
 export default function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, curVol, currentWeek, WEEKS, cycleStart, checkedEx, onClose, mode ="analyse" }) {
   useScrollTop();
 
-  // Lock body scroll
-  useEffect(() => {
-    const scrollY = window.scrollY;
-    document.documentElement.style.overflow = "hidden";
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.documentElement.style.overflow = "";
-      document.body.style.overflow = "";
-      window.scrollTo(0, scrollY);
-    };
-  }, []);
-
   const isForce   = mode ==="force";
   const [exMenu, setExMenu] = useState(false);
   const F = FONT;
@@ -36,22 +24,23 @@ export default function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, cu
     const d7  = daysBack(7);
     const d28 = daysBack(28);
     const loggedDates = Object.keys(wLog).filter(d => wLog[d]?.totalVolume > 0).sort();
-    const hasAcute = d7.some(d => wLog[d]?.totalVolume > 0);
     const spanDays = loggedDates.length
       ? Math.round((Date.now() - new Date(loggedDates[0]).getTime()) / 864e5) + 1
       : 0;
-    const MIN_SPAN = 21;
-    if (!hasAcute || spanDays < MIN_SPAN) {
-      return { ratio: null, source:"insufficient", spanDays, need: MIN_SPAN };
+    // Nombre de séances distinctes loggées dans chaque fenêtre — c'est ce qui
+    // garantit la fiabilité du ratio, pas le volume total ou l'étendue en jours.
+    const sessions7  = d7.filter(d  => wLog[d]?.totalVolume > 0).length;
+    const sessions28 = d28.filter(d => wLog[d]?.totalVolume > 0).length;
+    const MIN_SPAN = 21, MIN_SESSIONS_28 = 6, MIN_SESSIONS_7 = 2;
+    if (spanDays < MIN_SPAN || sessions28 < MIN_SESSIONS_28 || sessions7 < MIN_SESSIONS_7) {
+      return { ratio: null, source:"insufficient", spanDays, sessions7, sessions28,
+        need: MIN_SPAN, needSessions: MIN_SESSIONS_28 };
     }
     const acute   = d7.reduce((s,d)  => s + (wLog[d]?.totalVolume||0), 0);
     const chronic = d28.reduce((s,d) => s + (wLog[d]?.totalVolume||0), 0) / 4;
     const ratio   = chronic > 0 ? Math.round((acute/chronic)*100)/100 : null;
-    // Si la base chronique est trop faible (< 4 séances en 28j), le ratio est trompeur
-    if (ratio !== null && chronic < 200) {
-      return { ratio: null, source:"insufficient", spanDays, need: 21, acute: Math.round(acute), chronic: Math.round(chronic) };
-    }
-    return { ratio, acute: Math.round(acute), chronic: Math.round(chronic), source:"réel", spanDays };
+    return { ratio, acute: Math.round(acute), chronic: Math.round(chronic), source:"réel",
+      spanDays, sessions7, sessions28 };
   }, []);
 
   // ── Sommeil ───────────────────────────────────────────────────────────────
@@ -172,12 +161,7 @@ export default function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, cu
 
   // ── RENDER ────────────────────────────────────────────────────────────────
   return (
-    <div
-      style={{position:"fixed",inset:0,zIndex:340,background:"#F1F3F8",overflowY:"auto",WebkitOverflowScrolling:"touch",touchAction:"pan-y",overscrollBehavior:"contain"}}
-      onTouchStart={e => e.stopPropagation()}
-      onTouchMove={e => e.stopPropagation()}
-      onTouchEnd={e => e.stopPropagation()}
-    >
+    <div style={{ padding:"0 20px" }}>
       <style>{`
         @keyframes mFadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
         @keyframes mFadeIn{from{opacity:0}to{opacity:1}}
@@ -189,11 +173,11 @@ export default function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, cu
         @keyframes mPulseDot{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.5)}50%{box-shadow:0 0 0 7px rgba(239,68,68,0)}}
       `}</style>
 
-      <div style={{padding:"0 18px 160px",maxWidth:480,margin:"0 auto"}}>
+      <div style={{padding:"14px 0 40px",maxWidth:480,margin:"0 auto"}}>
 
         {/* ── Retour ── */}
         <div onClick={onClose} style={{
-          display:"flex",alignItems:"center",gap:6,padding:"20px 0 8px",cursor:"pointer",
+          display:"flex",alignItems:"center",gap:6,padding:"0 0 8px",cursor:"pointer",
           animation:"mFadeUp .5s cubic-bezier(.22,1,.36,1) both",animationDelay:".02s",
         }}>
           <I name="chevronLeft" size={18} color="#3B5BFB"/>
@@ -286,7 +270,9 @@ export default function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, cu
               background:"linear-gradient(135deg,#F7F8FB,#EEF1FF)",borderRadius:16,border:"1px dashed rgba(59,91,251,0.2)"}}>
               <span style={{fontSize:15,fontWeight:800,color:"#3B5BFB",fontFamily:F}}>Bientôt disponible</span>
               <span style={{fontSize:12.5,fontWeight:500,color:"#6B7486",lineHeight:1.5,fontFamily:F}}>
-                Complète 3 semaines d'entraînement (encore {Math.max(0, 21 - acwrData.spanDays)} jours) pour activer cette analyse — plus tu t'entraînes, plus elle est précise.
+                {(acwrData.sessions28 ?? 0) < 6
+                  ? `Encore ${Math.max(0, 6 - (acwrData.sessions28 ?? 0))} séance${Math.max(0, 6 - (acwrData.sessions28 ?? 0)) > 1 ? "s" : ""} loggée${Math.max(0, 6 - (acwrData.sessions28 ?? 0)) > 1 ? "s" : ""} pour activer cette analyse — il faut une base régulière sur 3-4 semaines pour un ratio fiable.`
+                  : `Complète 3 semaines d'entraînement (encore ${Math.max(0, 21 - acwrData.spanDays)} jours) pour activer cette analyse — plus tu t'entraînes, plus elle est précise.`}
               </span>
             </div>
           )}
@@ -531,21 +517,21 @@ export default function MesocycleDetail({ prog, semC, baseVol, MEV, MAV, MRV, cu
                 label: "Performance",
                 sub: perfData ? `${perfTrend !== null ? (perfTrend >= 0 ? `+${perfTrend}%` : `${perfTrend}%`) : "—"} · ${perfExName}` : "Aucune donnée",
                 ok: perfOK && perfData,
-                icon: <I name="progress" size={19} color={perfOK && perfData?"#12B981":"#B4BCCA"}/>,
+                icon: <I name="chart" size={19} color={perfOK && perfData?"#12B981":"#B4BCCA"}/>,
                 delay: ".46s",
               },
               {
                 label: "Sommeil",
                 sub: sleepData.avg !== null ? `${sleepData.avg}h moyenne (cible ${sTgt}h)` : "Aucune donnée",
                 ok: sleepOK,
-                icon: <I name="sleep" size={19} color={sleepOK?"#12B981":"#B4BCCA"}/>,
+                icon: <I name="moon" size={19} color={sleepOK?"#12B981":"#B4BCCA"}/>,
                 delay: ".51s",
               },
               {
                 label: "FC repos",
                 sub: "Connecte une app santé",
                 ok: null,
-                icon: <I name="cardio" size={19} color="#B4BCCA"/>,
+                icon: <I name="heart" size={19} color="#B4BCCA"/>,
                 delay: ".56s",
               },
               {
