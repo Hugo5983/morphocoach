@@ -89,6 +89,34 @@ export default function ProgrammeView(props) {
   const progIdx = Math.max(0, allProgs.findIndex(p => prog && (p.id===prog.id || p.titre===prog.titre)));
   const durOf = dureeSeance;
 
+  // ── Mésocycle : page pleine (remplace le contenu, garde header + scroll natif) ──
+  if (showMeso) {
+    return (
+      <MesocycleDetail
+        prog={prog}
+        semC={semC}
+        currentWeek={semN - 1}
+        WEEKS={[
+          {label:"Base",color:"#3B82F6"},
+          {label:"Vol+",color:"#3B82F6"},
+          {label:"Vol+",color:"#3B82F6"},
+          {label:"Vol+",color:"#3B82F6"},
+          {label:"Déload",color:"#F59E0B"},
+          {label:"Pic",color:"#12B76A"},
+        ]}
+        baseVol={prog?.jours?.reduce((t,j) => t + (j.exercices||[]).reduce((s,e) => s + (parseInt(e.series)||0) * (parseInt(e.reps)||0), 0), 0) || 40}
+        MEV={12}
+        MAV={20}
+        MRV={28}
+        curVol={prog?.jours?.reduce((t,j) => t + (j.exercices||[]).reduce((s,e) => s + (parseInt(e.series)||0) * (parseInt(e.reps)||0), 0), 0) || 0}
+        cycleStart={props.cycleStart}
+        checkedEx={props.checkedEx}
+        onClose={() => setShowMeso(false)}
+        mode="analyse"
+      />
+);
+  }
+
   return (
     <div style={{padding:"0 20px"}}>
       <style>{`
@@ -527,32 +555,6 @@ export default function ProgrammeView(props) {
       {showCreerForm && (
         <Creer {...creerProps} progs={allProgs} setProgsAll={(next)=>{ setProgs(next); if(next.length>0) setProg(next[next.length-1]); }}/>
 )}
-
-      {/* ── MesocycleDetail overlay ── */}
-      {showMeso && (
-        <MesocycleDetail
-          prog={prog}
-          semC={semC}
-          currentWeek={semN - 1}
-          WEEKS={[
-            {label:"Base",color:"#3B82F6"},
-            {label:"Vol+",color:"#3B82F6"},
-            {label:"Vol+",color:"#3B82F6"},
-            {label:"Vol+",color:"#3B82F6"},
-            {label:"Déload",color:"#F59E0B"},
-            {label:"Pic",color:"#12B76A"},
-          ]}
-          baseVol={prog?.jours?.reduce((t,j) => t + (j.exercices||[]).reduce((s,e) => s + (parseInt(e.series)||0) * (parseInt(e.reps)||0), 0), 0) || 40}
-          MEV={12}
-          MAV={20}
-          MRV={28}
-          curVol={prog?.jours?.reduce((t,j) => t + (j.exercices||[]).reduce((s,e) => s + (parseInt(e.series)||0) * (parseInt(e.reps)||0), 0), 0) || 0}
-          cycleStart={props.cycleStart}
-          checkedEx={props.checkedEx}
-          onClose={() => setShowMeso(false)}
-          mode="analyse"
-        />
-      )}
 
       {/* ── SeanceDetailModal en overlay fixe (gère son propre positionnement) ── */}
       {selectedJour !== null && prog?.jours?.[selectedJour.jIdx] && (

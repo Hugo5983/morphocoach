@@ -266,8 +266,8 @@ export default function TodayView(props) {
                   <span style={{ fontSize:16 }}><ID name="streak" size={24}/></span>
                   <span style={{ fontSize:20, fontWeight:700, color:"#F59E0B", fontFamily:DISP, lineHeight:1 }}>{streak}</span>
                 </div>
-                <div style={{ fontSize:10, fontWeight:600, color:"#F59E0B", fontFamily:DISP,
-                  letterSpacing:"0.1em", marginTop:2, textAlign:"center", color:"#0F1923" }}>
+                <div style={{ fontSize:10, fontWeight:600, color:"#0F1923", fontFamily:DISP,
+                  letterSpacing:"0.1em", marginTop:2, textAlign:"center" }}>
                   série
                 </div>
               </div>
