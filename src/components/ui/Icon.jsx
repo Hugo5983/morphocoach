@@ -59,6 +59,10 @@ const P = {
   scan:      { raw:'<path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2"/><path d="M8 8v8M11 8v8M14 8v8M16.5 8v8"/>' },
   bell:      { raw:'<path d="M6 9.5a6 6 0 0 1 12 0c0 4.5 1.8 5.5 1.8 5.5H4.2S6 14 6 9.5Z"/><path d="M10 19a2 2 0 0 0 4 0"/>' },
   search:    { raw:'<circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/>' },
+
+  // Suivi santé (mésocycle / coach)
+  moon:      { s:"M20 13a8 8 0 1 1-9-8 6.2 6.2 0 0 0 9 8Z" },
+  heart:     { s:"M12 20.5S3.5 15 3.5 8.7A4.2 4.2 0 0 1 12 6a4.2 4.2 0 0 1 8.5 2.7C20.5 15 12 20.5 12 20.5Z" },
 };
 
 export function I({ name, size = 24, color, fill = false, stroke = 1.8, style, ...rest }) {
@@ -319,11 +323,11 @@ const DUO_ALIAS = {
   book:"bookDuo", cookie:"apple",
   bell:"bellDuo", settings:"gear", info:"infoDuo",
   search:"searchDuo", camera:"cameraDuo", scan:"scanDuo",
-  brain:"coachDuo", arch:"plan", barbell:"gym", shield:"recovery",
+  brain:"coachDuo", arch:"plan", shield:"recovery",
   upload:"progress", weight:"scale", ruler:"ruler", bone:"bone", crown:"crown",
   alert:"infoDuo", cake:"apple", meal:"bowl", food:"bowl", water:"hydration",
   recipes:"bookDuo", sparkles:"spark",
-  fire:"streak", award:"trophyDuo", note:"bookDuo", list:"plan", stats:"progress",
+  award:"trophyDuo", note:"bookDuo", list:"plan", stats:"progress",
 };
 const MONO_ALIAS = {
   chevL:"chevronLeft", chevR:"chevronRight", chev:"chevronRight",
