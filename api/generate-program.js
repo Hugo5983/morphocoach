@@ -316,19 +316,27 @@ export default async function handler(req, res) {
   const prompt = buildServerPrompt({ form, dossier: dossier || {}, fiche, directives, cycleNum, candidats });
   const system = "Tu es un Master Coach Sportif expert en biomécanique, hypertrophie et périodisation. Tu raisonnes comme un coach de 10 ans d'expérience : tu lis le dossier de l'athlète AVANT de décider. Tu génères UNIQUEMENT du JSON valide, sans texte avant ou après, sans markdown.";
 
+  // Budget temps aligné sur le maxDuration déclaré dans vercel.json (120 s),
+  // avec une marge pour la validation, la télémétrie et la sérialisation.
+  const TOTAL_BUDGET_MS = 110_000;
+  const remaining = () => TOTAL_BUDGET_MS - (Date.now() - startedAt);
+
   try {
     let raw = await callAnthropic({
       model: MODEL, maxTokens: 8000, system,
       content: [{ type: "text", text: prompt }],
+      timeoutMs: Math.min(70_000, remaining()),
     });
     let parsed = parseJSON(raw);
     let problems = validate(parsed, { dossier, fiche, materiel: form.materiel });
 
-    // Une seule tentative corrective, si le budget temps le permet
-    if (problems.length > 0 && Date.now() - startedAt < 22_000) {
+    // Une seule tentative corrective, et seulement si le temps restant suffit
+    // vraiment à la mener à son terme (sinon on renvoie le programme + warnings).
+    if (problems.length > 0 && remaining() > 35_000) {
       console.warn("[generate-program] Corrections demandées:", problems);
       raw = await callAnthropic({
         model: MODEL, maxTokens: 8000, system,
+        timeoutMs: Math.min(60_000, remaining() - 5_000),
         content: [{
           type: "text",
           text: prompt + `\n\n═══ CORRECTION OBLIGATOIRE ═══\nTa précédente proposition violait ces règles:\n- ${problems.join("\n- ")}\nRégénère le JSON COMPLET en corrigeant ces violations (remplace les exercices fautifs par des alternatives autorisées du même pattern moteur, prises dans la liste fournie, renouvelle les exercices en trop).`,
