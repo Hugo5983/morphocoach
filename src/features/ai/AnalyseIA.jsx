@@ -1,12 +1,11 @@
 /**
-import { I } from"../../components/ui/Icon.jsx";
  * AnalyseIA.jsx — Refonte visuelle uniquement (design system onboarding)
  * ─────────────────────────────────────────────────────────────────────
  * LOGIQUE 100% INCHANGÉE : états, handlers, validation, services IA.
  * Seule la couche visuelle est remplacée par les tokens Focus Mode / Onboarding.
  */
 
-
+import { I } from"../../components/ui/Icon.jsx";
 import { useState, useRef } from"react";
 import useScrollTop from"../../hooks/useScrollTop.js";
 import {
