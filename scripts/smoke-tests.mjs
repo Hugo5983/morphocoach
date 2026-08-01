@@ -71,4 +71,107 @@ test("getVariationDirectives varie avec le numéro de cycle", () => {
   assert.notEqual(JSON.stringify(a), JSON.stringify(b));
 });
 
+// ── recoveryService : métriques de récupération (jamais de donnée inventée) ──
+const _store = {};
+globalThis.localStorage = {
+  getItem: k => _store[k] ?? null,
+  setItem: (k, v) => { _store[k] = String(v); },
+};
+const rec = await import("../src/services/recoveryService.js");
+const _dk = (o) => { const d = new Date(); d.setDate(d.getDate() - o); return d.toISOString().split("T")[0]; };
+
+test("volume : aucune séance validée → available=false, pas de chiffre", () => {
+  const v = rec.getWeeklyVolume();
+  assert.equal(v.available, false);
+  assert.equal(v.totalSets, 0);
+});
+
+test("volume : compte les séries RÉELLES, pas séries × reps du programme", () => {
+  _store["morpho_workout_log"] = JSON.stringify({
+    [_dk(0)]: { sets: [
+      ...Array(4).fill({ exNom: "Développé haltères incliné 30°", kg: 30, reps: 10 }),
+      ...Array(3).fill({ exNom: "Pull-over haltère couché", kg: 20, reps: 12 }),
+    ], totalVolume: 1920 },
+    [_dk(2)]: { sets: Array(4).fill({ exNom: "Développé haltères incliné 30°", kg: 32, reps: 10 }), totalVolume: 1280 },
+  });
+  const v = rec.getWeeklyVolume();
+  assert.equal(v.totalSets, 11);       // 11 séries, pas 110 reps
+  assert.equal(v.sessions, 2);
+  const pecs = v.byMuscle.find(g => g.groupe === "Pectoraux");
+  assert.equal(pecs.sets, 11);
+  assert.equal(pecs.landmarks.MRV, 22);
+  assert.equal(pecs.statut, "optimal");
+});
+
+test("volume : dépassement du MRV détecté", () => {
+  _store["morpho_workout_log"] = JSON.stringify({
+    [_dk(0)]: { sets: Array(25).fill({ exNom: "Développé haltères incliné 30°", kg: 30, reps: 10 }), totalVolume: 7500 },
+  });
+  assert.equal(rec.getWeeklyVolume().globalStatus, "au-dessus");
+});
+
+test("performance : 1 seule séance → pas de « +0 % » inventé", () => {
+  _store["morpho_workout_log"] = JSON.stringify({
+    [_dk(0)]: { sets: [{ exNom: "Développé haltères incliné 30°", kg: 34, reps: 10 }], totalVolume: 340 },
+  });
+  const p = rec.getPerformanceTrend();
+  assert.equal(p.available, false);
+  assert.match(p.reason, /2 séances/);
+});
+
+test("performance : 32 kg → 34 kg donne une hausse chiffrée", () => {
+  _store["morpho_workout_log"] = JSON.stringify({
+    [_dk(7)]: { sets: [{ exNom: "Développé haltères incliné 30°", kg: 32, reps: 10 }], totalVolume: 320 },
+    [_dk(0)]: { sets: [{ exNom: "Développé haltères incliné 30°", kg: 34, reps: 10 }], totalVolume: 340 },
+  });
+  const p = rec.getPerformanceTrend();
+  assert.equal(p.available, true);
+  assert.equal(p.trend, "hausse");
+  assert.ok(p.avgDelta > 5 && p.avgDelta < 7);
+});
+
+test("sommeil : cible dérivée de l'âge, indisponible sans âge", () => {
+  assert.equal(rec.getSleepTarget(30).target, 7);
+  assert.equal(rec.getSleepTarget(16).target, 8);
+  assert.equal(rec.getSleepTarget(70).max, 8);
+  assert.equal(rec.getSleepTarget(null).available, false);
+});
+
+test("FC de repos : valeur aberrante rejetée, ligne de base après 5 mesures", () => {
+  assert.equal(rec.saveRestingHR(300), false);
+  assert.equal(rec.getRestingHR().available, false);
+  rec.saveRestingHR(58);
+  assert.equal(rec.getRestingHR().partial, true);
+  for (let i = 1; i < 30; i++) rec.saveRestingHR(56, _dk(i));
+  for (let i = 0; i < 5; i++)  rec.saveRestingHR(64, _dk(i));
+  const hr = rec.getRestingHR();
+  assert.equal(hr.partial, false);
+  assert.ok(hr.delta >= 4);
+});
+
+test("score : aucune donnée → pas de score, sinon couverture annoncée", () => {
+  delete _store["morpho_hr_log"]; delete _store["morpho_sleep_log"];
+  delete _store["morpho_workout_log"]; delete _store["morpho_mobilite_log"];
+  assert.equal(rec.getRecoveryScore({ age: 30 }).available, false);
+  _store["morpho_sleep_log"] = JSON.stringify(
+    Object.fromEntries(Array.from({ length: 7 }, (_, i) => [_dk(i), 8])));
+  const s = rec.getRecoveryScore({ age: 30 });
+  assert.equal(s.available, true);
+  assert.equal(s.coverage, 35);              // sommeil seul
+  assert.ok(s.missing.includes("fcRepos"));
+});
+
+test("surentraînement : pas de statut sans signal, alertes justifiées sinon", () => {
+  delete _store["morpho_sleep_log"]; delete _store["morpho_hr_log"];
+  assert.equal(rec.getOvertrainingStatus({ age: 30 }).available, false);
+  _store["morpho_sleep_log"] = JSON.stringify(
+    Object.fromEntries(Array.from({ length: 7 }, (_, i) => [_dk(i), 5])));
+  for (let i = 1; i < 30; i++) rec.saveRestingHR(56, _dk(i));
+  for (let i = 0; i < 5; i++)  rec.saveRestingHR(66, _dk(i));
+  const o = rec.getOvertrainingStatus({ age: 30 });
+  assert.ok(o.warnings.length >= 2);
+  assert.ok(["surveillance", "fatigue", "risque"].includes(o.key));
+  assert.ok(o.warnings.every(w => w.length > 10));
+});
+
 console.log(`\n${n} tests de fumée OK`);
