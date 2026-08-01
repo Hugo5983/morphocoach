@@ -1,18 +1,23 @@
 // ─── API LIB : APPEL ANTHROPIC + PARSE ──────────────────────────────────────
 
-const API_TIMEOUT_MS = 50_000;
+// Timeout par appel. Doit TOUJOURS rester sous le maxDuration déclaré pour la
+// fonction dans vercel.json, sinon la plateforme coupe avant l'abort et renvoie
+// un 504 opaque au lieu d'une erreur exploitable.
+const API_TIMEOUT_MS = Number(process.env.ANTHROPIC_TIMEOUT_MS) || 50_000;
 
 /**
  * Appelle l'API Anthropic depuis le serveur (la clé ne quitte jamais Vercel).
  * Accepte soit`content` (message user unique), soit`messages` (historique complet).
+ * @param {{timeoutMs?: number}} opts timeoutMs surcharge le défaut pour cet appel
  * @returns {Promise<string>} texte brut concaténé de la réponse
  */
-export async function callAnthropic({ model, maxTokens, system, content, messages }) {
+export async function callAnthropic({ model, maxTokens, system, content, messages, timeoutMs }) {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) throw Object.assign(new Error("Configuration serveur incomplète"), { status: 500 });
 
+  const budget = Math.max(5_000, timeoutMs || API_TIMEOUT_MS);
   const controller = new AbortController();
-  const t = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
+  const t = setTimeout(() => controller.abort(), budget);
   try {
     const res = await fetch("https://api.anthropic.com/v1/messages", {
       method:"POST",
