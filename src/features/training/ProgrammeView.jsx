@@ -96,6 +96,7 @@ export default function ProgrammeView(props) {
         prog={prog}
         semC={semC}
         currentWeek={semN - 1}
+        profil={profil}
         WEEKS={[
           {label:"Base",color:"#3B82F6"},
           {label:"Vol+",color:"#3B82F6"},
@@ -104,15 +105,7 @@ export default function ProgrammeView(props) {
           {label:"Déload",color:"#F59E0B"},
           {label:"Pic",color:"#12B76A"},
         ]}
-        baseVol={prog?.jours?.reduce((t,j) => t + (j.exercices||[]).reduce((s,e) => s + (parseInt(e.series)||0) * (parseInt(e.reps)||0), 0), 0) || 40}
-        MEV={12}
-        MAV={20}
-        MRV={28}
-        curVol={prog?.jours?.reduce((t,j) => t + (j.exercices||[]).reduce((s,e) => s + (parseInt(e.series)||0) * (parseInt(e.reps)||0), 0), 0) || 0}
-        cycleStart={props.cycleStart}
-        checkedEx={props.checkedEx}
         onClose={() => setShowMeso(false)}
-        mode="analyse"
       />
 );
   }
