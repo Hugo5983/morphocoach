@@ -57,6 +57,8 @@ function mergeFicheLists(fiche) {
 
 // ─── Assemblage du prompt (côté serveur uniquement) ─────────────────────────
 function buildServerPrompt({ form, dossier, fiche, directives, cycleNum, candidats }) {
+  const joursPlein = normalizeJours(form.jours).length
+    ? normalizeJours(form.jours) : ["Lundi", "Mercredi", "Vendredi"];
   const volParams  = getVolumeParams(form.niveau, form.objectif);
   const mesoLogic  = getMesocycleLogic(form.niveau, form.objectif, cycleNum);
   const pathoRules = buildPathoRules(form.pathologies);
@@ -139,7 +141,7 @@ ${candidatsBlock}
 Nom: ${form.prenom || "Athlète"} | Âge: ${form.age} ans | Sexe: ${form.sexe}
 Poids: ${form.poids} kg | Taille: ${form.taille} cm | IMC: ${imc}
 Niveau: ${form.niveau} | Objectif: ${form.objectif}${form.objectifPrecis ? ` (précis: ${form.objectifPrecis})` : ""}
-Jours d'entraînement: ${(form.jours || []).join(", ") || "3 jours/semaine"}
+Jours d'entraînement (${joursPlein.length} par semaine): ${joursPlein.join(", ")}
 Matériel disponible: ${(form.materiel || []).join(", ") || "salle complète"}
 ${form.sport ? `Sport pratiqué: ${form.sport} — intégrer des exercices de transfert spécifiques` : ""}
 Pathologies déclarées: ${(form.pathologies || []).filter(p => p !== "Aucune").join(", ") || "aucune"}
@@ -174,11 +176,11 @@ ${refs ? `\n═══ RÉFÉRENTIELS DES MUSCLES PRIORITAIRES ═══\n${refs}
 Réponds UNIQUEMENT avec le JSON ci-dessous. Aucun texte avant ou après. Aucun markdown.
 
 ⛔ RÈGLE ABSOLUE — NOMBRE DE SÉANCES ⛔
-Le tableau "seances" doit contenir EXACTEMENT ${(form.jours || []).length || 3} séances, une par jour demandé :
-${((form.jours || []).length ? form.jours : ["Lundi","Mercredi","Vendredi"]).map((j, i) => `  ${i + 1}. ${j}`).join("\n")}
+Le tableau "seances" doit contenir EXACTEMENT ${joursPlein.length} séances, une par jour demandé :
+${joursPlein.map((j, i) => `  ${i + 1}. ${j}`).join("\n")}
 Chaque séance porte le champ "jour" correspondant, avec AU MINIMUM 4 exercices.
-Un programme incomplet est un échec total : ne t'arrête jamais avant d'avoir écrit les ${(form.jours || []).length || 3} séances.
-Le schéma ci-dessous ne montre QU'UN SEUL exemple de séance — tu dois en produire ${(form.jours || []).length || 3}.
+Un programme incomplet est un échec total : ne t'arrête jamais avant d'avoir écrit les ${joursPlein.length} séances.
+Le schéma ci-dessous ne montre QU'UN SEUL exemple de séance — tu dois en produire ${joursPlein.length}.
 
 Le bloc "reflexion" vient EN PREMIER : c'est ta pensée de coach, elle conditionne tout le reste.
 Chaque exercice doit avoir un "tips_coach" précis basé sur la morphologie ET une "justification" courte qui référence un élément de ta réflexion.
@@ -210,7 +212,7 @@ Le champ "progression_semaine" explique comment progresser la SEMAINE SUIVANTE s
 "split": "type de split utilisé",
 "seances": [
       {
-"jour": "Lundi",
+"jour": "${joursPlein[0] || "Lundi"}",
 "focus": "Groupe(s) musculaire(s)",
 "duree": "60min",
 "intensite": "leger|modere|lourd|intense",
@@ -307,6 +309,22 @@ export function validateProgramme(parsed, { dossier, fiche, materiel, joursDeman
   return problems;
 }
 
+// ─── Jours : le sélecteur du client émet des abréviations ("Lun", "Mar"…) ────
+// alors que le programme attend des noms complets ("Lundi"). On normalise ICI
+// pour que le modèle reçoive exactement ce qu'il doit réécrire dans "jour".
+const JOURS_COMPLETS = {
+  lun: "Lundi", mar: "Mardi", mer: "Mercredi", jeu: "Jeudi",
+  ven: "Vendredi", sam: "Samedi", dim: "Dimanche",
+};
+export function normalizeJours(jours = []) {
+  return (jours || [])
+    .map((j) => {
+      const k = String(j || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").slice(0, 3);
+      return JOURS_COMPLETS[k] || String(j || "").trim();
+    })
+    .filter(Boolean);
+}
+
 // ─── Cœur de génération (partagé sync/async) ────────────────────────────────
 /**
  * Exécute la génération complète — EXACTEMENT la logique métier historique :
@@ -333,6 +351,7 @@ export async function runGeneration({ form, dossier, ficheMorpho, access, budget
     aConserver: dossier?.memoire_exercices?.exercices_a_conserver || [],
     privilegies: fiche?.consequences?.exercices_privilegies || [],
     max: Math.min(240, 90 + nbJours * 30),
+    pathologies: (form.pathologies || []).filter(p => p && p !== "Aucune"),
   });
 
   const prompt = buildServerPrompt({ form, dossier: dossier || {}, fiche, directives, cycleNum, candidats });
@@ -356,7 +375,7 @@ export async function runGeneration({ form, dossier, ficheMorpho, access, budget
       timeoutMs: Math.min(CAP1, remaining()),
     });
     let parsed = parseJSON(raw);
-    let problems = validateProgramme(parsed, { dossier, fiche, materiel: form.materiel, joursDemandes: form.jours || [] });
+    let problems = validateProgramme(parsed, { dossier, fiche, materiel: form.materiel, joursDemandes: normalizeJours(form.jours) });
 
     // Une seule tentative corrective, et seulement si le temps restant le
     // permet. FILET DE SÉCURITÉ : si la correction expire ou échoue, on
@@ -375,7 +394,7 @@ export async function runGeneration({ form, dossier, ficheMorpho, access, budget
         });
         const parsed2 = parseJSON(raw2);
         parsed = parsed2;
-        problems = validateProgramme(parsed2, { dossier, fiche, materiel: form.materiel, joursDemandes: form.jours || [] });
+        problems = validateProgramme(parsed2, { dossier, fiche, materiel: form.materiel, joursDemandes: normalizeJours(form.jours) });
       } catch (e2) {
         console.warn("[generate-program] Correction avortée, programme initial conservé:", e2.message);
       }
