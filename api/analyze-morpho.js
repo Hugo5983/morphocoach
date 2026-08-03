@@ -81,6 +81,16 @@ export default async function handler(req, res) {
 - "partielle" : parties du corps coupées
 Si qualite_photo est "floue", "sombre", "trop_loin" ou "partielle", mets TOUS les champs à "indetermine" et confiance à "faible".
 
+⚠ IMPORTANT — "indetermine" est une EXCEPTION, pas un réflexe.
+Si la photo est exploitable, tu DOIS te prononcer : un coach expérimenté lit des
+proportions sur une photo correcte, c'est son métier. Réserve "indetermine" aux
+traits réellement invisibles sur ces photos précises (par exemple les insertions
+sous un vêtement ample). Une fiche entièrement "indetermine" sur des photos
+exploitables est un ÉCHEC d'analyse : elle prive le programme de toute
+personnalisation morphologique.
+Renseigne en particulier "repartition" pour les 10 groupes musculaires : c'est
+elle qui détermine les points faibles à prioriser dans le programme.
+
 ÉTAPE 2 — ANALYSE MORPHOLOGIQUE
 Tu classes chaque trait dans des CATÉGORIES FERMÉES. JAMAIS de mesure, JAMAIS de chiffre.
 ${REPERES_VISUELS}
@@ -93,8 +103,12 @@ ${schemaToPrompt()}`,
 
   try {
     const raw = await callAnthropic({
-      model: "claude-haiku-4-5",
-      maxTokens: 1500,
+      // Sonnet et non Haiku : lire des leviers osseux et des insertions sur
+      // photo est une tâche de vision fine. Haiku répondait "indetermine"
+      // partout, ce qui produisait une fiche techniquement valide mais VIDE —
+      // et donc un programme généré sans aucune donnée morphologique.
+      model: "claude-sonnet-4-6",
+      maxTokens: 2000,
       system: "Tu es un expert en lecture morphologique visuelle pour le coaching sportif. Tu réponds UNIQUEMENT en JSON valide avec les valeurs d'énumération exactes demandées. Au moindre doute tu réponds \"indetermine\" — tu n'inventes jamais. Tu évalues TOUJOURS la qualité des photos en premier.",
       content,
     });
@@ -122,6 +136,18 @@ ${schemaToPrompt()}`,
     const observations = validerObservations(parsed);
     const consequences = deriverConsequences(observations);
 
+    // Une fiche sans AUCUNE observation exploitable est un échec silencieux :
+    // on le rend visible plutôt que de générer un programme "aveugle".
+    const traits = [
+      ...Object.values(observations.leviers || {}),
+      ...Object.values(observations.insertions || {}),
+      ...Object.values(observations.physique || {}),
+      ...Object.values(observations.proportions || {}),
+      ...Object.values(observations.repartition || {}),
+    ];
+    const renseignes = traits.filter(v => v && v !== "indetermine").length;
+    const exploitabilite = traits.length ? Math.round((renseignes / traits.length) * 100) : 0;
+
     const fiche = {
       version: FICHE_VERSION,
       date: new Date().toISOString().split("T")[0],
@@ -129,6 +155,8 @@ ${schemaToPrompt()}`,
       consequences,
       confiance: observations.confiance,
       qualite_photo: qualite,
+      exploitabilite,          // % de traits réellement renseignés
+      vide: renseignes === 0,  // aucune donnée : le programme sera générique
     };
     logMorphoEvent({ userId: access.userId, fiche, status: "ok" }); // fire-and-forget
     return res.status(200).json({ fiche });
