@@ -3,6 +3,8 @@
   "outputDirectory": "dist",
   "framework": "vite",
   "functions": {
+    "api/generate-program-start.js":  { "maxDuration": 300 },
+    "api/generate-program-status.js": { "maxDuration": 15 },
     "api/generate-program.js": { "maxDuration": 120 },
     "api/analyze-morpho.js":   { "maxDuration": 60 },
     "api/coach-chat.js":       { "maxDuration": 60 },

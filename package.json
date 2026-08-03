@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.110.1",
+    "@vercel/functions": "^3.7.6",
     "@zxing/browser": "^0.1.4",
     "@zxing/library": "^0.21.3",
     "react": "^18.2.0",
