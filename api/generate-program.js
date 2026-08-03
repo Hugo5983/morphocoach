@@ -308,7 +308,7 @@ export async function runGeneration({ form, dossier, ficheMorpho, access, budget
   });
 
   const prompt = buildServerPrompt({ form, dossier: dossier || {}, fiche, directives, cycleNum, candidats });
-  const system = "Tu es un Master Coach Sportif expert en biomécanique, hypertrophie et périodisation. Tu raisonnes comme un coach de 10 ans d'expérience : tu lis le dossier de l'athlète AVANT de décider. Tu génères UNIQUEMENT du JSON valide, sans texte avant ou après, sans markdown.";
+  const system = "Tu es un Master Coach Sportif expert en biomécanique, hypertrophie et périodisation. Tu raisonnes comme un coach de 10 ans d'expérience : tu lis le dossier de l'athlète AVANT de décider. Tu génères UNIQUEMENT du JSON valide, sans texte avant ou après, sans markdown, COMPACT sur une seule ligne (aucune indentation, aucun retour à la ligne) : chaque caractère de mise en forme est du gaspillage.";
 
   const remaining = () => budgetMs - (Date.now() - startedAt);
   // Bornes par appel dérivées du budget : larges en asynchrone, historiques en synchrone.
@@ -316,14 +316,14 @@ export async function runGeneration({ form, dossier, ficheMorpho, access, budget
   // large doit couvrir ce cas réel, sinon c'est notre propre AbortController
   // qui tue une génération légitime (vu en production : abort à 120 s pile).
   const wide  = budgetMs >= 200_000;
-  const CAP1  = wide ? 200_000 : 70_000;   // appel principal
+  const CAP1  = wide ? 240_000 : 70_000;   // appel principal
   const GATE  = wide ?  90_000 : 35_000;   // temps restant minimal pour tenter la correction
   const CAP2  = wide ? 180_000 : 60_000;   // appel correctif
   const MARGE = wide ?  10_000 :  5_000;   // marge de sérialisation
 
   try {
     let raw = await callAnthropic({
-      model: MODEL, maxTokens: 8000, system,
+      model: MODEL, maxTokens: 16000, system,
       content: [{ type: "text", text: prompt }],
       timeoutMs: Math.min(CAP1, remaining()),
     });
@@ -338,7 +338,7 @@ export async function runGeneration({ form, dossier, ficheMorpho, access, budget
       console.warn("[generate-program] Corrections demandées:", problems);
       try {
         const raw2 = await callAnthropic({
-          model: MODEL, maxTokens: 8000, system,
+          model: MODEL, maxTokens: 16000, system,
           timeoutMs: Math.min(CAP2, remaining() - MARGE),
           content: [{
             type: "text",
