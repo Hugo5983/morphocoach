@@ -195,4 +195,22 @@ test("jobs.js expose createJob/getJob/completeJob/failJob", () => {
     assert.equal(typeof _jobs[k], "function"));
 });
 
+// ── parseJSON : troncature et JSON illisible ────────────────────────────────
+const _ant = await import("../api/_lib/anthropic.js");
+test("parseJSON répare les fences et les virgules terminales", () => {
+  const o = _ant.parseJSON('```json\n{"a":[1,2,],"b":"x"}\n```');
+  assert.deepEqual(o, { a: [1, 2], b: "x" });
+});
+test("parseJSON refuse un JSON irréparable avec un message lisible", () => {
+  // Accolade fermante présente mais structure cassée au milieu : le cas que la
+  // réparation ne peut pas rattraper honnêtement.
+  assert.throws(
+    () => _ant.parseJSON('{"a":[1 2 3],"b":}'),
+    /illisible/i
+  );
+});
+test("parseJSON rejette une réponse sans JSON du tout", () => {
+  assert.throws(() => _ant.parseJSON('{"seances":[{"n":"Dev'), /Pas de JSON/i);
+});
+
 console.log(`\n${n} tests de fumée OK`);
