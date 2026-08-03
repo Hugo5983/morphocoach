@@ -213,4 +213,44 @@ test("parseJSON rejette une réponse sans JSON du tout", () => {
   assert.throws(() => _ant.parseJSON('{"seances":[{"n":"Dev'), /Pas de JSON/i);
 });
 
+// ── Complétude du programme : le bug « 5 jours demandés, 2 générés » ────────
+const _mkSeance = (jour) => ({ jour, exercices: Array.from({ length: 5 }, (_, i) =>
+  ({ nom: "Développé haltères incliné 30°", series: "4", reps: "8-10" })) });
+
+test("validate détecte un programme amputé (2 séances pour 5 jours)", () => {
+  const parsed = { programme: { seances: [_mkSeance("Lundi"), _mkSeance("Mardi")] } };
+  const pb = _gp.validateProgramme(parsed, {
+    dossier: {}, fiche: null, materiel: ["halteres"],
+    joursDemandes: ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"],
+  });
+  assert.ok(pb.some(x => /incomplet/i.test(x)), "aucune alerte de complétude");
+  assert.ok(pb.some(x => /2 séance/.test(x) && /5 jour/.test(x)));
+});
+
+test("validate accepte un programme complet", () => {
+  const jours = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"];
+  const parsed = { programme: { seances: jours.map(_mkSeance) } };
+  const pb = _gp.validateProgramme(parsed, {
+    dossier: {}, fiche: null, materiel: ["halteres"], joursDemandes: jours,
+  });
+  assert.equal(pb.filter(x => /incomplet/i.test(x)).length, 0);
+});
+
+test("validate signale une séance trop pauvre", () => {
+  const parsed = { programme: { seances: [{ jour: "Lundi", exercices: [{ nom: "Pompes standards" }] }] } };
+  const pb = _gp.validateProgramme(parsed, {
+    dossier: {}, fiche: null, materiel: ["poids de corps"], joursDemandes: ["Lundi"],
+  });
+  assert.ok(pb.some(x => /minimum 4/.test(x)));
+});
+
+test("le bassin de candidats grandit avec le nombre de jours", async () => {
+  const cat = await import("../api/_knowledge/exercices_catalogue.js");
+  const mat = ["halteres", "barre", "banc", "poulie", "machine"];
+  const p3 = cat.selectCandidats({ materiel: mat, niveau: "intermediaire", max: 180 });
+  const p5 = cat.selectCandidats({ materiel: mat, niveau: "intermediaire", max: 240 });
+  assert.ok(p5.length > p3.length, "5 jours doit offrir plus de choix que 3");
+  assert.ok(p3.length > 100, "bassin trop étroit pour 3 jours");
+});
+
 console.log(`\n${n} tests de fumée OK`);
