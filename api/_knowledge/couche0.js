@@ -72,5 +72,10 @@ export const SCHEMA_REFLEXION = `{
     "risque_abandon": "ce qui pourrait faire décrocher cet athlète et la parade intégrée au programme",
     "facteur_limitant_prevu": "le prochain mur probable et comment le programme l'anticipe",
     "strategie": "3 phrases max: le compromis sécurité/progression/motivation choisi pour CE cycle",
-    "priorites": {"prioriser": ["muscle"], "entretenir": ["muscle"]}
+    "priorites": {"prioriser": ["muscle"], "entretenir": ["muscle"]},
+    "objectifs": {
+      "court_terme": {"horizon": "4-6 semaines", "cible": "objectif mesurable de CE cycle", "comment": "le levier concret utilisé"},
+      "moyen_terme": {"horizon": "3-6 mois", "cible": "où doit être cet athlète", "comment": "l'enchaînement de cycles prévu"},
+      "long_terme": {"horizon": "12 mois et +", "cible": "la transformation visée", "comment": "ce qui doit rester constant pour y arriver"}
+    }
   }`;
