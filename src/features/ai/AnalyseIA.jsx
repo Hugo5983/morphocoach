@@ -6,7 +6,7 @@
  */
 
 import { I } from"../../components/ui/Icon.jsx";
-import { useState, useRef } from"react";
+import { useState, useRef, useEffect } from"react";
 import useScrollTop from"../../hooks/useScrollTop.js";
 import {
   callGenerateProgramAPI, compressImage,
@@ -24,6 +24,7 @@ import {
 
 export default function AnalyseIA(props) {
   useScrollTop();
+  const [elapsed, setElapsed] = useState(0);
   const { profil, photos, setPhotos, readFile, INT, loadIA, setLoadIA, loadMsg,
           setLoadMsg, corrigerFaibles, setCorrigerFaibles, setProg, setCycleStart,
           setCalSess, setProgView, setTab, cycles, setCycles, prog, push } = props;
@@ -111,7 +112,33 @@ export default function AnalyseIA(props) {
     f.jours.includes(d) ? f.jours.filter(x=>x!==d) : [...f.jours,d] }));
   const toggleEquip = id => setForm(f => ({ ...f, materiel:
     f.materiel.includes(id) ? f.materiel.filter(x=>x!==id) : [...f.materiel,id] }));
+  // IMC + estimation du taux de masse grasse (Deurenberg 1991, à partir de
+  // l'IMC, l'âge et le sexe). C'est une ESTIMATION de population, pas une
+  // mesure : elle situe, elle ne remplace pas une impédancemétrie ou un pli.
+  const imcVal = (() => {
+    const p = parseFloat(form.poids), h = parseFloat(form.taille);
+    if (!p || !h) return null;
+    return (p / Math.pow(h / 100, 2)).toFixed(1);
+  })();
+  const imcLabel = imcVal == null ? "" :
+    imcVal < 18.5 ? "maigreur" : imcVal < 25 ? "normal" :
+    imcVal < 30 ? "surpoids" : "obésité";
+  const bfVal = (() => {
+    const age = parseFloat(form.age);
+    if (!imcVal || !age || !form.sexe) return null;
+    const sexe = form.sexe === "homme" ? 1 : 0;
+    const bf = 1.20 * parseFloat(imcVal) + 0.23 * age - 10.8 * sexe - 5.4;
+    return bf > 2 && bf < 65 ? bf.toFixed(1) : null;
+  })();
+
   const photoCount = [photos.face,photos.dos,photos.profil].filter(Boolean).length;
+
+  // Compteur d'attente : repart de zéro à chaque génération.
+  useEffect(() => {
+    if (!loadIA) { setElapsed(0); return; }
+    const id = setInterval(() => setElapsed(s => s + 1), 1000);
+    return () => clearInterval(id);
+  }, [loadIA]);
 
   // ── Écran de génération ───────────────────────────────────────────────────
   if (loadIA) {
@@ -176,6 +203,31 @@ export default function AnalyseIA(props) {
           <div style={{ fontFamily:F, fontSize:13, color:T.t3, marginTop:16,
                         lineHeight:1.5, maxWidth:280 }}>
             {loadMsg}
+          </div>
+
+          {/* Attente annoncée : une génération complète prend réellement
+              2 à 4 minutes. L'annoncer évite de croire à un blocage. */}
+          <div style={{ display:'flex', flexDirection:'column', alignItems:'center',
+                        gap:6, marginTop:20 }}>
+            <div style={{ display:'inline-flex', alignItems:'center', gap:8,
+                          background:T.surf, border:`1px solid ${T.bd}`,
+                          borderRadius:99, padding:'8px 16px' }}>
+              <span style={{ fontFamily:MON, fontSize:15, fontWeight:700, color:T.t1,
+                             fontVariantNumeric:'tabular-nums' }}>
+                {String(Math.floor(elapsed/60)).padStart(2,'0')}:{String(elapsed%60).padStart(2,'0')}
+              </span>
+              <span style={{ fontFamily:F, fontSize:12, fontWeight:500, color:T.t3 }}>
+                / ~3 min en moyenne
+              </span>
+            </div>
+            <div style={{ fontFamily:F, fontSize:12, color:T.t3, maxWidth:290,
+                          lineHeight:1.5, textAlign:'center' }}>
+              {elapsed < 150
+                ? "Un programme complet demande du temps. Tu peux laisser l'écran ouvert."
+                : elapsed < 300
+                  ? "Encore quelques instants — le coach finalise et vérifie ton programme."
+                  : "C'est plus long que d'habitude, mais la génération est toujours en cours."}
+            </div>
           </div>
         </div>
 
@@ -559,6 +611,8 @@ export default function AnalyseIA(props) {
                 { l:'Objectif', v:{hypertrophie:"Prise de muscle",force:"Force",poids:"Perte de poids",prep_physique:"Prépa physique",reathletisation:"Réathlé",sante:"Santé"}[form.objectif]||"—" },
                 { l:'Niveau',   v:{debutant:"Débutant",intermediaire:"Intermédiaire",avance:"Avancé"}[form.niveau]||"—" },
                 { l:'Fréquence',v:form.jours.length>0?`${form.jours.length} jours / sem`:"—" },
+                { l:'IMC', v:imcVal ? `${imcVal} · ${imcLabel}` : "—" },
+                { l:'Masse grasse estimée', v:bfVal ? `~${bfVal} %` : "—" },
                 { l:'Contraintes', v:form.pathologies.length>0?form.pathologies.join(","):"Aucune" },
               ].map(r => (
                 <div key={r.l} style={{ display:'flex', alignItems:'center', justifyContent:'space-between' }}>
