@@ -284,4 +284,97 @@ test("les exercices de rééducation sont bien au catalogue", () => {
     .forEach(n => assert.ok(_cat.findInCatalogue(n), `absent : ${n}`));
 });
 
+// ── Icônes : tout nom référencé doit exister, sinon trou visuel ─────────────
+const _fs = await import("node:fs");
+const _iconSrc = _fs.readFileSync("src/components/ui/Icon.jsx", "utf8");
+const _kitSrc  = _fs.readFileSync("src/features/ai/components/AnalyseIAKit.jsx", "utf8");
+
+function _availableIcons(src) {
+  const set = new Set();
+  const pm = src.match(/const P\s*=\s*\{([\s\S]*?)\n\};/);
+  if (pm) for (const m of pm[1].matchAll(/^\s*([A-Za-z0-9_]+)\s*:/gm)) set.add(m[1]);
+  for (const am of src.matchAll(/ALIAS\s*=\s*\{([\s\S]*?)\}/g))
+    for (const m of am[1].matchAll(/([A-Za-z0-9_]+)\s*:/g)) set.add(m[1]);
+  return set;
+}
+function _usedIcons(src) {
+  const set = new Set();
+  for (const m of src.matchAll(/OI n="([^"]+)"/g)) set.add(m[1]);
+  for (const bm of src.matchAll(/(GOAL_ICONS|EQUIP_ICONS|ZONE_ICONS)\s*=\s*\{([\s\S]*?)\}/g)) {
+    for (const m of bm[2].matchAll(/:\s*'([^']+)'/g)) set.add(m[1]);
+    for (const m of bm[2].matchAll(/:\s*"([^"]+)"/g)) set.add(m[1]);
+  }
+  return set;
+}
+
+test("aucune icône référencée n'est absente de la bibliothèque", () => {
+  const avail = _availableIcons(_iconSrc);
+  const missing = [..._usedIcons(_kitSrc)].filter(n => !avail.has(n));
+  assert.deepEqual(missing, [], `icônes manquantes : ${missing.join(", ")}`);
+});
+
+test("muscle et barbell ne sont plus la même icône que dumbbell", () => {
+  const duo = _iconSrc.match(/DUO_ALIAS\s*=\s*\{([\s\S]*?)\}/)[1];
+  assert.ok(!/\bmuscle\s*:\s*"gym"/.test(duo), "muscle collisionne encore");
+  assert.ok(!/\bbarbell\s*:\s*"gym"/.test(duo), "barbell collisionne encore");
+});
+
+// ── Catalogue complet + rééducation ciblée ──────────────────────────────────
+test("le catalogue entier est injecté (aucun plafond)", () => {
+  const tous = _cat.selectCandidats({ materiel: [], niveau: "avance", max: 9999 });
+  assert.ok(tous.length >= 800, `seulement ${tous.length} exercices`);
+});
+
+test("chaque pathologie renvoie des correctifs ciblés", () => {
+  for (const p of ["Hernie discale", "Coiffe rotateurs", "Ménisque",
+                   "Épicondylite", "Tendinite Achille", "Coxarthrose", "Scoliose"]) {
+    const r = _cat.correctifsPourPathologies([p], []);
+    assert.ok(r.exercices.length >= 10, `${p} : ${r.exercices.length} correctifs`);
+    assert.ok(r.groupes.length > 0, `${p} : aucune zone`);
+  }
+});
+
+test("sans pathologie, aucun bloc rééducation", () => {
+  assert.equal(_cat.correctifsPourPathologies([], []).exercices.length, 0);
+  assert.equal(_cat.correctifsPourPathologies(["Aucune"], []).exercices.length, 0);
+});
+
+test("les correctifs ciblés respectent le matériel déclaré", () => {
+  const r = _cat.correctifsPourPathologies(["Lombalgie"], ["poids_corps"]);
+  assert.ok(r.exercices.length > 0);
+  assert.ok(r.exercices.every(e => ["poids de corps", "accessoire"].includes(e.mat)),
+    "matériel non disponible proposé");
+});
+
+// ── File de revue : les exercices inconnus sont capturés, pas perdus ────────
+const _prop = await import("../api/_lib/proposals.js");
+
+test("les exercices hors catalogue sont capturés pour revue", () => {
+  const parsed = { programme: { seances: [{ jour: "Lundi", exercices: [
+    { nom: "Développé haltères incliné 30°" },
+    { nom: "Tirage Kelso" },
+    { nom: "Curl araignée poulie" },
+    { nom: "Pull-over haltère couché" },
+  ] }] } };
+  const pb = _gp.validateProgramme(parsed, {
+    dossier: {}, fiche: null, materiel: ["halteres"], joursDemandes: ["Lundi"],
+  });
+  assert.deepEqual(pb.horsCatalogue, ["Tirage Kelso", "Curl araignée poulie"]);
+});
+
+test("un programme 100% catalogue ne remplit pas la file", () => {
+  const parsed = { programme: { seances: [{ jour: "Lundi", exercices: [
+    { nom: "Développé haltères incliné 30°" }, { nom: "Pull-over haltère couché" },
+    { nom: "Écarté haltères plat" }, { nom: "Pompes standards" },
+  ] }] } };
+  const pb = _gp.validateProgramme(parsed, {
+    dossier: {}, fiche: null, materiel: ["halteres"], joursDemandes: ["Lundi"],
+  });
+  assert.deepEqual(pb.horsCatalogue, []);
+});
+
+test("la normalisation de la file dédoublonne accents et casse", () => {
+  assert.equal(_prop.normaliser("Développé Incliné 30°"), _prop.normaliser("developpe incline 30"));
+});
+
 console.log(`\n${n} tests de fumée OK`);
