@@ -95,8 +95,11 @@ export default function AnalyseIA(props) {
       setLoadIA(false);
     } catch(e) {
       console.error("lancerIA error:", e);
+      // L'écran d'erreur reste affiché : c'est son bouton « Réessayer » qui
+      // ramène au formulaire. Le refermer automatiquement rendait l'erreur
+      // illisible (elle disparaissait au bout de 2 s).
       setLoadMsg(`Erreur: ${e.message}`);
-      setTimeout(() => { setLoadIA(false); push("","Échec",e.message?.substring(0,80)||"Réessayez."); }, 2000);
+      push?.("","Génération échouée", e.message?.substring(0,80) ||"Réessayez.");
     } finally { clearInterval(interval); }
   };
 
