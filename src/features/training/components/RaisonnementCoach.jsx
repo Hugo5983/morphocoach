@@ -151,6 +151,15 @@ export default function RaisonnementCoach({ prog, onClose }) {
                 {r.lecture_morpho && (
                   <div style={{ marginBottom: r.lecture_historique ? 14 : 0 }}>
                     <SubLabel>Ta morphologie</SubLabel>
+                    {typeof prog?.ficheExploitabilite === "number" && (
+                      <div style={{ display: "inline-block", marginBottom: 8, borderRadius: 99,
+                        padding: "5px 11px", fontSize: 11.5, fontWeight: 800, fontFamily: FONT,
+                        color: prog.ficheExploitabilite >= 60 ? GRN : prog.ficheExploitabilite >= 30 ? AMB : RED,
+                        background: prog.ficheExploitabilite >= 60 ? "#E7F7F0"
+                                  : prog.ficheExploitabilite >= 30 ? "#FEF3E2" : "#FDECEC" }}>
+                        Photos exploitées à {prog.ficheExploitabilite} %
+                      </div>
+                    )}
                     <p style={pSmall}>{r.lecture_morpho}</p>
                   </div>
                 )}
