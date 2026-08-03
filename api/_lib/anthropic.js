@@ -41,6 +41,15 @@ export async function callAnthropic({ model, maxTokens, system, content, message
         { status: res.status }
 );
     }
+    // Réponse coupée par le plafond de tokens : le texte serait un JSON
+    // tronqué en plein milieu — irréparable. Mieux vaut une erreur nette
+    // qu'un parse corrompu silencieux.
+    if (data.stop_reason === "max_tokens") {
+      throw Object.assign(
+        new Error("Réponse tronquée par la limite de tokens"),
+        { status: 502, truncated: true }
+      );
+    }
     return (data.content || []).map((i) => i.text ||"").join("").trim();
   } catch (e) {
     if (e.name ==="AbortError") throw Object.assign(new Error("Délai dépassé"), { status: 504 });
@@ -63,7 +72,14 @@ export function parseJSON(rawText) {
   if (oA > cA) s +="]".repeat(oA - cA) +"}";
   // Virgules terminales ("...2,]" / "...x,}") : mode d'échec fréquent des LLM.
   s = s.replace(/,\s*([}\]])/g, "$1");
-  return JSON.parse(s);
+  try {
+    return JSON.parse(s);
+  } catch (e) {
+    // Le détail technique (position, ligne) part en log serveur ; l'utilisateur
+    // reçoit un message actionnable plutôt qu'une erreur de parseur brute.
+    console.warn("[parseJSON]", e.message);
+    throw new Error("La réponse de l'IA était illisible. Réessaie la génération.");
+  }
 }
 
 /** Normalise un nom d'exercice pour comparaison (accents, casse, pluriels simples). */
