@@ -312,10 +312,13 @@ export async function runGeneration({ form, dossier, ficheMorpho, access, budget
 
   const remaining = () => budgetMs - (Date.now() - startedAt);
   // Bornes par appel dérivées du budget : larges en asynchrone, historiques en synchrone.
+  // Une réponse COMPLÈTE de 8000 tokens prend couramment 150-180 s : le cap
+  // large doit couvrir ce cas réel, sinon c'est notre propre AbortController
+  // qui tue une génération légitime (vu en production : abort à 120 s pile).
   const wide  = budgetMs >= 200_000;
-  const CAP1  = wide ? 120_000 : 70_000;   // appel principal
-  const GATE  = wide ?  60_000 : 35_000;   // temps restant minimal pour tenter la correction
-  const CAP2  = wide ? 120_000 : 60_000;   // appel correctif
+  const CAP1  = wide ? 200_000 : 70_000;   // appel principal
+  const GATE  = wide ?  90_000 : 35_000;   // temps restant minimal pour tenter la correction
+  const CAP2  = wide ? 180_000 : 60_000;   // appel correctif
   const MARGE = wide ?  10_000 :  5_000;   // marge de sérialisation
 
   try {
@@ -327,20 +330,27 @@ export async function runGeneration({ form, dossier, ficheMorpho, access, budget
     let parsed = parseJSON(raw);
     let problems = validate(parsed, { dossier, fiche, materiel: form.materiel });
 
-    // Une seule tentative corrective, et seulement si le temps restant suffit
-    // vraiment à la mener à son terme (sinon on renvoie le programme + warnings).
+    // Une seule tentative corrective, et seulement si le temps restant le
+    // permet. FILET DE SÉCURITÉ : si la correction expire ou échoue, on
+    // CONSERVE le programme initial avec ses warnings — une correction ratée
+    // ne doit jamais détruire une génération complète déjà en main.
     if (problems.length > 0 && remaining() > GATE) {
       console.warn("[generate-program] Corrections demandées:", problems);
-      raw = await callAnthropic({
-        model: MODEL, maxTokens: 8000, system,
-        timeoutMs: Math.min(CAP2, remaining() - MARGE),
-        content: [{
-          type: "text",
-          text: prompt + `\n\n═══ CORRECTION OBLIGATOIRE ═══\nTa précédente proposition violait ces règles:\n- ${problems.join("\n- ")}\nRégénère le JSON COMPLET en corrigeant ces violations (remplace les exercices fautifs par des alternatives autorisées du même pattern moteur, prises dans la liste fournie, renouvelle les exercices en trop).`,
-        }],
-      });
-      parsed = parseJSON(raw);
-      problems = validate(parsed, { dossier, fiche, materiel: form.materiel });
+      try {
+        const raw2 = await callAnthropic({
+          model: MODEL, maxTokens: 8000, system,
+          timeoutMs: Math.min(CAP2, remaining() - MARGE),
+          content: [{
+            type: "text",
+            text: prompt + `\n\n═══ CORRECTION OBLIGATOIRE ═══\nTa précédente proposition violait ces règles:\n- ${problems.join("\n- ")}\nRégénère le JSON COMPLET en corrigeant ces violations (remplace les exercices fautifs par des alternatives autorisées du même pattern moteur, prises dans la liste fournie, renouvelle les exercices en trop).`,
+          }],
+        });
+        const parsed2 = parseJSON(raw2);
+        parsed = parsed2;
+        problems = validate(parsed2, { dossier, fiche, materiel: form.materiel });
+      } catch (e2) {
+        console.warn("[generate-program] Correction avortée, programme initial conservé:", e2.message);
+      }
     }
 
     const durationMs = Date.now() - startedAt;
