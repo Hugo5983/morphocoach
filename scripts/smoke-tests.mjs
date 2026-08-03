@@ -377,4 +377,62 @@ test("la normalisation de la file dédoublonne accents et casse", () => {
   assert.equal(_prop.normaliser("Développé Incliné 30°"), _prop.normaliser("developpe incline 30"));
 });
 
+// ── Analyse morphologique : une fiche vide doit être DÉTECTÉE ───────────────
+const _morpho = await import("../api/_knowledge/morphologie.js");
+
+function _obsVides() {
+  const S = _morpho.SCHEMA_OBSERVATIONS;
+  const raw = { leviers:{}, insertions:{}, physique:{}, proportions:{}, posture:[], repartition:{}, confiance:"moyenne" };
+  return _morpho.validerObservations(raw);
+}
+function _obsRiches() {
+  return _morpho.validerObservations({
+    leviers:{ humerus:"long", femur:"long", avant_bras:"long", tibia:"moyen", clavicules:"larges", torse:"long" },
+    insertions:{ biceps:"haute", mollets:"hautes", pectoraux:"normales", ischios:"normales" },
+    physique:{ morphotype:"ectomorphe", adiposite:"faible", masse_musculaire:"moyenne" },
+    proportions:{ taille_hanches:"v", epaules_hanches:"larges" },
+    posture:["cyphose"],
+    // Une analyse SÉRIEUSE se prononce sur les 10 groupes ("equilibre" compte
+    // comme une observation, pas comme une abstention).
+    repartition:{ quadriceps:"equilibre", ischios:"equilibre", mollets:"en_retard",
+      pectoraux:"en_retard", dos_largeur:"dominant", dos_epaisseur:"equilibre",
+      epaules:"en_retard", biceps:"equilibre", triceps:"equilibre", abdos:"equilibre" },
+    confiance:"haute",
+  });
+}
+
+test("une analyse riche produit des conséquences exploitables", () => {
+  const c = _morpho.deriverConsequences(_obsRiches());
+  assert.ok(c.lecture_coach.length > 0, "aucune lecture coach");
+  assert.ok(c.exercices_privilegies.length > 0, "aucun exercice privilégié");
+  assert.ok(c.points_faibles_visuels.length > 0, "aucun point faible détecté");
+});
+
+test("une analyse tout-indetermine donne une fiche vide (à signaler)", () => {
+  const obs = _obsVides();
+  const c = _morpho.deriverConsequences(obs);
+  assert.equal(c.lecture_coach.length, 0);
+  assert.equal(c.points_faibles_visuels.length, 0);
+  // C'est ce cas qui doit lever le drapeau `vide` côté API.
+  const traits = [
+    ...Object.values(obs.leviers), ...Object.values(obs.insertions),
+    ...Object.values(obs.physique), ...Object.values(obs.proportions),
+    ...Object.values(obs.repartition),
+  ];
+  assert.equal(traits.filter(v => v && v !== "indetermine").length, 0);
+});
+
+test("le taux d'exploitabilité distingue une bonne d'une mauvaise analyse", () => {
+  const calc = (obs) => {
+    const traits = [
+      ...Object.values(obs.leviers), ...Object.values(obs.insertions),
+      ...Object.values(obs.physique), ...Object.values(obs.proportions),
+      ...Object.values(obs.repartition),
+    ];
+    return Math.round(traits.filter(v => v && v !== "indetermine").length / traits.length * 100);
+  };
+  assert.equal(calc(_obsVides()), 0);
+  assert.ok(calc(_obsRiches()) > 50, "analyse riche mal notée");
+});
+
 console.log(`\n${n} tests de fumée OK`);
