@@ -284,21 +284,15 @@ function validate(parsed, { dossier, fiche, materiel }) {
   return problems;
 }
 
-// ─── Handler ────────────────────────────────────────────────────────────────
-export default async function handler(req, res) {
-  const g = guard(req, res);
-  if (!g.ok) return g.error ? res.status(g.status).json({ error: g.error }) : res.status(g.status).end();
-
-  const access = await checkAccess(req);
-  if (!access.ok) return res.status(access.status).json({ error: access.error });
-
-  const quota = await checkAndCountUsage(access, "generation");
-  if (!quota.ok) return res.status(quota.status).json({ error: quota.error });
-
-  const { form, dossier, ficheMorpho } = req.body || {};
-  if (!form || typeof form !== "object") return res.status(400).json({ error: "Profil (form) manquant" });
-  if (JSON.stringify(req.body).length > 200_000) return res.status(400).json({ error: "Requête trop volumineuse" });
-
+// ─── Cœur de génération (partagé sync/async) ────────────────────────────────
+/**
+ * Exécute la génération complète — EXACTEMENT la logique métier historique :
+ * prompt intégral, appel principal, validation, tentative corrective unique.
+ * Aucune simplification : seul le budget temps disponible change selon la
+ * route appelante (110 s en synchrone, ~280 s via le job asynchrone).
+ * @returns {Promise<{parsed:object, warnings:string[], meta:object}>}
+ */
+export async function runGeneration({ form, dossier, ficheMorpho, access, budgetMs = 110_000 }) {
   const startedAt = Date.now();
   const cycleNum = Math.max(1, parseInt(dossier?.numero_cycle) || (dossier?.memoire_exercices ? 2 : 1));
   const directives = getVariationDirectives({
@@ -316,27 +310,30 @@ export default async function handler(req, res) {
   const prompt = buildServerPrompt({ form, dossier: dossier || {}, fiche, directives, cycleNum, candidats });
   const system = "Tu es un Master Coach Sportif expert en biomécanique, hypertrophie et périodisation. Tu raisonnes comme un coach de 10 ans d'expérience : tu lis le dossier de l'athlète AVANT de décider. Tu génères UNIQUEMENT du JSON valide, sans texte avant ou après, sans markdown.";
 
-  // Budget temps aligné sur le maxDuration déclaré dans vercel.json (120 s),
-  // avec une marge pour la validation, la télémétrie et la sérialisation.
-  const TOTAL_BUDGET_MS = 110_000;
-  const remaining = () => TOTAL_BUDGET_MS - (Date.now() - startedAt);
+  const remaining = () => budgetMs - (Date.now() - startedAt);
+  // Bornes par appel dérivées du budget : larges en asynchrone, historiques en synchrone.
+  const wide  = budgetMs >= 200_000;
+  const CAP1  = wide ? 120_000 : 70_000;   // appel principal
+  const GATE  = wide ?  60_000 : 35_000;   // temps restant minimal pour tenter la correction
+  const CAP2  = wide ? 120_000 : 60_000;   // appel correctif
+  const MARGE = wide ?  10_000 :  5_000;   // marge de sérialisation
 
   try {
     let raw = await callAnthropic({
       model: MODEL, maxTokens: 8000, system,
       content: [{ type: "text", text: prompt }],
-      timeoutMs: Math.min(70_000, remaining()),
+      timeoutMs: Math.min(CAP1, remaining()),
     });
     let parsed = parseJSON(raw);
     let problems = validate(parsed, { dossier, fiche, materiel: form.materiel });
 
     // Une seule tentative corrective, et seulement si le temps restant suffit
     // vraiment à la mener à son terme (sinon on renvoie le programme + warnings).
-    if (problems.length > 0 && remaining() > 35_000) {
+    if (problems.length > 0 && remaining() > GATE) {
       console.warn("[generate-program] Corrections demandées:", problems);
       raw = await callAnthropic({
         model: MODEL, maxTokens: 8000, system,
-        timeoutMs: Math.min(60_000, remaining() - 5_000),
+        timeoutMs: Math.min(CAP2, remaining() - MARGE),
         content: [{
           type: "text",
           text: prompt + `\n\n═══ CORRECTION OBLIGATOIRE ═══\nTa précédente proposition violait ces règles:\n- ${problems.join("\n- ")}\nRégénère le JSON COMPLET en corrigeant ces violations (remplace les exercices fautifs par des alternatives autorisées du même pattern moteur, prises dans la liste fournie, renouvelle les exercices en trop).`,
@@ -356,18 +353,41 @@ export default async function handler(req, res) {
       accessMode: access.mode, status: "ok",
     });
 
-    return res.status(200).json({
+    return {
       parsed,
       warnings: problems,             // vide si tout est conforme
       meta: { cycleNum, directives, dureeMs: durationMs, acces: access.mode || "verifie" },
-    });
+    };
   } catch (e) {
-    console.error("[generate-program]", e.message);
     logGenerationEvent({
       userId: access.userId, form, dossier, fiche, directives,
       model: MODEL, durationMs: Date.now() - startedAt,
       accessMode: access.mode, status: "error:" + (e.status || 500),
     });
+    throw e;
+  }
+}
+
+// ─── Handler ────────────────────────────────────────────────────────────────
+export default async function handler(req, res) {
+  const g = guard(req, res);
+  if (!g.ok) return g.error ? res.status(g.status).json({ error: g.error }) : res.status(g.status).end();
+
+  const access = await checkAccess(req);
+  if (!access.ok) return res.status(access.status).json({ error: access.error });
+
+  const quota = await checkAndCountUsage(access, "generation");
+  if (!quota.ok) return res.status(quota.status).json({ error: quota.error });
+
+  const { form, dossier, ficheMorpho } = req.body || {};
+  if (!form || typeof form !== "object") return res.status(400).json({ error: "Profil (form) manquant" });
+  if (JSON.stringify(req.body).length > 200_000) return res.status(400).json({ error: "Requête trop volumineuse" });
+
+  try {
+    const out = await runGeneration({ form, dossier, ficheMorpho, access, budgetMs: 110_000 });
+    return res.status(200).json(out);
+  } catch (e) {
+    console.error("[generate-program]", e.message);
     return res.status(e.status || 500).json({ error: e.message || "Erreur serveur" });
   }
 }
