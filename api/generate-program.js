@@ -18,6 +18,7 @@ import { guard, checkAccess } from "./_lib/security.js";
 import { callAnthropic, parseJSON, normalizeExo } from "./_lib/anthropic.js";
 import { checkAndCountUsage } from "./_lib/usage.js";
 import { logGenerationEvent } from "./_lib/telemetry.js";
+import { logExercicesProposes } from "./_lib/proposals.js";
 import { buildPathoRules, buildGardeFous } from "./_knowledge/securite.js";
 import { getVolumeParams, getMesocycleLogic, REGLES_NIVEAU } from "./_knowledge/noyau.js";
 import { QUESTIONS_COACH, REGLE_PONDERATION, getVariationDirectives, SCHEMA_REFLEXION }
@@ -27,7 +28,8 @@ import { buildEMGBlock } from "./_knowledge/emg.js";
 import { buildRattrapageBlock } from "./_knowledge/rattrapage.js";
 import { buildTechniquesBlock } from "./_knowledge/techniques.js";
 import { PUISSANCE_C8, COMBAT_C3, isCombat } from "./_knowledge/periodisation_combat.js";
-import { selectCandidats, findInCatalogue, matsAutorises } from "./_knowledge/exercices_catalogue.js";
+import { selectCandidats, findInCatalogue, matsAutorises, correctifsPourPathologies }
+  from "./_knowledge/exercices_catalogue.js";
 
 export const config = { api: { bodyParser: { sizeLimit: "4mb" } } };
 
@@ -107,11 +109,55 @@ d'intensification allongeant les repos. La récupération nerveuse est LA variab
     : "";
 
   // ── Liste fermée de candidats (matériel + niveau déjà filtrés) ──
-  const candidatsBlock = `═══ CATALOGUE D'EXERCICES AUTORISÉS (liste FERMÉE) ═══
-Tu choisis les exercices EXCLUSIVEMENT dans cette liste (noms exacts, matériel déjà
-compatible avec l'équipement déclaré de l'athlète) :
-${candidats.map(e => `- ${e.n} [${e.groupe} · ${e.mat}]`).join("\n")}
+  // Format GROUPÉ : un bloc par muscle, sous-groupé par matériel. Le nom du
+  // groupe et du matériel n'est plus répété sur chaque ligne — environ 35 % de
+  // tokens économisés, ce qui permet d'injecter le catalogue ENTIER.
+  const parGroupe = {};
+  for (const e of candidats) {
+    (parGroupe[e.groupe] = parGroupe[e.groupe] || {});
+    (parGroupe[e.groupe][e.mat] = parGroupe[e.groupe][e.mat] || []).push(e);
+  }
+  const bloc = Object.entries(parGroupe).map(([groupe, parMat]) => {
+    const lignes = Object.entries(parMat).map(([mat, list]) => {
+      // Les correctifs sont signalés : ce sont eux qui servent les pathologies.
+      const noms = list.map(e => (e.cat === "correctif" ? `${e.n} (correctif)` : e.n));
+      return `  ${mat} — ${noms.join(" | ")}`;
+    });
+    return `▸ ${groupe.toUpperCase()}\n${lignes.join("\n")}`;
+  }).join("\n");
+
+  const candidatsBlock = `═══ CATALOGUE D'EXERCICES AUTORISÉS (liste FERMÉE — ${candidats.length} exercices) ═══
+Tu choisis les exercices EXCLUSIVEMENT dans cette liste (noms EXACTS, matériel déjà
+compatible avec l'équipement déclaré de l'athlète). Format : ▸ GROUPE puis, par
+matériel, les exercices séparés par « | ».
+
+EXIGENCE DE VARIÉTÉ : ce catalogue est large exprès. Exploite-le — varie les
+angles, les matériels et les patterns moteurs entre les séances. Ne retombe pas
+sur les 15 mêmes exercices classiques. Les exercices marqués (correctif) sont à
+privilégier quand une pathologie ou un déséquilibre est déclaré.
+
+${bloc}
+
 Un exercice hors de cette liste sera REJETÉ par la validation.`;
+
+  // ── Bloc CIBLÉ rééducation ──
+  // Dans un catalogue de 800 exercices, le marqueur "(correctif)" ne suffit pas
+  // à orienter le modèle. On lui redonne ici, explicitement, la liste des
+  // correctifs pertinents pour LES pathologies déclarées.
+  const pathosDeclarees = (form.pathologies || []).filter(p => p && p !== "Aucune");
+  const { groupes: zonesPatho, exercices: correctifsCibles } =
+    correctifsPourPathologies(pathosDeclarees, form.materiel || []);
+  const reeducBlock = correctifsCibles.length ? `
+═══ RÉÉDUCATION CIBLÉE — PATHOLOGIES DÉCLARÉES ═══
+Pathologies : ${pathosDeclarees.join(", ")}
+Zones à protéger et renforcer : ${zonesPatho.join(", ")}
+
+Intègre AU MOINS 2 exercices correctifs par semaine issus de cette liste, placés
+en début de séance (échauffement spécifique) ou en fin (renforcement) :
+${correctifsCibles.map(e => `- ${e.n} [${e.groupe} · ${e.mat}]`).join("\n")}
+
+Ces exercices sont du RENFORCEMENT, jamais un traitement : ne formule aucun
+diagnostic, et rappelle dans "tips_coach" d'arrêter en cas de douleur vive.` : "";
 
   return `Tu es un Master Coach Sportif et Préparateur Physique expert en biomécanique, hypertrophie et périodisation. Tu conçois de véritables planifications individualisées, cliniques et orientées progression réelle.
 
@@ -136,6 +182,7 @@ RÈGLE FONDAMENTALE : Programme = réflexion(dossier). Chaque exercice choisi do
 - Si "etat_athlete" indique une reprise après coupure : appliquer STRICTEMENT sa directive (charges réduites, réadaptation) ET renouveler les stimuli.
 
 ${candidatsBlock}
+${reeducBlock}
 
 ═══ PROFIL ATHLÈTE ═══
 Nom: ${form.prenom || "Athlète"} | Âge: ${form.age} ans | Sexe: ${form.sexe}
@@ -298,14 +345,19 @@ export function validateProgramme(parsed, { dossier, fiche, materiel, joursDeman
 
   // 3. Existence au catalogue + compatibilité matériel
   const mats = matsAutorises(materiel || []);
+  const horsCatalogue = [];
   for (const nom of noms) {
     const entry = findInCatalogue(nom);
     if (!entry) {
+      horsCatalogue.push(nom);
       problems.push(`Exercice hors catalogue : "${nom}" — remplacer par un nom EXACT de la liste fournie`);
     } else if (!mats.has(entry.mat)) {
       problems.push(`Matériel indisponible pour "${nom}" (${entry.mat}) — choisir une alternative compatible`);
     }
   }
+  // La liste des inconnus voyage avec les problèmes : elle alimente la file de
+  // revue sans jamais faire échouer la génération.
+  problems.horsCatalogue = horsCatalogue;
   return problems;
 }
 
@@ -350,8 +402,7 @@ export async function runGeneration({ form, dossier, ficheMorpho, access, budget
     niveau: form.niveau || "intermediaire",
     aConserver: dossier?.memoire_exercices?.exercices_a_conserver || [],
     privilegies: fiche?.consequences?.exercices_privilegies || [],
-    max: Math.min(240, 90 + nbJours * 30),
-    pathologies: (form.pathologies || []).filter(p => p && p !== "Aucune"),
+    max: 9999,   // catalogue ENTIER (déjà filtré par matériel + niveau)
   });
 
   const prompt = buildServerPrompt({ form, dossier: dossier || {}, fiche, directives, cycleNum, candidats });
@@ -398,6 +449,14 @@ export async function runGeneration({ form, dossier, ficheMorpho, access, budget
       } catch (e2) {
         console.warn("[generate-program] Correction avortée, programme initial conservé:", e2.message);
       }
+    }
+
+    // Exercices proposés hors catalogue : conservés dans le programme, mis en
+    // file de revue pour un ajout éventuel au catalogue (fire-and-forget).
+    if (problems.horsCatalogue?.length) {
+      logExercicesProposes(problems.horsCatalogue, {
+        niveau: form.niveau, objectif: form.objectif, materiel: form.materiel,
+      });
     }
 
     const durationMs = Date.now() - startedAt;
