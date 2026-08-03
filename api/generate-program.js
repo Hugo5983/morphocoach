@@ -172,6 +172,14 @@ ${refs ? `\n═══ RÉFÉRENTIELS DES MUSCLES PRIORITAIRES ═══\n${refs}
 
 ═══ FORMAT DE RÉPONSE ═══
 Réponds UNIQUEMENT avec le JSON ci-dessous. Aucun texte avant ou après. Aucun markdown.
+
+⛔ RÈGLE ABSOLUE — NOMBRE DE SÉANCES ⛔
+Le tableau "seances" doit contenir EXACTEMENT ${(form.jours || []).length || 3} séances, une par jour demandé :
+${((form.jours || []).length ? form.jours : ["Lundi","Mercredi","Vendredi"]).map((j, i) => `  ${i + 1}. ${j}`).join("\n")}
+Chaque séance porte le champ "jour" correspondant, avec AU MINIMUM 4 exercices.
+Un programme incomplet est un échec total : ne t'arrête jamais avant d'avoir écrit les ${(form.jours || []).length || 3} séances.
+Le schéma ci-dessous ne montre QU'UN SEUL exemple de séance — tu dois en produire ${(form.jours || []).length || 3}.
+
 Le bloc "reflexion" vient EN PREMIER : c'est ta pensée de coach, elle conditionne tout le reste.
 Chaque exercice doit avoir un "tips_coach" précis basé sur la morphologie ET une "justification" courte qui référence un élément de ta réflexion.
 Le champ "progression_semaine" explique comment progresser la SEMAINE SUIVANTE sur cet exercice.
@@ -243,10 +251,25 @@ function listExercices(parsed) {
   return out;
 }
 
-function validate(parsed, { dossier, fiche, materiel }) {
+export function validateProgramme(parsed, { dossier, fiche, materiel, joursDemandes = [] }) {
   const problems = [];
   const noms = listExercices(parsed);
   const exos = noms.map(normalizeExo);
+
+  // 0. COMPLÉTUDE — le motif d'échec le plus coûteux : un programme amputé
+  //    (5 jours demandés, 2 générés) passait jusqu'ici sans aucune alerte.
+  const seances = parsed?.programme?.seances || [];
+  const attendu = joursDemandes.length;
+  if (attendu > 0 && seances.length !== attendu) {
+    problems.push(
+      `Programme incomplet : ${seances.length} séance(s) générée(s) pour ${attendu} jour(s) demandé(s) ` +
+      `(${joursDemandes.join(", ")}) — régénère le programme COMPLET avec les ${attendu} séances`
+    );
+  }
+  seances.forEach((s, i) => {
+    const n = (s?.exercices || []).length;
+    if (n < 4) problems.push(`Séance ${i + 1} (${s?.jour || "?"}) : ${n} exercice(s) seulement — minimum 4`);
+  });
 
   // 1. Exercices bannis (morpho + mémoire + douleur)
   const bans = [
@@ -300,11 +323,16 @@ export async function runGeneration({ form, dossier, ficheMorpho, access, budget
   });
 
   const fiche = mergeFicheLists(ficheMorpho || null);
+  // Bassin de candidats proportionnel au volume demandé : 5 jours ont besoin de
+  // bien plus de choix que 3. L'entrée coûte 5× moins cher que la sortie, donc
+  // un catalogue large est le levier le moins cher pour la qualité.
+  const nbJours = (form.jours || []).length || 3;
   const candidats = selectCandidats({
     materiel: form.materiel || [],
     niveau: form.niveau || "intermediaire",
     aConserver: dossier?.memoire_exercices?.exercices_a_conserver || [],
     privilegies: fiche?.consequences?.exercices_privilegies || [],
+    max: Math.min(240, 90 + nbJours * 30),
   });
 
   const prompt = buildServerPrompt({ form, dossier: dossier || {}, fiche, directives, cycleNum, candidats });
@@ -328,7 +356,7 @@ export async function runGeneration({ form, dossier, ficheMorpho, access, budget
       timeoutMs: Math.min(CAP1, remaining()),
     });
     let parsed = parseJSON(raw);
-    let problems = validate(parsed, { dossier, fiche, materiel: form.materiel });
+    let problems = validateProgramme(parsed, { dossier, fiche, materiel: form.materiel, joursDemandes: form.jours || [] });
 
     // Une seule tentative corrective, et seulement si le temps restant le
     // permet. FILET DE SÉCURITÉ : si la correction expire ou échoue, on
@@ -347,7 +375,7 @@ export async function runGeneration({ form, dossier, ficheMorpho, access, budget
         });
         const parsed2 = parseJSON(raw2);
         parsed = parsed2;
-        problems = validate(parsed2, { dossier, fiche, materiel: form.materiel });
+        problems = validateProgramme(parsed2, { dossier, fiche, materiel: form.materiel, joursDemandes: form.jours || [] });
       } catch (e2) {
         console.warn("[generate-program] Correction avortée, programme initial conservé:", e2.message);
       }
