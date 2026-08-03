@@ -27,17 +27,79 @@ export function compressImage(dataUrl, maxW = 800, quality = 0.7) {
 }
 
 // ─── APPEL API : GÉNÉRATION DE PROGRAMME (serveur) ──────────────────────────
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
 /**
  * Demande la génération au serveur. AUCUNE photo n'est envoyée ici :
  * la morphologie voyage via la fiche (voir morphoService.analyserMorpho).
+ *
+ * Mode ASYNCHRONE d'abord (job + polling) : chaque requête HTTP dure < 1 s,
+ * ce qui neutralise la coupure Safari/WebKit à ~60 s pendant que le serveur
+ * génère tranquillement (jusqu'à ~280 s). Si les routes asynchrones ne sont
+ * pas disponibles (404/501), repli automatique sur la route synchrone
+ * historique — comportement strictement identique à avant.
  * @param {{ form: object, dossier: object, ficheMorpho: object|null }} payload
  * @returns {Promise<{parsed: import('../types').AIRawResponse, warnings: string[], meta: object}>}
  */
 export async function callGenerateProgramAPI({ form, dossier, ficheMorpho }) {
+  const body = JSON.stringify({ form, dossier, ficheMorpho });
+
+  // ── 1) Tentative asynchrone : /start puis polling /status ────────────────
+  try {
+    const start = await fetch("/api/generate-program-start", {
+      method: "POST",
+      headers: await authHeaders(),
+      body,
+    });
+
+    if (start.status === 404 || start.status === 501) {
+      throw Object.assign(new Error("async_unavailable"), { fallback: true });
+    }
+    const sd = await start.json().catch(() => ({}));
+    if (!start.ok) throw new Error(sd.error || `API ${start.status}`);
+    if (!sd.jobId || !sd.token) {
+      throw Object.assign(new Error("async_unavailable"), { fallback: true });
+    }
+
+    const POLL_MS = 3_000;
+    const MAX_MS = 6 * 60_000;       // plafond global côté client
+    const t0 = Date.now();
+    let netFails = 0;
+
+    while (Date.now() - t0 < MAX_MS) {
+      await sleep(POLL_MS);
+      let r, d;
+      try {
+        r = await fetch("/api/generate-program-status", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ jobId: sd.jobId, token: sd.token }),
+        });
+        d = await r.json().catch(() => ({}));
+        netFails = 0;
+      } catch {
+        // Coupure réseau passagère (changement d'antenne, mise en veille…) :
+        // on tolère quelques échecs consécutifs avant d'abandonner.
+        if (++netFails >= 5) throw new Error("Connexion perdue pendant la génération");
+        continue;
+      }
+
+      if (r.status === 202) continue;                        // toujours en cours
+      if (!r.ok) throw new Error(d.error || `API ${r.status}`);
+      if (!d.parsed?.programme) throw new Error("Réponse serveur invalide (programme absent)");
+      return d;                                              // même forme qu'avant
+    }
+    throw new Error("La génération a pris trop de temps. Réessaie.");
+  } catch (e) {
+    if (!e.fallback) throw e;
+    // sinon : routes asynchrones absentes → repli synchrone ci-dessous
+  }
+
+  // ── 2) Repli : route synchrone historique (inchangée) ────────────────────
   const res = await fetch("/api/generate-program", {
     method:"POST",
     headers: await authHeaders(),
-    body:    JSON.stringify({ form, dossier, ficheMorpho }),
+    body,
   });
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(data.error ||`API ${res.status}`);
