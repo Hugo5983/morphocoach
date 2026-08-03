@@ -253,4 +253,35 @@ test("le bassin de candidats grandit avec le nombre de jours", async () => {
   assert.ok(p3.length > 100, "bassin trop étroit pour 3 jours");
 });
 
+// ── Jours : abréviations du sélecteur → noms complets attendus par le modèle ─
+test("les abréviations du sélecteur deviennent des noms complets", () => {
+  assert.deepEqual(_gp.normalizeJours(["Lun", "Mar", "Jeu"]), ["Lundi", "Mardi", "Jeudi"]);
+  assert.deepEqual(_gp.normalizeJours(["Lundi", "Vendredi"]), ["Lundi", "Vendredi"]);
+  assert.deepEqual(_gp.normalizeJours([]), []);
+});
+
+// ── Catalogue : nouveau matériel et priorisation des correctifs ──────────────
+const _cat = await import("../api/_knowledge/exercices_catalogue.js");
+
+test("le catalogue inclut medecine ball et swiss ball", () => {
+  const mats = new Set(_cat.CATALOGUE.map(e => e.mat));
+  assert.ok(mats.has("medecine ball"));
+  assert.ok(mats.has("swiss ball"));
+  assert.ok(_cat.CATALOGUE.length > 700, `catalogue trop petit (${_cat.CATALOGUE.length})`);
+});
+
+test("une pathologie déclarée fait remonter les exercices correctifs", () => {
+  const base = _cat.selectCandidats({ materiel: [], niveau: "intermediaire", max: 240 });
+  const avec = _cat.selectCandidats({
+    materiel: [], niveau: "intermediaire", max: 240, pathologies: ["Lombalgie"],
+  });
+  const nb = (l) => l.filter(e => e.cat === "correctif").length;
+  assert.ok(nb(avec) > nb(base), `correctifs non priorisés (${nb(avec)} vs ${nb(base)})`);
+});
+
+test("les exercices de rééducation sont bien au catalogue", () => {
+  ["McGill big 3 — bird dog", "Protocole Alfredson — excentrique mollet", "Spanish squat élastique"]
+    .forEach(n => assert.ok(_cat.findInCatalogue(n), `absent : ${n}`));
+});
+
 console.log(`\n${n} tests de fumée OK`);
