@@ -174,4 +174,16 @@ test("surentraînement : pas de statut sans signal, alertes justifiées sinon", 
   assert.ok(o.warnings.every(w => w.length > 10));
 });
 
+// ── Architecture asynchrone : le cœur partagé et le stockage de jobs ─────────
+const _gp = await import("../api/generate-program.js");
+test("generate-program exporte runGeneration (partagé sync/async)", () => {
+  assert.equal(typeof _gp.runGeneration, "function");
+  assert.equal(typeof _gp.default, "function");
+});
+const _jobs = await import("../api/_lib/jobs.js");
+test("jobs.js expose createJob/getJob/completeJob/failJob", () => {
+  ["createJob", "getJob", "completeJob", "failJob"].forEach(k =>
+    assert.equal(typeof _jobs[k], "function"));
+});
+
 console.log(`\n${n} tests de fumée OK`);
