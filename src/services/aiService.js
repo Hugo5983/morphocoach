@@ -114,7 +114,7 @@ export async function callGenerateProgramAPI({ form, dossier, ficheMorpho }) {
  * @param {{ form: import('../types').Profil, cycles: import('../types').CycleHistorique[] }} ctx
  * @returns {import('../types').Programme}
  */
-export function buildProgramFromAI(parsed, { form, cycles }) {
+export function buildProgramFromAI(parsed, { form, cycles, ficheMorpho = null }) {
   if (!parsed.programme) throw new Error("Clé'programme' absente");
   if (!Array.isArray(parsed.programme.seances) || parsed.programme.seances.length === 0)
     throw new Error("Aucune séance générée");
@@ -132,6 +132,11 @@ export function buildProgramFromAI(parsed, { form, cycles }) {
 
     // Couche 0 — la pensée du coach qui a produit ce programme
     reflexion: parsed.reflexion || null,
+
+    // Qualité de la lecture morphologique : permet d'afficher honnêtement
+    // sur quoi le programme s'appuie réellement.
+    ficheExploitabilite: typeof ficheMorpho?.exploitabilite === "number"
+      ? ficheMorpho.exploitabilite : null,
 
     // Analyse biomécanique complète
     analyse: {
