@@ -87,20 +87,29 @@ test("volume : aucune séance validée → available=false, pas de chiffre", () 
 });
 
 test("volume : compte les séries RÉELLES, pas séries × reps du programme", () => {
-  _store["morpho_workout_log"] = JSON.stringify({
+  // La fenêtre est lundi → aujourd'hui : on construit le log DANS cette
+  // fenêtre quel que soit le jour d'exécution (un lundi, une seule séance
+  // est possible dans la semaine en cours).
+  const dow = (new Date().getDay() + 6) % 7;   // 0 = lundi
+  const log = {
     [_dk(0)]: { sets: [
-      ...Array(4).fill({ exNom: "Développé haltères incliné 30°", kg: 30, reps: 10 }),
+      ...Array(5).fill({ exNom: "Développé haltères incliné 30°", kg: 30, reps: 10 }),
       ...Array(3).fill({ exNom: "Pull-over haltère couché", kg: 20, reps: 12 }),
-    ], totalVolume: 1920 },
-    [_dk(2)]: { sets: Array(4).fill({ exNom: "Développé haltères incliné 30°", kg: 32, reps: 10 }), totalVolume: 1280 },
-  });
+    ], totalVolume: 2220 },
+  };
+  let expSets = 8, expSessions = 1;
+  if (dow >= 2) {
+    log[_dk(2)] = { sets: Array(4).fill({ exNom: "Développé haltères incliné 30°", kg: 32, reps: 10 }), totalVolume: 1280 };
+    expSets = 12; expSessions = 2;
+  }
+  _store["morpho_workout_log"] = JSON.stringify(log);
   const v = rec.getWeeklyVolume();
-  assert.equal(v.totalSets, 11);       // 11 séries, pas 110 reps
-  assert.equal(v.sessions, 2);
+  assert.equal(v.totalSets, expSets);       // des séries, pas des répétitions
+  assert.equal(v.sessions, expSessions);
   const pecs = v.byMuscle.find(g => g.groupe === "Pectoraux");
-  assert.equal(pecs.sets, 11);
+  assert.equal(pecs.sets, expSets);
   assert.equal(pecs.landmarks.MRV, 22);
-  assert.equal(pecs.statut, "optimal");
+  assert.equal(pecs.statut, "optimal");     // 8-12 séries : entre MEV 8 et MRV 22
 });
 
 test("volume : dépassement du MRV détecté", () => {
