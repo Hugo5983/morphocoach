@@ -7,6 +7,7 @@ import Creer from"./Creer.jsx";
 import { SeanceDetailModal } from"./components/ProgramTabModals.jsx";
 import CoachWeekCard from"./components/CoachWeekCard.jsx";
 import MesocycleDetail from"./components/MesocycleDetail.jsx";
+import RaisonnementCoach from"./components/RaisonnementCoach.jsx";
 
 export default function ProgrammeView(props) {
   useScrollTop();
@@ -17,6 +18,7 @@ export default function ProgrammeView(props) {
   const [selectedJour, setSelectedJour] = useState(null);    // {jIdx} → ouvre SeanceDetailModal en overlay
   const [confirmDel, setConfirmDel] = useState(null); // {type:"prog"|"jour", progIdx, jourIdx}
   const [showMeso, setShowMeso] = useState(false);
+  const [showRaison, setShowRaison] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
 
   // Durée totale du mésocycle : 6 semaines (Base · Vol+ ×3 · Déload · Pic),
@@ -88,6 +90,11 @@ export default function ProgrammeView(props) {
   const semN     = (semC||0)+1;
   const progIdx = Math.max(0, allProgs.findIndex(p => prog && (p.id===prog.id || p.titre===prog.titre)));
   const durOf = dureeSeance;
+
+  // ── Raisonnement du coach : page pleine (même pattern que le mésocycle) ──
+  if (showRaison) {
+    return <RaisonnementCoach prog={prog} onClose={() => setShowRaison(false)} />;
+  }
 
   // ── Mésocycle : page pleine (remplace le contenu, garde header + scroll natif) ──
   if (showMeso) {
@@ -424,6 +431,15 @@ export default function ProgrammeView(props) {
               <span style={{fontSize:13,fontWeight:600,color:"rgba(255,255,255,0.6)",fontFamily:DISP_F}}>
                 {prog.objectif || "Hypertrophie"} · {prog.jours.length} séance{prog.jours.length!==1?"s":""}
               </span>
+              <div onClick={()=>setShowRaison(true)} style={{display:"inline-flex",alignItems:"center",
+                gap:6,alignSelf:"flex-start",marginTop:10,cursor:"pointer",
+                background:"rgba(255,255,255,0.1)",border:"1px solid rgba(255,255,255,0.16)",
+                borderRadius:99,padding:"8px 14px"}}>
+                <span style={{fontSize:12.5,fontWeight:800,color:"#fff",fontFamily:DISP_F}}>
+                  Voir le raisonnement du coach
+                </span>
+                <span style={{fontSize:14,fontWeight:800,color:"#B9C6FF",fontFamily:DISP_F}}>&rsaquo;</span>
+              </div>
             </div>
             <div style={{display:"flex",flexDirection:"column",gap:9}}>
               <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
