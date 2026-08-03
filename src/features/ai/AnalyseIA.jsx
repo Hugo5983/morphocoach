@@ -66,8 +66,21 @@ export default function AnalyseIA(props) {
       if (rawPhotos.length > 0) {
         setLoadMsg(" Analyse morphologique de tes photos…");
         const compressed = [];
-        for (const p of rawPhotos) compressed.push(await compressImage(p, 800, 0.65));
+        // 1200 px / qualité 0.82 : à 800 px et 0.65, les détails morphologiques
+        // (insertions, reliefs, proportions) disparaissaient et l'analyse
+        // renvoyait "indetermine" partout. Reste très en dessous de la limite
+        // serveur de 3 Mo par photo.
+        for (const p of rawPhotos) compressed.push(await compressImage(p, 1200, 0.82));
         fiche = await analyserMorpho(compressed, { sexe: form.sexe, age: form.age });
+        // Une analyse qui ne lit rien doit se voir : sans ça, le programme est
+        // généré "à l'aveugle" et rien ne le signale à l'utilisateur.
+        if (fiche?.vide) {
+          push?.("", "Analyse morpho peu concluante",
+            "Tes photos n'ont pas permis de lire ta morphologie. Le programme reste basé sur ton historique. Reprends-les en pied, bien éclairé, vêtements ajustés.");
+        } else if (typeof fiche?.exploitabilite === "number" && fiche.exploitabilite < 40) {
+          push?.("", "Analyse morpho partielle",
+            `Seuls ${fiche.exploitabilite} % des traits ont pu être lus. Des photos plus nettes affineraient ton programme.`);
+        }
       } else if (fiche && !ficheEstValide()) {
         // Fiche ancienne (> 90 j) : on l'utilise quand même, mais on le signale
         push?.("","Fiche morpho ancienne","Pense à refaire tes photos pour une analyse à jour.");
@@ -76,7 +89,7 @@ export default function AnalyseIA(props) {
       const { parsed, warnings } = await callGenerateProgramAPI({ form, dossier, ficheMorpho: fiche });
       if (warnings?.length) console.warn("Avertissements génération:", warnings);
 
-      const np = buildProgramFromAI(parsed, { form, cycles });
+      const np = buildProgramFromAI(parsed, { form, cycles, ficheMorpho: fiche });
       if (prog && setCycles) {
         const archive = {
           ...prog, archiveDate: new Date().toLocaleDateString("fr-FR"),
