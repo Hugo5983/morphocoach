@@ -16,6 +16,7 @@ import {
 import { buildDossierAthlete } from"../../services/coachBrainService.js";
 import { analyserMorpho, getFicheMorpho, ficheEstValide } from"../../services/morphoService.js";
 import { syncCycleOutcome, restaurerHistorique } from"../../services/syncService.js";
+import { bilanChargesCycle } from"../../services/progressionService.js";
 import {
   T, F, SER, MON, CARD, InjectCSS, OI,
   PoseCard, Stepper, NavBtns, FL, SelRow,
@@ -106,7 +107,9 @@ export default function AnalyseIA(props) {
           chargesResume: summarizeProgramLoads(prog),
         };
         setCycles(prev => [...prev, archive]);
-        syncCycleOutcome(archive);                 // journal Supabase — silencieux
+        // On archive AUSSI les charges atteintes : le prochain cycle repart
+        // du meilleur niveau, pas de la dernière séance.
+        syncCycleOutcome(archive, bilanChargesCycle(60));
       }
       setProg(np); setCycleStart(Date.now());
       setAStep(0); setPhotos({ face:null, dos:null, profil:null });
@@ -240,14 +243,14 @@ export default function AnalyseIA(props) {
                 {String(Math.floor(elapsed/60)).padStart(2,'0')}:{String(elapsed%60).padStart(2,'0')}
               </span>
               <span style={{ fontFamily:F, fontSize:12, fontWeight:500, color:T.t3 }}>
-                / ~3 min en moyenne
+                / 3 à 5 min
               </span>
             </div>
             <div style={{ fontFamily:F, fontSize:12, color:T.t3, maxWidth:290,
                           lineHeight:1.5, textAlign:'center' }}>
-              {elapsed < 150
+              {elapsed < 210
                 ? "Un programme complet demande du temps. Tu peux laisser l'écran ouvert."
-                : elapsed < 300
+                : elapsed < 420
                   ? "Encore quelques instants — le coach finalise et vérifie ton programme."
                   : "C'est plus long que d'habitude, mais la génération est toujours en cours."}
             </div>
