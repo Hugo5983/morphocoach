@@ -1,3 +1,8 @@
+import {
+  getWeeklyVolume, getPerformanceTrend, getRestingHR, getMotivation,
+  getMobilityData, getRecoveryScore, getOvertrainingStatus,
+} from "./recoveryService.js";
+
 // @ts-check
 // ─── COACH BRAIN SERVICE — COUCHE 0 : RAISONNEMENT COACH ────────────────────
 // Construit le"Dossier Athlète" : l'objet de décision que l'IA lit AVANT
@@ -219,7 +224,7 @@ export function analyzeAdherence({ prog, form }) {
 
 export function analyzeFeedbacks() {
   const all = readJSON(FEEDBACK_KEY, {});
-  const douloureux = [], nonRessentis = [];
+  const douloureux = [], nonRessentis = [], rpeParExo = [];
   let rpeSum = 0, rpeN = 0;
 
   Object.entries(all).forEach(([nom, list]) => {
@@ -227,7 +232,16 @@ export function analyzeFeedbacks() {
     const recents = list.slice(-3);
     const maxPain = Math.max(...recents.map(f => f.pain ?? 0));
     const nbNonRessenti = recents.filter(f => f.feel === 2).length;
-    recents.forEach(f => { if (typeof f.rpe ==="number") { rpeSum += f.rpe; rpeN++; } });
+    const rpesEx = recents.filter(f => typeof f.rpe === "number").map(f => f.rpe);
+    rpesEx.forEach(r => { rpeSum += r; rpeN++; });
+    // RPE PAR EXERCICE : la moyenne globale masque les cas individuels. Un
+    // athlète peut être à 6 partout et à 9,5 sur le développé couché — c'est
+    // là que se joue le risque, et l'IA ne le voyait pas.
+    if (rpesEx.length >= 2) {
+      const moy = Math.round((rpesEx.reduce((a, b) => a + b, 0) / rpesEx.length) * 10) / 10;
+      if (moy >= 9)      rpeParExo.push({ nom, rpe: moy, note: "systématiquement proche de l'échec — charge à tempérer" });
+      else if (moy <= 6) rpeParExo.push({ nom, rpe: moy, note: "marge disponible — charge peut progresser" });
+    }
 
     if (maxPain >= 3) douloureux.push({ nom, niveau:"douleur STOP", consigne:"INTERDIT — remplacer par une alternative sans stress articulaire sur la même zone." });
     else if (maxPain === 2) douloureux.push({ nom, niveau:"gêne répétée", consigne:"Remplacer ou réduire la charge de 15% + tempo contrôlé, surveiller." });
@@ -239,7 +253,13 @@ export function analyzeFeedbacks() {
   if (rpeMoyen !== null && rpeMoyen >= 9) calibration ="RPE moyen rapporté très haut (" + rpeMoyen +") : cet athlète pousse toujours plus que prévu → prescrire des charges 5% plus conservatrices et verrouiller le RIR.";
   else if (rpeMoyen !== null && rpeMoyen <= 6.5) calibration ="RPE moyen rapporté bas (" + rpeMoyen +") : marge disponible → progression de charge légèrement plus agressive.";
 
-  return { exercices_douloureux: douloureux, exercices_non_ressentis: nonRessentis, rpe_moyen_rapporte: rpeMoyen, calibration };
+  return {
+    exercices_douloureux: douloureux,
+    exercices_non_ressentis: nonRessentis,
+    rpe_moyen_rapporte: rpeMoyen,
+    rpe_par_exercice: rpeParExo.length ? rpeParExo : undefined,
+    calibration,
+  };
 }
 
 // ─── 5. MÉMOIRE D'EXERCICES (anti-répétition) ───────────────────────────────
@@ -287,6 +307,131 @@ export function buildExerciseMemory({ prog, cycles, verdicts, feedbacks }) {
  * Assemble la Couche 0 complète.
  * @returns {{ dossier: object }}
  */
+/**
+ * ÉTAT DE FORME RÉEL — le moteur de récupération existait mais n'atteignait
+ * jamais l'IA : elle programmait un cycle d'accumulation alors que l'écran
+ * affichait « fatigue accumulée ». On lui transmet désormais le même diagnostic.
+ * @param {{age?: number|string}} profil
+ */
+function analyzeEtatDeForme(profil = {}) {
+  const age = parseInt(String(profil.age)) || null;
+  const vol   = getWeeklyVolume();
+  const perf  = getPerformanceTrend();
+  const hr    = getRestingHR();
+  const moti  = getMotivation(7);
+  const mob   = getMobilityData(7);
+  const score = getRecoveryScore({ age });
+  const over  = getOvertrainingStatus({ age });
+
+  /** @type {Record<string, any>} */
+  const out = {};
+
+  if (vol.available) {
+    out.volume_reel_semaine = {
+      series_validees: vol.totalSets,
+      seances: vol.sessions,
+      statut: vol.globalStatus,                    // optimal | au-dessus | sous-seuil
+      groupes_au_dessus_du_MRV: vol.byMuscle.filter(g => g.statut === "au-dessus").map(g => g.groupe),
+      groupes_sous_le_MEV:      vol.byMuscle.filter(g => g.statut === "sous-seuil").map(g => g.groupe),
+      detail: vol.byMuscle.slice(0, 8).map(g => `${g.groupe}: ${g.sets} séries`),
+    };
+  }
+  if (perf.available) {
+    out.tendance_performance = {
+      moyenne_pct: perf.avgDelta,
+      tendance: perf.trend,                        // hausse | stable | baisse
+      meilleur: perf.best ? `${perf.best.exNom} ${perf.best.deltaPct > 0 ? "+" : ""}${perf.best.deltaPct}%` : null,
+      pire:     perf.worst ? `${perf.worst.exNom} ${perf.worst.deltaPct > 0 ? "+" : ""}${perf.worst.deltaPct}%` : null,
+    };
+  }
+  if (hr.available && !hr.partial) {
+    out.fc_repos = { recente: hr.recent, reference_30j: hr.baseline, ecart: hr.delta, statut: hr.status };
+  }
+  if (moti.available) out.motivation = { moyenne_sur_5: moti.avg, checkins: moti.count };
+  if (mob.count > 0)  out.mobilite = { seances_7j: mob.count };
+  if (score.available) {
+    out.score_recuperation = { sur_100: score.score, label: score.label, couverture_pct: score.coverage };
+  }
+  if (over.available) {
+    out.statut_recuperation = {
+      niveau: over.label, risque: over.risk, fiabilite_pct: over.confidence,
+      alertes: over.warnings, signaux_positifs: over.positives,
+    };
+  }
+  return Object.keys(out).length ? out : { note: "Pas encore de données d'état de forme." };
+}
+
+/**
+ * CHARGES RÉELLES par exercice : point de départ chiffré de la surcharge
+ * progressive. Sans elles, l'IA ne peut prescrire qu'une progression abstraite.
+ */
+function analyzeChargesReelles() {
+  const log = readJSON("morpho_workout_log", {});
+  /** @type {Record<string, {kg: number, reps: number, date: string}>} */
+  const best = {};
+  Object.entries(log).sort(([a], [b]) => a.localeCompare(b)).forEach(([date, day]) => {
+    (day?.sets || []).forEach(s => {
+      const kg = Number(s.kg) || 0, reps = Number(s.reps) || 0;
+      if (!s.exNom || !kg) return;
+      const cur = best[s.exNom];
+      // Meilleure série = charge la plus lourde ; à charge égale, plus de reps.
+      if (!cur || kg > cur.kg || (kg === cur.kg && reps > cur.reps)) {
+        best[s.exNom] = { kg, reps, date };
+      }
+    });
+  });
+  const entries = Object.entries(best);
+  if (!entries.length) return { note: "Aucune charge enregistrée." };
+  return Object.fromEntries(
+    entries.slice(-15).map(([nom, b]) => [nom, `${b.kg}kg×${b.reps}`])
+  );
+}
+
+/**
+ * JOURS RÉELLEMENT HONORÉS : un athlète peut valider 100 % de ses lundis et
+ * zéro vendredi. Placer la séance clé le jour le mieux tenu est une décision
+ * de coach que l'IA ne pouvait pas prendre.
+ */
+function analyzeJoursReels() {
+  const log = readJSON("morpho_workout_log", {});
+  const NOMS = ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
+  const compte = {};
+  Object.keys(log).forEach(d => {
+    const dt = new Date(d);
+    if (isNaN(dt.getTime())) return;
+    if (!(log[d]?.sets || []).length) return;      // séance réellement faite
+    const n = NOMS[dt.getDay()];
+    compte[n] = (compte[n] || 0) + 1;
+  });
+  const total = Object.values(compte).reduce((a, b) => a + b, 0);
+  if (total < 3) return { note: "Pas assez de séances pour dégager un rythme." };
+  const tri = Object.entries(compte).sort((a, b) => b[1] - a[1]);
+  return {
+    seances_par_jour: Object.fromEntries(tri),
+    jour_le_mieux_tenu: tri[0][0],
+    jour_le_moins_tenu: tri[tri.length - 1][0],
+    conseil: `Placer la séance la plus exigeante le ${tri[0][0]} (jour le plus régulièrement honoré).`,
+  };
+}
+
+/**
+ * Réduit l'historique aux exercices qui appellent une décision : stagnation et
+ * régression d'abord, progression ensuite, le tout plafonné.
+ */
+function limiterHistorique(verdicts, max = 18) {
+  const entries = Object.entries(verdicts || {});
+  if (entries.length <= max) return verdicts;
+  const poids = (v) => {
+    const s = JSON.stringify(v).toLowerCase();
+    if (/regression|baisse/.test(s)) return 0;
+    if (/stagnation/.test(s)) return 1;
+    return 2;
+  };
+  return Object.fromEntries(
+    entries.sort((a, b) => poids(a[1]) - poids(b[1])).slice(0, max)
+  );
+}
+
 export function buildDossierAthlete({ form, prog, cycles, corrigerFaibles }) {
   const detraining = analyzeDetraining({ prog, cycles });
   const verdicts   = analyzeProgressionParExercice({ prog, cycles });
@@ -339,19 +484,29 @@ export function buildDossierAthlete({ form, prog, cycles, corrigerFaibles }) {
     ? Math.round((sleepVals.reduce((a, b) => a + b, 0) / sleepVals.length) * 10) / 10
     : null;
 
+  // ORDRE VOLONTAIRE : le dossier est tronqué à une taille fixe côté serveur.
+  // Les clés qui PILOTENT des décisions passent en premier — sur un athlète
+  // chargé, l'historique détaillé peut être coupé, jamais l'état de forme.
   const dossier = {
     numero_cycle: (cycles?.length || 0) + 1,
+    etat_de_forme: analyzeEtatDeForme(form),
+    charges_actuelles: analyzeChargesReelles(),
+    rythme_reel: analyzeJoursReels(),
+    priorite_points_faibles: !!corrigerFaibles,
     etat_athlete: detraining,
-    historique_progression: verdicts,
     personnalite_sportive: adherence,
     feedback_corporel: feedbacks,
     memoire_exercices: memoire,
+    // Borné : sur un athlète de longue date, ce bloc atteignait 4 400 caractères
+    // et poussait les autres clés hors de la fenêtre du prompt. Les exercices
+    // en stagnation ou en régression passent en premier — ce sont ceux qui
+    // demandent une décision.
+    historique_progression: limiterHistorique(verdicts, 18),
     suivi_poids: suiviPoids,
     nutrition_recente: nutritionRecente,
     recuperation: sommeilMoyen !== null
       ? { sommeil_moyen_7j: sommeilMoyen +"h", note: sommeilMoyen < 6.5 ?"Sommeil insuffisant → réduire le volume de 10-15%, éviter l'échec fréquent." :"Récupération correcte." }
       : { note:"Pas de données sommeil récentes." },
-    priorite_points_faibles: !!corrigerFaibles,
   };
 
   // Les directives de variation (split / accent / vague) sont recalculées
