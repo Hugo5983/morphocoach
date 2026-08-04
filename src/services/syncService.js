@@ -82,3 +82,111 @@ export function syncCycleOutcome(prog) {
     reflexion: prog.reflexion || null,
   });
 }
+
+
+// ═══════════════════════════════════════════════════════════════════════════
+// RESTAURATION — Supabase → localStorage
+// ═══════════════════════════════════════════════════════════════════════════
+// Jusqu'ici ce service n'écrivait QUE : sur un nouvel appareil, un cache vidé
+// ou un passage iPhone → web, l'historique restait dans Supabase mais l'IA
+// repartait de zéro. On lit désormais en retour, une seule fois, pour
+// reconstituer le journal local à partir duquel le dossier athlète est bâti.
+//
+// Principe conservé : le localStorage reste la SOURCE DE LECTURE de l'app.
+// Supabase ne fait que le réamorcer quand il est vide ou plus pauvre.
+
+const RESTORE_FLAG = "morpho_restored_at";
+
+/** Fusionne sans jamais écraser une donnée locale plus riche. */
+function fusionnerJournal(local, distant) {
+  const out = { ...distant, ...local };   // le local gagne en cas de conflit
+  for (const [jour, dist] of Object.entries(distant || {})) {
+    const loc = local?.[jour];
+    if (!loc) { out[jour] = dist; continue; }
+    // Même jour des deux côtés : on garde la version avec le plus de séries.
+    const nLoc  = (loc?.sets  || []).length;
+    const nDist = (dist?.sets || []).length;
+    out[jour] = nDist > nLoc ? dist : loc;
+  }
+  return out;
+}
+
+/**
+ * Reconstitue morpho_workout_log depuis Supabase.
+ * Idempotent, silencieux, non bloquant : en cas d'échec l'app fonctionne
+ * exactement comme avant.
+ * @param {{force?: boolean}} [opts] force=true pour ignorer le drapeau
+ * @returns {Promise<{restaure: boolean, jours: number, raison?: string}>}
+ */
+export async function restaurerHistorique(opts = {}) {
+  try {
+    const uid = await userId();
+    if (!uid) return { restaure: false, jours: 0, raison: "non connecté" };
+
+    if (!opts.force && localStorage.getItem(RESTORE_FLAG)) {
+      return { restaure: false, jours: 0, raison: "déjà restauré" };
+    }
+
+    const { data, error } = await supabase
+      .from("workout_sync")
+      .select("kind, day, payload")
+      .eq("kind", "workout")
+      .order("created_at", { ascending: true })
+      .limit(500);
+
+    if (error) return { restaure: false, jours: 0, raison: error.message };
+    if (!Array.isArray(data) || data.length === 0) {
+      localStorage.setItem(RESTORE_FLAG, new Date().toISOString());
+      return { restaure: false, jours: 0, raison: "aucun historique distant" };
+    }
+
+    const distant = {};
+    for (const row of data) {
+      if (!row?.day || !row?.payload) continue;
+      const prec = distant[row.day];
+      const nNew = (row.payload?.sets || []).length;
+      if (!prec || nNew > (prec?.sets || []).length) distant[row.day] = row.payload;
+    }
+
+    let local = {};
+    try { local = JSON.parse(localStorage.getItem("morpho_workout_log") || "{}"); } catch {}
+    const fusion = fusionnerJournal(local, distant);
+
+    const avant = Object.keys(local).length;
+    const apres = Object.keys(fusion).length;
+    if (apres > avant) {
+      localStorage.setItem("morpho_workout_log", JSON.stringify(fusion));
+    }
+    localStorage.setItem(RESTORE_FLAG, new Date().toISOString());
+    return { restaure: apres > avant, jours: apres - avant };
+  } catch (e) {
+    console.warn("[sync] restauration:", /** @type {Error} */ (e).message);
+    return { restaure: false, jours: 0, raison: "erreur" };
+  }
+}
+
+/**
+ * Restaure les cycles archivés (mémoire d'exercices des cycles précédents).
+ * @returns {Promise<object[]>} cycles distants, tableau vide si rien
+ */
+export async function restaurerCycles() {
+  try {
+    const uid = await userId();
+    if (!uid) return [];
+    const { data, error } = await supabase
+      .from("cycle_outcomes")
+      .select("cycle_numero, titre, objectif, split, seances_prevues, seances_faites, adherence_pct, charges_resume, created_at")
+      .order("cycle_numero", { ascending: true })
+      .limit(50);
+    if (error || !Array.isArray(data)) return [];
+    return data.map(c => ({
+      numero: c.cycle_numero, titre: c.titre, objectif: c.objectif, split: c.split,
+      chargesResume: c.charges_resume,
+      archiveDate: c.created_at ? new Date(c.created_at).toLocaleDateString("fr-FR") : null,
+      jours: [],                       // le détail des séances n'est pas journalisé
+      _restaure: true,                 // marqueur : provient de Supabase
+    }));
+  } catch {
+    return [];
+  }
+}
