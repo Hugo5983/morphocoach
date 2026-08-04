@@ -36,7 +36,7 @@ export default function AnalyseIA(props) {
     poids:  profil?.poids  ||"", taille: profil?.taille ||"",
     sexe:   profil?.sexe   ||"", metier:"",
     niveau:"", jours: [], objectif: profil?.objectif ||"",
-    objectifPrecis:"", materiel: [], pathologies: [], sport:"",
+    objectifPrecis:"", materiel: [], pathologies: [], sport:"", dureeSeance: 60,
   });
 
   const fileRefFace   = useRef();
@@ -502,6 +502,38 @@ export default function AnalyseIA(props) {
                 fontFamily:F, fontSize:14, fontWeight:500, color:T.t1, outline:'none' }}/>
           </div>
 
+          {/* Métier — contrainte de charge et de posture sur la journée */}
+          <div style={{ marginTop:20 }}>
+            <FL optional>Métier</FL>
+            <input value={form.metier||""} onChange={e=>setForm({...form,metier:e.target.value})}
+              placeholder="Bureau, manutention, debout, nuit…" autoComplete="off"
+              style={{ width:'100%', padding:'16px 16px', borderRadius:12, boxSizing:'border-box',
+                background:T.surfFlat, border:`1px solid ${T.bd}`,
+                fontFamily:F, fontSize:14, fontWeight:500, color:T.t1, outline:'none' }}/>
+            <div style={{ fontFamily:F, fontSize:12, color:T.t3, marginTop:6, lineHeight:1.4 }}>
+              Ce que ton corps encaisse déjà avant la séance : l'IA adapte le volume en conséquence.
+            </div>
+          </div>
+
+          {/* Durée de séance souhaitée */}
+          <div style={{ marginTop:20 }}>
+            <FL required>Durée d'une séance</FL>
+            <div style={{ display:'flex', gap:8 }}>
+              {[45, 60, 75, 90].map(d => {
+                const on = form.dureeSeance === d;
+                return (
+                  <button key={d} onClick={()=>setForm({...form,dureeSeance:d})} style={{
+                    flex:1, padding:'14px 0', borderRadius:12, cursor:'pointer', fontFamily:F,
+                    border: on ? `1.5px solid ${T.acc}` : `1px solid ${T.bd}`,
+                    background: on ? 'rgba(59,91,251,0.08)' : T.surfFlat,
+                    color: on ? T.acc : T.t2, fontSize:14, fontWeight:800 }}>
+                    {d} min
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
           {/* Jours */}
           <div style={{ marginTop:20 }}>
             <FL required>Jours d'entraînement</FL>
@@ -634,6 +666,7 @@ export default function AnalyseIA(props) {
                 { l:'Objectif', v:{hypertrophie:"Prise de muscle",force:"Force",poids:"Perte de poids",prep_physique:"Prépa physique",reathletisation:"Réathlé",sante:"Santé"}[form.objectif]||"—" },
                 { l:'Niveau',   v:{debutant:"Débutant",intermediaire:"Intermédiaire",avance:"Avancé"}[form.niveau]||"—" },
                 { l:'Fréquence',v:form.jours.length>0?`${form.jours.length} jours / sem`:"—" },
+                { l:'Durée séance', v:form.dureeSeance ? `${form.dureeSeance} min` : "—" },
                 { l:'IMC', v:imcVal ? `${imcVal} · ${imcLabel}` : "—" },
                 { l:'Masse grasse estimée', v:bfVal ? `~${bfVal} %` : "—" },
                 { l:'Contraintes', v:form.pathologies.length>0?form.pathologies.join(","):"Aucune" },
