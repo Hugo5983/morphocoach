@@ -384,6 +384,11 @@ ${refs ? `\n═══ RÉFÉRENTIELS DES MUSCLES PRIORITAIRES ═══\n${refs}
 
 ═══ FORMAT DE RÉPONSE ═══
 Réponds UNIQUEMENT avec le JSON ci-dessous. Aucun texte avant ou après. Aucun markdown.
+N'ajoute AUCUN champ hors schéma : la justification de tes choix appartient au bloc
+"reflexion" (ne la répète pas exercice par exercice), et la progression de charge
+est calculée par l'application à partir des séries réellement validées — ne la
+rédige pas. Chaque token économisé sur la redondance est du temps de génération
+en moins, donc moins de risque que le programme n'aboutisse pas.
 
 ⛔ RÈGLE ABSOLUE — NOMBRE DE SÉANCES ⛔
 Le tableau "seances" doit contenir EXACTEMENT ${joursPlein.length} séances, une par jour demandé :
@@ -445,9 +450,7 @@ Le champ "progression_semaine" explique comment progresser la SEMAINE SUIVANTE s
 "series": "4", "reps": "8-10", "rpe": "7-8", "rir": "2-3",
 "tempo": "3-1-2-0", "repos": "90s", "charge": "EN KILOS si l'exercice figure dans charges_actuelles (ex: 32 kg), sinon en % du 1RM estimé",
 "methode": "classique|superset_avec_suivant|drop_set|rest_pause|pyramidal|cluster",
-"tips_coach": "Positionnement précis basé sur la morphologie de l'athlète",
-"justification": "Pourquoi cet exercice pour CE profil (référence à la réflexion)",
-"progression_semaine": "Comment progresser la semaine suivante"
+"tips_coach": "Positionnement précis basé sur la morphologie de l'athlète — 1 à 2 phrases"
           }
         ]
       }
