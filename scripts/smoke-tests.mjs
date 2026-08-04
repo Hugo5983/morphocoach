@@ -435,4 +435,87 @@ test("le taux d'exploitabilité distingue une bonne d'une mauvaise analyse", () 
   assert.ok(calc(_obsRiches()) > 50, "analyse riche mal notée");
 });
 
+// ── GARANTIE : tout trait observé atteint le prompt ─────────────────────────
+// Construit un profil où CHAQUE trait a une valeur valide tirée du schéma,
+// puis vérifie qu'aucune valeur ne se perd dans le bloc envoyé au modèle.
+function _obsCompletes() {
+  const S = _morpho.SCHEMA_OBSERVATIONS;
+  const first = (arr) => arr.find(v => v !== "indetermine");
+  const raw = { leviers: {}, insertions: {}, physique: {}, proportions: {},
+                posture: S.posture.items.slice(0, 2), repartition: {}, confiance: "haute" };
+  for (const [k, allowed] of Object.entries(S.leviers))     raw.leviers[k]     = first(allowed);
+  for (const [k, allowed] of Object.entries(S.insertions))  raw.insertions[k]  = first(allowed);
+  for (const [k, allowed] of Object.entries(S.physique))    raw.physique[k]    = first(allowed);
+  for (const [k, allowed] of Object.entries(S.proportions)) raw.proportions[k] = first(allowed);
+  for (const g of S.repartition.groupes)                    raw.repartition[g] = first(S.repartition.valeurs);
+  return _morpho.validerObservations(raw);
+}
+
+test("AUCUN trait morphologique observé ne se perd avant le prompt", () => {
+  const obs = _obsCompletes();
+  const bloc = _gp.formatObservations(obs);
+  const manquants = [];
+  for (const cat of ["leviers", "insertions", "physique", "proportions", "repartition"]) {
+    for (const [k, v] of Object.entries(obs[cat] || {})) {
+      if (!v || v === "indetermine") continue;
+      // la valeur doit apparaître dans le bloc (underscores rendus en espaces)
+      if (!bloc.includes(String(v).replace(/_/g, " "))) manquants.push(`${cat}.${k}=${v}`);
+    }
+  }
+  assert.deepEqual(manquants, [], `traits perdus : ${manquants.join(", ")}`);
+  for (const p of obs.posture) {
+    assert.ok(bloc.includes(p.replace(/_/g, " ")), `posture perdue : ${p}`);
+  }
+});
+
+test("les six familles de traits sont toutes présentes dans le bloc", () => {
+  const bloc = _gp.formatObservations(_obsCompletes());
+  ["LEVIERS OSSEUX", "INSERTIONS", "PHYSIQUE", "PROPORTIONS", "POSTURE",
+   "DÉVELOPPEMENT PAR GROUPE"].forEach(s =>
+    assert.ok(bloc.includes(s), `section absente : ${s}`));
+});
+
+test("les traits indéterminés n'encombrent pas le prompt", () => {
+  const vide = _morpho.validerObservations({ confiance: "faible" });
+  assert.equal(_gp.formatObservations(vide), "");
+  assert.equal(_gp.formatObservations(null), "");
+});
+
+// ── Fusion Supabase → local : ne JAMAIS écraser une donnée locale plus riche ─
+// (réplique la logique de fusionnerJournal de syncService, testée isolément)
+function _fusion(local, distant) {
+  const out = { ...distant, ...local };
+  for (const [jour, dist] of Object.entries(distant || {})) {
+    const loc = local?.[jour];
+    if (!loc) { out[jour] = dist; continue; }
+    out[jour] = (dist?.sets || []).length > (loc?.sets || []).length ? dist : loc;
+  }
+  return out;
+}
+
+test("la restauration comble les jours absents en local", () => {
+  const local   = { "2026-08-01": { sets: [1, 2, 3] } };
+  const distant = { "2026-07-28": { sets: [1, 2] }, "2026-07-30": { sets: [1] } };
+  const f = _fusion(local, distant);
+  assert.equal(Object.keys(f).length, 3);
+  assert.ok(f["2026-07-28"] && f["2026-08-01"]);
+});
+
+test("une séance locale plus riche n'est jamais écrasée", () => {
+  const local   = { "2026-08-01": { sets: [1, 2, 3, 4, 5] } };
+  const distant = { "2026-08-01": { sets: [1, 2] } };
+  assert.equal(_fusion(local, distant)["2026-08-01"].sets.length, 5);
+});
+
+test("une séance distante plus complète remplace une locale partielle", () => {
+  const local   = { "2026-08-01": { sets: [1] } };
+  const distant = { "2026-08-01": { sets: [1, 2, 3, 4] } };
+  assert.equal(_fusion(local, distant)["2026-08-01"].sets.length, 4);
+});
+
+test("un local vide est intégralement réamorcé", () => {
+  const distant = { "2026-07-28": { sets: [1, 2] }, "2026-07-30": { sets: [1] } };
+  assert.equal(Object.keys(_fusion({}, distant)).length, 2);
+});
+
 console.log(`\n${n} tests de fumée OK`);
