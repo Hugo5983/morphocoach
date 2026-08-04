@@ -100,12 +100,40 @@ function mergeFicheLists(fiche) {
 function buildServerPrompt({ form, dossier, fiche, directives, cycleNum, candidats }) {
   const joursPlein = normalizeJours(form.jours).length
     ? normalizeJours(form.jours) : ["Lundi", "Mercredi", "Vendredi"];
+  // Durée cible : bornée pour rester réaliste même si la valeur arrive corrompue.
+  const dureeCible = Math.min(120, Math.max(30, parseInt(form.dureeSeance) || 60));
   const volParams  = getVolumeParams(form.niveau, form.objectif);
   const mesoLogic  = getMesocycleLogic(form.niveau, form.objectif, cycleNum);
   const pathoRules = buildPathoRules(form.pathologies);
   const gardeFous  = buildGardeFous({ age: form.age, niveau: form.niveau });
   const imc = form.poids && form.taille
     ? (parseFloat(form.poids) / Math.pow(parseFloat(form.taille) / 100, 2)).toFixed(1) : "?";
+
+  // Masse grasse estimée (Deurenberg 1991 : IMC, âge, sexe). ESTIMATION de
+  // population, pas une mesure — le prompt le dit explicitement pour que le
+  // modèle ne la traite pas comme une donnée d'impédancemétrie.
+  const bf = (() => {
+    const age = parseFloat(form.age);
+    if (imc === "?" || !age || !form.sexe) return null;
+    const v = 1.20 * parseFloat(imc) + 0.23 * age - 10.8 * (form.sexe === "homme" ? 1 : 0) - 5.4;
+    return v > 2 && v < 65 ? v.toFixed(1) : null;
+  })();
+
+  // Métier : contrainte de charge et de posture réellement exploitable par un
+  // coach. Le champ était collecté depuis toujours et n'atteignait jamais l'IA.
+  const metierBlock = form.metier
+    ? `\n═══ CONTRAINTE PROFESSIONNELLE ═══
+Métier déclaré : ${form.metier}
+Prends-le en compte concrètement :
+- travail assis / bureau → hanches et pectoraux raccourcis, chaîne postérieure faible :
+  intégrer mobilité de hanche, extension thoracique et travail du dos en priorité ;
+- port de charges / manutention → fatigue lombaire déjà accumulée sur la journée :
+  limiter le volume lombaire lourd, privilégier le gainage anti-mouvement ;
+- station debout prolongée → jambes et mollets déjà sollicités :
+  attention au volume total sur le bas du corps ;
+- travail de nuit / horaires décalés → récupération dégradée : plafonner le volume.
+Mentionne cette contrainte dans "reflexion.diagnostic" si elle influence tes choix.`
+    : "";
 
   // Routage référentiels : points faibles visuels (fiche) + priorités du dossier
   const groupesPrioritaires = [
@@ -228,13 +256,14 @@ RÈGLE FONDAMENTALE : Programme = réflexion(dossier). Chaque exercice choisi do
 - Si "etat_athlete" indique une reprise après coupure : appliquer STRICTEMENT sa directive (charges réduites, réadaptation) ET renouveler les stimuli.
 
 ${candidatsBlock}
-${reeducBlock}
+${reeducBlock}${metierBlock}
 
 ═══ PROFIL ATHLÈTE ═══
 Nom: ${form.prenom || "Athlète"} | Âge: ${form.age} ans | Sexe: ${form.sexe}
-Poids: ${form.poids} kg | Taille: ${form.taille} cm | IMC: ${imc}
+Poids: ${form.poids} kg | Taille: ${form.taille} cm | IMC: ${imc}${bf ? ` | Masse grasse estimée: ~${bf}% (estimation Deurenberg depuis IMC/âge/sexe — indicative, PAS une mesure : ne fonde pas une décision majeure dessus)` : ""}
 Niveau: ${form.niveau} | Objectif: ${form.objectif}${form.objectifPrecis ? ` (précis: ${form.objectifPrecis})` : ""}
 Jours d'entraînement (${joursPlein.length} par semaine): ${joursPlein.join(", ")}
+Durée souhaitée par séance: ${dureeCible} minutes
 Matériel disponible: ${(form.materiel || []).join(", ") || "salle complète"}
 ${form.sport ? `Sport pratiqué: ${form.sport} — intégrer des exercices de transfert spécifiques` : ""}
 Pathologies déclarées: ${(form.pathologies || []).filter(p => p !== "Aucune").join(", ") || "aucune"}
@@ -272,6 +301,15 @@ Réponds UNIQUEMENT avec le JSON ci-dessous. Aucun texte avant ou après. Aucun 
 Le tableau "seances" doit contenir EXACTEMENT ${joursPlein.length} séances, une par jour demandé :
 ${joursPlein.map((j, i) => `  ${i + 1}. ${j}`).join("\n")}
 Chaque séance porte le champ "jour" correspondant, avec AU MINIMUM 4 exercices.
+
+⏱ DURÉE CIBLE PAR SÉANCE : ${dureeCible} MINUTES
+L'application calcule la durée affichée ainsi :
+  durée = Σ (séries × (repos_en_secondes + 60))
+Dimensionne CHAQUE séance pour tomber entre ${Math.round(dureeCible * 0.85)} et ${Math.round(dureeCible * 1.15)} minutes
+avec cette formule exacte. Repère : à 4 séries et 90 s de repos, un exercice coûte
+10 minutes — soit environ ${Math.max(4, Math.round(dureeCible / 10))} exercices pour ${dureeCible} minutes.
+Ajuste le NOMBRE d'exercices et les temps de repos, jamais la qualité du contenu.
+Une séance qui déborde largement de la cible ne sera pas faite : c'est une contrainte réelle, pas indicative.
 Un programme incomplet est un échec total : ne t'arrête jamais avant d'avoir écrit les ${joursPlein.length} séances.
 Le schéma ci-dessous ne montre QU'UN SEUL exemple de séance — tu dois en produire ${joursPlein.length}.
 
