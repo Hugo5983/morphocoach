@@ -39,6 +39,45 @@ const MODEL = "claude-sonnet-4-6";
 // La sécurité prime : un exercice à la fois "privilégié" (par une règle) et
 // "interdit" (par une autre) est retiré des privilégiés AVANT d'atteindre le
 // prompt. Le modèle ne reçoit jamais de consigne contradictoire.
+// ─── Observations brutes → bloc lisible ─────────────────────────────────────
+// Les 31 traits observés sur les photos étaient jusqu'ici réduits aux seules
+// conséquences dérivées par les 37 règles — soit ~5 lignes sur un profil riche.
+// Les traits que AUCUNE règle ne couvre (longueur de tibia, symétrie, position
+// des pieds, densité musculaire…) n'atteignaient JAMAIS le modèle.
+// On les lui redonne ici, en clair, sans toucher aux conséquences existantes.
+const LIB_TRAITS = {
+  humerus: "Humérus", avant_bras: "Avant-bras", femur: "Fémur", tibia: "Tibia",
+  clavicules: "Clavicules", cage_thoracique: "Cage thoracique", bassin: "Bassin",
+  biceps: "Insertion biceps", mollets: "Insertion mollets", pectoraux: "Insertion pectoraux",
+  abdominaux: "Insertion abdominaux", ischios: "Insertion ischios",
+  masse_grasse_visuelle: "Masse grasse visuelle", densite_musculaire: "Densité musculaire",
+  repartition_graisse: "Répartition de la graisse",
+  rapport_epaules_taille: "Rapport épaules/taille", rapport_tronc_jambes: "Rapport tronc/jambes",
+  symetrie_gauche_droite: "Symétrie gauche/droite", position_pieds_naturelle: "Position naturelle des pieds",
+};
+const lisible = (v) => String(v || "").replace(/_/g, " ");
+
+export function formatObservations(obs) {
+  if (!obs) return "";
+  const sections = [];
+  const bloc = (titre, source, prefixe = "") => {
+    const items = Object.entries(source || {})
+      .filter(([, v]) => v && v !== "indetermine")
+      .map(([k, v]) => `${prefixe}${LIB_TRAITS[k] || k} : ${lisible(v)}`);
+    if (items.length) sections.push(`${titre} — ${items.join(" · ")}`);
+  };
+  bloc("LEVIERS OSSEUX", obs.leviers);
+  bloc("INSERTIONS", obs.insertions);
+  bloc("PHYSIQUE", obs.physique);
+  bloc("PROPORTIONS", obs.proportions);
+  if (Array.isArray(obs.posture) && obs.posture.length)
+    sections.push(`POSTURE — ${obs.posture.map(lisible).join(" · ")}`);
+  const rep = Object.entries(obs.repartition || {}).filter(([, v]) => v && v !== "indetermine");
+  if (rep.length)
+    sections.push(`DÉVELOPPEMENT PAR GROUPE — ${rep.map(([k, v]) => `${lisible(k)} : ${lisible(v)}`).join(" · ")}`);
+  return sections.join("\n");
+}
+
 function mergeFicheLists(fiche) {
   if (!fiche?.consequences) return fiche;
   const c = fiche.consequences;
@@ -85,9 +124,16 @@ function buildServerPrompt({ form, dossier, fiche, directives, cycleNum, candida
     ? PUISSANCE_C8 : "";
   const combatBlock = isCombat(form.sport) ? COMBAT_C3 : "";
 
+  const obsBrutes = formatObservations(fiche?.observations);
+  const fiabilite = typeof fiche?.exploitabilite === "number"
+    ? ` · ${fiche.exploitabilite}% des traits lisibles sur les photos` : "";
+
   const morphoBlock = fiche
-    ? `═══ FICHE MORPHOLOGIQUE (lecture coach validée, confiance: ${fiche.confiance}) ═══
-LECTURE : ${(fiche.consequences.lecture_coach || []).join(" ")}
+    ? `═══ FICHE MORPHOLOGIQUE (lecture coach validée, confiance: ${fiche.confiance}${fiabilite}) ═══
+${obsBrutes ? `OBSERVATIONS DIRECTES SUR LES PHOTOS (à exploiter dans ta réflexion et tes choix d'exercices) :
+${obsBrutes}
+
+` : ""}LECTURE : ${(fiche.consequences.lecture_coach || []).join(" ")}
 EXERCICES INTERDITS PAR LA MORPHO : ${fiche.consequences.exercices_interdits.join(", ") || "aucun"}
 EXERCICES À ADAPTER : ${fiche.consequences.exercices_adaptes.join(", ") || "aucun"}
 EXERCICES PRIVILÉGIÉS : ${fiche.consequences.exercices_privilegies.join(", ") || "aucun"}
