@@ -553,4 +553,204 @@ test("le repère d'exercices correspond à la formule de durée de l'app", () =>
   }
 });
 
+// ── Prescription : chaque objectif produit un programme RÉELLEMENT différent ─
+const _presc = await import("../api/_knowledge/prescription.js");
+
+test("force et hypertrophie ont des prescriptions distinctes", () => {
+  const f = _presc.getPrescription("force");
+  const h = _presc.getPrescription("hypertrophie");
+  ["intensite", "reps", "tempo", "repos", "logique"].forEach(champ =>
+    assert.notEqual(f[champ], h[champ], `champ identique : ${champ}`));
+});
+
+test("les six objectifs sont tous différenciés (aucun doublon)", () => {
+  const objectifs = ["force", "hypertrophie", "perte_poids", "prep_physique", "sante", "reathletisation"];
+  const signatures = objectifs.map(o => {
+    const p = _presc.getPrescription(o);
+    return `${p.intensite}|${p.reps}|${p.tempo}|${p.repos}`;
+  });
+  assert.equal(new Set(signatures).size, objectifs.length, "au moins deux objectifs identiques");
+});
+
+test("chaque prescription porte repos, tempo, intensité et interdits", () => {
+  for (const o of ["force", "hypertrophie", "perte_poids", "prep_physique", "sante", "reathletisation"]) {
+    const p = _presc.getPrescription(o);
+    ["intensite", "reps", "tempo", "repos", "series", "logique", "methodes", "exercices"]
+      .forEach(c => assert.ok(p[c] && p[c].length >= 4, `${o}.${c} vide`));
+    assert.ok(Array.isArray(p.interdits) && p.interdits.length >= 2, `${o} : interdits manquants`);
+  }
+});
+
+test("la force impose des repos longs, l'hypertrophie des repos courts", () => {
+  assert.match(_presc.getPrescription("force").repos, /3 à 5 min/);
+  assert.match(_presc.getPrescription("hypertrophie").repos, /45-90 s|90 s/);
+});
+
+test("le nombre d'exercices s'adapte aux repos de l'objectif", () => {
+  // À durée égale, la force (repos longs) tient MOINS d'exercices que la perte de poids.
+  const f = _presc.calibrerSeance("force", 60);
+  const p = _presc.calibrerSeance("perte_poids", 60);
+  assert.ok(f.max < p.min, `force ${f.min}-${f.max} vs perte_poids ${p.min}-${p.max}`);
+  // Une séance courte en force doit lever une alerte de compatibilité.
+  const c = _presc.calibrerSeance("force", 45);
+  assert.ok(c.alerte, "aucune alerte sur force 45 min");
+  // L'alerte doit annoncer la MÊME fourchette que la consigne.
+  assert.ok(c.alerte.includes(`${c.min} à ${c.max}`),
+    `alerte incohérente : annonce autre chose que ${c.min}-${c.max}`);
+  assert.equal(_presc.calibrerSeance("hypertrophie", 75).alerte, null);
+});
+
+test("un objectif inconnu retombe sur l'hypertrophie sans planter", () => {
+  const p = _presc.getPrescription("objectif_inexistant");
+  assert.ok(p && p.reps);
+  assert.equal(p.reps, _presc.getPrescription("hypertrophie").reps);
+});
+
+// ── Adaptations morphologiques : individualisation réelle ───────────────────
+const _adapt = await import("../api/_knowledge/adaptations.js");
+
+function _fiche(obs) { return { observations: _morpho.validerObservations(obs) }; }
+
+const _grandGabarit = _fiche({
+  leviers:{femur:"long",humerus:"long",avant_bras:"long",cage_thoracique:"plate",
+           clavicules:"etroites",bassin:"etroit",tibia:"court"},
+  insertions:{biceps:"haute",mollets:"haute",ischios:"haute",pectoraux:"moyenne",
+              abdominaux:"moyenne",avant_bras:"moyenne"},
+  physique:{masse_grasse_visuelle:"sec",densite_musculaire:"intermediaire",repartition_graisse:"androide"},
+  proportions:{rapport_tronc_jambes:"jambes_longues",symetrie_gauche_droite:"bras_droit_dominant",
+               rapport_epaules_taille:"vtaper_faible",position_pieds_naturelle:"paralleles"},
+  posture:["cyphose"],
+  repartition:{pectoraux:"en_retard",triceps:"en_retard",mollets:"en_retard",epaules:"equilibre",
+               biceps:"equilibre",quadriceps:"equilibre",ischios:"equilibre",dos_largeur:"equilibre",
+               dos_epaisseur:"equilibre",abdos:"equilibre"},
+  confiance:"haute" });
+
+const _petitGabarit = _fiche({
+  leviers:{femur:"court",humerus:"court",avant_bras:"court",cage_thoracique:"bombee",
+           clavicules:"larges",bassin:"large",tibia:"long"},
+  insertions:{biceps:"basse",mollets:"basse",ischios:"basse",pectoraux:"moyenne",
+              abdominaux:"moyenne",avant_bras:"moyenne"},
+  physique:{masse_grasse_visuelle:"moyen",densite_musculaire:"developpe",repartition_graisse:"mixte"},
+  proportions:{rapport_tronc_jambes:"tronc_long",symetrie_gauche_droite:"symetrique",
+               rapport_epaules_taille:"vtaper_prononce",position_pieds_naturelle:"paralleles"},
+  posture:[],
+  repartition:{pectoraux:"dominant",triceps:"equilibre",mollets:"equilibre",epaules:"equilibre",
+               biceps:"equilibre",quadriceps:"dominant",ischios:"equilibre",dos_largeur:"equilibre",
+               dos_epaisseur:"equilibre",abdos:"equilibre"},
+  confiance:"haute" });
+
+test("deux morphologies opposées produisent des adaptations opposées", () => {
+  const a = _adapt.selectAdaptations(_grandGabarit, { age: 27, sexe: "homme" });
+  const b = _adapt.selectAdaptations(_petitGabarit, { age: 27, sexe: "homme" });
+  assert.ok(a.regles.length >= 8, `grand gabarit : ${a.regles.length} règles`);
+  assert.ok(b.regles.length >= 4, `petit gabarit : ${b.regles.length} règles`);
+  const ids = (r) => new Set(r.regles.map(x => x.id));
+  assert.ok(ids(a).has("femur_long_squat"), "fémur long non détecté");
+  assert.ok(ids(b).has("femur_court_squat"), "fémur court non détecté");
+  // Aucune règle commune sur le squat : l'individualisation est réelle.
+  assert.ok(!ids(b).has("femur_long_squat") && !ids(a).has("femur_court_squat"));
+});
+
+test("l'âge et le sexe déclenchent leurs propres règles", () => {
+  const jeune = _adapt.selectAdaptations(_petitGabarit, { age: 27, sexe: "homme" });
+  const senior = _adapt.selectAdaptations(_petitGabarit, { age: 62, sexe: "femme" });
+  const ids = (r) => new Set(r.regles.map(x => x.id));
+  assert.ok(!ids(jeune).has("age_45_plus"));
+  assert.ok(ids(senior).has("age_45_plus") && ids(senior).has("age_60_plus"));
+  assert.ok(ids(senior).has("femme_laxite") && !ids(jeune).has("femme_laxite"));
+});
+
+test("TOUT exercice recommandé existe au catalogue", () => {
+  const manquants = [];
+  for (const r of _adapt.ADAPTATIONS) {
+    for (const n of r.privilegier || []) {
+      if (!_cat.findInCatalogue(n)) manquants.push(`${r.id} → ${n}`);
+    }
+  }
+  assert.deepEqual(manquants, [], `recommandations introuvables : ${manquants.join(", ")}`);
+});
+
+test("une contre-indication prime sur une recommandation", () => {
+  const { privilegier, eviter } = _adapt.selectAdaptations(_grandGabarit, { age: 27, sexe: "homme" });
+  const bas = eviter.map(e => e.toLowerCase());
+  privilegier.forEach(p =>
+    assert.ok(!bas.includes(p.toLowerCase()), `${p} à la fois conseillé et interdit`));
+});
+
+test("une morphologie non lue ne produit aucune adaptation MORPHO inventée", () => {
+  const vide = { observations: _morpho.validerObservations({ confiance: "faible" }) };
+  // Les règles de terrain (âge, sexe) restent légitimes : elles ne dépendent
+  // pas des photos. Seules les règles morphologiques doivent se taire.
+  const morphoOnly = (p) => _adapt.selectAdaptations(vide, p)
+    .regles.filter(r => !/^age_|^femme_/.test(r.id));
+  assert.deepEqual(morphoOnly({ age: 30, sexe: "homme" }), []);
+  assert.deepEqual(morphoOnly({ age: 70, sexe: "femme" }), []);
+  assert.equal(_adapt.buildAdaptationsBlock(null, {}), "");
+});
+
+test("aucune règle ne confond « indéterminé » avec une observation", () => {
+  // Piège réel : symetrie="indetermine" ≠ "symetrique" déclenchait à tort la
+  // règle d'asymétrie sur une fiche jamais lue.
+  const vide = _morpho.validerObservations({ confiance: "faible" });
+  const valeurs = [
+    ...Object.values(vide.leviers), ...Object.values(vide.insertions),
+    ...Object.values(vide.physique), ...Object.values(vide.proportions),
+    ...Object.values(vide.repartition),
+  ];
+  assert.ok(valeurs.every(v => v === "indetermine"), "fiche de test non vide");
+  const r = _adapt.selectAdaptations({ observations: vide }, { age: 30, sexe: "homme" });
+  assert.equal(r.regles.filter(x => !/^age_|^femme_/.test(x.id)).length, 0);
+});
+
+test("chaque règle est traçable à une section de la base", () => {
+  _adapt.ADAPTATIONS.forEach(r => {
+    assert.ok(r.src && r.src.length > 2, `${r.id} : source manquante`);
+    assert.ok(r.consequence && r.consequence.length > 40, `${r.id} : conséquence trop vague`);
+    assert.equal(typeof r.when, "function");
+  });
+});
+
+// ── Référentiels d'exécution : branches résolues, pas de pseudo-code brut ───
+const _constr = await import("../api/_knowledge/construction.js");
+
+test("la base jambes dépend de la longueur du fémur", () => {
+  const longs = _constr.buildConstructionBlock(_grandGabarit, { pathologies: [] }, 4);
+  const courts = _constr.buildConstructionBlock(_petitGabarit, { pathologies: [] }, 4);
+  assert.match(longs, /hack squat ou la presse 45/i);
+  assert.match(courts, /squat barre est la base légitime/i);
+  // Les deux consignes s'excluent : jamais les deux dans le même programme.
+  assert.ok(!/squat barre est la base légitime/i.test(longs));
+  assert.ok(!/hack squat ou la presse 45/i.test(courts));
+});
+
+test("une épaule pathologique change la base pectoraux", () => {
+  const avec = _constr.buildConstructionBlock(_petitGabarit, { pathologies: ["Conflit épaule"] }, 4);
+  const sans = _constr.buildConstructionBlock(_petitGabarit, { pathologies: [] }, 4);
+  assert.match(avec, /ÉPAULE FRAGILE/);
+  assert.match(avec, /machine convergente/i);
+  assert.ok(!/ÉPAULE FRAGILE/.test(sans));
+});
+
+test("aucun pseudo-code brut ne fuit dans le prompt", () => {
+  const b = _constr.buildConstructionBlock(_grandGabarit, { pathologies: ["Lombalgie"] }, 4);
+  // Le PDF contient "SI x : ... SINON" — ces branches doivent être RÉSOLUES.
+  assert.ok(!/\bSINON\b/.test(b), "pseudo-code SINON présent");
+  assert.ok(!/base = |echauffer\(/.test(b), "pseudo-code non traduit");
+});
+
+test("les cinq groupes sont couverts avec leurs règles propres", () => {
+  const b = _constr.buildConstructionBlock(_grandGabarit, { pathologies: [] }, 4);
+  ["▸ DOS", "▸ PECTORAUX", "▸ JAMBES", "▸ BRAS", "▸ ÉPAULES"].forEach(g =>
+    assert.ok(b.includes(g), `groupe absent : ${g}`));
+  // Deux axes du dos, chefs du triceps, gastro/soléaire : la substance y est.
+  assert.match(b, /LARGEUR.*ÉPAISSEUR|ÉPAISSEUR.*LARGEUR/s);
+  assert.match(b, /gastrocnémien/i);
+  assert.match(b, /chef long/i);
+});
+
+test("les règles de conception chiffrées sont transmises", () => {
+  assert.match(_constr.REGLES_CONCEPTION, /mois 1 → 4/);
+  assert.match(_constr.REGLES_CONCEPTION, /polyarticulaire lourd → polyarticulaire léger → isolation/);
+});
+
 console.log(`\n${n} tests de fumée OK`);
