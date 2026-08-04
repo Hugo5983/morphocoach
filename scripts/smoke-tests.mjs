@@ -987,4 +987,28 @@ test("une expiration déclenche une reprise, pas un échec sec", () => {
   assert.match(src, /même nombre d'exercices/i);
 });
 
+// ── Sortie : pas de champ redondant qui allonge la génération ──────────────
+test("les champs redondants ont disparu du schéma", () => {
+  const src = _fs.readFileSync("api/generate-program.js", "utf8");
+  const schema = src.slice(src.indexOf('"exercices": ['));
+  assert.ok(!/"justification":/.test(schema.slice(0, 900)),
+    "justification encore demandée par exercice");
+  assert.ok(!/"progression_semaine":/.test(schema.slice(0, 900)),
+    "progression_semaine encore demandée (calculée par progressionService)");
+  // tips_coach reste : c'est le seul des trois réellement utile en séance.
+  assert.match(schema.slice(0, 900), /"tips_coach":/);
+});
+
+test("le modèle est averti de ne pas réintroduire ces champs", () => {
+  const src = _fs.readFileSync("api/generate-program.js", "utf8");
+  assert.match(src, /N'ajoute AUCUN champ hors schéma/);
+  assert.match(src, /calculée par l'application à partir des séries réellement validées/);
+});
+
+test("le client reste compatible avec les anciens programmes", () => {
+  const src = _fs.readFileSync("src/services/aiService.js", "utf8");
+  assert.match(src, /justification:\s+ex\.justification/,
+    "les programmes déjà générés perdraient leur justification");
+});
+
 console.log(`\n${n} tests de fumée OK`);
