@@ -6,10 +6,11 @@ import useScrollTop from"../../hooks/useScrollTop.js";
  * Espacement généreux, safe-area iPhone, structure exacte de la maquette.
  */
 
-import { useState, useEffect, useRef, useCallback } from"react";
+import { useState, useEffect, useRef, useCallback, useMemo } from"react";
 import { createPortal }                 from"react-dom";
 import { addXP, XP }                   from"../../services/xpService.js";
 import { saveExoFeedback }             from"../../services/coachBrainService.js";
+import { chargeDepart, getChargeRecommandee } from"../../services/progressionService.js";
 import { syncWorkoutDay, syncExoFeedback } from"../../services/syncService.js";
 import {
   T, F, MON, NUM, GL, CSS, I,
@@ -31,11 +32,27 @@ export default function FocusMode({
 
   const [phase,      setPhase]     = useState('set');
   const [setIdx,     setSetIdx]    = useState(0);
-  const [kg,         setKg]        = useState(() => parseFloat(ex?.charge) || 60);
+  // Charge de départ : recommandation calculée sur les séries validées si elle
+  // existe, sinon la prescription du programme. parseFloat("70-75% 1RM")
+  // renvoyait 70 → l'app proposait 70 kg pour une consigne en pourcentage.
+  const [kg, setKg] = useState(() => chargeDepart(ex, prog?.objectif).kg ?? 20);
   const [reps,       setReps]      = useState(() => parseInt(ex?.reps)    || 10);
   const [loggedSets, setLoggedSets]= useState([]);
   const [elapsed,  setElapsed]  = useState(0);  // chrono séance globale
   const [rest,     setRest]     = useState(REST_DEFAULT);  // countdown repos
+
+  // Recommandation de charge pour l'exercice courant (déterministe, pas d'IA).
+  const reco = useMemo(
+    () => getChargeRecommandee(ex?.nom, { objectif: prog?.objectif, repsPrescrites: ex?.reps }),
+    [ex?.nom, ex?.reps, prog?.objectif]
+  );
+
+  // À chaque changement d'exercice, repartir de la charge recommandée.
+  useEffect(() => {
+    const d = chargeDepart(ex, prog?.objectif);
+    if (d.kg != null) setKg(d.kg);
+    setReps(parseInt(ex?.reps) || 10);
+  }, [exIdx]);
 
   // Toggles UI (Guide / Tip / Historique)
   const [showGuide, setShowGuide] = useState(false);
@@ -295,6 +312,34 @@ export default function FocusMode({
 ) : (
                 <div style={{ fontFamily:F, fontSize:13, color:T.t3, fontWeight:500 }}>
                   Pas encore enregistrée
+                </div>
+)}
+              {/* Recommandation de charge — calculée sur les séries validées,
+                  pas par l'IA : elle s'applique dès la 2e séance. */}
+              {reco.available && (
+                <div style={{ marginTop:8, paddingTop:8,
+                              borderTop:'1px solid rgba(255,255,255,0.08)' }}>
+                  <div style={{ display:'flex', alignItems:'center', gap:6, marginBottom:3 }}>
+                    <span style={{ fontFamily:MON, fontSize:10, letterSpacing:'0.1em',
+                                   textTransform:'uppercase', fontWeight:700,
+                                   color: reco.action==='augmenter' ? C.green
+                                        : reco.action==='reduire'   ? C.amber || '#F5A100' : T.t3 }}>
+                      {reco.action==='augmenter' ? 'Objectif du jour'
+                       : reco.action==='reduire' ? 'Charge à alléger' : 'On consolide'}
+                    </span>
+                    <span style={{ fontFamily:MON, fontSize:13, fontWeight:800, color:T.t1 }}>
+                      {reco.kg} kg
+                    </span>
+                    {reco.delta !== 0 && (
+                      <span style={{ fontFamily:MON, fontSize:11, fontWeight:700,
+                                     color: reco.delta>0 ? C.green : (C.amber||'#F5A100') }}>
+                        {reco.delta>0?'+':''}{reco.delta}
+                      </span>
+                    )}
+                  </div>
+                  <div style={{ fontFamily:F, fontSize:11.5, color:T.t3, lineHeight:1.45 }}>
+                    {reco.raison}
+                  </div>
                 </div>
 )}
             </div>

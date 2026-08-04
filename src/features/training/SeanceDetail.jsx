@@ -174,6 +174,20 @@ export default function TodayView(props) {
               </div>
             </div>
 
+            {/* Échauffement spécifique — première chose à lire avant de charger */}
+            {!todaySeance.complete && todaySeance.echauffement && (
+              <div style={{ background:"rgba(245,161,0,0.08)", border:"1px solid rgba(245,161,0,0.25)",
+                            borderRadius:16, padding:"14px 16px", marginBottom:12 }}>
+                <div style={{ fontSize:10.5, fontWeight:800, letterSpacing:"0.1em",
+                              color:"#B37400", marginBottom:5 }}>
+                  ÉCHAUFFEMENT AVANT DE CHARGER
+                </div>
+                <div style={{ fontSize:13, fontWeight:500, color:C.t1, lineHeight:1.5 }}>
+                  {todaySeance.echauffement}
+                </div>
+              </div>
+            )}
+
             {/* Checklist exercices */}
             {!todaySeance.complete && (
               <div style={{ background: C.s1, border:`1px solid ${C.bd}`, borderRadius: 20, padding:"4px 16px", marginBottom: 12 }}>
