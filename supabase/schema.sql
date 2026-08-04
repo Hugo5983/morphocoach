@@ -129,3 +129,70 @@ drop policy if exists "cycle_outcomes: lecture par le propriétaire" on public.c
 create policy "cycle_outcomes: lecture par le propriétaire"
   on public.cycle_outcomes for select
   using (auth.uid() = user_id);
+
+
+-- ─── 6bis. CYCLE_OUTCOMES — colonne ajoutée après l'audit ──────────────────
+-- Charges ATTEINTES en fin de cycle, écrites par syncCycleOutcome(prog, charges).
+-- Sans elle, l'insertion perd silencieusement le champ et le cycle suivant ne
+-- peut pas repartir du meilleur niveau atteint.
+alter table public.cycle_outcomes
+  add column if not exists charges_finales jsonb;
+
+
+-- ─── 7. GENERATION_JOBS (état des générations asynchrones) ─────────────────
+-- Indispensable au fonctionnement de /api/generate-program-start.
+-- Sans cette table, la route répond 501 et le client bascule sur la génération
+-- SYNCHRONE, que Safari coupe à ~60 s : c'est le « Délai dépassé ».
+--
+-- Aucune policy RLS : seule la service role (serveur) lit et écrit. Le client
+-- n'y accède jamais en direct, il passe par /api/generate-program-status avec
+-- le couple { jobId, token }.
+create table if not exists public.generation_jobs (
+  id            uuid primary key default gen_random_uuid(),
+  token         text        not null,
+  user_id       text,
+  status        text        not null default 'processing',  -- processing | done | error
+  result        jsonb,
+  error         text,
+  error_status  int,
+  created_at    timestamptz not null default now(),
+  updated_at    timestamptz not null default now()
+);
+create index if not exists genjobs_status_idx on public.generation_jobs(status, created_at desc);
+create index if not exists genjobs_user_idx   on public.generation_jobs(user_id, created_at desc);
+alter table public.generation_jobs enable row level security;
+-- Volontairement AUCUNE policy : accès réservé à la service role.
+
+
+-- ─── 8. EXERCICES_PROPOSES (file de revue des exercices hors catalogue) ────
+-- Quand l'IA nomme un exercice absent du catalogue, il est conservé dans le
+-- programme (avec un avertissement) et journalisé ici pour revue.
+--
+-- Pour consulter la file :
+--   Supabase → Table Editor → exercices_proposes → trier par occurrences ↓
+-- Les noms qui reviennent le plus sont ceux qui manquent réellement.
+--
+-- Facultative : si elle n'existe pas, la journalisation est ignorée sans erreur.
+create table if not exists public.exercices_proposes (
+  id             uuid primary key default gen_random_uuid(),
+  nom            text        not null,
+  nom_normalise  text        not null unique,   -- dédoublonnage (accents/casse retirés)
+  occurrences    int         not null default 1,
+  contexte       jsonb,                          -- { niveau, objectif, materiel }
+  statut         text        not null default 'a_revoir',  -- a_revoir | accepte | refuse
+  premiere_vue   timestamptz not null default now(),
+  derniere_vue   timestamptz not null default now()
+);
+create index if not exists exprop_statut_idx on public.exercices_proposes(statut, occurrences desc);
+alter table public.exercices_proposes enable row level security;
+-- Volontairement AUCUNE policy : accès réservé à la service role.
+
+
+-- ─── Vérification finale ───────────────────────────────────────────────────
+-- Doit renvoyer 8 lignes.
+select table_name
+from information_schema.tables
+where table_schema = 'public'
+  and table_name in ('entitlements','usage_counters','generation_events','morpho_events',
+                     'workout_sync','cycle_outcomes','generation_jobs','exercices_proposes')
+order by table_name;
