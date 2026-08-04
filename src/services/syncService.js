@@ -65,12 +65,16 @@ export function syncExoFeedback(exNom, fb) {
  * C'est la future VARIABLE CIBLE des modèles (programme → résultat).
  * @param {object} prog - programme archivé
  */
-export function syncCycleOutcome(prog) {
+export function syncCycleOutcome(prog, charges = null) {
   if (!prog) return Promise.resolve(false);
   const jours = Array.isArray(prog.jours) ? prog.jours : [];
   const prevu = jours.length;
   const fait  = jours.filter((j) => j.complete).length;
   return push("cycle_outcomes", {
+    // Charges ATTEINTES en fin de cycle : c'est le point de départ du cycle
+    // suivant. Sans elles, le cycle 2 repartait des charges de la dernière
+    // semaine au lieu du meilleur niveau atteint.
+    charges_finales: charges || null,
     cycle_numero: prog.numero || null,
     titre: prog.titre || null,
     objectif: prog.objectif || null,

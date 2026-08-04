@@ -198,8 +198,10 @@ export function buildProgramFromAI(parsed, { form, cycles, ficheMorpho = null })
         charge:               ex.charge ||"",
         methode:              ex.methode ||"classique",
         tips_coach:           ex.tips_coach || ex.morpho_tip ||"",
+        // Conservés pour les programmes générés AVANT leur retrait du schéma.
+        // La justification vit désormais dans reflexion, et la progression de
+        // charge est calculée par progressionService sur les séries validées.
         justification:        ex.justification || ex.technique ||"",
-        progression_semaine:  ex.progression_semaine ||"",
         historique:           /** @type {import('../types').EntreeHistorique[]} */ ([]),
         note:"",
       })),

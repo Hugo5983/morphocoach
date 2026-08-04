@@ -15,6 +15,7 @@
 //   morpho_motivation_log{ "YYYY-MM-DD": 1..5 }
 
 import { EX } from "../data/exercises.js";
+import { groupeMusculaire } from "./muscleGroups.js";
 
 // ─── Utilitaires ─────────────────────────────────────────────────────────────
 export function readJSON(key, fallback) {
@@ -51,6 +52,15 @@ export function exerciseMuscleMap() {
     (list || []).forEach(ex => { if (ex?.n) _exMap[ex.n] = groupe; })
   );
   return _exMap;
+}
+
+/**
+ * Groupe d'un exercice, y compris hors catalogue client. Le volume par muscle
+ * était faux sur 654 exercices : tous comptés dans "Autre", donc jamais
+ * comparés à leurs seuils MEV/MAV/MRV.
+ */
+function groupeDeLExercice(nom) {
+  return groupeMusculaire(nom);
 }
 
 // ─── Seuils de volume hebdomadaire par groupe (séries dures / semaine) ───────
@@ -93,7 +103,7 @@ export function getWeeklyVolume() {
     if (!day?.sets?.length) return;
     sessions += 1;
     day.sets.forEach(s => {
-      const groupe = map[s.exNom] || "Autre";
+      const groupe = groupeDeLExercice(s.exNom);
       if (!byMuscle[groupe]) byMuscle[groupe] = { sets: 0, tonnage: 0 };
       byMuscle[groupe].sets += 1;
       byMuscle[groupe].tonnage += (Number(s.kg) || 0) * (Number(s.reps) || 0);
