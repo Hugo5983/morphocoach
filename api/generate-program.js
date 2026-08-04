@@ -233,6 +233,26 @@ ${decisions.map(d => `• ${d}`).join("\n")}
 
 Justifie explicitement dans "reflexion.diagnostic" comment tu en as tenu compte.` : "";
 
+  // ── Charges réelles → prescription ABSOLUE ──
+  // Le dossier contient les charges réellement soulevées, mais rien ne disait
+  // au modèle de s'en servir : il prescrivait des "70-75 % du 1RM estimé" que
+  // l'athlète devait convertir lui-même. Un coach donne des kilos.
+  const chargesCo = dossier?.charges_actuelles || {};
+  const nbCharges = Object.keys(chargesCo).filter(k => k !== "note").length;
+  const chargesBlock = nbCharges ? `
+═══ CHARGES RÉELLES DE L'ATHLÈTE — PRESCRIRE EN KILOS ═══
+Ces charges viennent de ses séances validées, ce ne sont pas des estimations :
+${Object.entries(chargesCo).filter(([k]) => k !== "note").map(([n, v]) => `- ${n} : ${v}`).join("\n")}
+
+RÈGLE : pour tout exercice de cette liste (ou une variante proche), le champ
+"charge" doit être un NOMBRE EN KILOS, pas un pourcentage. Pars de la charge
+connue et prescris l'incrément : "32 kg (semaine 1-2) → 34 kg (semaine 3-4)".
+Progression réaliste : +2,5 % à +5 % par palier de 2 semaines sur le haut du
+corps, +5 % à +10 % sur le bas du corps.
+Pour un exercice NOUVEAU ou absent de la liste, indique un % du 1RM estimé et
+précise dans "tips_coach" comment trouver la charge de départ à la première séance.
+Ne prescris JAMAIS un pourcentage sur un exercice dont tu connais la charge réelle.` : "";
+
   const sommeilDegrade = /insuffisant/i.test(dossier?.recuperation?.note || "");
   const recupBlock = sommeilDegrade
     ? `\n═══ RÉCUPÉRATION DÉGRADÉE (donnée réelle du dossier) ═══
@@ -317,6 +337,8 @@ RÈGLE FONDAMENTALE : Programme = réflexion(dossier). Chaque exercice choisi do
 
 ${candidatsBlock}
 ${reeducBlock}${metierBlock}
+
+${chargesBlock}
 
 ═══ PROFIL ATHLÈTE ═══
 Nom: ${form.prenom || "Athlète"} | Âge: ${form.age} ans | Sexe: ${form.sexe}
@@ -416,11 +438,12 @@ Le champ "progression_semaine" explique comment progresser la SEMAINE SUIVANTE s
 "intensite": "leger|modere|lourd|intense",
 "type_seance": "push|pull|legs|corps_entier|upper|lower",
 "note": "contexte de la séance, placement dans la semaine",
+"echauffement": "Échauffement SPÉCIFIQUE à cette séance : articulations et muscles assistants à préparer, 5-10 min. Ex. dos → coudes/biceps/avant-bras/infra-épineux. Jamais générique.",
 "exercices": [
           {
 "nom": "Nom complet de l'exercice",
 "series": "4", "reps": "8-10", "rpe": "7-8", "rir": "2-3",
-"tempo": "3-1-2-0", "repos": "90s", "charge": "70-75% 1RM estimé",
+"tempo": "3-1-2-0", "repos": "90s", "charge": "EN KILOS si l'exercice figure dans charges_actuelles (ex: 32 kg), sinon en % du 1RM estimé",
 "methode": "classique|superset_avec_suivant|drop_set|rest_pause|pyramidal|cluster",
 "tips_coach": "Positionnement précis basé sur la morphologie de l'athlète",
 "justification": "Pourquoi cet exercice pour CE profil (référence à la réflexion)",
@@ -430,8 +453,9 @@ Le champ "progression_semaine" explique comment progresser la SEMAINE SUIVANTE s
       }
     ],
 "progression": {
-"semaines_1_2": "instruction", "semaines_3_4": "instruction",
-"semaine_5": "instruction", "semaine_deload": "instruction"
+"semaines_1_2": "instruction CHIFFRÉE (charges et/ou répétitions de départ)",
+"semaines_3_4": "instruction CHIFFRÉE (incrément précis depuis la semaine 1-2)",
+"semaine_5": "instruction CHIFFRÉE", "semaine_deload": "instruction CHIFFRÉE (% de réduction)"
     }
   },
 "correction": {
@@ -565,17 +589,53 @@ export async function runGeneration({ form, dossier, ficheMorpho, access, budget
   // large doit couvrir ce cas réel, sinon c'est notre propre AbortController
   // qui tue une génération légitime (vu en production : abort à 120 s pile).
   const wide  = budgetMs >= 200_000;
-  const CAP1  = wide ? 240_000 : 70_000;   // appel principal
+  // Le cap du premier appel est dérivé du budget et laisse une RÉSERVE : un
+  // dépassement ne doit pas condamner la génération. Vu en production : 4 min
+  // d'attente pour « Délai dépassé » et zéro programme, crédit consommé.
+  // On garde une RÉSERVE fixe de 70 s pour la reprise, et on donne tout le
+  // reste au premier appel (plafonné à 300 s). Un ratio donnait 154 s sur un
+  // budget de 280 s — trop court, la reprise se déclenchait pour rien.
+  const RESERVE = 70_000;
+  const CAP1  = wide ? Math.min(300_000, budgetMs - RESERVE) : 70_000;
   const GATE  = wide ?  90_000 : 35_000;   // temps restant minimal pour tenter la correction
   const CAP2  = wide ? 180_000 : 60_000;   // appel correctif
   const MARGE = wide ?  10_000 :  5_000;   // marge de sérialisation
 
+  // Consigne de concision : réduit la VERBOSITÉ (commentaires, justifications),
+  // jamais le contenu du programme. Sert uniquement à la reprise.
+  const CONCISION = `\n\n═══ CONTRAINTE DE FORMAT — RÉPONSE PRÉCÉDENTE TROP LONGUE ═══
+Le programme doit être COMPLET et de qualité identique : même nombre de séances,
+même nombre d'exercices, mêmes charges, mêmes tempos, même prescription.
+En revanche, RESSERRE la rédaction : "tips_coach" et "justification" en une
+phrase courte chacun, "progression_semaine" en une ligne, et les champs de
+"reflexion" en 2 phrases maximum. Aucune redondance entre les champs.`;
+
+  /**
+   * Appel principal avec reprise. Une expiration ne doit pas se solder par
+   * l'absence totale de programme quand il reste du temps au budget.
+   */
+  async function appelPrincipal() {
+    try {
+      return await callAnthropic({
+        model: MODEL, maxTokens: 16000, system,
+        content: [{ type: "text", text: prompt }],
+        timeoutMs: Math.min(CAP1, remaining()),
+      });
+    } catch (e) {
+      const expire = e.status === 504 || e.truncated;
+      const reste = remaining() - MARGE;
+      if (!expire || reste < 55_000) throw e;
+      console.warn(`[generate-program] 1er appel expiré, reprise concise (${Math.round(reste / 1000)}s restantes)`);
+      return await callAnthropic({
+        model: MODEL, maxTokens: 12000, system,
+        content: [{ type: "text", text: prompt + CONCISION }],
+        timeoutMs: reste,
+      });
+    }
+  }
+
   try {
-    let raw = await callAnthropic({
-      model: MODEL, maxTokens: 16000, system,
-      content: [{ type: "text", text: prompt }],
-      timeoutMs: Math.min(CAP1, remaining()),
-    });
+    let raw = await appelPrincipal();
     let parsed = parseJSON(raw);
     let problems = validateProgramme(parsed, { dossier, fiche, materiel: form.materiel, joursDemandes: normalizeJours(form.jours) });
 
