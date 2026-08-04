@@ -30,6 +30,9 @@ import { buildTechniquesBlock } from "./_knowledge/techniques.js";
 import { PUISSANCE_C8, COMBAT_C3, isCombat } from "./_knowledge/periodisation_combat.js";
 import { selectCandidats, findInCatalogue, matsAutorises, correctifsPourPathologies }
   from "./_knowledge/exercices_catalogue.js";
+import { buildPrescriptionBlock, getPrescription, calibrerSeance } from "./_knowledge/prescription.js";
+import { buildAdaptationsBlock } from "./_knowledge/adaptations.js";
+import { buildConstructionBlock } from "./_knowledge/construction.js";
 
 export const config = { api: { bodyParser: { sizeLimit: "4mb" } } };
 
@@ -102,6 +105,20 @@ function buildServerPrompt({ form, dossier, fiche, directives, cycleNum, candida
     ? normalizeJours(form.jours) : ["Lundi", "Mercredi", "Vendredi"];
   // Durée cible : bornée pour rester réaliste même si la valeur arrive corrompue.
   const dureeCible = Math.min(120, Math.max(30, parseInt(form.dureeSeance) || 60));
+  // Prescription différenciée par objectif (charge, reps, tempo, repos) —
+  // sans elle, "force" et "hypertrophie" produisaient des programmes jumeaux.
+  const prescriptionBlock = buildPrescriptionBlock(form.objectif);
+  // Nombre d'exercices compatible AVEC les temps de repos de l'objectif.
+  const calib = calibrerSeance(form.objectif, dureeCible);
+  // Adaptations individuelles : règles de la base MorphoCoach déclenchées par
+  // les traits RÉELLEMENT observés + âge + sexe + pathologies. Vide si la
+  // morphologie est neutre — on n'invente jamais de contrainte.
+  const adaptationsBlock = buildAdaptationsBlock(fiche, {
+    age: form.age, sexe: form.sexe, pathologies: form.pathologies,
+  });
+  // Référentiels d'exécution par groupe, branches morphologiques résolues.
+  const constructionBlock = buildConstructionBlock(fiche,
+    { pathologies: form.pathologies, niveau: form.niveau }, joursPlein.length);
   const volParams  = getVolumeParams(form.niveau, form.objectif);
   const mesoLogic  = getMesocycleLogic(form.niveau, form.objectif, cycleNum);
   const pathoRules = buildPathoRules(form.pathologies);
@@ -269,6 +286,12 @@ ${form.sport ? `Sport pratiqué: ${form.sport} — intégrer des exercices de tr
 Pathologies déclarées: ${(form.pathologies || []).filter(p => p !== "Aucune").join(", ") || "aucune"}
 Numéro de cycle: ${cycleNum}
 
+${prescriptionBlock}
+
+${adaptationsBlock}
+
+${constructionBlock}
+
 ═══ PARAMÈTRES DE VOLUME (MEV → MRV) ═══
 Niveau ${form.niveau}: ${volParams.series_min}–${volParams.series_max} séries de travail par exercice
 RPE cible: ${volParams.rpe_bas}–${volParams.rpe_haut} | RIR: ${volParams.rir}
@@ -300,16 +323,17 @@ Réponds UNIQUEMENT avec le JSON ci-dessous. Aucun texte avant ou après. Aucun 
 ⛔ RÈGLE ABSOLUE — NOMBRE DE SÉANCES ⛔
 Le tableau "seances" doit contenir EXACTEMENT ${joursPlein.length} séances, une par jour demandé :
 ${joursPlein.map((j, i) => `  ${i + 1}. ${j}`).join("\n")}
-Chaque séance porte le champ "jour" correspondant, avec AU MINIMUM 4 exercices.
+Chaque séance porte le champ "jour" correspondant, avec AU MINIMUM 3 exercices
+(le nombre exact est fixé par la durée et l'objectif, voir ci-dessous).
 
 ⏱ DURÉE CIBLE PAR SÉANCE : ${dureeCible} MINUTES
 L'application calcule la durée affichée ainsi :
   durée = Σ (séries × (repos_en_secondes + 60))
-Dimensionne CHAQUE séance pour tomber entre ${Math.round(dureeCible * 0.85)} et ${Math.round(dureeCible * 1.15)} minutes
-avec cette formule exacte. Repère : à 4 séries et 90 s de repos, un exercice coûte
-10 minutes — soit environ ${Math.max(4, Math.round(dureeCible / 10))} exercices pour ${dureeCible} minutes.
-Ajuste le NOMBRE d'exercices et les temps de repos, jamais la qualité du contenu.
-Une séance qui déborde largement de la cible ne sera pas faite : c'est une contrainte réelle, pas indicative.
+Avec les temps de repos qu'impose l'objectif, un exercice coûte environ
+${calib.coutExo} minutes → vise ${calib.min} à ${calib.max} exercices par séance.
+Ajuste le NOMBRE d'exercices, jamais les temps de repos de la prescription :
+c'est le repos qui définit l'objectif, pas l'inverse.${calib.alerte ? `
+⚠ ${calib.alerte}` : ""}
 Un programme incomplet est un échec total : ne t'arrête jamais avant d'avoir écrit les ${joursPlein.length} séances.
 Le schéma ci-dessous ne montre QU'UN SEUL exemple de séance — tu dois en produire ${joursPlein.length}.
 
