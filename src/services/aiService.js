@@ -166,6 +166,10 @@ export function buildProgramFromAI(parsed, { form, cycles, ficheMorpho = null })
 
     numero:          (cycles?.length || 0) + 1,
     objectif:        /** @type {import('../types').ObjectifKey} */ (form.objectif ||"sante"),
+    // Nécessaires à la substitution en séance : sans eux, les variantes
+    // proposées ignoreraient le matériel réel et le niveau de l'athlète.
+    materiel:        form.materiel || [],
+    niveau:          form.niveau ||"intermediaire",
     nutrition:       parsed.nutrition || {},
     dateDebut:       new Date().toLocaleDateString("fr-FR"),
     duree_semaines:  parsed.programme.duree_semaines || mesocycle.duree_semaines || 6,

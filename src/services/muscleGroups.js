@@ -9,7 +9,7 @@
 // On n'embarque pas les 122 ko du catalogue serveur dans le bundle client.
 
 import { EX } from "../data/exercises.js";
-import { EXERCICE_GROUPE } from "../data/muscleMap.js";
+import { EXERCICE_GROUPE } from "../data/catalogue.js";
 
 /** Mots-clés → groupe. Ordre important : le plus spécifique en premier. */
 const INDICES = [

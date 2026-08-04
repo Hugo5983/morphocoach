@@ -52,6 +52,8 @@ function I({ n, sz=18, c='currentColor', s=1.7 }) {
     spark: <><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/><path d="M6 6l2 2M18 18l-2-2M6 18l2-2M18 6l-2 2"/><circle cx="12" cy="12" r="2.5"/></>,
     minus: <path d="M5 12h14"/>,
     plus:  <path d="M12 5v14M5 12h14"/>,
+    // Deux flèches opposées : le geste de "remplacer par une variante".
+    swap:'M7 4 3.5 7.5 7 11M3.5 7.5H16a4.5 4.5 0 0 1 0 9h-1M17 20l3.5-3.5L17 13',
     skip:  <><path d="M5 5v14l9-7z"/><path d="M19 5v14"/></>,
     play:  <path d="M8 5v14l11-7z" fill="currentColor" stroke="none"/>,
     bulb:  <><path d="M9 18h6M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.2 1 2v.3h6V17c0-.7.4-1.5 1-2A7 7 0 0 0 12 2z"/></>,

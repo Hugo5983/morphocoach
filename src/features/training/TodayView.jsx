@@ -183,6 +183,7 @@ export default function TodayView(props) {
   if (focusActive && todaySeance) {
     return (
       <FocusMode
+        semaineCycle= {(props.semC || 0) + 1}
         seance      = {todaySeance}
         checkedEx   = {checkedEx}
         toggleCheck = {toggleCheck}

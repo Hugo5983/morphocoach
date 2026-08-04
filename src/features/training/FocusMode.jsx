@@ -11,6 +11,7 @@ import { createPortal }                 from"react-dom";
 import { addXP, XP }                   from"../../services/xpService.js";
 import { saveExoFeedback }             from"../../services/coachBrainService.js";
 import { chargeDepart, getChargeRecommandee } from"../../services/progressionService.js";
+import { getVariantes, evaluerDouleur } from"../../services/substitutionService.js";
 import { syncWorkoutDay, syncExoFeedback } from"../../services/syncService.js";
 import {
   T, F, MON, NUM, GL, CSS, I,
@@ -21,13 +22,23 @@ const REST_DEFAULT = 90;
 
 // ── FocusMode — Portal vers document.body ────────────────────────────────────
 export default function FocusMode({
-  seance, checkedEx, toggleCheck,
+  seance, checkedEx, toggleCheck, semaineCycle,
   prog, setProg, push, C, INT, EX, todayKey, premium, onClose,
 }) {
   useScrollTop();
+  const semaine    = Number(semaineCycle) || 1;   // semaine du mésocycle en cours
   const exercices  = seance?.exercices || [];
   const [exIdx,  setExIdx] = useState(0);
-  const ex        = exercices[exIdx] || null;
+  // Substitution valable pour CETTE séance seulement : { [index]: {nom,groupe,mat} }
+  const [substitue, setSubstitue] = useState({});
+  const [sheetVar,  setSheetVar]  = useState(false);
+  const [verdict,   setVerdict]   = useState(null);
+  const exBase    = exercices[exIdx] || null;
+  // L'exercice courant est le substitut s'il y en a un : tout le reste de la
+  // séance (charge, historique, feedback) doit porter sur le VRAI mouvement fait.
+  const ex        = substitue[exIdx]
+    ? { ...exBase, nom: substitue[exIdx].nom, _substitue: true }
+    : exBase;
   const totalSets = ex ? (parseInt(ex.series) || 4) : 4;
 
   const [phase,      setPhase]     = useState('set');
@@ -107,9 +118,45 @@ export default function FocusMode({
 
   const handleFeedback = useCallback((fb) => {
     if (!ex?.nom) return;
+    // Évaluation AVANT enregistrement : sinon le feedback du jour entrerait
+    // dans l'historique auquel on le compare, et « aggravation » ne serait
+    // jamais détectée.
+    if (typeof fb?.pain === "number" && fb.pain > 0) {
+      setVerdict(evaluerDouleur(ex.nom, fb.pain, {
+        semaine,
+        chargeActuelle: kg,
+      }));
+    }
     saveExoFeedback(ex.nom, fb);
     syncExoFeedback(ex.nom, fb);                  // journal Supabase — silencieux
-  }, [ex?.nom]);
+  }, [ex?.nom, kg, semaine]);
+
+  // Variantes du mouvement courant : même groupe, matériel disponible,
+  // contre-indications morpho exclues, exercices déjà au programme écartés.
+  const variantes = useMemo(() => getVariantes(ex?.nom, {
+    materiel:  prog?.materiel || [],
+    niveau:    prog?.niveau || "intermediaire",
+    exclure:   exercices.map(e => e?.nom).filter(Boolean),
+    interdits: prog?.analyse?.exercices_interdits || [],
+    correctifsOK: verdict?.action === "stop",
+    max: 4,
+  }), [ex?.nom, prog?.materiel, prog?.niveau, verdict?.action]);
+
+  /** Remplace l'exercice courant pour cette séance et repart à la série 1. */
+  const remplacerPar = useCallback((v) => {
+    setSubstitue(s => ({ ...s, [exIdx]: { nom: v.n, groupe: v.groupe, mat: v.mat } }));
+    setSheetVar(false);
+    setVerdict(null);
+    setLoggedSets([]);
+    setSetIdx(0);
+    setPhase('set');
+  }, [exIdx]);
+
+  /** Applique la charge allégée proposée par l'évaluation de la douleur. */
+  const appliquerAllegement = useCallback(() => {
+    if (verdict?.chargeSuggeree) setKg(verdict.chargeSuggeree);
+    setVerdict(null);
+  }, [verdict]);
 
   function nextExercise() {
     const n = exIdx + 1;
@@ -232,8 +279,27 @@ export default function FocusMode({
 
         {/* ── Barre d'actions rapides : Guide · Tip coach · Historique ── */}
         {phase ==='set' && (
-          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr',
+          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr 1fr',
                         gap:8, marginTop:16 }}>
+            {/* Variante — machine occupée, matériel absent, ou simple envie de
+                changer. Aucun appel IA : tout vient du catalogue local. */}
+            <button className="fm-tap" onClick={() => setSheetVar(true)}
+              disabled={!variantes.length}
+              style={{ background:T.surf, border:`1px solid ${T.bd}`,
+                       boxShadow: C.shadow, opacity: variantes.length ? 1 : .4,
+                       padding:'12px 8px', borderRadius:16,
+                       display:'flex', flexDirection:'column', alignItems:'center',
+                       gap:8, cursor: variantes.length ? 'pointer' : 'default' }}>
+              <span style={{ width:32, height:32, borderRadius:12,
+                             background:T.acSoft, color:T.ac,
+                             display:'grid', placeItems:'center' }}>
+                <I n="swap" sz={16}/>
+              </span>
+              <span style={{ fontFamily:F, fontSize:13, fontWeight:600, color:T.t1 }}>
+                Variante
+              </span>
+            </button>
+
             <button className="fm-tap" onClick={() => setShowGuide(true)}
               style={{ background:T.surf, border:`1px solid ${T.bd}`,
                        boxShadow: C.shadow,
@@ -314,6 +380,14 @@ export default function FocusMode({
                   Pas encore enregistrée
                 </div>
 )}
+              {/* Substitution active pour cette séance */}
+              {ex?._substitue && (
+                <div style={{ marginTop:8, fontFamily:F, fontSize:11.5, fontWeight:600,
+                              color:C.amber || '#F5A100' }}>
+                  Remplace « {exBase?.nom} » pour cette séance
+                </div>
+              )}
+
               {/* Recommandation de charge — calculée sur les séries validées,
                   pas par l'IA : elle s'applique dès la 2e séance. */}
               {reco.available && (
@@ -421,6 +495,104 @@ export default function FocusMode({
           premium={premium}
         />
 )}
+
+      {/* ── Verdict douleur — réponse graduée, jamais binaire ── */}
+      {verdict && verdict.titre && (
+        <div style={{ position:'absolute', inset:0, zIndex:70,
+                      background:'rgba(16,19,24,0.55)',
+                      backdropFilter:'blur(8px)', WebkitBackdropFilter:'blur(8px)',
+                      display:'flex', alignItems:'flex-end', justifyContent:'center',
+                      animation:'fm-fadeUp .25s ease both' }}>
+          <div style={{ width:'100%', maxWidth:460, background:T.surf,
+                        borderRadius:'24px 24px 0 0', padding:'22px 20px 26px',
+                        borderTop:`3px solid ${verdict.severite==='critique' ? C.red
+                                   : verdict.severite==='attention' ? (C.amber||'#F5A100') : T.ac}` }}>
+            <div style={{ fontFamily:MON, fontSize:10.5, letterSpacing:'0.1em',
+                          textTransform:'uppercase', fontWeight:700, marginBottom:6,
+                          color: verdict.severite==='critique' ? C.red
+                               : verdict.severite==='attention' ? (C.amber||'#F5A100') : T.t3 }}>
+              {verdict.severite==='critique' ? 'Douleur vive'
+               : verdict.tendance==='aggravation' ? 'La gêne augmente' : 'Ressenti signalé'}
+            </div>
+            <div style={{ fontFamily:F, fontSize:19, fontWeight:800, color:T.t1,
+                          lineHeight:1.25, marginBottom:10 }}>
+              {verdict.titre}
+            </div>
+            <div style={{ fontFamily:F, fontSize:13.5, fontWeight:500, color:T.t2,
+                          lineHeight:1.6, marginBottom:18 }}>
+              {verdict.message}
+            </div>
+
+            <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
+              {verdict.chargeSuggeree && (
+                <button onClick={appliquerAllegement}
+                  style={{ width:'100%', padding:14, borderRadius:14, border:'none',
+                           background:T.ac, color:'#FFF', cursor:'pointer',
+                           fontFamily:F, fontSize:15, fontWeight:800 }}>
+                  Passer à {verdict.chargeSuggeree} kg
+                </button>
+              )}
+              {verdict.proposerVariante && variantes.length > 0 && (
+                <button onClick={() => { setVerdict(null); setSheetVar(true); }}
+                  style={{ width:'100%', padding:14, borderRadius:14,
+                           border:`1px solid ${T.bd}`, background:T.surfFlat||T.surf,
+                           color:T.t1, cursor:'pointer',
+                           fontFamily:F, fontSize:15, fontWeight:700 }}>
+                  Choisir un exercice de remplacement
+                </button>
+              )}
+              <button onClick={() => setVerdict(null)}
+                style={{ width:'100%', padding:12, borderRadius:14, border:'none',
+                         background:'transparent', color:T.t3, cursor:'pointer',
+                         fontFamily:F, fontSize:13.5, fontWeight:600 }}>
+                {verdict.action === 'stop' ? 'Fermer' : 'Continuer sans changer'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Feuille variantes ── */}
+      {sheetVar && (
+        <div onClick={() => setSheetVar(false)}
+          style={{ position:'absolute', inset:0, zIndex:65,
+                   background:'rgba(16,19,24,0.5)',
+                   backdropFilter:'blur(8px)', WebkitBackdropFilter:'blur(8px)',
+                   display:'flex', alignItems:'flex-end', justifyContent:'center',
+                   animation:'fm-fadeUp .25s ease both' }}>
+          <div onClick={e => e.stopPropagation()}
+            style={{ width:'100%', maxWidth:460, background:T.surf,
+                     borderRadius:'24px 24px 0 0', padding:'20px 20px 26px' }}>
+            <div style={{ width:38, height:5, borderRadius:99, background:T.bd,
+                          margin:'0 auto 16px' }}/>
+            <div style={{ fontFamily:F, fontSize:18, fontWeight:800, color:T.t1,
+                          marginBottom:4 }}>
+              Remplacer cet exercice
+            </div>
+            <div style={{ fontFamily:F, fontSize:12.5, color:T.t3, lineHeight:1.5,
+                          marginBottom:16 }}>
+              Même groupe musculaire, matériel dont tu disposes, contre-indications
+              écartées. Le remplacement ne vaut que pour cette séance.
+            </div>
+            <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
+              {variantes.map(v => (
+                <button key={v.n} onClick={() => remplacerPar(v)}
+                  style={{ width:'100%', textAlign:'left', padding:'13px 15px',
+                           borderRadius:14, border:`1px solid ${T.bd}`,
+                           background:T.surfFlat||'transparent', cursor:'pointer' }}>
+                  <div style={{ fontFamily:F, fontSize:14.5, fontWeight:700, color:T.t1 }}>
+                    {v.n}
+                  </div>
+                  <div style={{ fontFamily:F, fontSize:12, fontWeight:500, color:T.t3,
+                                marginTop:2 }}>
+                    {v.raison}
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ── Modale Guide vidéo / instructions ── */}
       {showGuide && (

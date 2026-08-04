@@ -1011,4 +1011,97 @@ test("le client reste compatible avec les anciens programmes", () => {
     "les programmes déjà générés perdraient leur justification");
 });
 
+// ── Substitution & douleur : décisions de coach, sans IA ───────────────────
+const _sub = await import("../src/services/substitutionService.js");
+const _EXEP = "Développé militaire barre debout";
+const _hist = (pains) => { _store["mc_exoFeedback"] = JSON.stringify({ [_EXEP]:
+  pains.map((p, i) => ({ date: `2026-07-${String(i + 1).padStart(2, "0")}`, pain: p })) }); };
+
+test("les variantes restent dans le même groupe et le matériel disponible", () => {
+  const v = _sub.getVariantes(_EXEP, { materiel: ["halteres"], niveau: "intermediaire" });
+  assert.ok(v.length > 0, "aucune variante proposée");
+  v.forEach(x => {
+    assert.equal(x.groupe, "Épaules", `${x.n} hors groupe`);
+    assert.ok(["haltères", "poids de corps", "accessoire"].includes(x.mat),
+      `${x.n} exige du matériel non déclaré (${x.mat})`);
+  });
+});
+
+test("un exercice de rééducation ne remplace pas un mouvement principal", () => {
+  const v = _sub.getVariantes(_EXEP, { materiel: ["salle_complete"], niveau: "intermediaire" });
+  v.forEach(x => assert.notEqual(x.cat, "correctif",
+    `${x.n} est un correctif proposé pour un exercice principal`));
+});
+
+test("les exercices interdits par la morphologie sont écartés", () => {
+  const interdit = "Développé haltères assis";
+  const v = _sub.getVariantes(_EXEP, { materiel: ["salle_complete"], interdits: [interdit] });
+  assert.ok(!v.some(x => x.n === interdit), "un exercice interdit a été proposé");
+});
+
+test("un nom approximatif retrouve quand même l'exercice", () => {
+  const e = _sub.resoudreExercice("Développé militaire barre");
+  assert.ok(e && e.groupe === "Épaules", "résolution tolérante en échec");
+});
+
+test("douleur vive → arrêt immédiat, quelle que soit la semaine", () => {
+  _hist([0, 1]);
+  const r = _sub.evaluerDouleur(_EXEP, 3, { semaine: 4, chargeActuelle: 40 });
+  assert.equal(r.action, "stop");
+  assert.equal(r.severite, "critique");
+  assert.ok(r.proposerVariante);
+});
+
+test("gêne en semaine 1 → on remplace, l'exercice ne convient pas", () => {
+  _hist([]);
+  const r = _sub.evaluerDouleur(_EXEP, 2, { semaine: 1, chargeActuelle: 40 });
+  assert.equal(r.action, "remplacer");
+  assert.ok(r.proposerVariante);
+});
+
+test("gêne qui MONTE après des semaines saines → on allège, on ne supprime pas", () => {
+  _hist([0, 0, 1]);
+  const r = _sub.evaluerDouleur(_EXEP, 2, { semaine: 3, chargeActuelle: 40 });
+  assert.equal(r.action, "alleger");
+  assert.equal(r.tendance, "aggravation");
+  assert.equal(r.proposerVariante, false, "ne doit PAS supprimer un exercice qui fonctionnait");
+  assert.ok(r.chargeSuggeree && r.chargeSuggeree < 40, "aucune charge allégée proposée");
+  assert.match(r.message, /technique/i);
+});
+
+test("gêne récurrente malgré l'allègement → on change de mouvement", () => {
+  _hist([2, 2]);
+  const r = _sub.evaluerDouleur(_EXEP, 2, { semaine: 4, chargeActuelle: 40 });
+  assert.equal(r.action, "remplacer");
+  assert.ok(r.proposerVariante);
+});
+
+test("gêne légère et stable → aucune alarme", () => {
+  _hist([1, 1, 1]);
+  assert.equal(_sub.evaluerDouleur(_EXEP, 1, { semaine: 3 }).action, "aucune");
+  _hist([0, 0]);
+  assert.equal(_sub.evaluerDouleur(_EXEP, 1, { semaine: 2 }).action, "surveiller");
+});
+
+test("aucune douleur → aucune action", () => {
+  _hist([0, 0]);
+  const r = _sub.evaluerDouleur(_EXEP, 0, { semaine: 2 });
+  assert.equal(r.action, "aucune");
+  assert.equal(r.titre, "");
+});
+
+test("le programme transporte le matériel et le niveau pour la substitution", () => {
+  const src = _fs.readFileSync("src/services/aiService.js", "utf8");
+  assert.match(src, /materiel:\s+form\.materiel/, "prog.materiel absent");
+  assert.match(src, /niveau:\s+form\.niveau/, "prog.niveau absent");
+});
+
+test("la semaine réelle du cycle atteint la logique de douleur", () => {
+  const fm = _fs.readFileSync("src/features/training/FocusMode.jsx", "utf8");
+  const tv = _fs.readFileSync("src/features/training/TodayView.jsx", "utf8");
+  assert.match(tv, /semaineCycle=\s*\{\(props\.semC \|\| 0\) \+ 1\}/, "semaine non transmise");
+  assert.match(fm, /semaineCycle/, "prop non déclarée");
+  assert.ok(!/Number\(prog\?\.semaine\)/.test(fm), "utilise encore un champ inexistant");
+});
+
 console.log(`\n${n} tests de fumée OK`);
