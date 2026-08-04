@@ -518,4 +518,39 @@ test("un local vide est intégralement réamorcé", () => {
   assert.equal(Object.keys(_fusion({}, distant)).length, 2);
 });
 
+// ── Champs autrefois ignorés : métier, masse grasse, durée de séance ────────
+const _gpSrc = _fs.readFileSync("api/generate-program.js", "utf8");
+const _aiSrc = _fs.readFileSync("src/features/ai/AnalyseIA.jsx", "utf8");
+
+test("le métier atteint le prompt et est saisissable", () => {
+  assert.ok(/form\.metier/.test(_gpSrc), "metier absent du prompt serveur");
+  assert.ok(/metierBlock/.test(_gpSrc), "bloc métier non injecté");
+  // Un champ dans l'état sans input serait toujours vide : vérifier la saisie.
+  assert.ok(/setForm\(\{\.\.\.form,metier:/.test(_aiSrc), "aucun champ de saisie métier");
+});
+
+test("la masse grasse estimée est calculée et transmise", () => {
+  assert.ok(/Deurenberg/.test(_gpSrc), "formule absente");
+  assert.ok(/Masse grasse estimée/.test(_gpSrc), "non injectée dans le profil");
+  // Doit être présentée comme une ESTIMATION, jamais comme une mesure.
+  assert.ok(/PAS une mesure/.test(_gpSrc), "avertissement d'estimation manquant");
+});
+
+test("la durée de séance est collectée, bornée et contraignante", () => {
+  assert.ok(/dureeSeance: 60/.test(_aiSrc), "valeur par défaut absente");
+  assert.ok(/setForm\(\{\.\.\.form,dureeSeance:/.test(_aiSrc), "aucun sélecteur de durée");
+  assert.ok(/dureeCible/.test(_gpSrc), "durée absente du prompt");
+  assert.ok(/DURÉE CIBLE PAR SÉANCE/.test(_gpSrc), "contrainte non formulée");
+});
+
+test("le repère d'exercices correspond à la formule de durée de l'app", () => {
+  // formule client : Σ séries × (repos + 60) — cf. src/utils/training.js
+  for (const d of [45, 60, 75, 90]) {
+    const nbExos = Math.max(4, Math.round(d / 10));
+    const reelle = (nbExos * 4 * (90 + 60)) / 60;
+    assert.ok(Math.abs(reelle - d) <= d * 0.15,
+      `${d} min → ${nbExos} exos = ${reelle} min, hors tolérance`);
+  }
+});
+
 console.log(`\n${n} tests de fumée OK`);
