@@ -45,7 +45,7 @@ export default async function handler(req, res) {
     // Garde-fou : un job jamais terminé (crash plateforme) finit par expirer
     // côté client ; on borne aussi ici à 10 min pour donner une vraie erreur.
     const ageMs = Date.now() - new Date(job.created_at).getTime();
-    if (ageMs > 10 * 60_000) {
+    if (ageMs > 16 * 60_000) {
       return res.status(504).json({ error: "La génération a expiré. Réessaie." });
     }
     return res.status(202).json({ status: "processing" });
