@@ -27,7 +27,11 @@ export const config = { api: { bodyParser: { sizeLimit: "4mb" } } };
 // Budget de génération en arrière-plan. Doit rester sous le maxDuration de
 // CETTE fonction dans vercel.json (300 s) : réponse + travail waitUntil
 // partagent la même invocation.
-const ASYNC_BUDGET_MS = 280_000;
+// Doit rester SOUS le maxDuration de cette fonction dans vercel.json.
+//   Hobby + Fluid Compute : maxDuration 300 → budget 280 (défaut)
+//   Pro   + Fluid Compute : maxDuration 800 → budget 700 (GEN_BUDGET_MS=700000)
+// Réglable sans redéploiement de code via la variable d'environnement.
+const ASYNC_BUDGET_MS = Math.max(60_000, Number(process.env.GEN_BUDGET_MS) || 280_000);
 
 export default async function handler(req, res) {
   const g = guard(req, res);
