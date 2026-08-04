@@ -838,4 +838,153 @@ test("l'historique priorise stagnation et régression", async () => {
   assert.ok(Object.keys(h).length <= 18, `historique non borné (${Object.keys(h).length})`);
 });
 
+// ── Prescription en kilos : la différence entre un plan et un coach ─────────
+test("les charges connues imposent une prescription en kilos", () => {
+  const p = _prompt({ numero_cycle: 2, charges_actuelles: {
+    "Développé haltères incliné 30°": "32kg×10", "Rowing barre 45°": "70kg×8" } });
+  assert.match(p, /CHARGES RÉELLES DE L'ATHLÈTE/);
+  assert.match(p, /Développé haltères incliné 30° : 32kg×10/);
+  assert.match(p, /NOMBRE EN KILOS, pas un pourcentage/);
+  assert.match(p, /Ne prescris JAMAIS un pourcentage sur un exercice dont tu connais la charge/);
+});
+
+test("sans historique de charges, aucune prescription absolue inventée", () => {
+  assert.ok(!/CHARGES RÉELLES DE L'ATHLÈTE/.test(_prompt({ numero_cycle: 1 })));
+  assert.ok(!/CHARGES RÉELLES DE L'ATHLÈTE/.test(
+    _prompt({ numero_cycle: 1, charges_actuelles: { note: "Aucune charge enregistrée." } })));
+});
+
+test("le schéma impose un échauffement spécifique par séance", () => {
+  const p = _prompt({ numero_cycle: 1 });
+  assert.match(p, /"echauffement"/);
+  assert.match(p, /Jamais générique/);
+});
+
+test("la progression doit être chiffrée, pas descriptive", () => {
+  const p = _prompt({ numero_cycle: 1 });
+  assert.match(p, /instruction CHIFFRÉE/);
+  assert.match(p, /incrément précis/);
+});
+
+// ── Progression de charge : déterministe, appliquée dès la 2e séance ────────
+const _prog = await import("../src/services/progressionService.js");
+const _setLog = (exNom, kg, reps, n = 4) => {
+  _store["morpho_workout_log"] = JSON.stringify({
+    [_dk(3)]: { sets: Array(n).fill({ exNom, kg, reps }) } });
+};
+
+test("haut de fourchette atteint → la charge monte d'un vrai palier", () => {
+  _setLog("Développé haltères incliné 30°", 32, 10);
+  const r = _prog.getChargeRecommandee("Développé haltères incliné 30°",
+    { objectif: "hypertrophie", repsPrescrites: "8-10" });
+  assert.equal(r.action, "augmenter");
+  assert.ok(r.delta >= 2, `incrément dérisoire : +${r.delta} kg`);
+  assert.ok(r.kg > r.precedente);
+});
+
+test("dans la fourchette → on maintient et on gagne des répétitions", () => {
+  _setLog("Développé haltères incliné 30°", 32, 9);
+  const r = _prog.getChargeRecommandee("Développé haltères incliné 30°",
+    { objectif: "hypertrophie", repsPrescrites: "8-10" });
+  assert.equal(r.action, "maintenir");
+  assert.equal(r.delta, 0);
+});
+
+test("sous la fourchette → la charge est allégée", () => {
+  _setLog("Développé haltères incliné 30°", 32, 6);
+  const r = _prog.getChargeRecommandee("Développé haltères incliné 30°",
+    { objectif: "hypertrophie", repsPrescrites: "8-10" });
+  assert.equal(r.action, "reduire");
+  assert.ok(r.kg < r.precedente);
+});
+
+test("le palier respecte le matériel réel du groupe musculaire", () => {
+  _setLog("Presse à jambes 45° pieds hauts", 120, 12);
+  const bas = _prog.getChargeRecommandee("Presse à jambes 45° pieds hauts",
+    { objectif: "hypertrophie", repsPrescrites: "10-12" });
+  assert.equal(bas.kg % 5, 0, "bas du corps : palier de 5 kg attendu");
+  _setLog("Élévation latérale haltère unilatérale", 10, 15);
+  const haut = _prog.getChargeRecommandee("Élévation latérale haltère unilatérale",
+    { objectif: "hypertrophie", repsPrescrites: "12-15" });
+  assert.ok(haut.delta <= 2, "épaules : palier trop large");
+});
+
+test("l'objectif module la vitesse de progression quand le palier le permet", () => {
+  // Sur un mouvement à palier fin (pectoraux, 2,5 kg), l'écart d'incrément
+  // entre force (5 %) et santé (2 %) est exprimable. Sur un squat à palier de
+  // 5 kg, les deux tombent sur la même valeur : c'est la contrainte physique
+  // des disques, pas un défaut du moteur.
+  _setLog("Développé couché barre", 100, 5);
+  const force = _prog.getChargeRecommandee("Développé couché barre",
+    { objectif: "force", repsPrescrites: "3-5" });
+  _setLog("Développé couché barre", 100, 15);
+  const sante = _prog.getChargeRecommandee("Développé couché barre",
+    { objectif: "sante", repsPrescrites: "12-15" });
+  assert.ok(force.delta > sante.delta, `force ${force.delta} vs santé ${sante.delta}`);
+});
+
+test("le groupe musculaire est résolu même hors catalogue client", async () => {
+  const mg = await import("../src/services/muscleGroups.js");
+  // 100 % des exercices que l'IA peut prescrire doivent être résolus.
+  let ok = 0;
+  _cat.CATALOGUE.forEach(e => { if (mg.groupeMusculaire(e.n) === e.groupe) ok++; });
+  assert.equal(ok, _cat.CATALOGUE.length,
+    `${_cat.CATALOGUE.length - ok} exercices mal classés`);
+  // Filet sur un nom inventé.
+  assert.equal(mg.groupeMusculaire("Curl marteau incliné maison"), "Biceps");
+  assert.equal(mg.groupeMusculaire(""), "Autre");
+});
+
+test("un pourcentage n'est JAMAIS converti en kilos", () => {
+  _store["morpho_workout_log"] = JSON.stringify({});
+  const d = _prog.chargeDepart({ nom: "Exercice neuf", charge: "70-75% 1RM estimé" }, "hypertrophie");
+  assert.equal(d.kg, null, "70-75% interprété comme 70 kg");
+  const p2 = _prog.chargeDepart({ nom: "Exercice neuf", charge: "32 kg" }, "hypertrophie");
+  assert.equal(p2.kg, 32);
+});
+
+test("aucune recommandation sans série validée", () => {
+  _store["morpho_workout_log"] = JSON.stringify({});
+  assert.equal(_prog.getChargeRecommandee("Jamais fait", {}).available, false);
+});
+
+// ── Budgets de génération : cohérence de bout en bout ──────────────────────
+test("le cap du premier appel laisse toujours une réserve de reprise", () => {
+  const RESERVE = 70_000;
+  for (const budget of [280_000, 400_000, 700_000]) {
+    const cap1 = Math.min(300_000, budget - RESERVE);
+    assert.ok(cap1 > 0, `budget ${budget} : cap négatif`);
+    assert.ok(budget - cap1 >= 55_000,
+      `budget ${budget} : réserve ${budget - cap1} insuffisante pour une reprise`);
+  }
+});
+
+test("aucun budget ne dépasse le maxDuration déclaré", async () => {
+  const vercel = JSON.parse(_fs.readFileSync("vercel.json", "utf8"));
+  const maxStart = vercel.functions["api/generate-program-start.js"].maxDuration;
+  const src = _fs.readFileSync("api/generate-program-start.js", "utf8");
+  const defaut = Number((src.match(/\|\|\s*(\d+)_000/) || [])[1]) * 1000;
+  assert.ok(defaut > 0, "budget par défaut introuvable");
+  assert.ok(defaut < maxStart * 1000,
+    `budget ${defaut / 1000}s ≥ maxDuration ${maxStart}s`);
+});
+
+test("le plafond client couvre le budget serveur et sa reprise", () => {
+  const client = _fs.readFileSync("src/services/aiService.js", "utf8");
+  const maxMs = Number((client.match(/MAX_MS = (\d+) \* 60_000/) || [])[1]) * 60_000;
+  const statusSrc = _fs.readFileSync("api/generate-program-status.js", "utf8");
+  const garde = Number((statusSrc.match(/ageMs > (\d+) \* 60_000/) || [])[1]) * 60_000;
+  assert.ok(maxMs >= 700_000, `plafond client ${maxMs / 60_000} min trop court`);
+  assert.ok(garde > maxMs, "le garde-fou serveur expire avant le client");
+});
+
+test("une expiration déclenche une reprise, pas un échec sec", () => {
+  const src = _fs.readFileSync("api/generate-program.js", "utf8");
+  assert.match(src, /reprise concise/i);
+  assert.match(src, /CONTRAINTE DE FORMAT/);
+  // La reprise resserre la RÉDACTION, jamais le contenu du programme.
+  assert.match(src, /même nombre de séances/i);
+  assert.match(src, /même nombre d'exercices/i);
+});
+
 console.log(`\n${n} tests de fumée OK`);
