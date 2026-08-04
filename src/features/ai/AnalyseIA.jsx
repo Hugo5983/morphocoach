@@ -15,7 +15,7 @@ import {
 } from"../../services/aiService.js";
 import { buildDossierAthlete } from"../../services/coachBrainService.js";
 import { analyserMorpho, getFicheMorpho, ficheEstValide } from"../../services/morphoService.js";
-import { syncCycleOutcome } from"../../services/syncService.js";
+import { syncCycleOutcome, restaurerHistorique } from"../../services/syncService.js";
 import {
   T, F, SER, MON, CARD, InjectCSS, OI,
   PoseCard, Stepper, NavBtns, FL, SelRow,
@@ -57,6 +57,16 @@ export default function AnalyseIA(props) {
       setLoadMsg(LOAD_MESSAGES[mi]);
     }, 2200);
     try {
+      // Restauration Supabase AVANT la construction du dossier : sur un nouvel
+      // appareil ou après un cache vidé, l'historique est réamorcé depuis le
+      // compte au lieu de repartir de zéro. Silencieux et non bloquant.
+      setLoadMsg("Récupération de ton historique…");
+      const restaure = await restaurerHistorique();
+      if (restaure.restaure && restaure.jours > 0) {
+        push?.("", "Historique récupéré",
+          `${restaure.jours} séance${restaure.jours > 1 ? "s" : ""} restaurée${restaure.jours > 1 ? "s" : ""} depuis ton compte.`);
+      }
+
       // Couche 0 : dossier athlète depuis les données réelles du compte
       const { dossier } = buildDossierAthlete({ form, prog, cycles, corrigerFaibles });
 
