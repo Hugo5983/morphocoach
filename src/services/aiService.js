@@ -62,7 +62,7 @@ export async function callGenerateProgramAPI({ form, dossier, ficheMorpho }) {
     }
 
     const POLL_MS = 3_000;
-    const MAX_MS = 6 * 60_000;       // plafond global côté client
+    const MAX_MS = 14 * 60_000;      // plafond global : couvre budget serveur + reprise
     const t0 = Date.now();
     let netFails = 0;
 
@@ -184,6 +184,9 @@ export function buildProgramFromAI(parsed, { form, cycles, ficheMorpho = null })
       intensite:    /** @type {any} */ (s.intensite) ||"modere",
       type_seance:  s.type_seance ||"corps_entier",
       note_seance:  s.note || s.note_seance ||"",
+      // Échauffement spécifique à la séance : sans ce report, le champ produit
+      // par l'IA était perdu à la construction et n'atteignait jamais l'écran.
+      echauffement: s.echauffement ||"",
       exercices: (s.exercices || []).map(ex => ({
         nom:                  ex.nom ||"",
         series:               String(ex.series ||"3"),
