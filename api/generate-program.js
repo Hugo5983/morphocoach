@@ -100,7 +100,7 @@ function mergeFicheLists(fiche) {
 }
 
 // ─── Assemblage du prompt (côté serveur uniquement) ─────────────────────────
-function buildServerPrompt({ form, dossier, fiche, directives, cycleNum, candidats }) {
+export function buildServerPrompt({ form, dossier, fiche, directives, cycleNum, candidats }) {
   const joursPlein = normalizeJours(form.jours).length
     ? normalizeJours(form.jours) : ["Lundi", "Mercredi", "Vendredi"];
   // Durée cible : bornée pour rester réaliste même si la valeur arrive corrompue.
@@ -191,6 +191,48 @@ Aucune fiche morphologique disponible (pas de photos analysées) : appliquer les
 prudentes — exercices polyvalents, ROM contrôlé, aucune supposition morphologique.`;
 
   // ── Directive récupération explicite (sommeil dégradé → plafond de volume) ──
+  // ── État de forme mesuré → décisions imposées ──
+  // Recevoir un signal ne suffit pas : sans règle explicite, le modèle lit
+  // « fatigue accumulée » et programme quand même une semaine d'accumulation.
+  const edf = dossier?.etat_de_forme || {};
+  const statutRecup = edf.statut_recuperation || null;
+  const volReel = edf.volume_reel_semaine || null;
+  const perfReelle = edf.tendance_performance || null;
+  const risque = Number(statutRecup?.risque) || 0;
+
+  const decisions = [];
+  if (risque >= 8) decisions.push(
+    "RISQUE DE SURENTRAÎNEMENT MESURÉ : ce cycle DOIT démarrer par une semaine allégée "
+    + "(volume −40 %, intensité −15 %, aucun échec musculaire). Ne pas ouvrir sur une accumulation.");
+  else if (risque >= 5) decisions.push(
+    "FATIGUE ACCUMULÉE MESURÉE : plafonner le volume de la semaine 1 au niveau MEV, "
+    + "verrouiller le RIR à 3, et repousser la montée en charge à la semaine 2.");
+  if (volReel?.groupes_au_dessus_du_MRV?.length) decisions.push(
+    `VOLUME AU-DESSUS DU MAXIMUM RÉCUPÉRABLE sur : ${volReel.groupes_au_dessus_du_MRV.join(", ")}. `
+    + "Réduire leur volume hebdomadaire de 30 % ce cycle, quitte à réallouer ailleurs.");
+  if (volReel?.groupes_sous_le_MEV?.length) decisions.push(
+    `VOLUME SOUS LE SEUIL MINIMAL sur : ${volReel.groupes_sous_le_MEV.join(", ")}. `
+    + "Ces groupes ne progressent pas : leur donner au moins une stimulation supplémentaire.");
+  if (perfReelle?.tendance === "baisse") decisions.push(
+    `PERFORMANCES EN BAISSE (${perfReelle.moyenne_pct} % en moyenne). `
+    + "Ce n'est pas un problème de programme mais de récupération : alléger avant de complexifier.");
+  if (edf.fc_repos && Number(edf.fc_repos.ecart) >= 7) decisions.push(
+    `FC DE REPOS +${edf.fc_repos.ecart} bpm au-dessus de la référence : signal précoce de fatigue nerveuse. `
+    + "Éviter les techniques d'intensification ce cycle.");
+  if (dossier?.rythme_reel?.jour_le_mieux_tenu) decisions.push(
+    `RYTHME RÉEL : le ${dossier.rythme_reel.jour_le_mieux_tenu} est le jour le plus régulièrement honoré. `
+    + "Y placer la séance la plus exigeante ou le point faible prioritaire.");
+
+  const etatBlock = decisions.length ? `
+═══ ÉTAT DE FORME MESURÉ — DÉCISIONS IMPOSÉES ═══
+Ces constats viennent des données réellement enregistrées par l'athlète, pas d'une
+estimation. Ils PRIMENT sur la logique de périodisation théorique : un cycle
+d'accumulation lancé sur un athlète en fatigue accumulée ne produira rien.
+
+${decisions.map(d => `• ${d}`).join("\n")}
+
+Justifie explicitement dans "reflexion.diagnostic" comment tu en as tenu compte.` : "";
+
   const sommeilDegrade = /insuffisant/i.test(dossier?.recuperation?.note || "");
   const recupBlock = sommeilDegrade
     ? `\n═══ RÉCUPÉRATION DÉGRADÉE (donnée réelle du dossier) ═══
@@ -253,10 +295,11 @@ diagnostic, et rappelle dans "tips_coach" d'arrêter en cas de douleur vive.` : 
   return `Tu es un Master Coach Sportif et Préparateur Physique expert en biomécanique, hypertrophie et périodisation. Tu conçois de véritables planifications individualisées, cliniques et orientées progression réelle.
 
 ═══ COUCHE 0 — DOSSIER ATHLÈTE (données RÉELLES du compte, jamais fictives) ═══
-${JSON.stringify(dossier, null, 1).replace(/\n\s*/g, "\n").substring(0, 6000)}
+${JSON.stringify(dossier, null, 1).replace(/\n\s*/g, "\n").substring(0, 9000)}
 
 ${morphoBlock}
 ${recupBlock}
+${etatBlock}
 
 ═══ COUCHE 0 — RAISONNEMENT COACH OBLIGATOIRE ═══
 Avant TOUTE construction, tu réponds intérieurement à ces questions à partir du dossier et de la fiche :
