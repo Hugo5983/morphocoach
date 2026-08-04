@@ -753,4 +753,89 @@ test("les règles de conception chiffrées sont transmises", () => {
   assert.match(_constr.REGLES_CONCEPTION, /polyarticulaire lourd → polyarticulaire léger → isolation/);
 });
 
+// ── État de forme mesuré → décisions imposées dans le prompt ────────────────
+const _c0 = await import("../api/_knowledge/couche0.js");
+const _formBase = {
+  prenom: "Test", age: 30, sexe: "homme", poids: 80, taille: 180, niveau: "intermediaire",
+  objectif: "hypertrophie", jours: ["Lun", "Mer", "Ven"], dureeSeance: 60,
+  materiel: ["salle_complete"], pathologies: [], sport: "",
+};
+function _prompt(dossier) {
+  return _gp.buildServerPrompt({
+    form: _formBase, dossier, fiche: null,
+    directives: _c0.getVariationDirectives({ cycleNum: 2, nbJours: 3, objectif: "hypertrophie", niveau: "intermediaire" }),
+    cycleNum: 2,
+    candidats: _cat.selectCandidats({ materiel: ["salle_complete"], niveau: "intermediaire", max: 9999 }),
+  });
+}
+
+test("un athlète en fatigue reçoit des décisions imposées", () => {
+  const p = _prompt({ numero_cycle: 2, etat_de_forme: {
+    statut_recuperation: { niveau: "Fatigue accumulée", risque: 6 },
+    volume_reel_semaine: { statut: "au-dessus", groupes_au_dessus_du_MRV: ["Pectoraux"], groupes_sous_le_MEV: [] },
+    tendance_performance: { moyenne_pct: -4.2, tendance: "baisse" },
+    fc_repos: { ecart: 8 } } });
+  assert.match(p, /ÉTAT DE FORME MESURÉ/);
+  assert.match(p, /FATIGUE ACCUMULÉE MESURÉE/);
+  assert.match(p, /VOLUME AU-DESSUS DU MAXIMUM RÉCUPÉRABLE sur : Pectoraux/);
+  assert.match(p, /PERFORMANCES EN BAISSE/);
+  assert.match(p, /FC DE REPOS \+8 bpm/);
+});
+
+test("un risque élevé impose une semaine allégée, pas une accumulation", () => {
+  const p = _prompt({ numero_cycle: 2, etat_de_forme: {
+    statut_recuperation: { niveau: "Risque de surentraînement", risque: 9 } } });
+  assert.match(p, /RISQUE DE SURENTRAÎNEMENT MESURÉ/);
+  assert.match(p, /volume −40 %/);
+  assert.ok(!/FATIGUE ACCUMULÉE MESURÉE/.test(p), "deux niveaux déclenchés à la fois");
+});
+
+test("un athlète frais ne reçoit AUCUNE restriction inventée", () => {
+  const p = _prompt({ numero_cycle: 2, etat_de_forme: {
+    statut_recuperation: { niveau: "Récupération excellente", risque: 0 },
+    volume_reel_semaine: { statut: "optimal", groupes_au_dessus_du_MRV: [], groupes_sous_le_MEV: [] },
+    tendance_performance: { moyenne_pct: 3.1, tendance: "hausse" } } });
+  assert.ok(!/ÉTAT DE FORME MESURÉ/.test(p), "bloc affiché sans motif");
+});
+
+test("sans donnée d'état de forme, aucun bloc n'apparaît", () => {
+  assert.ok(!/ÉTAT DE FORME MESURÉ/.test(_prompt({ numero_cycle: 1 })));
+  assert.ok(!/ÉTAT DE FORME MESURÉ/.test(_prompt({})));
+});
+
+test("le jour le mieux tenu oriente le placement des séances", () => {
+  const p = _prompt({ numero_cycle: 2, rythme_reel: { jour_le_mieux_tenu: "Lundi" } });
+  assert.match(p, /RYTHME RÉEL : le Lundi/);
+});
+
+// ── Dossier : les clés qui pilotent des décisions ne doivent JAMAIS être ────
+//    coupées par la troncature du prompt.
+test("les clés décisionnelles passent avant l'historique volumineux", async () => {
+  const cb = await import("../src/services/coachBrainService.js");
+  // Athlète très chargé : 60 jours, 40 exercices distincts.
+  const EXOS = Array.from({ length: 40 }, (_, i) => `Exercice au nom assez long numéro ${i}`);
+  const log = {};
+  for (let i = 0; i < 60; i++) {
+    log[_dk(i)] = { sets: EXOS.slice(i % 20, i % 20 + 6)
+      .flatMap(nm => Array(4).fill({ exNom: nm, kg: 60 + i, reps: 10 })), totalVolume: 9000 };
+  }
+  _store["morpho_workout_log"] = JSON.stringify(log);
+  const { dossier } = cb.buildDossierAthlete({ form: { age: 27 }, prog: null, cycles: [], corrigerFaibles: true });
+  const cles = Object.keys(dossier);
+  const rang = (k) => cles.indexOf(k);
+  ["etat_de_forme", "charges_actuelles", "rythme_reel"].forEach(k =>
+    assert.ok(rang(k) < rang("historique_progression"),
+      `${k} placé après l'historique : serait tronqué`));
+  // Et le tout doit tenir dans la fenêtre côté serveur (9000).
+  const s = JSON.stringify(dossier, null, 1).replace(/\n\s*/g, "\n");
+  assert.ok(s.length <= 9000, `dossier de ${s.length} chars, au-delà de la limite`);
+});
+
+test("l'historique priorise stagnation et régression", async () => {
+  const cb = await import("../src/services/coachBrainService.js");
+  const { dossier } = cb.buildDossierAthlete({ form: { age: 27 }, prog: null, cycles: [], corrigerFaibles: false });
+  const h = dossier.historique_progression || {};
+  assert.ok(Object.keys(h).length <= 18, `historique non borné (${Object.keys(h).length})`);
+});
+
 console.log(`\n${n} tests de fumée OK`);
