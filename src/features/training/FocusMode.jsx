@@ -49,8 +49,9 @@ export default function FocusMode({
   // Périodisation : la semaine du mésocycle module séries et charge affichées.
   // Le programme stocké n'est pas modifié — on module ce qui est présenté.
   const phaseEx = useMemo(
-    () => appliquerPhase(ex, semaine, { groupe: groupeMusculaire(ex?.nom), chargeReelle: null }),
-    [ex?.series, ex?.charge, ex?.nom, semaine]
+    () => appliquerPhase(ex, semaine, { groupe: groupeMusculaire(ex?.nom), chargeReelle: null,
+      objectif: prog?.objectif }),
+    [ex?.series, ex?.charge, ex?.nom, semaine, prog?.objectif]
   );
   const totalSets = ex ? phaseEx.series : 4;
 

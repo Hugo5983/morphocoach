@@ -481,7 +481,7 @@ export default function ProgrammeView(props) {
         {/* Bandeau de semaine (concept D) — la périodisation devient visible.
             Sans lui, la semaine « Déload » n'était qu'une étiquette. */}
         {(() => {
-          const ph = resumeSemaine(semN);
+          const ph = resumeSemaine(semN, prog?.objectif);
           const estRepos = ph.cle === "deload";
           const acc = estRepos ? "#F5A100" : "#3B5BFB";
           return (
@@ -501,6 +501,14 @@ export default function ProgrammeView(props) {
               </div>
               <div style={{ fontSize:13, fontWeight:500, color:"#6B7486",
                             lineHeight:1.6, fontFamily:DISP_F }}>{ph.consigne}</div>
+              {/* La courbe dépend de l'objectif : sans cette ligne, l'athlète
+                  voit des chiffres bouger sans savoir pourquoi. */}
+              {ph.objectifNote && (
+                <div style={{ fontSize:11.5, fontWeight:500, color:"#9AA3B2",
+                              lineHeight:1.5, fontFamily:DISP_F, marginTop:7 }}>
+                  {(prog?.objectif || "hypertrophie").replace(/_/g," ")} · {ph.objectifNote}
+                </div>
+              )}
               <div style={{ display:"flex", gap:4, marginTop:13 }}>
                 {Array.from({ length: ph.total }).map((_, i) => (
                   <span key={i} style={{ flex:1, height:5, borderRadius:99,

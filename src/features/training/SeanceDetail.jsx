@@ -221,7 +221,7 @@ export default function TodayView(props) {
                           // Concept E : montrer l'ajustement de la semaine plutôt
                           // que de laisser croire à une erreur. Le barré indique
                           // qu'on allège volontairement, on n'a pas oublié.
-                          const ph = appliquerPhase(ex, semaineCycle, { groupe: groupeMusculaire(ex.nom) });
+                          const ph = appliquerPhase(ex, semaineCycle, { groupe: groupeMusculaire(ex.nom), objectif: prog?.objectif });
                           if (!ph.modifie) return null;
                           const baisse = ph.series < ph.seriesBase
                             || (ph.charge != null && ph.charge < ph.chargeBase);

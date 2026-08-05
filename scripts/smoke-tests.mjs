@@ -1223,8 +1223,10 @@ test("l'approche précède les séries de travail sans les remplacer", () => {
 test("le bandeau de semaine et l'ajustement par exercice sont branchés", () => {
   const pv = _fs.readFileSync("src/features/training/ProgrammeView.jsx", "utf8");
   const sd = _fs.readFileSync("src/features/training/SeanceDetail.jsx", "utf8");
-  assert.match(pv, /resumeSemaine\(semN\)/, "bandeau de semaine absent");
+  assert.match(pv, /resumeSemaine\(semN, prog\?\.objectif\)/,
+    "bandeau de semaine sans objectif : force et hypertrophie seraient identiques");
   assert.match(sd, /appliquerPhase\(ex, semaineCycle/, "ajustement par exercice absent");
+  assert.match(sd, /objectif: prog\?\.objectif/, "objectif non transmis à la phase");
   assert.match(sd, /const semaineCycle = \(props\.semC \|\| 0\) \+ 1/, "semaine non dérivée");
 });
 
@@ -1285,6 +1287,68 @@ test("la fiche morpho arrive par le service, pas par localStorage en dur", () =>
   assert.match(pv, /getFicheMorpho\(\)/, "fiche non lue via le service");
   assert.ok(!/localStorage\.getItem\("morpho_fiche"\)/.test(pv),
     "lecture directe de localStorage encore présente");
+});
+
+// ── Périodisation par objectif : force ≠ hypertrophie ≠ santé ──────────────
+test("force et hypertrophie ne se périodisent pas pareil", () => {
+  const ctx = (o) => ({ groupe: "Pectoraux", objectif: o });
+  const ex = { series: "4", charge: "100 kg" };
+  const fPic = _per.appliquerPhase(ex, 6, ctx("force"));
+  const hPic = _per.appliquerPhase(ex, 6, ctx("hypertrophie"));
+  assert.ok(fPic.charge > hPic.charge,
+    `pic force ${fPic.charge} devrait dépasser hypertrophie ${hPic.charge}`);
+  const fAcc = _per.appliquerPhase(ex, 4, ctx("force"));
+  const hAcc = _per.appliquerPhase(ex, 4, ctx("hypertrophie"));
+  assert.ok(fAcc.series <= hAcc.series,
+    "en force le volume doit chuter plus vite qu'en hypertrophie");
+});
+
+test("un objectif santé varie beaucoup moins qu'un objectif force", () => {
+  const ex = { series: "4", charge: "100 kg" };
+  const amplitude = (o) => {
+    const vals = [1, 2, 3, 4, 5, 6].map(s =>
+      _per.appliquerPhase(ex, s, { groupe: "Pectoraux", objectif: o }).charge);
+    return Math.max(...vals) - Math.min(...vals);
+  };
+  assert.ok(amplitude("force") > amplitude("sante"),
+    "la santé ne doit pas osciller autant que la force");
+  assert.ok(amplitude("perte_poids") < amplitude("force"),
+    "en déficit la charge doit rester stable");
+});
+
+test("le RIR cible se décale selon l'objectif", () => {
+  const force = _per.getPhase(3, "force").rir;
+  const sante = _per.getPhase(3, "sante").rir;
+  assert.notEqual(force, sante, `RIR identique : ${force}`);
+  // La santé doit rester plus loin de l'échec que la force.
+  const premier = (r) => parseInt(String(r).match(/\d+/)[0]);
+  assert.ok(premier(sante) > premier(force));
+});
+
+test("chaque objectif porte une note explicative", () => {
+  ["force", "hypertrophie", "perte_poids", "sante", "reathletisation", "prep_physique"]
+    .forEach(o => {
+      const p = _per.getPhase(3, o);
+      assert.ok(p.objectifNote && p.objectifNote.length > 20, `${o} : note absente`);
+    });
+});
+
+test("un objectif inconnu retombe sur l'hypertrophie", () => {
+  const a = _per.getPhase(4, "objectif_inexistant");
+  const b = _per.getPhase(4, "hypertrophie");
+  assert.equal(a.charge, b.charge);
+  assert.equal(a.series, b.series);
+});
+
+test("le déload allège dans TOUS les objectifs", () => {
+  ["force", "hypertrophie", "perte_poids", "sante", "reathletisation", "prep_physique"]
+    .forEach(o => {
+      const ctx = { groupe: "Pectoraux", objectif: o };
+      const base = _per.appliquerPhase({ series: "4", charge: "100 kg" }, 1, ctx);
+      const dl   = _per.appliquerPhase({ series: "4", charge: "100 kg" }, 5, ctx);
+      assert.ok(dl.charge < base.charge, `${o} : charge non réduite au déload`);
+      assert.ok(dl.series <= base.series, `${o} : volume non réduit au déload`);
+    });
 });
 
 console.log(`\n${n} tests de fumée OK`);

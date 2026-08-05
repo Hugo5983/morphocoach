@@ -21,6 +21,72 @@
  * @property {string} consigne    ce que l'athlète doit retenir
  */
 
+// ─── Courbes par objectif ────────────────────────────────────────────────────
+// Un cycle de force et un cycle d'hypertrophie ne se périodisent PAS de la
+// même façon. En force, le volume chute vite et l'intensité grimpe fort : on
+// cherche l'expression nerveuse. En hypertrophie, le volume s'accumule
+// longtemps et la charge monte peu : c'est le volume qui fait le muscle.
+//
+// Ces multiplicateurs s'appliquent PAR-DESSUS la courbe de base, ce qui évite
+// de dupliquer six phases par objectif.
+//
+// ampSeries : amplitude de la variation de volume (1 = courbe de base)
+// ampCharge : amplitude de la variation de charge
+// rirBase   : décalage du RIR cible (négatif = plus proche de l'échec)
+const COURBES = {
+  force: {
+    ampSeries: 1.3,   ampCharge: 1.6,  rirDecal: -1,
+    note: "Le volume chute vite, l'intensité grimpe : on cherche l'expression nerveuse.",
+  },
+  hypertrophie: {
+    ampSeries: 1.0,   ampCharge: 1.0,  rirDecal: 0,
+    note: "Le volume s'accumule longtemps, la charge monte progressivement.",
+  },
+  prep_physique: {
+    ampSeries: 1.1,   ampCharge: 1.3,  rirDecal: -1,
+    note: "Volume modéré, intensité travaillée : la qualité d'exécution prime.",
+  },
+  perte_poids: {
+    ampSeries: 0.7,   ampCharge: 0.5,  rirDecal: +1,
+    note: "Charge maintenue pour protéger le muscle, variation limitée en déficit.",
+  },
+  sante: {
+    ampSeries: 0.5,   ampCharge: 0.4,  rirDecal: +2,
+    note: "Progression douce et régulière, sans pic d'intensité.",
+  },
+  reathletisation: {
+    ampSeries: 0.6,   ampCharge: 0.35, rirDecal: +2,
+    note: "La charge suit la tolérance des tissus, jamais l'inverse.",
+  },
+};
+
+/** Normalise l'objectif du formulaire vers une courbe. */
+function clefObjectif(objectif) {
+  const k = String(objectif || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  if (k.includes("force")) return "force";
+  if (k.includes("poids") || k.includes("seche") || k.includes("perte")) return "perte_poids";
+  if (k.includes("prep") || k.includes("physique") || k.includes("puissance")) return "prep_physique";
+  if (k.includes("sante")) return "sante";
+  if (k.includes("reathle")) return "reathletisation";
+  return "hypertrophie";
+}
+
+/** Applique l'amplitude d'un objectif à un multiplicateur de la courbe de base. */
+function moduler(base, amplitude) {
+  return Math.round((1 + (base - 1) * amplitude) * 1000) / 1000;
+}
+
+/** Décale un RIR cible ("2-3" → "3-4") sans sortir de 0-5. */
+function decalerRir(rir, d) {
+  if (!d) return rir;
+  const borne = (n) => Math.max(0, Math.min(5, n + d));
+  const nums = String(rir).match(/\d+/g);
+  if (!nums) return rir;
+  return nums.length > 1
+    ? `${borne(+nums[0])}-${borne(+nums[1])}`
+    : String(borne(+nums[0]));
+}
+
 /** Mésocycle 6 semaines : accumulation → intensification → déload → pic. */
 export const PHASES = [
   {
@@ -68,9 +134,17 @@ export const TOTAL_SEMAINES = PHASES.length;
  * @param {number} semaine
  * @returns {Phase}
  */
-export function getPhase(semaine) {
+export function getPhase(semaine, objectif) {
   const i = Math.max(1, Math.min(TOTAL_SEMAINES, Math.round(Number(semaine) || 1))) - 1;
-  return PHASES[i];
+  const base = PHASES[i];
+  const c = COURBES[clefObjectif(objectif)];
+  return {
+    ...base,
+    series: moduler(base.series, c.ampSeries),
+    charge: moduler(base.charge, c.ampCharge),
+    rir: decalerRir(base.rir, c.rirDecal),
+    objectifNote: c.note,
+  };
 }
 
 /** Arrondit une charge à un palier réalisable en salle. */
@@ -91,7 +165,7 @@ function arrondir(kg, groupe) {
  *            chargeBase: number|null, rir: string, phase: Phase, modifie: boolean}}
  */
 export function appliquerPhase(ex, semaine, ctx = {}) {
-  const phase = getPhase(semaine);
+  const phase = getPhase(semaine, ctx.objectif);
   const seriesBase = Math.max(1, parseInt(String(ex?.series)) || 4);
   const series = Math.max(1, Math.round(seriesBase * phase.series));
 
@@ -121,8 +195,8 @@ export function appliquerPhase(ex, semaine, ctx = {}) {
  * Résumé de la semaine, pour un bandeau en tête de programme.
  * @param {number} semaine
  */
-export function resumeSemaine(semaine) {
-  const p = getPhase(semaine);
+export function resumeSemaine(semaine, objectif) {
+  const p = getPhase(semaine, objectif);
   const pctSeries = Math.round((p.series - 1) * 100);
   const pctCharge = Math.round((p.charge - 1) * 100);
   const bouts = [];
