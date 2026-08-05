@@ -259,3 +259,110 @@ export function getMobiliteAvantSeance(fiche, profil, focus = "") {
     return false;
   });
 }
+
+
+// ═══════════════════════════════════════════════════════════════════════════
+// SÉANCE DE MOBILITÉ
+// ═══════════════════════════════════════════════════════════════════════════
+// Différente des routines quotidiennes : c'est une séance STRUCTURÉE, à poser
+// dans la semaine comme n'importe quelle autre.
+//
+// Deux cas, et un seul principe : on ne fabrique pas un problème pour avoir
+// quelque chose à proposer.
+//   - posture dégradée détectée → séance CORRECTIVE ciblée sur ce qui est réel ;
+//   - rien à corriger → étirements classiques, 10 minutes maximum. Pas plus.
+
+/** Étirements généraux — le repli quand aucune correction n'est nécessaire. */
+const ETIREMENTS_CLASSIQUES = [
+  { nom: "Étirement pectoraux au mur",        duree: "2 × 30 s par bras" },
+  { nom: "Étirement grand dorsal suspendu",   duree: "2 × 30 s" },
+  { nom: "Étirement quadriceps debout",       duree: "2 × 30 s par jambe" },
+  { nom: "Étirement ischio-jambiers assis",   duree: "2 × 30 s par jambe" },
+  { nom: "Étirement fessiers allongé",        duree: "2 × 30 s par côté" },
+  { nom: "Étirement mollets au mur",          duree: "2 × 30 s par jambe" },
+];
+
+/** Priorité d'une routine dans la séance corrective : le rachis d'abord. */
+const PRIORITE = {
+  rachis_charges: 0, epaules_enroulees: 1, hanches_assis: 2,
+  epaule_patho: 3, cervicales: 4, cheville: 5, jambes_debout: 6,
+};
+
+/**
+ * Séance de mobilité à intégrer à la semaine.
+ *
+ * @param {{observations?: object}} fiche
+ * @param {{metier?: string, pathologies?: string[]}} profil
+ * @param {{joursEntrainement?: number}} [opts]
+ * @returns {{type: "corrective"|"classique", titre: string, sousTitre: string,
+ *            minutes: number, frequence: string, zones: string[],
+ *            exercices: {nom: string, duree: string, comment?: string, zone?: string}[],
+ *            note: string}}
+ */
+export function getSeanceMobilite(fiche, profil = {}, opts = {}) {
+  const { routines } = getRoutinesMobilite(fiche, profil);
+  const jours = Number(opts.joursEntrainement) || 3;
+
+  // ── Aucun défaut postural : étirements classiques, et on s'arrête là ──
+  if (!routines.length) {
+    return {
+      type: "classique",
+      titre: "Étirements généraux",
+      sousTitre: "Aucun déséquilibre postural détecté",
+      minutes: 10,
+      frequence: "1 à 2 fois par semaine, à distance des séances",
+      zones: [],
+      exercices: ETIREMENTS_CLASSIQUES,
+      note: "Ton analyse ne montre pas de posture à corriger. Cette séance sert l'entretien, "
+        + "pas la correction : 10 minutes suffisent, inutile d'en faire plus.",
+    };
+  }
+
+  // ── Séance corrective : on prend les exercices des routines déclenchées ──
+  const triees = [...routines].sort(
+    (a, b) => (PRIORITE[a.cle] ?? 9) - (PRIORITE[b.cle] ?? 9)
+  );
+
+  // Deux exercices par zone au maximum : une séance de mobilité qui dure
+  // 40 minutes ne sera jamais faite. On garde les plus structurants.
+  const exercices = [];
+  for (const r of triees) {
+    r.exercices.slice(0, 2).forEach(e =>
+      exercices.push({ ...e, zone: r.titre }));
+    if (exercices.length >= 8) break;
+  }
+
+  const minutes = Math.min(25, Math.max(12, exercices.length * 2));
+  const frequence = triees.length >= 3
+    ? "2 fois par semaine, en plus des routines quotidiennes"
+    : "1 à 2 fois par semaine";
+
+  const renforcer = triees.map(r => r.renforcer).filter(Boolean);
+
+  return {
+    type: "corrective",
+    titre: "Séance correctrice de posture",
+    sousTitre: triees.map(r => r.titre).join(" · "),
+    minutes,
+    frequence,
+    zones: triees.map(r => r.titre),
+    exercices,
+    note: renforcer.length
+      ? renforcer[0]
+      : "Travail ciblé sur les déséquilibres relevés lors de ton analyse morphologique.",
+  };
+}
+
+/**
+ * Faut-il intercaler la séance de mobilité dans la semaine ?
+ * @param {number} joursEntrainement
+ * @param {"corrective"|"classique"} type
+ */
+export function placementSeanceMobilite(joursEntrainement, type) {
+  if (type === "classique") {
+    return "À caler sur un jour de repos, ou après une séance légère.";
+  }
+  return joursEntrainement >= 5
+    ? "Ta semaine est déjà chargée : place-la après ta séance la plus courte, pas sur un jour de repos complet."
+    : "À caler sur un jour de repos — c'est là qu'elle sera le mieux absorbée.";
+}

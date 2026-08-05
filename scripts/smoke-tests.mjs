@@ -1241,4 +1241,50 @@ test("la page mobilité est atteignable et ses icônes existent", () => {
   assert.deepEqual(manquantes, [], `icônes absentes : ${manquantes.join(", ")}`);
 });
 
+// ── Séance de mobilité : corrective si besoin, sinon 10 min et pas plus ────
+test("posture dégradée → séance corrective ciblée sur le réel", () => {
+  const s = _mob.getSeanceMobilite(_ficheP(["cyphose", "antepulsion_scapulaire"]),
+    { metier: "Bureau assis", pathologies: [] }, { joursEntrainement: 5 });
+  assert.equal(s.type, "corrective");
+  assert.ok(s.exercices.length >= 4, `${s.exercices.length} exercices seulement`);
+  assert.ok(s.zones.length > 0, "aucune zone ciblée");
+  // Chaque exercice doit être rattaché à une zone : rien de générique.
+  s.exercices.forEach(e => assert.ok(e.zone, `${e.nom} sans zone`));
+});
+
+test("posture saine → étirements classiques, 10 minutes MAXIMUM", () => {
+  const s = _mob.getSeanceMobilite(_ficheP([]), { metier: "", pathologies: [] }, {});
+  assert.equal(s.type, "classique");
+  assert.ok(s.minutes <= 10, `${s.minutes} min, au-delà du plafond demandé`);
+  assert.equal(s.zones.length, 0, "des zones inventées sans motif");
+  assert.match(s.note, /pas de posture à corriger/i);
+});
+
+test("une séance corrective ne dépasse jamais une durée réaliste", () => {
+  // Profil cumulant tout : la séance doit rester faisable, pas exhaustive.
+  const s = _mob.getSeanceMobilite(_ficheP(["cyphose", "hyperlordose", "valgus_genou"]),
+    { metier: "Bureau assis", pathologies: ["Lombalgie", "Conflit épaule", "Tendinite Achille"] }, {});
+  assert.ok(s.exercices.length <= 8, `${s.exercices.length} exercices : séance trop longue`);
+  assert.ok(s.minutes <= 25, `${s.minutes} min : jamais faite en pratique`);
+});
+
+test("le rachis passe avant le reste dans une séance corrective", () => {
+  const s = _mob.getSeanceMobilite(_ficheP(["cyphose"]),
+    { metier: "Manutention", pathologies: ["Lombalgie"] }, {});
+  assert.match(s.exercices[0].zone, /rachis|Décompression/i);
+});
+
+test("le placement dépend de la charge de la semaine", () => {
+  assert.match(_mob.placementSeanceMobilite(5, "corrective"), /déjà chargée/i);
+  assert.match(_mob.placementSeanceMobilite(3, "corrective"), /jour de repos/i);
+  assert.match(_mob.placementSeanceMobilite(3, "classique"), /repos|légère/i);
+});
+
+test("la fiche morpho arrive par le service, pas par localStorage en dur", () => {
+  const pv = _fs.readFileSync("src/features/training/ProgrammeView.jsx", "utf8");
+  assert.match(pv, /getFicheMorpho\(\)/, "fiche non lue via le service");
+  assert.ok(!/localStorage\.getItem\("morpho_fiche"\)/.test(pv),
+    "lecture directe de localStorage encore présente");
+});
+
 console.log(`\n${n} tests de fumée OK`);

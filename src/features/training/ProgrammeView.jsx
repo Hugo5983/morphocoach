@@ -9,6 +9,7 @@ import CoachWeekCard from"./components/CoachWeekCard.jsx";
 import MesocycleDetail from"./components/MesocycleDetail.jsx";
 import RaisonnementCoach from"./components/RaisonnementCoach.jsx";
 import MobilitePage from"./components/MobilitePage.jsx";
+import { getFicheMorpho } from"../../services/morphoService.js";
 import { resumeSemaine } from"../../services/periodisationService.js";
 
 export default function ProgrammeView(props) {
@@ -96,9 +97,10 @@ export default function ProgrammeView(props) {
 
   // ── Mobilité : page pleine (même pattern que les autres) ──
   if (showMobilite) {
-    return <MobilitePage prog={prog} profil={profil}
-      fiche={(() => { try { return JSON.parse(localStorage.getItem("morpho_fiche") || "null"); }
-                      catch { return null; } })()}
+    // La fiche vient du service : c'est le SEUL point d'accès à l'analyse
+    // morphologique produite par l'IA à partir des photos. Une lecture directe
+    // de localStorage ici aurait divergé le jour où la clé change.
+    return <MobilitePage prog={prog} profil={profil} fiche={getFicheMorpho()}
       onClose={() => setShowMobilite(false)} />;
   }
 

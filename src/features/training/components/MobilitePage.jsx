@@ -9,7 +9,8 @@ import { useState, useMemo } from "react";
 import useScrollTop from "../../../hooks/useScrollTop.js";
 import { FONT } from "../../../data/constants.js";
 import { I } from "../../../components/ui/Icon.jsx";
-import { getRoutinesMobilite } from "../../../services/mobiliteService.js";
+import { getRoutinesMobilite, getSeanceMobilite, placementSeanceMobilite }
+  from "../../../services/mobiliteService.js";
 
 const F    = FONT;
 const BL   = "#3B5BFB";
@@ -27,6 +28,16 @@ const MOMENTS = {
 export default function MobilitePage({ prog, profil, fiche, onClose }) {
   useScrollTop();
   const [ouvert, setOuvert] = useState(null);
+
+  // Séance structurée : corrective si la posture le demande, sinon étirements
+  // classiques plafonnés à 10 min. On ne fabrique pas un problème.
+  const seance = useMemo(
+    () => getSeanceMobilite(fiche, {
+      metier: profil?.metier || prog?.metier,
+      pathologies: prog?.pathologies || profil?.pathologies || [],
+    }, { joursEntrainement: prog?.jours?.length || 3 }),
+    [fiche, profil?.metier, prog?.metier, prog?.pathologies, prog?.jours?.length]
+  );
 
   const { routines, minutesJour, resume } = useMemo(
     () => getRoutinesMobilite(fiche, {
@@ -68,11 +79,73 @@ export default function MobilitePage({ prog, profil, fiche, onClose }) {
             </span>
             <span style={{ fontSize: 13, fontWeight: 600, color: "rgba(255,255,255,.62)", fontFamily: F }}>
               {routines.length > 0
-                ? `${routines.length} routine${routines.length > 1 ? "s" : ""} · ~${minutesJour} min par jour`
-                : "Aucune contrainte identifiée"}
+                ? `${routines.length} routine${routines.length > 1 ? "s" : ""} quotidienne${routines.length > 1 ? "s" : ""} · ~${minutesJour} min par jour`
+                : "Entretien général — rien à corriger"}
             </span>
           </div>
         </div>
+
+        {/* Séance de mobilité — ce que l'athlète cherche en premier */}
+        <Card delay=".10s">
+          <div style={{ display: "flex", alignItems: "flex-start",
+            justifyContent: "space-between", gap: 10, marginBottom: 12 }}>
+            <div style={{ minWidth: 0 }}>
+              <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: ".06em",
+                color: "#6B7486", fontFamily: F, marginBottom: 3 }}>SÉANCE DE MOBILITÉ</div>
+              <div style={{ fontSize: 17, fontWeight: 800, color: "#0F1923",
+                fontFamily: F, lineHeight: 1.2 }}>{seance.titre}</div>
+              <div style={{ fontSize: 12, fontWeight: 500, color: GREY,
+                fontFamily: F, marginTop: 3, lineHeight: 1.4 }}>{seance.sousTitre}</div>
+            </div>
+            <span style={{ flexShrink: 0, borderRadius: 99, padding: "5px 11px",
+              fontSize: 11, fontWeight: 800, fontFamily: F, whiteSpace: "nowrap",
+              color: seance.type === "corrective" ? "#B37400" : GRN,
+              background: seance.type === "corrective" ? "rgba(245,161,0,.13)" : "#E7F7F0" }}>
+              {seance.minutes} min
+            </span>
+          </div>
+
+          <div style={{ fontSize: 12, fontWeight: 700, color: BL,
+            fontFamily: F, marginBottom: 11 }}>{seance.frequence}</div>
+
+          {seance.exercices.map((e, k) => (
+            <div key={k} style={{ display: "flex", gap: 11, padding: "9px 0",
+              borderTop: k === 0 ? "1px solid rgba(15,25,35,.06)" : "1px solid rgba(15,25,35,.05)" }}>
+              <span style={{ fontSize: 12, fontWeight: 700, color: GREY,
+                fontFamily: F, minWidth: 14 }}>{k + 1}</span>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontSize: 13.5, fontWeight: 700, color: "#0F1923", fontFamily: F }}>
+                  {e.nom}
+                </div>
+                <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 2 }}>
+                  <span style={{ fontSize: 11.5, fontWeight: 700, color: BL, fontFamily: F }}>
+                    {e.duree}
+                  </span>
+                  {e.zone && (
+                    <span style={{ fontSize: 11.5, fontWeight: 500, color: GREY, fontFamily: F }}>
+                      {e.zone}
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))}
+
+          <div style={{ marginTop: 13, background: seance.type === "corrective"
+              ? "rgba(245,161,0,.1)" : "rgba(59,91,251,.07)",
+            borderLeft: `3px solid ${seance.type === "corrective" ? AMB : BL}`,
+            padding: "11px 13px" }}>
+            <div style={{ fontSize: 12.5, fontWeight: 600, lineHeight: 1.55, fontFamily: F,
+              color: seance.type === "corrective" ? "#8A5A00" : "#2540E0" }}>
+              {seance.note}
+            </div>
+          </div>
+
+          <div style={{ fontSize: 11.5, fontWeight: 500, color: GREY,
+            lineHeight: 1.5, fontFamily: F, marginTop: 10 }}>
+            {placementSeanceMobilite(prog?.jours?.length || 3, seance.type)}
+          </div>
+        </Card>
 
         {routines.length === 0 ? (
           <Card delay=".12s">
@@ -80,7 +153,7 @@ export default function MobilitePage({ prog, profil, fiche, onClose }) {
               background: "linear-gradient(135deg,#F7F8FB,#EEF1FF)",
               border: "1px dashed rgba(59,91,251,.2)" }}>
               <div style={{ fontSize: 14.5, fontWeight: 800, color: BL, fontFamily: F, marginBottom: 6 }}>
-                Rien de spécifique à corriger
+                Aucune routine quotidienne nécessaire
               </div>
               <div style={{ fontSize: 12.5, fontWeight: 500, color: "#6B7486", lineHeight: 1.5, fontFamily: F }}>
                 {resume} Renseigne ton métier et refais l'analyse morphologique pour affiner.
