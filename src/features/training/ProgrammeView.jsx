@@ -12,6 +12,7 @@ import MobilitePage from"./components/MobilitePage.jsx";
 import { getFicheMorpho } from"../../services/morphoService.js";
 import { resumeSemaine, periodisationActive, totalSemaines }
   from"../../services/periodisationService.js";
+import { evaluerAutoregulation } from"../../services/autoregulationService.js";
 
 export default function ProgrammeView(props) {
   useScrollTop();
@@ -488,6 +489,42 @@ export default function ProgrammeView(props) {
           const estRepos = ph.cle === "deload";
           const acc = estRepos ? "#F5A100" : "#3B5BFB";
           const active = periodisationActive(prog);
+          // Autorégulation : les signaux réels peuvent justifier de dévier du
+          // plan. Elle s'affiche même sans périodisation active — un risque de
+          // blessure ne dépend pas d'un réglage d'affichage.
+          const auto = evaluerAutoregulation({
+            age: profil?.age, joursParSemaine: prog?.jours?.length || 3,
+            semaine: semN, semaineDeload: TOTAL_SEMAINES,
+          });
+          const COUL = { critique:"#EF4444", attention:"#F5A100", info:"#3B5BFB" };
+          const carteAuto = auto.titre ? (
+            <div style={{ background:"#fff", border:"1px solid rgba(15,25,35,.06)",
+                          borderRadius:22, padding:16, marginBottom:14,
+                          borderLeft:`3px solid ${COUL[auto.severite]}`,
+                          boxShadow:"0 2px 10px rgba(15,25,35,.05)" }}>
+              <div style={{ fontSize:10.5, fontWeight:800, letterSpacing:".08em",
+                            color:COUL[auto.severite], fontFamily:DISP_F, marginBottom:5 }}>
+                {auto.action === "deload" ? "AJUSTEMENT RECOMMANDÉ"
+                 : auto.action === "revue_technique" ? "À REGARDER DE PRÈS"
+                 : auto.action === "simplifier" ? "PROGRAMME À ADAPTER" : "SURVEILLANCE"}
+              </div>
+              <div style={{ fontSize:16, fontWeight:800, color:"#0F1923",
+                            fontFamily:DISP_F, lineHeight:1.25, marginBottom:8 }}>
+                {auto.titre}
+              </div>
+              <div style={{ fontSize:13, fontWeight:500, color:"#6B7486",
+                            lineHeight:1.6, fontFamily:DISP_F }}>{auto.message}</div>
+              {auto.signaux.length > 0 && (
+                <div style={{ marginTop:11, paddingTop:11,
+                              borderTop:"1px solid rgba(15,25,35,.06)" }}>
+                  {auto.signaux.map((s,i) => (
+                    <div key={i} style={{ fontSize:12, fontWeight:600, color:"#6B7486",
+                                          fontFamily:DISP_F, padding:"3px 0" }}>· {s}</div>
+                  ))}
+                </div>
+              )}
+            </div>
+          ) : null;
           const bascule = () => {
             const maj = { ...prog, periodisation: !active };
             setProg(maj);
@@ -499,6 +536,8 @@ export default function ProgrammeView(props) {
           // Modifier silencieusement des séries choisies par l'utilisateur
           // serait contredire son travail, pas le coacher.
           if (!active) return (
+            <>
+            {carteAuto}
             <div style={{ background:"#fff", border:"1px solid rgba(15,25,35,.06)",
                           borderRadius:22, padding:16, marginBottom:14,
                           boxShadow:"0 2px 10px rgba(15,25,35,.05)" }}>
@@ -524,9 +563,12 @@ export default function ProgrammeView(props) {
                                fontFamily:DISP_F }}>Activer la périodisation</span>
               </div>
             </div>
+            </>
           );
 
           return (
+            <>
+            {carteAuto}
             <div style={{ background:"#fff", border:"1px solid rgba(15,25,35,.06)",
                           borderRadius:22, padding:16, marginBottom:14,
                           boxShadow:"0 2px 10px rgba(15,25,35,.05)" }}>
@@ -563,6 +605,7 @@ export default function ProgrammeView(props) {
                 ))}
               </div>
             </div>
+            </>
           );
         })()}
 

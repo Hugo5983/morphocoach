@@ -1464,4 +1464,113 @@ test("la force et l'hypertrophie ont des phases NOMMÉES différemment", () => {
   assert.ok(f.some(l => /techni/i.test(l)), "la force devrait démarrer sur la technique");
 });
 
+// ── Autorégulation : le déload se déclenche, il n'arrive plus au calendrier ─
+const _auto = await import("../src/services/autoregulationService.js");
+
+function _seances(n, kgFn = () => 32) {
+  const log = {};
+  for (let i = 0; i < n; i++) {
+    log[_dk(Math.floor(i * 28 / n))] = { sets:
+      Array(6).fill(0).map(() => ({ exNom: "Développé haltères incliné 30°", kg: kgFn(i), reps: 10 })) };
+  }
+  _store["morpho_workout_log"] = JSON.stringify(log);
+}
+function _resetSignaux() {
+  ["morpho_sleep_log", "morpho_hr_log", "morpho_motivation_log", "mc_exoFeedback"]
+    .forEach(k => delete _store[k]);
+}
+const _ctxAuto = { age: 27, joursParSemaine: 5, semaine: 3, semaineDeload: 6 };
+
+test("un manque d'assiduité ne déclenche JAMAIS un déload", () => {
+  _resetSignaux(); _seances(6);
+  // Même avec tous les signaux de fatigue au rouge : sans volume réel,
+  // il n'y a rien à récupérer. Prescrire du repos serait absurde.
+  _store["morpho_sleep_log"] = JSON.stringify(
+    Object.fromEntries(Array.from({ length: 7 }, (_, i) => [_dk(i), 4.5])));
+  const v = _auto.evaluerAutoregulation(_ctxAuto);
+  assert.equal(v.action, "simplifier", `action ${v.action} au lieu de simplifier`);
+  assert.notEqual(v.action, "deload", "déload prescrit à quelqu'un qui ne s'entraîne pas");
+  assert.match(v.message, /pas un problème de fatigue/i);
+});
+
+test("des douleurs multiples appellent une revue technique, pas du repos", () => {
+  _resetSignaux(); _seances(18);
+  _store["mc_exoFeedback"] = JSON.stringify(Object.fromEntries(
+    ["Développé militaire barre debout", "Squat barre nuque (high-bar)", "Rowing barre 45°"]
+      .map(nm => [nm, [{ date: "2026-07-01", pain: 0 }, { date: "2026-07-20", pain: 2 }]])));
+  const v = _auto.evaluerAutoregulation(_ctxAuto);
+  assert.equal(v.action, "revue_technique");
+  assert.match(v.message, /repos ne répare pas/i);
+  assert.ok(v.ajustement?.charge && v.ajustement.charge < 1, "aucun allègement de charge");
+  assert.ok(!v.ajustement?.series, "le volume ne doit pas être coupé pour une douleur technique");
+});
+
+test("une fatigue accumulée réelle avance le déload", () => {
+  _resetSignaux();
+  _seances(18, i => (i < 9 ? 34 : 30));            // performances en baisse
+  _store["morpho_sleep_log"] = JSON.stringify(
+    Object.fromEntries(Array.from({ length: 7 }, (_, i) => [_dk(i), 5.0])));
+  const hr = {};
+  for (let i = 1; i < 30; i++) hr[_dk(i)] = 55;
+  for (let i = 0; i < 5; i++)  hr[_dk(i)] = 66;
+  _store["morpho_hr_log"] = JSON.stringify(hr);
+  _store["morpho_motivation_log"] = JSON.stringify(
+    Object.fromEntries(Array.from({ length: 5 }, (_, i) => [_dk(i), 2])));
+  const v = _auto.evaluerAutoregulation(_ctxAuto);
+  assert.equal(v.action, "deload");
+  assert.ok(v.score >= 6, `score ${v.score} sous le seuil`);
+  assert.ok(v.signaux.length >= 2, "un seul signal ne devrait pas suffire");
+  assert.match(v.titre, /avancer/i);
+});
+
+test("un signal isolé ne fait pas dévier du plan", () => {
+  _resetSignaux(); _seances(18);
+  _store["morpho_motivation_log"] = JSON.stringify(
+    Object.fromEntries(Array.from({ length: 5 }, (_, i) => [_dk(i), 2])));
+  const v = _auto.evaluerAutoregulation(_ctxAuto);
+  assert.notEqual(v.action, "deload", "déload sur un signal unique");
+});
+
+test("aucun déload n'est avancé si on y est déjà", () => {
+  _resetSignaux();
+  _seances(18, i => (i < 9 ? 34 : 30));
+  _store["morpho_sleep_log"] = JSON.stringify(
+    Object.fromEntries(Array.from({ length: 7 }, (_, i) => [_dk(i), 5.0])));
+  const hr = {};
+  for (let i = 1; i < 30; i++) hr[_dk(i)] = 55;
+  for (let i = 0; i < 5; i++)  hr[_dk(i)] = 66;
+  _store["morpho_hr_log"] = JSON.stringify(hr);
+  const v = _auto.evaluerAutoregulation({ ..._ctxAuto, semaine: 6 });
+  assert.notEqual(v.action, "deload", "déload avancé alors qu'on est en semaine de déload");
+});
+
+test("l'autorégulation corrige la phase sans la remplacer", () => {
+  const phase = { series: 4, charge: 60 };
+  const sans = _auto.appliquerAutoregulation(phase, { ajustement: null });
+  assert.equal(sans.autoregule, false);
+  assert.equal(sans.series, 4);
+  const avec = _auto.appliquerAutoregulation(phase,
+    { ajustement: { series: 0.6, charge: 0.9 }, titre: "Déload avancé" });
+  assert.ok(avec.series < 4 && avec.charge < 60);
+  assert.equal(avec.autoregule, true);
+  assert.equal(avec.raisonAutoregulation, "Déload avancé");
+});
+
+test("trop peu de séances → aucune conclusion hâtive", () => {
+  _resetSignaux(); _seances(2);
+  const v = _auto.evaluerAutoregulation(_ctxAuto);
+  assert.equal(v.action, "aucune");
+  assert.equal(v.titre, "");
+});
+
+test("le verdict d'autorégulation est affiché, pas seulement calculé", () => {
+  const pv = _fs.readFileSync("src/features/training/ProgrammeView.jsx", "utf8");
+  assert.match(pv, /evaluerAutoregulation\(/, "autorégulation non appelée");
+  assert.match(pv, /carteAuto/, "carte non construite");
+  // Elle doit s'afficher dans les DEUX cas : périodisation active ou non.
+  // Un risque de blessure ne dépend pas d'un réglage d'affichage.
+  assert.equal((pv.match(/\{carteAuto\}/g) || []).length, 2,
+    "la carte manque dans l'une des deux branches");
+});
+
 console.log(`\n${n} tests de fumée OK`);
