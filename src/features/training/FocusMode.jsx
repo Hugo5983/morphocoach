@@ -50,7 +50,7 @@ export default function FocusMode({
   // Le programme stocké n'est pas modifié — on module ce qui est présenté.
   const phaseEx = useMemo(
     () => appliquerPhase(ex, semaine, { groupe: groupeMusculaire(ex?.nom), chargeReelle: null,
-      objectif: prog?.objectif }),
+      objectif: prog?.objectif, prog }),
     [ex?.series, ex?.charge, ex?.nom, semaine, prog?.objectif]
   );
   const totalSets = ex ? phaseEx.series : 4;

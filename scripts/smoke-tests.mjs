@@ -1351,4 +1351,58 @@ test("le déload allège dans TOUS les objectifs", () => {
     });
 });
 
+// ── Autorité de l'utilisateur : on ne modifie pas un programme manuel ──────
+test("un programme manuel n'est PAS modulé par défaut", () => {
+  const ex = { series: "4", charge: "60 kg" };
+  const r = _per.appliquerPhase(ex, 5, {
+    groupe: "Pectoraux", objectif: "hypertrophie", prog: { type: "custom" } });
+  assert.equal(r.inactive, true, "un programme écrit à la main a été modifié");
+  assert.equal(r.series, 4, "séries modifiées sans accord");
+  assert.equal(r.charge, 60, "charge modifiée sans accord");
+  assert.equal(r.modifie, false);
+});
+
+test("un programme IA est modulé par défaut", () => {
+  const r = _per.appliquerPhase({ series: "4", charge: "60 kg" }, 5, {
+    groupe: "Pectoraux", objectif: "hypertrophie", prog: { type: "ia" } });
+  assert.ok(!r.inactive, "la périodisation du mésocycle IA n'est pas appliquée");
+  assert.ok(r.series < 4 && r.charge < 60, "déload sans effet sur un programme IA");
+});
+
+test("le choix de l'utilisateur prime sur le défaut, dans les deux sens", () => {
+  const ex = { series: "4", charge: "60 kg" };
+  const ctx = (prog) => ({ groupe: "Pectoraux", objectif: "hypertrophie", prog });
+  // Manuel + activation explicite → modulé
+  const a = _per.appliquerPhase(ex, 5, ctx({ type: "custom", periodisation: true }));
+  assert.ok(!a.inactive, "activation manuelle ignorée");
+  // IA + désactivation explicite → intact
+  const b = _per.appliquerPhase(ex, 5, ctx({ type: "ia", periodisation: false }));
+  assert.equal(b.inactive, true, "désactivation ignorée sur un programme IA");
+  assert.equal(b.series, 4);
+});
+
+test("periodisationActive applique les bons défauts", () => {
+  assert.equal(_per.periodisationActive({ type: "ia" }), true);
+  assert.equal(_per.periodisationActive({ type: "custom" }), false);
+  assert.equal(_per.periodisationActive({}), false, "défaut trop permissif");
+  assert.equal(_per.periodisationActive(null), false);
+});
+
+test("l'écran propose la périodisation au lieu de l'imposer", () => {
+  const pv = _fs.readFileSync("src/features/training/ProgrammeView.jsx", "utf8");
+  assert.match(pv, /periodisationActive\(prog\)/, "le drapeau n'est pas lu");
+  assert.match(pv, /Activer la périodisation/, "aucune proposition sur programme manuel");
+  assert.match(pv, /Suivre le programme sans variation/, "impossible de désactiver");
+  assert.match(pv, /programme suivi tel quel/, "l'état inactif n'est pas expliqué");
+});
+
+test("les trois écrans transmettent le programme à la phase", () => {
+  ["src/features/training/SeanceDetail.jsx", "src/features/training/FocusMode.jsx"]
+    .forEach(f => {
+      const s = _fs.readFileSync(f, "utf8");
+      assert.match(s, /objectif: prog\?\.objectif, prog/,
+        `${f} : programme non transmis, le drapeau serait ignoré`);
+    });
+});
+
 console.log(`\n${n} tests de fumée OK`);

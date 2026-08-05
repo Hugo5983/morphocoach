@@ -130,6 +130,27 @@ export const PHASES = [
 export const TOTAL_SEMAINES = PHASES.length;
 
 /**
+ * La périodisation doit-elle s'appliquer à ce programme ?
+ *
+ * Distinction volontaire :
+ * - programme IA (`type: "ia"`) → OUI par défaut. Le mésocycle 6 semaines fait
+ *   partie de la conception : moduler complète l'intention du coach.
+ * - programme manuel (`type: "custom"`) → NON par défaut. Quand quelqu'un écrit
+ *   4×10 à 60 kg, c'est un choix. Afficher 2×55 kg sans qu'il l'ait demandé,
+ *   ce n'est pas du coaching, c'est contredire son travail.
+ *
+ * Dans les deux cas, l'utilisateur tranche : le drapeau `periodisation` posé
+ * sur le programme prime toujours sur le défaut.
+ *
+ * @param {{type?: string, periodisation?: boolean}} prog
+ * @returns {boolean}
+ */
+export function periodisationActive(prog) {
+  if (typeof prog?.periodisation === "boolean") return prog.periodisation;
+  return prog?.type === "ia";
+}
+
+/**
  * Phase correspondant à une semaine du cycle (1-indexée).
  * @param {number} semaine
  * @returns {Phase}
@@ -166,6 +187,23 @@ function arrondir(kg, groupe) {
  */
 export function appliquerPhase(ex, semaine, ctx = {}) {
   const phase = getPhase(semaine, ctx.objectif);
+
+  // Périodisation désactivée : on renvoie le programme TEL QUEL. Aucune
+  // modification silencieuse de ce que l'utilisateur a écrit.
+  if (ctx.prog && !periodisationActive(ctx.prog)) {
+    const seriesBrutes = Math.max(1, parseInt(String(ex?.series)) || 4);
+    let chargeBrute = null;
+    const s = String(ex?.charge || "");
+    if (!/%/.test(s)) {
+      const n = parseFloat(s.replace(",", "."));
+      if (isFinite(n) && n > 0) chargeBrute = n;
+    }
+    return {
+      series: seriesBrutes, seriesBase: seriesBrutes,
+      charge: chargeBrute, chargeBase: chargeBrute,
+      rir: ex?.rir || phase.rir, phase, modifie: false, inactive: true,
+    };
+  }
   const seriesBase = Math.max(1, parseInt(String(ex?.series)) || 4);
   const series = Math.max(1, Math.round(seriesBase * phase.series));
 

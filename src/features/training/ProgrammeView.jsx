@@ -10,7 +10,7 @@ import MesocycleDetail from"./components/MesocycleDetail.jsx";
 import RaisonnementCoach from"./components/RaisonnementCoach.jsx";
 import MobilitePage from"./components/MobilitePage.jsx";
 import { getFicheMorpho } from"../../services/morphoService.js";
-import { resumeSemaine } from"../../services/periodisationService.js";
+import { resumeSemaine, periodisationActive } from"../../services/periodisationService.js";
 
 export default function ProgrammeView(props) {
   useScrollTop();
@@ -484,6 +484,45 @@ export default function ProgrammeView(props) {
           const ph = resumeSemaine(semN, prog?.objectif);
           const estRepos = ph.cle === "deload";
           const acc = estRepos ? "#F5A100" : "#3B5BFB";
+          const active = periodisationActive(prog);
+          const bascule = () => {
+            const maj = { ...prog, periodisation: !active };
+            setProg(maj);
+            const i = allProgs.findIndex(x => x.id === prog.id);
+            if (i >= 0) updateProgAtIdx(i, maj);
+          };
+
+          // Programme manuel sans périodisation : on PROPOSE, on n'impose pas.
+          // Modifier silencieusement des séries choisies par l'utilisateur
+          // serait contredire son travail, pas le coacher.
+          if (!active) return (
+            <div style={{ background:"#fff", border:"1px solid rgba(15,25,35,.06)",
+                          borderRadius:22, padding:16, marginBottom:14,
+                          boxShadow:"0 2px 10px rgba(15,25,35,.05)" }}>
+              <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:8 }}>
+                <span style={{ fontSize:11, fontWeight:800, fontFamily:DISP_F,
+                               color:"#6B7486", background:"#F1F3F8",
+                               padding:"5px 11px", borderRadius:99 }}>
+                  Semaine {ph.semaine} / {ph.total}
+                </span>
+                <span style={{ fontSize:11.5, fontWeight:600, color:"#9AA3B2",
+                               fontFamily:DISP_F }}>programme suivi tel quel</span>
+              </div>
+              <div style={{ fontSize:13, fontWeight:500, color:"#6B7486",
+                            lineHeight:1.6, fontFamily:DISP_F }}>
+                Tes séries et tes charges sont affichées exactement comme tu les as
+                écrites. Je peux les faire varier sur 6 semaines — volume qui monte,
+                semaine allégée, puis pic — sans jamais toucher à ton programme enregistré.
+              </div>
+              <div onClick={bascule} style={{ display:"inline-flex", alignItems:"center",
+                gap:7, marginTop:12, cursor:"pointer", background:"rgba(59,91,251,.1)",
+                borderRadius:99, padding:"9px 15px" }}>
+                <span style={{ fontSize:12.5, fontWeight:800, color:"#2540E0",
+                               fontFamily:DISP_F }}>Activer la périodisation</span>
+              </div>
+            </div>
+          );
+
           return (
             <div style={{ background:"#fff", border:"1px solid rgba(15,25,35,.06)",
                           borderRadius:22, padding:16, marginBottom:14,
@@ -509,6 +548,10 @@ export default function ProgrammeView(props) {
                   {(prog?.objectif || "hypertrophie").replace(/_/g," ")} · {ph.objectifNote}
                 </div>
               )}
+              <div onClick={bascule} style={{ fontSize:11.5, fontWeight:700,
+                color:"#9AA3B2", fontFamily:DISP_F, marginTop:9, cursor:"pointer" }}>
+                Suivre le programme sans variation
+              </div>
               <div style={{ display:"flex", gap:4, marginTop:13 }}>
                 {Array.from({ length: ph.total }).map((_, i) => (
                   <span key={i} style={{ flex:1, height:5, borderRadius:99,
