@@ -21,6 +21,8 @@
  * @property {string} consigne    ce que l'athlète doit retenir
  */
 
+import { getMesocycleLogic } from "../data/mesocycle.js";
+
 // ─── Courbes par objectif ────────────────────────────────────────────────────
 // Un cycle de force et un cycle d'hypertrophie ne se périodisent PAS de la
 // même façon. En force, le volume chute vite et l'intensité grimpe fort : on
@@ -87,64 +89,96 @@ function decalerRir(rir, d) {
     : String(borne(+nums[0]));
 }
 
-/** Mésocycle 6 semaines : accumulation → intensification → déload → pic. */
-export const PHASES = [
-  {
-    cle: "base", label: "Base",
-    intention: "Reprendre les repères techniques et poser les charges de départ.",
-    series: 1.0, charge: 1.0, rir: "3",
-    consigne: "Semaine de calage. Reste à 3 répétitions de la limite : on installe la technique, pas des records.",
-  },
-  {
-    cle: "accumulation1", label: "Accumulation",
-    intention: "Ajouter du volume à technique constante.",
-    series: 1.0, charge: 1.03, rir: "2-3",
-    consigne: "Le volume monte. Si la technique se dégrade, garde la charge de la semaine dernière.",
-  },
-  {
-    cle: "accumulation2", label: "Accumulation +",
-    intention: "Volume maximal du cycle, c'est la semaine la plus exigeante.",
-    series: 1.15, charge: 1.05, rir: "2",
-    consigne: "Semaine la plus lourde en volume. Soigne le sommeil et l'alimentation, c'est maintenant que ça compte.",
-  },
-  {
-    cle: "intensification", label: "Intensification",
-    intention: "Moins de volume, plus de charge : on transforme le travail accumulé.",
-    series: 0.9, charge: 1.08, rir: "1-2",
-    consigne: "On allège le volume et on monte les charges. Séries d'approche obligatoires.",
-  },
-  {
-    cle: "deload", label: "Déload",
-    intention: "Absorber la fatigue accumulée pour que l'adaptation se produise.",
-    series: 0.6, charge: 0.9, rir: "4-5",
-    consigne: "Semaine de récupération VOLONTAIRE. Le muscle se construit pendant cette semaine, pas pendant les autres. Ne la saute pas.",
-  },
-  {
-    cle: "pic", label: "Pic",
-    intention: "Exprimer les gains du cycle sur les mouvements principaux.",
-    series: 0.85, charge: 1.12, rir: "1",
-    consigne: "Semaine de test. Charges les plus lourdes du cycle sur les mouvements principaux, volume réduit ailleurs.",
-  },
-];
+// ─── Phases dérivées de la base de connaissances ────────────────────────────
+// Les phases ne sont plus inventées ici : elles viennent de getMesocycleLogic,
+// la MÊME fonction qui alimente le prompt de l'IA. Auparavant le service
+// affichait un déload en semaine 5 et un « pic » en semaine 6, alors que la
+// base plaçait le déload en semaine 6 et ne parlait jamais de pic. L'athlète
+// suivait une périodisation différente de celle conçue pour lui.
 
-export const TOTAL_SEMAINES = PHASES.length;
+/** Consignes par type de phase — le texte que l'athlète doit retenir. */
+const INTENTIONS = {
+  accumulation:    { series: 1.0,  charge: 1.0,  intention: "Poser les repères techniques et les charges de départ." },
+  intensification: { series: 1.05, charge: 1.06, intention: "Monter en charge à technique constante." },
+  surcharge:       { series: 1.15, charge: 1.08, intention: "Volume maximal du cycle : la semaine la plus exigeante." },
+  pic:             { series: 0.85, charge: 1.14, intention: "Exprimer les gains du cycle sur les mouvements principaux." },
+  deload:          { series: 0.6,  charge: 0.9,  intention: "Absorber la fatigue pour que l'adaptation se produise." },
+  technique:       { series: 0.95, charge: 0.95, intention: "Qualité d'exécution avant tout : la charge attendra." },
+  adaptation:      { series: 0.9,  charge: 0.92, intention: "Habituer le corps à l'effort, sans chercher la performance." },
+  progression:     { series: 1.0,  charge: 1.04, intention: "Progression régulière, sans à-coup." },
+  consolidation:   { series: 0.95, charge: 1.0,  intention: "Consolider les acquis, maintenir la régularité." },
+};
+
+const CONSIGNES = {
+  deload: "Semaine de récupération VOLONTAIRE. Le muscle se construit maintenant, pas pendant les autres. Ne la saute pas.",
+  surcharge: "Semaine la plus lourde du cycle. Soigne le sommeil et l'alimentation, c'est maintenant que ça compte.",
+  pic: "Charges les plus lourdes du cycle sur les mouvements principaux, volume réduit ailleurs.",
+};
+
+/** Reconnaît le type d'une phase depuis son libellé dans la base. */
+function typePhase(label) {
+  const l = String(label || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  if (l.includes("deload")) return "deload";
+  if (l.includes("surcharge")) return "surcharge";
+  if (l.includes("pic")) return "pic";
+  if (l.includes("intensi") || l.includes("force-v")) return "intensification";
+  if (l.includes("techni")) return "technique";
+  if (l.includes("adapta")) return "adaptation";
+  if (l.includes("progres")) return "progression";
+  if (l.includes("consolid")) return "consolidation";
+  return "accumulation";
+}
+
+/** Développe "1-2" ou "5" en liste de semaines. */
+function semainesDe(sem) {
+  const s = String(sem || "");
+  const m = s.match(/(\d+)\s*-\s*(\d+)/);
+  if (m) {
+    const out = [];
+    for (let i = +m[1]; i <= +m[2]; i++) out.push(i);
+    return out;
+  }
+  const n = parseInt(s);
+  return isFinite(n) ? [n] : [];
+}
 
 /**
- * La périodisation doit-elle s'appliquer à ce programme ?
- *
- * Distinction volontaire :
- * - programme IA (`type: "ia"`) → OUI par défaut. Le mésocycle 6 semaines fait
- *   partie de la conception : moduler complète l'intention du coach.
- * - programme manuel (`type: "custom"`) → NON par défaut. Quand quelqu'un écrit
- *   4×10 à 60 kg, c'est un choix. Afficher 2×55 kg sans qu'il l'ait demandé,
- *   ce n'est pas du coaching, c'est contredire son travail.
- *
- * Dans les deux cas, l'utilisateur tranche : le drapeau `periodisation` posé
- * sur le programme prime toujours sur le défaut.
- *
- * @param {{type?: string, periodisation?: boolean}} prog
- * @returns {boolean}
+ * Phases du mésocycle pour ce profil, dérivées de la base.
+ * @param {string} niveau
+ * @param {string} objectif
+ * @param {number} [cycleNum]
  */
+export function getPhases(niveau = "intermediaire", objectif = "hypertrophie", cycleNum = 1) {
+  const logique = getMesocycleLogic(niveau, objectif, cycleNum);
+  const parSemaine = [];
+  for (const p of logique.phases || []) {
+    const type = typePhase(p.phase);
+    const cfg = INTENTIONS[type] || INTENTIONS.accumulation;
+    for (const s of semainesDe(p.sem)) {
+      parSemaine[s - 1] = {
+        cle: type, label: p.phase, semaine: s,
+        intention: cfg.intention,
+        series: cfg.series, charge: cfg.charge,
+        rir: rpeVersRir(p.rpe),
+        consigne: CONSIGNES[type] || p.consigne || cfg.intention,
+      };
+    }
+  }
+  // Toute semaine non couverte reprend la dernière définie.
+  for (let i = 0; i < (logique.duree || 6); i++) {
+    if (!parSemaine[i]) parSemaine[i] = parSemaine[i - 1] || parSemaine.find(Boolean);
+  }
+  return parSemaine.slice(0, logique.duree || 6);
+}
+
+/** La base raisonne en RPE, l'application affiche du RIR : RIR = 10 − RPE. */
+function rpeVersRir(rpe) {
+  const nums = String(rpe || "").match(/\d+/g);
+  if (!nums) return "2-3";
+  const conv = (n) => Math.max(0, Math.min(5, 10 - +n));
+  return nums.length > 1 ? `${conv(nums[1])}-${conv(nums[0])}` : String(conv(nums[0]));
+}
+
 export function periodisationActive(prog) {
   if (typeof prog?.periodisation === "boolean") return prog.periodisation;
   return prog?.type === "ia";
@@ -155,17 +189,25 @@ export function periodisationActive(prog) {
  * @param {number} semaine
  * @returns {Phase}
  */
-export function getPhase(semaine, objectif) {
-  const i = Math.max(1, Math.min(TOTAL_SEMAINES, Math.round(Number(semaine) || 1))) - 1;
-  const base = PHASES[i];
+export function getPhase(semaine, objectif, niveau = "intermediaire") {
+  const phases = getPhases(niveau, objectif);
+  const total = phases.length;
+  const idx = Math.max(1, Math.min(total, Math.round(Number(semaine) || 1))) - 1;
+  const base = phases[idx];
   const c = COURBES[clefObjectif(objectif)];
   return {
     ...base,
+    total,
     series: moduler(base.series, c.ampSeries),
     charge: moduler(base.charge, c.ampCharge),
     rir: decalerRir(base.rir, c.rirDecal),
     objectifNote: c.note,
   };
+}
+
+/** Nombre de semaines du mésocycle pour ce profil (4 pour un débutant). */
+export function totalSemaines(niveau = "intermediaire", objectif = "hypertrophie") {
+  return getPhases(niveau, objectif).length;
 }
 
 /** Arrondit une charge à un palier réalisable en salle. */
@@ -186,7 +228,7 @@ function arrondir(kg, groupe) {
  *            chargeBase: number|null, rir: string, phase: Phase, modifie: boolean}}
  */
 export function appliquerPhase(ex, semaine, ctx = {}) {
-  const phase = getPhase(semaine, ctx.objectif);
+  const phase = getPhase(semaine, ctx.objectif, ctx.niveau);
 
   // Périodisation désactivée : on renvoie le programme TEL QUEL. Aucune
   // modification silencieuse de ce que l'utilisateur a écrit.
@@ -233,8 +275,8 @@ export function appliquerPhase(ex, semaine, ctx = {}) {
  * Résumé de la semaine, pour un bandeau en tête de programme.
  * @param {number} semaine
  */
-export function resumeSemaine(semaine, objectif) {
-  const p = getPhase(semaine, objectif);
+export function resumeSemaine(semaine, objectif, niveau) {
+  const p = getPhase(semaine, objectif, niveau);
   const pctSeries = Math.round((p.series - 1) * 100);
   const pctCharge = Math.round((p.charge - 1) * 100);
   const bouts = [];
@@ -242,8 +284,8 @@ export function resumeSemaine(semaine, objectif) {
   if (pctCharge !== 0) bouts.push(`${pctCharge > 0 ? "+" : ""}${pctCharge} % de charge`);
   return {
     ...p,
-    semaine: Math.max(1, Math.min(TOTAL_SEMAINES, Math.round(Number(semaine) || 1))),
-    total: TOTAL_SEMAINES,
+    semaine: Math.max(1, Math.min(p.total, Math.round(Number(semaine) || 1))),
+    total: p.total,
     ajustement: bouts.length ? bouts.join(" · ") : "volume et charges de référence",
   };
 }

@@ -10,7 +10,8 @@ import MesocycleDetail from"./components/MesocycleDetail.jsx";
 import RaisonnementCoach from"./components/RaisonnementCoach.jsx";
 import MobilitePage from"./components/MobilitePage.jsx";
 import { getFicheMorpho } from"../../services/morphoService.js";
-import { resumeSemaine, periodisationActive } from"../../services/periodisationService.js";
+import { resumeSemaine, periodisationActive, totalSemaines }
+  from"../../services/periodisationService.js";
 
 export default function ProgrammeView(props) {
   useScrollTop();
@@ -27,7 +28,9 @@ export default function ProgrammeView(props) {
 
   // Durée totale du mésocycle : 6 semaines (Base · Vol+ ×3 · Déload · Pic),
   // même modèle que le reste de l'app — affichée dans le hero du programme.
-  const TOTAL_SEMAINES = 6;
+  // Durée réelle du mésocycle : 4 semaines pour un débutant, 6 sinon.
+  // Elle vient de la base de connaissances, pas d'une constante en dur.
+  const TOTAL_SEMAINES = totalSemaines(prog?.niveau, prog?.objectif);
 
   const allProgs = progs && progs.length > 0 ? progs : (prog ? [prog] : []);
 
@@ -481,7 +484,7 @@ export default function ProgrammeView(props) {
         {/* Bandeau de semaine (concept D) — la périodisation devient visible.
             Sans lui, la semaine « Déload » n'était qu'une étiquette. */}
         {(() => {
-          const ph = resumeSemaine(semN, prog?.objectif);
+          const ph = resumeSemaine(semN, prog?.objectif, prog?.niveau);
           const estRepos = ph.cle === "deload";
           const acc = estRepos ? "#F5A100" : "#3B5BFB";
           const active = periodisationActive(prog);

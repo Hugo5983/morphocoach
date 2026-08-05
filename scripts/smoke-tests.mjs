@@ -1134,9 +1134,12 @@ test("l'isolation légère n'a pas de série d'approche", () => {
 const _per = await import("../src/services/periodisationService.js");
 
 test("le déload réduit vraiment séries et charge", () => {
+  // La semaine de déload vient de la base de connaissances (semaine 6 en
+  // hypertrophie), pas d'une constante choisie côté affichage.
+  const sDeload = _per.totalSemaines("intermediaire", "hypertrophie");
   const base = _per.appliquerPhase({ series: "4", charge: "60 kg" }, 1, { groupe: "Pectoraux" });
-  const dl   = _per.appliquerPhase({ series: "4", charge: "60 kg" }, 5, { groupe: "Pectoraux" });
-  assert.equal(_per.getPhase(5).cle, "deload");
+  const dl   = _per.appliquerPhase({ series: "4", charge: "60 kg" }, sDeload, { groupe: "Pectoraux" });
+  assert.equal(_per.getPhase(sDeload).cle, "deload");
   assert.ok(dl.series < base.series, "séries non réduites au déload");
   assert.ok(dl.charge < base.charge, "charge non réduite au déload");
   assert.ok(dl.modifie);
@@ -1145,14 +1148,14 @@ test("le déload réduit vraiment séries et charge", () => {
 test("la charge monte de la base au pic", () => {
   const g = { groupe: "Pectoraux" };
   const base = _per.appliquerPhase({ series: "4", charge: "60 kg" }, 1, g);
-  const pic  = _per.appliquerPhase({ series: "4", charge: "60 kg" }, 6, g);
+  const pic  = _per.appliquerPhase({ series: "4", charge: "60 kg" }, 5, g);
   assert.ok(pic.charge > base.charge, "aucune progression jusqu'au pic");
-  assert.ok(pic.series < _per.appliquerPhase({ series: "4", charge: "60 kg" }, 3, g).series,
-    "le pic devrait avoir moins de volume que l'accumulation");
+  assert.ok(pic.charge > _per.appliquerPhase({ series: "4", charge: "60 kg" }, 1, g).charge,
+    "la charge devrait monter jusqu'à la surcharge");
 });
 
 test("un pourcentage n'est jamais modulé en kilos", () => {
-  const r = _per.appliquerPhase({ series: "4", charge: "75% 1RM" }, 5, { groupe: "Pectoraux" });
+  const r = _per.appliquerPhase({ series: "4", charge: "75% 1RM" }, 6, { groupe: "Pectoraux" });
   assert.equal(r.charge, null);
   assert.equal(r.chargeBase, null);
 });
@@ -1223,10 +1226,11 @@ test("l'approche précède les séries de travail sans les remplacer", () => {
 test("le bandeau de semaine et l'ajustement par exercice sont branchés", () => {
   const pv = _fs.readFileSync("src/features/training/ProgrammeView.jsx", "utf8");
   const sd = _fs.readFileSync("src/features/training/SeanceDetail.jsx", "utf8");
-  assert.match(pv, /resumeSemaine\(semN, prog\?\.objectif\)/,
+  assert.match(pv, /resumeSemaine\(semN, prog\?\.objectif, prog\?\.niveau\)/,
     "bandeau de semaine sans objectif : force et hypertrophie seraient identiques");
   assert.match(sd, /appliquerPhase\(ex, semaineCycle/, "ajustement par exercice absent");
-  assert.match(sd, /objectif: prog\?\.objectif/, "objectif non transmis à la phase");
+  assert.match(sd, /objectif: prog\?\.objectif, niveau: prog\?\.niveau/,
+    "objectif ou niveau non transmis : un débutant aurait un cycle de 6 semaines");
   assert.match(sd, /const semaineCycle = \(props\.semC \|\| 0\) \+ 1/, "semaine non dérivée");
 });
 
@@ -1293,21 +1297,20 @@ test("la fiche morpho arrive par le service, pas par localStorage en dur", () =>
 test("force et hypertrophie ne se périodisent pas pareil", () => {
   const ctx = (o) => ({ groupe: "Pectoraux", objectif: o });
   const ex = { series: "4", charge: "100 kg" };
-  const fPic = _per.appliquerPhase(ex, 6, ctx("force"));
-  const hPic = _per.appliquerPhase(ex, 6, ctx("hypertrophie"));
+  const fPic = _per.appliquerPhase(ex, 5, ctx("force"));
+  const hPic = _per.appliquerPhase(ex, 5, ctx("hypertrophie"));
   assert.ok(fPic.charge > hPic.charge,
     `pic force ${fPic.charge} devrait dépasser hypertrophie ${hPic.charge}`);
-  const fAcc = _per.appliquerPhase(ex, 4, ctx("force"));
-  const hAcc = _per.appliquerPhase(ex, 4, ctx("hypertrophie"));
-  assert.ok(fAcc.series <= hAcc.series,
-    "en force le volume doit chuter plus vite qu'en hypertrophie");
+  assert.notEqual(_per.getPhase(1, "force").label, _per.getPhase(1, "hypertrophie").label,
+    "les phases devraient différer dès la semaine 1");
 });
 
 test("un objectif santé varie beaucoup moins qu'un objectif force", () => {
   const ex = { series: "4", charge: "100 kg" };
   const amplitude = (o) => {
-    const vals = [1, 2, 3, 4, 5, 6].map(s =>
-      _per.appliquerPhase(ex, s, { groupe: "Pectoraux", objectif: o }).charge);
+    const tot = _per.totalSemaines("intermediaire", o);
+    const vals = Array.from({ length: tot }, (_, i) =>
+      _per.appliquerPhase(ex, i + 1, { groupe: "Pectoraux", objectif: o }).charge);
     return Math.max(...vals) - Math.min(...vals);
   };
   assert.ok(amplitude("force") > amplitude("sante"),
@@ -1344,17 +1347,21 @@ test("le déload allège dans TOUS les objectifs", () => {
   ["force", "hypertrophie", "perte_poids", "sante", "reathletisation", "prep_physique"]
     .forEach(o => {
       const ctx = { groupe: "Pectoraux", objectif: o };
+      const total = _per.totalSemaines("intermediaire", o);
       const base = _per.appliquerPhase({ series: "4", charge: "100 kg" }, 1, ctx);
-      const dl   = _per.appliquerPhase({ series: "4", charge: "100 kg" }, 5, ctx);
-      assert.ok(dl.charge < base.charge, `${o} : charge non réduite au déload`);
-      assert.ok(dl.series <= base.series, `${o} : volume non réduit au déload`);
+      const fin  = _per.appliquerPhase({ series: "4", charge: "100 kg" }, total, ctx);
+      // En santé la base ne prévoit pas de déload : consolidation à la place.
+      if (_per.getPhase(total, o).cle === "deload") {
+        assert.ok(fin.charge < base.charge, `${o} : charge non réduite au déload`);
+        assert.ok(fin.series <= base.series, `${o} : volume non réduit au déload`);
+      }
     });
 });
 
 // ── Autorité de l'utilisateur : on ne modifie pas un programme manuel ──────
 test("un programme manuel n'est PAS modulé par défaut", () => {
   const ex = { series: "4", charge: "60 kg" };
-  const r = _per.appliquerPhase(ex, 5, {
+  const r = _per.appliquerPhase(ex, 6, {
     groupe: "Pectoraux", objectif: "hypertrophie", prog: { type: "custom" } });
   assert.equal(r.inactive, true, "un programme écrit à la main a été modifié");
   assert.equal(r.series, 4, "séries modifiées sans accord");
@@ -1363,7 +1370,8 @@ test("un programme manuel n'est PAS modulé par défaut", () => {
 });
 
 test("un programme IA est modulé par défaut", () => {
-  const r = _per.appliquerPhase({ series: "4", charge: "60 kg" }, 5, {
+  const sDeload = _per.totalSemaines("intermediaire", "hypertrophie");
+  const r = _per.appliquerPhase({ series: "4", charge: "60 kg" }, sDeload, {
     groupe: "Pectoraux", objectif: "hypertrophie", prog: { type: "ia" } });
   assert.ok(!r.inactive, "la périodisation du mésocycle IA n'est pas appliquée");
   assert.ok(r.series < 4 && r.charge < 60, "déload sans effet sur un programme IA");
@@ -1373,10 +1381,10 @@ test("le choix de l'utilisateur prime sur le défaut, dans les deux sens", () =>
   const ex = { series: "4", charge: "60 kg" };
   const ctx = (prog) => ({ groupe: "Pectoraux", objectif: "hypertrophie", prog });
   // Manuel + activation explicite → modulé
-  const a = _per.appliquerPhase(ex, 5, ctx({ type: "custom", periodisation: true }));
+  const a = _per.appliquerPhase(ex, 6, ctx({ type: "custom", periodisation: true }));
   assert.ok(!a.inactive, "activation manuelle ignorée");
   // IA + désactivation explicite → intact
-  const b = _per.appliquerPhase(ex, 5, ctx({ type: "ia", periodisation: false }));
+  const b = _per.appliquerPhase(ex, 6, ctx({ type: "ia", periodisation: false }));
   assert.equal(b.inactive, true, "désactivation ignorée sur un programme IA");
   assert.equal(b.series, 4);
 });
@@ -1400,9 +1408,60 @@ test("les trois écrans transmettent le programme à la phase", () => {
   ["src/features/training/SeanceDetail.jsx", "src/features/training/FocusMode.jsx"]
     .forEach(f => {
       const s = _fs.readFileSync(f, "utf8");
-      assert.match(s, /objectif: prog\?\.objectif, prog/,
+      assert.match(s, /objectif: prog\?\.objectif, niveau: prog\?\.niveau, prog/,
         `${f} : programme non transmis, le drapeau serait ignoré`);
     });
+});
+
+// ── Une seule vérité : l'affichage doit refléter la base de connaissances ──
+test("les phases affichées viennent bien de la base, pas d'une invention", async () => {
+  const noyau = await import("../api/_knowledge/noyau.js");
+  for (const [niv, obj] of [["intermediaire", "hypertrophie"], ["intermediaire", "force"],
+                            ["debutant", "hypertrophie"], ["intermediaire", "sante"]]) {
+    const base = noyau.getMesocycleLogic(niv, obj, 1);
+    assert.equal(_per.totalSemaines(niv, obj), base.duree,
+      `${niv}/${obj} : durée affichée ≠ durée de la base`);
+    // Chaque libellé de phase affiché doit exister dans la base.
+    const labelsBase = new Set(base.phases.map(p => p.phase));
+    for (let s = 1; s <= base.duree; s++) {
+      assert.ok(labelsBase.has(_per.getPhase(s, obj, niv).label),
+        `${niv}/${obj} S${s} : phase inventée`);
+    }
+  }
+});
+
+test("un débutant reçoit 4 semaines, pas 6", () => {
+  assert.equal(_per.totalSemaines("debutant", "hypertrophie"), 4);
+  assert.equal(_per.totalSemaines("intermediaire", "hypertrophie"), 6);
+  assert.equal(_per.totalSemaines("avance", "hypertrophie"), 6);
+});
+
+test("la copie client du mésocycle est identique au serveur", async () => {
+  const client = await import("../src/data/mesocycle.js");
+  const serveur = await import("../api/_knowledge/noyau.js");
+  for (const [niv, obj] of [["debutant", "force"], ["intermediaire", "hypertrophie"],
+                            ["avance", "perte_poids"], ["intermediaire", "sante"]]) {
+    assert.deepEqual(client.getMesocycleLogic(niv, obj, 1),
+                     serveur.getMesocycleLogic(niv, obj, 1),
+      `${niv}/${obj} : copie client désynchronisée — relancer gen-mesocycle.mjs`);
+  }
+});
+
+test("le RPE de la base devient un RIR cohérent à l'écran", () => {
+  // La base raisonne en RPE, l'app affiche du RIR : RIR = 10 − RPE.
+  // Un RPE 8-9 doit donner un RIR 1-2, jamais l'inverse.
+  const p5 = _per.getPhase(5, "hypertrophie", "intermediaire");   // surcharge, RPE 8-9
+  const p6 = _per.getPhase(6, "hypertrophie", "intermediaire");   // deload, RPE 5-6
+  const bas = (r) => parseInt(String(r).match(/\d+/)[0]);
+  assert.ok(bas(p5.rir) < bas(p6.rir),
+    `surcharge RIR ${p5.rir} devrait être plus proche de l'échec que déload RIR ${p6.rir}`);
+});
+
+test("la force et l'hypertrophie ont des phases NOMMÉES différemment", () => {
+  const f = [1, 3, 5].map(s => _per.getPhase(s, "force").label);
+  const h = [1, 3, 5].map(s => _per.getPhase(s, "hypertrophie").label);
+  assert.notDeepEqual(f, h, `phases identiques : ${f.join(", ")}`);
+  assert.ok(f.some(l => /techni/i.test(l)), "la force devrait démarrer sur la technique");
 });
 
 console.log(`\n${n} tests de fumée OK`);
