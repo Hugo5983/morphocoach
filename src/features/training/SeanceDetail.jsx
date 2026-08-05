@@ -1,3 +1,5 @@
+import { appliquerPhase } from"../../services/periodisationService.js";
+import { groupeMusculaire } from"../../services/muscleGroups.js";
 import { useState } from"react";
 import { I, ID } from"../../components/ui/Icon.jsx";
 import useScrollTop from"../../hooks/useScrollTop.js";
@@ -16,6 +18,9 @@ export default function TodayView(props) {
     seance, setSeance, setChrono, setChronoSec,
     exDetails, setExDetails, exEdit, setExEdit,
     profil, EX, C: _C, INT, push, setProgView } = props;
+
+  // Semaine du mésocycle en cours : même source que le reste de l'app.
+  const semaineCycle = (props.semC || 0) + 1;
 
   const [viewSeance,       setViewSeance]       = useState(null);
   const [showManualRM,     setShowManualRM]      = useState(false);
@@ -212,6 +217,29 @@ export default function TodayView(props) {
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <div style={{ fontSize: 13, fontWeight: 700, color: isChecked ?"${C.dim}" :"${C.text}", fontFamily: DISP, textDecoration: isChecked ?"line-through" :"none", letterSpacing: -0.2 }}>{ex.nom}</div>
                         <div style={{ fontSize: 10, color:"${C.dim}", fontFamily: DISP, marginTop: 2 }}>{ex.series}×{ex.reps} · {ex.repos}{ex.methode && ex.methode !=="Classique" ?` · ${ex.methode}` :""}</div>
+                        {(() => {
+                          // Concept E : montrer l'ajustement de la semaine plutôt
+                          // que de laisser croire à une erreur. Le barré indique
+                          // qu'on allège volontairement, on n'a pas oublié.
+                          const ph = appliquerPhase(ex, semaineCycle, { groupe: groupeMusculaire(ex.nom) });
+                          if (!ph.modifie) return null;
+                          const baisse = ph.series < ph.seriesBase
+                            || (ph.charge != null && ph.charge < ph.chargeBase);
+                          const col = baisse ?"#B37400" :"#0B8A5F";
+                          return (
+                            <div style={{ fontSize: 10, fontFamily: DISP, marginTop: 3,
+                                          color:"#9AA3B2", display:"flex", alignItems:"center", gap: 5 }}>
+                              <span style={{ textDecoration:"line-through" }}>
+                                {ph.seriesBase}×{ph.chargeBase != null ? `${ph.chargeBase} kg` : ex.reps}
+                              </span>
+                              <span>→</span>
+                              <span style={{ color: col, fontWeight: 800 }}>
+                                {ph.series}×{ph.charge != null ? `${ph.charge} kg` : ex.reps}
+                              </span>
+                              <span style={{ color: col }}>· {ph.phase.label.toLowerCase()}</span>
+                            </div>
+                          );
+                        })()}
                       </div>
                       {lastEntry && (
                         <div style={{ fontSize: 10, fontWeight: 700, color: exColor, fontFamily: DISP, flexShrink: 0, ...NUM }}>

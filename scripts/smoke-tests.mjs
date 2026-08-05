@@ -1200,4 +1200,45 @@ test("la mobilité avant séance dépend des groupes travaillés", () => {
   assert.ok(!bas.includes("epaules_enroulees"), "routine épaules sur une séance jambes");
 });
 
+// ── Intégration visuelle : rien ne doit être dégradé ───────────────────────
+test("les séries d'approche ne sont JAMAIS journalisées", () => {
+  const fm = _fs.readFileSync("src/features/training/FocusMode.jsx", "utf8");
+  // Le seul push dans le journal doit rester dans validate(), jamais dans
+  // validerApproche() — sinon le volume hebdomadaire serait faussé.
+  const pushes = [...fm.matchAll(/workoutSetsRef\.current\.push/g)];
+  assert.equal(pushes.length, 1, `${pushes.length} écritures dans le journal`);
+  const approche = fm.slice(fm.indexOf("const validerApproche"),
+                            fm.indexOf("Applique la charge allégée"));
+  assert.ok(!/workoutSetsRef/.test(approche), "validerApproche journalise des séries");
+  assert.ok(!/toggleCheck/.test(approche), "validerApproche coche l'exercice");
+});
+
+test("l'approche précède les séries de travail sans les remplacer", () => {
+  const fm = _fs.readFileSync("src/features/training/FocusMode.jsx", "utf8");
+  assert.match(fm, /enApproche && \(/, "bloc d'approche absent");
+  assert.match(fm, /!enApproche && \(\s*<SetStage/, "SetStage non conditionné");
+  assert.match(fm, /setApprocheIdx\(0\)/, "l'approche ne repart pas au changement d'exercice");
+});
+
+test("le bandeau de semaine et l'ajustement par exercice sont branchés", () => {
+  const pv = _fs.readFileSync("src/features/training/ProgrammeView.jsx", "utf8");
+  const sd = _fs.readFileSync("src/features/training/SeanceDetail.jsx", "utf8");
+  assert.match(pv, /resumeSemaine\(semN\)/, "bandeau de semaine absent");
+  assert.match(sd, /appliquerPhase\(ex, semaineCycle/, "ajustement par exercice absent");
+  assert.match(sd, /const semaineCycle = \(props\.semC \|\| 0\) \+ 1/, "semaine non dérivée");
+});
+
+test("la page mobilité est atteignable et ses icônes existent", () => {
+  const pv = _fs.readFileSync("src/features/training/ProgrammeView.jsx", "utf8");
+  assert.match(pv, /showMobilite/, "page non branchée");
+  assert.match(pv, /<MobilitePage/, "composant non rendu");
+  const icon = _fs.readFileSync("src/components/ui/Icon.jsx", "utf8");
+  const mob = _fs.readFileSync("src/features/training/components/MobilitePage.jsx", "utf8");
+  const utilisees = [...mob.matchAll(/icone:\s*"([^"]+)"/g)].map(m => m[1])
+    .concat([...mob.matchAll(/name="([^"]+)"/g)].map(m => m[1]));
+  const manquantes = [...new Set(utilisees)]
+    .filter(n => !new RegExp(`(^|\\s)${n}\\s*:`).test(icon));
+  assert.deepEqual(manquantes, [], `icônes absentes : ${manquantes.join(", ")}`);
+});
+
 console.log(`\n${n} tests de fumée OK`);

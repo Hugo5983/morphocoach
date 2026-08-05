@@ -12,6 +12,9 @@ import { addXP, XP }                   from"../../services/xpService.js";
 import { saveExoFeedback }             from"../../services/coachBrainService.js";
 import { chargeDepart, getChargeRecommandee } from"../../services/progressionService.js";
 import { getVariantes, evaluerDouleur } from"../../services/substitutionService.js";
+import { groupeMusculaire } from"../../services/muscleGroups.js";
+import { getSeriesApproche } from"../../services/progressionService.js";
+import { appliquerPhase } from"../../services/periodisationService.js";
 import { syncWorkoutDay, syncExoFeedback } from"../../services/syncService.js";
 import {
   T, F, MON, NUM, GL, CSS, I,
@@ -33,13 +36,23 @@ export default function FocusMode({
   const [substitue, setSubstitue] = useState({});
   const [sheetVar,  setSheetVar]  = useState(false);
   const [verdict,   setVerdict]   = useState(null);
+  // Séries d'approche : index courant, ou null quand on est passé au travail.
+  // Ces séries ne sont JAMAIS journalisées — les compter fausserait le volume
+  // hebdomadaire et donc les seuils MEV/MAV/MRV.
+  const [approcheIdx, setApprocheIdx] = useState(0);
   const exBase    = exercices[exIdx] || null;
   // L'exercice courant est le substitut s'il y en a un : tout le reste de la
   // séance (charge, historique, feedback) doit porter sur le VRAI mouvement fait.
   const ex        = substitue[exIdx]
     ? { ...exBase, nom: substitue[exIdx].nom, _substitue: true }
     : exBase;
-  const totalSets = ex ? (parseInt(ex.series) || 4) : 4;
+  // Périodisation : la semaine du mésocycle module séries et charge affichées.
+  // Le programme stocké n'est pas modifié — on module ce qui est présenté.
+  const phaseEx = useMemo(
+    () => appliquerPhase(ex, semaine, { groupe: groupeMusculaire(ex?.nom), chargeReelle: null }),
+    [ex?.series, ex?.charge, ex?.nom, semaine]
+  );
+  const totalSets = ex ? phaseEx.series : 4;
 
   const [phase,      setPhase]     = useState('set');
   const [setIdx,     setSetIdx]    = useState(0);
@@ -63,6 +76,7 @@ export default function FocusMode({
     const d = chargeDepart(ex, prog?.objectif);
     if (d.kg != null) setKg(d.kg);
     setReps(parseInt(ex?.reps) || 10);
+    setApprocheIdx(0);              // nouvel exercice : on remonte en charge
   }, [exIdx]);
 
   // Toggles UI (Guide / Tip / Historique)
@@ -151,6 +165,28 @@ export default function FocusMode({
     setSetIdx(0);
     setPhase('set');
   }, [exIdx]);
+
+  // Séries d'approche : calculées depuis la charge de travail effective.
+  const approches = useMemo(
+    () => getSeriesApproche(
+      { nom: ex?.nom, cat: ex?.cat },
+      phaseEx.charge || kg,
+      { objectif: prog?.objectif, repsTravail: parseInt(ex?.reps) || 10 }
+    ),
+    [ex?.nom, ex?.cat, phaseEx.charge, prog?.objectif, ex?.reps]
+  );
+  const enApproche = approcheIdx < approches.length;
+  const approche   = enApproche ? approches[approcheIdx] : null;
+
+  /** Valide une série d'approche : on avance, on ne journalise RIEN. */
+  const validerApproche = useCallback(() => {
+    const suivante = approcheIdx + 1;
+    setApprocheIdx(suivante);
+    const restant = approches[approcheIdx];
+    const rs = parseInt(String(restant?.repos || "45").replace(/\D/g, "")) || 45;
+    setPhase('flash');
+    setTimeout(() => { setRest(rs); setPhase('rest'); }, 700);
+  }, [approcheIdx, approches]);
 
   /** Applique la charge allégée proposée par l'évaluation de la douleur. */
   const appliquerAllegement = useCallback(() => {
@@ -464,8 +500,70 @@ export default function FocusMode({
 )}
       </div>
 
+      {/* ── Séries d'approche (concept C : une seule à la fois) ──
+           Affichées AVANT les séries de travail. Volontairement dépouillé :
+           en pleine montée en charge, on lit un chiffre, pas un tableau. ── */}
+      {(phase ==='set' || phase ==='flash') && enApproche && (
+        <div style={{ flex:1, display:'flex', flexDirection:'column',
+                      justifyContent:'center', padding:'0 22px' }}>
+          {/* Progression : approches puis séries de travail */}
+          <div style={{ display:'flex', gap:4, marginBottom:26 }}>
+            {approches.map((_, i) => (
+              <div key={'a'+i} style={{ flex:1, height:3, borderRadius:2,
+                background: i < approcheIdx ? T.ac
+                          : i === approcheIdx ? T.ac : T.bd,
+                opacity: i > approcheIdx ? 1 : (i === approcheIdx ? 1 : .55) }}/>
+            ))}
+            <div style={{ flex:1.5, height:3, borderRadius:2, background:T.bd }}/>
+          </div>
+
+          <div style={{ textAlign:'center' }}>
+            <span style={{ display:'inline-block', fontFamily:MON, fontSize:10.5,
+                           letterSpacing:'0.1em', textTransform:'uppercase',
+                           fontWeight:700, color:'#B37400',
+                           background:'rgba(245,161,0,0.14)',
+                           padding:'5px 13px', borderRadius:99, marginBottom:18 }}>
+              Approche {approcheIdx + 1} sur {approches.length}
+            </span>
+
+            <div style={{ fontFamily:F, fontSize:64, fontWeight:800,
+                          letterSpacing:'-0.04em', lineHeight:1, color:T.t1,
+                          fontVariantNumeric:'tabular-nums' }}>
+              {approche.kg}
+              <span style={{ fontSize:22, fontWeight:600, color:T.t3 }}> kg</span>
+            </div>
+            <div style={{ fontFamily:F, fontSize:19, fontWeight:700, color:T.t2,
+                          marginTop:8 }}>
+              {approche.reps} répétitions
+            </div>
+            <div style={{ fontFamily:F, fontSize:12.5, fontWeight:500, color:T.t3,
+                          lineHeight:1.6, marginTop:16, maxWidth:280,
+                          marginLeft:'auto', marginRight:'auto' }}>
+              {approche.note}<br/>
+              {approcheIdx + 1 < approches.length
+                ? `Ensuite : ${approches[approcheIdx+1].kg} kg × ${approches[approcheIdx+1].reps}`
+                : `Ensuite : ${phaseEx.charge || kg} kg × ${reps} — série de travail`}
+            </div>
+          </div>
+
+          <button onClick={validerApproche}
+            style={{ marginTop:30, width:'100%', padding:17, borderRadius:16,
+                     border:'none', background:T.ac, color:'#FFF', cursor:'pointer',
+                     fontFamily:F, fontSize:16, fontWeight:800,
+                     opacity: phase==='flash' ? .6 : 1 }}>
+            Approche faite
+          </button>
+          <button onClick={() => setApprocheIdx(approches.length)}
+            style={{ marginTop:10, width:'100%', padding:12, borderRadius:14,
+                     border:'none', background:'transparent', color:T.t3,
+                     cursor:'pointer', fontFamily:F, fontSize:13, fontWeight:600 }}>
+            Passer l'échauffement en charge
+          </button>
+        </div>
+)}
+
       {/* ── Stage — enfant direct du flex root ── */}
-      {(phase ==='set' || phase ==='flash') && (
+      {(phase ==='set' || phase ==='flash') && !enApproche && (
         <SetStage
           phase={phase}
           setNum={Math.min(setIdx+1, totalSets)}
@@ -480,8 +578,9 @@ export default function FocusMode({
       {phase ==='rest' && (
         <RestStage
           rest={rest} total={restSecs}
-          nextKg={kg} nextReps={reps}
-          nextNum={Math.min(setIdx+1, totalSets)}
+          nextKg={enApproche ? approche?.kg ?? kg : (phaseEx.charge || kg)}
+          nextReps={enApproche ? approche?.reps ?? reps : reps}
+          nextNum={enApproche ? approcheIdx + 1 : Math.min(setIdx+1, totalSets)}
           onSkip={() => { clearInterval(restRef.current); setPhase('set'); }}
           onAdd={s => setRest(r => r+s)}
         />

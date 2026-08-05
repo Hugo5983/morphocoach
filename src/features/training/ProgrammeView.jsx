@@ -8,6 +8,8 @@ import { SeanceDetailModal } from"./components/ProgramTabModals.jsx";
 import CoachWeekCard from"./components/CoachWeekCard.jsx";
 import MesocycleDetail from"./components/MesocycleDetail.jsx";
 import RaisonnementCoach from"./components/RaisonnementCoach.jsx";
+import MobilitePage from"./components/MobilitePage.jsx";
+import { resumeSemaine } from"../../services/periodisationService.js";
 
 export default function ProgrammeView(props) {
   useScrollTop();
@@ -19,6 +21,7 @@ export default function ProgrammeView(props) {
   const [confirmDel, setConfirmDel] = useState(null); // {type:"prog"|"jour", progIdx, jourIdx}
   const [showMeso, setShowMeso] = useState(false);
   const [showRaison, setShowRaison] = useState(false);
+  const [showMobilite, setShowMobilite] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
 
   // Durée totale du mésocycle : 6 semaines (Base · Vol+ ×3 · Déload · Pic),
@@ -90,6 +93,14 @@ export default function ProgrammeView(props) {
   const semN     = (semC||0)+1;
   const progIdx = Math.max(0, allProgs.findIndex(p => prog && (p.id===prog.id || p.titre===prog.titre)));
   const durOf = dureeSeance;
+
+  // ── Mobilité : page pleine (même pattern que les autres) ──
+  if (showMobilite) {
+    return <MobilitePage prog={prog} profil={profil}
+      fiche={(() => { try { return JSON.parse(localStorage.getItem("morpho_fiche") || "null"); }
+                      catch { return null; } })()}
+      onClose={() => setShowMobilite(false)} />;
+  }
 
   // ── Raisonnement du coach : page pleine (même pattern que le mésocycle) ──
   if (showRaison) {
@@ -440,6 +451,15 @@ export default function ProgrammeView(props) {
                 </span>
                 <span style={{fontSize:14,fontWeight:800,color:"#B9C6FF",fontFamily:DISP_F}}>&rsaquo;</span>
               </div>
+              <div onClick={()=>setShowMobilite(true)} style={{display:"inline-flex",alignItems:"center",
+                gap:6,alignSelf:"flex-start",marginTop:8,cursor:"pointer",
+                background:"rgba(255,255,255,0.1)",border:"1px solid rgba(255,255,255,0.16)",
+                borderRadius:99,padding:"8px 14px"}}>
+                <span style={{fontSize:12.5,fontWeight:800,color:"#fff",fontFamily:DISP_F}}>
+                  Ta mobilité quotidienne
+                </span>
+                <span style={{fontSize:14,fontWeight:800,color:"#B9C6FF",fontFamily:DISP_F}}>&rsaquo;</span>
+              </div>
             </div>
             <div style={{display:"flex",flexDirection:"column",gap:9}}>
               <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
@@ -455,6 +475,40 @@ export default function ProgrammeView(props) {
             </div>
           </div>
         </div>
+
+        {/* Bandeau de semaine (concept D) — la périodisation devient visible.
+            Sans lui, la semaine « Déload » n'était qu'une étiquette. */}
+        {(() => {
+          const ph = resumeSemaine(semN);
+          const estRepos = ph.cle === "deload";
+          const acc = estRepos ? "#F5A100" : "#3B5BFB";
+          return (
+            <div style={{ background:"#fff", border:"1px solid rgba(15,25,35,.06)",
+                          borderRadius:22, padding:16, marginBottom:14,
+                          boxShadow:"0 2px 10px rgba(15,25,35,.05)" }}>
+              <div style={{ display:"flex", alignItems:"center", gap:8,
+                            flexWrap:"wrap", marginBottom:9 }}>
+                <span style={{ fontSize:11, fontWeight:800, fontFamily:DISP_F,
+                               color: estRepos ? "#B37400" : "#2540E0",
+                               background: estRepos ? "rgba(245,161,0,.13)" : "rgba(59,91,251,.1)",
+                               padding:"5px 11px", borderRadius:99 }}>
+                  Semaine {ph.semaine} · {ph.label.toLowerCase()}
+                </span>
+                <span style={{ fontSize:11.5, fontWeight:600, color:"#9AA3B2",
+                               fontFamily:DISP_F }}>{ph.ajustement}</span>
+              </div>
+              <div style={{ fontSize:13, fontWeight:500, color:"#6B7486",
+                            lineHeight:1.6, fontFamily:DISP_F }}>{ph.consigne}</div>
+              <div style={{ display:"flex", gap:4, marginTop:13 }}>
+                {Array.from({ length: ph.total }).map((_, i) => (
+                  <span key={i} style={{ flex:1, height:5, borderRadius:99,
+                    background: i + 1 === ph.semaine ? acc
+                              : i + 1 < ph.semaine ? "#5B8DFF" : "#E1E5EE" }}/>
+                ))}
+              </div>
+            </div>
+          );
+        })()}
 
         {/* Tes séances — badge jour + statut, tap pour éditer */}
         <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:12 }}>
