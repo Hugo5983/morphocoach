@@ -214,3 +214,79 @@ export function bilanChargesCycle(joursEnArriere = 60) {
   });
   return best;
 }
+
+
+// ═══════════════════════════════════════════════════════════════════════════
+// SÉRIES D'APPROCHE (ramp-up)
+// ═══════════════════════════════════════════════════════════════════════════
+// Un coach ne met JAMAIS un athlète directement à sa charge de travail sur un
+// mouvement lourd. On monte progressivement : ça prépare le système nerveux,
+// ça révèle la forme du jour, et c'est là que se jouent la plupart des
+// blessures évitables.
+//
+// Règle appliquée : plus la charge est lourde et l'objectif orienté force,
+// plus il faut de paliers. Sur de l'isolation légère, aucune approche.
+//
+// IMPORTANT : ces séries ne comptent PAS dans le volume d'entraînement.
+// Les compter fausserait le calcul MEV/MAV/MRV et le score de récupération.
+
+/** Nombre de paliers selon l'objectif et la lourdeur du mouvement. */
+const PALIERS = {
+  force:           [0.50, 0.70, 0.85],
+  prep_physique:   [0.50, 0.75],
+  hypertrophie:    [0.55, 0.80],
+  perte_poids:     [0.60],
+  sante:           [0.60],
+  reathletisation: [0.50, 0.70],
+};
+
+/** Catégories qui méritent une montée en charge. */
+const MERITE_APPROCHE = new Set(["principal"]);
+
+/**
+ * Séries d'approche à effectuer avant la première série de travail.
+ *
+ * @param {{nom?: string, cat?: string}} ex
+ * @param {number|null} chargeTravail charge de travail en kg (null = inconnue)
+ * @param {{objectif?: string, repsTravail?: number}} [opts]
+ * @returns {{kg: number, reps: number, repos: string, note: string}[]}
+ */
+export function getSeriesApproche(ex, chargeTravail, opts = {}) {
+  const kg = Number(chargeTravail);
+  if (!kg || kg <= 0) return [];
+
+  const groupe = groupeDe(ex?.nom);
+  // L'isolation et le gainage ne demandent pas de montée en charge : le risque
+  // articulaire est faible et l'approche mangerait du temps pour rien.
+  const cat = ex?.cat || (MERITE_APPROCHE.has(ex?.cat) ? ex.cat : null);
+  const estPrincipal = !cat || MERITE_APPROCHE.has(cat);
+  if (!estPrincipal) return [];
+
+  // Charges légères : une seule série d'approche suffit, voire aucune.
+  const seuil = BAS_DU_CORPS.includes(groupe) ? 40 : 20;
+  if (kg < seuil) return [];
+
+  const k = clefObjectif(opts.objectif);
+  let ratios = PALIERS[k] || PALIERS.hypertrophie;
+  // Charge modérée : on retire le palier le plus bas, il n'apporte rien.
+  if (kg < seuil * 2.5 && ratios.length > 1) ratios = ratios.slice(1);
+
+  const repsTravail = Number(opts.repsTravail) || 10;
+  return ratios.map((r, i) => {
+    const brut = kg * r;
+    const arrondi = arrondirPalier(brut, groupe, "bas");
+    // Plus on approche de la charge de travail, moins on fait de répétitions :
+    // on prépare le geste, on ne fatigue pas.
+    const reps = i === 0 ? Math.min(10, repsTravail + 2)
+               : i === ratios.length - 1 ? Math.max(2, Math.round(repsTravail / 3))
+               : Math.max(3, Math.round(repsTravail / 2));
+    return {
+      kg: Math.max(arrondirPalier(seuil / 2, groupe, "bas"), arrondi),
+      reps,
+      repos: i === ratios.length - 1 ? "60-90s" : "30-45s",
+      note: i === 0 ? "Mise en route — geste ample et contrôlé"
+          : i === ratios.length - 1 ? "Dernier palier — se rapprocher de la sensation de travail"
+          : "Montée en charge",
+    };
+  });
+}

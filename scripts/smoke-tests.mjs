@@ -1104,4 +1104,100 @@ test("la semaine réelle du cycle atteint la logique de douleur", () => {
   assert.ok(!/Number\(prog\?\.semaine\)/.test(fm), "utilise encore un champ inexistant");
 });
 
+// ── Séries d'approche : monter en charge, sans polluer le volume ───────────
+test("un mouvement lourd reçoit des séries d'approche croissantes", () => {
+  const a = _prog.getSeriesApproche({ nom: "Squat barre nuque (high-bar)", cat: "principal" },
+    100, { objectif: "force", repsTravail: 5 });
+  assert.ok(a.length >= 3, `${a.length} palier(s) seulement en force`);
+  for (let i = 1; i < a.length; i++)
+    assert.ok(a[i].kg > a[i - 1].kg, "les paliers ne montent pas");
+  assert.ok(a[a.length - 1].kg < 100, "le dernier palier atteint la charge de travail");
+  // Les répétitions diminuent à mesure qu'on approche : on prépare, on ne fatigue pas.
+  assert.ok(a[a.length - 1].reps <= a[0].reps);
+});
+
+test("la force demande plus de paliers que l'hypertrophie", () => {
+  const f = _prog.getSeriesApproche({ nom: "Squat barre nuque (high-bar)", cat: "principal" },
+    100, { objectif: "force", repsTravail: 5 });
+  const h = _prog.getSeriesApproche({ nom: "Squat barre nuque (high-bar)", cat: "principal" },
+    100, { objectif: "hypertrophie", repsTravail: 10 });
+  assert.ok(f.length > h.length, `force ${f.length} vs hypertrophie ${h.length}`);
+});
+
+test("l'isolation légère n'a pas de série d'approche", () => {
+  assert.deepEqual(_prog.getSeriesApproche(
+    { nom: "Élévation latérale haltère unilatérale", cat: "isolation" }, 10, {}), []);
+  assert.deepEqual(_prog.getSeriesApproche({ nom: "X", cat: "principal" }, 0, {}), []);
+});
+
+// ── Périodisation : le déload doit RÉELLEMENT alléger ──────────────────────
+const _per = await import("../src/services/periodisationService.js");
+
+test("le déload réduit vraiment séries et charge", () => {
+  const base = _per.appliquerPhase({ series: "4", charge: "60 kg" }, 1, { groupe: "Pectoraux" });
+  const dl   = _per.appliquerPhase({ series: "4", charge: "60 kg" }, 5, { groupe: "Pectoraux" });
+  assert.equal(_per.getPhase(5).cle, "deload");
+  assert.ok(dl.series < base.series, "séries non réduites au déload");
+  assert.ok(dl.charge < base.charge, "charge non réduite au déload");
+  assert.ok(dl.modifie);
+});
+
+test("la charge monte de la base au pic", () => {
+  const g = { groupe: "Pectoraux" };
+  const base = _per.appliquerPhase({ series: "4", charge: "60 kg" }, 1, g);
+  const pic  = _per.appliquerPhase({ series: "4", charge: "60 kg" }, 6, g);
+  assert.ok(pic.charge > base.charge, "aucune progression jusqu'au pic");
+  assert.ok(pic.series < _per.appliquerPhase({ series: "4", charge: "60 kg" }, 3, g).series,
+    "le pic devrait avoir moins de volume que l'accumulation");
+});
+
+test("un pourcentage n'est jamais modulé en kilos", () => {
+  const r = _per.appliquerPhase({ series: "4", charge: "75% 1RM" }, 5, { groupe: "Pectoraux" });
+  assert.equal(r.charge, null);
+  assert.equal(r.chargeBase, null);
+});
+
+// ── Mobilité : routines dérivées du terrain réel ───────────────────────────
+const _mob = await import("../src/services/mobiliteService.js");
+const _ficheP = (posture) => ({ observations: _morpho.validerObservations({
+  leviers: {}, insertions: {}, physique: {}, proportions: {},
+  posture, repartition: {}, confiance: "haute" }) });
+
+test("travail de bureau déclenche épaules, hanches et cervicales", () => {
+  const r = _mob.getRoutinesMobilite(_ficheP([]), { metier: "Bureau, assis 8h", pathologies: [] });
+  const cles = r.routines.map(x => x.cle);
+  ["epaules_enroulees", "hanches_assis", "cervicales"].forEach(c =>
+    assert.ok(cles.includes(c), `routine manquante : ${c}`));
+  assert.ok(r.minutesJour > 0);
+});
+
+test("une épaule pathologique ajoute sa routine avant séance", () => {
+  const r = _mob.getRoutinesMobilite(_ficheP([]), { metier: "", pathologies: ["Conflit épaule"] });
+  const ep = r.routines.find(x => x.cle === "epaule_patho");
+  assert.ok(ep, "routine épaule absente");
+  assert.equal(ep.moment, "avant_seance");
+});
+
+test("les routines disent quoi RENFORCER, pas seulement quoi étirer", () => {
+  const r = _mob.getRoutinesMobilite(_ficheP(["cyphose"]), { metier: "Bureau", pathologies: [] });
+  const ep = r.routines.find(x => x.cle === "epaules_enroulees");
+  assert.match(ep.renforcer, /ALLONG/, "n'avertit pas contre l'étirement d'un muscle déjà long");
+});
+
+test("aucune contrainte identifiée → aucune routine inventée", () => {
+  const r = _mob.getRoutinesMobilite(_ficheP([]), { metier: "", pathologies: [] });
+  assert.equal(r.routines.length, 0);
+  assert.equal(r.minutesJour, 0);
+});
+
+test("la mobilité avant séance dépend des groupes travaillés", () => {
+  const f = _ficheP(["cyphose"]);
+  const p = { metier: "Bureau", pathologies: ["Conflit épaule"] };
+  const haut = _mob.getMobiliteAvantSeance(f, p, "Pectoraux / Épaules").map(x => x.cle);
+  const bas  = _mob.getMobiliteAvantSeance(f, p, "Jambes").map(x => x.cle);
+  assert.ok(haut.includes("epaule_patho"), "épaule absente d'une séance haut du corps");
+  assert.ok(bas.includes("hanches_assis"), "hanches absentes d'une séance jambes");
+  assert.ok(!bas.includes("epaules_enroulees"), "routine épaules sur une séance jambes");
+});
+
 console.log(`\n${n} tests de fumée OK`);
