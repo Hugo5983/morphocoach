@@ -1166,12 +1166,28 @@ const _ficheP = (posture) => ({ observations: _morpho.validerObservations({
   leviers: {}, insertions: {}, physique: {}, proportions: {},
   posture, repartition: {}, confiance: "haute" }) });
 
-test("travail de bureau déclenche épaules, hanches et cervicales", () => {
+test("travail de bureau déclenche les routines pertinentes, dans la limite du tenable", () => {
   const r = _mob.getRoutinesMobilite(_ficheP([]), { metier: "Bureau, assis 8h", pathologies: [] });
   const cles = r.routines.map(x => x.cle);
-  ["epaules_enroulees", "hanches_assis", "cervicales"].forEach(c =>
+  ["epaules_enroulees", "hanches_assis"].forEach(c =>
     assert.ok(cles.includes(c), `routine manquante : ${c}`));
-  assert.ok(r.minutesJour > 0);
+  assert.ok(cles.includes("respiration"),
+    "la respiration devrait être proposée à un travailleur assis");
+  // Plafond quotidien : au-delà de 20 min la routine est abandonnée.
+  assert.ok(r.minutesJour > 0 && r.minutesJour <= 20,
+    `${r.minutesJour} min/jour : hors du budget tenable`);
+});
+
+test("le plafond quotidien garde les routines PRIORITAIRES", () => {
+  const r = _mob.getRoutinesMobilite(
+    _ficheP(["hyperlordose", "bascule_bassin", "cyphose", "antepulsion_scapulaire"]),
+    { metier: "Bureau assis", pathologies: [] });
+  const cles = r.routines.map(x => x.cle);
+  // Les deux syndromes doivent survivre au plafond, pas la respiration (5 min)
+  // qui tiendrait pourtant plus facilement dans le budget restant.
+  assert.ok(cles.includes("croise_inferieur") && cles.includes("croise_superieur"),
+    "un syndrome a été écarté au profit d'une routine moins prioritaire");
+  assert.ok(r.minutesJour <= 20);
 });
 
 test("une épaule pathologique ajoute sa routine avant séance", () => {
@@ -1571,6 +1587,237 @@ test("le verdict d'autorégulation est affiché, pas seulement calculé", () => 
   // Un risque de blessure ne dépend pas d'un réglage d'affichage.
   assert.equal((pv.match(/\{carteAuto\}/g) || []).length, 2,
     "la carte manque dans l'une des deux branches");
+});
+
+// ── Syndromes croisés de Janda : étirer les raccourcis, MUSCLER les inhibés ─
+test("lordose + bascule du bassin → syndrome croisé inférieur", () => {
+  const r = _mob.getRoutinesMobilite(_ficheP(["hyperlordose", "bascule_bassin"]),
+    { metier: "Bureau assis", pathologies: [] });
+  const s = r.routines.find(x => x.cle === "croise_inferieur");
+  assert.ok(s, "syndrome croisé inférieur non détecté");
+  assert.match(s.cause, /psoas|érecteurs/i);
+  // Le point clé : les fessiers et abdos sont INHIBÉS, pas raides.
+  assert.match(s.renforcer, /INHIB/i);
+  assert.match(s.renforcer, /aggraverait|moitié du traitement/i);
+});
+
+test("cyphose + antépulsion → syndrome croisé supérieur", () => {
+  const r = _mob.getRoutinesMobilite(_ficheP(["cyphose", "antepulsion_scapulaire"]),
+    { metier: "", pathologies: [] });
+  const s = r.routines.find(x => x.cle === "croise_superieur");
+  assert.ok(s, "syndrome croisé supérieur non détecté");
+  assert.match(s.renforcer, /trapèze inférieur|dentelé/i);
+  // L'erreur classique : étirer le haut du dos déjà trop long.
+  assert.match(s.renforcer, /inverse|muscler/i);
+});
+
+test("un syndrome remplace les routines partielles, sans doublon", () => {
+  const r = _mob.getRoutinesMobilite(_ficheP(["cyphose", "antepulsion_scapulaire"]),
+    { metier: "Bureau assis", pathologies: [] });
+  const cles = r.routines.map(x => x.cle);
+  assert.ok(cles.includes("croise_superieur"));
+  assert.ok(!cles.includes("epaules_enroulees"), "routine partielle cumulée au syndrome");
+  assert.ok(!cles.includes("cervicales"), "cervicales cumulées au syndrome supérieur");
+});
+
+test("cumuler les deux syndromes reste faisable au quotidien", () => {
+  const r = _mob.getRoutinesMobilite(
+    _ficheP(["hyperlordose", "bascule_bassin", "cyphose", "antepulsion_scapulaire"]),
+    { metier: "Bureau assis", pathologies: [] });
+  assert.ok(r.minutesJour <= 22, `${r.minutesJour} min/jour : personne ne tiendra`);
+  const cles = r.routines.map(x => x.cle);
+  assert.ok(cles.includes("croise_inferieur") && cles.includes("croise_superieur"));
+});
+
+test("les syndromes passent en tête de la séance corrective", () => {
+  const s = _mob.getSeanceMobilite(_ficheP(["hyperlordose", "bascule_bassin"]),
+    { metier: "Bureau assis", pathologies: [] }, {});
+  assert.equal(s.type, "corrective");
+  assert.match(s.exercices[0].zone, /croisé inférieur/i);
+});
+
+test("une posture saine ne déclenche AUCUN syndrome", () => {
+  const r = _mob.getRoutinesMobilite(_ficheP([]), { metier: "", pathologies: [] });
+  assert.equal(r.routines.filter(x => /croise_/.test(x.cle)).length, 0);
+});
+
+// ── Sciatalgie : faire GLISSER le nerf, ne pas le tendre ───────────────────
+test("une sciatique déclenche la routine nerveuse dédiée", () => {
+  for (const pat of ["Sciatique", "Hernie discale", "Sciatalgie"]) {
+    const r = _mob.getRoutinesMobilite(_ficheP([]), { metier: "", pathologies: [pat] });
+    const s = r.routines.find(x => x.cle === "sciatique");
+    assert.ok(s, `${pat} : routine sciatique absente`);
+    assert.match(s.exercices[0].nom, /glissement|flossing/i,
+      "le glissement nerveux doit venir en premier");
+  }
+});
+
+test("la sciatique met en garde contre l'étirement d'un nerf irrité", () => {
+  const r = _mob.getRoutinesMobilite(_ficheP([]), { metier: "", pathologies: ["Sciatique"] });
+  const s = r.routines.find(x => x.cle === "sciatique");
+  assert.match(s.renforcer, /GLISSER|aggrave/i);
+  assert.match(s.renforcer, /sous le genou/i, "absence du critère d'arrêt");
+});
+
+test("une hernie discale est distinguée d'une compression du piriforme", () => {
+  const hernie = _mob.getRoutinesMobilite(_ficheP([]), { metier: "", pathologies: ["Hernie discale"] })
+    .routines.find(x => x.cle === "sciatique");
+  const pir = _mob.getRoutinesMobilite(_ficheP([]), { metier: "", pathologies: ["Piriforme"] })
+    .routines.find(x => x.cle === "sciatique");
+  assert.notEqual(hernie.cause, pir.cause, "même explication pour deux causes différentes");
+  assert.match(hernie.cause, /discale|radiculaire/i);
+});
+
+test("la sciatique remplace la routine rachis générique", () => {
+  const r = _mob.getRoutinesMobilite(_ficheP([]), { metier: "Manutention", pathologies: ["Sciatique"] });
+  const cles = r.routines.map(x => x.cle);
+  assert.ok(cles.includes("sciatique"));
+  assert.ok(!cles.includes("rachis_charges"), "doublon rachis + sciatique");
+});
+
+// ── Respiration : la cause souvent ignorée du croisé supérieur ─────────────
+test("la respiration est proposée aux profils assis et aux postures fermées", () => {
+  ["Bureau assis", "Travail de nuit"].forEach(m => {
+    const r = _mob.getRoutinesMobilite(_ficheP([]), { metier: m, pathologies: [] });
+    assert.ok(r.routines.some(x => x.cle === "respiration"), `${m} : respiration absente`);
+  });
+});
+
+test("la respiration ne passe JAMAIS devant une douleur", () => {
+  const s = _mob.getSeanceMobilite(_ficheP([]),
+    { metier: "Bureau assis", pathologies: ["Sciatique"] }, {});
+  assert.match(s.exercices[0].zone, /sciatalgie/i,
+    "la respiration passe avant une sciatique");
+});
+
+// ── Progression : les renforcements évoluent, pas les étirements ───────────
+test("les exercices de renforcement progressent avec le temps", () => {
+  const f = _ficheP(["hyperlordose", "bascule_bassin"]);
+  const pr = { metier: "Bureau assis", pathologies: [] };
+  const s0  = _mob.getRoutinesMobilite(f, pr, { semaines: 0 }).routines
+    .find(x => x.cle === "croise_inferieur");
+  const s12 = _mob.getRoutinesMobilite(f, pr, { semaines: 12 }).routines
+    .find(x => x.cle === "croise_inferieur");
+  const noms0 = s0.exercices.map(e => e.nom);
+  const noms12 = s12.exercices.map(e => e.nom);
+  assert.notDeepEqual(noms0, noms12, "aucune progression après 12 semaines");
+  // Les ÉTIREMENTS ne changent pas : leur rôle est de restaurer une longueur.
+  assert.ok(noms12.includes("Étirement psoas en fente haute"),
+    "un étirement a été remplacé alors qu'il ne doit pas progresser");
+  // Les exercices progressés portent la trace de ce qu'ils remplacent.
+  assert.ok(s12.exercices.some(e => e.remplace), "traçabilité de la progression absente");
+});
+
+test("aucune progression avant 4 semaines", () => {
+  const f = _ficheP(["hyperlordose", "bascule_bassin"]);
+  const pr = { metier: "Bureau assis", pathologies: [] };
+  const s3 = _mob.getRoutinesMobilite(f, pr, { semaines: 3 }).routines
+    .find(x => x.cle === "croise_inferieur");
+  assert.ok(!s3.exercices.some(e => e.remplace),
+    "progression déclenchée avant que le motif moteur soit installé");
+});
+
+// ── Plafonds : une séance trop longue est une séance skippée ───────────────
+test("aucune séance de mobilité ne dépasse 15 minutes", () => {
+  const cas = [
+    [[], "", []],
+    [["cyphose"], "Bureau", []],
+    [["hyperlordose", "bascule_bassin", "cyphose", "antepulsion_scapulaire", "valgus_genou"],
+     "Bureau assis", ["Lombalgie", "Conflit épaule", "Sciatique", "Tendinite Achille"]],
+  ];
+  cas.forEach(([post, met, pat]) => {
+    const s = _mob.getSeanceMobilite(_ficheP(post), { metier: met, pathologies: pat }, {});
+    assert.ok(s.minutes <= 15, `${s.minutes} min : sera skippée`);
+    assert.ok(s.exercices.length <= 7, `${s.exercices.length} exercices`);
+  });
+});
+
+test("toutes les zones prioritaires sont couvertes malgré le plafond", () => {
+  const s = _mob.getSeanceMobilite(
+    _ficheP(["hyperlordose", "bascule_bassin", "cyphose", "antepulsion_scapulaire"]),
+    { metier: "Bureau assis", pathologies: ["Sciatique"] }, {});
+  const zones = new Set(s.exercices.map(e => e.zone));
+  assert.ok(zones.size >= 4, `${zones.size} zones seulement : certaines sont ignorées`);
+});
+
+// ── Décompression vertébrale : indiquée, avec ses contre-indications ───────
+test("une discopathie déclenche la décompression vertébrale", () => {
+  for (const pat of ["Hernie discale", "Sciatique", "Lombalgie", "Discopathie"]) {
+    const r = _mob.getRoutinesMobilite(_ficheP([]), { metier: "", pathologies: [pat] });
+    const d = r.routines.find(x => x.cle === "decompression");
+    assert.ok(d, `${pat} : décompression absente`);
+    assert.match(d.exercices[0].nom, /suspend/i, "la suspension devrait venir en premier");
+  }
+});
+
+test("la suspension est contre-indiquée si l'épaule est douloureuse", () => {
+  const r = _mob.getRoutinesMobilite(_ficheP([]),
+    { metier: "", pathologies: ["Hernie discale", "Conflit épaule"] });
+  assert.ok(!r.routines.some(x => x.cle === "decompression"),
+    "suspension proposée malgré une épaule pathologique");
+  assert.ok(r.routines.some(x => x.cle === "epaule_patho"), "routine épaule absente");
+});
+
+test("la suspension précise passive ET descente contrôlée", () => {
+  const d = _mob.getRoutinesMobilite(_ficheP([]), { metier: "", pathologies: ["Hernie discale"] })
+    .routines.find(x => x.cle === "decompression");
+  const susp = d.exercices[0];
+  assert.match(susp.comment, /PASSIVE|passive/, "consigne de suspension passive absente");
+  assert.match(susp.comment, /REDESCEND|redescend/i, "aucune consigne sur la descente");
+  // La décompression soulage mais ne corrige pas : le renforcement est requis.
+  assert.match(d.renforcer, /SOULAGE|symptomatique/i);
+});
+
+// ── Mobilité pilotée par l'objectif ────────────────────────────────────────
+test("chaque objectif reçoit sa propre mobilité", () => {
+  const attendu = {
+    force: "objectif_force", prep_physique: "objectif_force",
+    hypertrophie: "objectif_hypertrophie", perte_poids: "objectif_recuperation",
+  };
+  for (const [obj, cle] of Object.entries(attendu)) {
+    const r = _mob.getRoutinesMobilite(_ficheP([]), { metier: "", pathologies: [], objectif: obj });
+    assert.ok(r.routines.some(x => x.cle === cle), `${obj} : routine ${cle} absente`);
+  }
+});
+
+test("la mobilité de performance se place AVANT la séance", () => {
+  const r = _mob.getRoutinesMobilite(_ficheP([]), { metier: "", pathologies: [], objectif: "force" });
+  const o = r.routines.find(x => x.cle === "objectif_force");
+  assert.equal(o.moment, "avant_seance",
+    "une mobilité de performance après la séance ne sert à rien");
+  // Elle ne doit pas entamer le budget quotidien.
+  assert.equal(r.minutesJour, 0, "la routine avant-séance compte dans le budget quotidien");
+});
+
+test("la prépa physique met en garde contre l'étirement statique avant l'effort", () => {
+  const o = _mob.getRoutinesMobilite(_ficheP([]),
+    { metier: "", pathologies: [], objectif: "prep_physique" })
+    .routines.find(x => x.cle === "objectif_force");
+  assert.match(o.cause, /statique/i);
+  assert.match(o.cause, /réduit la production de force|PAS d'étirement/i);
+});
+
+test("un objectif santé n'ajoute aucune routine de performance", () => {
+  const r = _mob.getRoutinesMobilite(_ficheP([]), { metier: "", pathologies: [], objectif: "sante" });
+  assert.equal(r.routines.filter(x => /^objectif_/.test(x.cle)).length, 0);
+});
+
+test("un profil complet reste dans les budgets malgré tous les cumuls", () => {
+  const r = _mob.getRoutinesMobilite(_ficheP(["cyphose", "antepulsion_scapulaire"]),
+    { metier: "Bureau assis", pathologies: ["Hernie discale"], objectif: "force" });
+  const s = _mob.getSeanceMobilite(_ficheP(["cyphose", "antepulsion_scapulaire"]),
+    { metier: "Bureau assis", pathologies: ["Hernie discale"], objectif: "force" }, {});
+  assert.ok(r.minutesJour <= 20, `${r.minutesJour} min/jour hors séance`);
+  assert.ok(s.minutes <= 15, `${s.minutes} min de séance`);
+  // La décompression, prioritaire, doit survivre au plafond.
+  assert.ok(r.routines.some(x => x.cle === "decompression"),
+    "la décompression a été écartée par le plafond alors qu'elle est prioritaire");
+});
+
+test("l'objectif atteint bien le service depuis l'écran", () => {
+  const mp = _fs.readFileSync("src/features/training/components/MobilitePage.jsx", "utf8");
+  assert.equal((mp.match(/objectif: prog\?\.objectif/g) || []).length, 2,
+    "l'objectif manque dans l'un des deux appels");
 });
 
 console.log(`\n${n} tests de fumée OK`);

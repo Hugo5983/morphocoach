@@ -25,7 +25,7 @@ const MOMENTS = {
   libre:        { label: "Dans la journée", icone: "clock",  couleur: GREY },
 };
 
-export default function MobilitePage({ prog, profil, fiche, onClose }) {
+export default function MobilitePage({ prog, profil, fiche, semaines = 0, onClose }) {
   useScrollTop();
   const [ouvert, setOuvert] = useState(null);
 
@@ -35,16 +35,18 @@ export default function MobilitePage({ prog, profil, fiche, onClose }) {
     () => getSeanceMobilite(fiche, {
       metier: profil?.metier || prog?.metier,
       pathologies: prog?.pathologies || profil?.pathologies || [],
-    }, { joursEntrainement: prog?.jours?.length || 3 }),
-    [fiche, profil?.metier, prog?.metier, prog?.pathologies, prog?.jours?.length]
+      objectif: prog?.objectif,
+    }, { joursEntrainement: prog?.jours?.length || 3, semaines }),
+    [fiche, profil?.metier, prog?.metier, prog?.pathologies, prog?.objectif, prog?.jours?.length, semaines]
   );
 
   const { routines, minutesJour, resume } = useMemo(
     () => getRoutinesMobilite(fiche, {
       metier: profil?.metier || prog?.metier,
       pathologies: prog?.pathologies || profil?.pathologies || [],
-    }),
-    [fiche, profil?.metier, prog?.metier, prog?.pathologies]
+      objectif: prog?.objectif,
+    }, { semaines }),
+    [fiche, profil?.metier, prog?.metier, prog?.pathologies, prog?.objectif, semaines]
   );
 
   return (
@@ -217,6 +219,11 @@ export default function MobilitePage({ prog, profil, fiche, onClose }) {
                           <div style={{ flex: 1, minWidth: 0 }}>
                             <div style={{ fontSize: 13.5, fontWeight: 700, color: "#0F1923", fontFamily: F }}>
                               {e.nom}
+                              {e.remplace && (
+                                <span style={{ fontSize: 10.5, fontWeight: 800, color: GRN,
+                                  background: "#E7F7F0", borderRadius: 99, padding: "2px 8px",
+                                  marginLeft: 7, whiteSpace: "nowrap" }}>progressé</span>
+                              )}
                             </div>
                             <div style={{ fontSize: 11.5, fontWeight: 700, color: BL,
                               fontFamily: F, marginTop: 2 }}>{e.duree}</div>

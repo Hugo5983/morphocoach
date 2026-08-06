@@ -104,7 +104,10 @@ export default function ProgrammeView(props) {
     // La fiche vient du service : c'est le SEUL point d'accès à l'analyse
     // morphologique produite par l'IA à partir des photos. Une lecture directe
     // de localStorage ici aurait divergé le jour où la clé change.
+    // semN = semaine du cycle courant ; les cycles précédents comptent aussi
+    // pour la progression des exercices de renforcement.
     return <MobilitePage prog={prog} profil={profil} fiche={getFicheMorpho()}
+      semaines={((progs?.length || 1) - 1) * TOTAL_SEMAINES + semN}
       onClose={() => setShowMobilite(false)} />;
   }
 
