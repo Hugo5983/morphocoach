@@ -32,6 +32,7 @@ import { selectCandidats, findInCatalogue, matsAutorises, correctifsPourPatholog
   from "./_knowledge/exercices_catalogue.js";
 import { buildPrescriptionBlock, getPrescription, calibrerSeance } from "./_knowledge/prescription.js";
 import { buildAdaptationsBlock } from "./_knowledge/adaptations.js";
+import { buildDouleursBlock } from "./_knowledge/douleurs.js";
 import { buildConstructionBlock } from "./_knowledge/construction.js";
 
 export const config = { api: { bodyParser: { sizeLimit: "4mb" } } };
@@ -115,6 +116,8 @@ export function buildServerPrompt({ form, dossier, fiche, directives, cycleNum, 
   // Adaptations individuelles : règles de la base MorphoCoach déclenchées par
   // les traits RÉELLEMENT observés + âge + sexe + pathologies. Vide si la
   // morphologie est neutre — on n'invente jamais de contrainte.
+  // Douleurs décrites par symptômes : où, quel mouvement. Pas de diagnostic.
+  const douleursBlock = buildDouleursBlock(form.douleurs || []);
   const adaptationsBlock = buildAdaptationsBlock(fiche, {
     age: form.age, sexe: form.sexe, pathologies: form.pathologies,
   });
@@ -354,6 +357,8 @@ Pathologies déclarées: ${(form.pathologies || []).filter(p => p !== "Aucune").
 Numéro de cycle: ${cycleNum}
 
 ${prescriptionBlock}
+
+${douleursBlock}
 
 ${adaptationsBlock}
 
@@ -603,20 +608,43 @@ export async function runGeneration({ form, dossier, ficheMorpho, access, budget
   // On garde une RÉSERVE fixe de 70 s pour la reprise, et on donne tout le
   // reste au premier appel (plafonné à 300 s). Un ratio donnait 154 s sur un
   // budget de 280 s — trop court, la reprise se déclenchait pour rien.
-  const RESERVE = 70_000;
+  // Vu en production : appel 1 coupé à 210 s, reprise à 70 s, échec total à
+  // 280 s. La reprise arrivait TROP TARD et avec trop peu de temps.
+  //
+  // Nouvelle stratégie : on part directement en mode CONCIS quand le budget est
+  // serré, plutôt que de tenter une version longue vouée à expirer puis une
+  // reprise trop courte. Mieux vaut un programme complet et sobre qu'un échec.
+  const RESERVE = Math.round(budgetMs * 0.33);          // ~92 s sur 280
   const CAP1  = wide ? Math.min(300_000, budgetMs - RESERVE) : 70_000;
+  // Budget serré = sortie longue impossible : on demande la concision D'EMBLÉE.
+  const concisDemblee = wide && CAP1 < 230_000;
   const GATE  = wide ?  90_000 : 35_000;   // temps restant minimal pour tenter la correction
   const CAP2  = wide ? 180_000 : 60_000;   // appel correctif
   const MARGE = wide ?  10_000 :  5_000;   // marge de sérialisation
 
   // Consigne de concision : réduit la VERBOSITÉ (commentaires, justifications),
   // jamais le contenu du programme. Sert uniquement à la reprise.
-  const CONCISION = `\n\n═══ CONTRAINTE DE FORMAT — RÉPONSE PRÉCÉDENTE TROP LONGUE ═══
+  const CONCISION = `\n\n═══ CONTRAINTE DE FORMAT — RÉDACTION RESSERRÉE ═══
 Le programme doit être COMPLET et de qualité identique : même nombre de séances,
-même nombre d'exercices, mêmes charges, mêmes tempos, même prescription.
-En revanche, RESSERRE la rédaction : "tips_coach" et "justification" en une
-phrase courte chacun, "progression_semaine" en une ligne, et les champs de
-"reflexion" en 2 phrases maximum. Aucune redondance entre les champs.`;
+même nombre d'exercices, mêmes charges, mêmes tempos, même prescription, même
+échauffement. C'est la RÉDACTION qu'on resserre, jamais le contenu.
+- "tips_coach" : une phrase courte, l'essentiel du placement.
+- champs de "reflexion" : 2 phrases maximum chacun, aucune redondance.
+- pas de reformulation d'un champ à l'autre.`;
+
+  // Reprise d'urgence : on sacrifie la prose explicative, JAMAIS le programme.
+  // Sans elle, un run lent ne produisait rien du tout après 4 min 40 d'attente.
+  const MINIMAL = `\n\n═══ MODE COMPACT — TEMPS DE GÉNÉRATION CONTRAINT ═══
+Priorité absolue : livrer le PROGRAMME COMPLET. Même nombre de séances, même
+nombre d'exercices, mêmes charges, séries, répétitions, tempos et repos.
+Pour tenir le temps :
+- "tips_coach" : 10 mots maximum, ou chaîne vide si rien d'essentiel.
+- "reflexion" : remplis UNIQUEMENT "diagnostic" (une phrase) et "priorites".
+  Tous les autres champs de reflexion : chaîne vide. Ils seront complétés
+  au prochain cycle.
+- "echauffement" : une ligne courte.
+- pas de champ "nutrition" ni "morpho" : chaîne vide ou objet minimal.
+Un programme complet et sobre vaut infiniment mieux qu'aucun programme.`;
 
   /**
    * Appel principal avec reprise. Une expiration ne doit pas se solder par
@@ -625,18 +653,18 @@ phrase courte chacun, "progression_semaine" en une ligne, et les champs de
   async function appelPrincipal() {
     try {
       return await callAnthropic({
-        model: MODEL, maxTokens: 16000, system,
-        content: [{ type: "text", text: prompt }],
+        model: MODEL, maxTokens: concisDemblee ? 12000 : 16000, system,
+        content: [{ type: "text", text: prompt + (concisDemblee ? CONCISION : "") }],
         timeoutMs: Math.min(CAP1, remaining()),
       });
     } catch (e) {
       const expire = e.status === 504 || e.truncated;
       const reste = remaining() - MARGE;
       if (!expire || reste < 55_000) throw e;
-      console.warn(`[generate-program] 1er appel expiré, reprise concise (${Math.round(reste / 1000)}s restantes)`);
+      console.warn(`[generate-program] 1er appel expiré, reprise compacte (${Math.round(reste / 1000)}s restantes)`);
       return await callAnthropic({
-        model: MODEL, maxTokens: 12000, system,
-        content: [{ type: "text", text: prompt + CONCISION }],
+        model: MODEL, maxTokens: 6000, system,
+        content: [{ type: "text", text: prompt + MINIMAL }],
         timeoutMs: reste,
       });
     }

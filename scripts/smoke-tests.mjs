@@ -980,11 +980,31 @@ test("le plafond client couvre le budget serveur et sa reprise", () => {
 
 test("une expiration déclenche une reprise, pas un échec sec", () => {
   const src = _fs.readFileSync("api/generate-program.js", "utf8");
-  assert.match(src, /reprise concise/i);
-  assert.match(src, /CONTRAINTE DE FORMAT/);
+  assert.match(src, /reprise compacte/i, "aucune reprise en cas d'expiration");
+  assert.match(src, /MODE COMPACT/, "mode de repli absent");
   // La reprise resserre la RÉDACTION, jamais le contenu du programme.
   assert.match(src, /même nombre de séances/i);
   assert.match(src, /même nombre d'exercices/i);
+  assert.match(src, /vaut infiniment mieux qu'aucun programme/i,
+    "la priorité au programme complet n'est pas énoncée");
+});
+
+test("un budget serré demande la concision D'EMBLÉE", () => {
+  const src = _fs.readFileSync("api/generate-program.js", "utf8");
+  assert.match(src, /concisDemblee/, "aucune détection de budget serré");
+  // Vu en production : appel 1 coupé à 210 s puis reprise à 70 s = échec
+  // total après 4 min 40. Mieux vaut viser court dès le départ.
+  assert.match(src, /CAP1 < 230_000/, "seuil de bascule absent");
+});
+
+test("les budgets laissent la place aux DEUX tentatives", () => {
+  for (const budget of [280_000, 700_000]) {
+    const reserve = Math.round(budget * 0.33);
+    const cap1 = Math.min(300_000, budget - reserve);
+    assert.ok(cap1 >= 180_000, `budget ${budget / 1000}s : CAP1 ${cap1 / 1000}s trop court`);
+    assert.ok(reserve >= 90_000, `budget ${budget / 1000}s : réserve ${reserve / 1000}s trop courte`);
+    assert.ok(cap1 + reserve <= budget, "la somme dépasse le budget");
+  }
 });
 
 // ── Sortie : pas de champ redondant qui allonge la génération ──────────────
@@ -1885,6 +1905,83 @@ test("le prompt annonce la durée réelle au modèle", () => {
     "le budget d'exercices ne déduit pas l'échauffement");
   assert.match(src, /comptés deux[\s\S]{0,6}fois/,
     "rien n'empêche le modèle d'ajouter des exercices d'échauffement");
+});
+
+// ── Douleurs : on décrit des SYMPTÔMES, on ne demande pas un diagnostic ────
+const _dlr = await import("../api/_knowledge/douleurs.js");
+
+test("un symptôme décrit produit un mécanisme et des contre-indications", () => {
+  const r = _dlr.lireDouleur({ zone: "epaule", localisation: "anterieure", mouvement: "pousser_haut" });
+  assert.equal(r.reconnu, true);
+  assert.ok(r.mecanisme.length > 40);
+  assert.ok(r.eviter.includes("Développé nuque"), "le développé nuque devrait être écarté");
+  assert.ok(r.privilegier.length > 0);
+  assert.ok(r.consigne.length > 20);
+});
+
+test("la même zone donne des lectures DIFFÉRENTES selon le mouvement", () => {
+  const haut  = _dlr.lireDouleur({ zone: "epaule", localisation: "anterieure", mouvement: "pousser_haut" });
+  const devant = _dlr.lireDouleur({ zone: "epaule", localisation: "anterieure", mouvement: "pousser_devant" });
+  assert.notEqual(haut.mecanisme, devant.mecanisme,
+    "le mouvement déclencheur ne change rien : l'information la plus utile est perdue");
+  assert.notDeepEqual(haut.eviter, devant.eviter);
+});
+
+test("un genou antérieur en descente n'est pas un genou en rotation", () => {
+  const patello = _dlr.lireDouleur({ zone: "genou", localisation: "anterieure", mouvement: "descente" });
+  const rotation = _dlr.lireDouleur({ zone: "genou", localisation: "interne", mouvement: "rotation" });
+  assert.notEqual(patello.mecanisme, rotation.mecanisme);
+  assert.equal(rotation.avisRecommande, true, "une douleur en rotation devrait orienter vers un avis");
+});
+
+test("les drapeaux rouges sont levés", () => {
+  const nuit = _dlr.lireDouleur({ zone: "epaule", localisation: "laterale",
+    mouvement: "elever_cote", moment: "nuit" });
+  assert.ok(nuit.drapeaux.length > 0, "douleur nocturne non signalée");
+  assert.equal(nuit.avisRecommande, true);
+  const jambe = _dlr.lireDouleur({ zone: "dos", localisation: "descend", mouvement: "flexion" });
+  assert.ok(jambe.drapeaux.some(f => /nerveuse|jambe/i.test(f)), "irradiation non signalée");
+});
+
+test("un motif non reconnu protège la zone sans inventer d'explication", () => {
+  const r = _dlr.lireDouleur({ zone: "hanche", localisation: "fessier", mouvement: "ecart" });
+  assert.equal(r.reconnu, false);
+  assert.ok(r.consigne.length > 20, "aucune consigne de prudence");
+  assert.deepEqual(r.eviter, [], "des exercices écartés sans motif identifié");
+});
+
+test("TOUT exercice recommandé existe au catalogue", () => {
+  const noms = new Set();
+  for (const [zone, cfg] of Object.entries(_dlr.QUESTIONNAIRE)) {
+    for (const l of cfg.localisations) for (const m of cfg.mouvements) {
+      _dlr.lireDouleur({ zone, localisation: l.cle, mouvement: m.cle })
+        .privilegier.forEach(nm => noms.add(nm));
+    }
+  }
+  const absents = [...noms].filter(nm => !_cat.findInCatalogue(nm));
+  assert.deepEqual(absents, [], `recommandations introuvables : ${absents.join(", ")}`);
+});
+
+test("le bloc prompt interdit de nommer une pathologie", () => {
+  const b = _dlr.buildDouleursBlock([
+    { zone: "epaule", localisation: "anterieure", mouvement: "pousser_haut" }]);
+  assert.match(b, /en aucun cas un diagnostic/i);
+  assert.match(b, /Ne nomme jamais de pathologie/i);
+  assert.match(b, /EXERCICES À ÉCARTER/);
+});
+
+test("aucune douleur déclarée → aucun bloc", () => {
+  assert.equal(_dlr.buildDouleursBlock([]), "");
+  assert.equal(_dlr.buildDouleursBlock(), "");
+});
+
+test("le questionnaire couvre les cinq zones avec leurs mouvements", () => {
+  ["epaule", "genou", "dos", "coude", "hanche"].forEach(z => {
+    const q = _dlr.QUESTIONNAIRE[z];
+    assert.ok(q, `zone ${z} absente`);
+    assert.ok(q.localisations.length >= 3, `${z} : localisations trop grossières`);
+    assert.ok(q.mouvements.length >= 4, `${z} : pas assez de mouvements déclencheurs`);
+  });
 });
 
 console.log(`\n${n} tests de fumée OK`);
