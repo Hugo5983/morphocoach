@@ -1984,4 +1984,30 @@ test("le questionnaire couvre les cinq zones avec leurs mouvements", () => {
   });
 });
 
+test("le questionnaire client est identique au serveur", async () => {
+  const client = await import("../src/data/douleurs.js");
+  assert.deepEqual(client.QUESTIONNAIRE, _dlr.QUESTIONNAIRE,
+    "questionnaire désynchronisé — relancer gen-douleurs.mjs");
+  assert.deepEqual(client.MOMENTS, _dlr.MOMENTS);
+});
+
+test("le formulaire propose les deux voies : diagnostic ET symptômes", () => {
+  const src = _fs.readFileSync("src/features/ai/AnalyseIA.jsx", "utf8");
+  // Les diagnostics restent pour ceux qui les connaissent.
+  assert.match(src, /Conflit épaule/, "les diagnostics ont été retirés");
+  // Et le questionnaire par symptômes pour les autres.
+  assert.match(src, /sans savoir ce que c'est/i, "questionnaire par symptômes absent");
+  assert.match(src, /QUEL MOUVEMENT DÉCLENCHE/, "le mouvement déclencheur n'est pas demandé");
+  assert.match(src, /douleurs: \[\]/, "état des douleurs non initialisé");
+});
+
+test("les douleurs décrites atteignent le serveur", () => {
+  const ai = _fs.readFileSync("src/services/aiService.js", "utf8");
+  assert.match(ai, /JSON\.stringify\(\{ form,/,
+    "le formulaire complet n'est pas transmis : douleurs perdues");
+  const gp = _fs.readFileSync("api/generate-program.js", "utf8");
+  assert.match(gp, /form\.douleurs \|\| \[\]\)\.slice\(0, 5\)/,
+    "aucun bornage du nombre de douleurs");
+});
+
 console.log(`\n${n} tests de fumée OK`);

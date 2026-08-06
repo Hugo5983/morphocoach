@@ -6,6 +6,7 @@
  */
 
 import { I } from"../../components/ui/Icon.jsx";
+import { QUESTIONNAIRE, MOMENTS, lireDouleur } from"../../data/douleurs.js";
 import { useState, useRef, useEffect } from"react";
 import useScrollTop from"../../hooks/useScrollTop.js";
 import {
@@ -26,6 +27,8 @@ import {
 export default function AnalyseIA(props) {
   useScrollTop();
   const [elapsed, setElapsed] = useState(0);
+  const [dlrZone, setDlrZone] = useState(null);   // zone en cours de description
+  const [dlrLoc,  setDlrLoc]  = useState(null);
   const { profil, photos, setPhotos, readFile, INT, loadIA, setLoadIA, loadMsg,
           setLoadMsg, corrigerFaibles, setCorrigerFaibles, setProg, setCycleStart,
           setCalSess, setProgView, setTab, cycles, setCycles, prog, push } = props;
@@ -38,6 +41,7 @@ export default function AnalyseIA(props) {
     sexe:   profil?.sexe   ||"", metier:"",
     niveau:"", jours: [], objectif: profil?.objectif ||"",
     objectifPrecis:"", materiel: [], pathologies: [], sport:"", dureeSeance: 60,
+    douleurs: [],   // [{ zone, localisation, mouvement, moment }]
   });
 
   const fileRefFace   = useRef();
@@ -595,6 +599,115 @@ export default function AnalyseIA(props) {
               selected={form.pathologies} onToggle={togglePath}/>
 ))}
 
+          {/* ── Douleur sans diagnostic ──
+               Beaucoup de gens ont mal sans savoir de quoi il s'agit : demander
+               un diagnostic laisse la case vide et l'IA travaille à l'aveugle.
+               On demande donc OÙ et SUR QUEL MOUVEMENT. ── */}
+          <div style={{ ...CARD, padding:'16px', marginTop:4, marginBottom:14 }}>
+            <div style={{ fontSize:13.5, fontWeight:700, color:T.t1, marginBottom:4 }}>
+              Tu as mal quelque part sans savoir ce que c'est ?
+            </div>
+            <div style={{ fontSize:11.5, color:T.t3, lineHeight:1.5, marginBottom:14 }}>
+              Pas besoin de diagnostic. Dis-moi où, et sur quel mouvement ça se déclenche :
+              c'est ça qui permet d'écarter les bons exercices.
+            </div>
+
+            {/* Douleurs déjà décrites */}
+            {(form.douleurs || []).map((d, i) => {
+              const z = QUESTIONNAIRE[d.zone];
+              const loc = z?.localisations.find(x => x.cle === d.localisation)?.label || "";
+              const mvt = z?.mouvements.find(x => x.cle === d.mouvement)?.label || "";
+              const lue = lireDouleur(d);
+              return (
+                <div key={i} style={{ background:T.surfFlat, borderRadius:12,
+                  padding:'11px 13px', marginBottom:8, border:`1px solid ${T.bd}` }}>
+                  <div style={{ display:'flex', alignItems:'flex-start', gap:10 }}>
+                    <div style={{ flex:1, minWidth:0 }}>
+                      <div style={{ fontSize:13, fontWeight:700, color:T.t1 }}>
+                        {z?.label} — {loc}
+                      </div>
+                      <div style={{ fontSize:11.5, color:T.t3, marginTop:2 }}>{mvt}</div>
+                      {lue.drapeaux.length > 0 && (
+                        <div style={{ fontSize:11.5, fontWeight:600, color:'#B37400',
+                          lineHeight:1.45, marginTop:5 }}>{lue.drapeaux[0]}</div>
+                      )}
+                    </div>
+                    <button onClick={() => setForm(f => ({ ...f,
+                      douleurs: f.douleurs.filter((_, k) => k !== i) }))}
+                      style={{ background:'transparent', border:'none', cursor:'pointer',
+                        color:T.t3, fontSize:18, lineHeight:1, padding:'0 2px' }}>×</button>
+                  </div>
+                </div>
+              );
+            })}
+
+            {/* Sélecteur en trois temps */}
+            {!dlrZone ? (
+              <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:8 }}>
+                {Object.entries(QUESTIONNAIRE).map(([cle, z]) => (
+                  <button key={cle} onClick={() => setDlrZone(cle)}
+                    style={{ padding:'12px 8px', borderRadius:12, cursor:'pointer',
+                      background:T.surfFlat, border:`1px solid ${T.bd}`,
+                      fontFamily:F, fontSize:13, fontWeight:600, color:T.t2 }}>
+                    {z.label}
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <div>
+                <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:12 }}>
+                  <button onClick={() => { setDlrZone(null); setDlrLoc(null); }}
+                    style={{ background:'transparent', border:'none', cursor:'pointer',
+                      color:T.acLt, fontFamily:F, fontSize:12.5, fontWeight:700, padding:0 }}>
+                    ‹ Retour
+                  </button>
+                  <span style={{ fontSize:13, fontWeight:700, color:T.t1 }}>
+                    {QUESTIONNAIRE[dlrZone].label}
+                  </span>
+                </div>
+
+                {!dlrLoc ? (
+                  <>
+                    <div style={{ fontSize:11.5, fontWeight:700, color:T.t3, marginBottom:8 }}>
+                      OÙ EXACTEMENT ?
+                    </div>
+                    <div style={{ display:'flex', flexDirection:'column', gap:7 }}>
+                      {QUESTIONNAIRE[dlrZone].localisations.map(l => (
+                        <button key={l.cle} onClick={() => setDlrLoc(l.cle)}
+                          style={{ padding:'12px 14px', borderRadius:12, textAlign:'left',
+                            cursor:'pointer', background:T.surfFlat, border:`1px solid ${T.bd}`,
+                            fontFamily:F, fontSize:13, fontWeight:600, color:T.t2 }}>
+                          {l.label}
+                        </button>
+                      ))}
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div style={{ fontSize:11.5, fontWeight:700, color:T.t3, marginBottom:8 }}>
+                      QUEL MOUVEMENT DÉCLENCHE LA DOULEUR ?
+                    </div>
+                    <div style={{ display:'flex', flexDirection:'column', gap:7 }}>
+                      {QUESTIONNAIRE[dlrZone].mouvements.map(m => (
+                        <button key={m.cle}
+                          onClick={() => {
+                            setForm(f => ({ ...f, douleurs: [...(f.douleurs || []),
+                              { zone:dlrZone, localisation:dlrLoc, mouvement:m.cle }] }));
+                            setDlrZone(null); setDlrLoc(null);
+                          }}
+                          style={{ padding:'12px 14px', borderRadius:12, textAlign:'left',
+                            cursor:'pointer', background:T.surfFlat, border:`1px solid ${T.bd}`,
+                            fontFamily:F, fontSize:13, fontWeight:600, color:T.t2 }}>
+                          {m.label}
+                        </button>
+                      ))}
+                    </div>
+                  </>
+                )}
+              </div>
+            )}
+          </div>
+
           {/* Aucune pathologie */}
           <div style={{ paddingTop:4 }}>
             <button className="ob-tap"
@@ -673,6 +786,13 @@ export default function AnalyseIA(props) {
                 { l:'IMC', v:imcVal ? `${imcVal} · ${imcLabel}` : "—" },
                 { l:'Masse grasse estimée', v:bfVal ? `~${bfVal} %` : "—" },
                 { l:'Contraintes', v:form.pathologies.length>0?form.pathologies.join(","):"Aucune" },
+                { l:'Douleurs décrites', v:(form.douleurs||[]).length
+                    ? (form.douleurs||[]).map(d => {
+                        const z = QUESTIONNAIRE[d.zone];
+                        const l = z?.localisations.find(x=>x.cle===d.localisation)?.label;
+                        return `${z?.label} (${(l||"").toLowerCase()})`;
+                      }).join(" · ")
+                    : "—" },
               ].map(r => (
                 <div key={r.l} style={{ display:'flex', alignItems:'center', justifyContent:'space-between' }}>
                   <span style={{ fontSize:11, fontWeight:500, color:T.t3 }}>{r.l}</span>

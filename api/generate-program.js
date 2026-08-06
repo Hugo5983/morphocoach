@@ -117,7 +117,8 @@ export function buildServerPrompt({ form, dossier, fiche, directives, cycleNum, 
   // les traits RÉELLEMENT observés + âge + sexe + pathologies. Vide si la
   // morphologie est neutre — on n'invente jamais de contrainte.
   // Douleurs décrites par symptômes : où, quel mouvement. Pas de diagnostic.
-  const douleursBlock = buildDouleursBlock(form.douleurs || []);
+  // Borné à 5 : au-delà, ce n'est plus un programme d'entraînement qu'il faut.
+  const douleursBlock = buildDouleursBlock((form.douleurs || []).slice(0, 5));
   const adaptationsBlock = buildAdaptationsBlock(fiche, {
     age: form.age, sexe: form.sexe, pathologies: form.pathologies,
   });
