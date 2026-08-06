@@ -1,4 +1,6 @@
 import { appliquerPhase } from"../../services/periodisationService.js";
+import { getEchauffement } from"../../services/echauffementService.js";
+import { getFicheMorpho } from"../../services/morphoService.js";
 import { groupeMusculaire } from"../../services/muscleGroups.js";
 import { useState } from"react";
 import { I, ID } from"../../components/ui/Icon.jsx";
@@ -179,7 +181,58 @@ export default function TodayView(props) {
               </div>
             </div>
 
-            {/* Échauffement spécifique — première chose à lire avant de charger */}
+            {/* Échauffement structuré — trois temps, plafonné à 10 min hors
+                montée en charge. Il ouvre la séance : c'est la première chose
+                à lire, et la première qu'on saute quand elle est floue. */}
+            {!todaySeance.complete && (() => {
+              const ech = getEchauffement(todaySeance, getFicheMorpho(), {
+                metier: profil?.metier, pathologies: prog?.pathologies,
+                objectif: prog?.objectif, niveau: prog?.niveau,
+              }, { chargePremierExo: null });
+              return (
+                <div style={{ background:"rgba(245,161,0,0.07)", border:"1px solid rgba(245,161,0,0.22)",
+                              borderRadius:16, padding:"14px 16px", marginBottom:12 }}>
+                  <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between",
+                                gap:10, marginBottom:9 }}>
+                    <span style={{ fontSize:10.5, fontWeight:800, letterSpacing:"0.1em",
+                                   color:"#B37400" }}>ÉCHAUFFEMENT</span>
+                    <span style={{ fontSize:11, fontWeight:800, color:"#B37400",
+                                   background:"rgba(245,161,0,0.16)", borderRadius:99,
+                                   padding:"3px 10px" }}>{ech.minutes} min</span>
+                  </div>
+                  {ech.blocs.map((b, bi) => (
+                    <div key={b.cle} style={{ marginTop: bi === 0 ? 0 : 11 }}>
+                      <div style={{ fontSize:12.5, fontWeight:800, color:C.t1 }}>
+                        {bi + 1}. {b.titre}
+                        <span style={{ fontWeight:600, color:"#9AA3B2" }}> · {b.minutes} min</span>
+                      </div>
+                      <div style={{ fontSize:11.5, fontWeight:500, color:"#9AA3B2",
+                                    lineHeight:1.45, marginTop:2 }}>{b.but}</div>
+                      {b.exercices.map((x, xi) => (
+                        <div key={xi} style={{ display:"flex", gap:8, marginTop:5 }}>
+                          <span style={{ color:"#B37400", fontSize:12 }}>·</span>
+                          <div style={{ flex:1, minWidth:0 }}>
+                            <span style={{ fontSize:12.5, fontWeight:700, color:C.t1 }}>{x.nom}</span>
+                            <span style={{ fontSize:11.5, fontWeight:600, color:"#B37400" }}> — {x.duree}</span>
+                            {x.comment && (
+                              <div style={{ fontSize:11.5, fontWeight:500, color:"#6B7486",
+                                            lineHeight:1.45 }}>{x.comment}</div>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+                  <div style={{ fontSize:11.5, fontWeight:600, color:"#8A5A00",
+                                lineHeight:1.5, marginTop:11, paddingTop:9,
+                                borderTop:"1px solid rgba(245,161,0,0.2)" }}>
+                    Les séries d'approche sur le premier exercice sont guidées en séance.
+                  </div>
+                </div>
+              );
+            })()}
+
+            {/* Consigne d'échauffement propre à cette séance (produite par l'IA) */}
             {!todaySeance.complete && todaySeance.echauffement && (
               <div style={{ background:"rgba(245,161,0,0.08)", border:"1px solid rgba(245,161,0,0.25)",
                             borderRadius:16, padding:"14px 16px", marginBottom:12 }}>

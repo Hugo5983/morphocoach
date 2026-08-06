@@ -109,7 +109,9 @@ export function buildServerPrompt({ form, dossier, fiche, directives, cycleNum, 
   // sans elle, "force" et "hypertrophie" produisaient des programmes jumeaux.
   const prescriptionBlock = buildPrescriptionBlock(form.objectif);
   // Nombre d'exercices compatible AVEC les temps de repos de l'objectif.
-  const calib = calibrerSeance(form.objectif, dureeCible);
+  // 8 min d'échauffement sont retirées du budget : sans ça, le modèle
+  // remplissait toute la durée d'exercices et la séance réelle débordait.
+  const calib = calibrerSeance(form.objectif, Math.max(20, dureeCible - 8));
   // Adaptations individuelles : règles de la base MorphoCoach déclenchées par
   // les traits RÉELLEMENT observés + âge + sexe + pathologies. Vide si la
   // morphologie est neutre — on n'invente jamais de contrainte.
@@ -398,7 +400,10 @@ Chaque séance porte le champ "jour" correspondant, avec AU MINIMUM 3 exercices
 
 ⏱ DURÉE CIBLE PAR SÉANCE : ${dureeCible} MINUTES
 L'application calcule la durée affichée ainsi :
-  durée = Σ (séries × (repos_en_secondes + 60))
+  durée = Σ (séries × (repos_en_secondes + 60)) + 8 min d'échauffement
+Les 8 minutes d'échauffement sont incompressibles et déjà comptées : n'ajoute
+pas d'exercices d'échauffement dans "exercices", ils y seraient comptés deux
+fois. Le champ "echauffement" de la séance suffit.
 Avec les temps de repos qu'impose l'objectif, un exercice coûte environ
 ${calib.coutExo} minutes → vise ${calib.min} à ${calib.max} exercices par séance.
 Ajuste le NOMBRE d'exercices, jamais les temps de repos de la prescription :

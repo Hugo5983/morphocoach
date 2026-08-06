@@ -71,15 +71,31 @@ export const catColor = (cat) => CAT[cat ||"principal"] || CAT.principal;
  * @param {{exercices?: Array<{series?:string|number, repos?:string|number}>}} jour
  * @returns {number|null}
  */
-export function dureeSeance(jour) {
+/**
+ * Durée d'une séance, échauffement COMPRIS.
+ *
+ * L'ancienne version ne comptait que les séries de travail : une séance
+ * annoncée à 60 min en prenait 75 une fois l'échauffement et la montée en
+ * charge effectués. C'est ainsi qu'on « perd » du temps sans comprendre
+ * pourquoi, et qu'on finit par sauter l'échauffement.
+ *
+ * @param {{exercices?: object[]}} jour
+ * @param {{minutesEchauffement?: number}} [opts] 0 pour exclure l'échauffement
+ */
+export function dureeSeance(jour, opts = {}) {
   const exs = jour?.exercices || [];
   if (!exs.length) return null;
   const secs = exs.reduce((sum, ex) => {
     const s = parseInt(ex.series) || 4;
-    const r = parseInt(String(ex.repos ||"90").replace(/\D/g,"")) || 90;
+    // "90s" ou "60-90s" : on prend la borne haute, pas la concaténation.
+    const nums = String(ex.repos || "90").match(/\d+/g);
+    const r = nums ? Number(nums[nums.length - 1]) : 90;
     return sum + s * (r + 60);
   }, 0);
-  return Math.round(secs / 60);
+  // Échauffement par défaut : 8 min si non précisé (3 général + 4 spécifique
+  // + ~1 de transition). Passer 0 pour obtenir le temps de travail seul.
+  const ech = typeof opts.minutesEchauffement === "number" ? opts.minutesEchauffement : 8;
+  return Math.round(secs / 60) + ech;
 }
 
 /**

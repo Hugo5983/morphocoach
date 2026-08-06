@@ -1820,4 +1820,71 @@ test("l'objectif atteint bien le service depuis l'écran", () => {
     "l'objectif manque dans l'un des deux appels");
 });
 
+// ── Échauffement : une séquence unique, plafonnée, et RÉELLEMENT comptée ───
+const _ech = await import("../src/services/echauffementService.js");
+const _train = await import("../src/utils/training.js");
+
+const _seancePec = { focus: "Pectoraux", echauffement: "Coiffe avant tout développé.",
+  exercices: [{ nom: "Développé couché barre", reps: "8-10", cat: "principal" },
+              { nom: "Écarté poulie vis-à-vis", reps: "12" }] };
+
+test("l'échauffement suit les trois temps du coach", () => {
+  const r = _ech.getEchauffement(_seancePec, _ficheP([]), { objectif: "hypertrophie" }, {});
+  const cles = r.blocs.map(b => b.cle);
+  assert.ok(cles.includes("general"), "aucune mise en route générale");
+  assert.ok(cles.includes("specifique"), "aucune préparation ciblée");
+  assert.ok(r.blocs[0].cle === "general", "le spécifique passe avant la température");
+});
+
+test("l'échauffement ne dépasse JAMAIS 10 minutes hors montée en charge", () => {
+  const cas = [
+    [_ficheP([]), { objectif: "hypertrophie" }],
+    [_ficheP(["cyphose", "antepulsion_scapulaire"]),
+     { metier: "Bureau assis", pathologies: ["Conflit épaule"], objectif: "force" }],
+  ];
+  cas.forEach(([f, pr]) => {
+    const r = _ech.getEchauffement(_seancePec, f, pr, {});
+    assert.ok(r.minutes <= 10, `${r.minutes} min : sera sauté`);
+  });
+});
+
+test("la montée en charge est chiffrée correctement", () => {
+  // Piège : "30-45s" donne 3045 s si l'on retire simplement les non-chiffres.
+  const r = _ech.getEchauffement(_seancePec, _ficheP([]), { objectif: "hypertrophie" },
+    { chargePremierExo: 80 });
+  assert.ok(r.montee.length > 0, "aucune montée en charge sur un développé à 80 kg");
+  assert.ok(r.minutesMontee > 0 && r.minutesMontee <= 10,
+    `${r.minutesMontee} min de montée : calcul erroné`);
+  assert.ok(r.minutesTotal <= 20, `${r.minutesTotal} min au total`);
+});
+
+test("une routine morpho prime sur la préparation générique", () => {
+  const r = _ech.getEchauffement(_seancePec,
+    _ficheP(["cyphose", "antepulsion_scapulaire"]),
+    { metier: "Bureau assis", pathologies: ["Conflit épaule"], objectif: "hypertrophie" }, {});
+  const spec = r.blocs.find(b => b.cle === "specifique");
+  assert.ok(spec.exercices.some(e => e.origine && /épaule|syndrome|amplitude/i.test(e.origine)),
+    "la préparation ne tient pas compte de l'analyse morphologique");
+});
+
+test("la durée annoncée inclut désormais l'échauffement", () => {
+  const j = { exercices: Array(6).fill({ series: "4", reps: "8-10", repos: "60-90s" }) };
+  const travail = _train.dureeSeance(j, { minutesEchauffement: 0 });
+  const total = _train.dureeSeance(j);
+  assert.ok(total > travail, "l'échauffement n'est pas compté");
+  assert.equal(total - travail, 8, "forfait d'échauffement incorrect");
+  // Piège du parsing : "60-90s" ne doit pas être lu comme 6090 secondes.
+  assert.ok(travail < 120, `${travail} min : le repos est mal parsé`);
+});
+
+test("le prompt annonce la durée réelle au modèle", () => {
+  const src = _fs.readFileSync("api/generate-program.js", "utf8");
+  assert.match(src, /\+ 8 min d'échauffement/,
+    "le modèle ignore que l'échauffement s'ajoute");
+  assert.match(src, /dureeCible - 8/,
+    "le budget d'exercices ne déduit pas l'échauffement");
+  assert.match(src, /comptés deux[\s\S]{0,6}fois/,
+    "rien n'empêche le modèle d'ajouter des exercices d'échauffement");
+});
+
 console.log(`\n${n} tests de fumée OK`);
