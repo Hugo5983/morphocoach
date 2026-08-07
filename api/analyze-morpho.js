@@ -81,6 +81,25 @@ export default async function handler(req, res) {
 - "partielle" : parties du corps coupées
 Si qualite_photo est "floue", "sombre", "trop_loin" ou "partielle", mets TOUS les champs à "indetermine" et confiance à "faible".
 
+⛔ LA POSTURE SE LIT SUR LES PHOTOS, ELLE NE SE DÉDUIT PAS ⛔
+Tu ne connais NI le métier, NI le mode de vie de cette personne, et c'est
+volontaire. Ne coche une posture que si tu la VOIS :
+- antepulsion_scapulaire : de PROFIL, les épaules sont en avant de l'axe de
+  l'oreille et du bassin ; de FACE, les paumes regardent vers l'arrière.
+- cyphose : de PROFIL, courbure dorsale marquée, sternum affaissé.
+- hyperlordose : de PROFIL, creux lombaire accentué, bassin basculé vers
+  l'avant, fesses projetées en arrière.
+- bascule_bassin : de PROFIL, l'épine iliaque antérieure est nettement plus
+  BASSE que la postérieure.
+- valgus_genou : de FACE, les genoux convergent vers l'intérieur.
+- epaule_asymetrique : de FACE ou de DOS, une épaule visiblement plus haute.
+- rotation_bassin : de FACE, une crête iliaque plus haute ou plus avancée.
+
+Si l'angle de prise de vue ne permet pas de trancher (pas de profil net,
+vêtement ample, cadrage partiel), NE COCHE PAS. Une posture supposée
+entraîne des exercices imposés pendant six semaines : le coût d'une
+fausse détection est réel.
+
 ⚠ IMPORTANT — "indetermine" est une EXCEPTION, pas un réflexe.
 Si la photo est exploitable, tu DOIS te prononcer : un coach expérimenté lit des
 proportions sur une photo correcte, c'est son métier. Réserve "indetermine" aux

@@ -139,32 +139,68 @@ export function analyzeProgressionParExercice({ prog, cycles }) {
 
   const verdicts = [];
   Object.entries(series).forEach(([nom, pts]) => {
+    // Il faut au moins 3 points pour parler d'une tendance.
     if (pts.length < 3) return;
     pts.sort((a, b) => a.date.localeCompare(b.date));
     const win = pts.slice(-4);                       // fenêtre : 4 dernières séances
     const first = win[0].top, lastP = win[win.length - 1];
+
+    // ÉTALEMENT DANS LE TEMPS — le critère qui manquait.
+    // Trois séances réparties sur trois mois ne constituent PAS une
+    // stagnation : c'est un problème de fréquence. Conclure « stagnation »
+    // dans ce cas amenait l'IA à remplacer des exercices qui n'avaient
+    // simplement jamais eu l'occasion de progresser.
+    const jours = Math.round(
+      (new Date(lastP.date) - new Date(win[0].date)) / 864e5
+    );
+    const semaines = Math.max(1, Math.round(jours / 7));
+    const cadence = win.length / semaines;           // séances par semaine
+
+    // Tolérance : 2 % sur 60 kg font 1,2 kg, soit moins que le plus petit
+    // disque. On prend le maximum entre 3 % et un vrai palier de 2,5 kg.
+    const seuil = Math.max(0.03, 2.5 / Math.max(1, first));
     const delta = (lastP.top - first) / first;
+
     let tendance, action;
-    if (delta >= 0.02) {
-      tendance ="progression";
-      action ="Exercice qui FONCTIONNE pour ce profil → à conserver ou faire évoluer légèrement.";
-    } else if (delta <= -0.02) {
-      tendance ="regression";
-      action ="Régression → réduire le volume 2 semaines OU remplacer par une variante moins exigeante, vérifier la récupération.";
+
+    if (cadence < 0.4) {
+      // Moins d'une séance toutes les 2,5 semaines sur cet exercice.
+      tendance = "frequence_insuffisante";
+      action = `FRÉQUENCE INSUFFISANTE (${win.length} séances étalées sur ${semaines} semaines) → `
+        + "aucune conclusion possible sur cet exercice : il n'a pas été pratiqué assez souvent "
+        + "pour progresser ou stagner. NE PAS le remplacer pour cause de stagnation. "
+        + "Le problème est l'assiduité, pas le choix d'exercice.";
+    } else if (delta >= seuil) {
+      tendance = "progression";
+      action = "Exercice qui FONCTIONNE pour ce profil → à conserver ou faire évoluer légèrement.";
+    } else if (delta <= -seuil) {
+      tendance = "regression";
+      action = "Régression → réduire le volume 2 semaines OU remplacer par une variante moins exigeante, vérifier la récupération.";
+    } else if (win.length >= 4) {
+      tendance = "stagnation";
+      action = `STAGNATION (${win.length} séances sur ${semaines} semaines à ~${lastP.top}kg) → `
+        + "cet exercice ne produit plus d'adaptation : remplacer par une variante du même pattern "
+        + "(angle/prise/matériel différent) OU changer radicalement la plage de reps OU passer en rest-pause.";
     } else {
-      tendance ="stagnation";
-      action ="STAGNATION (" + win.length +" séances à ~" + lastP.top +"kg) → cet exercice ne produit plus d'adaptation : remplacer par une variante du même pattern (angle/prise/matériel différent) OU changer radicalement la plage de reps OU passer en rest-pause.";
+      // 3 séances rapprochées mais sans évolution nette : trop tôt pour trancher.
+      tendance = "a_confirmer";
+      action = `Charge stable sur ${win.length} séances en ${semaines} semaines → `
+        + "trop tôt pour conclure. Conserver l'exercice une période de plus avant d'envisager "
+        + "un remplacement.";
     }
+
     verdicts.push({
       nom, seances_analysees: pts.length,
-      derniere_perf: lastP.top +"kg ×" + (lastP.reps ||"?"),
+      periode: `${win.length} séances sur ${semaines} semaine${semaines > 1 ? "s" : ""}`,
+      derniere_perf: lastP.top + "kg ×" + (lastP.reps || "?"),
       evolution_recente: win.map(p => p.top).join(" →"),
       tendance, action,
     });
   });
 
   // Les problèmes d'abord (c'est là que le coach doit réfléchir)
-  const ordre = { stagnation: 0, regression: 1, progression: 2 };
+  const ordre = { regression: 0, stagnation: 1, a_confirmer: 2,
+                  frequence_insuffisante: 3, progression: 4 };
   verdicts.sort((a, b) => ordre[a.tendance] - ordre[b.tendance]);
   return verdicts.slice(0, 15);
 }

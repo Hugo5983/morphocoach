@@ -238,6 +238,7 @@ const ROUTINES = [
   // tension 20 000 fois par jour. Aucun étirement ne compense ça.
   {
     cle: "respiration",
+    observe: (c) => c.posture.includes("cyphose") || c.posture.includes("antepulsion_scapulaire"),
     when: (c) => c.metier === "assis" || c.metier === "nuit"
       || c.posture.includes("cyphose") || c.posture.includes("antepulsion_scapulaire"),
     titre: "Respiration diaphragmatique",
@@ -268,6 +269,7 @@ const ROUTINES = [
   // dès qu'on se relève.
   {
     cle: "croise_inferieur",
+    observe: (c) => c.posture.includes("hyperlordose") && c.posture.includes("bascule_bassin"),
     when: (c) => (c.posture.includes("hyperlordose") && c.posture.includes("bascule_bassin"))
       || (c.posture.includes("hyperlordose") && c.metier === "assis"),
     titre: "Syndrome croisé inférieur",
@@ -301,6 +303,7 @@ const ROUTINES = [
   // INHIBÉE (fléchisseurs profonds du cou, trapèze inférieur, dentelé).
   {
     cle: "croise_superieur",
+    observe: () => true,   // exige cyphose ET antépulsion, donc toujours observé
     when: (c) => c.posture.includes("cyphose") && c.posture.includes("antepulsion_scapulaire"),
     titre: "Syndrome croisé supérieur",
     cause: () => "Cyphose et épaules enroulées combinées : trapèze supérieur, angulaire de l'omoplate "
@@ -329,6 +332,10 @@ const ROUTINES = [
 
   {
     cle: "epaules_enroulees",
+    // `observe` distingue ce qui a été VU sur les photos de ce qui est déduit
+    // du métier. Un travail de bureau rend une antépulsion probable, il ne la
+    // prouve pas — et l'athlète doit savoir sur quoi repose sa routine.
+    observe: (c) => c.posture.includes("antepulsion_scapulaire") || c.posture.includes("cyphose"),
     when: (c) => c.posture.includes("antepulsion_scapulaire") || c.posture.includes("cyphose")
       || c.metier === "assis",
     titre: "Ouverture thoracique et épaules",
@@ -352,6 +359,7 @@ const ROUTINES = [
   },
   {
     cle: "hanches_assis",
+    observe: (c) => c.posture.includes("hyperlordose") || c.posture.includes("bascule_bassin"),
     when: (c) => c.metier === "assis" || c.posture.includes("hyperlordose")
       || c.posture.includes("bascule_bassin"),
     titre: "Ouverture des hanches",
@@ -454,6 +462,7 @@ const ROUTINES = [
   },
   {
     cle: "cervicales",
+    observe: (c) => c.posture.includes("cyphose") || c.posture.includes("antepulsion_scapulaire"),
     when: (c) => c.metier === "assis" || c.patho.some(p => /cervical|nuque/.test(p)),
     titre: "Nuque et cervicales",
     cause: () => "Tête projetée en avant devant un écran : les cervicales supportent plusieurs kilos de plus.",
@@ -562,6 +571,8 @@ export function getRoutinesMobilite(fiche, profil = {}, opts = {}) {
       cause: typeof r.cause === "function" ? r.cause(ctx) : r.cause,
       frequence: r.frequence, moment: r.moment, minutes: r.minutes,
       exercices: progresser(r.exercices, opts.semaines), renforcer: r.renforcer || null,
+      // true = constaté sur les photos ; false = déduit du métier ou d'une pathologie.
+      observe: typeof r.observe === "function" ? !!r.observe(ctx) : true,
     }));
 
   if (!routines.length) {

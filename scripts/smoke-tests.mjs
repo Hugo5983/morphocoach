@@ -2052,4 +2052,94 @@ test("le système impose des règles d'échappement explicites", () => {
   assert.match(src, /fait échouer toute la génération/);
 });
 
+// ── Verdicts de progression : le TEMPS compte autant que la charge ─────────
+test("4 séances étalées sur 3 mois ne sont PAS une stagnation", async () => {
+  const cb = await import("../src/services/coachBrainService.js");
+  const log = {};
+  [60, 60, 60, 60].forEach((kg, i) => {
+    log[_dk(28 * (3 - i))] = { sets: Array(4).fill({
+      exNom: "Développé haltères incliné 30°", kg, reps: 10 }) };
+  });
+  _store["morpho_workout_log"] = JSON.stringify(log);
+  const { dossier } = cb.buildDossierAthlete({ form: { age: 27 }, prog: null, cycles: [], corrigerFaibles: false });
+  const v = (dossier.historique_progression || []).find(x => x.nom === "Développé haltères incliné 30°");
+  assert.ok(v, "aucun verdict produit");
+  assert.equal(v.tendance, "frequence_insuffisante",
+    `verdict ${v.tendance} : l'exercice va être remplacé alors qu'il n'a jamais eu sa chance`);
+  assert.match(v.action, /assiduité, pas le choix d'exercice/i);
+});
+
+test("4 séances rapprochées sans progrès = stagnation légitime", async () => {
+  const cb = await import("../src/services/coachBrainService.js");
+  const log = {};
+  [60, 60, 60, 60].forEach((kg, i) => {
+    log[_dk(7 * (3 - i))] = { sets: Array(4).fill({
+      exNom: "Développé haltères incliné 30°", kg, reps: 10 }) };
+  });
+  _store["morpho_workout_log"] = JSON.stringify(log);
+  const { dossier } = cb.buildDossierAthlete({ form: { age: 27 }, prog: null, cycles: [], corrigerFaibles: false });
+  const v = (dossier.historique_progression || []).find(x => x.nom === "Développé haltères incliné 30°");
+  assert.equal(v.tendance, "stagnation");
+  assert.match(v.periode, /4 séances sur \d+ semaine/);
+});
+
+test("3 séances seulement → à confirmer, pas de conclusion", async () => {
+  const cb = await import("../src/services/coachBrainService.js");
+  const log = {};
+  [60, 60, 60].forEach((kg, i) => {
+    log[_dk(7 * (2 - i))] = { sets: Array(4).fill({
+      exNom: "Développé haltères incliné 30°", kg, reps: 10 }) };
+  });
+  _store["morpho_workout_log"] = JSON.stringify(log);
+  const { dossier } = cb.buildDossierAthlete({ form: { age: 27 }, prog: null, cycles: [], corrigerFaibles: false });
+  const v = (dossier.historique_progression || []).find(x => x.nom === "Développé haltères incliné 30°");
+  assert.equal(v.tendance, "a_confirmer");
+  assert.match(v.action, /trop tôt pour conclure/i);
+});
+
+test("le seuil de progression dépasse le plus petit palier réel", async () => {
+  const cb = await import("../src/services/coachBrainService.js");
+  // +1 kg sur 60 kg (1,7 %) ne doit PAS compter comme une progression :
+  // c'est sous le plus petit disque disponible.
+  const log = {};
+  [60, 60, 60, 61].forEach((kg, i) => {
+    log[_dk(7 * (3 - i))] = { sets: Array(4).fill({
+      exNom: "Développé haltères incliné 30°", kg, reps: 10 }) };
+  });
+  _store["morpho_workout_log"] = JSON.stringify(log);
+  const { dossier } = cb.buildDossierAthlete({ form: { age: 27 }, prog: null, cycles: [], corrigerFaibles: false });
+  const v = (dossier.historique_progression || []).find(x => x.nom === "Développé haltères incliné 30°");
+  assert.notEqual(v.tendance, "progression", "+1 kg compté comme une progression");
+});
+
+// ── Posture : observée sur photo ou déduite du métier ? ────────────────────
+test("une routine déduite du métier est distinguée d'un constat photo", () => {
+  const bureau = _mob.getRoutinesMobilite(_ficheP([]), { metier: "Bureau assis", pathologies: [] });
+  assert.ok(bureau.routines.length > 0);
+  assert.ok(bureau.routines.every(r => r.observe === false),
+    "une routine sans observation est présentée comme constatée");
+
+  const vu = _mob.getRoutinesMobilite(_ficheP(["cyphose", "antepulsion_scapulaire"]),
+    { metier: "Bureau assis", pathologies: [] });
+  assert.ok(vu.routines.some(r => r.observe === true),
+    "une posture réellement vue n'est pas marquée comme observée");
+});
+
+test("l'analyse photo impose des critères VISUELS, pas des déductions", () => {
+  const src = _fs.readFileSync("api/analyze-morpho.js", "utf8");
+  assert.match(src, /LA POSTURE SE LIT SUR LES PHOTOS, ELLE NE SE DÉDUIT PAS/);
+  assert.match(src, /Tu ne connais NI le métier/,
+    "le modèle pourrait déduire la posture du contexte");
+  // Chaque posture doit avoir son critère d'observation.
+  ["antepulsion_scapulaire", "cyphose", "hyperlordose", "bascule_bassin", "valgus_genou"]
+    .forEach(p => assert.ok(new RegExp(`${p} :`).test(src), `${p} sans critère visuel`));
+  assert.match(src, /NE COCHE PAS/, "aucune consigne d'abstention si l'angle ne permet pas");
+});
+
+test("l'écran indique l'origine de chaque routine", () => {
+  const mp = _fs.readFileSync("src/features/training/components/MobilitePage.jsx", "utf8");
+  assert.match(mp, /constaté sur tes photos/);
+  assert.match(mp, /déduit de ton métier/);
+});
+
 console.log(`\n${n} tests de fumée OK`);

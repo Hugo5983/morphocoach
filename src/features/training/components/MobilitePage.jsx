@@ -185,6 +185,15 @@ export default function MobilitePage({ prog, profil, fiche, semaines = 0, onClos
                       <div style={{ fontSize: 14.5, fontWeight: 800, color: "#0F1923", fontFamily: F }}>
                         {r.titre}
                       </div>
+                      {/* D'où vient cette routine : constat photo ou déduction ?
+                          Sans ça, l'athlète ne peut pas savoir si sa posture a
+                          réellement été vue ou simplement supposée. */}
+                      <div style={{ display: "inline-block", marginTop: 3, borderRadius: 99,
+                        padding: "2px 8px", fontSize: 10, fontWeight: 800, fontFamily: F,
+                        color: r.observe ? GRN : GREY,
+                        background: r.observe ? "#E7F7F0" : "#F1F3F8" }}>
+                        {r.observe ? "constaté sur tes photos" : "déduit de ton métier"}
+                      </div>
                       <div style={{ fontSize: 11.5, fontWeight: 600, color: GREY, fontFamily: F, marginTop: 2 }}>
                         {m.label} · {r.minutes} min · {r.exercices.length} exercices
                       </div>
