@@ -201,16 +201,49 @@ test("parseJSON répare les fences et les virgules terminales", () => {
   const o = _ant.parseJSON('```json\n{"a":[1,2,],"b":"x"}\n```');
   assert.deepEqual(o, { a: [1, 2], b: "x" });
 });
-test("parseJSON refuse un JSON irréparable avec un message lisible", () => {
-  // Accolade fermante présente mais structure cassée au milieu : le cas que la
-  // réparation ne peut pas rattraper honnêtement.
-  assert.throws(
-    () => _ant.parseJSON('{"a":[1 2 3],"b":}'),
-    /illisible/i
-  );
+test("parseJSON répare une réponse tronquée en pleine chaîne", () => {
+  // Cas réel : la génération aboutit mais le JSON s'arrête au milieu d'un
+  // tips_coach. On récupère ce qui est complet plutôt que de tout perdre.
+  const o = _ant.parseJSON(
+    '{"programme":{"seances":[{"jour":"Lundi","tips":"garde le dos dro');
+  assert.ok(o.programme?.seances?.length >= 1, "aucune séance récupérée");
+  assert.equal(o.programme.seances[0].jour, "Lundi");
 });
-test("parseJSON rejette une réponse sans JSON du tout", () => {
-  assert.throws(() => _ant.parseJSON('{"seances":[{"n":"Dev'), /Pas de JSON/i);
+
+test("parseJSON ignore la ponctuation À L'INTÉRIEUR des chaînes", () => {
+  // L'ancien comptage par regex cassait dès qu'un texte contenait { ou }.
+  const o = _ant.parseJSON('{"tips":"place {le coude} bas [vraiment]","b":1}');
+  assert.equal(o.tips, "place {le coude} bas [vraiment]");
+  assert.equal(o.b, 1);
+});
+
+test("parseJSON gère les échappements sans se perdre", () => {
+  // Un guillemet échappé à l'intérieur d'une chaîne ne doit pas être lu comme
+  // une fin de chaîne, sinon tout le comptage de structures dérive.
+  const o = _ant.parseJSON(String.raw`{"a":"guillemet \" et antislash \\","b":2}`);
+  assert.equal(o.b, 2);
+  assert.ok(o.a.includes("guillemet"));
+});
+
+test("parseJSON rejette une réponse sans aucun JSON", () => {
+  assert.throws(() => _ant.parseJSON("Je ne peux pas répondre."), /Pas de JSON/i);
+  assert.throws(() => _ant.parseJSON(""), /vide/i);
+});
+
+test("un programme réparé mais AMPUTÉ est détecté par la validation", () => {
+  // La réparation ne doit jamais faire passer un programme incomplet pour bon :
+  // c'est la validation qui doit déclencher la passe corrective.
+  const tronque = '{"programme":{"seances":['
+    + '{"jour":"Lundi","exercices":[{"nom":"Développé haltères incliné 30°"},'
+    + '{"nom":"Pull-over haltère couché"},{"nom":"Écarté haltères plat"},'
+    + '{"nom":"Pompes standards"}]},'
+    + '{"jour":"Mardi","exercices":[{"nom":"Rowing barre 45°"';
+  const o = _ant.parseJSON(tronque);
+  assert.equal(o.programme.seances.length, 2);
+  const pb = _gp.validateProgramme(o, { dossier: {}, fiche: null, materiel: ["halteres"],
+    joursDemandes: ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"] });
+  assert.ok(pb.some(x => /incomplet/i.test(x)),
+    "un programme amputé est passé pour complet");
 });
 
 // ── Complétude du programme : le bug « 5 jours demandés, 2 générés » ────────
@@ -2008,6 +2041,15 @@ test("les douleurs décrites atteignent le serveur", () => {
   const gp = _fs.readFileSync("api/generate-program.js", "utf8");
   assert.match(gp, /form\.douleurs \|\| \[\]\)\.slice\(0, 5\)/,
     "aucun bornage du nombre de douleurs");
+});
+
+test("le système impose des règles d'échappement explicites", () => {
+  const src = _fs.readFileSync("api/generate-program.js", "utf8");
+  assert.match(src, /RÈGLES D'ÉCHAPPEMENT STRICTES/,
+    "rien n'empêche le modèle d'émettre un JSON mal échappé");
+  assert.match(src, /jamais de retour à la ligne brut dans une chaîne/);
+  // Le rappel d'enjeu : un JSON cassé fait tout échouer.
+  assert.match(src, /fait échouer toute la génération/);
 });
 
 console.log(`\n${n} tests de fumée OK`);

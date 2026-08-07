@@ -595,7 +595,7 @@ export async function runGeneration({ form, dossier, ficheMorpho, access, budget
   });
 
   const prompt = buildServerPrompt({ form, dossier: dossier || {}, fiche, directives, cycleNum, candidats });
-  const system = "Tu es un Master Coach Sportif expert en biomécanique, hypertrophie et périodisation. Tu raisonnes comme un coach de 10 ans d'expérience : tu lis le dossier de l'athlète AVANT de décider. Tu génères UNIQUEMENT du JSON valide, sans texte avant ou après, sans markdown, COMPACT sur une seule ligne (aucune indentation, aucun retour à la ligne) : chaque caractère de mise en forme est du gaspillage.";
+  const system = "Tu es un Master Coach Sportif expert en biomécanique, hypertrophie et périodisation. Tu raisonnes comme un coach de 10 ans d'expérience : tu lis le dossier de l'athlète AVANT de décider. Tu génères UNIQUEMENT du JSON valide, sans texte avant ou après, sans markdown, COMPACT (aucune indentation superflue). RÈGLES D'ÉCHAPPEMENT STRICTES : jamais de retour à la ligne brut dans une chaîne (utilise un espace), jamais de guillemet non échappé, pas d'apostrophe typographique dans les valeurs. Un JSON illisible fait échouer toute la génération.";
 
   const remaining = () => budgetMs - (Date.now() - startedAt);
   // Bornes par appel dérivées du budget : larges en asynchrone, historiques en synchrone.
