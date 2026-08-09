@@ -34,6 +34,7 @@ import { buildPrescriptionBlock, getPrescription, calibrerSeance } from "./_know
 import { buildAdaptationsBlock } from "./_knowledge/adaptations.js";
 import { buildDouleursBlock, exercicesAEviterPourDouleurs } from "./_knowledge/douleurs.js";
 import { buildConstructionBlock } from "./_knowledge/construction.js";
+import { validateConformite } from "./_knowledge/conformite.js";
 
 export const config = { api: { bodyParser: { sizeLimit: "4mb" } } };
 
@@ -456,6 +457,20 @@ ${c8Block ? `\n═══ PUISSANCE & PÉRIODISATION AVANCÉE ═══\n${c8Bloc
 ${combatBlock ? `\n═══ SPÉCIFIQUE SPORT DE COMBAT ═══\n${combatBlock}` : ""}
 ${refs ? `\n═══ RÉFÉRENTIELS DES MUSCLES PRIORITAIRES ═══\n${refs}\n\n${CORRECTEURS}` : ""}
 
+═══ CONTRÔLES AUTOMATIQUES APPLIQUÉS À TA RÉPONSE ═══
+Ces points ne sont pas des recommandations : ils sont VÉRIFIÉS PAR PROGRAMME dès
+que tu as répondu. Toute violation déclenche une régénération, ce qui coûte du
+temps et dégrade le résultat. Vérifie-les toi-même avant de conclure :
+1. Chaque exercice provient de la liste fermée, au nom EXACT, matériel compatible.
+2. Aucun exercice interdit (morpho, mémoire, douleur) n'apparaît.
+3. Le nombre de séances correspond exactement aux jours demandés, ≥ 4 exercices chacune.
+4. "reps" et "repos" de chaque exercice respectent la PRESCRIPTION de l'objectif,
+   et chaque séance contient au moins un mouvement principal traité selon cet objectif.
+5. Tout exercice dont la charge réelle est connue est prescrit EN KILOS, jamais en %.
+6. Chaque point faible visuel reçoit au moins autant de séries que la moyenne des
+   autres groupes travaillés — jamais moins.
+7. Au maximum 40 % des exercices proviennent du cycle précédent.
+
 ═══ FORMAT DE RÉPONSE ═══
 Réponds UNIQUEMENT avec le JSON ci-dessous. Aucun texte avant ou après. Aucun markdown.
 N'ajoute AUCUN champ hors schéma : la justification de tes choix appartient au bloc
@@ -555,7 +570,7 @@ function listExercices(parsed) {
   return out;
 }
 
-export function validateProgramme(parsed, { dossier, fiche, materiel, joursDemandes = [], douleurs = [] }) {
+export function validateProgramme(parsed, { dossier, fiche, materiel, joursDemandes = [], douleurs = [], objectif = "" }) {
   const problems = [];
   const noms = listExercices(parsed);
   const exos = noms.map(normalizeExo);
@@ -613,6 +628,11 @@ export function validateProgramme(parsed, { dossier, fiche, materiel, joursDeman
       problems.push(`Matériel indisponible pour "${nom}" (${entry.mat}) — choisir une alternative compatible`);
     }
   }
+  // 4. CONFORMITÉ — la connaissance est-elle APPLIQUÉE, pas seulement reçue ?
+  //    Prescription (reps/repos/tempo), charges réelles en kilos, et volume
+  //    réellement alloué aux points faibles diagnostiqués sur photo.
+  problems.push(...validateConformite(parsed, { objectif, dossier, fiche }));
+
   // La liste des inconnus voyage avec les problèmes : elle alimente la file de
   // revue sans jamais faire échouer la génération.
   problems.horsCatalogue = horsCatalogue;
@@ -752,7 +772,7 @@ Un programme complet et sobre vaut infiniment mieux qu'aucun programme.`;
   try {
     let raw = await appelPrincipal();
     let parsed = parseJSON(raw);
-    let problems = validateProgramme(parsed, { dossier, fiche, materiel: form.materiel, joursDemandes: normalizeJours(form.jours), douleurs: form.douleurs || [] });
+    let problems = validateProgramme(parsed, { dossier, fiche, materiel: form.materiel, joursDemandes: normalizeJours(form.jours), douleurs: form.douleurs || [], objectif: form.objectif });
 
     // Une seule tentative corrective, et seulement si le temps restant le
     // permet. FILET DE SÉCURITÉ : si la correction expire ou échoue, on
@@ -771,7 +791,7 @@ Un programme complet et sobre vaut infiniment mieux qu'aucun programme.`;
         });
         const parsed2 = parseJSON(raw2);
         parsed = parsed2;
-        problems = validateProgramme(parsed2, { dossier, fiche, materiel: form.materiel, joursDemandes: normalizeJours(form.jours), douleurs: form.douleurs || [] });
+        problems = validateProgramme(parsed2, { dossier, fiche, materiel: form.materiel, joursDemandes: normalizeJours(form.jours), douleurs: form.douleurs || [], objectif: form.objectif });
       } catch (e2) {
         console.warn("[generate-program] Correction avortée, programme initial conservé:", e2.message);
       }

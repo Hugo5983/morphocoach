@@ -40,6 +40,18 @@ export const PRESCRIPTIONS = {
       "superset sur les mouvements principaux",
       "plage 12-15 répétitions sur un exercice principal",
     ],
+    // Bornes NUMÉRIQUES de la prescription — c'est cette version que le CODE
+    // vérifie après génération. La prose ci-dessus est pour le modèle, ces
+    // chiffres sont pour la validation. Volontairement LARGES : on ne veut
+    // signaler que les écarts francs, pas les nuances de coaching.
+    bornes: {
+      reps: [1, 8],              // au-delà, ce n'est plus de la force
+      repos_s: [90, 420],        // accessoires courts tolérés, principaux longs
+      tempo_excentrique_s: [0, 4],
+      // Signature : au moins UN exercice par séance doit être réellement lourd.
+      signature: { reps_max: 6, repos_min_s: 150,
+        libelle: "aucun exercice lourd (≤ 6 reps avec ≥ 2 min 30 de repos)" },
+    },
   },
 
   hypertrophie: {
@@ -56,6 +68,12 @@ export const PRESCRIPTIONS = {
       "repos de 5 min partout : allonge la séance sans gain hypertrophique",
       "tempo explosif sur l'isolation — il supprime la tension mécanique recherchée",
     ],
+    bornes: {
+      reps: [5, 20],
+      repos_s: [40, 240],
+      tempo_excentrique_s: [1, 5],
+      signature: null,
+    },
   },
 
   perte_poids: {
@@ -72,6 +90,12 @@ export const PRESCRIPTIONS = {
       "volume très élevé : la récupération est déjà dégradée par le déficit calorique",
       "échec systématique : risque de surentraînement en restriction",
     ],
+    bornes: {
+      reps: [8, 25],
+      repos_s: [30, 180],
+      tempo_excentrique_s: [1, 4],
+      signature: null,
+    },
   },
 
   prep_physique: {
@@ -88,6 +112,12 @@ export const PRESCRIPTIONS = {
       "volume d'isolation important au détriment du travail global",
       "tempo lent sur le travail de puissance",
     ],
+    bornes: {
+      reps: [3, 15],
+      repos_s: [45, 480],
+      tempo_excentrique_s: [0, 4],
+      signature: null,
+    },
   },
 
   sante: {
@@ -104,6 +134,12 @@ export const PRESCRIPTIONS = {
       "charges maximales",
       "techniques d'intensification (rest-pause, dégressives, forcées)",
     ],
+    bornes: {
+      reps: [8, 20],
+      repos_s: [40, 150],
+      tempo_excentrique_s: [1, 4],
+      signature: null,
+    },
   },
 
   reathletisation: {
@@ -121,6 +157,12 @@ export const PRESCRIPTIONS = {
       "échec musculaire",
       "pliométrie et mouvements balistiques",
     ],
+    bornes: {
+      reps: [8, 25],
+      repos_s: [45, 150],
+      tempo_excentrique_s: [2, 6],
+      signature: null,
+    },
   },
 };
 
