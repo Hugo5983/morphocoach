@@ -19,11 +19,77 @@ export const REGLES_PATHO = {
   "Coxarthrose":      "HANCHE : amplitudes réduites, pas de squat profond. Mouvements dans l'axe fonctionnel de la hanche uniquement.",
 };
 
+// ─── Alias de libellés ──────────────────────────────────────────────────────
+// REGLES_PATHO est indexé sur 13 libellés EXACTS. Toute autre formulation
+// ("discopathie", "sciatique", "tendinite du coude", saisie libre en minuscules)
+// ne déclenchait AUCUNE règle : le programme était généré aveugle à la
+// contre-indication, silencieusement. On normalise ici avant l'accès.
+const normPatho = (s) => String(s || "").toLowerCase().normalize("NFD")
+  .replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9 ]/g, " ").replace(/\s+/g, " ").trim();
+
+/** Motifs reconnus → clé canonique de REGLES_PATHO. Ordre = priorité. */
+const ALIAS_PATHO = [
+  [/hernie|discopathie|discale|protrusion|bombement discal/, "Hernie discale"],
+  [/lombalgie|lumbago|mal de dos|douleur lombaire|lombaire|sciatique|cruralgie|spondylolisthesis/, "Lombalgie"],
+  [/scoliose|cyphose severe|asymetrie rachidienne/, "Scoliose"],
+  [/cervicalgie|cervical|nuque|torticolis|nca|nevralgie cervico/, "Cervicalgie"],
+  [/conflit|impingement|sous acromial|subacromial|acromion/, "Conflit épaule"],
+  [/coiffe|supra epineux|supraepineux|sus epineux|rotateur/, "Coiffe rotateurs"],
+  [/menisque|meniscal/, "Ménisque"],
+  [/lca|ligament croise|croise anterieur|lcp|ligament du genou/, "LCA"],
+  [/achille|achileen|achilleen/, "Tendinite Achille"],
+  [/epicondylite|epicondylalgie|tennis elbow|golf elbow|epitrochleite/, "Épicondylite"],
+  [/canal carpien|carpien|nerf median/, "Canal carpien"],
+  [/coxarthrose|arthrose de hanche|arthrose hanche/, "Coxarthrose"],
+  [/arthrose|gonarthrose|omarthrose|cartilage use/, "Arthrose"],
+  [/tendinite|tendinopathie|tendinose|inflammation tendon/, "Tendinite"],
+];
+
+/**
+ * Ramène un libellé libre à la clé canonique de REGLES_PATHO, ou null.
+ * Exporté pour que les autres modules (catalogue, routage) partagent la
+ * MÊME normalisation — une seule source de vérité.
+ */
+export function canonPathologie(libelle) {
+  const p = normPatho(libelle);
+  if (!p || p === "aucune" || p === "non" || p === "rien") return null;
+  // 1. Correspondance exacte sur les clés officielles (cas nominal).
+  for (const cle of Object.keys(REGLES_PATHO)) if (normPatho(cle) === p) return cle;
+  // 2. Sinon, reconnaissance par motif.
+  for (const [motif, cle] of ALIAS_PATHO) if (motif.test(p)) return cle;
+  return null;
+}
+
+/** Libellés déclarés → clés canoniques reconnues, sans doublon. */
+export function canonPathologies(pathologies = []) {
+  return [...new Set((pathologies || []).map(canonPathologie).filter(Boolean))];
+}
+
+/**
+ * Libellés NON reconnus : ils existent, l'athlète les a déclarés, mais aucune
+ * règle ne leur correspond. Plutôt que de les perdre en silence, on les
+ * transmet quand même au modèle avec une consigne de prudence explicite.
+ */
+export function pathologiesNonReconnues(pathologies = []) {
+  return (pathologies || [])
+    .filter(p => p && normPatho(p) !== "aucune" && !canonPathologie(p))
+    .map(p => String(p).trim());
+}
+
 export function buildPathoRules(pathologies = []) {
-  return pathologies
-    .filter(p => p !== "Aucune" && REGLES_PATHO[p])
-    .map(p => REGLES_PATHO[p])
-    .join("\n");
+  const regles = canonPathologies(pathologies).map(cle => REGLES_PATHO[cle]);
+  const inconnues = pathologiesNonReconnues(pathologies);
+  if (inconnues.length) {
+    regles.push(
+      `ZONE(S) DÉCLARÉE(S) SANS RÈGLE CODIFIÉE : ${inconnues.join(", ")}. `
+      + "Aucune adaptation automatique n'existe pour ce libellé : traite-le comme une "
+      + "contre-indication PRUDENTE. Identifie la zone anatomique concernée, réduis-y la "
+      + "charge et l'amplitude, évite les mouvements maximaux qui la sollicitent, et "
+      + "explique dans \"reflexion.risque_blessure\" comment tu l'as protégée. "
+      + "Ne pose AUCUN diagnostic et rappelle d'arrêter en cas de douleur vive."
+    );
+  }
+  return regles.join("\n");
 }
 
 /** Garde-fous transverses issus des principes fondateurs C2 (tissu sous contrainte). */

@@ -57,12 +57,47 @@ const MAP_GROUPE_REF = {
   epaules: "pectoraux", // les règles poussée/épaule vivent dans le référentiel pecs
 };
 
-/** Sélectionne les référentiels pertinents pour les groupes prioritaires du profil. */
-export function routeReferentiels(groupesPrioritaires = []) {
-  const keys = new Set();
+/** Groupes couverts par un objectif : un programme de force travaille les trois
+ *  gros patterns, une prépa physique aussi. Sert de secours quand aucun point
+ *  faible visuel n'est détecté. */
+const REFS_PAR_OBJECTIF = {
+  force:         ["dos", "pectoraux", "jambes"],
+  prep_physique: ["dos", "pectoraux", "jambes"],
+  hypertrophie:  ["dos", "pectoraux", "jambes", "bras"],
+  poids:         ["dos", "pectoraux", "jambes"],
+  perte_poids:   ["dos", "pectoraux", "jambes"],
+  sante:         ["dos", "jambes"],
+};
+
+/**
+ * Sélectionne les référentiels à injecter.
+ *
+ * ANCIEN COMPORTEMENT : routage UNIQUEMENT sur les points faibles visuels.
+ * Conséquence : un athlète sans point faible détecté (ou sans fiche morpho)
+ * ne recevait AUCUN référentiel d'exécution — ni DOS, ni PEC, ni JAMBES, ni
+ * BRAS — et le bloc CORRECTEURS disparaissait avec eux. C'était le plus gros
+ * chemin mort du système : la connaissance la plus dense, absente par défaut.
+ *
+ * NOUVEAU : les points faibles restent PRIORITAIRES (ils déterminent l'ordre),
+ * mais on complète toujours par les groupes que l'objectif implique. Le retour
+ * n'est jamais vide.
+ *
+ * @param {string[]} groupesPrioritaires  points faibles visuels de la fiche
+ * @param {{objectif?: string}} [contexte]
+ */
+export function routeReferentiels(groupesPrioritaires = [], contexte = {}) {
+  const keys = [];
+  const ajouter = (k) => { if (k && REFERENTIELS[k] && !keys.includes(k)) keys.push(k); };
+
+  // 1. Points faibles d'abord : ce sont eux qui comptent le plus pour ce profil.
   for (const g of groupesPrioritaires) {
-    const k = MAP_GROUPE_REF[String(g).toLowerCase().replace(/\s+/g, "_")];
-    if (k) keys.add(k);
+    ajouter(MAP_GROUPE_REF[String(g).toLowerCase().replace(/\s+/g, "_")]);
   }
-  return [...keys].map(k => REFERENTIELS[k]).join("\n\n");
+
+  // 2. Complément par objectif, pour que le socle d'exécution soit toujours là.
+  const obj = String(contexte.objectif || "").toLowerCase().normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+  for (const k of (REFS_PAR_OBJECTIF[obj] || REFS_PAR_OBJECTIF.hypertrophie)) ajouter(k);
+
+  return keys.map(k => REFERENTIELS[k]).join("\n\n");
 }

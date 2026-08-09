@@ -372,6 +372,24 @@ export function lireDouleur(d) {
 }
 
 /**
+ * Exercices à écarter, déduits des douleurs déclarées.
+ *
+ * Ces contre-indications étaient jusqu'ici ANNONCÉES au modèle dans le prompt
+ * mais jamais VÉRIFIÉES en sortie : un exercice écarté pour cause de douleur
+ * pouvait réapparaître dans le programme sans que rien ne le rejette. Cette
+ * fonction permet à la validation post-génération de les traiter au même titre
+ * que les interdits morphologiques.
+ *
+ * @param {Douleur[]} douleurs
+ * @returns {string[]}
+ */
+export function exercicesAEviterPourDouleurs(douleurs = []) {
+  return [...new Set(
+    (douleurs || []).flatMap(d => lireDouleur(d).eviter || [])
+  )].filter(Boolean);
+}
+
+/**
  * Bloc à injecter dans le prompt, à partir des douleurs déclarées.
  * @param {Douleur[]} douleurs
  */

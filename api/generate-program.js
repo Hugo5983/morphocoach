@@ -19,7 +19,7 @@ import { callAnthropic, parseJSON, normalizeExo } from "./_lib/anthropic.js";
 import { checkAndCountUsage } from "./_lib/usage.js";
 import { logGenerationEvent } from "./_lib/telemetry.js";
 import { logExercicesProposes } from "./_lib/proposals.js";
-import { buildPathoRules, buildGardeFous } from "./_knowledge/securite.js";
+import { buildPathoRules, buildGardeFous, canonPathologies } from "./_knowledge/securite.js";
 import { getVolumeParams, getMesocycleLogic, REGLES_NIVEAU } from "./_knowledge/noyau.js";
 import { QUESTIONS_COACH, REGLE_PONDERATION, getVariationDirectives, SCHEMA_REFLEXION }
   from "./_knowledge/couche0.js";
@@ -32,7 +32,7 @@ import { selectCandidats, findInCatalogue, matsAutorises, correctifsPourPatholog
   from "./_knowledge/exercices_catalogue.js";
 import { buildPrescriptionBlock, getPrescription, calibrerSeance } from "./_knowledge/prescription.js";
 import { buildAdaptationsBlock } from "./_knowledge/adaptations.js";
-import { buildDouleursBlock } from "./_knowledge/douleurs.js";
+import { buildDouleursBlock, exercicesAEviterPourDouleurs } from "./_knowledge/douleurs.js";
 import { buildConstructionBlock } from "./_knowledge/construction.js";
 
 export const config = { api: { bodyParser: { sizeLimit: "4mb" } } };
@@ -162,7 +162,7 @@ Mentionne cette contrainte dans "reflexion.diagnostic" si elle influence tes cho
   const groupesPrioritaires = [
     ...(fiche?.consequences?.points_faibles_visuels || []).map(p => p.groupe),
   ];
-  const refs = routeReferentiels(groupesPrioritaires);
+  const refs = routeReferentiels(groupesPrioritaires, { objectif: form.objectif });
 
   const emgBlock  = buildEMGBlock({ niveau: form.niveau, objectif: form.objectif });
   const rattrapageBlock = buildRattrapageBlock({
@@ -190,11 +190,16 @@ EXERCICES À ADAPTER : ${fiche.consequences.exercices_adaptes.join(", ") || "auc
 EXERCICES PRIVILÉGIÉS : ${fiche.consequences.exercices_privilegies.join(", ") || "aucun"}
 POINTS FAIBLES VISUELS : ${(fiche.consequences.points_faibles_visuels || []).map(p => `${p.groupe} (${p.niveau})`).join(", ") || "aucun"}
 POINTS FORTS VISUELS : ${(fiche.consequences.points_forts_visuels || []).join(", ") || "—"}
-${fiche.consequences.regle_donnant_donnant ? "DONNANT-DONNANT : " + fiche.consequences.regle_donnant_donnant : ""}
-${REGLE_PONDERATION}`
+${fiche.consequences.regle_donnant_donnant ? "DONNANT-DONNANT : " + fiche.consequences.regle_donnant_donnant : ""}`
     : `═══ FICHE MORPHOLOGIQUE ═══
 Aucune fiche morphologique disponible (pas de photos analysées) : appliquer les règles générales
 prudentes — exercices polyvalents, ROM contrôlé, aucune supposition morphologique.`;
+
+  // REGLE_PONDERATION vivait DANS le template "avec fiche" : sans photos, la
+  // règle d'arbitrage la plus importante du système (l'historique réel prime sur
+  // la théorie morphologique, sauf pour les interdits de sécurité) n'atteignait
+  // jamais le modèle. Elle est valable dans les deux cas — on la sort du bloc.
+  const ponderationBlock = `\n═══ RÈGLE D'ARBITRAGE (s'applique à TOUT le programme) ═══\n${REGLE_PONDERATION}`;
 
   // ── Directive récupération explicite (sommeil dégradé → plafond de volume) ──
   // ── État de forme mesuré → décisions imposées ──
@@ -259,7 +264,40 @@ Pour un exercice NOUVEAU ou absent de la liste, indique un % du 1RM estimé et
 précise dans "tips_coach" comment trouver la charge de départ à la première séance.
 Ne prescris JAMAIS un pourcentage sur un exercice dont tu connais la charge réelle.` : "";
 
-  const sommeilDegrade = /insuffisant/i.test(dossier?.recuperation?.note || "");
+  // Détection de récupération dégradée. L'ancienne version ne testait QUE le mot
+  // "insuffisant" : "5h par nuit", "sommeil dégradé", "je dors mal" passaient à
+  // travers et la règle n'atteignait jamais le modèle. On élargit au vocabulaire
+  // réellement employé, ET on lit la valeur chiffrée quand elle existe.
+  const noteRecup = String(dossier?.recuperation?.note || "")
+    .toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  // Mots choisis pour être peu ambigus : "fatigue" ou "court" seuls sont écartés
+  // (ils apparaissent aussi dans "aucune fatigue" ou "repos court entre séries").
+  const MOTS_SOMMEIL_DEGRADE =
+    /insuffisant|degrade|mauvais sommeil|sommeil mauvais|mediocre|peu de sommeil|manque de sommeil|dors mal|dort mal|mal dormi|nuits? courtes?|sommeil leger|sommeil fragmente|reveils nocturnes|insomnie|non reparateur|pas reparateur|peu reparateur/;
+  // Valeur chiffrée : "5h", "6h30", "6,5 h", "6.5", "5 heures" → dégradé sous 6,5 h.
+  // On distingue le séparateur horaire (h, :) du séparateur décimal (, .) :
+  // "6h30" = 6,5 heures, tandis que "6,5" = 6,5 heures aussi mais par la décimale.
+  const heuresSommeil = (() => {
+    const src = `${dossier?.recuperation?.sommeil_moyen_7j || ""} ${noteRecup}`.toLowerCase();
+    let m = src.match(/(\d{1,2})\s*[h:]\s*(\d{1,2})\b/);          // 6h30 / 6:30
+    if (m) {
+      const h = parseFloat(m[1]), min = parseFloat(m[2]);
+      return h > 0 && h < 24 && min >= 0 && min < 60 ? h + min / 60 : null;
+    }
+    m = src.match(/(\d{1,2})[.,](\d{1,2})\s*(?:h|heure)/);        // 6,5 h / 6.5 heures
+    if (m) {
+      const v = parseFloat(`${m[1]}.${m[2]}`);
+      return v > 0 && v < 24 ? v : null;
+    }
+    m = src.match(/(\d{1,2})\s*(?:h|heure)/);                     // 5h / 5 heures
+    if (m) {
+      const v = parseFloat(m[1]);
+      return v > 0 && v < 24 ? v : null;
+    }
+    return null;
+  })();
+  const sommeilDegrade =
+    MOTS_SOMMEIL_DEGRADE.test(noteRecup) || (heuresSommeil !== null && heuresSommeil <= 6.5);
   const recupBlock = sommeilDegrade
     ? `\n═══ RÉCUPÉRATION DÉGRADÉE (donnée réelle du dossier) ═══
 Sommeil moyen ${dossier.recuperation.sommeil_moyen_7j || "< 6,5 h"} sur 7 jours : plafonner le volume
@@ -303,9 +341,36 @@ Un exercice hors de cette liste sera REJETÉ par la validation.`;
   // Dans un catalogue de 800 exercices, le marqueur "(correctif)" ne suffit pas
   // à orienter le modèle. On lui redonne ici, explicitement, la liste des
   // correctifs pertinents pour LES pathologies déclarées.
+  // ── Dossier athlète : troncature VISIBLE ──
+  // L'ancienne version coupait à 9000 caractères sans rien dire. Sur un compte
+  // ancien (historique de charges, mémoire de cycles, feedback corporel), la
+  // fin du dossier disparaissait en silence — et personne ne pouvait le savoir.
+  // On garde le plafond (budget de contexte) mais on l'annonce, au modèle comme
+  // aux logs, pour que la perte soit détectable.
+  const LIMITE_DOSSIER = 9000;
+  const dossierBrut = JSON.stringify(dossier, null, 1).replace(/\n\s*/g, "\n");
+  const dossierTronque = dossierBrut.length > LIMITE_DOSSIER;
+  if (dossierTronque) {
+    console.warn(
+      `[generate-program] Dossier tronqué : ${dossierBrut.length} caractères reçus, `
+      + `${LIMITE_DOSSIER} transmis (${dossierBrut.length - LIMITE_DOSSIER} perdus).`
+    );
+  }
+  const dossierTexte = dossierTronque
+    ? dossierBrut.substring(0, LIMITE_DOSSIER)
+      + `\n… [DOSSIER TRONQUÉ : ${dossierBrut.length - LIMITE_DOSSIER} caractères non transmis. `
+      + "Si une information te manque pour décider, dis-le explicitement dans "
+      + "\"reflexion.diagnostic\" plutôt que de combler par une supposition.]"
+    : dossierBrut;
+
   const pathosDeclarees = (form.pathologies || []).filter(p => p && p !== "Aucune");
+  // On cherche les correctifs sur les libellés DÉCLARÉS *et* sur leur forme
+  // canonique : "discopathie" ne matche aucune zone, "Hernie discale" oui.
   const { groupes: zonesPatho, exercices: correctifsCibles } =
-    correctifsPourPathologies(pathosDeclarees, form.materiel || []);
+    correctifsPourPathologies(
+      [...new Set([...pathosDeclarees, ...canonPathologies(pathosDeclarees)])],
+      form.materiel || []
+    );
   const reeducBlock = correctifsCibles.length ? `
 ═══ RÉÉDUCATION CIBLÉE — PATHOLOGIES DÉCLARÉES ═══
 Pathologies : ${pathosDeclarees.join(", ")}
@@ -321,9 +386,10 @@ diagnostic, et rappelle dans "tips_coach" d'arrêter en cas de douleur vive.` : 
   return `Tu es un Master Coach Sportif et Préparateur Physique expert en biomécanique, hypertrophie et périodisation. Tu conçois de véritables planifications individualisées, cliniques et orientées progression réelle.
 
 ═══ COUCHE 0 — DOSSIER ATHLÈTE (données RÉELLES du compte, jamais fictives) ═══
-${JSON.stringify(dossier, null, 1).replace(/\n\s*/g, "\n").substring(0, 9000)}
+${dossierTexte}
 
 ${morphoBlock}
+${ponderationBlock}
 ${recupBlock}
 ${etatBlock}
 
@@ -489,7 +555,7 @@ function listExercices(parsed) {
   return out;
 }
 
-export function validateProgramme(parsed, { dossier, fiche, materiel, joursDemandes = [] }) {
+export function validateProgramme(parsed, { dossier, fiche, materiel, joursDemandes = [], douleurs = [] }) {
   const problems = [];
   const noms = listExercices(parsed);
   const exos = noms.map(normalizeExo);
@@ -514,6 +580,9 @@ export function validateProgramme(parsed, { dossier, fiche, materiel, joursDeman
     ...(fiche?.consequences?.exercices_interdits || []),
     ...(dossier?.memoire_exercices?.exercices_a_remplacer || []),
     ...(dossier?.feedback_corporel?.exercices_douloureux || []).map(d => d.nom),
+    // Contre-indications déduites des douleurs déclarées : annoncées dans le
+    // prompt depuis toujours, désormais réellement vérifiées ici.
+    ...exercicesAEviterPourDouleurs(douleurs),
   ].map(normalizeExo).filter(Boolean);
 
   for (const exo of exos) {
@@ -586,11 +655,20 @@ export async function runGeneration({ form, dossier, ficheMorpho, access, budget
   // bien plus de choix que 3. L'entrée coûte 5× moins cher que la sortie, donc
   // un catalogue large est le levier le moins cher pour la qualité.
   const nbJours = (form.jours || []).length || 3;
+  // Les pathologies étaient déclarées dans la signature de selectCandidats mais
+  // jamais transmises : la branche qui remonte les exercices correctifs en tête
+  // de sélection était du code mort. On la réactive, avec les libellés canoniques
+  // pour que les formulations libres soient reconnues elles aussi.
+  const pathosPourCatalogue = [...new Set([
+    ...(form.pathologies || []).filter(p => p && p !== "Aucune"),
+    ...canonPathologies(form.pathologies || []),
+  ])];
   const candidats = selectCandidats({
     materiel: form.materiel || [],
     niveau: form.niveau || "intermediaire",
     aConserver: dossier?.memoire_exercices?.exercices_a_conserver || [],
     privilegies: fiche?.consequences?.exercices_privilegies || [],
+    pathologies: pathosPourCatalogue,
     max: 9999,   // catalogue ENTIER (déjà filtré par matériel + niveau)
   });
 
@@ -674,7 +752,7 @@ Un programme complet et sobre vaut infiniment mieux qu'aucun programme.`;
   try {
     let raw = await appelPrincipal();
     let parsed = parseJSON(raw);
-    let problems = validateProgramme(parsed, { dossier, fiche, materiel: form.materiel, joursDemandes: normalizeJours(form.jours) });
+    let problems = validateProgramme(parsed, { dossier, fiche, materiel: form.materiel, joursDemandes: normalizeJours(form.jours), douleurs: form.douleurs || [] });
 
     // Une seule tentative corrective, et seulement si le temps restant le
     // permet. FILET DE SÉCURITÉ : si la correction expire ou échoue, on
@@ -693,7 +771,7 @@ Un programme complet et sobre vaut infiniment mieux qu'aucun programme.`;
         });
         const parsed2 = parseJSON(raw2);
         parsed = parsed2;
-        problems = validateProgramme(parsed2, { dossier, fiche, materiel: form.materiel, joursDemandes: normalizeJours(form.jours) });
+        problems = validateProgramme(parsed2, { dossier, fiche, materiel: form.materiel, joursDemandes: normalizeJours(form.jours), douleurs: form.douleurs || [] });
       } catch (e2) {
         console.warn("[generate-program] Correction avortée, programme initial conservé:", e2.message);
       }
