@@ -19,7 +19,7 @@
 // déclenche des corrections inutiles, consomme le budget temps, et finit par
 // être désactivé — c'est pire que pas de validateur du tout.
 
-import { getPrescription, calibrerSeance } from "./prescription.js";
+import { getPrescription, calibrerSeance, reserveEchauffementMin } from "./prescription.js";
 import { findInCatalogue } from "./exercices_catalogue.js";
 
 const norm = (s) => String(s || "").toLowerCase().normalize("NFD")
@@ -276,28 +276,40 @@ export function validatePointsFaibles(parsed, fiche) {
     .filter(p => p?.groupe);
   if (!faibles.length) return [];
 
-  // Séries hebdomadaires par groupe de catalogue.
+  // Séries hebdomadaires ET nombre de séances par groupe de catalogue.
   const seriesParGroupe = {};
-  for (const { ex } of tousExercices(parsed)) {
+  const seancesParGroupe = {};   // groupe → Set d'index de séance
+  for (const { ex, index } of tousExercices(parsed)) {
     const entry = findInCatalogue(ex.nom);
     if (!entry) continue;
     const n = parseSeries(ex.series) ?? 3;
     seriesParGroupe[entry.groupe] = (seriesParGroupe[entry.groupe] || 0) + n;
+    (seancesParGroupe[entry.groupe] ||= new Set()).add(index);
   }
+  const nbSeances = (parsed?.programme?.seances || []).length;
   const volumes = Object.values(seriesParGroupe).filter(v => v > 0).sort((a, b) => a - b);
   if (!volumes.length) return [];
   const mediane = volumes[Math.floor(volumes.length / 2)];
 
   const problems = [];
-  const absents = [], sousVolume = [];
+  const absents = [], sousVolume = [], sousFrequence = [];
 
   for (const pf of faibles) {
     const cibles = MAP_GROUPE_CATALOGUE[String(pf.groupe).toLowerCase().replace(/\s+/g, "_")];
     if (!cibles) continue;                       // groupe non mappable : on se tait
     const total = cibles.reduce((acc, g) => acc + (seriesParGroupe[g] || 0), 0);
 
-    if (total === 0) absents.push(lisibleGroupe(pf.groupe));
-    else if (total < mediane) sousVolume.push(`${lisibleGroupe(pf.groupe)} : ${total} séries (médiane ${mediane})`);
+    if (total === 0) { absents.push(lisibleGroupe(pf.groupe)); continue; }
+    if (total < mediane) sousVolume.push(`${lisibleGroupe(pf.groupe)} : ${total} séries (médiane ${mediane})`);
+
+    // Fréquence : c'est le PREMIER levier sur un point faible, avant le volume.
+    // On ne l'exige qu'à partir de 3 séances — en dessous, le format est
+    // corps entier et la question ne se pose pas.
+    if (nbSeances >= 3) {
+      const seances = new Set();
+      for (const g of cibles) for (const i of (seancesParGroupe[g] || [])) seances.add(i);
+      if (seances.size < 2) sousFrequence.push(`${lisibleGroupe(pf.groupe)} : 1 seule séance sur ${nbSeances}`);
+    }
   }
 
   if (absents.length) problems.push(
@@ -309,6 +321,12 @@ export function validatePointsFaibles(parsed, fiche) {
     `Point(s) faible(s) sous-servi(s) en volume : ${sousVolume.join(" ; ")}. `
     + "Un groupe en retard doit recevoir AU MOINS autant de séries que la moyenne des autres. "
     + "Applique le donnant-donnant : réalloue du volume depuis les groupes dominants."
+  );
+  if (sousFrequence.length) problems.push(
+    `Point(s) faible(s) stimulé(s) une seule fois dans la semaine : ${sousFrequence.join(" ; ")}. `
+    + "La FRÉQUENCE est le premier levier sur un muscle en retard, avant le volume : répartis son "
+    + "travail sur au moins 2 séances, à volume total constant. C'est le changement le moins "
+    + "coûteux en récupération."
   );
 
   return problems;
@@ -339,8 +357,9 @@ export function validateTempsSeance(parsed, objectif, dureeSeance) {
   const duree = Number(dureeSeance);
   if (!Number.isFinite(duree) || duree < 20) return [];
 
-  // Même marge que dans le prompt : ~8 min d'échauffement retirées.
-  const calib = calibrerSeance(objectif, Math.max(20, duree - 8));
+  // MÊME réserve que dans le prompt : sinon le validateur juge sur une base
+  // différente de celle annoncée au modèle, et signale des séances correctes.
+  const calib = calibrerSeance(objectif, Math.max(20, duree - reserveEchauffementMin(objectif)));
   if (!calib) return [];
 
   const trop = [], insuffisant = [];

@@ -243,6 +243,33 @@ const COUT = {
 };
 
 /**
+ * Minutes à RÉSERVER à l'échauffement, montée en charge comprise.
+ *
+ * Le code retirait 8 minutes forfaitaires, quel que soit l'objectif. C'est
+ * faux, et toujours dans le même sens : l'échauffement général et spécifique
+ * fait déjà 6 à 10 min, et la montée en charge s'y ajoute. Or elle dépend
+ * entièrement de l'objectif — 3 à 4 séries d'approche avec 2 à 3 min de repos
+ * avant un squat lourd, contre une seule série de mise en route avant un
+ * exercice de congestion.
+ *
+ * Une séance annoncée 60 min en prenait donc 70 à 75. L'athlète la tronquait,
+ * et ce sont les derniers exercices qui sautaient — souvent ceux du point faible.
+ *
+ * @param {string} objectif
+ * @returns {number} minutes
+ */
+export function reserveEchauffementMin(objectif) {
+  const k = clef(objectif);
+  // Force et prépa physique : montée en charge longue, repos d'approche longs.
+  if (k === "force" || k === "prep_physique") return 15;
+  // Réathlétisation : préparation articulaire plus longue, charges légères.
+  if (k === "reathletisation") return 12;
+  // Perte de poids : charges modérées, montée courte.
+  if (k === "perte_poids") return 8;
+  return 10;
+}
+
+/**
  * Nombre d'exercices réaliste pour une durée et un objectif donnés, plus un
  * avertissement si la durée demandée est trop courte pour l'objectif.
  * @param {string} objectif

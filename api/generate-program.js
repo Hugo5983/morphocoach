@@ -30,12 +30,14 @@ import { buildTechniquesBlock } from "./_knowledge/techniques.js";
 import { PUISSANCE_C8, COMBAT_C3, isCombat } from "./_knowledge/periodisation_combat.js";
 import { selectCandidats, findInCatalogue, matsAutorises, correctifsPourPathologies }
   from "./_knowledge/exercices_catalogue.js";
-import { buildPrescriptionBlock, getPrescription, calibrerSeance } from "./_knowledge/prescription.js";
+import { buildPrescriptionBlock, getPrescription, calibrerSeance, reserveEchauffementMin } from "./_knowledge/prescription.js";
 import { buildAdaptationsBlock } from "./_knowledge/adaptations.js";
 import { buildDouleursBlock, exercicesAEviterPourDouleurs } from "./_knowledge/douleurs.js";
 import { buildConstructionBlock } from "./_knowledge/construction.js";
 import { validateConformite } from "./_knowledge/conformite.js";
 import { buildEvolutionBlock } from "./_knowledge/evolution.js";
+import { buildCardioBlock } from "./_knowledge/cardio.js";
+import { buildFrequenceBlock } from "./_knowledge/frequence.js";
 
 export const config = { api: { bodyParser: { sizeLimit: "4mb" } } };
 
@@ -114,7 +116,10 @@ export function buildServerPrompt({ form, dossier, fiche, fichePrecedente, direc
   // Nombre d'exercices compatible AVEC les temps de repos de l'objectif.
   // 8 min d'échauffement sont retirées du budget : sans ça, le modèle
   // remplissait toute la durée d'exercices et la séance réelle débordait.
-  const calib = calibrerSeance(form.objectif, Math.max(20, dureeCible - 8));
+  // La réserve d'échauffement dépend de l'objectif : une montée en charge avant
+  // un squat lourd n'a rien à voir avec une mise en route avant un curl.
+  const reserveEch = reserveEchauffementMin(form.objectif);
+  const calib = calibrerSeance(form.objectif, Math.max(20, dureeCible - reserveEch));
   // Adaptations individuelles : règles de la base MorphoCoach déclenchées par
   // les traits RÉELLEMENT observés + âge + sexe + pathologies. Vide si la
   // morphologie est neutre — on n'invente jamais de contrainte.
@@ -203,74 +208,29 @@ prudentes — exercices polyvalents, ROM contrôlé, aucune supposition morpholo
   // jamais le modèle. Elle est valable dans les deux cas — on la sort du bloc.
   const ponderationBlock = `\n═══ RÈGLE D'ARBITRAGE (s'applique à TOUT le programme) ═══\n${REGLE_PONDERATION}`;
 
+  // Cardio : l'objectif "perte de poids" existait sans qu'aucune connaissance
+  // cardio n'atteigne jamais le modèle. Toujours injecté — même en force, où la
+  // vraie consigne est de le LIMITER, ce qu'il faut dire explicitement.
+  const cardioBlock = buildCardioBlock({
+    objectif: form.objectif, niveau: form.niveau,
+    nbJours: (form.jours || []).length, sport: form.sport,
+    materiel: form.materiel || [], pathologies: form.pathologies || [],
+  });
+
+  // Fréquence hebdomadaire et particularités liées au sexe : le volume par
+  // muscle était prescrit, jamais sa RÉPARTITION — or c'est le premier levier
+  // à actionner sur un point faible, avant d'ajouter du volume.
+  const frequenceBlock = buildFrequenceBlock({
+    sexe: form.sexe, nbJours: (form.jours || []).length,
+    aPointsFaibles: (fiche?.consequences?.points_faibles_visuels || []).length > 0,
+  });
+
   // Comparaison avec la fiche précédente : c'est le seul endroit où le système
   // apprend si ce qui a été prescrit au cycle d'avant a FONCTIONNÉ.
   const evolutionBlock = (fichePrecedente && fiche)
     ? buildEvolutionBlock(fichePrecedente, fiche) : "";
 
   // ── Directive récupération explicite (sommeil dégradé → plafond de volume) ──
-  // ── État de forme mesuré → décisions imposées ──
-  // Recevoir un signal ne suffit pas : sans règle explicite, le modèle lit
-  // « fatigue accumulée » et programme quand même une semaine d'accumulation.
-  const edf = dossier?.etat_de_forme || {};
-  const statutRecup = edf.statut_recuperation || null;
-  const volReel = edf.volume_reel_semaine || null;
-  const perfReelle = edf.tendance_performance || null;
-  const risque = Number(statutRecup?.risque) || 0;
-
-  const decisions = [];
-  if (risque >= 8) decisions.push(
-    "RISQUE DE SURENTRAÎNEMENT MESURÉ : ce cycle DOIT démarrer par une semaine allégée "
-    + "(volume −40 %, intensité −15 %, aucun échec musculaire). Ne pas ouvrir sur une accumulation.");
-  else if (risque >= 5) decisions.push(
-    "FATIGUE ACCUMULÉE MESURÉE : plafonner le volume de la semaine 1 au niveau MEV, "
-    + "verrouiller le RIR à 3, et repousser la montée en charge à la semaine 2.");
-  if (volReel?.groupes_au_dessus_du_MRV?.length) decisions.push(
-    `VOLUME AU-DESSUS DU MAXIMUM RÉCUPÉRABLE sur : ${volReel.groupes_au_dessus_du_MRV.join(", ")}. `
-    + "Réduire leur volume hebdomadaire de 30 % ce cycle, quitte à réallouer ailleurs.");
-  if (volReel?.groupes_sous_le_MEV?.length) decisions.push(
-    `VOLUME SOUS LE SEUIL MINIMAL sur : ${volReel.groupes_sous_le_MEV.join(", ")}. `
-    + "Ces groupes ne progressent pas : leur donner au moins une stimulation supplémentaire.");
-  if (perfReelle?.tendance === "baisse") decisions.push(
-    `PERFORMANCES EN BAISSE (${perfReelle.moyenne_pct} % en moyenne). `
-    + "Ce n'est pas un problème de programme mais de récupération : alléger avant de complexifier.");
-  if (edf.fc_repos && Number(edf.fc_repos.ecart) >= 7) decisions.push(
-    `FC DE REPOS +${edf.fc_repos.ecart} bpm au-dessus de la référence : signal précoce de fatigue nerveuse. `
-    + "Éviter les techniques d'intensification ce cycle.");
-  if (dossier?.rythme_reel?.jour_le_mieux_tenu) decisions.push(
-    `RYTHME RÉEL : le ${dossier.rythme_reel.jour_le_mieux_tenu} est le jour le plus régulièrement honoré. `
-    + "Y placer la séance la plus exigeante ou le point faible prioritaire.");
-
-  const etatBlock = decisions.length ? `
-═══ ÉTAT DE FORME MESURÉ — DÉCISIONS IMPOSÉES ═══
-Ces constats viennent des données réellement enregistrées par l'athlète, pas d'une
-estimation. Ils PRIMENT sur la logique de périodisation théorique : un cycle
-d'accumulation lancé sur un athlète en fatigue accumulée ne produira rien.
-
-${decisions.map(d => `• ${d}`).join("\n")}
-
-Justifie explicitement dans "reflexion.diagnostic" comment tu en as tenu compte.` : "";
-
-  // ── Charges réelles → prescription ABSOLUE ──
-  // Le dossier contient les charges réellement soulevées, mais rien ne disait
-  // au modèle de s'en servir : il prescrivait des "70-75 % du 1RM estimé" que
-  // l'athlète devait convertir lui-même. Un coach donne des kilos.
-  const chargesCo = dossier?.charges_actuelles || {};
-  const nbCharges = Object.keys(chargesCo).filter(k => k !== "note").length;
-  const chargesBlock = nbCharges ? `
-═══ CHARGES RÉELLES DE L'ATHLÈTE — PRESCRIRE EN KILOS ═══
-Ces charges viennent de ses séances validées, ce ne sont pas des estimations :
-${Object.entries(chargesCo).filter(([k]) => k !== "note").map(([n, v]) => `- ${n} : ${v}`).join("\n")}
-
-RÈGLE : pour tout exercice de cette liste (ou une variante proche), le champ
-"charge" doit être un NOMBRE EN KILOS, pas un pourcentage. Pars de la charge
-connue et prescris l'incrément : "32 kg (semaine 1-2) → 34 kg (semaine 3-4)".
-Progression réaliste : +2,5 % à +5 % par palier de 2 semaines sur le haut du
-corps, +5 % à +10 % sur le bas du corps.
-Pour un exercice NOUVEAU ou absent de la liste, indique un % du 1RM estimé et
-précise dans "tips_coach" comment trouver la charge de départ à la première séance.
-Ne prescris JAMAIS un pourcentage sur un exercice dont tu connais la charge réelle.` : "";
-
   // Détection de récupération dégradée. L'ancienne version ne testait QUE le mot
   // "insuffisant" : "5h par nuit", "sommeil dégradé", "je dors mal" passaient à
   // travers et la règle n'atteignait jamais le modèle. On élargit au vocabulaire
@@ -305,6 +265,92 @@ Ne prescris JAMAIS un pourcentage sur un exercice dont tu connais la charge rée
   })();
   const sommeilDegrade =
     MOTS_SOMMEIL_DEGRADE.test(noteRecup) || (heuresSommeil !== null && heuresSommeil <= 6.5);
+
+  // ── État de forme mesuré → décisions imposées ──
+  // Recevoir un signal ne suffit pas : sans règle explicite, le modèle lit
+  // « fatigue accumulée » et programme quand même une semaine d'accumulation.
+  const edf = dossier?.etat_de_forme || {};
+  const statutRecup = edf.statut_recuperation || null;
+  const volReel = edf.volume_reel_semaine || null;
+  const perfReelle = edf.tendance_performance || null;
+  const risque = Number(statutRecup?.risque) || 0;
+
+  const decisions = [];
+  if (risque >= 8) decisions.push(
+    "RISQUE DE SURENTRAÎNEMENT MESURÉ : ce cycle DOIT démarrer par une semaine allégée "
+    + "(volume −40 %, intensité −15 %, aucun échec musculaire). Ne pas ouvrir sur une accumulation.");
+  else if (risque >= 5) decisions.push(
+    "FATIGUE ACCUMULÉE MESURÉE : plafonner le volume de la semaine 1 au niveau MEV, "
+    + "verrouiller le RIR à 3, et repousser la montée en charge à la semaine 2.");
+  if (volReel?.groupes_au_dessus_du_MRV?.length) decisions.push(
+    `VOLUME AU-DESSUS DU MAXIMUM RÉCUPÉRABLE sur : ${volReel.groupes_au_dessus_du_MRV.join(", ")}. `
+    + "Réduire leur volume hebdomadaire de 30 % ce cycle, quitte à réallouer ailleurs.");
+  if (volReel?.groupes_sous_le_MEV?.length) decisions.push(
+    `VOLUME SOUS LE SEUIL MINIMAL sur : ${volReel.groupes_sous_le_MEV.join(", ")}. `
+    + "Ces groupes ne progressent pas : leur donner au moins une stimulation supplémentaire.");
+  if (perfReelle?.tendance === "baisse") decisions.push(
+    `PERFORMANCES EN BAISSE (${perfReelle.moyenne_pct} % en moyenne). `
+    + "Ce n'est pas un problème de programme mais de récupération : alléger avant de complexifier.");
+  if (edf.fc_repos && Number(edf.fc_repos.ecart) >= 7) decisions.push(
+    `FC DE REPOS +${edf.fc_repos.ecart} bpm au-dessus de la référence : signal précoce de fatigue nerveuse. `
+    + "Éviter les techniques d'intensification ce cycle.");
+  // ── DELOAD CONDITIONNEL ──
+  // La périodisation place le deload en semaine 6, quoi qu'il arrive. Un coach
+  // ne fonctionne pas ainsi : il décharge quand les signaux apparaissent. Tous
+  // les signaux nécessaires sont déjà mesurés ci-dessus — ils n'étaient
+  // simplement jamais convertis en décision de placement.
+  const signauxDeload = [];
+  if (risque >= 8) signauxDeload.push("risque de surentraînement élevé");
+  if (perfReelle?.tendance === "baisse") signauxDeload.push("performances en baisse");
+  if (edf.fc_repos && Number(edf.fc_repos.ecart) >= 7) signauxDeload.push("FC de repos élevée");
+  if (volReel?.groupes_au_dessus_du_MRV?.length) signauxDeload.push("volume au-dessus du maximum récupérable");
+  if (sommeilDegrade) signauxDeload.push("sommeil dégradé");
+
+  if (signauxDeload.length >= 2) decisions.push(
+    `DELOAD À AVANCER — ${signauxDeload.length} signaux convergents : ${signauxDeload.join(", ")}. `
+    + "N'attends PAS la semaine de décharge prévue au calendrier : place-la en semaine 1 ou 2 de ce "
+    + "cycle (volume −40/−50 %, intensité −10/−20 %, aucun échec), puis reprends la progression "
+    + "derrière. Un deload avancé coûte une semaine ; un deload subi en coûte quatre. "
+    + "Explique ce choix dans \"reflexion.strategie\" pour que l'athlète comprenne que ce n'est "
+    + "pas un recul mais une décision.");
+  else if (signauxDeload.length === 1) decisions.push(
+    `SIGNAL DE FATIGUE ISOLÉ (${signauxDeload[0]}) : un seul signal ne justifie pas d'avancer le `
+    + "deload, mais interdit d'ouvrir sur une semaine agressive. Démarre prudemment et surveille.");
+
+  if (dossier?.rythme_reel?.jour_le_mieux_tenu) decisions.push(
+    `RYTHME RÉEL : le ${dossier.rythme_reel.jour_le_mieux_tenu} est le jour le plus régulièrement honoré. `
+    + "Y placer la séance la plus exigeante ou le point faible prioritaire.");
+
+  const etatBlock = decisions.length ? `
+═══ ÉTAT DE FORME MESURÉ — DÉCISIONS IMPOSÉES ═══
+Ces constats viennent des données réellement enregistrées par l'athlète, pas d'une
+estimation. Ils PRIMENT sur la logique de périodisation théorique : un cycle
+d'accumulation lancé sur un athlète en fatigue accumulée ne produira rien.
+
+${decisions.map(d => `• ${d}`).join("\n")}
+
+Justifie explicitement dans "reflexion.diagnostic" comment tu en as tenu compte.` : "";
+
+  // ── Charges réelles → prescription ABSOLUE ──
+  // Le dossier contient les charges réellement soulevées, mais rien ne disait
+  // au modèle de s'en servir : il prescrivait des "70-75 % du 1RM estimé" que
+  // l'athlète devait convertir lui-même. Un coach donne des kilos.
+  const chargesCo = dossier?.charges_actuelles || {};
+  const nbCharges = Object.keys(chargesCo).filter(k => k !== "note").length;
+  const chargesBlock = nbCharges ? `
+═══ CHARGES RÉELLES DE L'ATHLÈTE — PRESCRIRE EN KILOS ═══
+Ces charges viennent de ses séances validées, ce ne sont pas des estimations :
+${Object.entries(chargesCo).filter(([k]) => k !== "note").map(([n, v]) => `- ${n} : ${v}`).join("\n")}
+
+RÈGLE : pour tout exercice de cette liste (ou une variante proche), le champ
+"charge" doit être un NOMBRE EN KILOS, pas un pourcentage. Pars de la charge
+connue et prescris l'incrément : "32 kg (semaine 1-2) → 34 kg (semaine 3-4)".
+Progression réaliste : +2,5 % à +5 % par palier de 2 semaines sur le haut du
+corps, +5 % à +10 % sur le bas du corps.
+Pour un exercice NOUVEAU ou absent de la liste, indique un % du 1RM estimé et
+précise dans "tips_coach" comment trouver la charge de départ à la première séance.
+Ne prescris JAMAIS un pourcentage sur un exercice dont tu connais la charge réelle.` : "";
+
   const recupBlock = sommeilDegrade
     ? `\n═══ RÉCUPÉRATION DÉGRADÉE (donnée réelle du dossier) ═══
 Sommeil moyen ${dossier.recuperation.sommeil_moyen_7j || "< 6,5 h"} sur 7 jours : plafonner le volume
@@ -398,6 +444,8 @@ ${dossierTexte}
 ${morphoBlock}
 ${evolutionBlock}
 ${ponderationBlock}
+${frequenceBlock}
+${cardioBlock}
 ${recupBlock}
 ${etatBlock}
 
@@ -494,10 +542,13 @@ Chaque séance porte le champ "jour" correspondant, avec AU MINIMUM 3 exercices
 
 ⏱ DURÉE CIBLE PAR SÉANCE : ${dureeCible} MINUTES
 L'application calcule la durée affichée ainsi :
-  durée = Σ (séries × (repos_en_secondes + 60)) + 8 min d'échauffement
-Les 8 minutes d'échauffement sont incompressibles et déjà comptées : n'ajoute
-pas d'exercices d'échauffement dans "exercices", ils y seraient comptés deux
-fois. Le champ "echauffement" de la séance suffit.
+  durée = Σ (séries × (repos_en_secondes + 60)) + ${reserveEch} min d'échauffement
+Ces ${reserveEch} minutes couvrent l'échauffement général, la préparation articulaire
+ET la montée en charge (séries d'approche sur les mouvements lourds). Elles sont
+incompressibles et DÉJÀ comptées : n'ajoute pas d'exercices d'échauffement ni de
+séries d'approche dans "exercices", ils y seraient comptés deux fois. Le champ
+"echauffement" de la séance suffit — l'application construit la montée en charge
+elle-même à partir des charges réelles de l'athlète.
 Avec les temps de repos qu'impose l'objectif, un exercice coûte environ
 ${calib.coutExo} minutes → vise ${calib.min} à ${calib.max} exercices par séance.
 Ajuste le NOMBRE d'exercices, jamais les temps de repos de la prescription :
