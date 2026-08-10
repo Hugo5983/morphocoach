@@ -46,17 +46,62 @@ const VAGUES_REPS = {
   prep_physique: ["5-8 force / 8-10 transfert", "puissance 3-5 + conditionnement", "contraste lourd-explosif"],
 };
 
-/** Rotation déterministe mais dépendante du temps (cycle + semaine calendaire). */
-export function getVariationDirectives({ cycleNum, nbJours, objectif, niveau }) {
+/**
+ * Empreinte stable d'un athlète, dérivée de son identifiant.
+ *
+ * POURQUOI : sans elle, la graine de variation ne contenait que le numéro de
+ * cycle et la semaine calendaire. Deux personnes qui ne se connaissent pas,
+ * au même cycle, la même semaine, avec le même nombre de jours, le même
+ * objectif et le même niveau recevaient EXACTEMENT le même split imposé, le
+ * même accent de méthode et la même vague de répétitions. La promesse
+ * d'individualisation tombait sur la structure même du programme.
+ *
+ * L'empreinte est déterministe (le même athlète retrouve sa séquence, ses
+ * cycles s'enchaînent logiquement) mais propre à lui (deux athlètes suivent
+ * des séquences décorrélées).
+ */
+/** Mélange d'entiers (variante de Wang/Jenkins) : décorrèle deux graines proches. */
+function melange(graine, sel) {
+  let h = (graine >>> 0) ^ Math.imul(sel + 1, 0x9e3779b1);
+  h = Math.imul(h ^ (h >>> 16), 0x85ebca6b) >>> 0;
+  h = Math.imul(h ^ (h >>> 13), 0xc2b2ae35) >>> 0;
+  return (h ^ (h >>> 16)) >>> 0;
+}
+
+export function empreinteAthlete(identifiant) {
+  const s = String(identifiant || "");
+  if (!s) return 0;
+  // Hachage FNV-1a 32 bits : court, stable, sans dépendance.
+  let h = 0x811c9dc5;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 0x01000193) >>> 0;
+  }
+  return h % 9973;   // nombre premier : évite les cycles courts dans les modulos
+}
+
+/**
+ * Rotation déterministe : cycle + semaine calendaire + EMPREINTE DE L'ATHLÈTE.
+ *
+ * @param {object} p
+ * @param {string|number} [p.empreinte] identifiant stable de l'athlète
+ */
+export function getVariationDirectives({ cycleNum, nbJours, objectif, niveau, empreinte }) {
   const week = Math.floor(Date.now() / (7 * 864e5));
-  const seed = (cycleNum || 1) + week;
+  const emp = typeof empreinte === "number" ? empreinte : empreinteAthlete(empreinte);
+  const seed = (cycleNum || 1) + week + emp;
   const pool = SPLITS_PAR_JOURS[Math.min(Math.max(nbJours || 3, 2), 6)] || SPLITS_PAR_JOURS[3];
   const accents = niveau === "debutant" ? ACCENTS_METHODE.slice(0, 2) : ACCENTS_METHODE;
   const vagues = VAGUES_REPS[objectif] || VAGUES_REPS.hypertrophie;
+  // Trois tirages INDÉPENDANTS. Une simple multiplication (seed*3 % 6) créait
+  // des collisions : le résultat ne prenait que 2 valeurs sur 6 possibles, et
+  // 40 athlètes ne produisaient que 4 combinaisons au lieu de plusieurs dizaines.
+  // On rehache la graine avec un sel différent pour chaque axe.
+  const tirage = (sel, taille) => melange(seed, sel) % taille;
   return {
-    split_impose:   pool[seed % pool.length],
-    accent_methode: accents[(seed + 1) % accents.length],
-    vague_de_reps:  vagues[(seed + 2) % vagues.length],
+    split_impose:   pool[tirage(1, pool.length)],
+    accent_methode: accents[tirage(2, accents.length)],
+    vague_de_reps:  vagues[tirage(3, vagues.length)],
     regle_overlap:  "MAXIMUM 40% des exercices peuvent provenir du cycle précédent. Les exercices repris doivent être EXCLUSIVEMENT ceux listés dans 'exercices_a_conserver' (ils progressent). Tout le reste doit être renouvelé : autre variante du même pattern, autre angle, autre matériel.",
   };
 }

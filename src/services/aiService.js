@@ -38,11 +38,11 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
  * génère tranquillement (jusqu'à ~280 s). Si les routes asynchrones ne sont
  * pas disponibles (404/501), repli automatique sur la route synchrone
  * historique — comportement strictement identique à avant.
- * @param {{ form: object, dossier: object, ficheMorpho: object|null }} payload
+ * @param {{ form: object, dossier: object, ficheMorpho: object|null, fichePrecedente?: object|null }} payload
  * @returns {Promise<{parsed: import('../types').AIRawResponse, warnings: string[], meta: object}>}
  */
-export async function callGenerateProgramAPI({ form, dossier, ficheMorpho }) {
-  const body = JSON.stringify({ form, dossier, ficheMorpho });
+export async function callGenerateProgramAPI({ form, dossier, ficheMorpho, fichePrecedente = null }) {
+  const body = JSON.stringify({ form, dossier, ficheMorpho, fichePrecedente });
 
   // ── 1) Tentative asynchrone : /start puis polling /status ────────────────
   try {

@@ -15,7 +15,7 @@ import {
   summarizeProgramLoads, LOAD_MESSAGES,
 } from"../../services/aiService.js";
 import { buildDossierAthlete } from"../../services/coachBrainService.js";
-import { analyserMorpho, getFicheMorpho, ficheEstValide } from"../../services/morphoService.js";
+import { analyserMorpho, getFicheMorpho, getFichePrecedente, ficheEstValide, besoinNouvellesPhotos } from"../../services/morphoService.js";
 import { syncCycleOutcome, restaurerHistorique } from"../../services/syncService.js";
 import { bilanChargesCycle } from"../../services/progressionService.js";
 import {
@@ -77,6 +77,9 @@ export default function AnalyseIA(props) {
 
       // Fiche morphologique : nouvelles photos → analyse vision ; sinon fiche stockée
       let fiche = getFicheMorpho();
+      // Mémorisée AVANT l'analyse : c'est elle qui servira de point de
+      // comparaison si de nouvelles photos sont fournies maintenant.
+      const ficheAvantAnalyse = fiche;
       const rawPhotos = [photos.face, photos.dos, photos.profil].filter(Boolean);
       if (rawPhotos.length > 0) {
         setLoadMsg(" Analyse morphologique de tes photos…");
@@ -86,7 +89,7 @@ export default function AnalyseIA(props) {
         // renvoyait "indetermine" partout. Reste très en dessous de la limite
         // serveur de 3 Mo par photo.
         for (const p of rawPhotos) compressed.push(await compressImage(p, 1200, 0.82));
-        fiche = await analyserMorpho(compressed, { sexe: form.sexe, age: form.age });
+        fiche = await analyserMorpho(compressed, { sexe: form.sexe, age: form.age, poids: form.poids });
         // Une analyse qui ne lit rien doit se voir : sans ça, le programme est
         // généré "à l'aveugle" et rien ne le signale à l'utilisateur.
         if (fiche?.vide) {
@@ -96,12 +99,23 @@ export default function AnalyseIA(props) {
           push?.("", "Analyse morpho partielle",
             `Seuls ${fiche.exploitabilite} % des traits ont pu être lus. Des photos plus nettes affineraient ton programme.`);
         }
-      } else if (fiche && !ficheEstValide()) {
-        // Fiche ancienne (> 90 j) : on l'utilise quand même, mais on le signale
-        push?.("","Fiche morpho ancienne","Pense à refaire tes photos pour une analyse à jour.");
+      } else if (fiche) {
+        // Pas de nouvelles photos : on réutilise la fiche stockée, mais on
+        // signale quand elle mérite d'être rafraîchie (cycle terminé, écart de
+        // poids, ou simplement 6 semaines écoulées).
+        const besoin = besoinNouvellesPhotos({
+          poidsActuel: Number(form.poids),
+          cyclesTermines: Array.isArray(cycles) ? cycles.length : 0,
+        });
+        if (besoin.besoin) push?.("", "Photos à rafraîchir", besoin.message);
       }
 
-      const { parsed, warnings } = await callGenerateProgramAPI({ form, dossier, ficheMorpho: fiche });
+      // Fiche précédente : permet au serveur de comparer et de dire à l'athlète
+      // ce qui a réellement progressé depuis la dernière analyse.
+      const fichePrecedente = (rawPhotos.length > 0 && ficheAvantAnalyse)
+        ? ficheAvantAnalyse : getFichePrecedente();
+
+      const { parsed, warnings } = await callGenerateProgramAPI({ form, dossier, ficheMorpho: fiche, fichePrecedente });
       if (warnings?.length) console.warn("Avertissements génération:", warnings);
 
       const np = buildProgramFromAI(parsed, { form, cycles, ficheMorpho: fiche });

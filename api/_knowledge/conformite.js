@@ -19,7 +19,7 @@
 // déclenche des corrections inutiles, consomme le budget temps, et finit par
 // être désactivé — c'est pire que pas de validateur du tout.
 
-import { getPrescription } from "./prescription.js";
+import { getPrescription, calibrerSeance } from "./prescription.js";
 import { findInCatalogue } from "./exercices_catalogue.js";
 
 const norm = (s) => String(s || "").toLowerCase().normalize("NFD")
@@ -314,11 +314,67 @@ export function validatePointsFaibles(parsed, fiche) {
   return problems;
 }
 
-/** Lance les trois contrôles d'un coup. */
-export function validateConformite(parsed, { objectif, dossier, fiche }) {
+// ────────────────────────────────────────────────────────────────────────────
+// 4. TEMPS DE SÉANCE — la durée annoncée est-elle tenable ?
+// ────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Vérifie que le nombre d'exercices tient dans la durée annoncée par l'athlète.
+ *
+ * Le calcul existait déjà (calibrerSeance) et était transmis au modèle, mais
+ * rien ne vérifiait le résultat : on pouvait prescrire 8 exercices de force
+ * pour 45 minutes. Dans la vraie vie, l'athlète tronque la fin de séance —
+ * donc ce sont les derniers exercices, souvent ceux du point faible, qui
+ * sautent. Une séance trop chargée n'est pas un détail de confort.
+ *
+ * Le gainage et les correctifs comptent pour MOITIÉ : ils sont courts et
+ * s'intercalent entre les séries.
+ *
+ * @param {object} parsed
+ * @param {string} objectif
+ * @param {number} dureeSeance  minutes annoncées par l'athlète
+ * @returns {string[]}
+ */
+export function validateTempsSeance(parsed, objectif, dureeSeance) {
+  const duree = Number(dureeSeance);
+  if (!Number.isFinite(duree) || duree < 20) return [];
+
+  // Même marge que dans le prompt : ~8 min d'échauffement retirées.
+  const calib = calibrerSeance(objectif, Math.max(20, duree - 8));
+  if (!calib) return [];
+
+  const trop = [], insuffisant = [];
+  for (const s of (parsed?.programme?.seances || [])) {
+    const liste = (s?.exercices || []).filter(ex => ex?.nom);
+    if (!liste.length) continue;
+    // Coût pondéré : un correctif court ne pèse pas comme un squat lourd.
+    const cout = liste.reduce((acc, ex) => acc + (horsPrescription(ex.nom) ? 0.5 : 1), 0);
+    const jour = s?.jour || "séance sans nom";
+    if (cout > calib.max + 1) trop.push(`${jour} : ${liste.length} exercices`);
+    else if (cout < calib.min - 1) insuffisant.push(`${jour} : ${liste.length} exercices`);
+  }
+
+  const problems = [];
+  if (trop.length) problems.push(
+    `Séance(s) trop chargée(s) pour ${duree} min en "${objectif}" `
+    + `(${calib.min} à ${calib.max} exercices tenables, ≈ ${calib.coutExo} min chacun) : ${trop.join(" ; ")}. `
+    + "Retire les exercices les moins rentables : une séance qu'on ne finit pas fait sauter "
+    + "la fin du programme, donc souvent le travail du point faible."
+  );
+  if (insuffisant.length) problems.push(
+    `Séance(s) sous-remplie(s) pour ${duree} min en "${objectif}" `
+    + `(${calib.min} à ${calib.max} exercices attendus) : ${insuffisant.join(" ; ")}. `
+    + "Le temps disponible n'est pas exploité — ajoute du travail utile sur les priorités du cycle."
+  );
+  return problems;
+}
+
+/** Lance les quatre contrôles d'un coup. */
+export function validateConformite(parsed, { objectif, dossier, fiche, dureeSeance }) {
   return [
     ...validatePrescription(parsed, objectif),
     ...validateCharges(parsed, dossier),
     ...validatePointsFaibles(parsed, fiche),
+    ...validateTempsSeance(parsed, objectif, dureeSeance),
   ];
 }

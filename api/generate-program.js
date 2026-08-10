@@ -35,6 +35,7 @@ import { buildAdaptationsBlock } from "./_knowledge/adaptations.js";
 import { buildDouleursBlock, exercicesAEviterPourDouleurs } from "./_knowledge/douleurs.js";
 import { buildConstructionBlock } from "./_knowledge/construction.js";
 import { validateConformite } from "./_knowledge/conformite.js";
+import { buildEvolutionBlock } from "./_knowledge/evolution.js";
 
 export const config = { api: { bodyParser: { sizeLimit: "4mb" } } };
 
@@ -102,7 +103,7 @@ function mergeFicheLists(fiche) {
 }
 
 // ─── Assemblage du prompt (côté serveur uniquement) ─────────────────────────
-export function buildServerPrompt({ form, dossier, fiche, directives, cycleNum, candidats }) {
+export function buildServerPrompt({ form, dossier, fiche, fichePrecedente, directives, cycleNum, candidats }) {
   const joursPlein = normalizeJours(form.jours).length
     ? normalizeJours(form.jours) : ["Lundi", "Mercredi", "Vendredi"];
   // Durée cible : bornée pour rester réaliste même si la valeur arrive corrompue.
@@ -201,6 +202,11 @@ prudentes — exercices polyvalents, ROM contrôlé, aucune supposition morpholo
   // la théorie morphologique, sauf pour les interdits de sécurité) n'atteignait
   // jamais le modèle. Elle est valable dans les deux cas — on la sort du bloc.
   const ponderationBlock = `\n═══ RÈGLE D'ARBITRAGE (s'applique à TOUT le programme) ═══\n${REGLE_PONDERATION}`;
+
+  // Comparaison avec la fiche précédente : c'est le seul endroit où le système
+  // apprend si ce qui a été prescrit au cycle d'avant a FONCTIONNÉ.
+  const evolutionBlock = (fichePrecedente && fiche)
+    ? buildEvolutionBlock(fichePrecedente, fiche) : "";
 
   // ── Directive récupération explicite (sommeil dégradé → plafond de volume) ──
   // ── État de forme mesuré → décisions imposées ──
@@ -390,6 +396,7 @@ diagnostic, et rappelle dans "tips_coach" d'arrêter en cas de douleur vive.` : 
 ${dossierTexte}
 
 ${morphoBlock}
+${evolutionBlock}
 ${ponderationBlock}
 ${recupBlock}
 ${etatBlock}
@@ -570,7 +577,7 @@ function listExercices(parsed) {
   return out;
 }
 
-export function validateProgramme(parsed, { dossier, fiche, materiel, joursDemandes = [], douleurs = [], objectif = "" }) {
+export function validateProgramme(parsed, { dossier, fiche, materiel, joursDemandes = [], douleurs = [], objectif = "", dureeSeance = 0 }) {
   const problems = [];
   const noms = listExercices(parsed);
   const exos = noms.map(normalizeExo);
@@ -631,7 +638,7 @@ export function validateProgramme(parsed, { dossier, fiche, materiel, joursDeman
   // 4. CONFORMITÉ — la connaissance est-elle APPLIQUÉE, pas seulement reçue ?
   //    Prescription (reps/repos/tempo), charges réelles en kilos, et volume
   //    réellement alloué aux points faibles diagnostiqués sur photo.
-  problems.push(...validateConformite(parsed, { objectif, dossier, fiche }));
+  problems.push(...validateConformite(parsed, { objectif, dossier, fiche, dureeSeance }));
 
   // La liste des inconnus voyage avec les problèmes : elle alimente la file de
   // revue sans jamais faire échouer la génération.
@@ -663,11 +670,19 @@ export function normalizeJours(jours = []) {
  * route appelante (110 s en synchrone, ~280 s via le job asynchrone).
  * @returns {Promise<{parsed:object, warnings:string[], meta:object}>}
  */
-export async function runGeneration({ form, dossier, ficheMorpho, access, budgetMs = 110_000 }) {
+export async function runGeneration({ form, dossier, ficheMorpho, fichePrecedente = null, access, budgetMs = 110_000 }) {
   const startedAt = Date.now();
   const cycleNum = Math.max(1, parseInt(dossier?.numero_cycle) || (dossier?.memoire_exercices ? 2 : 1));
+  // L'empreinte rend la séquence de variation propre à CET athlète : deux
+  // inconnus au même cycle ne reçoivent plus le même split imposé.
+  // On retombe sur un identifiant de secours si le compte n'est pas connu,
+  // pour que la génération reste déterministe et reproductible.
+  const empreinte = access?.userId
+    || [form.prenom, form.sexe, form.taille, form.age].filter(Boolean).join("|")
+    || "anonyme";
   const directives = getVariationDirectives({
-    cycleNum, nbJours: (form.jours || []).length, objectif: form.objectif, niveau: form.niveau,
+    cycleNum, nbJours: (form.jours || []).length, objectif: form.objectif,
+    niveau: form.niveau, empreinte,
   });
 
   const fiche = mergeFicheLists(ficheMorpho || null);
@@ -692,7 +707,7 @@ export async function runGeneration({ form, dossier, ficheMorpho, access, budget
     max: 9999,   // catalogue ENTIER (déjà filtré par matériel + niveau)
   });
 
-  const prompt = buildServerPrompt({ form, dossier: dossier || {}, fiche, directives, cycleNum, candidats });
+  const prompt = buildServerPrompt({ form, dossier: dossier || {}, fiche, fichePrecedente, directives, cycleNum, candidats });
   const system = "Tu es un Master Coach Sportif expert en biomécanique, hypertrophie et périodisation. Tu raisonnes comme un coach de 10 ans d'expérience : tu lis le dossier de l'athlète AVANT de décider. Tu génères UNIQUEMENT du JSON valide, sans texte avant ou après, sans markdown, COMPACT (aucune indentation superflue). RÈGLES D'ÉCHAPPEMENT STRICTES : jamais de retour à la ligne brut dans une chaîne (utilise un espace), jamais de guillemet non échappé, pas d'apostrophe typographique dans les valeurs. Un JSON illisible fait échouer toute la génération.";
 
   const remaining = () => budgetMs - (Date.now() - startedAt);
@@ -772,7 +787,7 @@ Un programme complet et sobre vaut infiniment mieux qu'aucun programme.`;
   try {
     let raw = await appelPrincipal();
     let parsed = parseJSON(raw);
-    let problems = validateProgramme(parsed, { dossier, fiche, materiel: form.materiel, joursDemandes: normalizeJours(form.jours), douleurs: form.douleurs || [], objectif: form.objectif });
+    let problems = validateProgramme(parsed, { dossier, fiche, materiel: form.materiel, joursDemandes: normalizeJours(form.jours), douleurs: form.douleurs || [], objectif: form.objectif, dureeSeance: form.dureeSeance });
 
     // Une seule tentative corrective, et seulement si le temps restant le
     // permet. FILET DE SÉCURITÉ : si la correction expire ou échoue, on
@@ -791,7 +806,7 @@ Un programme complet et sobre vaut infiniment mieux qu'aucun programme.`;
         });
         const parsed2 = parseJSON(raw2);
         parsed = parsed2;
-        problems = validateProgramme(parsed2, { dossier, fiche, materiel: form.materiel, joursDemandes: normalizeJours(form.jours), douleurs: form.douleurs || [], objectif: form.objectif });
+        problems = validateProgramme(parsed2, { dossier, fiche, materiel: form.materiel, joursDemandes: normalizeJours(form.jours), douleurs: form.douleurs || [], objectif: form.objectif, dureeSeance: form.dureeSeance });
       } catch (e2) {
         console.warn("[generate-program] Correction avortée, programme initial conservé:", e2.message);
       }
@@ -841,12 +856,12 @@ export default async function handler(req, res) {
   const quota = await checkAndCountUsage(access, "generation");
   if (!quota.ok) return res.status(quota.status).json({ error: quota.error });
 
-  const { form, dossier, ficheMorpho } = req.body || {};
+  const { form, dossier, ficheMorpho, fichePrecedente } = req.body || {};
   if (!form || typeof form !== "object") return res.status(400).json({ error: "Profil (form) manquant" });
   if (JSON.stringify(req.body).length > 200_000) return res.status(400).json({ error: "Requête trop volumineuse" });
 
   try {
-    const out = await runGeneration({ form, dossier, ficheMorpho, access, budgetMs: 110_000 });
+    const out = await runGeneration({ form, dossier, ficheMorpho, fichePrecedente, access, budgetMs: 110_000 });
     return res.status(200).json(out);
   } catch (e) {
     console.error("[generate-program]", e.message);
