@@ -16,7 +16,7 @@
 // première cause de blessure évitable en salle.
 
 import { getSeriesApproche } from "./progressionService.js";
-import { getMobiliteAvantSeance } from "./mobiliteService.js";
+import { buildActivation, matsAutorises } from "./activationService.js";
 import { groupeMusculaire } from "./muscleGroups.js";
 
 const MAX_MIN_HORS_MONTEE = 10;
@@ -94,47 +94,20 @@ function groupesDeLaSeance(seance) {
  */
 export function getEchauffement(seance, fiche, profil = {}, opts = {}) {
   const groupes = groupesDeLaSeance(seance);
-  const nbBas = groupes.filter(g => BAS.includes(g)).length;
-  const nbHaut = groupes.filter(g => HAUT.includes(g)).length;
-  const orientation = nbBas > nbHaut ? "bas" : nbHaut > nbBas ? "haut" : "mixte";
 
-  const blocs = [];
-
-  // ── 1. GÉNÉRAL — toujours, c'est ce qui élève la température ──
-  blocs.push({
-    cle: "general", titre: "Mise en route", minutes: 3,
-    but: "Élever la température corporelle et le rythme cardiaque.",
-    exercices: GENERAL[orientation],
+  // ── 1 & 2. MISE EN ROUTE + ACTIVATION ──
+  // La préparation ciblée venait des ROUTINES DE MOBILITÉ. Elle produisait des
+  // étirements statiques tenus (30-40 s) juste avant des charges lourdes —
+  // l'inverse de ce qu'il faut. La mobilité garde ses créneaux matin/soir ;
+  // l'échauffement passe désormais par de l'ACTIVATION pure, choisie dans le
+  // catalogue selon les groupes du jour et le matériel réellement disponible.
+  const act = buildActivation({
+    groupes,
+    mats: matsAutorises(profil?.materiel || []),
+    pathologies: profil?.pathologies || [],
+    maxMinutes: MAX_MIN_HORS_MONTEE,
   });
-
-  // ── 2. SPÉCIFIQUE — priorité aux routines morpho, sinon générique ──
-  // Une routine issue de l'analyse photo prime toujours : elle vise un
-  // déséquilibre réel, pas une préparation standard.
-  const morpho = getMobiliteAvantSeance(fiche, profil, seance?.focus || groupes.join(" "));
-  const exosSpecifiques = [];
-  const sources = [];
-
-  for (const r of morpho.slice(0, 2)) {
-    r.exercices.slice(0, 2).forEach(e => exosSpecifiques.push({ ...e, origine: r.titre }));
-    sources.push(r.titre);
-  }
-  // Complément générique sur les groupes du jour non encore couverts.
-  for (const g of groupes.slice(0, 2)) {
-    if (exosSpecifiques.length >= 4) break;
-    (SPECIFIQUE[g] || []).slice(0, 1).forEach(e =>
-      exosSpecifiques.push({ ...e, origine: g }));
-  }
-
-  if (exosSpecifiques.length) {
-    blocs.push({
-      cle: "specifique", titre: "Préparation ciblée",
-      minutes: Math.min(4, Math.max(2, Math.ceil(exosSpecifiques.length * 0.9))),
-      but: sources.length
-        ? `Zones à préparer en priorité : ${sources.join(", ").toLowerCase()}.`
-        : `Articulations sollicitées aujourd'hui : ${groupes.slice(0, 3).join(", ").toLowerCase()}.`,
-      exercices: exosSpecifiques.slice(0, 4),
-    });
-  }
+  const blocs = act.blocs;
 
   // ── 3. MONTÉE EN CHARGE — sur le premier mouvement lourd ──
   const premier = (seance?.exercices || [])[0];

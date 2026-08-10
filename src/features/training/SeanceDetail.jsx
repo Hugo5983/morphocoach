@@ -188,6 +188,7 @@ export default function TodayView(props) {
               const ech = getEchauffement(todaySeance, getFicheMorpho(), {
                 metier: profil?.metier, pathologies: prog?.pathologies,
                 objectif: prog?.objectif, niveau: prog?.niveau,
+                materiel: prog?.materiel || profil?.materiel || [],
               }, { chargePremierExo: null });
               return (
                 <div style={{ background:"rgba(245,161,0,0.07)", border:"1px solid rgba(245,161,0,0.22)",

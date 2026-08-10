@@ -264,6 +264,7 @@ export default function FocusMode({
       return getEchauffement(seance, getFicheMorpho(), {
         objectif: prog?.objectif, niveau: prog?.niveau,
         pathologies: prog?.pathologies, metier: prog?.metier,
+        materiel: prog?.materiel || [],
       }, { chargePremierExo: kg });
     } catch { return null; }
   }, [seance?.id, prog?.objectif, prog?.niveau, kg]);
