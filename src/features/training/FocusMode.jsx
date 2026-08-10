@@ -13,6 +13,10 @@ import { saveExoFeedback }             from"../../services/coachBrainService.js"
 import { chargeDepart, getChargeRecommandee } from"../../services/progressionService.js";
 import { getVariantes, evaluerDouleur } from"../../services/substitutionService.js";
 import { groupeMusculaire } from"../../services/muscleGroups.js";
+import { reposEnSecondes } from"../../utils/duree.js";
+import { getEchauffement } from"../../services/echauffementService.js";
+import { getFicheMorpho } from"../../services/morphoService.js";
+import EchauffementStage from"./components/EchauffementStage.jsx";
 import { getSeriesApproche } from"../../services/progressionService.js";
 import { appliquerPhase } from"../../services/periodisationService.js";
 import { syncWorkoutDay, syncExoFeedback } from"../../services/syncService.js";
@@ -40,6 +44,12 @@ export default function FocusMode({
   // Ces séries ne sont JAMAIS journalisées — les compter fausserait le volume
   // hebdomadaire et donc les seuils MEV/MAV/MRV.
   const [approcheIdx, setApprocheIdx] = useState(0);
+  // Étape échauffement : elle précède l'exercice 1. Sautée d'office si la séance
+  // est déjà commencée (on ne réaffiche pas l'échauffement à quelqu'un qui
+  // reprend au troisième exercice après une interruption).
+  const [enEchauffement, setEnEchauffement] = useState(
+    () => !(checkedEx?.[seance?.id]?.length > 0)
+  );
   const exBase    = exercices[exIdx] || null;
   // L'exercice courant est le substitut s'il y en a un : tout le reste de la
   // séance (charge, historique, feedback) doit porter sur le VRAI mouvement fait.
@@ -124,7 +134,7 @@ export default function FocusMode({
     setTimeout(() => {
       if (next >= totalSets) { setPhase('done'); }
       else {
-        const rs = parseInt(String(ex?.repos || REST_DEFAULT).replace(/\D/g,'')) || REST_DEFAULT;
+        const rs = reposEnSecondes(ex?.repos, REST_DEFAULT);
         setRest(rs); setPhase('rest');
       }
     }, 1100);
@@ -184,7 +194,7 @@ export default function FocusMode({
     const suivante = approcheIdx + 1;
     setApprocheIdx(suivante);
     const restant = approches[approcheIdx];
-    const rs = parseInt(String(restant?.repos || "45").replace(/\D/g, "")) || 45;
+    const rs = reposEnSecondes(restant?.repos, 45);
     setPhase('flash');
     setTimeout(() => { setRest(rs); setPhase('rest'); }, 700);
   }, [approcheIdx, approches]);
@@ -241,10 +251,22 @@ export default function FocusMode({
   const kgDelta      = lastEntry
     ? +(kg - parseFloat(lastEntry.poids || 0)).toFixed(1)
     : null;
-  const restSecs     = parseInt(String(ex?.repos || REST_DEFAULT).replace(/\D/g,'')) || REST_DEFAULT;
+  const restSecs     = reposEnSecondes(ex?.repos, REST_DEFAULT);
   const coachMsg     = loggedSets.length > 0
     ?`${loggedSets.length} séries bouclées. Beau travail, continue.`
     : null;
+
+  // Échauffement de la séance : général + préparation ciblée issue de la
+  // morphologie + annonce de la montée en charge. Aucun appel IA : tout est
+  // calculé localement à partir de ce qui a déjà été généré.
+  const echauffement = useMemo(() => {
+    try {
+      return getEchauffement(seance, getFicheMorpho(), {
+        objectif: prog?.objectif, niveau: prog?.niveau,
+        pathologies: prog?.pathologies, metier: prog?.metier,
+      }, { chargePremierExo: kg });
+    } catch { return null; }
+  }, [seance?.id, prog?.objectif, prog?.niveau, kg]);
 
   const content = (
     <div style={{ position:'fixed', top:0, left:0, right:0, bottom:0,
@@ -273,13 +295,13 @@ export default function FocusMode({
           <div style={{ textAlign:'center', flex:1, padding:'0 12px' }}>
             <div style={{ fontFamily:F, fontSize:20, fontWeight:700,
                           color:T.t1, letterSpacing:-0.5, lineHeight:1.2 }}>
-              {ex ? ex.nom :'—'}
+              {enEchauffement ?'Échauffement' : (ex ? ex.nom :'—')}
             </div>
             <div style={{ display:'flex', alignItems:'center', justifyContent:'center',
                           gap:8, marginTop:8 }}>
               <span style={{ fontFamily:MON, fontSize:10, fontWeight:500, color:T.t4,
                              letterSpacing:"0.1em", textTransform:'uppercase' }}>
-                EXO {exIdx+1}/{exercices.length}
+                {enEchauffement ?'AVANT LA SÉANCE' :`EXO ${exIdx+1}/${exercices.length}`}
               </span>
               <span style={{ width:3, height:3, borderRadius:'50%', background:T.t5 }}/>
               <I n="clock" sz={9} c={T.t4} s={2}/>
@@ -297,6 +319,7 @@ export default function FocusMode({
         </div>
 
         {/* Dots séries */}
+        {!enEchauffement && (
         <div style={{ display:'flex', alignItems:'center', justifyContent:'center',
                       gap:8, marginTop:20, paddingBottom:4 }}>
           {Array.from({ length:totalSets }).map((_,i) => {
@@ -313,9 +336,10 @@ export default function FocusMode({
 );
           })}
         </div>
+        )}
 
         {/* ── Barre d'actions rapides : Guide · Tip coach · Historique ── */}
-        {phase ==='set' && (
+        {!enEchauffement && phase ==='set' && (
           <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr 1fr',
                         gap:8, marginTop:16 }}>
             {/* Variante — machine occupée, matériel absent, ou simple envie de
@@ -388,7 +412,7 @@ export default function FocusMode({
 )}
 
         {/* ── Card Dernière séance ── */}
-        {phase ==='set' && (
+        {!enEchauffement && phase ==='set' && (
           <div style={{ marginTop:12, padding:'12px 16px',
                         background:T.surf, border:`1px solid ${T.bd}`,
                         boxShadow: C.shadow,
@@ -469,7 +493,7 @@ export default function FocusMode({
 )}
 
         {/* ── Bandeau Tip coach (toggle) ── */}
-        {phase ==='set' && showTip && (
+        {!enEchauffement && phase ==='set' && showTip && (
           <div style={{ marginTop:12, padding:'12px 12px',
                         background:'linear-gradient(135deg,rgba(254,243,199,0.65) 0%,rgba(254,249,232,0.65) 100%)',
                         border:'1px solid rgba(245,158,11,0.25)',
@@ -501,10 +525,20 @@ export default function FocusMode({
 )}
       </div>
 
+      {/* ── Étape échauffement : précède le premier exercice ── */}
+      {enEchauffement && (
+        <EchauffementStage
+          echauffement={echauffement}
+          C={C}
+          onDemarrer={() => setEnEchauffement(false)}
+          onPasser={() => setEnEchauffement(false)}
+        />
+      )}
+
       {/* ── Séries d'approche (concept C : une seule à la fois) ──
            Affichées AVANT les séries de travail. Volontairement dépouillé :
            en pleine montée en charge, on lit un chiffre, pas un tableau. ── */}
-      {(phase ==='set' || phase ==='flash') && enApproche && (
+      {!enEchauffement && (phase ==='set' || phase ==='flash') && enApproche && (
         <div style={{ flex:1, display:'flex', flexDirection:'column',
                       justifyContent:'center', padding:'0 22px' }}>
           {/* Progression : approches puis séries de travail */}
@@ -564,7 +598,7 @@ export default function FocusMode({
 )}
 
       {/* ── Stage — enfant direct du flex root ── */}
-      {(phase ==='set' || phase ==='flash') && !enApproche && (
+      {!enEchauffement && (phase ==='set' || phase ==='flash') && !enApproche && (
         <SetStage
           phase={phase}
           setNum={Math.min(setIdx+1, totalSets)}
@@ -576,7 +610,7 @@ export default function FocusMode({
           onValidate={validate}
         />
 )}
-      {phase ==='rest' && (
+      {!enEchauffement && phase ==='rest' && (
         <RestStage
           rest={rest} total={restSecs}
           nextKg={enApproche ? approche?.kg ?? kg : (phaseEx.charge || kg)}
@@ -586,7 +620,7 @@ export default function FocusMode({
           onAdd={s => setRest(r => r+s)}
         />
 )}
-      {phase ==='done' && (
+      {!enEchauffement && phase ==='done' && (
         <DoneStage
           loggedSets={loggedSets}
           onNextExercise={nextExercise}

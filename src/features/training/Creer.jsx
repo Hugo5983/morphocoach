@@ -1,4 +1,5 @@
 import { useState, useMemo } from"react";
+import { reposEnSecondes } from"../../utils/duree.js";
 import { I, ID } from"../../components/ui/Icon.jsx";
 import { createPortal } from"react-dom";
 import {
@@ -64,7 +65,7 @@ export default function Creer(props) {
       if (!exs.length) return 0;
       const secs = exs.reduce((sum, ex) => {
         const sets  = parseInt(ex.series) || 4;
-        const repos = parseInt(String(ex.repos ||"90").replace(/\D/g,"")) || 90;
+        const repos = reposEnSecondes(ex.repos, 90);
         return sum + sets * (repos + 60);   // repos entre séries + ~60s de travail par série
       }, 0);
       return Math.round(secs / 60);

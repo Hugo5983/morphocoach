@@ -1,4 +1,5 @@
 import { I } from"../../../components/ui/Icon.jsx";
+import { reposEnSecondes } from"../../../utils/duree.js";
 /**
  * CreerKit.jsx — Tokens, constantes & composants du créateur de programme.
  * Extrait de Creer.jsx sans aucune modification de code.
@@ -56,7 +57,7 @@ const cc = cat => CAT_C[cat] || CAT.principal;
 const parseScheme = scheme => {
   const [left,right] = String(scheme||"3×10 · 60s").split("·").map(x=>x.trim());
   const [sets,reps]  = (left||"3×10").split("×").map(x=>x.trim());
-  const rest = parseInt(String(right||"60").replace(/\D/g,""),10);
+  const rest = reposEnSecondes(right, 60);
   return { sets:parseInt(sets,10)||3, reps:reps||"10", rest:rest||60 };
 };
 
