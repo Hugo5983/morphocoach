@@ -46,38 +46,6 @@ function OfferCard({
   const cardBorder = accent + "40";  // 25 %
   const cardGlow   = accent + "1A";  // 10 %
 
-  // ── Composition immersive ───────────────────────────────────────────────
-  // La photo occupe TOUTE la largeur de la carte en fond ; le contenu texte
-  // se superpose au-dessus, avec un dégradé sombre → transparent qui gère
-  // la lisibilité. Trois tiers :
-  //   • 0-30 %   : totalement opaque (texte parfaitement lisible)
-  //   • 30-70 %  : fondu progressif (photo apparaît doucement derrière)
-  //   • 70-100 % : photo visible et nette
-  // Le texte s'arrête vers 60 % de la carte (paddingRight ~40 %), donc son
-  // extrémité droite est déjà dans la zone de fondu léger → effet immersif
-  // sans perte de contraste. Pas de séparation verticale visible.
-  //
-  //   ┌────────────────────────────────────────────┐
-  //   │  [icône] Titre                             │
-  //   │  Sous-titre    ┅┅┅  ← fondu ┅┅┅  📷 photo  │
-  //   │  [icône] Feature 1  ┅┅┅┅         nette     │
-  //   │  [icône] Feature 2  ┅┅┅┅                   │
-  //   │  [icône] Feature 3  ┅┅┅┅                   │
-  //   │  [icône] Feature 4  ┅┅┅┅                   │
-  //   │                                            │
-  //   │  [ Gérer mon abonnement → ]  ← full width  │
-  //   └────────────────────────────────────────────┘
-
-  // Gradient horizontal en 6 stops pour éviter toute ligne verticale
-  // perceptible et créer un vrai fondu progressif entre les 3 tiers.
-  const gradientOverlay = `linear-gradient(to right, `
-    + `${DARK.surface} 0%, `
-    + `${DARK.surface} 30%, `
-    + `${DARK.surface}E6 42%, `   // ~90 % opacity
-    + `${DARK.surface}99 55%, `   // ~60 %
-    + `${DARK.surface}4D 68%, `   // ~30 %
-    + `transparent 82%)`;
-
   return (
     <div style={{
       position: "relative",
@@ -88,38 +56,29 @@ function OfferCard({
       boxShadow: `0 0 0 1px ${accent}14, 0 12px 40px ${cardGlow}`,
       isolation: "isolate",
     }}>
-      {/* ── Photo en fond, largeur pleine, ancrée à droite ── */}
+      {/* ── Photo immersive à droite ── */}
       <div style={{
         position: "absolute",
-        inset: 0,
+        top: 0, right: 0, bottom: 0,
+        width: "48%",
         backgroundImage: photo.src ? `url(${photo.src})` : "none",
         backgroundSize: "cover",
-        backgroundPosition: "right center",
-        backgroundColor: DARK.bgDeep,   // placeholder si le workflow n'a pas tourné
+        backgroundPosition: "center",
+        backgroundColor: DARK.bgDeep,   // placeholder tant que le workflow n'a pas tourné
         zIndex: 0,
       }} aria-label={photo.alt || undefined} />
 
-      {/* ── Overlay dégradé — sombre à gauche, transparent à droite ── */}
+      {/* ── Masque dégradé gauche→droite pour lisibilité du texte ── */}
       <div style={{
         position: "absolute",
-        inset: 0,
-        background: gradientOverlay,
-        pointerEvents: "none",
+        top: 0, left: 0, bottom: 0,
+        right: 0,
+        background: `linear-gradient(to right, ${DARK.surface} 0%, ${DARK.surface} 42%, ${DARK.surface}CC 55%, transparent 82%)`,
         zIndex: 1,
+        pointerEvents: "none",
       }} />
 
-      {/* ── Voile sombre supplémentaire tout en bas, pour asseoir le CTA
-             sans faire une ligne dure entre la photo et le bouton ── */}
-      <div style={{
-        position: "absolute",
-        left: 0, right: 0, bottom: 0,
-        height: 96,
-        background: `linear-gradient(to bottom, transparent 0%, ${DARK.surface}CC 60%, ${DARK.surface} 100%)`,
-        pointerEvents: "none",
-        zIndex: 1,
-      }} />
-
-      {/* ── Contenu texte + CTA, superposé au fond ── */}
+      {/* ── Contenu ── */}
       <div style={{
         position: "relative",
         zIndex: 2,
@@ -128,13 +87,8 @@ function OfferCard({
         flexDirection: "column",
         gap: 20,
       }}>
-        {/* Header : icône + titre + sous-titre
-             paddingRight 32 % → zone titre = 155 px min (iPhone 375), ce qui
-             permet à « Entraînement » (≈145 px en Archivo 800 22px) de tenir
-             sur une seule ligne avec +10 px de marge. Le texte s'étend jusqu'à
-             ~68 % de la carte, juste dans la zone de fondu progressif → effet
-             photo légèrement plus présent derrière le contenu qu'à 38 %. */}
-        <div style={{ display: "flex", alignItems: "flex-start", gap: 12, paddingRight: "32%" }}>
+        {/* Header : icône + titre + sous-titre */}
+        <div style={{ display: "flex", alignItems: "flex-start", gap: 12, paddingRight: "44%" }}>
           <div style={{
             width: 46, height: 46, borderRadius: 12,
             background: tileBg,
@@ -143,12 +97,11 @@ function OfferCard({
           }}>
             <ID name={iconMain} size={24} dark tint={accent} />
           </div>
-          <div style={{ minWidth: 0, flex: 1 }}>
+          <div style={{ minWidth: 0 }}>
             <div style={{
               fontSize: 22, fontWeight: 800, lineHeight: 1.1,
               fontFamily: FONT, color: DARK.text,
               letterSpacing: "-0.01em",
-              whiteSpace: "nowrap",  // empêche « Entraînement » de se couper
             }}>
               {title}{" "}
               <span style={{ color: accent }}>Pro</span>
@@ -157,17 +110,16 @@ function OfferCard({
               marginTop: 6,
               fontSize: 13, fontWeight: 500, lineHeight: 1.35,
               color: DARK.dimStrong, fontFamily: FONT,
-              overflowWrap: "break-word",
             }}>
               {subtitle}
             </div>
           </div>
         </div>
 
-        {/* Features (colonne) — paddingRight aligné sur le header */}
+        {/* Features (colonne) */}
         <div style={{
           display: "flex", flexDirection: "column", gap: 14,
-          paddingRight: "32%",
+          paddingRight: "44%",
         }}>
           {features.map((f) => (
             <div key={f.title} style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
@@ -183,14 +135,12 @@ function OfferCard({
                 <div style={{
                   fontSize: 13.5, fontWeight: 700, color: DARK.text,
                   fontFamily: FONT, lineHeight: 1.2,
-                  overflowWrap: "break-word",
                 }}>
                   {f.title}
                 </div>
                 <div style={{
                   fontSize: 11.5, color: DARK.dim, fontWeight: 500,
                   marginTop: 3, lineHeight: 1.4, fontFamily: FONT,
-                  overflowWrap: "break-word",
                 }}>
                   {f.sub}
                 </div>
@@ -199,7 +149,7 @@ function OfferCard({
           ))}
         </div>
 
-        {/* CTA plein — traverse toute la largeur de la carte */}
+        {/* CTA plein */}
         <button onClick={onUnlock} className="tap" style={{
           width: "100%",
           padding: "15px 16px",
@@ -212,7 +162,6 @@ function OfferCard({
           display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
           letterSpacing: "-0.005em",
           boxShadow: `0 8px 24px ${accent}40`,
-          marginTop: 4,
         }}>
           <span>{premium ? "Gérer mon abonnement" : "Débloquer"}</span>
           <I name="arrowRight" size={18} color="#FFFFFF" stroke={2} />
@@ -306,11 +255,14 @@ export default function HomePage({
   const streak = getStreak ?? 0;
   return (
     <div style={{
-      paddingBottom: 32,
+      minHeight: "100%",
+      paddingBottom: 34,
+      background: DARK.bgDeep,
+      color: DARK.text,
       fontFamily: FONT,
       WebkitFontSmoothing: "antialiased",
     }}>
-      <HeroCard prog={prog} calSess={calSess} setTab={setTab} />
+      <HeroCard profil={profil} prog={prog} calObj={calObj} calSess={calSess} setTab={setTab} />
       <NutritionCard
         calObj={calObj} pObj={pObj} gObj={gObj} lObj={lObj}
         totR={totR} setTab={setTab}
@@ -318,7 +270,7 @@ export default function HomePage({
       />
       <StreakCard streak={streak} />
       <BadgesCard badgeStates={badgeStates} onVoirTout={() => setShowBadges(true)} />
-      <CoachIACard />
+      <CoachIACard setTab={setTab} />
     </div>
   );
 }
