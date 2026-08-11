@@ -201,15 +201,18 @@ export function HeroCard({ profil, prog, calObj, calSess, setTab }) {
                   overflow: "hidden",
                 }}>{titleSub}</div>
               )}
+              {/* Spacer intermédiaire : remonte titre+sous-titre et laisse
+                  respirer la ligne durée + le CTA en bas */}
+              <div style={{ flex: 0.55 }} />
               <div style={{
                 color: "rgba(255,255,255,0.82)",
-                fontSize: 13, fontWeight: 600, marginTop: 8,
+                fontSize: 13, fontWeight: 600,
               }}>{duration} · {count} exercices</div>
               <button
                 onClick={() => setTab && setTab("program")}
                 className="tap"
                 style={{
-                  marginTop: 16, alignSelf: "stretch",
+                  marginTop: 14, alignSelf: "stretch",
                   border: "none", borderRadius: 14,
                   padding: "14px 17px",
                   background: blue, color: "#fff",
@@ -378,29 +381,29 @@ export function StreakCard({ streak = 0, inline = false }) {
       {/* Ligne principale : chiffre à gauche, 4 barres uniformes à droite */}
       <div style={{
         display: "flex", alignItems: "center", justifyContent: "space-between",
-        gap: 10, marginTop: 10, flex: 1,
+        gap: 14, marginTop: 12, flex: 1,
       }}>
         <div style={{ display: "flex", alignItems: "baseline", gap: 6, minWidth: 0 }}>
           <strong style={{
-            color: DARK.text, fontSize: 36, lineHeight: 1,
-            fontWeight: 850, letterSpacing: "-0.045em",
+            color: DARK.text, fontSize: 46, lineHeight: 1,
+            fontWeight: 850, letterSpacing: "-0.05em",
           }}>{value}</strong>
-          <span style={{ color: muted, fontSize: 11.5, fontWeight: 600 }}>
+          <span style={{ color: muted, fontSize: 13, fontWeight: 600 }}>
             jour{value > 1 ? "s" : ""}
           </span>
         </div>
 
         <div style={{
-          display: "flex", alignItems: "center", gap: 5,
+          display: "flex", alignItems: "center", gap: 6,
           flexShrink: 0,
         }} aria-hidden="true">
           {bars.map(i => {
             const active = i < Math.min(value, bars.length);
             return (
               <div key={i} style={{
-                width: 8,
-                height: 34,
-                borderRadius: 5,
+                width: 10,
+                height: 48,
+                borderRadius: 6,
                 background: active
                   ? `linear-gradient(180deg, ${blue}, ${blue}B8)`
                   : "rgba(255,255,255,0.08)",
@@ -546,35 +549,20 @@ export function CoachCard({ setTab }) {
         color: muted, fontSize: 12.5, lineHeight: 1.4, marginTop: 6,
       }}>Chaque séance compte,<br />même les plus courtes.</div>
 
-      {/* Deux CTA empilés : entraînement (bleu) + nutrition (vert) */}
-      <div style={{
-        display: "flex", flexDirection: "column", gap: 8,
-        marginTop: 12,
-      }}>
-        <button onClick={() => setTab?.("coach")} className="tap" style={{
-          border: `1px solid ${blue}`, borderRadius: 11,
-          background: "rgba(60,91,255,0.10)",
-          color: DARK.text,
-          padding: "9px 12px",
-          fontFamily: FONT, fontSize: 11.5, fontWeight: 700,
-          cursor: "pointer",
-          display: "flex", alignItems: "center", gap: 7,
-          width: "fit-content", maxWidth: "100%",
-        }}>
-          <I name="coach" size={14} color={blue} />
-          Coach entraînement
-        </button>
+      {/* CTA unique : Coach nutrition (le coach entraînement n'est pas encore
+          disponible côté app — sera réactivé quand le routing existera) */}
+      <div style={{ marginTop: 14 }}>
         <button onClick={() => setTab?.("coach")} className="tap" style={{
           border: `1px solid ${green}`, borderRadius: 11,
           background: `${green}14`,
           color: DARK.text,
-          padding: "9px 12px",
-          fontFamily: FONT, fontSize: 11.5, fontWeight: 700,
+          padding: "10px 14px",
+          fontFamily: FONT, fontSize: 12, fontWeight: 700,
           cursor: "pointer",
           display: "flex", alignItems: "center", gap: 7,
           width: "fit-content", maxWidth: "100%",
         }}>
-          <I name="coach" size={14} color={green} />
+          <I name="coach" size={15} color={green} />
           Coach nutrition
         </button>
       </div>
