@@ -18,9 +18,7 @@ const GLASS = "rgba(5,8,15,.62)";
 
 // Référence Pexels choisie pour la direction artistique.
 // Le fallback local permet de garder l'écran visuel même hors connexion.
-const PEXELS_BACKGROUND =
-  "https://images.pexels.com/photos/30370272/pexels-photo-30370272.jpeg?auto=compress&cs=tinysrgb&w=1600";
-const FALLBACK_BACKGROUND = "/auth-athlete-fallback.jpg";
+const AUTH_BACKGROUND = "/auth-athlete.png";
 
 export default function AuthPage() {
   const { signUp, signIn, resetPassword, signInWithOAuth } = useAuth();
@@ -103,18 +101,19 @@ export default function AuthPage() {
         boxSizing: "border-box",
       }}
     >
-      {/* Photo plein écran — discrète et sombre pour conserver la lisibilité. */}
+      {/* Fond photo MorphoCoach : image locale, optimisée pour le login mobile. */}
       <div
         aria-hidden="true"
         style={{
           position: "fixed",
           inset: 0,
           zIndex: 0,
-          backgroundImage: `url(${bgFailed ? FALLBACK_BACKGROUND : PEXELS_BACKGROUND})`,
+          backgroundImage: `url(${AUTH_BACKGROUND})`,
           backgroundSize: "cover",
           backgroundPosition: "center top",
-          filter: "saturate(.72) contrast(1.08)",
-          transform: "scale(1.02)",
+          backgroundRepeat: "no-repeat",
+          filter: "saturate(.78) contrast(1.06)",
+          transform: "scale(1.015)",
         }}
       />
 
@@ -140,17 +139,6 @@ export default function AuthPage() {
           pointerEvents: "none",
         }}
       />
-
-      {/* Détection de panne de la source Pexels sans modifier la logique auth. */}
-      {!bgFailed && (
-        <img
-          src={PEXELS_BACKGROUND}
-          alt=""
-          aria-hidden="true"
-          onError={() => setBgFailed(true)}
-          style={{ position: "fixed", width: 1, height: 1, opacity: 0, pointerEvents: "none" }}
-        />
-      )}
 
       <main
         style={{
@@ -193,15 +181,15 @@ export default function AuthPage() {
         <section
           style={{
             textAlign: "center",
-            marginTop: isSignup || isForgot ? 12 : "clamp(12px, 5vh, 70px)",
-            marginBottom: 24,
+            marginTop: isSignup || isForgot ? 12 : "clamp(20px, 7vh, 92px)",
+            marginBottom: 34,
           }}
         >
           <BrandMark />
-          <div style={{ marginTop: 12, fontSize: 25, fontWeight: 800, letterSpacing: "-.045em" }}>
+          <div style={{ marginTop: 12, fontSize: 27, fontWeight: 850, letterSpacing: "-.045em" }}>
             MORPHO<span style={{ color: BLUE }}>COACH</span>
           </div>
-          <div style={{ marginTop: 6, fontSize: 9.5, letterSpacing: ".30em", color: FAINT, fontWeight: 600 }}>
+          <div style={{ marginTop: 6, fontSize: 9.5, letterSpacing: ".28em", color: FAINT, fontWeight: 600 }}>
             BUILT FOR PROGRESS.
           </div>
         </section>
@@ -215,7 +203,7 @@ export default function AuthPage() {
             display: "flex",
             flexDirection: "column",
             justifyContent: isSignup || isForgot ? "flex-start" : "flex-end",
-            paddingBottom: isSignup || isForgot ? 8 : 4,
+            paddingBottom: isSignup || isForgot ? 8 : 18,
           }}
         >
           {isForgot && (
@@ -265,9 +253,9 @@ export default function AuthPage() {
               disabled={busy}
               className="tap"
               style={{
-                height: 54,
+                height: 58,
                 border: 0,
-                borderRadius: 16,
+                borderRadius: 17,
                 marginTop: 4,
                 background: busy ? "#26304E" : `linear-gradient(135deg, ${BLUE}, ${BLUE_DARK})`,
                 color: "#FFF",
@@ -320,20 +308,30 @@ export default function AuthPage() {
           </div>
         </section>
       </main>
+      <style>{`
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .tap { -webkit-tap-highlight-color: transparent; transition: transform .16s ease, opacity .16s ease, filter .16s ease; }
+        .tap:active { transform: scale(.985); }
+        input::placeholder { color: rgba(247,248,252,.34); }
+      `}</style>
     </div>
   );
 }
 
 function Field({ label, value, onChange, type, placeholder, autoComplete, required, icon }) {
+  const [showPassword, setShowPassword] = useState(false);
+  const isPassword = type === "password";
+  const inputType = isPassword && showPassword ? "text" : type;
+
   return (
     <label style={{ display: "flex", flexDirection: "column", gap: 7 }}>
       <span style={{ fontSize: 11.5, fontWeight: 650, color: MUTED, paddingLeft: 2 }}>{label}</span>
       <div style={{ position: "relative" }}>
-        <span style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", color: "rgba(255,255,255,.55)", display: "grid", placeItems: "center", pointerEvents: "none" }}>
+        <span style={{ position: "absolute", left: 17, top: "50%", transform: "translateY(-50%)", color: "rgba(255,255,255,.62)", display: "grid", placeItems: "center", pointerEvents: "none", zIndex: 2 }}>
           {icon}
         </span>
         <input
-          type={type}
+          type={inputType}
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
@@ -341,20 +339,43 @@ function Field({ label, value, onChange, type, placeholder, autoComplete, requir
           required={required}
           style={{
             width: "100%",
-            height: 52,
-            borderRadius: 15,
-            border: `1px solid ${BORDER}`,
-            background: GLASS,
+            height: 56,
+            borderRadius: 16,
+            border: `1px solid rgba(255,255,255,.14)`,
+            background: "rgba(7,11,20,.52)",
             backdropFilter: "blur(18px)",
-            padding: "0 16px 0 48px",
-            fontSize: 14.5,
+            WebkitBackdropFilter: "blur(18px)",
+            padding: isPassword ? "0 50px 0 52px" : "0 16px 0 52px",
+            fontSize: 15.5,
             fontFamily: FONT,
             color: TEXT,
             outline: "none",
             boxSizing: "border-box",
-            boxShadow: "inset 0 1px 0 rgba(255,255,255,.025)",
+            boxShadow: "inset 0 1px 0 rgba(255,255,255,.025), 0 8px 30px rgba(0,0,0,.12)",
           }}
         />
+        {isPassword && (
+          <button
+            type="button"
+            onClick={() => setShowPassword((v) => !v)}
+            aria-label={showPassword ? "Masquer le mot de passe" : "Afficher le mot de passe"}
+            style={{
+              position: "absolute",
+              right: 15,
+              top: "50%",
+              transform: "translateY(-50%)",
+              border: 0,
+              background: "transparent",
+              color: "rgba(255,255,255,.68)",
+              padding: 6,
+              cursor: "pointer",
+              display: "grid",
+              placeItems: "center",
+            }}
+          >
+            <EyeIcon open={showPassword} />
+          </button>
+        )}
       </div>
     </label>
   );
@@ -363,7 +384,7 @@ function Field({ label, value, onChange, type, placeholder, autoComplete, requir
 function SocialButton({ label, icon, busy, disabled, onClick }) {
   return (
     <button type="button" onClick={onClick} disabled={disabled} className="tap" style={{
-      height: 50,
+      height: 54,
       borderRadius: 15,
       border: `1px solid ${BORDER}`,
       background: "rgba(7,11,19,.56)",
@@ -431,6 +452,23 @@ function Spinner() {
 function GoogleMark() {
   return <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#4285F4" d="M45.1 24.5c0-1.6-.14-3.13-.4-4.6H24v9.02h11.85c-.51 2.75-2.06 5.08-4.4 6.64v5.52h7.11c4.16-3.83 6.54-9.47 6.54-16.58Z"/><path fill="#34A853" d="M24 46c5.94 0 10.92-1.97 14.56-5.32l-7.11-5.52c-1.97 1.32-4.5 2.1-7.45 2.1-5.73 0-10.58-3.87-12.31-9.07H4.34v5.7C7.96 41.07 15.4 46 24 46Z"/><path fill="#FBBC05" d="M11.69 28.19A13.87 13.87 0 0 1 10.95 24c0-1.46.25-2.87.74-4.19v-5.7H4.34A21.93 21.93 0 0 0 2 24c0 3.55.85 6.9 2.34 9.89l7.35-5.7Z"/><path fill="#EA4335" d="M24 10.75c3.23 0 6.13 1.11 8.41 3.29l6.31-6.31C34.9 4.18 29.93 2 24 2 15.4 2 7.96 6.93 4.34 14.11l7.35 5.7c1.73-5.2 6.58-9.06 12.31-9.06Z"/></svg>;
 }
+function EyeIcon({ open }) {
+  return (
+    <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      {open ? (
+        <>
+          <path d="M2.2 12s3.4-6 9.8-6 9.8 6 9.8 6-3.4 6-9.8 6-9.8-6-9.8-6Z"/>
+          <circle cx="12" cy="12" r="2.7"/>
+        </>
+      ) : (
+        <>
+          <path d="M2.2 12s3.4-6 9.8-6 9.8 6 9.8 6-3.4 6-9.8 6-9.8-6-9.8-6Z"/>
+          <circle cx="12" cy="12" r="2.7"/>
+        </>
+      )}
+    </svg>
+  );
+}
 function AppleMark() {
   return <svg width="17" height="20" viewBox="0 0 17 20" fill="#FFF"><path d="M14.03 10.62c-.02-2.15 1.76-3.18 1.84-3.23-1-1.47-2.57-1.67-3.13-1.69-1.33-.14-2.6.78-3.28.78-.68 0-1.72-.76-2.82-.74-1.45.02-2.79.85-3.54 2.15-1.51 2.62-.39 6.5 1.09 8.63.72 1.04 1.58 2.2 2.71 2.16 1.09-.04 1.5-.7 2.82-.7 1.31 0 1.69.7 2.84.68 1.18-.02 1.92-1.06 2.63-2.11.83-1.21 1.17-2.38 1.19-2.44-.03-.01-2.28-.88-2.35-3.49ZM11.87 4.14c.59-.72.99-1.71.88-2.7-.85.03-1.88.57-2.49 1.28-.55.63-1.03 1.65-.9 2.62.94.07 1.91-.48 2.51-1.2Z"/></svg>;
 }
@@ -439,7 +477,7 @@ const linkButtonStyle = {
   background: "none",
   border: 0,
   padding: 0,
-  color: "#6F8AFF",
+  color: "#4D6BFF",
   fontFamily: FONT,
   fontSize: 13,
   fontWeight: 650,
