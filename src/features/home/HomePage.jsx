@@ -129,10 +129,12 @@ function OfferCard({
         gap: 20,
       }}>
         {/* Header : icône + titre + sous-titre
-             paddingRight ≈ 40 % → le texte s'étend jusqu'à ~60 % de la carte,
-             c'est-à-dire jusqu'au tout début du fondu, pour un effet
-             immersif sans perte de lisibilité. */}
-        <div style={{ display: "flex", alignItems: "flex-start", gap: 12, paddingRight: "38%" }}>
+             paddingRight 32 % → zone titre = 155 px min (iPhone 375), ce qui
+             permet à « Entraînement » (≈145 px en Archivo 800 22px) de tenir
+             sur une seule ligne avec +10 px de marge. Le texte s'étend jusqu'à
+             ~68 % de la carte, juste dans la zone de fondu progressif → effet
+             photo légèrement plus présent derrière le contenu qu'à 38 %. */}
+        <div style={{ display: "flex", alignItems: "flex-start", gap: 12, paddingRight: "32%" }}>
           <div style={{
             width: 46, height: 46, borderRadius: 12,
             background: tileBg,
@@ -146,7 +148,7 @@ function OfferCard({
               fontSize: 22, fontWeight: 800, lineHeight: 1.1,
               fontFamily: FONT, color: DARK.text,
               letterSpacing: "-0.01em",
-              overflowWrap: "break-word",
+              whiteSpace: "nowrap",  // empêche « Entraînement » de se couper
             }}>
               {title}{" "}
               <span style={{ color: accent }}>Pro</span>
@@ -162,10 +164,10 @@ function OfferCard({
           </div>
         </div>
 
-        {/* Features (colonne) — même paddingRight que le header */}
+        {/* Features (colonne) — paddingRight aligné sur le header */}
         <div style={{
           display: "flex", flexDirection: "column", gap: 14,
-          paddingRight: "38%",
+          paddingRight: "32%",
         }}>
           {features.map((f) => (
             <div key={f.title} style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
