@@ -101,21 +101,42 @@ export default function AuthPage() {
         boxSizing: "border-box",
       }}
     >
-      {/* Fond photo MorphoCoach : image locale, optimisée pour le login mobile. */}
+      {/* Fond portrait complet : centré sans recadrer l'athlète. */}
       <div
         aria-hidden="true"
         style={{
           position: "fixed",
           inset: 0,
           zIndex: 0,
-          backgroundImage: `url(${AUTH_BACKGROUND})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center top",
-          backgroundRepeat: "no-repeat",
-          filter: "saturate(.78) contrast(1.06)",
-          transform: "scale(1.015)",
+          background: "#020611",
+          overflow: "hidden",
         }}
-      />
+      >
+        <img
+          src={AUTH_BACKGROUND}
+          alt=""
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "contain",
+            objectPosition: "center center",
+            display: "block",
+            filter: "saturate(.82) contrast(1.05)",
+          }}
+        />
+        <div
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            inset: 0,
+            background:
+              "linear-gradient(180deg, rgba(2,6,17,.16) 0%, rgba(2,6,17,.04) 36%, rgba(2,6,17,.48) 100%)",
+          }}
+        />
+      </div>
 
       {/* Traitement cinématique : bleu froid en haut, noir vers le formulaire. */}
       <div
@@ -181,7 +202,7 @@ export default function AuthPage() {
         <section
           style={{
             textAlign: "center",
-            marginTop: isSignup || isForgot ? 12 : "clamp(20px, 7vh, 92px)",
+            marginTop: isSignup || isForgot ? 12 : "clamp(28px, 8vh, 110px)",
             marginBottom: 34,
           }}
         >
@@ -197,7 +218,7 @@ export default function AuthPage() {
         <section
           style={{
             width: "100%",
-            maxWidth: 430,
+            maxWidth: 460,
             margin: "0 auto",
             flex: isSignup || isForgot ? 0 : 1,
             display: "flex",
