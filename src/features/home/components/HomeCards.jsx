@@ -94,34 +94,30 @@ export function HeroCard({ profil, prog, calObj, calSess, setTab }) {
   const prenom = firstDefined(profil?.prenom, prog?.prenom, "Hugo");
 
   return (
-    <div style={{ padding: "18px 16px 0", fontFamily: FONT }}>
+    <div style={{ padding: "20px 16px 0", fontFamily: FONT }}>
       <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 14, marginBottom: 18 }}>
         <div style={{ minWidth: 0 }}>
-          <div style={{ color: blue, fontSize: 13, fontWeight: 750, marginBottom: 8 }}>Bonjour {prenom} 👋</div>
-          <div style={{ color: DARK.text, fontSize: 30, lineHeight: 1.04, fontWeight: 850, letterSpacing: "-0.04em" }}>
+          <div style={{ color: blue, fontSize: 15, fontWeight: 750, marginBottom: 8 }}>Bonjour {prenom} 👋</div>
+          <div style={{ color: DARK.text, fontSize: 26, lineHeight: 1.06, fontWeight: 850, letterSpacing: "-0.035em" }}>
             Prêt à devenir<br />
             ta <span style={{ color: blue }}>meilleure version</span> ?
           </div>
         </div>
-        <div style={{ flex: "0 0 74px", minHeight: 72, borderRadius: 18, border: "1px solid rgba(92,119,255,0.22)", background: "rgba(17,23,34,0.78)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 3 }}>
+        <div style={{ flex: "0 0 74px", minHeight: 74, borderRadius: 18, border: "1px solid rgba(92,119,255,0.22)", background: "rgba(17,23,34,0.78)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 3 }}>
           <I name="flame" size={21} color={blue} fill />
           <strong style={{ color: DARK.text, fontSize: 18, lineHeight: 1 }}>1</strong>
           <span style={{ color: muted, fontSize: 10, fontWeight: 600 }}>série</span>
         </div>
       </div>
 
-      <div style={{ position: "relative", minHeight: 286, borderRadius: 24, overflow: "hidden", border: "1px solid rgba(92,119,255,0.18)", background: "#0C1017", boxShadow: "0 14px 38px rgba(0,0,0,0.28)" }}>
+      <div style={{ position: "relative", minHeight: 292, borderRadius: 24, overflow: "hidden", border: "1px solid rgba(92,119,255,0.18)", background: "#0C1017", boxShadow: "0 14px 38px rgba(0,0,0,0.28)" }}>
         <div style={{ position: "absolute", inset: 0, backgroundImage: `url(${HOME_HERO_SRC})`, backgroundSize: "cover", backgroundPosition: "center 42%" }} />
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg, rgba(7,10,15,0.96) 0%, rgba(7,10,15,0.76) 38%, rgba(7,10,15,0.20) 76%, rgba(7,10,15,0.16) 100%), linear-gradient(0deg, rgba(7,10,15,0.92) 0%, transparent 48%)" }} />
-        <div style={{ position: "relative", minHeight: 286, padding: "20px 20px 16px", display: "flex", flexDirection: "column", justifyContent: "flex-end" }}>
+        <div style={{ position: "relative", minHeight: 292, padding: "22px 20px 18px", display: "flex", flexDirection: "column", justifyContent: "flex-end" }}>
           <div style={{ color: blue, fontSize: 12, fontWeight: 800, letterSpacing: "0.09em", marginBottom: 8 }}>SÉANCE DU JOUR</div>
-          <div style={{
-            color: "#fff", fontSize: 30, fontWeight: 850, lineHeight: 1.04,
-            letterSpacing: "-0.035em", maxWidth: "92%", display: "-webkit-box",
-            WebkitBoxOrient: "vertical", WebkitLineClamp: 3, overflow: "hidden",
-          }}>{title}</div>
-          <div style={{ color: "rgba(255,255,255,0.84)", fontSize: 14, fontWeight: 650, marginTop: 7 }}>{duration} · {count} exercices</div>
-          <button onClick={() => setTab && setTab("program")} className="tap" style={{ marginTop: 15, alignSelf: "flex-start", border: "none", borderRadius: 14, padding: "13px 18px", background: blue, color: "#fff", display: "flex", alignItems: "center", gap: 9, fontFamily: FONT, fontSize: 14, fontWeight: 750, boxShadow: "0 8px 22px rgba(60,91,255,0.32)", cursor: "pointer" }}>
+          <div style={{ color: "#fff", fontSize: 32, fontWeight: 850, lineHeight: 1.05, letterSpacing: "-0.035em" }}>{title}</div>
+          <div style={{ color: "rgba(255,255,255,0.82)", fontSize: 14, fontWeight: 600, marginTop: 8 }}>{duration} · {count} exercices</div>
+          <button onClick={() => setTab && setTab("program")} className="tap" style={{ marginTop: 17, alignSelf: "flex-start", border: "none", borderRadius: 13, padding: "13px 17px", background: blue, color: "#fff", display: "flex", alignItems: "center", gap: 9, fontFamily: FONT, fontSize: 14, fontWeight: 750, boxShadow: "0 8px 22px rgba(60,91,255,0.32)", cursor: "pointer" }}>
             <I name="play" size={15} color="#fff" fill />
             Commencer la séance
           </button>
@@ -134,10 +130,10 @@ export function HeroCard({ profil, prog, calObj, calSess, setTab }) {
           { icon: "chart", label: "Progression", value: "Bonne dynamique", color: "#35D07F" },
           { icon: "target", label: "Objectif", value: `${fmt(firstDefined(calObj, 3305))} kcal`, color: blue },
         ].map((item, i) => (
-          <div key={item.label} style={{ minWidth: 0, padding: "2px 11px", borderLeft: i ? "1px solid rgba(255,255,255,0.08)" : "none" }}>
+          <div key={item.label} style={{ minWidth: 0, padding: "1px 11px", borderLeft: i ? "1px solid rgba(255,255,255,0.08)" : "none" }}>
             <I name={item.icon} size={18} color={item.color} />
-            <div style={{ color: muted, fontSize: 10.5, fontWeight: 650, marginTop: 7, lineHeight: 1.15, minHeight: 24 }}>{item.label}</div>
-            <div style={{ color: item.color, fontSize: 12.5, fontWeight: 800, marginTop: 3, lineHeight: 1.15, display: "-webkit-box", WebkitBoxOrient: "vertical", WebkitLineClamp: 2, overflow: "hidden" }}>{item.value}</div>
+            <div style={{ color: muted, fontSize: 10.5, fontWeight: 600, marginTop: 7, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{item.label}</div>
+            <div style={{ color: item.color, fontSize: 12.5, fontWeight: 750, marginTop: 3, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{item.value}</div>
           </div>
         ))}
       </div>
@@ -168,7 +164,7 @@ export function NutritionCard({ calObj, pObj, gObj, lObj, totR, setTab, setPaywa
   };
 
   return (
-    <section style={{ ...card, margin: "15px 16px 0", padding: 18, fontFamily: FONT }}>
+    <section style={{ ...card, margin: "14px 16px 0", padding: 18, fontFamily: FONT }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 15 }}>
         <div style={sectionTitle}>TA NUTRITION</div>
         <button onClick={() => setTab?.("nutrition")} style={{ border: 0, background: "none", color: blue, fontFamily: FONT, fontWeight: 700, fontSize: 12, cursor: "pointer" }}>Détails ›</button>
@@ -207,49 +203,134 @@ export function NutritionCard({ calObj, pObj, gObj, lObj, totR, setTab, setPaywa
 }
 
 export function StreakCard({ streak = 0 }) {
+  const value = n(streak);
+  const bars = [0, 1, 2, 3, 4];
+  const isStarted = value > 0;
+  const message = isStarted ? "Continue comme ça" : "Commence ta série aujourd’hui";
+
   return (
-    <div style={{ ...card, margin: "15px 16px 0", padding: 16, fontFamily: FONT }}>
-      <div style={sectionTitle}>TA PROGRESSION</div>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 12 }}>
-        <div>
-          <div style={{ color: muted, fontSize: 11 }}>Série actuelle 🔥</div>
-          <div style={{ color: DARK.text, fontSize: 28, fontWeight: 850, lineHeight: 1, marginTop: 7 }}>{n(streak)}</div>
-          <div style={{ color: muted, fontSize: 11, marginTop: 5 }}>jours</div>
-        </div>
-        <div style={{ display: "flex", gap: 7, alignItems: "flex-end" }}>
-          {[0,1,2,3,4].map(i => <div key={i} style={{ width: 12, height: 18 + i * 7, borderRadius: 7, background: i < Math.min(n(streak), 5) ? blue : "rgba(255,255,255,0.08)" }} />)}
+    <section style={{
+      ...card,
+      margin: "14px 16px 0",
+      padding: "17px 18px 16px",
+      fontFamily: FONT,
+      overflow: "hidden",
+    }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 14 }}>
+        <div style={sectionTitle}>TA PROGRESSION</div>
+        <div style={{ color: blue, fontSize: 11.5, fontWeight: 750, letterSpacing: "-0.01em" }}>
+          {value > 0 ? `${value} jour${value > 1 ? "s" : ""}` : "À démarrer"}
         </div>
       </div>
-      <div style={{ color: blue, fontSize: 11.5, fontWeight: 700, marginTop: 12 }}>Continue comme ça</div>
-    </div>
+
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 20, marginTop: 15 }}>
+        <div style={{ minWidth: 0 }}>
+          <div style={{ color: muted, fontSize: 11.5, fontWeight: 600 }}>Série actuelle 🔥</div>
+          <div style={{ display: "flex", alignItems: "baseline", gap: 7, marginTop: 5 }}>
+            <strong style={{ color: DARK.text, fontSize: 34, lineHeight: 1, fontWeight: 850, letterSpacing: "-0.04em" }}>{value}</strong>
+            <span style={{ color: muted, fontSize: 11.5, fontWeight: 600 }}>jour{value > 1 ? "s" : ""}</span>
+          </div>
+          <div style={{ color: blue, fontSize: 12, fontWeight: 750, marginTop: 11 }}>{message}</div>
+        </div>
+
+        <div style={{ display: "flex", alignItems: "flex-end", gap: 7, paddingRight: 2, flexShrink: 0 }} aria-hidden="true">
+          {bars.map(i => {
+            const active = i < Math.min(value, 5);
+            return (
+              <div key={i} style={{
+                width: 13,
+                height: 22 + i * 9,
+                borderRadius: 8,
+                background: active ? `linear-gradient(180deg, ${blue}, ${blue}B8)` : "rgba(255,255,255,0.075)",
+                boxShadow: active ? `0 0 16px ${blue}28` : "none",
+                opacity: active ? 1 : 0.9,
+              }} />
+            );
+          })}
+        </div>
+      </div>
+    </section>
   );
 }
 
 export function BadgesCard({ badgeStates, onVoirTout }) {
   const earned = Object.values(badgeStates || {}).filter(v => v === true || v?.earned || v?.unlocked).length;
-  const icons = ["trophy", "bolt", "target", "flame", "star"];
-  const colors = ["#4DA3FF", "#9B7CFF", "#F5B942", "#4ED9C2", "#A7AFBF"];
+
+  // Visuels badges : retour à la direction validée (médaille + intitulé),
+  // sans modifier l’état métier ni le calcul du nombre de badges.
+  const badges = [
+    { number: "1", top: "PREMIÈRE", bottom: "SÉANCE", color: "#4DA3FF", glow: true },
+    { number: "", top: "FOCUS", bottom: "MAX", color: "#9B7CFF" },
+    { number: "", top: "OBJECTIF", bottom: "ATTEINT", color: "#F5B942" },
+    { number: "", top: "DÉFICIT", bottom: "MAÎTRISÉ", color: "#4ED9C2" },
+    { number: "7", top: "JOURS", bottom: "CONSÉCUTIFS", color: "#A7AFBF" },
+  ];
+
   return (
-    <div style={{ ...card, margin: "15px 16px 0", padding: 16, fontFamily: FONT }}>
+    <section style={{ ...card, margin: "14px 16px 0", padding: "17px 16px 15px", fontFamily: FONT }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <div style={sectionTitle}>BADGES</div>
-        <span style={{ color: blue, fontSize: 12, fontWeight: 750 }}>{Math.max(earned, 1)}/30</span>
+        <span style={{ color: blue, fontSize: 12.5, fontWeight: 800 }}>{Math.max(earned, 1)}/30</span>
       </div>
-      <div style={{ display: "flex", justifyContent: "space-between", gap: 8, marginTop: 15 }}>
-        {icons.map((icon, i) => (
-          <div key={icon} style={{ width: 48, height: 48, borderRadius: 14, background: `linear-gradient(145deg, ${colors[i]}18, rgba(255,255,255,0.02))`, border: `1px solid ${colors[i]}40`, display: "grid", placeItems: "center", boxShadow: `0 0 14px ${colors[i]}12` }}>
-            <I name={icon} size={22} color={colors[i]} fill={icon === "star" || icon === "flame"} />
+
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 8, marginTop: 15 }}>
+        {badges.map((badge) => (
+          <div key={`${badge.top}-${badge.bottom}`} style={{ display: "flex", justifyContent: "center", minWidth: 0 }}>
+            <div style={{
+              position: "relative",
+              width: 58,
+              height: 66,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              clipPath: "polygon(50% 0%, 88% 14%, 100% 50%, 88% 86%, 50% 100%, 12% 86%, 0% 50%, 12% 14%)",
+              background: `linear-gradient(145deg, ${badge.color}22, rgba(255,255,255,0.025))`,
+              filter: badge.glow ? `drop-shadow(0 0 10px ${badge.color}35)` : "none",
+            }}>
+              <div style={{
+                position: "absolute",
+                inset: 1,
+                clipPath: "inherit",
+                background: "#101621",
+              }} />
+              <div style={{
+                position: "relative",
+                zIndex: 1,
+                width: "100%",
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 1,
+                textAlign: "center",
+                color: badge.color,
+                fontFamily: FONT,
+                lineHeight: 1,
+              }}>
+                {badge.number ? (
+                  <div style={{ fontSize: 16, fontWeight: 850, marginBottom: 2 }}>{badge.number}</div>
+                ) : (
+                  <div style={{ width: 8, height: 8, borderRadius: "50%", border: `2px solid ${badge.color}`, marginBottom: 3, boxShadow: `0 0 7px ${badge.color}35` }} />
+                )}
+                <div style={{ fontSize: 6.5, fontWeight: 850, letterSpacing: "0.03em" }}>{badge.top}</div>
+                <div style={{ fontSize: 6.5, fontWeight: 750, opacity: 0.92 }}>{badge.bottom}</div>
+              </div>
+            </div>
           </div>
         ))}
       </div>
-      <button onClick={onVoirTout} style={{ marginTop: 11, border: 0, background: "none", color: blue, fontFamily: FONT, fontSize: 11.5, fontWeight: 700, cursor: "pointer" }}>Voir tout ›</button>
-    </div>
+
+      <button onClick={onVoirTout} style={{ marginTop: 12, border: 0, background: "none", color: blue, fontFamily: FONT, fontSize: 12, fontWeight: 750, cursor: "pointer", padding: 0 }}>
+        Voir tout ›
+      </button>
+    </section>
   );
 }
 
 export function CoachIACard({ setTab }) {
   return (
-    <div style={{ ...card, position: "relative", overflow: "hidden", margin: "15px 16px 32px", minHeight: 158, padding: "20px 180px 20px 18px", fontFamily: FONT }}>
+    <div style={{ ...card, position: "relative", overflow: "hidden", margin: "14px 16px 32px", minHeight: 158, padding: "20px 180px 20px 18px", fontFamily: FONT }}>
       <div style={{ color: blue, fontSize: 11, fontWeight: 800, letterSpacing: "0.10em" }}>TON COACH IA</div>
       <div style={{ color: DARK.text, fontSize: 24, lineHeight: 1.08, fontWeight: 850, letterSpacing: "-0.03em", marginTop: 7 }}>Un jour à la fois.</div>
       <div style={{ color: muted, fontSize: 13, lineHeight: 1.4, marginTop: 7 }}>Chaque séance compte,<br />même les plus courtes.</div>
