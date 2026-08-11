@@ -194,7 +194,7 @@ export default function CoachPage({
   const protRest = Math.max(0, Math.round((pObj || 0) - (bilan?.avgProt || 0)));
   const journalDays = `${bilan?.nbLogged ?? 0}/${bilan?.totalDays ?? 14} j`;
 
-  const SUGGESTION_ICONS = ["search", "target", "progress", "mealprep", "fiber", "star"];
+  const SUGGESTION_ICONS = ["searchDuo", "goal", "progress", "bowl", "fiber", "spark"];
 
   return (
     <div onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd}
@@ -210,56 +210,56 @@ export default function CoachPage({
       }}>
 
       {/* HERO COACH IA */}
-      <div style={{ padding:"16px 20px 0" }}>
+      <div style={{ padding:"18px 20px 0" }}>
         <div style={{
           position:"relative", overflow:"hidden",
           border:"1px solid rgba(60,91,255,.75)",
           borderRadius:24,
           background:"radial-gradient(circle at 82% 32%, rgba(42,82,255,.32), transparent 34%), linear-gradient(145deg,#0A0D14 0%,#070A10 58%,#0B0E12 100%)",
           boxShadow:"0 0 34px rgba(60,91,255,.12), inset 0 0 40px rgba(60,91,255,.04)",
-          minHeight: 294,
+          minHeight: 278,
         }}>
           <div style={{ position:"absolute", inset:0, pointerEvents:"none",
             background:"radial-gradient(circle at 84% 44%, rgba(60,91,255,.24), transparent 30%)" }}/>
 
-          <div style={{ position:"relative", zIndex:2, padding:"22px 20px 0", minHeight:294 }}>
+          <div style={{ position:"relative", zIndex:2, padding:"24px 20px 0", minHeight:278 }}>
             <div style={{ fontSize:12, fontWeight:700, letterSpacing:".12em", color:"#3C8DFF",
               textTransform:"uppercase", marginBottom:14 }}>COACH IA</div>
-            <div style={{ width:"58%", maxWidth:290, fontSize:25, lineHeight:1.08, fontWeight:800,
+            <div style={{ width:"58%", maxWidth:290, fontSize:26, lineHeight:1.08, fontWeight:800,
               letterSpacing:"-.025em", color:"#F7F8FC" }}>
               Salut {firstName},<br/>j’ai lu ton journal.
             </div>
-            <div style={{ width:"55%", maxWidth:280, marginTop:11, fontSize:14, lineHeight:1.42,
+            <div style={{ width:"58%", maxWidth:285, marginTop:12, fontSize:14.5, lineHeight:1.42,
               color:"rgba(246,247,249,.72)" }}>
               Pose-moi tes questions sur ton alimentation et tes macros.
             </div>
 
             <img src={ROBOT_IMG} alt="Coach IA" style={{
-              position:"absolute", right:-2, top:16, width:162, height:162,
+              position:"absolute", right:-8, top:20, width:178, height:178,
               objectFit:"contain", objectPosition:"center", filter:"drop-shadow(0 0 24px rgba(60,91,255,.45))",
               pointerEvents:"none",
             }}/>
 
             {/* Metrics inside hero */}
             <div style={{
-              position:"absolute", left:14, right:14, bottom:12,
+              position:"absolute", left:14, right:14, bottom:14,
               display:"grid", gridTemplateColumns:"repeat(4,1fr)",
               background:"rgba(5,8,13,.82)", backdropFilter:"blur(14px)", WebkitBackdropFilter:"blur(14px)",
               border:"1px solid rgba(255,255,255,.10)", borderRadius:18,
               overflow:"hidden",
             }}>
               {[
-                { icon:"target", label:"Objectif", value:obj?.l || "Prise de masse", color:"#F6F7F9" },
-                { icon:"flame", label:"Calories restantes", value:`${kcalRest} kcal`, color:"#3C7CFF" },
-                { icon:"bolt", label:"Protéines restantes", value:`${protRest} g`, color:"#3C7CFF" },
-                { icon:"calendar", label:"Journal", value:journalDays, color:"#3C7CFF" },
+                { icon:"goal", label:"Objectif", value:obj?.l || "Prise de masse", color:"#3C7CFF" },
+                { icon:"calories", label:"Calories restantes", value:`${kcalRest} kcal`, color:"#3C7CFF" },
+                { icon:"protein", label:"Protéines restantes", value:`${protRest} g`, color:"#3C7CFF" },
+                { icon:"calendarDuo", label:"Journal", value:journalDays, color:"#3C7CFF" },
               ].map((m,i) => (
-                <div key={m.label} style={{ padding:"10px 8px 12px", minWidth:0,
+                <div key={m.label} style={{ padding:"10px 8px 11px", minWidth:0,
                   borderRight:i<3 ? "1px solid rgba(255,255,255,.10)" : "none" }}>
-                  <I name={m.icon} size={16} color={m.color}/>
-                  <div style={{ marginTop:6, fontSize:8.8, color:"rgba(246,247,249,.62)", lineHeight:1.15,
+                  <I name={m.icon} size={18} color={m.color} dark tint={m.color}/>
+                  <div style={{ marginTop:6, fontSize:8.5, color:"rgba(246,247,249,.62)", lineHeight:1.15,
                     whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>{m.label}</div>
-                  <div style={{ marginTop:4, fontSize:11.8, fontWeight:700, color:m.color,
+                  <div style={{ marginTop:4, fontSize:11.5, fontWeight:700, color:m.color,
                     whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>{m.value}</div>
                 </div>
               ))}
@@ -272,7 +272,7 @@ export default function CoachPage({
       <div style={{ padding:"18px 20px 0" }}>
         <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)",
           background:"rgba(7,10,16,.86)", border:"1px solid rgba(60,91,255,.35)",
-          borderRadius:18, overflow:"hidden", boxShadow:"inset 0 0 24px rgba(60,91,255,.025)" }}>
+          borderRadius:18, overflow:"hidden" }}>
           {[
             { v:scoreValue, l:"Score nutrition", info:true, c:scoreValue === "—" ? "#F6F7F9" : "#3C7CFF" },
             { v:"—", l:"kcal / j", info:true, c:"#F6F7F9" },
@@ -293,18 +293,18 @@ export default function CoachPage({
 
         {/* Welcome assistant bubble */}
         {messages.length === 1 && (
-          <div style={{ display:"flex", alignItems:"flex-end", gap:10, margin:"0 0 22px 0" }}>
-            <div style={{ width:42, height:42, flexShrink:0, borderRadius:"50%",
-              border:"1px solid #3C5BFF", background:"#080C14",
-              display:"grid", placeItems:"center", overflow:"hidden",
-              boxShadow:"0 0 20px rgba(60,91,255,.25)" }}>
-              <img src={ROBOT_IMG} alt="Coach IA" style={{ width:42, height:42, objectFit:"contain" }}/>
-            </div>
-            <div style={{ position:"relative", maxWidth:"calc(100% - 68px)",
-              padding:"14px 16px", borderRadius:"18px 18px 18px 5px",
+          <div style={{ position:"relative", margin:"0 0 24px 0", paddingLeft:44 }}>
+            <div style={{ position:"relative", padding:"17px 18px 17px 20px",
+              borderRadius:"20px 20px 20px 6px",
               background:"linear-gradient(145deg,#0A0E16,#070A10)",
-              border:"1px solid rgba(60,91,255,.65)", color:"#F6F7F9",
-              fontSize:14.2, lineHeight:1.5, boxShadow:"0 0 18px rgba(60,91,255,.08)" }}>
+              border:"1px solid rgba(60,91,255,.72)", color:"#F6F7F9",
+              fontSize:14.5, lineHeight:1.52, boxShadow:"0 0 22px rgba(60,91,255,.08)" }}>
+              <div style={{ position:"absolute", left:-23, bottom:16, width:46, height:46,
+                borderRadius:"50%", border:"1px solid #3C5BFF", background:"#080C14",
+                display:"grid", placeItems:"center", overflow:"hidden",
+                boxShadow:"0 0 20px rgba(60,91,255,.28)" }}>
+                <img src={ROBOT_IMG} alt="Coach IA" style={{ width:43, height:43, objectFit:"contain" }}/>
+              </div>
               Bonjour {firstName} ! Je suis ton Coach Nutrition.<br/>
               J’ai accès à ton bilan des 14 derniers jours.<br/>
               Pose-moi tes questions sur ton alimentation, tes macros ou tes carences.
@@ -350,28 +350,29 @@ export default function CoachPage({
         {/* Suggestions */}
         {messages.length === 1 && !loading && (
           <div>
-            <div style={{ fontSize:12.5, fontWeight:800, letterSpacing:".12em", textTransform:"uppercase",
-              color:"#1680FF", marginBottom:12 }}>Questions suggérées</div>
-            <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
+            <div style={{ fontSize:12, fontWeight:700, letterSpacing:".1em", textTransform:"uppercase",
+              color:"#1680FF", marginBottom:10 }}>Questions suggérées</div>
+            <div style={{ display:"flex", flexDirection:"column", gap:7 }}>
               {SUGGESTIONS.map((s,i) => (
-                <button key={i} onClick={() => sendMessage(s)} style={{ width:"100%", minHeight:58,
-                  padding:"8px 10px", background:"linear-gradient(180deg,rgba(10,14,22,.96),rgba(7,10,16,.96))",
-                  border:"1px solid rgba(60,91,255,.34)", borderRadius:15, color:"#F6F7F9",
-                  fontSize:14, fontFamily:FONT, cursor:"pointer", textAlign:"left",
-                  display:"flex", alignItems:"center", gap:12 }}>
-                  <span style={{ width:40, height:40, borderRadius:11, flexShrink:0, display:"grid", placeItems:"center",
-                    background:"#0C1422", border:"1px solid rgba(60,91,255,.42)", boxShadow:"inset 0 0 16px rgba(60,91,255,.08)" }}>
-                    <I name={SUGGESTION_ICONS[i] || "star"} size={20} color="#4B8DFF"/>
+                <button key={i} onClick={() => sendMessage(s)} style={{ width:"100%", minHeight:52,
+                  padding:"7px 10px", background:"linear-gradient(180deg,rgba(10,14,22,.96),rgba(7,10,16,.96))",
+                  border:"1px solid rgba(60,91,255,.28)", borderRadius:14, color:"#F6F7F9",
+                  fontSize:13.5, fontFamily:FONT, cursor:"pointer", textAlign:"left",
+                  display:"flex", alignItems:"center", gap:11 }}>
+                  <span style={{ width:40, height:40, borderRadius:12, flexShrink:0, display:"grid", placeItems:"center",
+                    background:"linear-gradient(145deg,#0D172B,#09101D)", border:"1px solid rgba(60,91,255,.42)",
+                    boxShadow:"inset 0 0 14px rgba(60,91,255,.08)" }}>
+                    <I name={SUGGESTION_ICONS[i] || "spark"} size={22} color="#3C7CFF" dark tint="#3C7CFF"/>
                   </span>
                   <span style={{ flex:1 }}>{s}</span>
-                  <I name="arrowRight" size={20} color="#1680FF" stroke={2.1}/>
+                  <I name="arrowRight" size={22} color="#1680FF" stroke={2.2}/>
                 </button>
               ))}
             </div>
           </div>
         )}
 
-        <div ref={msgsEndRef} style={{ height: 8 }}/>
+        <div ref={msgsEndRef}/>
       </div>
 
       {/* PAYWALL */}
@@ -385,22 +386,27 @@ export default function CoachPage({
         </div>
       )}
 
-      {/* INPUT */}
-      <div style={{ padding:"14px 16px 4px", borderTop:"1px solid rgba(255,255,255,.08)",
-        display:"flex", gap:10, alignItems:"flex-end", flexShrink:0, background:DARK.bgDeep }}>
-        <textarea ref={inputRef} value={input} onChange={e => setInput(e.target.value)} onKeyDown={handleKey}
-          placeholder={canSend ? "Pose ta question au coach…" : "Limite atteinte ce mois-ci"}
-          disabled={!canSend || loading} rows={1}
-          style={{ flex:1, minHeight:48, background:"#070B12", border:"1px solid rgba(255,255,255,.16)",
-            borderRadius:25, padding:"12px 16px", color:"#F6F7F9", fontSize:14, fontFamily:FONT,
-            resize:"none", outline:"none", lineHeight:1.4, maxHeight:100, overflowY:"auto" }} />
+      {/* INPUT / COMPOSER */}
+      <div style={{ padding:"16px 16px 6px", borderTop:"1px solid rgba(255,255,255,.06)",
+        display:"flex", gap:10, alignItems:"center", flexShrink:0, background:DARK.bgDeep }}>
+        <div style={{ flex:1, minWidth:0, display:"flex", alignItems:"center",
+          background:"#070B12", border:"1px solid rgba(75,141,255,.22)", borderRadius:27,
+          boxShadow:"inset 0 0 0 1px rgba(255,255,255,.02)" }}>
+          <textarea ref={inputRef} value={input} onChange={e => setInput(e.target.value)} onKeyDown={handleKey}
+            placeholder={canSend ? "Pose ta question au coach…" : "Limite atteinte ce mois-ci"}
+            disabled={!canSend || loading} rows={1}
+            style={{ width:"100%", minHeight:50, background:"transparent", border:"none",
+              padding:"13px 18px", color:"#F6F7F9", fontSize:14, fontFamily:FONT,
+              resize:"none", outline:"none", lineHeight:1.4, maxHeight:100, overflowY:"auto", boxSizing:"border-box" }} />
+        </div>
         <button onClick={() => sendMessage()} disabled={!input.trim() || !canSend || loading}
-          style={{ width:54, height:54, borderRadius:17, flexShrink:0,
+          aria-label="Envoyer"
+          style={{ width:52, height:52, borderRadius:"50%", flexShrink:0,
             background:input.trim() && canSend && !loading ? "linear-gradient(135deg,#2E63FF,#0B5CFF)" : "#0C1420",
             border:input.trim() && canSend && !loading ? "1px solid rgba(75,141,255,.85)" : "1px solid rgba(255,255,255,.10)",
             display:"grid", placeItems:"center", cursor:input.trim() && canSend && !loading ? "pointer" : "default",
-            boxShadow:input.trim() && canSend && !loading ? "0 0 22px rgba(60,91,255,.45)" : "none" }}>
-          <I name="send" size={22} color={input.trim() && canSend && !loading ? "#FFF" : "#667085"} stroke={2}/>
+            boxShadow:input.trim() && canSend && !loading ? "0 0 20px rgba(60,91,255,.35)" : "none" }}>
+          <I name="arrowRight" size={24} color={input.trim() && canSend && !loading ? "#FFFFFF" : "#667085"} stroke={2.2}/>
         </button>
       </div>
     </div>
