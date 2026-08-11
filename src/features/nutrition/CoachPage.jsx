@@ -293,17 +293,18 @@ export default function CoachPage({
 
         {/* Welcome assistant bubble */}
         {messages.length === 1 && (
-          <div style={{ position:"relative", margin:"0 0 24px 0", paddingLeft:44 }}>
-            <div style={{ position:"relative", padding:"17px 18px 17px 20px",
-              borderRadius:"20px 20px 20px 6px",
+          <div style={{ margin:"0 0 28px 0" }}>
+            <div style={{ position:"relative", minHeight:96, padding:"18px 18px 18px 78px",
+              borderRadius:20,
               background:"linear-gradient(145deg,#0A0E16,#070A10)",
               border:"1px solid rgba(60,91,255,.72)", color:"#F6F7F9",
-              fontSize:14.5, lineHeight:1.52, boxShadow:"0 0 22px rgba(60,91,255,.08)" }}>
-              <div style={{ position:"absolute", left:-23, bottom:16, width:46, height:46,
-                borderRadius:"50%", border:"1px solid #3C5BFF", background:"#080C14",
+              fontSize:14.5, lineHeight:1.52, boxShadow:"0 0 22px rgba(60,91,255,.08)",
+              boxSizing:"border-box" }}>
+              <div style={{ position:"absolute", left:14, top:"50%", transform:"translateY(-50%)",
+                width:52, height:52, borderRadius:"50%", border:"1px solid #3C5BFF", background:"#080C14",
                 display:"grid", placeItems:"center", overflow:"hidden",
                 boxShadow:"0 0 20px rgba(60,91,255,.28)" }}>
-                <img src={ROBOT_IMG} alt="Coach IA" style={{ width:43, height:43, objectFit:"contain" }}/>
+                <img src={ROBOT_IMG} alt="Coach IA" style={{ width:46, height:46, objectFit:"contain", display:"block" }}/>
               </div>
               Bonjour {firstName} ! Je suis ton Coach Nutrition.<br/>
               J’ai accès à ton bilan des 14 derniers jours.<br/>
@@ -387,8 +388,8 @@ export default function CoachPage({
       )}
 
       {/* INPUT / COMPOSER */}
-      <div style={{ padding:"16px 16px 6px", borderTop:"1px solid rgba(255,255,255,.06)",
-        display:"flex", gap:10, alignItems:"center", flexShrink:0, background:DARK.bgDeep }}>
+      <div style={{ padding:"28px 16px 12px",
+        display:"flex", gap:12, alignItems:"center", flexShrink:0, background:"transparent" }}>
         <div style={{ flex:1, minWidth:0, display:"flex", alignItems:"center",
           background:"#070B12", border:"1px solid rgba(75,141,255,.22)", borderRadius:27,
           boxShadow:"inset 0 0 0 1px rgba(255,255,255,.02)" }}>
@@ -402,8 +403,8 @@ export default function CoachPage({
         <button onClick={() => sendMessage()} disabled={!input.trim() || !canSend || loading}
           aria-label="Envoyer"
           style={{ width:52, height:52, borderRadius:"50%", flexShrink:0,
-            background:input.trim() && canSend && !loading ? "linear-gradient(135deg,#2E63FF,#0B5CFF)" : "#0C1420",
-            border:input.trim() && canSend && !loading ? "1px solid rgba(75,141,255,.85)" : "1px solid rgba(255,255,255,.10)",
+            background:input.trim() && canSend && !loading ? "linear-gradient(135deg,#3C6BFF,#1768FF)" : "#101827",
+            border:input.trim() && canSend && !loading ? "1px solid rgba(92,145,255,.95)" : "1px solid rgba(75,141,255,.22)",
             display:"grid", placeItems:"center", cursor:input.trim() && canSend && !loading ? "pointer" : "default",
             boxShadow:input.trim() && canSend && !loading ? "0 0 20px rgba(60,91,255,.35)" : "none" }}>
           <I name="arrowRight" size={24} color={input.trim() && canSend && !loading ? "#FFFFFF" : "#667085"} stroke={2.2}/>
