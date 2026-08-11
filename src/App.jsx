@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect, useRef, lazy, Suspense } from"react";
 import { scrollTop } from"./hooks/useScrollTop.js";
-import { C, OBJ, ACTIVITE_FACTOR, GLOBAL_CSS as CSS, INT } from"./data/constants.js";
+import { C, DARK, OBJ, ACTIVITE_FACTOR, GLOBAL_CSS as CSS, INT } from"./data/constants.js";
 import { FOODS } from"./data/foods.js";
 import { EX } from"./data/exercises.js";
 import { MOTIVATIONS } from"./data/motivations.js";
@@ -381,7 +381,7 @@ export default function App() {
 
   return (
     <AppContext.Provider value={contextValue}>
-      <Screen style={tab === "coach" ? { background:"#05070B", color:"#F6F7F9" } : undefined}>
+      <Screen style={(tab === "coach" || (tab === "home" && subViewHome === "pro")) ? { background:DARK.bgDeep, color:DARK.text } : undefined}>
         <div onTouchStart={gTS} onTouchMove={gTM} onTouchEnd={gTE}
           style={{ ...globalSwipe, minHeight:"100vh" }}>
         <style>{CSS}</style>
@@ -396,7 +396,9 @@ export default function App() {
             coach:     { items:[{id:"journal",label:"Journal"},{id:"coach",label:"Coach"},{id:"dashboard",label:"Bilan Pro",pro:true},{id:"bilan",label:"Analyse",pro:true}], view:"coach", set:(v)=>{ if(v==="coach"){} else{setTab("nutrition");setSubViewNutrition(v);} } },
           };
           const nav = NAVS[tab];
-          const layoutTheme = tab === "coach" ? "dark" : "light";
+          const isPremiumOfferView = tab === "home" && subViewHome === "pro";
+          const isCoachView = tab === "coach";
+          const layoutTheme = (isPremiumOfferView || isCoachView) ? "dark" : "light";
           return (
             <Header
               premium={premium} cycleStart={cycleStart} jR={jR}
@@ -414,7 +416,7 @@ export default function App() {
           </Suspense>
 )}
 
-        <PageContainer style={tab === "coach" ? { background:"#05070B", color:"#F6F7F9" } : undefined}>
+        <PageContainer style={(tab === "coach" || (tab === "home" && subViewHome === "pro")) ? { background:DARK.bgDeep, color:DARK.text } : undefined}>
           <div className="page-enter">
             {tab ==="home" && <Home {...homeProps} />}
             {tab !=="home" && (
@@ -449,7 +451,7 @@ export default function App() {
         </div>
         {/* ── Fin zone swipable ── */}
 
-        <BottomNav tab={tab} setTab={setTab} theme={tab === "coach" ? "dark" : "light"} />
+        <BottomNav tab={tab} setTab={setTab} theme={(tab === "coach" || (tab === "home" && subViewHome === "pro")) ? "dark" : "light"} />
 
         {/* ── Modal Level-Up Momentum XP ── */}
         <LevelUpModal
