@@ -10,7 +10,7 @@ import { getXPState, getLevelInfo } from"../../services/xpService.js";
 
 export function Header({ premium, cycleStart, jR, tab, setTab, subNav, subView, setSubView, setPaywall, theme = "light" }) {
   const dark = theme === "dark";
-  const T = dark ? { bg:"#05070B", surface:"#0B0F16", text:"#F6F7F9", dim:"rgba(246,247,249,.58)" } : { bg:"#FFFFFF", surface:C.s2, text:C.text, dim:C.dim };
+  const T = dark ? { bg:"#0B0E12", surface:"#141922", text:"#F6F7F9", dim:"rgba(246,247,249,.58)" } : { bg:"#FFFFFF", surface:C.s2, text:C.text, dim:C.dim };
   const [xpState, setXpState] = useState(() => getXPState());
   useEffect(() => {
     const handler = () => setXpState(getXPState());
