@@ -4,11 +4,13 @@
 // droite · sous-onglets soulignés SUR LA MÊME SURFACE BLANCHE. La séparation
 // avec le contenu se fait par le changement de fond (blanc → gris), zéro trait.
 // ═══════════════════════════════════════════════════════════════════════════
-import { C, DARK, FONT } from"../../data/constants.js";
+import { C, FONT } from"../../data/constants.js";
 import { useState, useEffect } from"react";
 import { getXPState, getLevelInfo } from"../../services/xpService.js";
 
 export function Header({ premium, cycleStart, jR, tab, setTab, subNav, subView, setSubView, setPaywall, theme = "light" }) {
+  const dark = theme === "dark";
+  const T = dark ? { bg:"#05070B", surface:"#0B0F16", text:"#F6F7F9", dim:"rgba(246,247,249,.58)" } : { bg:"#FFFFFF", surface:C.s2, text:C.text, dim:C.dim };
   const [xpState, setXpState] = useState(() => getXPState());
   useEffect(() => {
     const handler = () => setXpState(getXPState());
@@ -17,37 +19,9 @@ export function Header({ premium, cycleStart, jR, tab, setTab, subNav, subView, 
   }, []);
   const info = getLevelInfo(xpState.xp || 0);
 
-  // ── Pack de couleurs selon le thème ──
-  // theme="light" (défaut) → aucun changement vs version historique.
-  // theme="dark" → surface sombre premium, utilisée uniquement par la page
-  // « Offre du moment » (contexte scopé côté App.jsx). Aucun autre écran
-  // ne passe theme="dark" tant qu'App.jsx ne le décide pas.
-  const isDark = theme === "dark";
-  const T = isDark ? {
-    bg:          DARK.bgDeep,
-    text:        DARK.text,
-    dim:         DARK.dim,
-    dimStrong:   DARK.dimStrong,
-    surface:     DARK.surfaceHi,
-    progressBg:  "rgba(255,255,255,0.10)",
-    proBg:       "rgba(60,91,255,0.22)",
-    proText:     DARK.accent,       // #9DB0FF, lisible sur sombre
-    profileMid:  DARK.dimStrong,
-  } : {
-    bg:          "#FFFFFF",
-    text:        C.text,
-    dim:         C.dim,
-    dimStrong:   C.mid,
-    surface:     C.s2,
-    progressBg:  "#E2E6EE",
-    proBg:       "rgba(60,91,255,0.12)",
-    proText:     C.accentDk,
-    profileMid:  C.mid,
-  };
-
   return (
     <div className="np" style={{
-      background: T.bg,
+      background:T.bg,
       paddingTop:"calc(8px + env(safe-area-inset-top, 0px))",
       position:"sticky", top: 0, zIndex: 100,
     }}>
@@ -89,7 +63,7 @@ export function Header({ premium, cycleStart, jR, tab, setTab, subNav, subView, 
               {info.cur.level}
             </span>
             <span style={{ width:50, height:6, borderRadius:99,
-              background:T.progressBg, position:"relative",
+              background:dark ? "#1B2230" : "#E2E6EE", position:"relative",
               display:"inline-block", overflow:"hidden" }}>
               <span style={{ position:"absolute", inset:0, width:`${info.pct}%`,
                 background: C.accent, borderRadius:99,
@@ -99,8 +73,8 @@ export function Header({ premium, cycleStart, jR, tab, setTab, subNav, subView, 
           {premium && (
             <div style={{
               padding:"7px 11px", borderRadius:10,
-              background:T.proBg,
-              fontSize:11, color:T.proText, fontWeight:700,
+              background:"rgba(60,91,255,0.12)",
+              fontSize:11, color:C.accentDk, fontWeight:700,
               letterSpacing:".03em", fontFamily:FONT,
             }}>PRO</div>
           )}
@@ -109,10 +83,10 @@ export function Header({ premium, cycleStart, jR, tab, setTab, subNav, subView, 
             className="tap-icon"
             style={{
               width:34, height:34, borderRadius:10,
-              background: tab ==="profile" ?"rgba(60,91,255,0.18)" : T.surface,
+              background: tab ==="profile" ?"rgba(60,91,255,0.12)" : T.surface,
               display:"grid", placeItems:"center",
               cursor:"pointer", flexShrink: 0, border:"none",
-              color: tab ==="profile" ? (isDark ? DARK.accent : C.accent) : T.profileMid,
+              color: tab ==="profile" ? C.accent : T.dim,
             }}
           >
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none"
