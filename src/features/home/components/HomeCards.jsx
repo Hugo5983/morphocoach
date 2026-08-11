@@ -129,36 +129,20 @@ export function HeroCard({ profil, prog, calObj, calSess, setTab }) {
 
   return (
     <div style={{ padding: "22px 16px 0", fontFamily: FONT }}>
-      {/* Bloc "Bonjour + phrase" à gauche, pilule "1 série" à droite */}
-      <div style={{
-        display: "flex", alignItems: "flex-start", justifyContent: "space-between",
-        gap: 14, marginBottom: 20,
-      }}>
-        <div style={{ minWidth: 0 }}>
-          <div style={{
-            color: blue, fontSize: 20, fontWeight: 800, marginBottom: 10,
-            letterSpacing: "-0.02em",
-          }}>
-            Bonjour {prenom} <span style={{ display: "inline-block" }}>👋</span>
-          </div>
-          <div style={{
-            color: DARK.text, fontSize: 26, lineHeight: 1.08,
-            fontWeight: 850, letterSpacing: "-0.035em",
-          }}>
-            Prêt à devenir<br />
-            ta <span style={{ color: blue }}>meilleure version</span> ?
-          </div>
+      {/* Bonjour + phrase — occupe toute la largeur (plus de pilule à droite) */}
+      <div style={{ marginBottom: 20 }}>
+        <div style={{
+          color: blue, fontSize: 20, fontWeight: 800, marginBottom: 10,
+          letterSpacing: "-0.02em",
+        }}>
+          Bonjour {prenom} <span style={{ display: "inline-block" }}>👋</span>
         </div>
         <div style={{
-          flex: "0 0 74px", minHeight: 78, borderRadius: 18,
-          border: "1px solid rgba(92,119,255,0.22)",
-          background: "rgba(17,23,34,0.78)",
-          display: "flex", flexDirection: "column",
-          alignItems: "center", justifyContent: "center", gap: 3,
+          color: DARK.text, fontSize: 26, lineHeight: 1.08,
+          fontWeight: 850, letterSpacing: "-0.035em",
         }}>
-          <I name="flame" size={21} color={blue} fill />
-          <strong style={{ color: DARK.text, fontSize: 18, lineHeight: 1 }}>1</strong>
-          <span style={{ color: muted, fontSize: 10, fontWeight: 600 }}>série</span>
+          Prêt à devenir<br />
+          ta <span style={{ color: blue }}>meilleure version</span> ?
         </div>
       </div>
 
@@ -179,7 +163,7 @@ export function HeroCard({ profil, prog, calObj, calSess, setTab }) {
         }} />
         <div style={{
           position: "relative", minHeight: 292,
-          padding: "20px 20px 20px",
+          padding: "20px 20px 30px",
           display: "flex", flexDirection: "column",
         }}>
           {/* Label collé en haut de la carte */}
@@ -363,79 +347,75 @@ export function NutritionCard({ calObj, pObj, gObj, lObj, totR, setTab, setPaywa
 }
 
 /**
- * Carte "Série actuelle" — layout premium centré : anneau SVG cohérent
- * avec la NutritionCard, chiffre au centre, message court en bas.
+ * Carte "Série actuelle" — layout épuré : titre en haut, gros chiffre à gauche,
+ * 4 barres verticales UNIFORMES à droite (bleu MorphoCoach), message en bas.
  * `inline` = utilisée dans une grille 2 colonnes → pas de margin extérieure.
  */
 export function StreakCard({ streak = 0, inline = false }) {
   const value = n(streak);
-  const target = 7; // objectif visuel : série de 7 jours (badge Série 7 Jours)
+  const bars = [0, 1, 2, 3];
   const isStarted = value > 0;
-
-  const r = 40;
-  const circumference = 2 * Math.PI * r;
-  const progress = Math.min(value / target, 1);
-  const dash = circumference * progress;
 
   return (
     <section style={{
       ...card,
       margin: inline ? 0 : "14px 16px 0",
-      padding: "14px 14px 14px",
+      padding: "14px 14px 13px",
       fontFamily: FONT,
       overflow: "hidden",
       display: "flex", flexDirection: "column",
       minHeight: inline ? 152 : undefined,
     }}>
-      {/* Header : titre + flamme alignés */}
+      {/* Titre en haut : label + flamme */}
       <div style={{
-        display: "flex", alignItems: "center", justifyContent: "space-between",
+        color: DARK.text, fontSize: 13, fontWeight: 800,
+        letterSpacing: "-0.005em",
+        display: "flex", alignItems: "center", gap: 5,
       }}>
-        <div style={{
-          color: DARK.text, fontSize: 13, fontWeight: 800,
-          letterSpacing: "-0.005em",
-        }}>Série actuelle</div>
-        <span style={{ fontSize: 14, lineHeight: 1 }} aria-hidden="true">🔥</span>
+        Série actuelle <span style={{ fontSize: 14 }} aria-hidden="true">🔥</span>
       </div>
 
-      {/* Anneau centré avec chiffre au centre */}
+      {/* Ligne principale : chiffre à gauche, 4 barres uniformes à droite */}
       <div style={{
-        flex: 1,
-        display: "flex", alignItems: "center", justifyContent: "center",
-        marginTop: 4,
+        display: "flex", alignItems: "center", justifyContent: "space-between",
+        gap: 10, marginTop: 10, flex: 1,
       }}>
-        <div style={{ position: "relative", width: 96, height: 96 }}>
-          <svg width="96" height="96" viewBox="0 0 96 96" style={{ transform: "rotate(-90deg)" }}>
-            <circle cx="48" cy="48" r={r} fill="none"
-              stroke="rgba(255,255,255,0.08)" strokeWidth="6.5" />
-            <circle cx="48" cy="48" r={r} fill="none"
-              stroke={blue} strokeWidth="6.5" strokeLinecap="round"
-              strokeDasharray={`${dash} ${circumference - dash}`}
-              style={{ filter: isStarted ? `drop-shadow(0 0 6px ${blue}55)` : "none" }} />
-          </svg>
-          <div style={{
-            position: "absolute", inset: 0,
-            display: "flex", flexDirection: "column",
-            justifyContent: "center", alignItems: "center",
-            gap: 1,
-          }}>
-            <strong style={{
-              color: DARK.text, fontSize: 30, lineHeight: 1,
-              fontWeight: 850, letterSpacing: "-0.04em",
-            }}>{value}</strong>
-            <span style={{
-              color: muted, fontSize: 10, fontWeight: 600,
-              letterSpacing: "0.02em",
-            }}>jour{value > 1 ? "s" : ""}</span>
-          </div>
+        <div style={{ display: "flex", alignItems: "baseline", gap: 6, minWidth: 0 }}>
+          <strong style={{
+            color: DARK.text, fontSize: 36, lineHeight: 1,
+            fontWeight: 850, letterSpacing: "-0.045em",
+          }}>{value}</strong>
+          <span style={{ color: muted, fontSize: 11.5, fontWeight: 600 }}>
+            jour{value > 1 ? "s" : ""}
+          </span>
+        </div>
+
+        <div style={{
+          display: "flex", alignItems: "center", gap: 5,
+          flexShrink: 0,
+        }} aria-hidden="true">
+          {bars.map(i => {
+            const active = i < Math.min(value, bars.length);
+            return (
+              <div key={i} style={{
+                width: 8,
+                height: 34,
+                borderRadius: 5,
+                background: active
+                  ? `linear-gradient(180deg, ${blue}, ${blue}B8)`
+                  : "rgba(255,255,255,0.08)",
+                boxShadow: active ? `0 0 12px ${blue}30` : "none",
+              }} />
+            );
+          })}
         </div>
       </div>
 
-      {/* Message court centré */}
+      {/* Message conditionnel en bas */}
       <div style={{
         color: isStarted ? blue : muted,
         fontSize: 10.5, fontWeight: 700,
-        textAlign: "center", marginTop: 6,
+        marginTop: 8, lineHeight: 1.3,
         letterSpacing: "-0.005em",
       }}>
         {isStarted ? "Continue comme ça" : "Commence aujourd'hui"}
@@ -542,76 +522,77 @@ export function BadgesCard({ badgeStates, onVoirTout, inline = false }) {
 }
 
 /**
- * Carte "Ton Coach" (entraînement) — grande carte immersive avec le robot
- * MorphoCoach à droite. Route vers l'onglet Coach global (setTab("coach")).
+ * Carte "Ton Coach" — grande carte immersive avec le robot MorphoCoach
+ * centré verticalement dans la partie droite. Deux CTA empilés à gauche :
+ * un pour le coach entraînement (bleu), un pour le coach nutrition (vert).
+ * Les deux routent vers setTab("coach").
  */
 export function CoachCard({ setTab }) {
   return (
     <div style={{
       ...card,
       position: "relative", overflow: "hidden",
-      margin: "14px 16px 0",
-      minHeight: 158,
-      padding: "20px 180px 20px 18px",
+      margin: "14px 16px 32px",
+      minHeight: 200,
+      padding: "20px 168px 20px 18px",
       fontFamily: FONT,
     }}>
       <div style={{ color: blue, fontSize: 11, fontWeight: 800, letterSpacing: "0.10em" }}>TON COACH</div>
-      <div style={{ color: DARK.text, fontSize: 24, lineHeight: 1.08, fontWeight: 850, letterSpacing: "-0.03em", marginTop: 7 }}>Un jour à la fois.</div>
-      <div style={{ color: muted, fontSize: 13, lineHeight: 1.4, marginTop: 7 }}>Chaque séance compte,<br />même les plus courtes.</div>
-      <button onClick={() => setTab?.("coach")} className="tap" style={{ marginTop: 13, border: `1px solid ${blue}`, borderRadius: 11, background: "rgba(60,91,255,0.08)", color: DARK.text, padding: "9px 12px", fontFamily: FONT, fontSize: 11.5, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 7 }}>
-        <I name="coach" size={15} color={blue} /> Discuter avec le coach
-      </button>
-      <img src={coachRobot} alt="Coach MorphoCoach" style={{ position: "absolute", width: 168, height: 168, objectFit: "contain", right: -4, bottom: -12, filter: "drop-shadow(0 0 24px rgba(60,91,255,0.34))" }} />
-    </div>
-  );
-}
+      <div style={{
+        color: DARK.text, fontSize: 22, lineHeight: 1.08,
+        fontWeight: 850, letterSpacing: "-0.03em", marginTop: 7,
+      }}>Un jour à la fois.</div>
+      <div style={{
+        color: muted, fontSize: 12.5, lineHeight: 1.4, marginTop: 6,
+      }}>Chaque séance compte,<br />même les plus courtes.</div>
 
-/**
- * Carte "Coach Nutrition" — carte compacte accent vert, empilée sous CoachCard.
- * Même destination (setTab("coach")) tant qu'il n'y a pas de routing dédié.
- */
-export function CoachNutritionCard({ setTab }) {
-  return (
-    <div style={{
-      ...card,
-      position: "relative", overflow: "hidden",
-      margin: "12px 16px 32px",
-      padding: "18px 18px",
-      fontFamily: FONT,
-      border: `1px solid ${green}30`,
-      boxShadow: `0 10px 30px ${green}12, 0 12px 34px rgba(0,0,0,0.22)`,
-    }}>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 14 }}>
-        <div style={{ minWidth: 0, flex: 1 }}>
-          <div style={{ color: green, fontSize: 11, fontWeight: 800, letterSpacing: "0.10em" }}>COACH NUTRITION</div>
-          <div style={{ color: DARK.text, fontSize: 19, lineHeight: 1.15, fontWeight: 850, letterSpacing: "-0.025em", marginTop: 6 }}>Optimise tes repas.</div>
-          <div style={{ color: muted, fontSize: 12.5, lineHeight: 1.4, marginTop: 5 }}>Conseils personnalisés selon<br />tes objectifs.</div>
-        </div>
-        <div style={{
-          width: 62, height: 62, borderRadius: 18,
-          background: `${green}18`,
-          border: `1px solid ${green}35`,
-          display: "grid", placeItems: "center", flexShrink: 0,
-        }}>
-          <ID name="apple" size={30} dark tint={green} />
-        </div>
-      </div>
-      <button onClick={() => setTab?.("coach")} className="tap" style={{
-        marginTop: 13,
-        border: `1px solid ${green}`, borderRadius: 11,
-        background: `${green}12`,
-        color: DARK.text,
-        padding: "9px 12px",
-        fontFamily: FONT, fontSize: 11.5, fontWeight: 700,
-        cursor: "pointer",
-        display: "inline-flex", alignItems: "center", gap: 7,
+      {/* Deux CTA empilés : entraînement (bleu) + nutrition (vert) */}
+      <div style={{
+        display: "flex", flexDirection: "column", gap: 8,
+        marginTop: 12,
       }}>
-        <I name="coach" size={15} color={green} /> Discuter avec le coach
-      </button>
+        <button onClick={() => setTab?.("coach")} className="tap" style={{
+          border: `1px solid ${blue}`, borderRadius: 11,
+          background: "rgba(60,91,255,0.10)",
+          color: DARK.text,
+          padding: "9px 12px",
+          fontFamily: FONT, fontSize: 11.5, fontWeight: 700,
+          cursor: "pointer",
+          display: "flex", alignItems: "center", gap: 7,
+          width: "fit-content", maxWidth: "100%",
+        }}>
+          <I name="coach" size={14} color={blue} />
+          Coach entraînement
+        </button>
+        <button onClick={() => setTab?.("coach")} className="tap" style={{
+          border: `1px solid ${green}`, borderRadius: 11,
+          background: `${green}14`,
+          color: DARK.text,
+          padding: "9px 12px",
+          fontFamily: FONT, fontSize: 11.5, fontWeight: 700,
+          cursor: "pointer",
+          display: "flex", alignItems: "center", gap: 7,
+          width: "fit-content", maxWidth: "100%",
+        }}>
+          <I name="coach" size={14} color={green} />
+          Coach nutrition
+        </button>
+      </div>
+
+      {/* Robot centré verticalement dans la moitié droite */}
+      <img src={coachRobot} alt="Coach MorphoCoach" style={{
+        position: "absolute",
+        width: 168, height: 168, objectFit: "contain",
+        right: -6, top: "50%",
+        transform: "translateY(-50%)",
+        filter: "drop-shadow(0 0 24px rgba(60,91,255,0.34))",
+        pointerEvents: "none",
+      }} />
     </div>
   );
 }
 
 // Compatibilité avec les imports historiques.
 export function CoachIACard(props) { return <CoachCard {...props} />; }
+export function CoachNutritionCard() { return null; }
 export function PacksCard() { return null; }
