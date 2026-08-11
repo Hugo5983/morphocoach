@@ -268,8 +268,15 @@ export default function HomePage({
         totR={totR} setTab={setTab}
         setPaywallNutrition={setPaywallNutrition} premium={premium}
       />
-      <StreakCard streak={streak} />
-      <BadgesCard badgeStates={badgeStates} onVoirTout={() => setShowBadges(true)} />
+      <div style={{
+        display: "grid",
+        gridTemplateColumns: "minmax(0, 0.85fr) minmax(0, 1.15fr)",
+        gap: 10,
+        padding: "14px 16px 0",
+      }}>
+        <StreakCard streak={streak} inline />
+        <BadgesCard badgeStates={badgeStates} onVoirTout={() => setShowBadges(true)} inline />
+      </div>
       <CoachIACard setTab={setTab} />
     </div>
   );
