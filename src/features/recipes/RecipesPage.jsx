@@ -1,112 +1,150 @@
-import { useState, useRef, useEffect } from"react";
+import { useState } from"react";
 import useScrollTop from"../../hooks/useScrollTop.js";
-import { RECIPES, REPAS, FILTRE_GROUPES, FILTRES, recipeBadge, prixEuros } from"../../data/recipes.js";
+import { RECIPES, REPAS, FILTRE_GROUPES, FILTRES, prixEuros } from"../../data/recipes.js";
 import RecipeDetail from"./RecipeDetail.jsx";
 import ListeDeCourses from"./ListeDeCourses.jsx";
 import { useRecipePhoto } from"./useRecipePhoto.js";
 import { C, FONT, NUM } from"../../data/constants.js";
 import { I } from"../../components/ui/Icon.jsx";
 
-// ─── Carte recette (rail horizontal, 178px) ──────────────────────────────────
+// ─── Carte recette ────────────────────────────────────────────────────────────
 function RecipeCard({ r, liked, onLike, onOpen, fluid, locked }) {
   const { src:photo } = useRecipePhoto(r.id, r.img,"card");
   const prix = prixEuros(r);
   return (
     <div onClick={() => onOpen(r)} className="tap" style={{
-      ...(fluid ? { width:"100%" } : { flex:"none", width:178 }),
-      background:C.s1,
-      border:`1px solid ${C.bd}`, borderRadius:16,
+      ...(fluid ? { width:"100%" } : { flex:"none", width:184 }),
+      background:"#FFFFFF",
+      border:`1px solid rgba(16,19,24,0.075)`, borderRadius:18,
       overflow:"hidden", cursor:"pointer",
       display:"flex", flexDirection:"column",
-      contain:"layout paint",
-      position:"relative",
+      boxShadow:"0 2px 10px rgba(16,19,24,0.045)",
+      contain:"layout paint", position:"relative",
     }}>
-      {/* Lock overlay for premium recipes */}
       {locked && (
         <div style={{ position:"absolute", inset:0, zIndex:5,
-          background:"rgba(246,247,249,0.55)", backdropFilter:"blur(1px)",
+          background:"rgba(246,247,249,0.58)", backdropFilter:"blur(1.5px)",
           display:"flex", alignItems:"center", justifyContent:"center",
-          borderRadius:16,
-        }}>
-          <div style={{ width:36, height:36, borderRadius:10,
-            background:"rgba(0,0,0,0.06)",
-            display:"grid", placeItems:"center" }}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-              stroke={C.dim} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="3" y="11" width="18" height="11" rx="2"/>
-              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-            </svg>
+          borderRadius:18 }}>
+          <div style={{ width:38, height:38, borderRadius:12,
+            background:"rgba(255,255,255,0.92)", border:"1px solid rgba(16,19,24,0.08)",
+            boxShadow:"0 4px 14px rgba(16,19,24,0.10)", display:"grid", placeItems:"center" }}>
+            <I name="lock" size={18} color={C.dim}/>
           </div>
         </div>
       )}
-      <div style={{ position:"relative", width:"100%", aspectRatio:"4 / 3",
+
+      <div style={{ position:"relative", width:"100%", aspectRatio:"1.42 / 1",
         background:C.s2, flexShrink:0,
-        ...(locked ? { filter:"grayscale(0.6) opacity(0.7)" } : {}),
-      }}>
+        ...(locked ? { filter:"grayscale(0.55) opacity(0.72)" } : {}) }}>
         <img src={photo} alt={r.nom} loading="lazy" decoding="async"
           style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }}
           onError={e => { if (e.target.src !== r.img) e.target.src = r.img;
                           else e.target.style.display="none"; }}/>
         <div style={{ position:"absolute", inset:0,
-          background:"linear-gradient(to top,rgba(16,19,24,0.55) 0%,transparent 45%)" }}/>
+          background:"linear-gradient(to top,rgba(16,19,24,0.48) 0%,rgba(16,19,24,0.03) 58%,transparent 100%)" }}/>
+
         {prix && (
-          <div style={{ position:"absolute", left:8, bottom:8,
-            padding:"4px 8px", borderRadius:8,
-            background:"rgba(16,19,24,0.72)",
-            color:"#FFF", fontSize:11, fontWeight:700, fontFamily:FONT,
+          <div style={{ position:"absolute", left:10, bottom:10,
+            padding:"6px 10px", borderRadius:10,
+            background:"rgba(16,19,24,0.72)", backdropFilter:"blur(8px)",
+            color:"#FFF", fontSize:11.5, fontWeight:700, fontFamily:FONT,
             ...NUM, whiteSpace:"nowrap", letterSpacing:0.1 }}>{prix}</div>
         )}
+
         {!locked && (
           <button onClick={e => { e.stopPropagation(); onLike(r.id); }}
             aria-label={liked ?"Retirer des favoris" :"Ajouter aux favoris"}
-            style={{ position:"absolute", top:8, right:8,
-              width:32, height:32, borderRadius:"50%",
-              background: liked ?"rgba(229,72,77,0.95)" :"rgba(255,255,255,0.92)",
-              border: liked ?"1px solid rgba(229,72,77,0.65)" :"1px solid rgba(255,255,255,0.65)",
-              boxShadow: liked ?"0 3px 10px rgba(229,72,77,0.5)" :"0 2px 8px rgba(16,19,24,0.18)",
-              display:"grid", placeItems:"center", cursor:"pointer",
-              transition:"all .2s ease" }}>
-            <svg width="15" height="15" viewBox="0 0 24 24"
-              fill={liked ?"#FFF" :"none"} stroke={liked ?"#FFF" :"#E5484D"}
-              strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/>
-            </svg>
+            style={{ position:"absolute", top:10, right:10,
+              width:36, height:36, borderRadius:"50%",
+              background:"rgba(255,255,255,0.94)",
+              border:"1px solid rgba(255,255,255,0.72)",
+              boxShadow:liked ?"0 4px 12px rgba(229,72,77,0.24)" :"0 3px 10px rgba(16,19,24,0.12)",
+              display:"grid", placeItems:"center", cursor:"pointer", transition:"all .2s ease" }}>
+            <I name="heart" size={18} color={liked ?"#E5484D" :"#E5484D"} fill={liked}/>
           </button>
         )}
       </div>
-      <div style={{ padding:"12px 13px 13px", flex:1, display:"flex",
-        flexDirection:"column", gap:8 }}>
-        <span style={{ fontSize:15, fontWeight:600, color:C.text, fontFamily:FONT,
-          lineHeight:1.25, display:"-webkit-box", WebkitLineClamp:2,
-          WebkitBoxOrient:"vertical", overflow:"hidden" }}>{r.nom}</span>
-        <div style={{ marginTop:"auto", display:"flex", alignItems:"center",
-          justifyContent:"space-between" }}>
-          <span style={{ fontSize:13.5, fontWeight:600, color:C.dim,
-            fontFamily:FONT, ...NUM }}>{r.kcal} kcal</span>
+
+      <div style={{ padding:"12px 13px 13px", minHeight:76,
+        display:"flex", flexDirection:"column", gap:8 }}>
+        <span style={{ fontSize:15, fontWeight:650, color:C.text, fontFamily:FONT,
+          lineHeight:1.24, display:"-webkit-box", WebkitLineClamp:2,
+          WebkitBoxOrient:"vertical", overflow:"hidden", letterSpacing:"-.015em" }}>{r.nom}</span>
+
+        <div style={{ marginTop:"auto", display:"flex", alignItems:"center", gap:10,
+          color:C.dim, fontFamily:FONT, fontSize:12.5, fontWeight:600 }}>
+          <span style={{ display:"inline-flex", alignItems:"center", gap:5 }}>
+            <I name="flame" size={15} color="#F59E0B" />
+            <span {...NUM}>{r.kcal} kcal</span>
+          </span>
+          {r.temps != null && <span style={{ width:1, height:15, background:"rgba(16,19,24,0.14)" }}/>} 
+          {r.temps != null && (
+            <span style={{ display:"inline-flex", alignItems:"center", gap:5 }}>
+              <I name="clock" size={15} color="#667085" />
+              <span {...NUM}>{r.temps} min</span>
+            </span>
+          )}
         </div>
       </div>
     </div>
   );
 }
 
-// ─── Hero card (rail éditorial) ──────────────────────────────────────────────
-function HeroCard({ r, onOpen }) {
+// ─── Hero éditorial ──────────────────────────────────────────────────────────
+function HeroCard({ r, onOpen, index = 0 }) {
   const { src:photo } = useRecipePhoto(r.id, r.img,"card");
+  const badge = index === 0 ? "Nouveau" : "À découvrir";
+  const tag = index === 0 ? "Incontournable" : null;
   return (
     <div onClick={() => onOpen(r)} className="tap" style={{
-      flex:"none", width:300, position:"relative", borderRadius:18,
-      overflow:"hidden", aspectRatio:"16 / 10", background:C.s3,
-      border:`1px solid ${C.bd}`, cursor:"pointer",
-    }}>
+      flex:"none", width:326, position:"relative", borderRadius:22,
+      overflow:"hidden", aspectRatio:"1.68 / 1", background:C.s3,
+      border:"1px solid rgba(16,19,24,0.08)", cursor:"pointer",
+      boxShadow:"0 5px 18px rgba(16,19,24,0.08)" }}>
       <img src={photo} alt={r.nom} loading="lazy" decoding="async"
         style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }}
-        onError={e => { e.target.style.display="none"; }}/>
+        onError={e => { if (e.target.src !== r.img) e.target.src = r.img;
+                        else e.target.style.display="none"; }}/>
       <div style={{ position:"absolute", inset:0,
-        background:"linear-gradient(to top,rgba(16,19,24,0.72),rgba(16,19,24,0) 58%)",
+        background:"linear-gradient(to bottom,rgba(16,19,24,0.06) 0%,rgba(16,19,24,0.02) 36%,rgba(16,19,24,0.78) 100%)",
         pointerEvents:"none" }}/>
-      <span style={{ position:"absolute", left:18, right:18, bottom:15,
-        fontSize:23, fontWeight:700, lineHeight:1.15, letterSpacing:"-.01em",
-        color:"#FFFFFF", fontFamily:FONT }}>{r.nom}</span>
+
+      <div style={{ position:"absolute", top:12, left:12,
+        display:"flex", gap:7, alignItems:"center" }}>
+        <span style={{ display:"inline-flex", alignItems:"center", gap:6,
+          padding:"6px 10px", borderRadius:999,
+          background:"rgba(255,255,255,0.92)", color:C.accent,
+          fontSize:11, fontWeight:700, fontFamily:FONT,
+          boxShadow:"0 3px 10px rgba(16,19,24,0.08)" }}>
+          <span style={{ width:7, height:7, borderRadius:"50%", background:C.accent }}/>{badge}
+        </span>
+      </div>
+
+      <div style={{ position:"absolute", left:18, right:18, bottom:16 }}>
+        {tag && (
+          <span style={{ display:"inline-flex", alignItems:"center", gap:5,
+            padding:"5px 9px", borderRadius:8, marginBottom:8,
+            background:C.accent, color:"#FFF", fontSize:10.5, fontWeight:700,
+            fontFamily:FONT, boxShadow:"0 3px 10px rgba(60,91,255,0.24)" }}>
+            <I name="star" size={11} color="#FFF" fill /> {tag}
+          </span>
+        )}
+        <div style={{ fontSize:24, fontWeight:750, lineHeight:1.12,
+          letterSpacing:"-.025em", color:"#FFFFFF", fontFamily:FONT,
+          textShadow:"0 2px 8px rgba(0,0,0,0.18)" }}>{r.nom}</div>
+        <div style={{ display:"flex", alignItems:"center", gap:10,
+          marginTop:10, color:"rgba(255,255,255,0.94)", fontFamily:FONT,
+          fontSize:12.5, fontWeight:600 }}>
+          <span style={{ display:"inline-flex", alignItems:"center", gap:5 }}>
+            <I name="flame" size={16} color="#F59E0B"/> {r.kcal} kcal
+          </span>
+          <span style={{ width:1, height:15, background:"rgba(255,255,255,0.38)" }}/>
+          <span style={{ display:"inline-flex", alignItems:"center", gap:5 }}>
+            <I name="clock" size={16} color="#FFFFFF"/> {r.temps ?? "—"} min
+          </span>
+        </div>
+      </div>
     </div>
   );
 }
@@ -115,27 +153,26 @@ function HeroCard({ r, onOpen }) {
 function SectionRail({ label, recettes, liked, onLike, onOpen, onVoirTout, premium }) {
   if (!recettes.length) return null;
   return (
-    <div style={{ marginTop:26 }}>
-      <div style={{ display:"flex", alignItems:"baseline",
-        justifyContent:"space-between", padding:"0 20px" }}>
-        <span style={{ fontSize:13, fontWeight:700, letterSpacing:".12em",
-          textTransform:"uppercase", color:C.mid, fontFamily:FONT }}>{label}</span>
+    <section style={{ marginTop:30 }}>
+      <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between",
+        padding:"0 20px" }}>
+        <span style={{ fontSize:14, fontWeight:750, letterSpacing:".13em",
+          textTransform:"uppercase", color:"#344054", fontFamily:FONT }}>{label}</span>
         {onVoirTout && (
-          <button onClick={onVoirTout} style={{ background:"none", border:"none",
-            fontSize:14.5, fontWeight:600, color:C.accent, fontFamily:FONT,
+          <button onClick={onVoirTout} className="tap" style={{ background:"none", border:"none",
+            fontSize:14.5, fontWeight:650, color:C.accent, fontFamily:FONT,
             cursor:"pointer", padding:0 }}>Voir tout</button>
         )}
       </div>
-      <div style={{ display:"flex", gap:14, overflowX:"auto",
-        padding:"14px 20px 2px", scrollbarWidth:"none",
-        WebkitOverflowScrolling:"touch" }}>
+      <div style={{ display:"grid", gridTemplateColumns:"repeat(2,minmax(0,1fr))",
+        gap:12, padding:"14px 20px 0" }}>
         {recettes.map(r => (
           <RecipeCard key={r.id} r={r} liked={!!liked[r.id]}
-            onLike={onLike} onOpen={onOpen}
+            onLike={onLike} onOpen={onOpen} fluid
             locked={!premium && !r.free}/>
         ))}
       </div>
-    </div>
+    </section>
   );
 }
 
@@ -225,72 +262,87 @@ export default function Recipes(props) {
   }
 
   return (
-    <div className="anim" style={{ padding:"0 0 32px" }}>
+    <div className="anim" style={{ padding:"0 0 32px", background:"#F6F7F9" }}>
 
-      {/* ── Header sticky : recherche + filtre ── */}
-      <div style={{ position:"sticky", top:0, zIndex:10,
-        background:"rgba(246,247,249,0.9)", backdropFilter:"blur(12px)",
-        WebkitBackdropFilter:"blur(12px)",
-        borderBottom:`1px solid rgba(16,19,24,0.06)`,
-        padding:"18px 20px 15px", display:"flex", alignItems:"center", gap:14 }}>
-        <div style={{ flex:1, display:"flex", alignItems:"center", gap:10,
-          background:"#FFFFFF", border:`1px solid ${C.bd}`,
-          borderRadius:999, padding:"12px 16px" }}>
-          <I name="search" size={18} color="#98A2B3"/>
-          <input value={search} onChange={e => setSearch(e.target.value)}
-            placeholder="Rechercher"
-            style={{ background:"none", border:"none", outline:"none",
-              color:C.text, fontSize:15, fontWeight:500, fontFamily:FONT,
-              width:"100%" }}/>
-          {search && (
-            <button onClick={() => setSearch("")} style={{ background:"none",
-              border:"none", cursor:"pointer", padding:0 }}>
-              <I name="close" size={16} color={C.dim}/>
-            </button>
-          )}
+      {/* ── Recherche ── */}
+      <div style={{
+        position:"sticky", top:0, zIndex:10,
+        background:"rgba(246,247,249,0.92)", backdropFilter:"blur(14px)",
+        WebkitBackdropFilter:"blur(14px)",
+        borderBottom:"1px solid rgba(16,19,24,0.045)",
+        padding:"16px 20px 14px",
+      }}>
+        <div style={{ display:"flex", alignItems:"center", gap:12 }}>
+          <div style={{ flex:1, height:48, display:"flex", alignItems:"center", gap:11,
+            background:"#FFFFFF", border:"1px solid rgba(16,19,24,0.075)",
+            borderRadius:999, padding:"0 17px",
+            boxShadow:"0 2px 8px rgba(16,19,24,0.025)" }}>
+            <I name="search" size={19} color="#98A2B3"/>
+            <input value={search} onChange={e => setSearch(e.target.value)}
+              placeholder="Rechercher une recette, un ingrédient..."
+              style={{ background:"none", border:"none", outline:"none",
+                color:C.text, fontSize:15, fontWeight:500, fontFamily:FONT,
+                width:"100%" }}/>
+            {search && (
+              <button onClick={() => setSearch("")} aria-label="Effacer la recherche"
+                style={{ background:"none", border:"none", cursor:"pointer", padding:0 }}>
+                <I name="close" size={16} color={C.dim}/>
+              </button>
+            )}
+          </div>
+          <button onClick={() => setDrawerOpen(true)} className="tap"
+            aria-label="Ouvrir les filtres"
+            style={{ width:48, height:48, flex:"none", display:"grid", placeItems:"center",
+              background:"#FFFFFF", border:"1px solid rgba(16,19,24,0.075)",
+              borderRadius:16, cursor:"pointer",
+              boxShadow:"0 2px 8px rgba(16,19,24,0.025)", position:"relative" }}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+              stroke={filtres.length ? C.accent : "#667085"}
+              strokeWidth="2.1" strokeLinecap="round">
+              <path d="M4 6h16M7 12h10M10 18h4"/>
+            </svg>
+            {filtres.length > 0 && (
+              <div style={{ position:"absolute", top:3, right:3,
+                width:16, height:16, borderRadius:8, background:C.accent,
+                color:"#FFF", fontSize:9, fontWeight:700, display:"grid", placeItems:"center" }}>
+                {filtres.length}
+              </div>
+            )}
+          </button>
         </div>
-        {/* Bouton filtres */}
-        <button onClick={() => setDrawerOpen(true)} className="tap"
-          style={{ width:44, height:44, flex:"none", display:"grid",
-            placeItems:"center", background:"none", border:"none",
-            cursor:"pointer", position:"relative" }}>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-            stroke={filtres.length ? C.accent : C.dim}
-            strokeWidth="2.2" strokeLinecap="round">
-            <path d="M4 6h16M6 12h12M9 18h6"/>
-          </svg>
-          {filtres.length > 0 && (
-            <div style={{ position:"absolute", top:4, right:4,
-              width:16, height:16, borderRadius:8, background:C.accent,
-              color:"#FFF", fontSize:9, fontWeight:700, display:"grid",
-              placeItems:"center" }}>{filtres.length}</div>
-          )}
-        </button>
-
       </div>
 
       {/* ── Hero éditorial ── */}
       {showHome && heroRecipes.length > 0 && (
         <div>
-          <div style={{ padding:"20px 20px 0" }}>
-            <span style={{ fontSize:13, fontWeight:700, letterSpacing:".12em",
-              textTransform:"uppercase", color:C.mid, fontFamily:FONT }}>
+          <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between",
+            padding:"20px 20px 0" }}>
+            <span style={{ fontSize:14, fontWeight:750, letterSpacing:".13em",
+              textTransform:"uppercase", color:"#344054", fontFamily:FONT }}>
               Tout nouveau, tout chaud
             </span>
           </div>
           <div style={{ display:"flex", gap:14, overflowX:"auto",
-            padding:"14px 20px 2px", scrollbarWidth:"none",
+            padding:"14px 20px 0", scrollbarWidth:"none",
             WebkitOverflowScrolling:"touch" }}>
-            {heroRecipes.map(r => (
-              <HeroCard key={r.id} r={r} onOpen={openRecipe}/>
+            {heroRecipes.map((r, i) => (
+              <HeroCard key={r.id} r={r} index={i} onOpen={openRecipe}/>
+            ))}
+          </div>
+          <div style={{ display:"flex", justifyContent:"center", alignItems:"center",
+            gap:7, paddingTop:12 }}>
+            {heroRecipes.map((r, i) => (
+              <span key={r.id} style={{ width:i === 0 ? 16 : 7, height:7,
+                borderRadius:999, background:i === 0 ? C.accent : "#D9DEE8",
+                transition:"all .2s ease" }}/>
             ))}
           </div>
         </div>
       )}
 
-      {/* ── Sections par repas (rails) ── */}
+      {/* ── Sections par repas ── */}
       {sections.length === 0 ? (
-        <div style={{ textAlign:"center", padding:"48px 20px",
+        <div style={{ textAlign:"center", padding:"54px 20px",
           color:C.dim, fontSize:14, fontFamily:FONT, lineHeight:1.6 }}>
           {showFavs
             ?"Aucune recette en favori pour l'instant. Touche le cœur d'une recette pour l'ajouter."
@@ -299,10 +351,10 @@ export default function Recipes(props) {
       ) : (
         sections.map(sec => (
           <SectionRail key={sec.id} label={sec.label}
-            recettes={showHome ? sec.recettes.slice(0, 8) : sec.recettes}
+            recettes={showHome ? sec.recettes.slice(0, 2) : sec.recettes}
             liked={liked} onLike={toggleLike} onOpen={openRecipe}
             premium={premium}
-            onVoirTout={sec.recettes.length > 4
+            onVoirTout={sec.recettes.length > 2
               ? () => { setVoirTout(sec.id); window.scrollTo(0,0); }
               : null}/>
         ))
@@ -310,7 +362,7 @@ export default function Recipes(props) {
 
       {/* ── CTA Premium ── */}
       {!premium && (
-        <div style={{ margin:"32px 20px 0", display:"flex", flexDirection:"column",
+        <div style={{ margin:"36px 20px 0", display:"flex", flexDirection:"column",
           alignItems:"center", gap:16 }}>
           <span style={{ fontSize:21, fontWeight:800, letterSpacing:"-.02em",
             textAlign:"center", maxWidth:290, lineHeight:1.28, fontFamily:FONT,
