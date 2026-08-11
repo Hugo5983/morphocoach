@@ -70,7 +70,7 @@ const ITEMS = [
 
 export function BottomNav({ tab, setTab, theme = "light" }) {
   const dark = theme === "dark";
-  const navBg = dark ? "rgba(5,7,11,.96)" : "rgba(246,248,251,.97)";
+  const navBg = dark ? "rgba(11,14,18,.97)" : "rgba(246,248,251,.97)";
   const navDim = dark ? "rgba(246,247,249,.58)" : C.dim;
   return (
     <nav className="np" style={{
