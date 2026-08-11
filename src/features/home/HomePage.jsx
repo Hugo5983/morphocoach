@@ -8,7 +8,7 @@ import { getBadgeStates } from "../../services/badgeService.js";
 import { useOfferPhoto } from "./useOfferPhoto.js";
 import {
   HeroCard, NutritionCard, PacksCard,
-  BadgesCard, StreakCard, CoachIACard,
+  BadgesCard, StreakCard, CoachCard, CoachNutritionCard,
 } from "./components/HomeCards.jsx";
 
 // ─── OFFRE PRO (vue « Offre du moment ») ──────────────────────────────────────
@@ -277,7 +277,8 @@ export default function HomePage({
         <StreakCard streak={streak} inline />
         <BadgesCard badgeStates={badgeStates} onVoirTout={() => setShowBadges(true)} inline />
       </div>
-      <CoachIACard setTab={setTab} />
+      <CoachCard setTab={setTab} />
+      <CoachNutritionCard setTab={setTab} />
     </div>
   );
 }
