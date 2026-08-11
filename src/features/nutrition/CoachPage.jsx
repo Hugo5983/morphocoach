@@ -200,7 +200,7 @@ export default function CoachPage({
     <div onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd}
       style={{
         position:"relative",
-        background:"#05070B",
+        background:DARK.bgDeep,
         color:"#F6F7F9",
         display:"flex", flexDirection:"column",
         fontFamily: FONT,
@@ -216,7 +216,7 @@ export default function CoachPage({
           position:"relative", overflow:"hidden",
           border:"1px solid rgba(60,91,255,.75)",
           borderRadius:24,
-          background:"radial-gradient(circle at 82% 32%, rgba(42,82,255,.32), transparent 34%), linear-gradient(145deg,#0A0D14 0%,#070A10 58%,#05070B 100%)",
+          background:"radial-gradient(circle at 82% 32%, rgba(42,82,255,.32), transparent 34%), linear-gradient(145deg,#0A0D14 0%,#070A10 58%,#0B0E12 100%)",
           boxShadow:"0 0 34px rgba(60,91,255,.12), inset 0 0 40px rgba(60,91,255,.04)",
           minHeight: 320,
         }}>
@@ -389,7 +389,7 @@ export default function CoachPage({
 
       {/* INPUT */}
       <div style={{ padding:"10px 20px 12px", borderTop:"1px solid rgba(255,255,255,.08)",
-        display:"flex", gap:10, alignItems:"flex-end", flexShrink:0, background:"#05070B" }}>
+        display:"flex", gap:10, alignItems:"flex-end", flexShrink:0, background:DARK.bgDeep }}>
         <textarea ref={inputRef} value={input} onChange={e => setInput(e.target.value)} onKeyDown={handleKey}
           placeholder={canSend ? "Pose ta question au coach…" : "Limite atteinte ce mois-ci"}
           disabled={!canSend || loading} rows={1}
