@@ -66,6 +66,24 @@ function sessionTitle(session) {
   return firstDefined(session?.title, session?.nom, session?.name, session?.label, session?.muscle, null);
 }
 
+/**
+ * Découpe un titre de séance en {main, sub} pour un rendu premium :
+ *  · "Dos (Épaisseur prioritaire — séance…)" → main="Dos", sub="Épaisseur prioritaire — séance…"
+ *  · "Torse — force"                        → main="Torse", sub="force"
+ *  · "Push"                                 → main="Push", sub=null
+ * Le sous-titre est destiné à un rendu plus petit et estompé, tronqué visuellement à 2 lignes.
+ */
+function splitSessionTitle(raw) {
+  if (!raw || typeof raw !== "string") return { main: null, sub: null };
+  const trimmed = raw.trim();
+  const idx = trimmed.search(/[(—–\-·]/);
+  if (idx <= 0) return { main: trimmed, sub: null };
+  const main = trimmed.slice(0, idx).trim();
+  let sub = trimmed.slice(idx).replace(/^[\s(—–\-·]+/, "").replace(/\)\s*$/, "").trim();
+  if (!main) return { main: trimmed, sub: null };
+  return { main, sub: sub || null };
+}
+
 function sessionDuration(session) {
   const value = firstDefined(session?.duration, session?.duree, session?.minutes, session?.durationMin);
   return value ? `${Math.round(n(value, 60))} min` : "60 min";
@@ -97,7 +115,8 @@ function ProgressBar({ value, total, color = blue }) {
 export function HeroCard({ profil, prog, calObj, calSess, setTab }) {
   const session = getSession(calSess, prog);
   const hasProg = hasProgram(prog);
-  const title = sessionTitle(session);
+  const rawTitle = sessionTitle(session);
+  const { main: titleMain, sub: titleSub } = splitSessionTitle(rawTitle);
   const duration = sessionDuration(session);
   const count = sessionExerciseCount(session);
   const lastSession = firstDefined(calSess?.last?.label, calSess?.last?.name, calSess?.lastSession, "Vendredi · Dos");
@@ -106,7 +125,7 @@ export function HeroCard({ profil, prog, calObj, calSess, setTab }) {
   // Deux modes :
   //  · sessionMode = programme actif ET séance du jour → CTA "Commencer la séance"
   //  · setupMode   = pas de programme (ou aucune séance) → CTA "Créer ton programme"
-  const sessionMode = hasProg && title !== null;
+  const sessionMode = hasProg && titleMain !== null;
 
   return (
     <div style={{ padding: "22px 16px 0", fontFamily: FONT }}>
@@ -160,28 +179,53 @@ export function HeroCard({ profil, prog, calObj, calSess, setTab }) {
         }} />
         <div style={{
           position: "relative", minHeight: 292,
-          padding: "22px 20px 20px",
-          display: "flex", flexDirection: "column", justifyContent: "flex-end",
+          padding: "20px 20px 20px",
+          display: "flex", flexDirection: "column",
         }}>
+          {/* Label collé en haut de la carte */}
+          <div style={{
+            color: blue, fontSize: 12, fontWeight: 800,
+            letterSpacing: "0.09em",
+          }}>
+            {sessionMode ? "SÉANCE DU JOUR" : "PRÊT À COMMENCER"}
+          </div>
+
+          {/* Spacer poussant le contenu principal vers le bas */}
+          <div style={{ flex: 1 }} />
+
           {sessionMode ? (
             <>
+              {/* Titre principal (partie avant parenthèse/tiret) — 2 lignes max */}
               <div style={{
-                color: blue, fontSize: 12, fontWeight: 800,
-                letterSpacing: "0.09em", marginBottom: 8,
-              }}>SÉANCE DU JOUR</div>
-              <div style={{
-                color: "#fff", fontSize: 26, fontWeight: 850,
-                lineHeight: 1.05, letterSpacing: "-0.03em",
-              }}>{title}</div>
+                color: "#fff", fontSize: 28, fontWeight: 850,
+                lineHeight: 1.04, letterSpacing: "-0.035em",
+                display: "-webkit-box",
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: "vertical",
+                overflow: "hidden",
+                wordBreak: "break-word",
+              }}>{titleMain}</div>
+              {/* Sous-titre (contexte entre parenthèses) — plus petit, muted, 2 lignes max */}
+              {titleSub && (
+                <div style={{
+                  color: "rgba(255,255,255,0.66)",
+                  fontSize: 12.5, fontWeight: 600,
+                  lineHeight: 1.35, marginTop: 6,
+                  display: "-webkit-box",
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: "vertical",
+                  overflow: "hidden",
+                }}>{titleSub}</div>
+              )}
               <div style={{
                 color: "rgba(255,255,255,0.82)",
-                fontSize: 13.5, fontWeight: 600, marginTop: 7,
+                fontSize: 13, fontWeight: 600, marginTop: 8,
               }}>{duration} · {count} exercices</div>
               <button
                 onClick={() => setTab && setTab("program")}
                 className="tap"
                 style={{
-                  marginTop: 17, alignSelf: "stretch",
+                  marginTop: 16, alignSelf: "stretch",
                   border: "none", borderRadius: 14,
                   padding: "14px 17px",
                   background: blue, color: "#fff",
@@ -198,22 +242,18 @@ export function HeroCard({ profil, prog, calObj, calSess, setTab }) {
           ) : (
             <>
               <div style={{
-                color: blue, fontSize: 12, fontWeight: 800,
-                letterSpacing: "0.09em", marginBottom: 8,
-              }}>PRÊT À COMMENCER</div>
-              <div style={{
-                color: "#fff", fontSize: 26, fontWeight: 850,
-                lineHeight: 1.05, letterSpacing: "-0.03em",
+                color: "#fff", fontSize: 28, fontWeight: 850,
+                lineHeight: 1.04, letterSpacing: "-0.035em",
               }}>Crée ton programme</div>
               <div style={{
-                color: "rgba(255,255,255,0.82)",
-                fontSize: 13.5, fontWeight: 600, marginTop: 7,
+                color: "rgba(255,255,255,0.72)",
+                fontSize: 13, fontWeight: 600, marginTop: 7,
               }}>Sur-mesure, selon ta morphologie</div>
               <button
                 onClick={() => setTab && setTab("program")}
                 className="tap"
                 style={{
-                  marginTop: 17, alignSelf: "stretch",
+                  marginTop: 16, alignSelf: "stretch",
                   border: "none", borderRadius: 14,
                   padding: "14px 17px",
                   background: blue, color: "#fff",
@@ -323,75 +363,82 @@ export function NutritionCard({ calObj, pObj, gObj, lObj, totR, setTab, setPaywa
 }
 
 /**
- * Carte "Série actuelle" — plus de header uppercase "TA PROGRESSION",
- * titre direct + gros chiffre + 4 barres bleues en escalier.
+ * Carte "Série actuelle" — layout premium centré : anneau SVG cohérent
+ * avec la NutritionCard, chiffre au centre, message court en bas.
  * `inline` = utilisée dans une grille 2 colonnes → pas de margin extérieure.
  */
 export function StreakCard({ streak = 0, inline = false }) {
   const value = n(streak);
-  const bars = [0, 1, 2, 3];
+  const target = 7; // objectif visuel : série de 7 jours (badge Série 7 Jours)
   const isStarted = value > 0;
-  const message = isStarted ? "Continue comme ça" : "Commence ta série aujourd'hui";
+
+  const r = 40;
+  const circumference = 2 * Math.PI * r;
+  const progress = Math.min(value / target, 1);
+  const dash = circumference * progress;
 
   return (
     <section style={{
       ...card,
       margin: inline ? 0 : "14px 16px 0",
-      padding: "16px 16px 15px",
+      padding: "14px 14px 14px",
       fontFamily: FONT,
       overflow: "hidden",
       display: "flex", flexDirection: "column",
-      minHeight: inline ? 172 : undefined,
+      minHeight: inline ? 152 : undefined,
     }}>
+      {/* Header : titre + flamme alignés */}
       <div style={{
-        color: DARK.text, fontSize: 13.5, fontWeight: 800,
-        letterSpacing: "-0.005em",
-        display: "flex", alignItems: "center", gap: 5,
+        display: "flex", alignItems: "center", justifyContent: "space-between",
       }}>
-        Série actuelle <span style={{ fontSize: 15 }}>🔥</span>
+        <div style={{
+          color: DARK.text, fontSize: 13, fontWeight: 800,
+          letterSpacing: "-0.005em",
+        }}>Série actuelle</div>
+        <span style={{ fontSize: 14, lineHeight: 1 }} aria-hidden="true">🔥</span>
       </div>
 
+      {/* Anneau centré avec chiffre au centre */}
       <div style={{
-        display: "flex", alignItems: "flex-end", justifyContent: "space-between",
-        gap: 12, marginTop: 14, flex: 1,
+        flex: 1,
+        display: "flex", alignItems: "center", justifyContent: "center",
+        marginTop: 4,
       }}>
-        <div style={{ minWidth: 0, display: "flex", flexDirection: "column", gap: 8 }}>
-          <div style={{ display: "flex", alignItems: "baseline", gap: 7 }}>
-            <strong style={{
-              color: DARK.text, fontSize: 40, lineHeight: 1,
-              fontWeight: 850, letterSpacing: "-0.045em",
-            }}>{value}</strong>
-            <span style={{ color: muted, fontSize: 12, fontWeight: 600 }}>
-              jour{value > 1 ? "s" : ""}
-            </span>
-          </div>
+        <div style={{ position: "relative", width: 96, height: 96 }}>
+          <svg width="96" height="96" viewBox="0 0 96 96" style={{ transform: "rotate(-90deg)" }}>
+            <circle cx="48" cy="48" r={r} fill="none"
+              stroke="rgba(255,255,255,0.08)" strokeWidth="6.5" />
+            <circle cx="48" cy="48" r={r} fill="none"
+              stroke={blue} strokeWidth="6.5" strokeLinecap="round"
+              strokeDasharray={`${dash} ${circumference - dash}`}
+              style={{ filter: isStarted ? `drop-shadow(0 0 6px ${blue}55)` : "none" }} />
+          </svg>
           <div style={{
-            color: isStarted ? blue : muted,
-            fontSize: 11.5, fontWeight: 650, lineHeight: 1.3,
+            position: "absolute", inset: 0,
+            display: "flex", flexDirection: "column",
+            justifyContent: "center", alignItems: "center",
+            gap: 1,
           }}>
-            {message}
+            <strong style={{
+              color: DARK.text, fontSize: 30, lineHeight: 1,
+              fontWeight: 850, letterSpacing: "-0.04em",
+            }}>{value}</strong>
+            <span style={{
+              color: muted, fontSize: 10, fontWeight: 600,
+              letterSpacing: "0.02em",
+            }}>jour{value > 1 ? "s" : ""}</span>
           </div>
         </div>
+      </div>
 
-        <div style={{
-          display: "flex", alignItems: "flex-end", gap: 6,
-          paddingBottom: 2, flexShrink: 0,
-        }} aria-hidden="true">
-          {bars.map(i => {
-            const active = i < Math.min(value, bars.length);
-            return (
-              <div key={i} style={{
-                width: 11,
-                height: 20 + i * 11,
-                borderRadius: 7,
-                background: active
-                  ? `linear-gradient(180deg, ${blue}, ${blue}B8)`
-                  : "rgba(255,255,255,0.075)",
-                boxShadow: active ? `0 0 14px ${blue}30` : "none",
-              }} />
-            );
-          })}
-        </div>
+      {/* Message court centré */}
+      <div style={{
+        color: isStarted ? blue : muted,
+        fontSize: 10.5, fontWeight: 700,
+        textAlign: "center", marginTop: 6,
+        letterSpacing: "-0.005em",
+      }}>
+        {isStarted ? "Continue comme ça" : "Commence aujourd'hui"}
       </div>
     </section>
   );
@@ -427,32 +474,32 @@ export function BadgesCard({ badgeStates, onVoirTout, inline = false }) {
     <section style={{
       ...card,
       margin: inline ? 0 : "14px 16px 0",
-      padding: "16px 14px 14px",
+      padding: "14px 12px 12px",
       fontFamily: FONT,
       display: "flex", flexDirection: "column",
-      minHeight: inline ? 172 : undefined,
+      minHeight: inline ? 152 : undefined,
     }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <div style={{
-          color: DARK.text, fontSize: 13.5, fontWeight: 800,
+          color: DARK.text, fontSize: 13, fontWeight: 800,
           letterSpacing: "-0.005em",
         }}>Badges</div>
-        <span style={{ color: blue, fontSize: 12, fontWeight: 800 }}>
+        <span style={{ color: blue, fontSize: 11.5, fontWeight: 800 }}>
           {earned}/{total}
         </span>
       </div>
 
       <div style={{
         display: "grid", gridTemplateColumns: "repeat(4, 1fr)",
-        gap: 8, marginTop: 14, flex: 1, alignItems: "center",
+        gap: 6, marginTop: 10, flex: 1, alignItems: "center",
       }}>
         {four.map(b => (
           <div key={b.id} style={{
             display: "flex", flexDirection: "column",
-            alignItems: "center", gap: 4, minWidth: 0,
+            alignItems: "center", gap: 3, minWidth: 0,
           }}>
             <div style={{
-              width: 46, height: 46,
+              width: 42, height: 42,
               display: "grid", placeItems: "center",
               filter: b.unlocked ? `drop-shadow(0 0 8px ${blue}40)` : "none",
               opacity: b.unlocked ? 1 : 0.32,
@@ -468,7 +515,7 @@ export function BadgesCard({ badgeStates, onVoirTout, inline = false }) {
             </div>
             <div style={{
               color: b.unlocked ? DARK.text : muted,
-              fontSize: 8.5, fontWeight: 700,
+              fontSize: 8, fontWeight: 700,
               letterSpacing: "0.02em", textAlign: "center",
               lineHeight: 1.15,
               width: "100%",
@@ -482,10 +529,10 @@ export function BadgesCard({ badgeStates, onVoirTout, inline = false }) {
       </div>
 
       <button onClick={onVoirTout} style={{
-        marginTop: 10, alignSelf: "flex-end",
+        marginTop: 6, alignSelf: "flex-end",
         border: 0, background: "none",
         color: blue, fontFamily: FONT,
-        fontSize: 12, fontWeight: 750,
+        fontSize: 11.5, fontWeight: 750,
         cursor: "pointer", padding: 0,
       }}>
         Voir tout ›
@@ -494,19 +541,77 @@ export function BadgesCard({ badgeStates, onVoirTout, inline = false }) {
   );
 }
 
-export function CoachIACard({ setTab }) {
+/**
+ * Carte "Ton Coach" (entraînement) — grande carte immersive avec le robot
+ * MorphoCoach à droite. Route vers l'onglet Coach global (setTab("coach")).
+ */
+export function CoachCard({ setTab }) {
   return (
-    <div style={{ ...card, position: "relative", overflow: "hidden", margin: "14px 16px 32px", minHeight: 158, padding: "20px 180px 20px 18px", fontFamily: FONT }}>
-      <div style={{ color: blue, fontSize: 11, fontWeight: 800, letterSpacing: "0.10em" }}>TON COACH IA</div>
+    <div style={{
+      ...card,
+      position: "relative", overflow: "hidden",
+      margin: "14px 16px 0",
+      minHeight: 158,
+      padding: "20px 180px 20px 18px",
+      fontFamily: FONT,
+    }}>
+      <div style={{ color: blue, fontSize: 11, fontWeight: 800, letterSpacing: "0.10em" }}>TON COACH</div>
       <div style={{ color: DARK.text, fontSize: 24, lineHeight: 1.08, fontWeight: 850, letterSpacing: "-0.03em", marginTop: 7 }}>Un jour à la fois.</div>
       <div style={{ color: muted, fontSize: 13, lineHeight: 1.4, marginTop: 7 }}>Chaque séance compte,<br />même les plus courtes.</div>
       <button onClick={() => setTab?.("coach")} className="tap" style={{ marginTop: 13, border: `1px solid ${blue}`, borderRadius: 11, background: "rgba(60,91,255,0.08)", color: DARK.text, padding: "9px 12px", fontFamily: FONT, fontSize: 11.5, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 7 }}>
         <I name="coach" size={15} color={blue} /> Discuter avec le coach
       </button>
-      <img src={coachRobot} alt="Coach IA MorphoCoach" style={{ position: "absolute", width: 168, height: 168, objectFit: "contain", right: -4, bottom: -12, filter: "drop-shadow(0 0 24px rgba(60,91,255,0.34))" }} />
+      <img src={coachRobot} alt="Coach MorphoCoach" style={{ position: "absolute", width: 168, height: 168, objectFit: "contain", right: -4, bottom: -12, filter: "drop-shadow(0 0 24px rgba(60,91,255,0.34))" }} />
+    </div>
+  );
+}
+
+/**
+ * Carte "Coach Nutrition" — carte compacte accent vert, empilée sous CoachCard.
+ * Même destination (setTab("coach")) tant qu'il n'y a pas de routing dédié.
+ */
+export function CoachNutritionCard({ setTab }) {
+  return (
+    <div style={{
+      ...card,
+      position: "relative", overflow: "hidden",
+      margin: "12px 16px 32px",
+      padding: "18px 18px",
+      fontFamily: FONT,
+      border: `1px solid ${green}30`,
+      boxShadow: `0 10px 30px ${green}12, 0 12px 34px rgba(0,0,0,0.22)`,
+    }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 14 }}>
+        <div style={{ minWidth: 0, flex: 1 }}>
+          <div style={{ color: green, fontSize: 11, fontWeight: 800, letterSpacing: "0.10em" }}>COACH NUTRITION</div>
+          <div style={{ color: DARK.text, fontSize: 19, lineHeight: 1.15, fontWeight: 850, letterSpacing: "-0.025em", marginTop: 6 }}>Optimise tes repas.</div>
+          <div style={{ color: muted, fontSize: 12.5, lineHeight: 1.4, marginTop: 5 }}>Conseils personnalisés selon<br />tes objectifs.</div>
+        </div>
+        <div style={{
+          width: 62, height: 62, borderRadius: 18,
+          background: `${green}18`,
+          border: `1px solid ${green}35`,
+          display: "grid", placeItems: "center", flexShrink: 0,
+        }}>
+          <ID name="apple" size={30} dark tint={green} />
+        </div>
+      </div>
+      <button onClick={() => setTab?.("coach")} className="tap" style={{
+        marginTop: 13,
+        border: `1px solid ${green}`, borderRadius: 11,
+        background: `${green}12`,
+        color: DARK.text,
+        padding: "9px 12px",
+        fontFamily: FONT, fontSize: 11.5, fontWeight: 700,
+        cursor: "pointer",
+        display: "inline-flex", alignItems: "center", gap: 7,
+      }}>
+        <I name="coach" size={15} color={green} /> Discuter avec le coach
+      </button>
     </div>
   );
 }
 
 // Compatibilité avec les imports historiques.
+export function CoachIACard(props) { return <CoachCard {...props} />; }
 export function PacksCard() { return null; }
