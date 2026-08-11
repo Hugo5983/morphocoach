@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect, useRef, lazy, Suspense } from"react";
 import { scrollTop } from"./hooks/useScrollTop.js";
-import { C, OBJ, ACTIVITE_FACTOR, GLOBAL_CSS as CSS, INT } from"./data/constants.js";
+import { C, DARK, OBJ, ACTIVITE_FACTOR, GLOBAL_CSS as CSS, INT } from"./data/constants.js";
 import { FOODS } from"./data/foods.js";
 import { EX } from"./data/exercises.js";
 import { MOTIVATIONS } from"./data/motivations.js";
@@ -381,7 +381,17 @@ export default function App() {
 
   return (
     <AppContext.Provider value={contextValue}>
-      <Screen>
+      {(() => {
+        // ── Thème layout : SEULE la page « Offre du moment » (tab home,
+        // subView pro) déclenche le thème sombre premium sur Screen +
+        // Header + BottomNav. Toute autre vue reste en light comme avant.
+        const isPremiumOfferView = tab === "home" && subViewHome === "pro";
+        const layoutTheme = isPremiumOfferView ? "dark" : "light";
+        const screenStyle = layoutTheme === "dark"
+          ? { background: DARK.bgDeep, color: DARK.text }
+          : undefined;
+        return (
+      <Screen style={screenStyle}>
         <div onTouchStart={gTS} onTouchMove={gTM} onTouchEnd={gTE}
           style={{ ...globalSwipe, minHeight:"100vh" }}>
         <style>{CSS}</style>
@@ -402,6 +412,7 @@ export default function App() {
               tab={tab} setTab={setTab}
               subNav={nav?.items} subView={nav?.view} setSubView={nav?.set}
               setPaywall={setPaywall}
+              theme={layoutTheme}
             />
           );
         })()}
@@ -447,7 +458,7 @@ export default function App() {
         </div>
         {/* ── Fin zone swipable ── */}
 
-        <BottomNav tab={tab} setTab={setTab} />
+        <BottomNav tab={tab} setTab={setTab} theme={layoutTheme} />
 
         {/* ── Modal Level-Up Momentum XP ── */}
         <LevelUpModal
@@ -480,6 +491,8 @@ export default function App() {
           />
 )}
       </Screen>
+      );
+      })()}
     </AppContext.Provider>
 );
 }

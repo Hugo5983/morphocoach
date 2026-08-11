@@ -257,12 +257,13 @@ const DUO = {
     sw:'<path d="M10.3 6.9a2.1 2.1 0 0 1 2.4-.7"/>' },
 };
 
-export function ID({ name, size = 24, dark = false, style, ...rest }) {
+export function ID({ name, size = 24, dark = false, tint, style, ...rest }) {
   const d = DUO[name];
   if (!d) return null;
   const st = dark ? "#F6F7F9" : "#101318";
+  const fillColor = tint || "#3C5BFF";
   const html =
-    `<g fill="#3C5BFF" stroke="none">${d.fl || ""}</g>` +
+    `<g fill="${fillColor}" stroke="none">${d.fl || ""}</g>` +
     `<g fill="none" stroke="${st}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${d.s || ""}</g>` +
     `<g fill="none" stroke="${st}" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round">${d.sx || ""}</g>` +
     `<g fill="none" stroke="#FFFFFF" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round">${d.sw || ""}</g>` +

@@ -4,11 +4,11 @@
 // droite · sous-onglets soulignés SUR LA MÊME SURFACE BLANCHE. La séparation
 // avec le contenu se fait par le changement de fond (blanc → gris), zéro trait.
 // ═══════════════════════════════════════════════════════════════════════════
-import { C, FONT } from"../../data/constants.js";
+import { C, DARK, FONT } from"../../data/constants.js";
 import { useState, useEffect } from"react";
 import { getXPState, getLevelInfo } from"../../services/xpService.js";
 
-export function Header({ premium, cycleStart, jR, tab, setTab, subNav, subView, setSubView, setPaywall }) {
+export function Header({ premium, cycleStart, jR, tab, setTab, subNav, subView, setSubView, setPaywall, theme = "light" }) {
   const [xpState, setXpState] = useState(() => getXPState());
   useEffect(() => {
     const handler = () => setXpState(getXPState());
@@ -17,9 +17,37 @@ export function Header({ premium, cycleStart, jR, tab, setTab, subNav, subView, 
   }, []);
   const info = getLevelInfo(xpState.xp || 0);
 
+  // ── Pack de couleurs selon le thème ──
+  // theme="light" (défaut) → aucun changement vs version historique.
+  // theme="dark" → surface sombre premium, utilisée uniquement par la page
+  // « Offre du moment » (contexte scopé côté App.jsx). Aucun autre écran
+  // ne passe theme="dark" tant qu'App.jsx ne le décide pas.
+  const isDark = theme === "dark";
+  const T = isDark ? {
+    bg:          DARK.bgDeep,
+    text:        DARK.text,
+    dim:         DARK.dim,
+    dimStrong:   DARK.dimStrong,
+    surface:     DARK.surfaceHi,
+    progressBg:  "rgba(255,255,255,0.10)",
+    proBg:       "rgba(60,91,255,0.22)",
+    proText:     DARK.accent,       // #9DB0FF, lisible sur sombre
+    profileMid:  DARK.dimStrong,
+  } : {
+    bg:          "#FFFFFF",
+    text:        C.text,
+    dim:         C.dim,
+    dimStrong:   C.mid,
+    surface:     C.s2,
+    progressBg:  "#E2E6EE",
+    proBg:       "rgba(60,91,255,0.12)",
+    proText:     C.accentDk,
+    profileMid:  C.mid,
+  };
+
   return (
     <div className="np" style={{
-      background:"#FFFFFF",
+      background: T.bg,
       paddingTop:"calc(8px + env(safe-area-inset-top, 0px))",
       position:"sticky", top: 0, zIndex: 100,
     }}>
@@ -40,7 +68,7 @@ export function Header({ premium, cycleStart, jR, tab, setTab, subNav, subView, 
             </svg>
           </div>
           <span style={{ fontSize:16, fontWeight:700, letterSpacing:"-.02em",
-            fontFamily:FONT, color:C.text, whiteSpace:"nowrap" }}>
+            fontFamily:FONT, color:T.text, whiteSpace:"nowrap" }}>
             Morpho<span style={{ color: C.accent }}>Coach</span>
           </span>
         </div>
@@ -54,14 +82,14 @@ export function Header({ premium, cycleStart, jR, tab, setTab, subNav, subView, 
           )}
           <div onClick={() => setTab?.("profile")} className="tap-sm" style={{
             display:"flex", alignItems:"center", gap:6, cursor:"pointer",
-            background: C.s2, borderRadius:10, padding:"7px 11px 7px 10px",
+            background: T.surface, borderRadius:10, padding:"7px 11px 7px 10px",
           }}>
-            <span style={{ fontSize:12, fontWeight:700, color:C.text,
+            <span style={{ fontSize:12, fontWeight:700, color:T.text,
               fontFamily:FONT, fontVariantNumeric:"tabular-nums" }}>
               {info.cur.level}
             </span>
             <span style={{ width:50, height:6, borderRadius:99,
-              background:"#E2E6EE", position:"relative",
+              background:T.progressBg, position:"relative",
               display:"inline-block", overflow:"hidden" }}>
               <span style={{ position:"absolute", inset:0, width:`${info.pct}%`,
                 background: C.accent, borderRadius:99,
@@ -71,8 +99,8 @@ export function Header({ premium, cycleStart, jR, tab, setTab, subNav, subView, 
           {premium && (
             <div style={{
               padding:"7px 11px", borderRadius:10,
-              background:"rgba(60,91,255,0.12)",
-              fontSize:11, color:C.accentDk, fontWeight:700,
+              background:T.proBg,
+              fontSize:11, color:T.proText, fontWeight:700,
               letterSpacing:".03em", fontFamily:FONT,
             }}>PRO</div>
           )}
@@ -81,10 +109,10 @@ export function Header({ premium, cycleStart, jR, tab, setTab, subNav, subView, 
             className="tap-icon"
             style={{
               width:34, height:34, borderRadius:10,
-              background: tab ==="profile" ?"rgba(60,91,255,0.12)" : C.s2,
+              background: tab ==="profile" ?"rgba(60,91,255,0.18)" : T.surface,
               display:"grid", placeItems:"center",
               cursor:"pointer", flexShrink: 0, border:"none",
-              color: tab ==="profile" ? C.accent : C.mid,
+              color: tab ==="profile" ? (isDark ? DARK.accent : C.accent) : T.profileMid,
             }}
           >
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none"
@@ -122,7 +150,7 @@ export function Header({ premium, cycleStart, jR, tab, setTab, subNav, subView, 
                 <span style={{
                   fontSize: compact ? 12.5 : 14, fontFamily:FONT,
                   fontWeight: on ? 700 : 600,
-                  color: on ? C.text : C.dim,
+                  color: on ? T.text : T.dim,
                   display:"flex", alignItems:"center", justifyContent:"center", gap:4,
                   textAlign:"center", lineHeight:1.2,
                   whiteSpace: compact ?"normal" :"nowrap",
@@ -130,7 +158,7 @@ export function Header({ premium, cycleStart, jR, tab, setTab, subNav, subView, 
                   {item.label}
                   {item.pro && (
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
-                      stroke={on ? C.accent : C.dim} strokeWidth="2.2"
+                      stroke={on ? C.accent : T.dim} strokeWidth="2.2"
                       strokeLinecap="round" strokeLinejoin="round"
                       style={{ flexShrink:0, pointerEvents:"none" }}>
                       <rect x="3" y="11" width="18" height="11" rx="2"/>
