@@ -1,9 +1,9 @@
-import { C, DARK, FONT } from"../../data/constants.js";
+import { C, FONT } from"../../data/constants.js";
 
 
 // Icônes 2 états : contour fin au repos → version pleine sur l'onglet actif.
-function NavIcon({ name, active, dim }) {
-  const col = active ? C.accent : dim;
+function NavIcon({ name, active, dark = false }) {
+  const col = active ? C.accent : (dark ? "rgba(246,247,249,.58)" : C.dim);
   const base = { width:22, height:22, viewBox:"0 0 24 24" };
   const line = { fill:"none", stroke:col, strokeWidth:1.8, strokeLinecap:"round", strokeLinejoin:"round" };
 
@@ -69,31 +69,16 @@ const ITEMS = [
 ];
 
 export function BottomNav({ tab, setTab, theme = "light" }) {
-  // theme="light" (défaut) → aucun changement vs version historique.
-  // theme="dark" → nav sombre premium pour la page « Offre du moment »,
-  // scopée depuis App.jsx. Tout autre écran continue à passer "light".
-  const isDark = theme === "dark";
-  const T = isDark ? {
-    bg:        "rgba(11,14,18,0.94)",
-    border:    "rgba(255,255,255,0.08)",
-    shadow:    "0 -8px 24px rgba(0,0,0,0.35)",
-    dim:       DARK.dim,
-    safeArea:  "rgba(11,14,18,0.94)",
-  } : {
-    bg:        "rgba(246,248,251,0.97)",
-    border:    "rgba(0,0,0,0.08)",
-    shadow:    C.shadow,
-    dim:       C.dim,
-    safeArea:  "rgba(246,248,251,0.97)",
-  };
-
+  const dark = theme === "dark";
+  const navBg = dark ? "rgba(5,7,11,.96)" : "rgba(246,248,251,.97)";
+  const navDim = dark ? "rgba(246,247,249,.58)" : C.dim;
   return (
     <nav className="np" style={{
       position:"fixed", bottom:0, left:0, right:0,
-      background:T.bg,
+      background:navBg,
       backdropFilter:"blur(24px)", WebkitBackdropFilter:"blur(24px)",
-      borderTop:`1px solid ${T.border}`,
-      boxShadow: T.shadow,
+      borderTop:`1px solid ${dark ? "rgba(255,255,255,.08)" : "rgba(0,0,0,0.08)"}`,
+      boxShadow: C.shadow,
       display:"flex", flexDirection:"column",
       zIndex:100,
     }}>
@@ -107,11 +92,11 @@ export function BottomNav({ tab, setTab, theme = "light" }) {
             flex:1, padding:"4px 2px", background:"transparent", border:"none", cursor:"pointer",
             display:"flex", flexDirection:"column", alignItems:"center", gap:4, fontFamily:FONT,
           }}>
-            <NavIcon name={t.icon} active={on} dim={T.dim}/>
+            <NavIcon name={t.icon} active={on} dark={dark}/>
             <span style={{
               fontSize:10, letterSpacing:0.2,
               fontWeight: on ? 600 : 400,
-              color: on ? C.accent : T.dim,
+              color: on ? C.accent : navDim,
               transition:"color .15s",
             }}>{t.l}</span>
             <div style={{
@@ -127,7 +112,7 @@ export function BottomNav({ tab, setTab, theme = "light" }) {
       {/* Zone safe-area réduite — colle la nav au plus bas sans passer sous la barre home */}
       <div style={{
         height:"max(4px, calc(env(safe-area-inset-bottom, 0px) - 12px))",
-        background:T.safeArea,
+        background:navBg,
       }}/>
     </nav>
 );
