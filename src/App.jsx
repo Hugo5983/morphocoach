@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect, useRef, lazy, Suspense } from"react";
 import { scrollTop } from"./hooks/useScrollTop.js";
-import { C, DARK, OBJ, ACTIVITE_FACTOR, GLOBAL_CSS as CSS, INT } from"./data/constants.js";
+import { C, OBJ, ACTIVITE_FACTOR, GLOBAL_CSS as CSS, INT } from"./data/constants.js";
 import { FOODS } from"./data/foods.js";
 import { EX } from"./data/exercises.js";
 import { MOTIVATIONS } from"./data/motivations.js";
@@ -381,17 +381,7 @@ export default function App() {
 
   return (
     <AppContext.Provider value={contextValue}>
-      {(() => {
-        // ── Thème layout : SEULE la page « Offre du moment » (tab home,
-        // subView pro) déclenche le thème sombre premium sur Screen +
-        // Header + BottomNav. Toute autre vue reste en light comme avant.
-        const isPremiumOfferView = tab === "home" && subViewHome === "pro";
-        const layoutTheme = isPremiumOfferView ? "dark" : "light";
-        const screenStyle = layoutTheme === "dark"
-          ? { background: DARK.bgDeep, color: DARK.text }
-          : undefined;
-        return (
-      <Screen style={screenStyle}>
+      <Screen style={tab === "coach" ? { background:"#05070B", color:"#F6F7F9" } : undefined}>
         <div onTouchStart={gTS} onTouchMove={gTM} onTouchEnd={gTE}
           style={{ ...globalSwipe, minHeight:"100vh" }}>
         <style>{CSS}</style>
@@ -406,6 +396,7 @@ export default function App() {
             coach:     { items:[{id:"journal",label:"Journal"},{id:"coach",label:"Coach"},{id:"dashboard",label:"Bilan Pro",pro:true},{id:"bilan",label:"Analyse",pro:true}], view:"coach", set:(v)=>{ if(v==="coach"){} else{setTab("nutrition");setSubViewNutrition(v);} } },
           };
           const nav = NAVS[tab];
+          const layoutTheme = tab === "coach" ? "dark" : "light";
           return (
             <Header
               premium={premium} cycleStart={cycleStart} jR={jR}
@@ -423,7 +414,7 @@ export default function App() {
           </Suspense>
 )}
 
-        <PageContainer>
+        <PageContainer style={tab === "coach" ? { background:"#05070B", color:"#F6F7F9" } : undefined}>
           <div className="page-enter">
             {tab ==="home" && <Home {...homeProps} />}
             {tab !=="home" && (
@@ -458,7 +449,7 @@ export default function App() {
         </div>
         {/* ── Fin zone swipable ── */}
 
-        <BottomNav tab={tab} setTab={setTab} theme={layoutTheme} />
+        <BottomNav tab={tab} setTab={setTab} theme={tab === "coach" ? "dark" : "light"} />
 
         {/* ── Modal Level-Up Momentum XP ── */}
         <LevelUpModal
@@ -491,8 +482,6 @@ export default function App() {
           />
 )}
       </Screen>
-      );
-      })()}
     </AppContext.Provider>
 );
 }
