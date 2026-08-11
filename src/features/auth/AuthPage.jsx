@@ -121,7 +121,7 @@ export default function AuthPage() {
             inset: 0,
             width: "100%",
             height: "100%",
-            objectFit: "contain",
+            objectFit: "cover",
             objectPosition: "center center",
             display: "block",
             filter: "saturate(.82) contrast(1.05)",
@@ -133,7 +133,7 @@ export default function AuthPage() {
             position: "absolute",
             inset: 0,
             background:
-              "linear-gradient(180deg, rgba(2,6,17,.16) 0%, rgba(2,6,17,.04) 36%, rgba(2,6,17,.48) 100%)",
+              "linear-gradient(180deg, rgba(2,6,17,.10) 0%, rgba(2,6,17,.02) 38%, rgba(2,6,17,.42) 100%)",
           }}
         />
       </div>
@@ -146,7 +146,7 @@ export default function AuthPage() {
           inset: 0,
           zIndex: 1,
           background:
-            "linear-gradient(180deg, rgba(3,7,15,.18) 0%, rgba(3,7,15,.30) 25%, rgba(3,7,15,.58) 48%, #05080F 72%, #05080F 100%)",
+            "linear-gradient(180deg, rgba(3,7,15,.10) 0%, rgba(3,7,15,.18) 25%, rgba(3,7,15,.38) 48%, rgba(5,8,15,.86) 76%, #05080F 100%)",
         }}
       />
       <div
@@ -201,16 +201,37 @@ export default function AuthPage() {
         {/* Branding : volontairement très peu de texte. */}
         <section
           style={{
+            position: "absolute",
+            top: "28.5%",
+            left: 0,
+            right: 0,
             textAlign: "center",
-            marginTop: isSignup || isForgot ? 12 : "clamp(28px, 8vh, 110px)",
-            marginBottom: 34,
+            margin: 0,
+            pointerEvents: "none",
           }}
         >
           <BrandMark />
-          <div style={{ marginTop: 12, fontSize: 27, fontWeight: 850, letterSpacing: "-.045em" }}>
+          <div style={{
+            marginTop: 12,
+            fontFamily: '"Arial Narrow", "Roboto Condensed", "Helvetica Neue", Arial, sans-serif',
+            fontSize: "clamp(30px, 5.8vw, 54px)",
+            lineHeight: .95,
+            fontWeight: 900,
+            fontStyle: "italic",
+            letterSpacing: "-.065em",
+            transform: "skewX(-4deg)",
+            textShadow: "0 3px 20px rgba(0,0,0,.38)",
+          }}>
             MORPHO<span style={{ color: BLUE }}>COACH</span>
           </div>
-          <div style={{ marginTop: 6, fontSize: 9.5, letterSpacing: ".28em", color: FAINT, fontWeight: 600 }}>
+          <div style={{
+            marginTop: 8,
+            fontSize: "clamp(8px, 1.8vw, 12px)",
+            letterSpacing: ".34em",
+            color: "rgba(247,248,252,.55)",
+            fontWeight: 700,
+            marginLeft: ".34em",
+          }}>
             BUILT FOR PROGRESS.
           </div>
         </section>
@@ -218,13 +239,14 @@ export default function AuthPage() {
         <section
           style={{
             width: "100%",
-            maxWidth: 460,
+            maxWidth: 650,
+            width: "76%",
             margin: "0 auto",
             flex: isSignup || isForgot ? 0 : 1,
             display: "flex",
             flexDirection: "column",
             justifyContent: isSignup || isForgot ? "flex-start" : "flex-end",
-            paddingBottom: isSignup || isForgot ? 8 : 18,
+            paddingBottom: isSignup || isForgot ? 8 : 28,
           }}
         >
           {isForgot && (
@@ -360,10 +382,10 @@ function Field({ label, value, onChange, type, placeholder, autoComplete, requir
           required={required}
           style={{
             width: "100%",
-            height: 56,
+            height: 58,
             borderRadius: 16,
-            border: `1px solid rgba(255,255,255,.14)`,
-            background: "rgba(7,11,20,.52)",
+            border: `1px solid rgba(255,255,255,.15)`,
+            background: "rgba(7,11,20,.42)",
             backdropFilter: "blur(18px)",
             WebkitBackdropFilter: "blur(18px)",
             padding: isPassword ? "0 50px 0 52px" : "0 16px 0 52px",
@@ -444,9 +466,21 @@ function Message({ tone, children }) {
 
 function BrandMark() {
   return (
-    <div style={{ width: 54, height: 54, margin: "0 auto", filter: "drop-shadow(0 8px 20px rgba(60,91,255,.35))" }}>
-      <svg viewBox="0 0 54 54" width="54" height="54" fill="none">
-        <path d="M14 43V11l8 7v25M40 43V11l-8 7v25M22 18l5 5 5-5" stroke={BLUE} strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
+    <div style={{
+      width: "clamp(72px, 15vw, 108px)",
+      height: "clamp(72px, 15vw, 108px)",
+      margin: "0 auto",
+      filter: "drop-shadow(0 10px 28px rgba(60,91,255,.40))",
+    }}>
+      <svg viewBox="0 0 108 108" width="100%" height="100%" fill="none" aria-hidden="true">
+        <path
+          d="M28 82V25l26 24 26-24v57"
+          stroke={BLUE}
+          strokeWidth="7"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <path d="M41 82V38M67 82V38" stroke={BLUE_DARK} strokeWidth="5.5" strokeLinecap="round"/>
       </svg>
     </div>
   );
