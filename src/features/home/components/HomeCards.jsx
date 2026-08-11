@@ -168,8 +168,8 @@ export function HeroCard({ profil, prog, calObj, calSess, setTab }) {
         }}>
           {/* Label collé en haut de la carte */}
           <div style={{
-            color: blue, fontSize: 12, fontWeight: 800,
-            letterSpacing: "0.09em",
+            color: blue, fontSize: 16, fontWeight: 800,
+            letterSpacing: "0.08em",
           }}>
             {sessionMode ? "SÉANCE DU JOUR" : "PRÊT À COMMENCER"}
           </div>
@@ -201,9 +201,10 @@ export function HeroCard({ profil, prog, calObj, calSess, setTab }) {
                   overflow: "hidden",
                 }}>{titleSub}</div>
               )}
-              {/* Spacer intermédiaire : remonte titre+sous-titre et laisse
-                  respirer la ligne durée + le CTA en bas */}
-              <div style={{ flex: 0.55 }} />
+              {/* Spacer intermédiaire : le titre+sous-titre sont plus bas
+                  qu'en V5, plus près de la ligne durée pour équilibrer avec
+                  le label plus imposant en haut */}
+              <div style={{ flex: 0.28 }} />
               <div style={{
                 color: "rgba(255,255,255,0.82)",
                 fontSize: 13, fontWeight: 600,
