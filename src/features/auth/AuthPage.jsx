@@ -1,294 +1,457 @@
 // ═══════════════════════════════════════════════════════════════════════════
-// AUTH PAGE — écran de connexion / inscription (thème « Précision »).
-// Affiché uniquement quand personne n'est connecté (voir App.jsx).
+// AUTH PAGE — connexion / inscription.
+// Refonte visuelle uniquement : la logique Supabase et les actions d'auth
+// restent identiques. Direction : premium fitness, noir profond + bleu.
 // ═══════════════════════════════════════════════════════════════════════════
-import { useState } from"react";
-import { C, FONT } from"../../data/constants.js";
-import { useAuth } from"../../hooks/useAuth.js";
-import { I } from"../../components/ui/Icon.jsx";
+import { useState } from "react";
+import { FONT } from "../../data/constants.js";
+import { useAuth } from "../../hooks/useAuth.js";
+
+const BLUE = "#3C5BFF";
+const BLUE_DARK = "#2848E8";
+const BG = "#05080F";
+const TEXT = "#F7F8FC";
+const MUTED = "rgba(247,248,252,.62)";
+const FAINT = "rgba(247,248,252,.42)";
+const BORDER = "rgba(255,255,255,.12)";
+const GLASS = "rgba(5,8,15,.62)";
+
+// Référence Pexels choisie pour la direction artistique.
+// Le fallback local permet de garder l'écran visuel même hors connexion.
+const PEXELS_BACKGROUND =
+  "https://images.pexels.com/photos/30370272/pexels-photo-30370272.jpeg?auto=compress&cs=tinysrgb&w=1600";
+const FALLBACK_BACKGROUND = "/auth-athlete-fallback.jpg";
 
 export default function AuthPage() {
   const { signUp, signIn, resetPassword, signInWithOAuth } = useAuth();
-  const [mode, setMode] = useState("signin"); //"signin" |"signup" |"forgot"
+  const [mode, setMode] = useState("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [error, setError] = useState("");
   const [info, setInfo] = useState("");
   const [busy, setBusy] = useState(false);
-  const [oauthBusy, setOauthBusy] = useState(null); // "google" |"apple" |"facebook" | null
+  const [oauthBusy, setOauthBusy] = useState(null);
+  const [bgFailed, setBgFailed] = useState(false);
 
-  const isSignup = mode ==="signup";
-  const isForgot = mode ==="forgot";
+  const isSignup = mode === "signup";
+  const isForgot = mode === "forgot";
 
   async function handleSubmit(e) {
     e.preventDefault();
-    setError(""); setInfo(""); setBusy(true);
+    setError("");
+    setInfo("");
+    setBusy(true);
     try {
       if (isForgot) {
         const { error } = await resetPassword(email.trim());
-        if (error) { setError(traduireErreur(error.message)); setBusy(false); return; }
-        setInfo("Email envoyé ! Suis le lien reçu pour choisir un nouveau mot de passe.");
-        setBusy(false); return;
+        if (error) {
+          setError(traduireErreur(error.message));
+          return;
+        }
+        setInfo("Email envoyé. Suis le lien reçu pour choisir un nouveau mot de passe.");
+        return;
       }
+
       if (isSignup) {
         if (password.length < 6) {
           setError("Le mot de passe doit faire au moins 6 caractères.");
-          setBusy(false); return;
+          return;
         }
         const { error } = await signUp(email.trim(), password, fullName.trim());
-        if (error) { setError(traduireErreur(error.message)); setBusy(false); return; }
-        setInfo("Compte créé ! Vérifie tes emails pour confirmer ton adresse, puis connecte-toi.");
+        if (error) {
+          setError(traduireErreur(error.message));
+          return;
+        }
+        setInfo("Compte créé ! Vérifie tes emails pour confirmer ton adresse.");
         setMode("signin");
-      } else {
-        const { error } = await signIn(email.trim(), password);
-        if (error) { setError(traduireErreur(error.message)); setBusy(false); return; }
-        // Succès : useAuth détecte la session, App.jsx bascule automatiquement.
+        return;
       }
+
+      const { error } = await signIn(email.trim(), password);
+      if (error) setError(traduireErreur(error.message));
     } finally {
       setBusy(false);
     }
   }
 
   async function handleOAuth(provider) {
-    setError(""); setOauthBusy(provider);
+    setError("");
+    setOauthBusy(provider);
     const { error } = await signInWithOAuth(provider);
-    if (error) { setError(traduireErreur(error.message)); setOauthBusy(null); }
-    // en cas de succès, redirection gérée par Supabase — pas de reset local nécessaire.
+    if (error) {
+      setError(traduireErreur(error.message));
+      setOauthBusy(null);
+    }
   }
 
-  const title = isForgot ?"Mot de passe oublié" : isSignup ?"Créer un compte" :"Se connecter";
-  const canGoBack = isSignup || isForgot;
+  const go = (nextMode) => {
+    setMode(nextMode);
+    setError("");
+    setInfo("");
+  };
 
   return (
-    <div style={{
-      minHeight:"100vh", background: C.bg, fontFamily: FONT,
-      display:"flex", flexDirection:"column",
-    }}>
-      {/* ── Header : retour + titre ── */}
-      <div style={{ display:"flex", alignItems:"center", gap:14,
-        padding:"20px 20px 8px" }}>
-        {canGoBack ? (
-          <button onClick={() => { setMode("signin"); setError(""); setInfo(""); }}
-            aria-label="Retour" className="tap" style={{
-              width:40, height:40, borderRadius:"50%", flexShrink:0,
-              background:C.s1, border:`1px solid ${C.bd}`,
-              display:"grid", placeItems:"center", cursor:"pointer" }}>
-            <I name="chevronLeft" size={20} color={C.text}/>
-          </button>
-        ) : (
-          <div style={{ width:40, height:40, flexShrink:0 }}/>
-        )}
-        <span style={{ flex:1, textAlign:"center", marginRight:40,
-          fontSize:19, fontWeight:700, letterSpacing:"-.01em",
-          color:C.text, fontFamily:FONT }}>{title}</span>
-      </div>
+    <div
+      style={{
+        minHeight: "100dvh",
+        background: BG,
+        color: TEXT,
+        fontFamily: FONT,
+        position: "relative",
+        overflow: "hidden",
+        boxSizing: "border-box",
+      }}
+    >
+      {/* Photo plein écran — discrète et sombre pour conserver la lisibilité. */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "fixed",
+          inset: 0,
+          zIndex: 0,
+          backgroundImage: `url(${bgFailed ? FALLBACK_BACKGROUND : PEXELS_BACKGROUND})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center top",
+          filter: "saturate(.72) contrast(1.08)",
+          transform: "scale(1.02)",
+        }}
+      />
 
-      <div style={{ flex:1, display:"flex", flexDirection:"column",
-        justifyContent:"center", padding:"12px 20px 24px",
-        boxSizing:"border-box" }}>
+      {/* Traitement cinématique : bleu froid en haut, noir vers le formulaire. */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "fixed",
+          inset: 0,
+          zIndex: 1,
+          background:
+            "linear-gradient(180deg, rgba(3,7,15,.18) 0%, rgba(3,7,15,.30) 25%, rgba(3,7,15,.58) 48%, #05080F 72%, #05080F 100%)",
+        }}
+      />
+      <div
+        aria-hidden="true"
+        style={{
+          position: "fixed",
+          inset: 0,
+          zIndex: 1,
+          background:
+            "radial-gradient(circle at 50% 30%, rgba(60,91,255,.16), transparent 36%), linear-gradient(90deg, rgba(3,7,15,.46), transparent 38%, rgba(3,7,15,.36))",
+          pointerEvents: "none",
+        }}
+      />
 
-        {/* ── Logo (uniquement à la connexion) ── */}
-        {!canGoBack && (
-          <div style={{ textAlign:"center", marginBottom:28 }}>
-            <div style={{
-              width:56, height:56, borderRadius:16, margin:"0 auto 14px",
-              background:"linear-gradient(135deg, #2E48D9, #3C5BFF)",
-              display:"grid", placeItems:"center",
-              boxShadow:"0 8px 24px rgba(60,91,255,0.28)",
-            }}>
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FFF" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M5 8v8M9 5v14M15 5v14M19 8v8M9 12h6"/>
-              </svg>
-            </div>
-            <div style={{ fontSize:13, color:C.dim, fontWeight:500 }}>
-              Content de te revoir
-            </div>
+      {/* Détection de panne de la source Pexels sans modifier la logique auth. */}
+      {!bgFailed && (
+        <img
+          src={PEXELS_BACKGROUND}
+          alt=""
+          aria-hidden="true"
+          onError={() => setBgFailed(true)}
+          style={{ position: "fixed", width: 1, height: 1, opacity: 0, pointerEvents: "none" }}
+        />
+      )}
+
+      <main
+        style={{
+          position: "relative",
+          zIndex: 2,
+          minHeight: "100dvh",
+          display: "flex",
+          flexDirection: "column",
+          boxSizing: "border-box",
+          padding: "max(18px, env(safe-area-inset-top)) 22px max(22px, env(safe-area-inset-bottom))",
+        }}
+      >
+        {/* Petit retour uniquement pour inscription / récupération. */}
+        <div style={{ minHeight: 46, display: "flex", alignItems: "center" }}>
+          {(isSignup || isForgot) && (
+            <button
+              type="button"
+              onClick={() => go("signin")}
+              aria-label="Retour"
+              className="tap"
+              style={{
+                width: 42,
+                height: 42,
+                borderRadius: 14,
+                border: `1px solid ${BORDER}`,
+                background: "rgba(7,11,19,.52)",
+                color: TEXT,
+                display: "grid",
+                placeItems: "center",
+                cursor: "pointer",
+                backdropFilter: "blur(14px)",
+              }}
+            >
+              <ArrowLeft />
+            </button>
+          )}
+        </div>
+
+        {/* Branding : volontairement très peu de texte. */}
+        <section
+          style={{
+            textAlign: "center",
+            marginTop: isSignup || isForgot ? 12 : "clamp(12px, 5vh, 70px)",
+            marginBottom: 24,
+          }}
+        >
+          <BrandMark />
+          <div style={{ marginTop: 12, fontSize: 25, fontWeight: 800, letterSpacing: "-.045em" }}>
+            MORPHO<span style={{ color: BLUE }}>COACH</span>
           </div>
-        )}
-
-        {isForgot && (
-          <div style={{ fontSize:13.5, color:C.dim, fontWeight:500,
-            lineHeight:1.5, marginBottom:20 }}>
-            Indique ton email — on t'envoie un lien pour choisir un nouveau mot de passe.
+          <div style={{ marginTop: 6, fontSize: 9.5, letterSpacing: ".30em", color: FAINT, fontWeight: 600 }}>
+            BUILT FOR PROGRESS.
           </div>
-        )}
+        </section>
 
-        {/* ── Formulaire ── */}
-        <form onSubmit={handleSubmit} style={{
-          display:"flex", flexDirection:"column", gap:18,
-        }}>
+        <section
+          style={{
+            width: "100%",
+            maxWidth: 430,
+            margin: "0 auto",
+            flex: isSignup || isForgot ? 0 : 1,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: isSignup || isForgot ? "flex-start" : "flex-end",
+            paddingBottom: isSignup || isForgot ? 8 : 4,
+          }}
+        >
+          {isForgot && (
+            <div style={{ marginBottom: 18 }}>
+              <div style={{ fontSize: 25, fontWeight: 750, letterSpacing: "-.035em" }}>
+                Réinitialiser
+              </div>
+              <div style={{ marginTop: 7, fontSize: 13.5, color: MUTED, lineHeight: 1.5 }}>
+                Entre ton email pour recevoir ton lien.
+              </div>
+            </div>
+          )}
+
           {isSignup && (
-            <Field label="Nom" value={fullName} onChange={setFullName} type="text"
-                   placeholder="Ton prénom" autoComplete="name" required />
+            <div style={{ marginBottom: 18 }}>
+              <div style={{ fontSize: 25, fontWeight: 750, letterSpacing: "-.035em" }}>
+                Crée ton compte
+              </div>
+              <div style={{ marginTop: 7, fontSize: 13.5, color: MUTED }}>
+                Ton parcours commence maintenant.
+              </div>
+            </div>
           )}
-          <Field label="Adresse e-mail" value={email} onChange={setEmail} type="email"
-                 placeholder="toi@exemple.com" autoComplete="email" required />
+
+          <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            {isSignup && (
+              <Field label="Prénom" value={fullName} onChange={setFullName} type="text" placeholder="Ton prénom" autoComplete="name" icon={<UserIcon />} />
+            )}
+            <Field label="Email" value={email} onChange={setEmail} type="email" placeholder="ton@email.com" autoComplete="email" required icon={<MailIcon />} />
+            {!isForgot && (
+              <Field label="Mot de passe" value={password} onChange={setPassword} type="password" placeholder="••••••••" autoComplete={isSignup ? "new-password" : "current-password"} required icon={<LockIcon />} />
+            )}
+
+            {error && <Message tone="error">{error}</Message>}
+            {info && <Message tone="info">{info}</Message>}
+
+            {mode === "signin" && (
+              <div style={{ textAlign: "right", marginTop: -2 }}>
+                <button type="button" onClick={() => go("forgot")} style={linkButtonStyle}>
+                  Mot de passe oublié ?
+                </button>
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={busy}
+              className="tap"
+              style={{
+                height: 54,
+                border: 0,
+                borderRadius: 16,
+                marginTop: 4,
+                background: busy ? "#26304E" : `linear-gradient(135deg, ${BLUE}, ${BLUE_DARK})`,
+                color: "#FFF",
+                fontFamily: FONT,
+                fontSize: 15,
+                fontWeight: 750,
+                letterSpacing: ".015em",
+                cursor: busy ? "default" : "pointer",
+                boxShadow: busy ? "none" : "0 10px 32px rgba(60,91,255,.30)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 12,
+              }}
+            >
+              {busy ? "..." : isForgot ? "Envoyer le lien" : isSignup ? "Créer mon compte" : "Se connecter"}
+              {!busy && <ArrowRight />}
+            </button>
+          </form>
+
           {!isForgot && (
-            <Field label="Mot de passe" value={password} onChange={setPassword} type="password"
-                   placeholder="••••••••" autoComplete={isSignup ?"new-password" :"current-password"} required />
+            <>
+              <div style={{ display: "flex", alignItems: "center", gap: 12, margin: "22px 0 12px" }}>
+                <div style={{ flex: 1, height: 1, background: BORDER }} />
+                <span style={{ fontSize: 10.5, letterSpacing: ".12em", color: FAINT, fontWeight: 700 }}>OU</span>
+                <div style={{ flex: 1, height: 1, background: BORDER }} />
+              </div>
+
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                <SocialButton provider="apple" label="Apple" busy={oauthBusy === "apple"} disabled={!!oauthBusy} onClick={() => handleOAuth("apple")} icon={<AppleMark />} />
+                <SocialButton provider="google" label="Google" busy={oauthBusy === "google"} disabled={!!oauthBusy} onClick={() => handleOAuth("google")} icon={<GoogleMark />} />
+              </div>
+            </>
           )}
 
-          {error && (
-            <div style={{
-              fontSize:12.5, fontWeight:600, color:C.red,
-              background:"rgba(229,72,77,0.08)", border:"1px solid rgba(229,72,77,0.25)",
-              borderRadius:12, padding:"10px 12px",
-            }}>{error}</div>
-          )}
-          {info && (
-            <div style={{
-              fontSize:12.5, fontWeight:600, color:C.green,
-              background:"rgba(18,183,106,0.08)", border:"1px solid rgba(18,183,106,0.25)",
-              borderRadius:12, padding:"10px 12px",
-            }}>{info}</div>
-          )}
-
-          <button type="submit" disabled={busy} className="tap" style={{
-            height:52, borderRadius:14, border:"none", marginTop:2,
-            background: busy ? C.s3 : C.accent,
-            color:"#FFF", fontSize:15, fontWeight:700, fontFamily:FONT,
-            cursor: busy ?"default" :"pointer",
-            boxShadow: busy ?"none" :"0 8px 20px rgba(60,91,255,0.28)",
-          }}>
-            {busy ?"..." : isForgot ?"Envoyer le lien" : isSignup ?"Créer mon compte" :"Se connecter"}
-          </button>
-        </form>
-
-        {!isSignup && !isForgot && (
-          <button onClick={() => { setMode("forgot"); setError(""); setInfo(""); }}
-            style={{ marginTop:18, background:"none", border:"none", cursor:"pointer",
-              alignSelf:"center", fontSize:14, fontWeight:600, color:C.accent,
-              fontFamily:FONT }}>
-            Mot de passe oublié ?
-          </button>
-        )}
-
-        {/* ── Séparateur + boutons sociaux (hors mode "mot de passe oublié") ── */}
-        {!isForgot && (
-          <>
-            <div style={{ display:"flex", alignItems:"center", gap:14,
-              margin:"28px 0 20px" }}>
-              <div style={{ flex:1, height:1, background:C.bd }}/>
-              <span style={{ fontSize:12, fontWeight:700, letterSpacing:".08em",
-                color:C.dim, fontFamily:FONT }}>OU</span>
-              <div style={{ flex:1, height:1, background:C.bd }}/>
-            </div>
-
-            <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
-              <SocialButton provider="google" label="Continuer avec Google"
-                busy={oauthBusy==="google"} disabled={!!oauthBusy}
-                onClick={() => handleOAuth("google")}
-                icon={<GoogleMark/>}/>
-              <SocialButton provider="apple" label="Continuer avec Apple"
-                busy={oauthBusy==="apple"} disabled={!!oauthBusy}
-                onClick={() => handleOAuth("apple")}
-                icon={<AppleMark/>}/>
-              <SocialButton provider="facebook" label="Continuer avec Facebook"
-                busy={oauthBusy==="facebook"} disabled={!!oauthBusy}
-                onClick={() => handleOAuth("facebook")}
-                icon={<FacebookMark/>}/>
-            </div>
-          </>
-        )}
-
-        {!canGoBack ? (
-          <button
-            onClick={() => { setMode("signup"); setError(""); setInfo(""); }}
-            style={{
-              marginTop:24, background:"none", border:"none", cursor:"pointer",
-              alignSelf:"center", fontSize:13.5, fontWeight:600, color:C.dim, fontFamily:FONT,
-            }}
-          >
-            Pas encore de compte ?{" "}
-            <span style={{ color:C.accent }}>Créer un compte</span>
-          </button>
-        ) : (
-          <div style={{ marginTop:24, textAlign:"center", fontSize:12,
-            color:C.dim, fontWeight:500, lineHeight:1.5 }}>
-            Nous ne publierons jamais rien sans votre autorisation.
+          <div style={{ textAlign: "center", marginTop: 18, paddingBottom: 4, fontSize: 13, color: MUTED }}>
+            {isSignup ? (
+              <>
+                Déjà un compte ?{" "}
+                <button type="button" onClick={() => go("signin")} style={linkButtonStyle}>Se connecter</button>
+              </>
+            ) : isForgot ? (
+              <button type="button" onClick={() => go("signin")} style={linkButtonStyle}>Retour à la connexion</button>
+            ) : (
+              <>
+                Pas encore de compte ?{" "}
+                <button type="button" onClick={() => go("signup")} style={linkButtonStyle}>Créer un compte</button>
+              </>
+            )}
           </div>
-        )}
-      </div>
+        </section>
+      </main>
     </div>
   );
 }
 
-function Field({ label, value, onChange, type, placeholder, autoComplete, required }) {
+function Field({ label, value, onChange, type, placeholder, autoComplete, required, icon }) {
   return (
-    <label style={{ display:"flex", flexDirection:"column", gap:8 }}>
-      <span style={{ fontSize:13, fontWeight:600, color:C.mid, fontFamily:FONT }}>
-        {label}
-      </span>
-      <input
-        type={type} value={value} onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder} autoComplete={autoComplete} required={required}
-        style={{
-          height:52, borderRadius:14, border:`1px solid ${C.bd}`,
-          background:C.s1, padding:"0 16px", fontSize:15, fontFamily:FONT,
-          color:C.text, outline:"none", boxSizing:"border-box",
-        }}
-      />
+    <label style={{ display: "flex", flexDirection: "column", gap: 7 }}>
+      <span style={{ fontSize: 11.5, fontWeight: 650, color: MUTED, paddingLeft: 2 }}>{label}</span>
+      <div style={{ position: "relative" }}>
+        <span style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", color: "rgba(255,255,255,.55)", display: "grid", placeItems: "center", pointerEvents: "none" }}>
+          {icon}
+        </span>
+        <input
+          type={type}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder={placeholder}
+          autoComplete={autoComplete}
+          required={required}
+          style={{
+            width: "100%",
+            height: 52,
+            borderRadius: 15,
+            border: `1px solid ${BORDER}`,
+            background: GLASS,
+            backdropFilter: "blur(18px)",
+            padding: "0 16px 0 48px",
+            fontSize: 14.5,
+            fontFamily: FONT,
+            color: TEXT,
+            outline: "none",
+            boxSizing: "border-box",
+            boxShadow: "inset 0 1px 0 rgba(255,255,255,.025)",
+          }}
+        />
+      </div>
     </label>
   );
 }
 
 function SocialButton({ label, icon, busy, disabled, onClick }) {
   return (
-    <button onClick={onClick} disabled={disabled} className="tap" style={{
-      height:52, borderRadius:14, border:`1px solid ${C.bd}`,
-      background:"#FFFFFF", display:"flex", alignItems:"center",
-      justifyContent:"center", gap:10, cursor: disabled ?"default" :"pointer",
-      opacity: disabled && !busy ? 0.5 : 1,
-      fontSize:14.5, fontWeight:700, color:C.text, fontFamily:FONT,
+    <button type="button" onClick={onClick} disabled={disabled} className="tap" style={{
+      height: 50,
+      borderRadius: 15,
+      border: `1px solid ${BORDER}`,
+      background: "rgba(7,11,19,.56)",
+      backdropFilter: "blur(16px)",
+      color: TEXT,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: 9,
+      cursor: disabled ? "default" : "pointer",
+      opacity: disabled && !busy ? .45 : 1,
+      fontSize: 13.5,
+      fontWeight: 650,
+      fontFamily: FONT,
     }}>
-      {busy ? <Spinner/> : icon}
-      <span>{busy ?"Connexion..." : label}</span>
+      {busy ? <Spinner /> : icon}
+      <span>{busy ? "..." : label}</span>
     </button>
   );
 }
 
+function Message({ tone, children }) {
+  const good = tone === "info";
+  return (
+    <div style={{
+      fontSize: 12,
+      lineHeight: 1.45,
+      color: good ? "#70E3B0" : "#FF9A9D",
+      background: good ? "rgba(18,183,106,.09)" : "rgba(229,72,77,.09)",
+      border: `1px solid ${good ? "rgba(18,183,106,.22)" : "rgba(229,72,77,.22)"}`,
+      borderRadius: 13,
+      padding: "10px 12px",
+    }}>{children}</div>
+  );
+}
+
+function BrandMark() {
+  return (
+    <div style={{ width: 54, height: 54, margin: "0 auto", filter: "drop-shadow(0 8px 20px rgba(60,91,255,.35))" }}>
+      <svg viewBox="0 0 54 54" width="54" height="54" fill="none">
+        <path d="M14 43V11l8 7v25M40 43V11l-8 7v25M22 18l5 5 5-5" stroke={BLUE} strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
+      </svg>
+    </div>
+  );
+}
+
+function ArrowRight() {
+  return <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h13"/><path d="m13 6 6 6-6 6"/></svg>;
+}
+function ArrowLeft() {
+  return <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5"/><path d="m11 18-6-6 6-6"/></svg>;
+}
+function MailIcon() {
+  return <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>;
+}
+function LockIcon() {
+  return <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>;
+}
+function UserIcon() {
+  return <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c.8-3.5 3.3-5.3 7-5.3s6.2 1.8 7 5.3"/></svg>;
+}
 function Spinner() {
-  return (
-    <div style={{ width:18, height:18, borderRadius:"50%",
-      border:`2px solid ${C.bd}`, borderTopColor:C.accent,
-      animation:"spin .7s linear infinite" }}/>
-  );
+  return <div style={{ width: 16, height: 16, borderRadius: "50%", border: "2px solid rgba(255,255,255,.25)", borderTopColor: "#fff", animation: "spin .7s linear infinite" }} />;
 }
-
 function GoogleMark() {
-  return (
-    <svg width="19" height="19" viewBox="0 0 48 48">
-      <path fill="#4285F4" d="M45.1 24.5c0-1.6-.14-3.13-.4-4.6H24v9.02h11.85c-.51 2.75-2.06 5.08-4.4 6.64v5.52h7.11c4.16-3.83 6.54-9.47 6.54-16.58Z"/>
-      <path fill="#34A853" d="M24 46c5.94 0 10.92-1.97 14.56-5.32l-7.11-5.52c-1.97 1.32-4.5 2.1-7.45 2.1-5.73 0-10.58-3.87-12.31-9.07H4.34v5.7C7.96 41.07 15.4 46 24 46Z"/>
-      <path fill="#FBBC05" d="M11.69 28.19A13.87 13.87 0 0 1 10.95 24c0-1.46.25-2.87.74-4.19v-5.7H4.34A21.93 21.93 0 0 0 2 24c0 3.55.85 6.9 2.34 9.89l7.35-5.7Z"/>
-      <path fill="#EA4335" d="M24 10.75c3.23 0 6.13 1.11 8.41 3.29l6.31-6.31C34.9 4.18 29.93 2 24 2 15.4 2 7.96 6.93 4.34 14.11l7.35 5.7c1.73-5.2 6.58-9.06 12.31-9.06Z"/>
-    </svg>
-  );
+  return <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#4285F4" d="M45.1 24.5c0-1.6-.14-3.13-.4-4.6H24v9.02h11.85c-.51 2.75-2.06 5.08-4.4 6.64v5.52h7.11c4.16-3.83 6.54-9.47 6.54-16.58Z"/><path fill="#34A853" d="M24 46c5.94 0 10.92-1.97 14.56-5.32l-7.11-5.52c-1.97 1.32-4.5 2.1-7.45 2.1-5.73 0-10.58-3.87-12.31-9.07H4.34v5.7C7.96 41.07 15.4 46 24 46Z"/><path fill="#FBBC05" d="M11.69 28.19A13.87 13.87 0 0 1 10.95 24c0-1.46.25-2.87.74-4.19v-5.7H4.34A21.93 21.93 0 0 0 2 24c0 3.55.85 6.9 2.34 9.89l7.35-5.7Z"/><path fill="#EA4335" d="M24 10.75c3.23 0 6.13 1.11 8.41 3.29l6.31-6.31C34.9 4.18 29.93 2 24 2 15.4 2 7.96 6.93 4.34 14.11l7.35 5.7c1.73-5.2 6.58-9.06 12.31-9.06Z"/></svg>;
 }
-
 function AppleMark() {
-  return (
-    <svg width="17" height="20" viewBox="0 0 17 20" fill="#101318">
-      <path d="M14.03 10.62c-.02-2.15 1.76-3.18 1.84-3.23-1-1.47-2.57-1.67-3.13-1.69-1.33-.14-2.6.78-3.28.78-.68 0-1.72-.76-2.82-.74-1.45.02-2.79.85-3.54 2.15-1.51 2.62-.39 6.5 1.09 8.63.72 1.04 1.58 2.2 2.71 2.16 1.09-.04 1.5-.7 2.82-.7 1.31 0 1.69.7 2.84.68 1.18-.02 1.92-1.06 2.63-2.11.83-1.21 1.17-2.38 1.19-2.44-.03-.01-2.28-.88-2.35-3.49ZM11.87 4.14c.59-.72.99-1.71.88-2.7-.85.03-1.88.57-2.49 1.28-.55.63-1.03 1.65-.9 2.62.94.07 1.91-.48 2.51-1.2Z"/>
-    </svg>
-  );
+  return <svg width="17" height="20" viewBox="0 0 17 20" fill="#FFF"><path d="M14.03 10.62c-.02-2.15 1.76-3.18 1.84-3.23-1-1.47-2.57-1.67-3.13-1.69-1.33-.14-2.6.78-3.28.78-.68 0-1.72-.76-2.82-.74-1.45.02-2.79.85-3.54 2.15-1.51 2.62-.39 6.5 1.09 8.63.72 1.04 1.58 2.2 2.71 2.16 1.09-.04 1.5-.7 2.82-.7 1.31 0 1.69.7 2.84.68 1.18-.02 1.92-1.06 2.63-2.11.83-1.21 1.17-2.38 1.19-2.44-.03-.01-2.28-.88-2.35-3.49ZM11.87 4.14c.59-.72.99-1.71.88-2.7-.85.03-1.88.57-2.49 1.28-.55.63-1.03 1.65-.9 2.62.94.07 1.91-.48 2.51-1.2Z"/></svg>;
 }
 
-function FacebookMark() {
-  return (
-    <svg width="19" height="19" viewBox="0 0 24 24">
-      <path fill="#1877F2" d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.97h-1.51c-1.49 0-1.95.93-1.95 1.89v2.25h3.32l-.53 3.49h-2.79V24C19.61 23.1 24 18.1 24 12.07Z"/>
-    </svg>
-  );
-}
+const linkButtonStyle = {
+  background: "none",
+  border: 0,
+  padding: 0,
+  color: "#6F8AFF",
+  fontFamily: FONT,
+  fontSize: 13,
+  fontWeight: 650,
+  cursor: "pointer",
+};
 
-// Messages Supabase traduits en français simple pour l'utilisateur
 function traduireErreur(msg) {
-  if (msg.includes("Invalid login credentials")) return"Email ou mot de passe incorrect.";
-  if (msg.includes("User already registered")) return"Un compte existe déjà avec cet email.";
-  if (msg.includes("Email not confirmed")) return"Confirme ton email avant de te connecter (regarde tes spams).";
-  if (msg.includes("Password should be")) return"Le mot de passe doit faire au moins 6 caractères.";
-  if (msg.includes("provider is not enabled") || msg.includes("Unsupported provider")) return"Cette méthode de connexion n'est pas encore activée.";
-  return"Une erreur est survenue. Réessaie dans un instant.";
+  if (msg.includes("Invalid login credentials")) return "Email ou mot de passe incorrect.";
+  if (msg.includes("User already registered")) return "Un compte existe déjà avec cet email.";
+  if (msg.includes("Email not confirmed")) return "Confirme ton email avant de te connecter (regarde tes spams).";
+  if (msg.includes("Password should be")) return "Le mot de passe doit faire au moins 6 caractères.";
+  if (msg.includes("provider is not enabled") || msg.includes("Unsupported provider")) return "Cette méthode de connexion n'est pas encore activée.";
+  return "Une erreur est survenue. Réessaie dans un instant.";
 }
+
