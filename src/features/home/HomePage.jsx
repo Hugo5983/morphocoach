@@ -46,6 +46,25 @@ function OfferCard({
   const cardBorder = accent + "40";  // 25 %
   const cardGlow   = accent + "1A";  // 10 %
 
+  // ── Layout responsive ────────────────────────────────────────────────────
+  // La carte est structurée en 2 rangées Flex, jamais en position absolute
+  // pour la photo, afin de garantir que le texte a une largeur déterministe
+  // (58 % du parent) totalement disjointe de la zone photo (42 %). Ainsi les
+  // sous-titres longs comme « Compensation des asymétries & déséquilibres »
+  // wrappent naturellement dans leur slot sans jamais déborder sous la photo.
+  //
+  //   ┌────────────────────────────────────────────┐
+  //   │  [icône] Titre                             │
+  //   │  Sous-titre         ┌────── photo ──────┐  │
+  //   │  ─────────          │  (background +    │  │
+  //   │  [icône] Feature 1  │   mask dégradé    │  │
+  //   │  [icône] Feature 2  │   vers la gauche) │  │
+  //   │  [icône] Feature 3  │                   │  │
+  //   │  [icône] Feature 4  └───────────────────┘  │
+  //   ├────────────────────────────────────────────┤
+  //   │  [ Gérer mon abonnement → ]  ← full width  │
+  //   └────────────────────────────────────────────┘
+
   return (
     <div style={{
       position: "relative",
@@ -56,100 +75,115 @@ function OfferCard({
       boxShadow: `0 0 0 1px ${accent}14, 0 12px 40px ${cardGlow}`,
       isolation: "isolate",
     }}>
-      {/* ── Photo immersive à droite ── */}
-      <div style={{
-        position: "absolute",
-        top: 0, right: 0, bottom: 0,
-        width: "48%",
-        backgroundImage: photo.src ? `url(${photo.src})` : "none",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundColor: DARK.bgDeep,   // placeholder tant que le workflow n'a pas tourné
-        zIndex: 0,
-      }} aria-label={photo.alt || undefined} />
+      {/* ── Rangée 1 : contenu texte + slot photo, côte à côte ── */}
+      <div style={{ display: "flex", alignItems: "stretch" }}>
 
-      {/* ── Masque dégradé gauche→droite pour lisibilité du texte ── */}
-      <div style={{
-        position: "absolute",
-        top: 0, left: 0, bottom: 0,
-        right: 0,
-        background: `linear-gradient(to right, ${DARK.surface} 0%, ${DARK.surface} 42%, ${DARK.surface}CC 55%, transparent 82%)`,
-        zIndex: 1,
-        pointerEvents: "none",
-      }} />
-
-      {/* ── Contenu ── */}
-      <div style={{
-        position: "relative",
-        zIndex: 2,
-        padding: "22px 20px 20px",
-        display: "flex",
-        flexDirection: "column",
-        gap: 20,
-      }}>
-        {/* Header : icône + titre + sous-titre */}
-        <div style={{ display: "flex", alignItems: "flex-start", gap: 12, paddingRight: "44%" }}>
-          <div style={{
-            width: 46, height: 46, borderRadius: 12,
-            background: tileBg,
-            border: `1px solid ${tileBorder}`,
-            display: "grid", placeItems: "center", flexShrink: 0,
-          }}>
-            <ID name={iconMain} size={24} dark tint={accent} />
-          </div>
-          <div style={{ minWidth: 0 }}>
-            <div style={{
-              fontSize: 22, fontWeight: 800, lineHeight: 1.1,
-              fontFamily: FONT, color: DARK.text,
-              letterSpacing: "-0.01em",
-            }}>
-              {title}{" "}
-              <span style={{ color: accent }}>Pro</span>
-            </div>
-            <div style={{
-              marginTop: 6,
-              fontSize: 13, fontWeight: 500, lineHeight: 1.35,
-              color: DARK.dimStrong, fontFamily: FONT,
-            }}>
-              {subtitle}
-            </div>
-          </div>
-        </div>
-
-        {/* Features (colonne) */}
+        {/* Slot texte — largeur déterministe 58 %, minWidth 0 pour permettre au wrap */}
         <div style={{
-          display: "flex", flexDirection: "column", gap: 14,
-          paddingRight: "44%",
+          flex: "1 1 58%",
+          minWidth: 0,
+          padding: "22px 12px 16px 20px",
+          display: "flex",
+          flexDirection: "column",
+          gap: 18,
+          position: "relative",
+          zIndex: 2,
         }}>
-          {features.map((f) => (
-            <div key={f.title} style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
+          {/* Header : icône + titre + sous-titre */}
+          <div style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
+            <div style={{
+              width: 46, height: 46, borderRadius: 12,
+              background: tileBg,
+              border: `1px solid ${tileBorder}`,
+              display: "grid", placeItems: "center", flexShrink: 0,
+            }}>
+              <ID name={iconMain} size={24} dark tint={accent} />
+            </div>
+            <div style={{ minWidth: 0, flex: 1 }}>
               <div style={{
-                width: 34, height: 34, borderRadius: 10,
-                background: tileBg,
-                border: `1px solid ${tileBorder}`,
-                display: "grid", placeItems: "center", flexShrink: 0,
+                fontSize: 22, fontWeight: 800, lineHeight: 1.1,
+                fontFamily: FONT, color: DARK.text,
+                letterSpacing: "-0.01em",
+                overflowWrap: "break-word",
               }}>
-                <ID name={f.icon} size={19} dark tint={accent} />
+                {title}{" "}
+                <span style={{ color: accent }}>Pro</span>
               </div>
-              <div style={{ minWidth: 0, flex: 1 }}>
-                <div style={{
-                  fontSize: 13.5, fontWeight: 700, color: DARK.text,
-                  fontFamily: FONT, lineHeight: 1.2,
-                }}>
-                  {f.title}
-                </div>
-                <div style={{
-                  fontSize: 11.5, color: DARK.dim, fontWeight: 500,
-                  marginTop: 3, lineHeight: 1.4, fontFamily: FONT,
-                }}>
-                  {f.sub}
-                </div>
+              <div style={{
+                marginTop: 6,
+                fontSize: 13, fontWeight: 500, lineHeight: 1.35,
+                color: DARK.dimStrong, fontFamily: FONT,
+                overflowWrap: "break-word",
+              }}>
+                {subtitle}
               </div>
             </div>
-          ))}
+          </div>
+
+          {/* Features (colonne) */}
+          <div style={{
+            display: "flex", flexDirection: "column", gap: 14,
+          }}>
+            {features.map((f) => (
+              <div key={f.title} style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
+                <div style={{
+                  width: 34, height: 34, borderRadius: 10,
+                  background: tileBg,
+                  border: `1px solid ${tileBorder}`,
+                  display: "grid", placeItems: "center", flexShrink: 0,
+                }}>
+                  <ID name={f.icon} size={19} dark tint={accent} />
+                </div>
+                <div style={{ minWidth: 0, flex: 1 }}>
+                  <div style={{
+                    fontSize: 13.5, fontWeight: 700, color: DARK.text,
+                    fontFamily: FONT, lineHeight: 1.2,
+                    overflowWrap: "break-word",
+                  }}>
+                    {f.title}
+                  </div>
+                  <div style={{
+                    fontSize: 11.5, color: DARK.dim, fontWeight: 500,
+                    marginTop: 3, lineHeight: 1.4, fontFamily: FONT,
+                    overflowWrap: "break-word",
+                  }}>
+                    {f.sub}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
-        {/* CTA plein */}
+        {/* Slot photo — largeur 42 %, image en background avec mask dégradé
+            vers la gauche pour une transition douce avec le texte */}
+        <div style={{
+          flex: "0 0 42%",
+          position: "relative",
+          backgroundImage: photo.src ? `url(${photo.src})` : "none",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundColor: DARK.bgDeep,   // placeholder si le workflow n'a pas tourné
+        }} aria-label={photo.alt || undefined}>
+          {/* Mask dégradé — assombrit la lisière gauche de la photo pour
+              qu'elle se fonde dans le texte, sans jamais couvrir le contenu */}
+          <div style={{
+            position: "absolute",
+            top: 0, left: 0, bottom: 0,
+            width: "45%",
+            background: `linear-gradient(to right, ${DARK.surface} 0%, ${DARK.surface}CC 40%, transparent 100%)`,
+            pointerEvents: "none",
+          }} />
+        </div>
+      </div>
+
+      {/* ── Rangée 2 : CTA full-width, séparé de la photo ── */}
+      <div style={{
+        padding: "8px 20px 20px",
+        position: "relative",
+        zIndex: 3,
+        background: DARK.surface,
+      }}>
         <button onClick={onUnlock} className="tap" style={{
           width: "100%",
           padding: "15px 16px",

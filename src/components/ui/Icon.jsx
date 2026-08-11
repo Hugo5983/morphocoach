@@ -255,6 +255,13 @@ const DUO = {
   userDuo:{ fl:'<circle cx="12" cy="8" r="3.6"/>',
     s:'<circle cx="12" cy="8" r="3.6"/><path d="M5 20c.8-3.6 3.6-5.4 7-5.4s6.2 1.8 7 5.4"/>',
     sw:'<path d="M10.3 6.9a2.1 2.1 0 0 1 2.4-.7"/>' },
+  // Haltère bicolore : ajouté pour la carte « Exercices correctifs » de la
+  // page Offre du moment (ID retournait null car dumbbell n'existait qu'en
+  // mono dans P). Format duo identique aux autres : 4 rectangles remplis
+  // pour les poids + une barre horizontale claire au centre.
+  dumbbell:{ fl:'<rect x="2.6" y="9.2" width="3.4" height="5.6" rx="1.1"/><rect x="6" y="7" width="3.4" height="10" rx="1.2"/><rect x="14.6" y="7" width="3.4" height="10" rx="1.2"/><rect x="18" y="9.2" width="3.4" height="5.6" rx="1.1"/>',
+    s:'<rect x="2.6" y="9.2" width="3.4" height="5.6" rx="1.1"/><rect x="6" y="7" width="3.4" height="10" rx="1.2"/><rect x="14.6" y="7" width="3.4" height="10" rx="1.2"/><rect x="18" y="9.2" width="3.4" height="5.6" rx="1.1"/>',
+    sw:'<path d="M9.4 12h5.2"/>' },
 };
 
 export function ID({ name, size = 24, dark = false, tint, style, ...rest }) {
