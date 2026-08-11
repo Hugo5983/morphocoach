@@ -59,11 +59,11 @@ function getSession(calSess, prog) {
     if (raw?.[k]) return raw[k];
   }
   if (Array.isArray(raw)) return raw[0] || null;
-  return raw?.session || raw?.current || raw?.seance || raw?.[0] || null;
+  return raw?.session || raw?.current || raw?.seance || null;
 }
 
 function sessionTitle(session) {
-  return firstDefined(session?.title, session?.nom, session?.name, session?.label, session?.muscle, "Torse");
+  return firstDefined(session?.title, session?.nom, session?.name, session?.label, session?.muscle, null);
 }
 
 function sessionDuration(session) {
@@ -77,6 +77,15 @@ function sessionExerciseCount(session) {
   return n(session?.exerciseCount || session?.nbExercices, 5);
 }
 
+/** Vrai quand l'utilisateur n'a pas encore de programme actif. */
+function hasProgram(prog) {
+  if (!prog) return false;
+  if (Array.isArray(prog?.jours) && prog.jours.length > 0) return true;
+  if (Array.isArray(prog?.seances) && prog.seances.length > 0) return true;
+  if (Array.isArray(prog) && prog.length > 0) return true;
+  return Boolean(prog?.id || prog?.title || prog?.nom);
+}
+
 function ProgressBar({ value, total, color = blue }) {
   return (
     <div style={{ height: 6, borderRadius: 999, background: "rgba(255,255,255,0.08)", overflow: "hidden" }}>
@@ -87,53 +96,164 @@ function ProgressBar({ value, total, color = blue }) {
 
 export function HeroCard({ profil, prog, calObj, calSess, setTab }) {
   const session = getSession(calSess, prog);
+  const hasProg = hasProgram(prog);
   const title = sessionTitle(session);
   const duration = sessionDuration(session);
   const count = sessionExerciseCount(session);
-  const lastSession = firstDefined(calSess?.last?.label, calSess?.last?.name, calSess?.lastSession, "Vendredi – Dos");
+  const lastSession = firstDefined(calSess?.last?.label, calSess?.last?.name, calSess?.lastSession, "Vendredi · Dos");
   const prenom = firstDefined(profil?.prenom, prog?.prenom, "Hugo");
 
+  // Deux modes :
+  //  · sessionMode = programme actif ET séance du jour → CTA "Commencer la séance"
+  //  · setupMode   = pas de programme (ou aucune séance) → CTA "Créer ton programme"
+  const sessionMode = hasProg && title !== null;
+
   return (
-    <div style={{ padding: "20px 16px 0", fontFamily: FONT }}>
-      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 14, marginBottom: 18 }}>
+    <div style={{ padding: "22px 16px 0", fontFamily: FONT }}>
+      {/* Bloc "Bonjour + phrase" à gauche, pilule "1 série" à droite */}
+      <div style={{
+        display: "flex", alignItems: "flex-start", justifyContent: "space-between",
+        gap: 14, marginBottom: 20,
+      }}>
         <div style={{ minWidth: 0 }}>
-          <div style={{ color: blue, fontSize: 15, fontWeight: 750, marginBottom: 8 }}>Bonjour {prenom} 👋</div>
-          <div style={{ color: DARK.text, fontSize: 26, lineHeight: 1.06, fontWeight: 850, letterSpacing: "-0.035em" }}>
+          <div style={{
+            color: blue, fontSize: 20, fontWeight: 800, marginBottom: 10,
+            letterSpacing: "-0.02em",
+          }}>
+            Bonjour {prenom} <span style={{ display: "inline-block" }}>👋</span>
+          </div>
+          <div style={{
+            color: DARK.text, fontSize: 26, lineHeight: 1.08,
+            fontWeight: 850, letterSpacing: "-0.035em",
+          }}>
             Prêt à devenir<br />
             ta <span style={{ color: blue }}>meilleure version</span> ?
           </div>
         </div>
-        <div style={{ flex: "0 0 74px", minHeight: 74, borderRadius: 18, border: "1px solid rgba(92,119,255,0.22)", background: "rgba(17,23,34,0.78)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 3 }}>
+        <div style={{
+          flex: "0 0 74px", minHeight: 78, borderRadius: 18,
+          border: "1px solid rgba(92,119,255,0.22)",
+          background: "rgba(17,23,34,0.78)",
+          display: "flex", flexDirection: "column",
+          alignItems: "center", justifyContent: "center", gap: 3,
+        }}>
           <I name="flame" size={21} color={blue} fill />
           <strong style={{ color: DARK.text, fontSize: 18, lineHeight: 1 }}>1</strong>
           <span style={{ color: muted, fontSize: 10, fontWeight: 600 }}>série</span>
         </div>
       </div>
 
-      <div style={{ position: "relative", minHeight: 292, borderRadius: 24, overflow: "hidden", border: "1px solid rgba(92,119,255,0.18)", background: "#0C1017", boxShadow: "0 14px 38px rgba(0,0,0,0.28)" }}>
-        <div style={{ position: "absolute", inset: 0, backgroundImage: `url(${HOME_HERO_SRC})`, backgroundSize: "cover", backgroundPosition: "center 42%" }} />
-        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg, rgba(7,10,15,0.96) 0%, rgba(7,10,15,0.76) 38%, rgba(7,10,15,0.20) 76%, rgba(7,10,15,0.16) 100%), linear-gradient(0deg, rgba(7,10,15,0.92) 0%, transparent 48%)" }} />
-        <div style={{ position: "relative", minHeight: 292, padding: "22px 20px 18px", display: "flex", flexDirection: "column", justifyContent: "flex-end" }}>
-          <div style={{ color: blue, fontSize: 12, fontWeight: 800, letterSpacing: "0.09em", marginBottom: 8 }}>SÉANCE DU JOUR</div>
-          <div style={{ color: "#fff", fontSize: 32, fontWeight: 850, lineHeight: 1.05, letterSpacing: "-0.035em" }}>{title}</div>
-          <div style={{ color: "rgba(255,255,255,0.82)", fontSize: 14, fontWeight: 600, marginTop: 8 }}>{duration} · {count} exercices</div>
-          <button onClick={() => setTab && setTab("program")} className="tap" style={{ marginTop: 17, alignSelf: "flex-start", border: "none", borderRadius: 13, padding: "13px 17px", background: blue, color: "#fff", display: "flex", alignItems: "center", gap: 9, fontFamily: FONT, fontSize: 14, fontWeight: 750, boxShadow: "0 8px 22px rgba(60,91,255,0.32)", cursor: "pointer" }}>
-            <I name="play" size={15} color="#fff" fill />
-            Commencer la séance
-          </button>
+      {/* HERO : photo Pexels + contenu selon le mode */}
+      <div style={{
+        position: "relative", minHeight: 292, borderRadius: 24, overflow: "hidden",
+        border: "1px solid rgba(92,119,255,0.18)", background: "#0C1017",
+        boxShadow: "0 14px 38px rgba(0,0,0,0.28)",
+      }}>
+        <div style={{
+          position: "absolute", inset: 0,
+          backgroundImage: `url(${HOME_HERO_SRC})`,
+          backgroundSize: "cover", backgroundPosition: "center 42%",
+        }} />
+        <div style={{
+          position: "absolute", inset: 0,
+          background: "linear-gradient(90deg, rgba(7,10,15,0.96) 0%, rgba(7,10,15,0.76) 38%, rgba(7,10,15,0.20) 76%, rgba(7,10,15,0.16) 100%), linear-gradient(0deg, rgba(7,10,15,0.92) 0%, transparent 48%)",
+        }} />
+        <div style={{
+          position: "relative", minHeight: 292,
+          padding: "22px 20px 20px",
+          display: "flex", flexDirection: "column", justifyContent: "flex-end",
+        }}>
+          {sessionMode ? (
+            <>
+              <div style={{
+                color: blue, fontSize: 12, fontWeight: 800,
+                letterSpacing: "0.09em", marginBottom: 8,
+              }}>SÉANCE DU JOUR</div>
+              <div style={{
+                color: "#fff", fontSize: 26, fontWeight: 850,
+                lineHeight: 1.05, letterSpacing: "-0.03em",
+              }}>{title}</div>
+              <div style={{
+                color: "rgba(255,255,255,0.82)",
+                fontSize: 13.5, fontWeight: 600, marginTop: 7,
+              }}>{duration} · {count} exercices</div>
+              <button
+                onClick={() => setTab && setTab("program")}
+                className="tap"
+                style={{
+                  marginTop: 17, alignSelf: "stretch",
+                  border: "none", borderRadius: 14,
+                  padding: "14px 17px",
+                  background: blue, color: "#fff",
+                  display: "flex", alignItems: "center", justifyContent: "center", gap: 9,
+                  fontFamily: FONT, fontSize: 15, fontWeight: 750,
+                  boxShadow: "0 8px 22px rgba(60,91,255,0.32)",
+                  cursor: "pointer",
+                }}
+              >
+                <I name="play" size={15} color="#fff" fill />
+                Commencer la séance
+              </button>
+            </>
+          ) : (
+            <>
+              <div style={{
+                color: blue, fontSize: 12, fontWeight: 800,
+                letterSpacing: "0.09em", marginBottom: 8,
+              }}>PRÊT À COMMENCER</div>
+              <div style={{
+                color: "#fff", fontSize: 26, fontWeight: 850,
+                lineHeight: 1.05, letterSpacing: "-0.03em",
+              }}>Crée ton programme</div>
+              <div style={{
+                color: "rgba(255,255,255,0.82)",
+                fontSize: 13.5, fontWeight: 600, marginTop: 7,
+              }}>Sur-mesure, selon ta morphologie</div>
+              <button
+                onClick={() => setTab && setTab("program")}
+                className="tap"
+                style={{
+                  marginTop: 17, alignSelf: "stretch",
+                  border: "none", borderRadius: 14,
+                  padding: "14px 17px",
+                  background: blue, color: "#fff",
+                  display: "flex", alignItems: "center", justifyContent: "center", gap: 9,
+                  fontFamily: FONT, fontSize: 15, fontWeight: 750,
+                  boxShadow: "0 8px 22px rgba(60,91,255,0.32)",
+                  cursor: "pointer",
+                }}
+              >
+                <I name="plus" size={16} color="#fff" stroke={2.2} />
+                Créer ton programme
+              </button>
+            </>
+          )}
         </div>
       </div>
 
-      <div style={{ ...card, marginTop: 12, padding: "15px 8px", display: "grid", gridTemplateColumns: "repeat(3,1fr)" }}>
+      {/* Bandeau info rapide sous le hero */}
+      <div style={{
+        ...card, marginTop: 12, padding: "15px 8px",
+        display: "grid", gridTemplateColumns: "repeat(3,1fr)",
+      }}>
         {[
-          { icon: "clock", label: "Dernière séance", value: lastSession, color: muted },
-          { icon: "chart", label: "Progression", value: "Bonne dynamique", color: "#35D07F" },
-          { icon: "target", label: "Objectif", value: `${fmt(firstDefined(calObj, 3305))} kcal`, color: blue },
+          { icon: "clock",  label: "Dernière séance", value: lastSession, color: muted },
+          { icon: "chart",  label: "Progression",     value: "Bonne dynamique", color: "#35D07F" },
+          { icon: "target", label: "Objectif",        value: `${fmt(firstDefined(calObj, 3305))} kcal`, color: blue },
         ].map((item, i) => (
-          <div key={item.label} style={{ minWidth: 0, padding: "1px 11px", borderLeft: i ? "1px solid rgba(255,255,255,0.08)" : "none" }}>
+          <div key={item.label} style={{
+            minWidth: 0, padding: "1px 11px",
+            borderLeft: i ? "1px solid rgba(255,255,255,0.08)" : "none",
+          }}>
             <I name={item.icon} size={18} color={item.color} />
-            <div style={{ color: muted, fontSize: 10.5, fontWeight: 600, marginTop: 7, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{item.label}</div>
-            <div style={{ color: item.color, fontSize: 12.5, fontWeight: 750, marginTop: 3, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{item.value}</div>
+            <div style={{
+              color: muted, fontSize: 10.5, fontWeight: 600, marginTop: 7,
+              whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
+            }}>{item.label}</div>
+            <div style={{
+              color: item.color, fontSize: 12.5, fontWeight: 750, marginTop: 3,
+              whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
+            }}>{item.value}</div>
           </div>
         ))}
       </div>
@@ -202,48 +322,72 @@ export function NutritionCard({ calObj, pObj, gObj, lObj, totR, setTab, setPaywa
   );
 }
 
-export function StreakCard({ streak = 0 }) {
+/**
+ * Carte "Série actuelle" — plus de header uppercase "TA PROGRESSION",
+ * titre direct + gros chiffre + 4 barres bleues en escalier.
+ * `inline` = utilisée dans une grille 2 colonnes → pas de margin extérieure.
+ */
+export function StreakCard({ streak = 0, inline = false }) {
   const value = n(streak);
-  const bars = [0, 1, 2, 3, 4];
+  const bars = [0, 1, 2, 3];
   const isStarted = value > 0;
-  const message = isStarted ? "Continue comme ça" : "Commence ta série aujourd’hui";
+  const message = isStarted ? "Continue comme ça" : "Commence ta série aujourd'hui";
 
   return (
     <section style={{
       ...card,
-      margin: "14px 16px 0",
-      padding: "17px 18px 16px",
+      margin: inline ? 0 : "14px 16px 0",
+      padding: "16px 16px 15px",
       fontFamily: FONT,
       overflow: "hidden",
+      display: "flex", flexDirection: "column",
+      minHeight: inline ? 172 : undefined,
     }}>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 14 }}>
-        <div style={sectionTitle}>TA PROGRESSION</div>
-        <div style={{ color: blue, fontSize: 11.5, fontWeight: 750, letterSpacing: "-0.01em" }}>
-          {value > 0 ? `${value} jour${value > 1 ? "s" : ""}` : "À démarrer"}
-        </div>
+      <div style={{
+        color: DARK.text, fontSize: 13.5, fontWeight: 800,
+        letterSpacing: "-0.005em",
+        display: "flex", alignItems: "center", gap: 5,
+      }}>
+        Série actuelle <span style={{ fontSize: 15 }}>🔥</span>
       </div>
 
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 20, marginTop: 15 }}>
-        <div style={{ minWidth: 0 }}>
-          <div style={{ color: muted, fontSize: 11.5, fontWeight: 600 }}>Série actuelle 🔥</div>
-          <div style={{ display: "flex", alignItems: "baseline", gap: 7, marginTop: 5 }}>
-            <strong style={{ color: DARK.text, fontSize: 34, lineHeight: 1, fontWeight: 850, letterSpacing: "-0.04em" }}>{value}</strong>
-            <span style={{ color: muted, fontSize: 11.5, fontWeight: 600 }}>jour{value > 1 ? "s" : ""}</span>
+      <div style={{
+        display: "flex", alignItems: "flex-end", justifyContent: "space-between",
+        gap: 12, marginTop: 14, flex: 1,
+      }}>
+        <div style={{ minWidth: 0, display: "flex", flexDirection: "column", gap: 8 }}>
+          <div style={{ display: "flex", alignItems: "baseline", gap: 7 }}>
+            <strong style={{
+              color: DARK.text, fontSize: 40, lineHeight: 1,
+              fontWeight: 850, letterSpacing: "-0.045em",
+            }}>{value}</strong>
+            <span style={{ color: muted, fontSize: 12, fontWeight: 600 }}>
+              jour{value > 1 ? "s" : ""}
+            </span>
           </div>
-          <div style={{ color: blue, fontSize: 12, fontWeight: 750, marginTop: 11 }}>{message}</div>
+          <div style={{
+            color: isStarted ? blue : muted,
+            fontSize: 11.5, fontWeight: 650, lineHeight: 1.3,
+          }}>
+            {message}
+          </div>
         </div>
 
-        <div style={{ display: "flex", alignItems: "flex-end", gap: 7, paddingRight: 2, flexShrink: 0 }} aria-hidden="true">
+        <div style={{
+          display: "flex", alignItems: "flex-end", gap: 6,
+          paddingBottom: 2, flexShrink: 0,
+        }} aria-hidden="true">
           {bars.map(i => {
-            const active = i < Math.min(value, 5);
+            const active = i < Math.min(value, bars.length);
             return (
               <div key={i} style={{
-                width: 13,
-                height: 22 + i * 9,
-                borderRadius: 8,
-                background: active ? `linear-gradient(180deg, ${blue}, ${blue}B8)` : "rgba(255,255,255,0.075)",
-                boxShadow: active ? `0 0 16px ${blue}28` : "none",
-                opacity: active ? 1 : 0.9,
+                width: 11,
+                height: 20 + i * 11,
+                borderRadius: 7,
+                background: active
+                  ? `linear-gradient(180deg, ${blue}, ${blue}B8)`
+                  : "rgba(255,255,255,0.075)",
+                boxShadow: active ? `0 0 14px ${blue}30` : "none",
               }} />
             );
           })}
@@ -253,75 +397,97 @@ export function StreakCard({ streak = 0 }) {
   );
 }
 
-export function BadgesCard({ badgeStates, onVoirTout }) {
-  const earned = Object.values(badgeStates || {}).filter(v => v === true || v?.earned || v?.unlocked).length;
+/**
+ * Sélectionne les 4 badges les plus pertinents à afficher sur l'accueil :
+ * les débloqués d'abord, puis ceux dont la progression est la plus avancée.
+ * Filtre le badge "mode_legende" (méta-badge) tant qu'il n'est pas gagné.
+ */
+function pickFourBadges(badgeStates) {
+  const list = Array.isArray(badgeStates) ? badgeStates : [];
+  const filtered = list.filter(b => b?.id !== "mode_legende" || b?.unlocked);
+  const sorted = [...filtered].sort((a, b) => {
+    if (a.unlocked && !b.unlocked) return -1;
+    if (!a.unlocked && b.unlocked) return 1;
+    return (b.pct || 0) - (a.pct || 0);
+  });
+  return sorted.slice(0, 4);
+}
 
-  // Visuels badges : retour à la direction validée (médaille + intitulé),
-  // sans modifier l’état métier ni le calcul du nombre de badges.
-  const badges = [
-    { number: "1", top: "PREMIÈRE", bottom: "SÉANCE", color: "#4DA3FF", glow: true },
-    { number: "", top: "FOCUS", bottom: "MAX", color: "#9B7CFF" },
-    { number: "", top: "OBJECTIF", bottom: "ATTEINT", color: "#F5B942" },
-    { number: "", top: "DÉFICIT", bottom: "MAÎTRISÉ", color: "#4ED9C2" },
-    { number: "7", top: "JOURS", bottom: "CONSÉCUTIFS", color: "#A7AFBF" },
-  ];
+/**
+ * Carte Badges — 4 vrais badges depuis le sprite /public/badges/*.png.
+ * Débloqués : pleine opacité + léger glow bleu. Verrouillés : très estompés.
+ */
+export function BadgesCard({ badgeStates, onVoirTout, inline = false }) {
+  const list = Array.isArray(badgeStates) ? badgeStates : [];
+  const earned = list.filter(b => b?.unlocked).length;
+  const total = list.length || 30;
+  const four = pickFourBadges(list);
 
   return (
-    <section style={{ ...card, margin: "14px 16px 0", padding: "17px 16px 15px", fontFamily: FONT }}>
+    <section style={{
+      ...card,
+      margin: inline ? 0 : "14px 16px 0",
+      padding: "16px 14px 14px",
+      fontFamily: FONT,
+      display: "flex", flexDirection: "column",
+      minHeight: inline ? 172 : undefined,
+    }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <div style={sectionTitle}>BADGES</div>
-        <span style={{ color: blue, fontSize: 12.5, fontWeight: 800 }}>{Math.max(earned, 1)}/30</span>
+        <div style={{
+          color: DARK.text, fontSize: 13.5, fontWeight: 800,
+          letterSpacing: "-0.005em",
+        }}>Badges</div>
+        <span style={{ color: blue, fontSize: 12, fontWeight: 800 }}>
+          {earned}/{total}
+        </span>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 8, marginTop: 15 }}>
-        {badges.map((badge) => (
-          <div key={`${badge.top}-${badge.bottom}`} style={{ display: "flex", justifyContent: "center", minWidth: 0 }}>
+      <div style={{
+        display: "grid", gridTemplateColumns: "repeat(4, 1fr)",
+        gap: 8, marginTop: 14, flex: 1, alignItems: "center",
+      }}>
+        {four.map(b => (
+          <div key={b.id} style={{
+            display: "flex", flexDirection: "column",
+            alignItems: "center", gap: 4, minWidth: 0,
+          }}>
             <div style={{
-              position: "relative",
-              width: 58,
-              height: 66,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              clipPath: "polygon(50% 0%, 88% 14%, 100% 50%, 88% 86%, 50% 100%, 12% 86%, 0% 50%, 12% 14%)",
-              background: `linear-gradient(145deg, ${badge.color}22, rgba(255,255,255,0.025))`,
-              filter: badge.glow ? `drop-shadow(0 0 10px ${badge.color}35)` : "none",
+              width: 46, height: 46,
+              display: "grid", placeItems: "center",
+              filter: b.unlocked ? `drop-shadow(0 0 8px ${blue}40)` : "none",
+              opacity: b.unlocked ? 1 : 0.32,
             }}>
-              <div style={{
-                position: "absolute",
-                inset: 1,
-                clipPath: "inherit",
-                background: "#101621",
-              }} />
-              <div style={{
-                position: "relative",
-                zIndex: 1,
-                width: "100%",
-                height: "100%",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: 1,
-                textAlign: "center",
-                color: badge.color,
-                fontFamily: FONT,
-                lineHeight: 1,
-              }}>
-                {badge.number ? (
-                  <div style={{ fontSize: 16, fontWeight: 850, marginBottom: 2 }}>{badge.number}</div>
-                ) : (
-                  <div style={{ width: 8, height: 8, borderRadius: "50%", border: `2px solid ${badge.color}`, marginBottom: 3, boxShadow: `0 0 7px ${badge.color}35` }} />
-                )}
-                <div style={{ fontSize: 6.5, fontWeight: 850, letterSpacing: "0.03em" }}>{badge.top}</div>
-                <div style={{ fontSize: 6.5, fontWeight: 750, opacity: 0.92 }}>{badge.bottom}</div>
-              </div>
+              <img
+                src={b.img}
+                alt={b.nom}
+                style={{
+                  width: "100%", height: "100%", objectFit: "contain",
+                  filter: b.unlocked ? "none" : "grayscale(1)",
+                }}
+              />
             </div>
+            <div style={{
+              color: b.unlocked ? DARK.text : muted,
+              fontSize: 8.5, fontWeight: 700,
+              letterSpacing: "0.02em", textAlign: "center",
+              lineHeight: 1.15,
+              width: "100%",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+              opacity: b.unlocked ? 1 : 0.7,
+            }}>{b.nom}</div>
           </div>
         ))}
       </div>
 
-      <button onClick={onVoirTout} style={{ marginTop: 12, border: 0, background: "none", color: blue, fontFamily: FONT, fontSize: 12, fontWeight: 750, cursor: "pointer", padding: 0 }}>
+      <button onClick={onVoirTout} style={{
+        marginTop: 10, alignSelf: "flex-end",
+        border: 0, background: "none",
+        color: blue, fontFamily: FONT,
+        fontSize: 12, fontWeight: 750,
+        cursor: "pointer", padding: 0,
+      }}>
         Voir tout ›
       </button>
     </section>
