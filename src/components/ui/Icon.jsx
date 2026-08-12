@@ -255,10 +255,21 @@ const DUO = {
   userDuo:{ fl:'<circle cx="12" cy="8" r="3.6"/>',
     s:'<circle cx="12" cy="8" r="3.6"/><path d="M5 20c.8-3.6 3.6-5.4 7-5.4s6.2 1.8 7 5.4"/>',
     sw:'<path d="M10.3 6.9a2.1 2.1 0 0 1 2.4-.7"/>' },
+  // Haltère bicolore : ajouté pour la carte « Exercices correctifs » de la
+  // page Offre du moment (ID retournait null car dumbbell n'existait qu'en
+  // mono dans P). Format duo identique aux autres : 4 rectangles remplis
+  // pour les poids + une barre horizontale claire au centre.
+  dumbbell:{ fl:'<rect x="2.6" y="9.2" width="3.4" height="5.6" rx="1.1"/><rect x="6" y="7" width="3.4" height="10" rx="1.2"/><rect x="14.6" y="7" width="3.4" height="10" rx="1.2"/><rect x="18" y="9.2" width="3.4" height="5.6" rx="1.1"/>',
+    s:'<rect x="2.6" y="9.2" width="3.4" height="5.6" rx="1.1"/><rect x="6" y="7" width="3.4" height="10" rx="1.2"/><rect x="14.6" y="7" width="3.4" height="10" rx="1.2"/><rect x="18" y="9.2" width="3.4" height="5.6" rx="1.1"/>',
+    sw:'<path d="M9.4 12h5.2"/>' },
 };
 
 export function ID({ name, size = 24, dark = false, tint, style, ...rest }) {
-  const d = DUO[name];
+  // Résout aussi les anciens noms utilisés par les Paywalls / Offre du moment
+  // (ex. calendar → calendarDuo, chart → progress, person → userDuo, etc.).
+  // Important : on conserve les noms historiques pour ne rien casser ailleurs.
+  const resolvedName = DUO[name] ? name : (DUO_ALIAS[name] || name);
+  const d = DUO[resolvedName];
   if (!d) return null;
   const st = dark ? "#F6F7F9" : "#101318";
   const fillColor = tint || "#3C5BFF";
@@ -326,50 +337,6 @@ Object.assign(DUO, {
     sw:'<path d="M8.5 9.5a5 5 0 0 1 7 0l-1.8 1.9a2.4 2.4 0 0 0-3.4 0L8.5 9.5Z"/><path d="M12 13.4v2.4"/>' },
 });
 
-// ── Icônes dédiées aux cartes Offre du moment + Paywalls ─────────────────────
-// Ces six icônes sont isolées du reste du set afin de ne modifier aucune autre
-// icône de l'application. Style : bleu MorphoCoach + structure fine blanche.
-Object.assign(DUO, {
-  paywallMorpho: {
-    fl:'<path d="M12 4.1c1.65 0 2.85 1.12 2.85 2.58S13.65 9.25 12 9.25 9.15 8.14 9.15 6.68 10.35 4.1 12 4.1Z"/><path d="M8.15 10.15 12 12.1l3.85-1.95 2.05 3.35-2.25 2.35v4.05H8.35v-4.05L6.1 13.5l2.05-3.35Z"/>',
-    s:'<path d="M8.15 10.15 12 12.1l3.85-1.95 2.05 3.35-2.25 2.35v4.05H8.35v-4.05L6.1 13.5l2.05-3.35Z"/>',
-    sw:'<path d="M12 9.8v8.4M8.35 14.35h7.3"/>'
-  },
-  paywallCalendar: {
-    fl:'<path d="M4.1 7.6A2.1 2.1 0 0 1 6.2 5.5h11.6a2.1 2.1 0 0 1 2.1 2.1V10H4.1V7.6Z"/><circle cx="8.5" cy="13.5" r=".65"/><circle cx="12" cy="13.5" r=".65"/><circle cx="15.5" cy="13.5" r=".65"/><circle cx="8.5" cy="17" r=".65"/><circle cx="12" cy="17" r=".65"/>',
-    s:'<rect x="4.1" y="5.5" width="15.8" height="15" rx="2.15"/><path d="M4.1 10h15.8M8.5 3.5v4M15.5 3.5v4"/>',
-    sw:'<path d="M8.5 13.5h0M12 13.5h0M15.5 13.5h0M8.5 17h0M12 17h0"/>'
-  },
-  paywallAnalysis: {
-    fl:'<rect x="4" y="12" width="3.25" height="8" rx=".9"/><rect x="10.35" y="7" width="3.3" height="13" rx=".9"/><rect x="16.75" y="4" width="3.25" height="16" rx=".9"/>',
-    s:'<path d="M3.5 20.2h17"/>'
-  },
-  paywallProgress: {
-    fl:'<path d="M4.2 19.5V5.2h15.6v14.3Z"/>',
-    s:'<path d="M6.4 16.5 9.7 13l2.7 2.1 4.8-6M14.8 9.1h2.4v2.4"/>'
-  },
-  paywallIntensity: {
-    fl:'<path d="M13.2 2.7 5 13.4h5.2l-.8 7.9 9.2-12.1h-5.3l-.1-6.5Z"/>',
-    s:'<path d="M13.2 2.7 5 13.4h5.2l-.8 7.9 9.2-12.1h-5.3l-.1-6.5Z"/>',
-    sw:'<path d="M12.4 8.2 10.9 11h2.4l-1 3"/>'
-  },
-  paywallTarget: {
-    fl:'<circle cx="12" cy="12" r="7.8"/>',
-    s:'<circle cx="12" cy="12" r="7.8"/><circle cx="12" cy="12" r="4"/>',
-    sw:'<circle cx="12" cy="12" r="1.15" fill="currentColor" stroke="none"/>'
-  }
-});
-
-// Noms courts utilisés par les cartes premium.
-const PAYWALL_ALIAS = {
-  morphoBody:"paywallMorpho",
-  barChart:"paywallAnalysis",
-  growthChart:"paywallProgress",
-  boltDuo:"paywallIntensity",
-  targetDuo:"paywallTarget",
-  calendarDuo:"paywallCalendar",
-};
-
 // ── Alias : anciens noms des jeux locaux → duo ──
 const DUO_ALIAS = {
   dumbbell:"gym",
@@ -411,7 +378,7 @@ function lum(color) {
 // Règles : icône posée sur fond coloré (color clair) → mono blanc conservé ;
 // contexte sombre (color très sombre passé pour surface ink) → duo dark.
 export function Ico({ name, size = 24, color, stroke = 1.8, dark, style, ...rest }) {
-  const duoName = PAYWALL_ALIAS[name] || (DUO[name] ? name : DUO_ALIAS[name]);
+  const duoName = DUO[name] ? name : DUO_ALIAS[name];
   if (duoName && DUO[duoName]) {
     const L = lum(color);
     if (L !== null && L > 0.86) {
