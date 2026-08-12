@@ -333,6 +333,46 @@ Object.assign(DUO, {
     sw:'<path d="M8.5 9.5a5 5 0 0 1 7 0l-1.8 1.9a2.4 2.4 0 0 0-3.4 0L8.5 9.5Z"/><path d="M12 13.4v2.4"/>' },
 });
 
+// ── Icônes dédiées aux offres / paywalls PRO ───────────────────────────────
+// Style volontairement homogène avec les maquettes : fond sombre, accent plein,
+// contour fin et détails blancs. Ces icônes ne sont utilisées que par les
+// cartes Offre du moment et les deux paywalls.
+Object.assign(DUO, {
+  morphoBody:{
+    fl:'<path d="M12 4.2c1.55 0 2.7 1.05 2.7 2.45S13.55 9.1 12 9.1 9.3 8.05 9.3 6.65 10.45 4.2 12 4.2Z"/><path d="M8.2 10.2 12 12.1l3.8-1.9 1.8 3.1-2.1 2.3v4.2H8.5v-4.2l-2.1-2.3 1.8-3.1Z"/>',
+    s:'<path d="M8.2 10.2 12 12.1l3.8-1.9 1.8 3.1-2.1 2.3v4.2H8.5v-4.2l-2.1-2.3 1.8-3.1Z"/>',
+    sw:'<path d="M12 9.9v8.2M8.5 14.5h7M9.8 20h4.4"/>'
+  },
+  barChart:{
+    fl:'<rect x="4" y="12" width="3.2" height="8" rx="1"/><rect x="10.4" y="7" width="3.2" height="13" rx="1"/><rect x="16.8" y="4" width="3.2" height="16" rx="1"/>',
+    s:'<path d="M3.5 20.2h17"/>'
+  },
+  growthChart:{
+    fl:'<path d="M4.2 19.5V5.2h15.6v14.3Z"/>',
+    s:'<path d="M6.5 16.5l3.2-3.4 2.7 2.1 4.8-6M14.8 9.2h2.4v2.4"/>'
+  },
+  boltDuo:{
+    fl:'<path d="M13.2 2.8 5 13.4h5.2l-.8 7.8 9.2-12h-5.3l-.1-6.4Z"/>',
+    s:'<path d="M13.2 2.8 5 13.4h5.2l-.8 7.8 9.2-12h-5.3l-.1-6.4Z"/>',
+    sw:'<path d="M12.4 8.2 10.9 11h2.4l-1 3"/>'
+  },
+  targetDuo:{
+    fl:'<circle cx="12" cy="12" r="7.8"/>',
+    s:'<circle cx="12" cy="12" r="7.8"/><circle cx="12" cy="12" r="4"/>',
+    sw:'<circle cx="12" cy="12" r="1.15" fill="currentColor" stroke="none"/>'
+  },
+  chef:{
+    fl:'<path d="M6.2 11.8h11.6v7H6.2Z"/><path d="M5 11.8h14"/>',
+    s:'<path d="M7.2 11.5a3.2 3.2 0 0 1 1.4-5.9 4 4 0 0 1 6.8 0 3.2 3.2 0 0 1 1.4 5.9"/><path d="M6.2 11.8h11.6v7H6.2Z"/>',
+    sw:'<path d="M9.2 14.5h5.6M9.2 17h5.6"/>'
+  },
+  leaf:{
+    fl:'<path d="M5.2 18.8c0-8.4 4.8-13.3 13.7-13.7-.4 8.9-5.3 13.7-13.7 13.7Z"/>',
+    s:'<path d="M5.2 18.8c0-8.4 4.8-13.3 13.7-13.7-.4 8.9-5.3 13.7-13.7 13.7Z"/>',
+    sw:'<path d="M5.8 18.2c3.1-3.9 6.5-6.9 10.4-9.2M9.1 14.4c1.9.3 3.5.1 4.9-.7"/>'
+  }
+});
+
 // ── Alias : anciens noms des jeux locaux → duo ──
 const DUO_ALIAS = {
   dumbbell:"gym",

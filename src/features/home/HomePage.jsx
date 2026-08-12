@@ -178,9 +178,9 @@ function RapportView({ premium, setPaywall, setPaywallNutrition }) {
       accent: C.accent,        // bleu MorphoCoach
       title: "Entraînement",
       subtitle: "Programme sur-mesure selon ta morphologie",
-      iconMain: "coachDuo",
+      iconMain: "morphoBody",
       features: [
-        { icon: "coachDuo",    title: "Coach morphologique", sub: "Programme adapté à ta morphologie précise" },
+        { icon: "morphoBody",   title: "Coach morphologique", sub: "Programme adapté à ta morphologie précise" },
         { icon: "dumbbell",    title: "Exercices correctifs", sub: "Compensation des asymétries & déséquilibres" },
         { icon: "calendarDuo", title: "Cycle 6 semaines",     sub: "Périodisation pro pour des gains durables" },
         { icon: "scanDuo",     title: "Suivi 3D",             sub: "Mesures corporelles et photo-progression" },
@@ -195,7 +195,7 @@ function RapportView({ premium, setPaywall, setPaywallNutrition }) {
       iconMain: "apple",
       features: [
         { icon: "apple",     title: "Recettes premium",      sub: "500+ recettes adaptées à ton profil" },
-        { icon: "progress",  title: "Analyse macro avancée", sub: "Répartition P/G/L personnalisée à tes objectifs" },
+        { icon: "barChart",  title: "Analyse macro avancée", sub: "Répartition P/G/L personnalisée à tes objectifs" },
         { icon: "cameraDuo", title: "Scan photo",            sub: "Identifie les aliments en photo pour les logger" },
         { icon: "bookDuo",   title: "Bilan bi-mensuel",      sub: "Rapport détaillé de ta progression nutritionnelle" },
       ],

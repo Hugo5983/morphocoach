@@ -11,12 +11,12 @@ import { I, ID } from "../ui/Icon.jsx";
 import { useOfferPhoto } from "../../features/home/useOfferPhoto.js";
 
 const FEATURES = [
-  { icon: "cloche", label: "+500 recettes premium complètes",    sub: "Ingrédients, étapes détaillées, curseur calories" },
-  { icon: "fruit",  label: "Conseils nutritionnels personnalisés", sub: "Selon ton objectif, profil et régime alimentaire" },
+  { icon: "chef",   label: "+500 recettes premium complètes",    sub: "Ingrédients, étapes détaillées, curseur calories" },
+  { icon: "leaf",   label: "Conseils nutritionnels personnalisés", sub: "Selon ton objectif, profil et régime alimentaire" },
   { icon: "camera", label: "Estimation macros par photo de repas", sub: "Analyse instantanée — jusqu'à 120 photos/mois" },
-  { icon: "chart",  label: "Bilan nutritionnel bi-mensuel",       sub: "Analyse complète de tes apports toutes les 2 semaines" },
+  { icon: "barChart", label: "Bilan nutritionnel bi-mensuel",       sub: "Analyse complète de tes apports toutes les 2 semaines" },
   { icon: "apple",  label: "Suivi fruits & légumes quotidien",    sub: "Tracker avec objectifs personnalisés" },
-  { icon: "goal",   label: "Recommandations actionnables",        sub: "Conseils concrets pour progresser chaque semaine" },
+  { icon: "targetDuo", label: "Recommandations actionnables",        sub: "Conseils concrets pour progresser chaque semaine" },
 ];
 
 // Palette Nutrition (vert MorphoCoach)

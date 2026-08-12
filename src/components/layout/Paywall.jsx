@@ -13,12 +13,12 @@ import { useOfferPhoto } from "../../features/home/useOfferPhoto.js";
 import { PaywallShell } from "./PaywallNutrition.jsx";
 
 const FEATURES = [
-  { icon: "gym",      label: "Programme morphologique personnalisé", sub: "Adapté à ta morphologie, tes objectifs et ton niveau" },
+  { icon: "morphoBody", label: "Programme morphologique personnalisé", sub: "Adapté à ta morphologie, tes objectifs et ton niveau" },
   { icon: "calendar", label: "Planification 6 semaines clé en main",  sub: "Cycles progressifs avec surcharge programmée" },
-  { icon: "person",   label: "Analyse morphologique complète",        sub: "Évaluation posture, points faibles, déséquilibres" },
-  { icon: "chart",    label: "Bilan de progression bi-mensuel",       sub: "Suivi détaillé de tes progrès toutes les 2 semaines" },
-  { icon: "flame",    label: "Méthodes d'intensification avancées",   sub: "Drop sets, pyramidal, surcharge progressive" },
-  { icon: "goal",     label: "Exercices correctifs sur mesure",       sub: "Adaptés à tes limitations ou pathologies" },
+  { icon: "barChart",  label: "Analyse morphologique complète",        sub: "Évaluation posture, points faibles, déséquilibres" },
+  { icon: "growthChart", label: "Bilan de progression bi-mensuel",       sub: "Suivi détaillé de tes progrès toutes les 2 semaines" },
+  { icon: "boltDuo",   label: "Méthodes d'intensification avancées",   sub: "Drop sets, pyramidal, surcharge progressive" },
+  { icon: "targetDuo", label: "Exercices correctifs sur mesure",       sub: "Adaptés à tes limitations ou pathologies" },
 ];
 
 // Palette Entraînement (bleu électrique MorphoCoach)
@@ -34,7 +34,7 @@ export function Paywall({ onSubscribe, onClose }) {
     <PaywallShell
       accent={ACCENT} accentDeep={ACCENT_DEEP}
       accentSoft={ACCENT_SOFT} accentLine={ACCENT_LINE}
-      badgeIcon="gym" badgeLabel="Entraînement PRO"
+      badgeIcon="morphoBody" badgeLabel="Entraînement PRO"
       photoSrc={photo.src} photoAlt={photo.alt || "Entraînement Pro"}
       titleMain="Entraîne-toi plus intelligemment,"
       titleAccent="progresse plus vite"
