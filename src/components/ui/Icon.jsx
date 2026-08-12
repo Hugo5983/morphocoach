@@ -255,13 +255,6 @@ const DUO = {
   userDuo:{ fl:'<circle cx="12" cy="8" r="3.6"/>',
     s:'<circle cx="12" cy="8" r="3.6"/><path d="M5 20c.8-3.6 3.6-5.4 7-5.4s6.2 1.8 7 5.4"/>',
     sw:'<path d="M10.3 6.9a2.1 2.1 0 0 1 2.4-.7"/>' },
-  // Haltère bicolore : ajouté pour la carte « Exercices correctifs » de la
-  // page Offre du moment (ID retournait null car dumbbell n'existait qu'en
-  // mono dans P). Format duo identique aux autres : 4 rectangles remplis
-  // pour les poids + une barre horizontale claire au centre.
-  dumbbell:{ fl:'<rect x="2.6" y="9.2" width="3.4" height="5.6" rx="1.1"/><rect x="6" y="7" width="3.4" height="10" rx="1.2"/><rect x="14.6" y="7" width="3.4" height="10" rx="1.2"/><rect x="18" y="9.2" width="3.4" height="5.6" rx="1.1"/>',
-    s:'<rect x="2.6" y="9.2" width="3.4" height="5.6" rx="1.1"/><rect x="6" y="7" width="3.4" height="10" rx="1.2"/><rect x="14.6" y="7" width="3.4" height="10" rx="1.2"/><rect x="18" y="9.2" width="3.4" height="5.6" rx="1.1"/>',
-    sw:'<path d="M9.4 12h5.2"/>' },
 };
 
 export function ID({ name, size = 24, dark = false, tint, style, ...rest }) {
@@ -333,45 +326,41 @@ Object.assign(DUO, {
     sw:'<path d="M8.5 9.5a5 5 0 0 1 7 0l-1.8 1.9a2.4 2.4 0 0 0-3.4 0L8.5 9.5Z"/><path d="M12 13.4v2.4"/>' },
 });
 
-// ── Icônes dédiées aux offres / paywalls PRO ───────────────────────────────
-// Style volontairement homogène avec les maquettes : fond sombre, accent plein,
-// contour fin et détails blancs. Ces icônes ne sont utilisées que par les
-// cartes Offre du moment et les deux paywalls.
-Object.assign(DUO, {
-  morphoBody:{
-    fl:'<path d="M12 4.2c1.55 0 2.7 1.05 2.7 2.45S13.55 9.1 12 9.1 9.3 8.05 9.3 6.65 10.45 4.2 12 4.2Z"/><path d="M8.2 10.2 12 12.1l3.8-1.9 1.8 3.1-2.1 2.3v4.2H8.5v-4.2l-2.1-2.3 1.8-3.1Z"/>',
-    s:'<path d="M8.2 10.2 12 12.1l3.8-1.9 1.8 3.1-2.1 2.3v4.2H8.5v-4.2l-2.1-2.3 1.8-3.1Z"/>',
-    sw:'<path d="M12 9.9v8.2M8.5 14.5h7M9.8 20h4.4"/>'
-  },
-  barChart:{
-    fl:'<rect x="4" y="12" width="3.2" height="8" rx="1"/><rect x="10.4" y="7" width="3.2" height="13" rx="1"/><rect x="16.8" y="4" width="3.2" height="16" rx="1"/>',
-    s:'<path d="M3.5 20.2h17"/>'
-  },
-  growthChart:{
-    fl:'<path d="M4.2 19.5V5.2h15.6v14.3Z"/>',
-    s:'<path d="M6.5 16.5l3.2-3.4 2.7 2.1 4.8-6M14.8 9.2h2.4v2.4"/>'
-  },
-  boltDuo:{
-    fl:'<path d="M13.2 2.8 5 13.4h5.2l-.8 7.8 9.2-12h-5.3l-.1-6.4Z"/>',
-    s:'<path d="M13.2 2.8 5 13.4h5.2l-.8 7.8 9.2-12h-5.3l-.1-6.4Z"/>',
-    sw:'<path d="M12.4 8.2 10.9 11h2.4l-1 3"/>'
-  },
-  targetDuo:{
-    fl:'<circle cx="12" cy="12" r="7.8"/>',
-    s:'<circle cx="12" cy="12" r="7.8"/><circle cx="12" cy="12" r="4"/>',
-    sw:'<circle cx="12" cy="12" r="1.15" fill="currentColor" stroke="none"/>'
-  },
-  chef:{
-    fl:'<path d="M6.2 11.8h11.6v7H6.2Z"/><path d="M5 11.8h14"/>',
-    s:'<path d="M7.2 11.5a3.2 3.2 0 0 1 1.4-5.9 4 4 0 0 1 6.8 0 3.2 3.2 0 0 1 1.4 5.9"/><path d="M6.2 11.8h11.6v7H6.2Z"/>',
-    sw:'<path d="M9.2 14.5h5.6M9.2 17h5.6"/>'
-  },
-  leaf:{
-    fl:'<path d="M5.2 18.8c0-8.4 4.8-13.3 13.7-13.7-.4 8.9-5.3 13.7-13.7 13.7Z"/>',
-    s:'<path d="M5.2 18.8c0-8.4 4.8-13.3 13.7-13.7-.4 8.9-5.3 13.7-13.7 13.7Z"/>',
-    sw:'<path d="M5.8 18.2c3.1-3.9 6.5-6.9 10.4-9.2M9.1 14.4c1.9.3 3.5.1 4.9-.7"/>'
-  }
-});
+
+// ── Icônes PAYWALL : tracées directement depuis la maquette de référence ──
+// Monochromes bleu électrique, proportions et silhouette conservées.
+const PAYWALL = {
+  morphoBody: `M10.28 4.25L10.28 5.97L6.14 8.38L6.14 11.14L4.77 16.65L5.80 16.65L6.83 12.86L8.21 12.52L8.90 13.55L8.56 19.41L9.24 19.41L9.59 17.34L10.62 17.68L11.31 19.41L12.69 19.41L13.03 18.03L14.41 17.34L14.76 19.41L15.44 19.41L15.10 13.55L15.79 12.52L17.17 12.86L17.86 14.24L17.86 16.65L18.89 16.65L17.86 8.73L16.82 7.35L14.07 6.32L13.72 4.25L13.03 4.25L13.03 7.35L11.31 8.04L10.97 4.25Z M7.87 8.04L10.28 8.38L12.00 10.11L13.72 8.38L16.48 8.38L16.82 9.76L15.44 10.11L14.07 16.31L11.66 17.34L9.59 15.96L9.93 13.55L9.24 11.48L7.18 9.76Z`,
+  calendarDuo: `M11.03 15.10L11.03 16.26L12.58 16.26L12.58 15.10Z M7.93 15.10L7.93 16.26L9.48 16.26L9.48 15.10Z M7.93 12.39L8.32 13.55L9.48 13.55L9.48 12.39Z M11.03 12.78L11.42 13.55L15.68 13.55L15.68 12.39L14.91 12.00L14.13 12.78L11.81 12.00Z M5.99 5.41L4.44 7.35L4.83 18.59L5.99 19.36L18.39 18.98L19.17 17.43L18.78 6.58L17.62 5.41L16.07 5.41L15.68 4.25L14.52 4.25L14.13 5.41L9.48 5.41L9.09 4.25L7.93 4.25L7.54 5.41Z M5.61 10.84L7.93 10.06L17.62 10.45L18.01 17.43L17.23 18.20L13.36 18.59L6.38 18.20L5.61 17.43Z M5.61 7.35L7.54 6.58L9.09 7.74L9.87 6.58L14.13 6.58L14.52 7.74L17.23 6.96L18.01 8.51L17.23 9.29L6.38 9.29Z`,
+  barChart: `M5.27 14.45L4.86 18.93L6.90 19.34L6.90 14.45Z M4.86 11.18L5.27 12.00L7.72 11.59L7.72 10.78Z M9.35 10.37L9.35 19.34L10.98 19.34L10.98 10.78Z M13.43 4.25L13.43 19.34L14.65 19.34L15.06 8.33L17.10 8.74L17.10 18.93L18.32 19.34L18.73 8.33L18.32 7.51L15.47 7.51L15.06 5.07Z`,
+  growthChart: `M4.67 4.67L4.25 18.07L5.93 19.33L18.91 19.33L19.33 18.07L5.51 17.66L5.93 13.89L7.60 14.72L10.53 11.79L13.47 13.47L16.82 9.70L18.49 10.53L17.66 15.14L10.53 15.14L9.28 15.98L18.91 15.56L18.91 6.76L15.56 6.34L15.14 7.60L15.98 8.86L13.89 11.37L10.11 10.11L6.76 13.89L5.93 13.89L5.51 5.09Z M8.02 4.67L14.30 5.09L13.89 4.25Z`,
+  boltDuo: `M14.46 4.25L6.52 12.57L10.68 13.32L8.79 19.37L9.54 19.37L17.10 11.05L16.73 10.30L13.32 9.92L14.84 5.01Z`,
+  targetDuo: `M11.48 4.42L11.14 5.46L8.38 6.14L5.97 8.56L4.25 12.34L5.28 12.69L5.97 15.44L8.38 17.86L12.17 19.23L12.52 18.54L15.62 17.51L17.34 15.79L18.37 12.69L19.41 11.66L18.37 11.31L18.03 9.24L16.65 7.18L14.58 5.80L12.52 5.46L12.17 4.42Z M16.99 12.34L17.34 13.38L16.65 15.10L14.93 16.82L12.52 17.51L11.83 15.79L13.89 14.76L15.62 12.34Z M6.32 12.69L8.38 12.34L9.07 14.07L11.83 15.79L11.48 17.17L10.45 17.51L8.38 16.48L7.01 15.10Z M11.48 9.59L12.86 9.93L14.24 11.66L13.89 13.03L12.17 14.41L10.79 14.07L9.42 12.34L9.76 10.97Z M12.17 6.83L13.55 6.49L14.93 7.18L16.65 8.90L17.34 10.97L15.62 11.66L13.89 9.24L11.83 8.21Z M11.14 6.49L11.83 8.21L9.76 9.24L8.38 11.66L7.01 11.66L7.01 8.90L8.73 7.18Z`,
+};
+
+export function IPaywall({ name, size = 24, color = "#4B63FF", style, ...rest }) {
+  const d = PAYWALL[name];
+  if (!d) return null;
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      width={size}
+      height={size}
+      fill={color}
+      stroke="none"
+      style={{
+        flexShrink: 0,
+        display: "block",
+        filter: `drop-shadow(0 0 1.8px ${color}66)`,
+        ...style,
+      }}
+      aria-hidden="true"
+      {...rest}
+    >
+      <path d={d} fillRule="evenodd" clipRule="evenodd" />
+    </svg>
+  );
+}
 
 // ── Alias : anciens noms des jeux locaux → duo ──
 const DUO_ALIAS = {
@@ -414,6 +403,12 @@ function lum(color) {
 // Règles : icône posée sur fond coloré (color clair) → mono blanc conservé ;
 // contexte sombre (color très sombre passé pour surface ink) → duo dark.
 export function Ico({ name, size = 24, color, stroke = 1.8, dark, style, ...rest }) {
+  // Les 6 icônes des cartes Offre du moment / Paywalls utilisent
+  // leur tracé dédié pour rester fidèles à la maquette.
+  if (PAYWALL[name]) {
+    return <IPaywall name={name} size={size} color={color || "#4B63FF"} style={style} {...rest} />;
+  }
+
   const duoName = DUO[name] ? name : DUO_ALIAS[name];
   if (duoName && DUO[duoName]) {
     const L = lum(color);
