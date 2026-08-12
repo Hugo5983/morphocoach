@@ -1,134 +1,250 @@
-import { C, FONT, SERIF } from"../../data/constants.js";
-import { I } from"../ui/Icon.jsx";
-import { ID } from"../ui/Icon.jsx";
-import { Card, Eyebrow } from"../../components/ui/index.jsx";
+// @ts-check
+// ─── MorphoCoach · PaywallNutrition — refonte visuelle premium dark ──────────
+// Aucune logique métier modifiée :
+//   · props identiques   (onSubscribe, onClose)
+//   · FEATURES identiques (mêmes labels, mêmes sous-titres, même ordre)
+//   · prix identique      (6,99 € / mois)
+//   · image identique     (Pexels ID 5836775 via useOfferPhoto("nutrition-pro"))
+// Seule l'UI est refaite : fond sombre, grande image, hiérarchie premium.
+import { C, FONT } from "../../data/constants.js";
+import { I, ID } from "../ui/Icon.jsx";
+import { useOfferPhoto } from "../../features/home/useOfferPhoto.js";
 
+// Features conservées à l'identique (labels + sub) — on ajoute juste `icon`.
 const FEATURES = [
-  { label:"+500 recettes premium complètes",       sub:"Ingrédients, étapes détaillées, curseur calories" },
-  { label:"Conseils nutritionnels personnalisés",   sub:"Selon ton objectif, profil et régime alimentaire" },
-  { label:"Estimation macros par photo de repas",   sub:"Analyse instantanée — jusqu'à 120 photos/mois" },
-  { label:"Bilan nutritionnel bi-mensuel",          sub:"Analyse complète de tes apports toutes les 2 semaines" },
-  { label:"Suivi fruits & légumes quotidien",       sub:"Tracker avec objectifs personnalisés" },
-  { label:"Recommandations actionnables",           sub:"Conseils concrets pour progresser chaque semaine" },
+  { icon: "cloche", label: "+500 recettes premium complètes",    sub: "Ingrédients, étapes détaillées, curseur calories" },
+  { icon: "fruit",  label: "Conseils nutritionnels personnalisés", sub: "Selon ton objectif, profil et régime alimentaire" },
+  { icon: "camera", label: "Estimation macros par photo de repas", sub: "Analyse instantanée — jusqu'à 120 photos/mois" },
+  { icon: "chart",  label: "Bilan nutritionnel bi-mensuel",       sub: "Analyse complète de tes apports toutes les 2 semaines" },
+  { icon: "apple",  label: "Suivi fruits & légumes quotidien",    sub: "Tracker avec objectifs personnalisés" },
+  { icon: "goal",   label: "Recommandations actionnables",        sub: "Conseils concrets pour progresser chaque semaine" },
 ];
 
+const GREEN     = "#12B76A";
+const GREEN_SOFT = "rgba(18,183,106,0.14)";
+const GREEN_LINE = "rgba(18,183,106,0.32)";
+const BG        = "#0A0F17";
+const TEXT      = "#FFFFFF";
+const MUTED     = "#A7AFBF";
+const HAIRLINE  = "rgba(255,255,255,0.06)";
+const INNER_BG  = "rgba(255,255,255,0.03)";
+const INNER_BD  = "rgba(255,255,255,0.08)";
+
 export function PaywallNutrition({ onSubscribe, onClose }) {
+  const photo = useOfferPhoto("nutrition-pro", "card");
+
   return (
     <div style={{
-      position:"fixed", inset:0, zIndex:340,
-      background:"rgba(5,8,18,0.96)",
-      display:"flex", alignItems:"center", justifyContent:"center",
-      padding:"0 16px",
+      position: "fixed", inset: 0, zIndex: 340,
+      background: "rgba(3,5,10,0.86)",
+      backdropFilter: "blur(6px)",
+      WebkitBackdropFilter: "blur(6px)",
+      display: "flex", alignItems: "center", justifyContent: "center",
+      padding: "12px 12px 16px",
+      fontFamily: FONT,
     }}>
-      <Card padding="none" style={{
-        border:"1px solid rgba(18,183,106,0.25)",
-        padding:"24px 20px",
-        width:"100%", maxWidth:400,
-        boxShadow: C.shadow,
-        position:"relative", overflow:"hidden",
-        maxHeight:"90vh", overflowY:"auto",
+      <div style={{
+        position: "relative",
+        width: "100%", maxWidth: 420,
+        maxHeight: "94vh", overflowY: "auto", overflowX: "hidden",
+        background: BG,
+        border: `1px solid ${GREEN_LINE}`,
+        borderRadius: 28,
+        boxShadow: `0 24px 60px rgba(0,0,0,0.55), 0 0 0 1px rgba(18,183,106,0.05) inset`,
+        WebkitOverflowScrolling: "touch",
       }}>
-        {/* Lueur verte */}
+        {/* ── ZONE IMAGE (bandeau haut) ────────────────────────────────── */}
         <div style={{
-          position:"absolute", top:-60, left:"50%", transform:"translateX(-50%)",
-          width:300, height:160, borderRadius:"50%",
-          background:"radial-gradient(closest-side,rgba(18,183,106,0.18),transparent 70%)",
-          filter:"blur(20px)", pointerEvents:"none",
-        }}/>
-
-        {/* Fermer */}
-        <button onClick={onClose} style={{
-          position:"absolute", top:14, right:14,
-          width:30, height:30, borderRadius:8,
-          background:"rgba(0,0,0,0.05)",
-          border:`1px solid ${C.bd}`,
-          color:C.mid, fontSize:20,
-          display:"grid", placeItems:"center", cursor:"pointer",
-        }}>×</button>
-
-        {/* Badge + Titre */}
-        <div style={{ textAlign:"center", marginBottom:20, position:"relative" }}>
+          position: "relative",
+          width: "100%", height: 200,
+          overflow: "hidden",
+          borderTopLeftRadius: 28, borderTopRightRadius: 28,
+        }}>
+          {photo.src && (
+            <img src={photo.src} alt={photo.alt || "Nutrition Pro"}
+              style={{
+                position: "absolute", inset: 0,
+                width: "100%", height: "100%",
+                objectFit: "cover", objectPosition: "center 42%",
+                display: "block",
+              }} />
+          )}
+          {/* Gradient bas : fond de la modal remonte pour lier le titre */}
           <div style={{
-            display:"inline-flex", alignItems:"center", gap:8,
-            padding:"4px 16px", borderRadius:20,
-            background:"rgba(5,150,105,0.12)",
-            border:"1px solid rgba(5,150,105,0.35)",
-            fontSize:11, fontWeight:700, color:"#12B76A",
-            fontFamily:FONT, letterSpacing:"0.1em", textTransform:"uppercase",
-            marginBottom:16,
-          }}><ID name="bowl" size={20}/> Nutrition PRO</div>
+            position: "absolute", inset: 0,
+            background: `linear-gradient(180deg, rgba(10,15,23,0.10) 0%, rgba(10,15,23,0.55) 55%, ${BG} 100%)`,
+            pointerEvents: "none",
+          }} />
+          {/* Petit voile vert en bas gauche pour cohérence identitaire */}
+          <div style={{
+            position: "absolute", left: -40, bottom: -40,
+            width: 200, height: 200, borderRadius: "50%",
+            background: "radial-gradient(closest-side, rgba(18,183,106,0.22), transparent 70%)",
+            filter: "blur(8px)", pointerEvents: "none",
+          }} />
 
-          <div style={{ fontFamily:SERIF, fontSize:26, color:C.text, letterSpacing:-0.5, lineHeight:1.3, marginBottom:8 }}>
-            Mange mieux,<br/>
-            <span style={{ fontStyle:"italic" }}>progresse plus vite</span>
+          {/* Badge NUTRITION PRO posé sur l'image */}
+          <div style={{
+            position: "absolute", top: 16, left: 16,
+            display: "inline-flex", alignItems: "center", gap: 8,
+            padding: "7px 14px",
+            borderRadius: 999,
+            background: "rgba(10,15,23,0.60)",
+            border: `1px solid ${GREEN_LINE}`,
+            backdropFilter: "blur(10px)",
+            WebkitBackdropFilter: "blur(10px)",
+            color: GREEN,
+            fontSize: 11, fontWeight: 800,
+            letterSpacing: "0.14em", textTransform: "uppercase",
+          }}>
+            <ID name="bowl" size={16} dark tint={GREEN} />
+            Nutrition PRO
           </div>
-          <div style={{ fontSize:13, color:C.mid, fontFamily:FONT, lineHeight:1.6 }}>
-            Tout ce qu'il faut pour optimiser<br/>ta nutrition au quotidien.
-          </div>
+
+          {/* Bouton X circulaire */}
+          <button onClick={onClose} aria-label="Fermer" style={{
+            position: "absolute", top: 14, right: 14,
+            width: 34, height: 34, borderRadius: "50%",
+            background: "rgba(10,15,23,0.60)",
+            border: "1px solid rgba(255,255,255,0.16)",
+            backdropFilter: "blur(10px)",
+            WebkitBackdropFilter: "blur(10px)",
+            color: "#fff",
+            display: "grid", placeItems: "center",
+            cursor: "pointer", padding: 0,
+          }}>
+            <I name="close" size={16} color="#fff" stroke={2} />
+          </button>
         </div>
 
-        {/* Features */}
-        <Card padding="none" style={{ padding:"4px 16px", marginBottom:20 }}>
-          {FEATURES.map((f, i) => (
-            <div key={i} style={{
-              display:"flex", alignItems:"center", gap:12,
-              padding:"12px 0",
-              borderBottom: i < FEATURES.length - 1 ?`1px solid rgba(0,0,0,0.05)` :"none",
-            }}>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={C.accent} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{flexShrink:0}}><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-              <div style={{ flex:1 }}>
-                <div style={{ fontSize:13, fontWeight:600, color:C.text, fontFamily:FONT }}>{f.label}</div>
-                <div style={{ fontSize:11, color:C.mid, marginTop:1, fontFamily:FONT }}>{f.sub}</div>
+        {/* ── CONTENU ─────────────────────────────────────────────────── */}
+        <div style={{ padding: "8px 22px 22px" }}>
+          {/* Titre avec accent vert italique */}
+          <h2 style={{
+            margin: 0,
+            color: TEXT, fontFamily: FONT,
+            fontSize: 30, lineHeight: 1.08,
+            fontWeight: 850, letterSpacing: "-0.035em",
+          }}>
+            Mange mieux,<br />
+            <span style={{ color: GREEN, fontStyle: "italic", fontWeight: 800 }}>
+              progresse plus vite
+            </span>
+          </h2>
+
+          {/* Sous-titre */}
+          <p style={{
+            margin: "12px 0 22px",
+            color: MUTED, fontFamily: FONT,
+            fontSize: 13.5, lineHeight: 1.5, fontWeight: 500,
+          }}>
+            Tout ce qu'il faut pour optimiser<br />
+            ta nutrition au quotidien.
+          </p>
+
+          {/* Carte intérieure des avantages */}
+          <div style={{
+            background: INNER_BG,
+            border: `1px solid ${INNER_BD}`,
+            borderRadius: 20,
+            padding: "4px 14px",
+            marginBottom: 22,
+          }}>
+            {FEATURES.map((f, i) => (
+              <div key={f.label} style={{
+                display: "flex", alignItems: "center", gap: 12,
+                padding: "13px 0",
+                borderBottom: i < FEATURES.length - 1 ? `1px solid ${HAIRLINE}` : "none",
+              }}>
+                {/* Tuile icône */}
+                <div style={{
+                  width: 44, height: 44, borderRadius: 12,
+                  background: GREEN_SOFT,
+                  border: `1px solid ${GREEN_LINE}`,
+                  display: "grid", placeItems: "center", flexShrink: 0,
+                }}>
+                  <ID name={f.icon} size={22} dark tint={GREEN} />
+                </div>
+                {/* Texte */}
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{
+                    color: TEXT, fontSize: 13.5, fontWeight: 700,
+                    lineHeight: 1.25, letterSpacing: "-0.005em",
+                  }}>{f.label}</div>
+                  <div style={{
+                    color: MUTED, fontSize: 11.5, fontWeight: 500,
+                    marginTop: 2, lineHeight: 1.35,
+                  }}>{f.sub}</div>
+                </div>
+                {/* Check plein vert */}
+                <div style={{
+                  width: 22, height: 22, borderRadius: "50%",
+                  background: GREEN, flexShrink: 0,
+                  display: "grid", placeItems: "center",
+                  boxShadow: `0 4px 12px rgba(18,183,106,0.30)`,
+                }}>
+                  <I name="check" size={13} color="#fff" stroke={2.6} />
+                </div>
               </div>
-              <div style={{
-                width:20, height:20, borderRadius:8, flexShrink:0,
-                background:"rgba(5,150,105,0.12)",
-                border:"1px solid rgba(5,150,105,0.25)",
-                display:"grid", placeItems:"center",
-                fontSize:11, color:"#12B76A", fontWeight:700,
-              }}><I name="check" size={13} color="#FFF"/></div>
+            ))}
+          </div>
+
+          {/* Prix */}
+          <div style={{ textAlign: "center", marginBottom: 18 }}>
+            <div style={{
+              display: "inline-flex", alignItems: "baseline", gap: 6,
+            }}>
+              <span style={{
+                color: TEXT, fontFamily: FONT,
+                fontSize: 44, fontWeight: 850,
+                letterSpacing: "-0.045em", lineHeight: 1,
+              }}>6,99€</span>
+              <span style={{
+                color: GREEN, fontSize: 14, fontWeight: 700,
+                letterSpacing: "-0.01em",
+              }}>/mois</span>
             </div>
-))}
-        </Card>
+            <div style={{
+              color: MUTED, fontSize: 11.5, marginTop: 6, fontWeight: 500,
+            }}>
+              Sans engagement · Résiliable à tout moment
+            </div>
+          </div>
 
-        {/* Prix */}
-        <div style={{ textAlign:"center", marginBottom:16 }}>
-          <div style={{ display:"flex", alignItems:"baseline", justifyContent:"center", gap:8 }}>
-            <span style={{ fontFamily:SERIF, fontSize:44, color:C.text, letterSpacing:-1, lineHeight:1 }}>6.99€</span>
-            <span style={{ fontSize:13, color:C.mid, fontFamily:FONT }}>/mois</span>
-          </div>
-          <div style={{ fontSize:11, color:"${C.dim}", fontFamily:FONT, marginTop:4 }}>
-            Sans engagement · Résiliable à tout moment
-          </div>
+          {/* CTA principal — Activer Nutrition PRO */}
+          <button onClick={onSubscribe} className="tap" style={{
+            width: "100%", height: 54,
+            position: "relative",
+            background: `linear-gradient(180deg, ${GREEN}, #0E9E5A)`,
+            border: "none", borderRadius: 16,
+            color: "#fff",
+            fontFamily: FONT, fontSize: 15, fontWeight: 800,
+            letterSpacing: "-0.005em",
+            display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
+            cursor: "pointer",
+            boxShadow: `0 10px 28px rgba(18,183,106,0.42), 0 0 0 1px rgba(255,255,255,0.06) inset`,
+          }}>
+            <I name="crown" size={17} color="#fff" fill />
+            Activer Nutrition PRO
+            <I name="arrowRight" size={16} color="#fff" stroke={2.2}
+              style={{ position: "absolute", right: 18 }} />
+          </button>
+
+          {/* Continuer en gratuit — outline discret */}
+          <button onClick={onClose} className="tap" style={{
+            width: "100%", height: 46,
+            marginTop: 10,
+            background: "transparent",
+            border: "1px solid rgba(255,255,255,0.14)",
+            borderRadius: 14,
+            color: MUTED,
+            fontFamily: FONT, fontSize: 13, fontWeight: 600,
+            cursor: "pointer",
+          }}>
+            Continuer en gratuit
+          </button>
         </div>
-
-        {/* CTA */}
-        <button onClick={onSubscribe} style={{
-          width:"100%", padding:"16px 16px",
-          background:"linear-gradient(135deg,#12B76A,#12B76A)",
-          border:"1px solid rgba(0,0,0,0.08)",
-          borderRadius:16, color:"#FFF",
-          fontSize:14, fontWeight:700, fontFamily:FONT,
-          cursor:"pointer", marginBottom:12,
-          boxShadow:"0 4px 20px rgba(18,183,106,0.35)",
-          position:"relative", overflow:"hidden",
-        }}>
-          <div style={{
-            position:"absolute", top:0, left:0, right:0, height:1,
-            background:"linear-gradient(90deg,transparent,rgba(0,0,0,0.12),transparent)",
-          }}/>
-          Activer Nutrition PRO
-        </button>
-
-        <button onClick={onClose} style={{
-          width:"100%", padding:"12px 16px",
-          background:"transparent", border:`1px solid ${C.bd}`,
-          borderRadius:16, color:C.mid,
-          fontSize:13, fontWeight:500, fontFamily:FONT, cursor:"pointer",
-        }}>
-          Continuer en gratuit
-        </button>
-      </Card>
+      </div>
     </div>
-);
+  );
 }
