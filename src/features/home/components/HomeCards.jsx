@@ -201,13 +201,9 @@ export function HeroCard({ profil, prog, calObj, calSess, setTab }) {
                   overflow: "hidden",
                 }}>{titleSub}</div>
               )}
-              {/* Spacer intermédiaire : le titre+sous-titre sont plus bas
-                  qu'en V5, plus près de la ligne durée pour équilibrer avec
-                  le label plus imposant en haut */}
-              <div style={{ flex: 0.28 }} />
               <div style={{
                 color: "rgba(255,255,255,0.82)",
-                fontSize: 13, fontWeight: 600,
+                fontSize: 13, fontWeight: 600, marginTop: 8,
               }}>{duration} · {count} exercices</div>
               <button
                 onClick={() => setTab && setTab("program")}
