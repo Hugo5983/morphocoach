@@ -14,20 +14,22 @@ const DISP = FONT;
 const SERIF_F = SERIF;
 
 // ─── Palette dark premium (locale à TodayView) ─────────────────────────────
-// Tokens alignés sur le brief : fond très profond, surfaces légèrement bleutées,
-// bleu MorphoCoach électrique en accent, texte secondaire gris froid.
+// Fond & surfaces alignés sur les tokens DARK.* partagés avec la page Accueil
+// et les autres surfaces dark de l'app → cohérence visuelle stricte, même
+// teinte partout. Le bleu MorphoCoach et le muted restent locaux (accents
+// spécifiques à cette page).
 const TV = {
-  bg:         "#05070B",
-  surface:    "#0B0F17",
-  surfaceHi:  "#111622",
-  surfaceMid: "#0E1220",
-  border:     "rgba(255,255,255,0.08)",
-  borderHi:   "rgba(255,255,255,0.12)",
-  text:       "#FFFFFF",
-  textDim:    "#C4C9D6",
-  muted:      "#9AA3B5",
+  bg:         DARK.bgDeep,             // "#0B0E12" — même fond que Accueil
+  surface:    DARK.surface,            // "#1A1F27" — cartes qui ressortent
+  surfaceHi:  DARK.surfaceHi,          // "#141922" — surfaces surélevées
+  surfaceMid: "#0E1220",               // conservé pour cas spécifiques (legacy composer)
+  border:     DARK.border,             // "rgba(255,255,255,0.08)"
+  borderHi:   DARK.borderHi,           // "rgba(255,255,255,0.12)"
+  text:       DARK.text,               // "#F6F7F9"
+  textDim:    DARK.dimStrong,          // "rgba(246,247,249,0.75)"
+  muted:      "#9AA3B5",               // gris froid (accent local)
   faint:      "#5A6072",
-  blue:       "#3158FF",
+  blue:       "#3158FF",               // bleu MorphoCoach (accent, conservé)
   blueBright: "#3158FF",
   blueSoft:   "rgba(49,88,255,0.14)",
   blueLine:   "rgba(49,88,255,0.32)",
