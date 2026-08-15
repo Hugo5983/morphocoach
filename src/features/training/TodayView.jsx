@@ -834,7 +834,7 @@ export default function TodayView(props) {
           return d > 0 ? d : null;
         };
         return (
-        <div style={{ marginBottom: 0, marginInline: 14 }}>
+        <div style={{ marginBottom: 0, marginInline: 6 }}>
           {/* Titre sur 2 lignes — « Objectifs » en italique bleu dessous */}
           <div style={{ display:"flex", alignItems:"flex-end", justifyContent:"space-between", marginBottom:16, gap:12 }}>
             <div style={{
@@ -889,11 +889,11 @@ export default function TodayView(props) {
             const resteKg = topEx ? Math.max(0, Math.round(topEx.cible - topEx.rm1)) : 0;
 
             // ── Courbe traversante ───────────────────────────────────────
-            const W = 390, H = 96;
+            const W = 390, H = 58;
             // Tracé d'amorce quand il n'y a rien : presque plat, remonte à droite.
-            const EMPTY_LINE = "M0,84 C60,84 90,82 140,81 C200,80 235,77 280,73 C320,69 350,62 390,54";
+            const EMPTY_LINE = "M0,51 C60,51 90,49.5 140,49 C200,48 235,46.5 280,44 C320,42 350,37 390,33";
             const buildLine = (values) => {
-              if (!values || values.length < 2) return { d: EMPTY_LINE, lx: W, ly: 54, empty: true };
+              if (!values || values.length < 2) return { d: EMPTY_LINE, lx: W, ly: 33, empty: true };
               const min = Math.min(...values), max = Math.max(...values);
               const span = (max - min) || 1;
               const pts = values.map((v, i) => ({
@@ -916,33 +916,34 @@ export default function TodayView(props) {
                 position:"relative", overflow:"hidden",
                 borderRadius: 30,
                 border:"1px solid rgba(80,105,190,0.22)",
-                minHeight: 470,
+                minHeight: 340,
                 display:"flex", flexDirection:"column",
                 boxShadow:"0 20px 50px rgba(0,0,0,0.45)",
               }}>
-                {/* Photo de fond */}
+                {/* Photo de fond — cadrée sur le disque, au centre-droit */}
                 <img src="https://images.pexels.com/photos/15373907/pexels-photo-15373907.jpeg"
                   alt=""
                   style={{
                     position:"absolute", inset: 0,
                     width:"100%", height:"100%",
-                    objectFit:"cover", objectPosition:"center 42%",
+                    objectFit:"cover", objectPosition:"58% 45%",
                     display:"block",
                   }}/>
-                {/* Voile progressif : sombre derrière les textes, ouvert au milieu */}
+                {/* Voile progressif allégé : sombre derrière les textes,
+                    largement ouvert au centre pour révéler le disque */}
                 <div style={{
                   position:"absolute", inset: 0, pointerEvents:"none",
-                  background:"linear-gradient(180deg, rgba(9,11,16,0.94) 0%, rgba(9,11,16,0.80) 22%, rgba(9,11,16,0.42) 42%, rgba(9,11,16,0.78) 66%, rgba(9,11,16,0.96) 100%)",
+                  background:"linear-gradient(180deg, rgba(9,11,16,0.88) 0%, rgba(9,11,16,0.60) 22%, rgba(9,11,16,0.26) 42%, rgba(9,11,16,0.62) 66%, rgba(9,11,16,0.90) 100%)",
                 }}/>
-                {/* Teinte bleue haut-gauche */}
+                {/* Teinte bleue haut-gauche, adoucie pour ne pas laver le métal */}
                 <div style={{
                   position:"absolute", inset: 0, pointerEvents:"none",
-                  background:"radial-gradient(120% 70% at 15% 8%, rgba(49,88,255,0.16), transparent 60%)",
+                  background:"radial-gradient(120% 70% at 15% 8%, rgba(49,88,255,0.10), transparent 60%)",
                 }}/>
 
                 <div style={{
                   position:"relative", zIndex: 2, flex: 1,
-                  display:"flex", flexDirection:"column", padding: 22,
+                  display:"flex", flexDirection:"column", padding: 18,
                 }}>
                   {/* Haut : titre + badge */}
                   <div style={{ display:"flex", alignItems:"flex-start", justifyContent:"space-between", gap: 12 }}>
@@ -979,10 +980,10 @@ export default function TodayView(props) {
                   </div>
 
                   {/* Respiration — la photo est visible ici */}
-                  <div style={{ flex: 1, minHeight: 78 }}/>
+                  <div style={{ flex: 1, minHeight: 12 }}/>
 
                   {/* Courbe traversante, de bord à bord */}
-                  <div style={{ margin:"0 -22px 2px" }}>
+                  <div style={{ margin:"0 -18px 2px" }}>
                     <svg viewBox={`0 0 ${W} ${H}`} width="100%" height={H}
                       preserveAspectRatio="none" style={{ display:"block" }}>
                       <defs>
@@ -997,8 +998,8 @@ export default function TodayView(props) {
                         </linearGradient>
                       </defs>
                       {/* Grille très discrète */}
-                      <line x1="0" y1="46" x2={W} y2="46" stroke="rgba(255,255,255,0.045)" strokeWidth="1"/>
-                      <line x1="0" y1="70" x2={W} y2="70" stroke="rgba(255,255,255,0.045)" strokeWidth="1"/>
+                      <line x1="0" y1="28" x2={W} y2="28" stroke="rgba(255,255,255,0.045)" strokeWidth="1"/>
+                      <line x1="0" y1="42" x2={W} y2="42" stroke="rgba(255,255,255,0.045)" strokeWidth="1"/>
                       <path d={`${curve.d} L${W},${H} L0,${H} Z`} fill="url(#tdHzFill)"/>
                       <path d={curve.d} fill="none" stroke="url(#tdHzLine)"
                         strokeWidth={curve.empty ? "2.4" : "2.6"}
@@ -1009,9 +1010,9 @@ export default function TodayView(props) {
                     </svg>
                   </div>
 
-                  {/* Bas : chiffres + amorce */}
-                  <div style={{ display:"flex", alignItems:"center", gap: 16, marginTop: 2 }}>
-                    <div style={{ flexShrink: 0, display:"flex", gap: 16 }}>
+                  {/* Bas : chiffres sur une ligne, amorce en dessous pleine largeur */}
+                  <div style={{ marginTop: 10 }}>
+                    <div style={{ display:"flex", gap: 18, alignItems:"flex-start" }}>
                       <div>
                         <div style={{
                           fontSize: 38, fontWeight: 800, color: TV.blueBright,
@@ -1019,7 +1020,7 @@ export default function TodayView(props) {
                         }}>{totalRecords}</div>
                         <div style={{
                           fontSize: 12, color: TV.muted, lineHeight: 1.35,
-                          marginTop: 8, fontFamily: DISP,
+                          marginTop: 7, fontFamily: DISP,
                         }}>Records<br />personnels</div>
                       </div>
                       <div style={{ width: 1, background: TV.border, alignSelf:"stretch" }}/>
@@ -1030,12 +1031,15 @@ export default function TodayView(props) {
                         }}>{objectifsActifs}</div>
                         <div style={{
                           fontSize: 12, color: TV.muted, lineHeight: 1.35,
-                          marginTop: 8, fontFamily: DISP,
+                          marginTop: 7, fontFamily: DISP,
                         }}>Objectifs<br />actifs</div>
                       </div>
                     </div>
-                    <div style={{ width: 1, background: TV.border, alignSelf:"stretch" }}/>
-                    <div style={{ flex: 1, minWidth: 0, display:"flex", gap: 11, alignItems:"flex-start" }}>
+
+                    <div style={{
+                      display:"flex", gap: 11, alignItems:"flex-start",
+                      marginTop: 14,
+                    }}>
                       <div style={{
                         flexShrink: 0, width: 36, height: 36, borderRadius: 11,
                         background: topEx ? "rgba(18,183,106,0.13)" : "rgba(49,88,255,0.13)",
@@ -1047,7 +1051,7 @@ export default function TodayView(props) {
                           <path d="M3 17 9 11l4 4 8-8"/><path d="M14 7h7v7"/>
                         </svg>
                       </div>
-                      <div style={{ minWidth: 0 }}>
+                      <div style={{ flex: 1, minWidth: 0 }}>
                         <div style={{
                           fontSize: 12.5, fontWeight: 800, letterSpacing:"-0.01em",
                           color:"#fff", fontFamily: DISP,
@@ -1058,7 +1062,7 @@ export default function TodayView(props) {
                         </div>
                         <div style={{
                           fontSize: 11, color: TV.muted, lineHeight: 1.45,
-                          marginTop: 4, fontFamily: DISP,
+                          marginTop: 3, fontFamily: DISP,
                         }}>
                           {topEx
                             ? (resteKg > 0
@@ -1074,7 +1078,7 @@ export default function TodayView(props) {
                   <button onClick={() => setShowProgression(true)}
                     className="tap"
                     style={{
-                      marginTop: 18, width:"100%", height: 54,
+                      marginTop: 14, width:"100%", height: 54,
                       border:"none", borderRadius: 17,
                       background: TV.blue, color:"#fff", fontFamily: DISP,
                       fontSize: 14.5, fontWeight: 750, letterSpacing:"-0.005em",
