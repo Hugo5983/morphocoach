@@ -14,28 +14,28 @@ const DISP = FONT;
 const SERIF_F = SERIF;
 
 // ─── Palette dark premium (locale à TodayView) ─────────────────────────────
-// Direction demandée : #050609 fond, surfaces sombres, bleu MorphoCoach #285BFF.
-// N'affecte pas les autres écrans (constantes locales, pas globales).
+// Tokens alignés sur le brief : fond très profond, surfaces légèrement bleutées,
+// bleu MorphoCoach électrique en accent, texte secondaire gris froid.
 const TV = {
-  bg:         "#050609",
-  surface:    "#0A0B10",
-  surfaceHi:  "#101118",
-  surfaceMid: "#0E0F16",
+  bg:         "#05070B",
+  surface:    "#0B0F17",
+  surfaceHi:  "#111622",
+  surfaceMid: "#0E1220",
   border:     "rgba(255,255,255,0.08)",
-  borderHi:   "rgba(255,255,255,0.14)",
-  text:       "#F5F5F7",
-  textDim:    "#B6B8C1",
-  muted:      "#858894",
-  faint:      "#5A5D6A",
-  blue:       "#285BFF",
-  blueBright: "#3264FF",
-  blueSoft:   "rgba(40,91,255,0.14)",
-  blueLine:   "rgba(40,91,255,0.30)",
+  borderHi:   "rgba(255,255,255,0.12)",
+  text:       "#FFFFFF",
+  textDim:    "#C4C9D6",
+  muted:      "#9AA3B5",
+  faint:      "#5A6072",
+  blue:       "#3158FF",
+  blueBright: "#3158FF",
+  blueSoft:   "rgba(49,88,255,0.14)",
+  blueLine:   "rgba(49,88,255,0.32)",
 };
 
 // Images du carousel « Compose ta séance » — Pexels (IDs choisis par Hugo)
 const CAROUSEL_IMG = {
-  muscu:   "https://images.pexels.com/photos/33258631/pexels-photo-33258631.jpeg",
+  muscu:   "https://images.pexels.com/photos/16996376/pexels-photo-16996376.jpeg",
   cardio:  "https://images.pexels.com/photos/6389882/pexels-photo-6389882.jpeg",
   stretch: "https://images.pexels.com/photos/8436691/pexels-photo-8436691.jpeg",
 };
@@ -870,44 +870,55 @@ export default function TodayView(props) {
             <div style={{
               background: TV.surface,
               border: `1px solid ${TV.border}`,
-              borderRadius: 20,
-              padding: "18px 18px",
-              display: "flex", alignItems: "center", gap: 14,
+              borderRadius: 22,
+              padding: "26px 22px 20px",
+              display: "flex", flexDirection: "column",
+              alignItems: "center", textAlign: "center", gap: 12,
             }}>
-              {/* Icône cible à gauche */}
+              {/* Icône objectif dans une tuile */}
               <div style={{
-                width: 48, height: 48, borderRadius: 14,
+                width: 56, height: 56, borderRadius: 16,
                 background: TV.surfaceHi,
                 border: `1px solid ${TV.border}`,
-                display: "grid", placeItems: "center", flexShrink: 0,
+                display: "grid", placeItems: "center",
+                marginBottom: 2,
               }}>
-                <ID name="goal" size={24} dark tint={TV.blueBright}/>
+                <ID name="goal" size={28} dark tint={TV.blueBright}/>
               </div>
-              {/* Texte au centre */}
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{
-                  fontFamily: DISP, fontSize: 14, fontWeight: 800,
-                  color: TV.text, marginBottom: 4,
-                }}>Pas encore de données</div>
-                <div style={{
-                  fontSize: 11.5, color: TV.muted,
-                  lineHeight: 1.5, fontFamily: DISP,
+              {/* Titre */}
+              <div style={{
+                fontFamily: DISP, fontSize: 15, fontWeight: 800,
+                color: TV.text, letterSpacing: "-0.01em",
+              }}>Pas encore de données</div>
+              {/* Description */}
+              <div style={{
+                fontSize: 12.5, color: TV.muted,
+                lineHeight: 1.55, fontFamily: DISP,
+                maxWidth: 280,
+              }}>
+                Enregistre tes charges pendant tes séances<br />
+                pour suivre tes progrès et battre tes records.
+              </div>
+              {/* Bouton "+ Ajouter un objectif" */}
+              <button onClick={() => setShowProgression(true)}
+                className="tap"
+                style={{
+                  marginTop: 8,
+                  display: "inline-flex", alignItems: "center", gap: 8,
+                  padding: "12px 20px",
+                  borderRadius: 14,
+                  background: TV.blue, border: "none",
+                  color: "#fff", fontFamily: DISP,
+                  fontSize: 13.5, fontWeight: 750,
+                  letterSpacing: "-0.005em",
+                  cursor: "pointer",
+                  boxShadow: `0 8px 22px ${TV.blueSoft}`,
                 }}>
-                  Enregistre tes charges pendant les séances pour voir tes progrès et tes records.
-                </div>
-              </div>
-              {/* Bouton + circulaire à droite */}
-              <button onClick={() => setShowProgression(true)} style={{
-                width: 44, height: 44, borderRadius: "50%",
-                background: TV.blue, border: "none",
-                color: "#fff", cursor: "pointer",
-                display: "grid", placeItems: "center", flexShrink: 0,
-                boxShadow: `0 8px 20px ${TV.blueSoft}`,
-              }} aria-label="Saisir un record">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
                   stroke="#fff" strokeWidth="2.4" strokeLinecap="round">
                   <path d="M12 5v14M5 12h14"/>
                 </svg>
+                Ajouter un objectif
               </button>
             </div>
           ) : (
