@@ -650,16 +650,7 @@ export default function TodayView(props) {
                   background:"linear-gradient(180deg, rgba(5,6,9,0.10) 0%, rgba(5,6,9,0.20) 40%, rgba(5,6,9,0.88) 100%)",
                   pointerEvents:"none",
                 }}/>
-                {/* Icône bleue en haut-gauche */}
-                <div style={{
-                  position:"absolute", top: 14, left: 14,
-                  width: 42, height: 42, borderRadius: 12,
-                  background: TV.blue,
-                  display:"grid", placeItems:"center",
-                  boxShadow: `0 6px 16px ${TV.blueSoft}`,
-                }}>
-                  <ID name={card.icon} size={22} dark tint="#fff"/>
-                </div>
+                {/* (Petit badge d'icône bleu supprimé — la photo devient l'élément visuel principal) */}
                 {/* Titre + sous-titre + bouton flèche en bas */}
                 <div style={{
                   position:"absolute", left: 16, right: 16, bottom: 16,
