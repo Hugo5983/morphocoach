@@ -856,124 +856,239 @@ export default function TodayView(props) {
             </button>
           </div>
 
-          {rmData.length === 0 ? (
-            <div style={{
-              position: "relative", overflow: "hidden",
-              borderRadius: 22,
-              border: `1px solid ${TV.border}`,
-              padding: "26px 22px 20px",
-              display: "flex", flexDirection: "column",
-              alignItems: "center", textAlign: "center", gap: 12,
-              minHeight: 260,
-              justifyContent: "center",
-            }}>
-              {/* Photo Pexels en fond (sport / force — ID 15373907) */}
-              <img src="https://images.pexels.com/photos/15373907/pexels-photo-15373907.jpeg"
-                alt=""
-                style={{
-                  position:"absolute", inset: 0,
-                  width:"100%", height:"100%",
-                  objectFit:"cover", objectPosition:"center",
-                  display:"block",
-                }}/>
-              {/* Overlay dégradé sombre pour lisibilité du texte */}
-              <div style={{
-                position:"absolute", inset: 0,
-                background: `linear-gradient(180deg, rgba(11,14,18,0.55) 0%, rgba(11,14,18,0.82) 55%, rgba(11,14,18,0.94) 100%)`,
-                pointerEvents:"none",
-              }}/>
+          {(() => {
+            // ── Valeurs dérivées des données existantes (0 si rien) ──────
+            // Aucune donnée inventée : tout vient de rmData / getRM().
+            const totalRecords   = rmData.length;
+            const objectifsActifs = rmData.filter(ex => ex.rm1 < ex.cible).length;
 
-              {/* Contenu par-dessus */}
+            // Progression moyenne en % sur les exercices ayant ≥2 entrées
+            const gainsPct = rmData.map(ex => {
+              const h = ex.historique;
+              if (!h || h.length < 2) return null;
+              const rms = h.map(x => calc1RM(parseFloat(x.poids), parseInt(x.reps)));
+              const first = rms[0], last = rms[rms.length - 1];
+              if (!first) return null;
+              return ((last - first) / first) * 100;
+            }).filter(v => v !== null && isFinite(v));
+            const progPct = gainsPct.length
+              ? Math.round(gainsPct.reduce((a, b) => a + b, 0) / gainsPct.length)
+              : 0;
+
+            // Courbe : historique 1RM du record le plus lourd
+            const topEx = rmData.length
+              ? rmData.reduce((a, b) => (a.rm1 >= b.rm1 ? a : b))
+              : null;
+            const sparkValues = topEx?.historique?.length
+              ? topEx.historique.map(h => calc1RM(parseFloat(h.poids), parseInt(h.reps)))
+              : [];
+
+            // Construction du tracé lissé (ligne + aire)
+            const W = 170, H = 82;
+            const buildSpark = (values) => {
+              if (!values || values.length < 2) {
+                const y = H * 0.78; // ligne plate basse quand il n'y a rien
+                return {
+                  line: `M0,${y} L${W},${y}`,
+                  area: `M0,${y} L${W},${y} L${W},${H} L0,${H} Z`,
+                  lx: W, ly: y, flat: true,
+                };
+              }
+              const min = Math.min(...values), max = Math.max(...values);
+              const span = (max - min) || 1;
+              const pts = values.map((v, i) => ({
+                x: (i / (values.length - 1)) * W,
+                y: H - ((v - min) / span) * (H * 0.80) - H * 0.10,
+              }));
+              let line = `M${pts[0].x.toFixed(1)},${pts[0].y.toFixed(1)}`;
+              for (let i = 1; i < pts.length; i++) {
+                const p0 = pts[i - 1], p1 = pts[i];
+                const dx = (p1.x - p0.x) / 2.6;
+                line += ` C${(p0.x + dx).toFixed(1)},${p0.y.toFixed(1)} ${(p1.x - dx).toFixed(1)},${p1.y.toFixed(1)} ${p1.x.toFixed(1)},${p1.y.toFixed(1)}`;
+              }
+              return {
+                line,
+                area: `${line} L${W},${H} L0,${H} Z`,
+                lx: pts[pts.length - 1].x,
+                ly: pts[pts.length - 1].y,
+                flat: false,
+              };
+            };
+            const spark = buildSpark(sparkValues);
+            const hasProg = progPct > 0;
+
+            return (
               <div style={{
-                position:"relative", zIndex: 1,
-                display: "flex", flexDirection: "column",
-                alignItems: "center", gap: 12, width: "100%",
+                position: "relative", overflow: "hidden",
+                borderRadius: 22,
+                border: `1px solid ${TV.border}`,
               }}>
-                {/* Icône objectif dans une tuile */}
-                <div style={{
-                  width: 56, height: 56, borderRadius: 16,
-                  background: "rgba(11,14,18,0.65)",
-                  border: `1px solid ${TV.borderHi}`,
-                  backdropFilter: "blur(8px)",
-                  WebkitBackdropFilter: "blur(8px)",
-                  display: "grid", placeItems: "center",
-                  marginBottom: 2,
-                }}>
-                  <ID name="goal" size={28} dark tint={TV.blueBright}/>
-                </div>
-                {/* Titre */}
-                <div style={{
-                  fontFamily: DISP, fontSize: 16, fontWeight: 800,
-                  color: "#fff", letterSpacing: "-0.01em",
-                  textShadow: "0 2px 10px rgba(0,0,0,0.5)",
-                }}>Pas encore de données</div>
-                {/* Description */}
-                <div style={{
-                  fontSize: 12.5, color: "rgba(255,255,255,0.78)",
-                  lineHeight: 1.55, fontFamily: DISP,
-                  maxWidth: 300,
-                  textShadow: "0 1px 8px rgba(0,0,0,0.4)",
-                }}>
-                  Enregistre tes charges pendant tes séances<br />
-                  pour suivre tes progrès et battre tes records.
-                </div>
-                {/* Bouton "+ Ajouter un objectif" */}
-                <button onClick={() => setShowProgression(true)}
-                  className="tap"
+                {/* Photo en fond, grand-angle */}
+                <img src="https://images.pexels.com/photos/15373907/pexels-photo-15373907.jpeg"
+                  alt=""
                   style={{
-                    marginTop: 8,
-                    display: "inline-flex", alignItems: "center", gap: 8,
-                    padding: "12px 20px",
-                    borderRadius: 14,
-                    background: TV.blue, border: "none",
-                    color: "#fff", fontFamily: DISP,
-                    fontSize: 13.5, fontWeight: 750,
-                    letterSpacing: "-0.005em",
-                    cursor: "pointer",
-                    boxShadow: `0 10px 26px rgba(49,88,255,0.42)`,
+                    position:"absolute", inset: 0,
+                    width:"100%", height:"100%",
+                    objectFit:"cover", objectPosition:"center 35%",
+                    display:"block",
+                  }}/>
+                {/* Voile sombre — lisibilité des chiffres par-dessus la photo */}
+                <div style={{
+                  position:"absolute", inset: 0,
+                  background: "linear-gradient(180deg, rgba(11,14,18,0.78) 0%, rgba(11,14,18,0.88) 45%, rgba(11,14,18,0.96) 100%)",
+                  pointerEvents:"none",
+                }}/>
+
+                <div style={{ position:"relative", zIndex: 1 }}>
+                  {/* En-tête : titre + badge progression */}
+                  <div style={{
+                    display:"flex", alignItems:"center", justifyContent:"space-between",
+                    padding:"18px 18px 0", gap: 10,
                   }}>
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
-                    stroke="#fff" strokeWidth="2.4" strokeLinecap="round">
-                    <path d="M12 5v14M5 12h14"/>
-                  </svg>
-                  Ajouter un objectif
-                </button>
+                    <span style={{
+                      fontSize: 15, fontWeight: 800, color:"#fff",
+                      letterSpacing:"-0.01em", fontFamily: DISP,
+                      textShadow:"0 2px 10px rgba(0,0,0,0.45)",
+                    }}>Tes performances</span>
+                    <span style={{
+                      flexShrink: 0,
+                      display:"inline-flex", alignItems:"center", gap: 5,
+                      background: hasProg ? "rgba(18,183,106,0.14)" : "rgba(255,255,255,0.06)",
+                      border: `1px solid ${hasProg ? "rgba(18,183,106,0.30)" : TV.border}`,
+                      borderRadius: 99, padding:"4px 9px",
+                    }}>
+                      <span style={{
+                        color: hasProg ? "#12B76A" : TV.muted,
+                        fontSize: 11, fontWeight: 800, fontFamily: DISP, ...NUM,
+                      }}>{hasProg ? `+${progPct}%` : "0%"}</span>
+                      <span style={{ fontSize: 9.5, color: TV.muted, fontFamily: DISP }}>
+                        progression
+                      </span>
+                    </span>
+                  </div>
+
+                  {/* Corps : chiffres à gauche, courbe à droite */}
+                  <div style={{
+                    display:"flex", gap: 16, alignItems:"flex-end",
+                    padding:"16px 18px 16px",
+                  }}>
+                    <div style={{ flexShrink: 0, display:"flex", gap: 18 }}>
+                      <div>
+                        <div style={{
+                          fontSize: 34, fontWeight: 800, lineHeight: 1,
+                          letterSpacing:"-0.045em", color: TV.blueBright,
+                          fontFamily: DISP, ...NUM,
+                        }}>{totalRecords}</div>
+                        <div style={{
+                          fontSize: 11, color: TV.muted, lineHeight: 1.35,
+                          marginTop: 6, fontFamily: DISP,
+                        }}>Records<br />personnels</div>
+                      </div>
+                      <div style={{ width: 1, background: TV.border, alignSelf:"stretch" }}/>
+                      <div>
+                        <div style={{
+                          fontSize: 34, fontWeight: 800, lineHeight: 1,
+                          letterSpacing:"-0.045em", color: TV.blueBright,
+                          fontFamily: DISP, ...NUM,
+                        }}>{objectifsActifs}</div>
+                        <div style={{
+                          fontSize: 11, color: TV.muted, lineHeight: 1.35,
+                          marginTop: 6, fontFamily: DISP,
+                        }}>Objectifs<br />actifs</div>
+                      </div>
+                    </div>
+
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <svg viewBox={`0 0 ${W} ${H}`} width="100%" height={H}
+                        preserveAspectRatio="none" style={{ display:"block" }}>
+                        <defs>
+                          <linearGradient id="tdSparkFill" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%"   stopColor={TV.blueBright} stopOpacity={spark.flat ? "0.10" : "0.32"}/>
+                            <stop offset="100%" stopColor={TV.blueBright} stopOpacity="0"/>
+                          </linearGradient>
+                        </defs>
+                        <path d={spark.area} fill="url(#tdSparkFill)"/>
+                        <path d={spark.line} fill="none"
+                          stroke={spark.flat ? "rgba(255,255,255,0.16)" : TV.blueBright}
+                          strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"
+                          vectorEffect="non-scaling-stroke"/>
+                        {!spark.flat && (
+                          <circle cx={spark.lx} cy={spark.ly} r="3.4"
+                            fill={TV.blueBright} stroke={TV.bg} strokeWidth="2"
+                            vectorEffect="non-scaling-stroke"/>
+                        )}
+                      </svg>
+                      <div style={{
+                        fontSize: 9.5, color: TV.muted, marginTop: 7,
+                        fontFamily: DISP, textAlign:"right",
+                        overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap",
+                      }}>
+                        {topEx ? topEx.nom : "En attente de ta première charge"}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* CTA */}
+                  <div style={{ padding:"0 18px 18px" }}>
+                    <button onClick={() => setShowProgression(true)}
+                      className="tap"
+                      style={{
+                        width:"100%",
+                        display:"inline-flex", alignItems:"center", justifyContent:"center", gap: 8,
+                        padding:"13px 20px", borderRadius: 14,
+                        background: TV.blue, border:"none",
+                        color:"#fff", fontFamily: DISP,
+                        fontSize: 13.5, fontWeight: 750,
+                        letterSpacing:"-0.005em", cursor:"pointer",
+                        boxShadow:"0 10px 26px rgba(49,88,255,0.42)",
+                      }}>
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+                        stroke="#fff" strokeWidth="2.4" strokeLinecap="round">
+                        <path d="M12 5v14M5 12h14"/>
+                      </svg>
+                      Ajouter un objectif
+                    </button>
+                  </div>
+                </div>
               </div>
-            </div>
-          ) : (
-            <div>
+            );
+          })()}
+
+          {/* Grille des records — inchangée dans sa logique, adaptée au dark */}
+          {rmData.length > 0 && (
+            <div style={{ marginTop: 12 }}>
               <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:12 }}>
                 {rmData.map((ex, i) => {
                   const col  = REC_PALETTE[i % REC_PALETTE.length];
                   const tr   = trendOf(ex.historique);
                   return (
                     <div key={i} onClick={() => setEditRecord(ex)} style={{
-                      background:C.s1, border:`1px solid ${C.bd}`, borderRadius:16,
-                      padding:"16px 16px 12px", cursor:"pointer", boxShadow:C.shadow,
+                      background:TV.surface, border:`1px solid ${TV.border}`, borderRadius:16,
+                      padding:"16px 16px 12px", cursor:"pointer",
                     }}>
                       <div style={{ width:36, height:36, borderRadius:12,
-                        background:`linear-gradient(135deg, #E8EBFF, ${col}33)`,
-                        border:`1px solid ${col}30`,
+                        background:`${col}1F`,
+                        border:`1px solid ${col}3D`,
                         display:"flex", alignItems:"center", justifyContent:"center", marginBottom:8 }}>
                         <I name="gym" size={18} color={col}/>
                       </div>
                       <div style={{ fontFamily:DISP, fontSize:26, fontWeight:700, color:col,
                         letterSpacing:-1, lineHeight:1, ...NUM }}>{ex.rm1}</div>
-                      <div style={{ fontSize:10, color:"#98A2B3", fontWeight:600, marginTop:1, fontFamily:DISP }}>kg · 1RM</div>
-                      <div style={{ fontSize:13, color:C.text, fontWeight:600, marginTop:8,
+                      <div style={{ fontSize:10, color:TV.muted, fontWeight:600, marginTop:1, fontFamily:DISP }}>kg · 1RM</div>
+                      <div style={{ fontSize:13, color:TV.text, fontWeight:600, marginTop:8,
                         fontFamily:DISP, lineHeight:1.3, overflow:"hidden", textOverflow:"ellipsis",
                         display:"-webkit-box", WebkitLineClamp:2, WebkitBoxOrient:"vertical" }}>{ex.nom}</div>
-                      {tr && <div style={{ fontSize:10, color:C.green, fontWeight:700, marginTop:4, fontFamily:DISP }}>+{tr} kg</div>}
+                      {tr && <div style={{ fontSize:10, color:"#12B76A", fontWeight:700, marginTop:4, fontFamily:DISP }}>+{tr} kg</div>}
                     </div>
                   );
                 })}
               </div>
               <button onClick={() => setShowProgression(true)} style={{
                 width:"100%", padding:"16px", borderRadius:16,
-                background:"#3B5BFB", border:"none",
+                background:TV.blue, border:"none",
                 color:"#FFF", fontFamily:DISP, fontSize:15, fontWeight:800,
                 letterSpacing:-0.2, cursor:"pointer",
-                boxShadow:"0 8px 24px rgba(59,91,251,0.38)",
+                boxShadow:"0 8px 24px rgba(49,88,255,0.38)",
                 display:"flex", alignItems:"center", justifyContent:"center", gap:8,
               }}>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round">
