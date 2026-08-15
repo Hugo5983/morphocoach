@@ -243,7 +243,7 @@ export default function TodayView(props) {
       color: TV.text,
       fontFamily: DISP,
       minHeight: "100dvh",
-      padding: "0 20px 100px",
+      padding: "0 20px 32px",
       boxSizing: "border-box",
     }}>
 
@@ -280,7 +280,7 @@ export default function TodayView(props) {
 
         return (
           <div style={{
-            paddingTop: 24, marginBottom: 24,
+            paddingTop: 10, marginBottom: 18,
             display:"flex", alignItems:"center", justifyContent:"space-between",
             gap: 16,
             animation:"tdFadeUp .55s cubic-bezier(.22,1,.36,1) both",
@@ -571,10 +571,6 @@ export default function TodayView(props) {
           }}>
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{
-                fontSize: 11, fontWeight: 800, letterSpacing:"0.14em",
-                color: TV.blueBright, fontFamily: DISP, marginBottom: 6,
-              }}>ENVIE DE BOUGER ?</div>
-              <div style={{
                 fontSize: 26, fontWeight: 800, letterSpacing:"-0.03em",
                 color: TV.text, lineHeight: 1.05, fontFamily: DISP,
               }}>
@@ -838,16 +834,17 @@ export default function TodayView(props) {
           return d > 0 ? d : null;
         };
         return (
-        <div style={{ marginBottom: 20 }}>
-          <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:12 }}>
+        <div style={{ marginBottom: 0 }}>
+          <div style={{ display:"flex", alignItems:"flex-end", justifyContent:"space-between", marginBottom:16, gap:12 }}>
             <div style={{
-              fontFamily:DISP, fontSize:12, fontWeight:800,
-              color:TV.textDim, letterSpacing:"0.14em", textTransform:"uppercase",
+              flex: 1, minWidth: 0,
+              fontSize: 26, fontWeight: 800, letterSpacing:"-0.03em",
+              color: TV.text, lineHeight: 1.05, fontFamily: DISP,
             }}>
-              Records & Objectifs
+              Records & <span style={{ fontStyle:"italic", color: TV.blueBright }}>Objectifs</span>
             </div>
             <button onClick={() => setShowProgression(true)}
-              style={{ fontSize:11.5, fontWeight:700, color:TV.text,
+              style={{ flexShrink:0, fontSize:11.5, fontWeight:700, color:TV.text,
                 background:"transparent", border:`1px solid ${TV.borderHi}`, borderRadius:12,
                 padding:"7px 12px", cursor:"pointer", fontFamily:DISP,
                 display:"flex", alignItems:"center", gap:6 }}>
@@ -861,58 +858,87 @@ export default function TodayView(props) {
 
           {rmData.length === 0 ? (
             <div style={{
-              background: TV.surface,
-              border: `1px solid ${TV.border}`,
+              position: "relative", overflow: "hidden",
               borderRadius: 22,
+              border: `1px solid ${TV.border}`,
               padding: "26px 22px 20px",
               display: "flex", flexDirection: "column",
               alignItems: "center", textAlign: "center", gap: 12,
+              minHeight: 260,
+              justifyContent: "center",
             }}>
-              {/* Icône objectif dans une tuile */}
-              <div style={{
-                width: 56, height: 56, borderRadius: 16,
-                background: TV.surfaceHi,
-                border: `1px solid ${TV.border}`,
-                display: "grid", placeItems: "center",
-                marginBottom: 2,
-              }}>
-                <ID name="goal" size={28} dark tint={TV.blueBright}/>
-              </div>
-              {/* Titre */}
-              <div style={{
-                fontFamily: DISP, fontSize: 15, fontWeight: 800,
-                color: TV.text, letterSpacing: "-0.01em",
-              }}>Pas encore de données</div>
-              {/* Description */}
-              <div style={{
-                fontSize: 12.5, color: TV.muted,
-                lineHeight: 1.55, fontFamily: DISP,
-                maxWidth: 280,
-              }}>
-                Enregistre tes charges pendant tes séances<br />
-                pour suivre tes progrès et battre tes records.
-              </div>
-              {/* Bouton "+ Ajouter un objectif" */}
-              <button onClick={() => setShowProgression(true)}
-                className="tap"
+              {/* Photo Pexels en fond (sport / force — ID 15373907) */}
+              <img src="https://images.pexels.com/photos/15373907/pexels-photo-15373907.jpeg"
+                alt=""
                 style={{
-                  marginTop: 8,
-                  display: "inline-flex", alignItems: "center", gap: 8,
-                  padding: "12px 20px",
-                  borderRadius: 14,
-                  background: TV.blue, border: "none",
-                  color: "#fff", fontFamily: DISP,
-                  fontSize: 13.5, fontWeight: 750,
-                  letterSpacing: "-0.005em",
-                  cursor: "pointer",
-                  boxShadow: `0 8px 22px ${TV.blueSoft}`,
+                  position:"absolute", inset: 0,
+                  width:"100%", height:"100%",
+                  objectFit:"cover", objectPosition:"center",
+                  display:"block",
+                }}/>
+              {/* Overlay dégradé sombre pour lisibilité du texte */}
+              <div style={{
+                position:"absolute", inset: 0,
+                background: `linear-gradient(180deg, rgba(11,14,18,0.55) 0%, rgba(11,14,18,0.82) 55%, rgba(11,14,18,0.94) 100%)`,
+                pointerEvents:"none",
+              }}/>
+
+              {/* Contenu par-dessus */}
+              <div style={{
+                position:"relative", zIndex: 1,
+                display: "flex", flexDirection: "column",
+                alignItems: "center", gap: 12, width: "100%",
+              }}>
+                {/* Icône objectif dans une tuile */}
+                <div style={{
+                  width: 56, height: 56, borderRadius: 16,
+                  background: "rgba(11,14,18,0.65)",
+                  border: `1px solid ${TV.borderHi}`,
+                  backdropFilter: "blur(8px)",
+                  WebkitBackdropFilter: "blur(8px)",
+                  display: "grid", placeItems: "center",
+                  marginBottom: 2,
                 }}>
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
-                  stroke="#fff" strokeWidth="2.4" strokeLinecap="round">
-                  <path d="M12 5v14M5 12h14"/>
-                </svg>
-                Ajouter un objectif
-              </button>
+                  <ID name="goal" size={28} dark tint={TV.blueBright}/>
+                </div>
+                {/* Titre */}
+                <div style={{
+                  fontFamily: DISP, fontSize: 16, fontWeight: 800,
+                  color: "#fff", letterSpacing: "-0.01em",
+                  textShadow: "0 2px 10px rgba(0,0,0,0.5)",
+                }}>Pas encore de données</div>
+                {/* Description */}
+                <div style={{
+                  fontSize: 12.5, color: "rgba(255,255,255,0.78)",
+                  lineHeight: 1.55, fontFamily: DISP,
+                  maxWidth: 300,
+                  textShadow: "0 1px 8px rgba(0,0,0,0.4)",
+                }}>
+                  Enregistre tes charges pendant tes séances<br />
+                  pour suivre tes progrès et battre tes records.
+                </div>
+                {/* Bouton "+ Ajouter un objectif" */}
+                <button onClick={() => setShowProgression(true)}
+                  className="tap"
+                  style={{
+                    marginTop: 8,
+                    display: "inline-flex", alignItems: "center", gap: 8,
+                    padding: "12px 20px",
+                    borderRadius: 14,
+                    background: TV.blue, border: "none",
+                    color: "#fff", fontFamily: DISP,
+                    fontSize: 13.5, fontWeight: 750,
+                    letterSpacing: "-0.005em",
+                    cursor: "pointer",
+                    boxShadow: `0 10px 26px rgba(49,88,255,0.42)`,
+                  }}>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+                    stroke="#fff" strokeWidth="2.4" strokeLinecap="round">
+                    <path d="M12 5v14M5 12h14"/>
+                  </svg>
+                  Ajouter un objectif
+                </button>
+              </div>
             </div>
           ) : (
             <div>
