@@ -13,6 +13,33 @@ import FocusMode from"./FocusMode.jsx";
 const DISP = FONT;
 const SERIF_F = SERIF;
 
+// ─── Palette dark premium (locale à TodayView) ─────────────────────────────
+// Direction demandée : #050609 fond, surfaces sombres, bleu MorphoCoach #285BFF.
+// N'affecte pas les autres écrans (constantes locales, pas globales).
+const TV = {
+  bg:         "#050609",
+  surface:    "#0A0B10",
+  surfaceHi:  "#101118",
+  surfaceMid: "#0E0F16",
+  border:     "rgba(255,255,255,0.08)",
+  borderHi:   "rgba(255,255,255,0.14)",
+  text:       "#F5F5F7",
+  textDim:    "#B6B8C1",
+  muted:      "#858894",
+  faint:      "#5A5D6A",
+  blue:       "#285BFF",
+  blueBright: "#3264FF",
+  blueSoft:   "rgba(40,91,255,0.14)",
+  blueLine:   "rgba(40,91,255,0.30)",
+};
+
+// Images du carousel « Compose ta séance » — Pexels (IDs choisis par Hugo)
+const CAROUSEL_IMG = {
+  muscu:   "https://images.pexels.com/photos/33258631/pexels-photo-33258631.jpeg",
+  cardio:  "https://images.pexels.com/photos/6389882/pexels-photo-6389882.jpeg",
+  stretch: "https://images.pexels.com/photos/8436691/pexels-photo-8436691.jpeg",
+};
+
 export default function TodayView(props) {
   const { prog, setProg, calSess, setCalSess, checkedEx, setCheckedEx,
     seance, setSeance, setChrono, setChronoSec,
@@ -209,7 +236,14 @@ export default function TodayView(props) {
   }
 
   return (
-    <div style={{ padding:"0 20px" }}>
+    <div style={{
+      background: TV.bg,
+      color: TV.text,
+      fontFamily: DISP,
+      minHeight: "100dvh",
+      padding: "0 20px 100px",
+      boxSizing: "border-box",
+    }}>
 
       {/* ── Animations locales ──────────────────────────────────── */}
       <style>{`
@@ -226,60 +260,8 @@ export default function TodayView(props) {
         const dateLabel = today.toLocaleDateString("fr-FR", {
           weekday:"long", day:"numeric", month:"short",
         }).toUpperCase().replace(".", "");
-        return (
-          <div style={{
-            paddingTop: 8, marginBottom: 18,
-            display:"flex", alignItems:"flex-start", justifyContent:"space-between",
-            gap: 12,
-            animation:"tdFadeUp .55s cubic-bezier(.22,1,.36,1) both",
-            animationDelay:".04s",
-          }}>
-            <div style={{ flex:1, minWidth:0 }}>
-              <div style={{
-                fontSize:11, fontWeight:700, letterSpacing:"0.12em",
-                color: C.accent, fontFamily: DISP, marginBottom: 6,
-              }}>
-                {dateLabel}
-              </div>
-              <div style={{
-                fontFamily: DISP, fontSize: 31, fontWeight: 700,
-                color: C.text, letterSpacing: -1, lineHeight: 1,
-              }}>
-                {todaySeance
-                  ? <>Séance du <span style={{ fontStyle:"italic", color: C.accent }}>jour</span></>
-                  : <>Journée <span style={{ fontStyle:"italic", color: C.accent }}>libre</span></>}
-              </div>
-              <div style={{
-                fontSize: 13.5, fontWeight: 500, color:"#6B7486",
-                fontFamily: DISP, marginTop: 6,
-              }}>
-                {todaySeance
-                  ? "Programmée par ton coach — continue ta progression"
-                  : "Aucune séance ni programme actif — à toi de jouer"}
-              </div>
-            </div>
-            {streak > 0 && (
-              <div style={{ display:"flex", flexDirection:"column", alignItems:"center",
-                background:"#FFFFFF", border:"1px solid rgba(245,158,11,0.20)",
-                borderRadius:16, padding:"8px 12px", flexShrink:0,
-                boxShadow:"0 2px 8px rgba(245,158,11,0.12)" }}>
-                <div style={{ display:"flex", alignItems:"center", gap:4 }}>
-                  <span style={{ fontSize:16 }}><ID name="streak" size={24}/></span>
-                  <span style={{ fontSize:20, fontWeight:700, color:"#F59E0B", fontFamily:DISP, lineHeight:1 }}>{streak}</span>
-                </div>
-                <div style={{ fontSize:10, fontWeight:600, color:"#0F1923", fontFamily:DISP,
-                  letterSpacing:"0.1em", marginTop:2, textAlign:"center" }}>
-                  série
-                </div>
-              </div>
-            )}
-          </div>
-        );
-      })()}
 
-      {/* ── État de forme (V4/V5) ───────────────────────────────── */}
-      {(() => {
-        // Score calculé à partir de la récup dispo (sommeil, mobilité, streak)
+        // Score État de forme — même calcul qu'avant, hissé ici pour le cercle
         let score = 70;
         if (todaySleepLogged !== null) {
           if (todaySleepLogged >= sleepTarget) score += 15;
@@ -289,68 +271,96 @@ export default function TodayView(props) {
         if (todayMobilite) score += 8;
         if (streak > 0) score += Math.min(7, streak);
         score = Math.max(30, Math.min(100, score));
-
-        const stateLabel = score >= 80 ? "PRÊT" : score >= 60 ? "OK" : "REPOS";
-        const stateColor = score >= 80 ? "#12B981" : score >= 60 ? "#F59E0B" : "#E5484D";
-        const stateBg    = score >= 80 ? "#E7F7F0" : score >= 60 ? "#FEF3E2" : "#FDECEC";
-        const stateRing  = score >= 80 ? "#EAF7F0" : score >= 60 ? "#FEF3E2" : "#FDECEC";
-        const stateSub   = score >= 80
-          ? (todaySeance
-              ? "Bien récupéré · c'est le moment idéal pour pousser"
-              : "Bien récupéré · ton corps est prêt à bouger")
-          : score >= 60
-            ? "Récupération correcte · à toi de choisir l'intensité"
-            : "Récupération limitée · pense à te reposer";
-
-        // Le cercle complet vaut 97 (dasharray). On dessine `dashLen` du total.
-        const CIRC = 97;
-        const dashLen = Math.round(CIRC * (score / 100));
+        const stateLabel = score >= 80 ? "Prêt" : score >= 60 ? "Bon" : "Repos";
+        const stateColor = score >= 80 ? "#12B981" : score >= 60 ? "#12B981" : "#F59E0B";
+        const CIRC = 2 * Math.PI * 38; // r=38
+        const dashLen = CIRC * (score / 100);
 
         return (
-          <div onClick={() => { setSleepInput(todaySleepLogged ?? sleepTarget); setShowSleepModal(true); }}
-            style={{
-              background: C.s1, border:`1px solid ${C.bd}`,
-              borderRadius: 18, padding:"14px 15px",
-              display:"flex", alignItems:"center", gap: 13,
-              boxShadow:"0 2px 8px rgba(15,25,35,0.04)",
-              marginBottom: 18, cursor:"pointer",
-              animation:"tdFadeUp .55s cubic-bezier(.22,1,.36,1) both",
-              animationDelay:".10s",
-            }}>
-            <div style={{ position:"relative", width: 44, height: 44, flex:"none" }}>
-              <svg width="44" height="44" viewBox="0 0 36 36">
-                <circle cx="18" cy="18" r="15.5" fill="none" stroke={stateRing} strokeWidth="4"/>
-                <circle cx="18" cy="18" r="15.5" fill="none" stroke={stateColor} strokeWidth="4"
-                  strokeLinecap="round"
-                  strokeDasharray={`${dashLen} ${CIRC}`}
-                  transform="rotate(-90 18 18)"
-                  style={{ animation:"tdRingDraw 1.1s cubic-bezier(.22,1,.36,1) .35s both" }}/>
-              </svg>
-              <span style={{
-                position:"absolute", inset: 0, display:"grid", placeItems:"center",
-                fontSize: 12, fontWeight: 800, color: stateColor, fontFamily: DISP,
-                animation:"tdFadeIn .6s ease .9s both",
-              }}>{score}</span>
-            </div>
-            <div style={{ flex:1, minWidth:0, display:"flex", flexDirection:"column", gap:3 }}>
-              <div style={{ display:"flex", alignItems:"center", gap:7 }}>
-                <span style={{ fontSize:14, fontWeight:800, color: C.text, fontFamily: DISP }}>État de forme</span>
-                <span style={{
-                  fontSize:10, fontWeight:800, letterSpacing:"0.03em",
-                  color: stateColor, background: stateBg,
-                  padding:"2px 7px", borderRadius:6, fontFamily: DISP,
-                }}>{stateLabel}</span>
+          <div style={{
+            paddingTop: 24, marginBottom: 24,
+            display:"flex", alignItems:"center", justifyContent:"space-between",
+            gap: 16,
+            animation:"tdFadeUp .55s cubic-bezier(.22,1,.36,1) both",
+            animationDelay:".04s",
+          }}>
+            <div style={{ flex:1, minWidth:0 }}>
+              <div style={{
+                fontSize:11, fontWeight:800, letterSpacing:"0.14em",
+                color: TV.blueBright, fontFamily: DISP, marginBottom: 10,
+              }}>
+                {dateLabel}
               </div>
-              <span style={{ fontSize:12, fontWeight:500, color:"#6B7486", fontFamily: DISP }}>
-                {stateSub}
-              </span>
+              <div style={{
+                fontFamily: DISP, fontSize: 30, fontWeight: 800,
+                color: TV.text, letterSpacing: "-0.03em", lineHeight: 1,
+              }}>
+                {todaySeance
+                  ? <>Séance du <span style={{ fontStyle:"italic", color: TV.blueBright }}>jour</span></>
+                  : <>Journée <span style={{ fontStyle:"italic", color: TV.blueBright }}>libre</span></>}
+              </div>
+              <div style={{
+                fontSize: 13, fontWeight: 500, color: TV.muted,
+                fontFamily: DISP, marginTop: 10, lineHeight: 1.5,
+              }}>
+                {todaySeance
+                  ? "Programmée par ton coach — continue ta progression"
+                  : <>Aucune séance ni programme actif<br />— à toi de jouer.</>}
+              </div>
             </div>
-            <span style={{ color:"#C3C9D4", flexShrink:0, display:"grid", placeItems:"center" }}>
-              <I name="chevronRight" size={16} color="#C3C9D4"/>
-            </span>
+
+            {/* État de forme — cercle premium 90×90 à droite */}
+            <div
+              onClick={() => { setSleepInput(todaySleepLogged ?? sleepTarget); setShowSleepModal(true); }}
+              style={{
+                flexShrink: 0,
+                display:"flex", flexDirection:"column", alignItems:"center", gap: 8,
+                cursor:"pointer",
+              }}
+              aria-label={`État de forme ${score}%`}
+            >
+              <div style={{
+                position:"relative", width: 90, height: 90,
+                filter: `drop-shadow(0 6px 18px ${TV.blueSoft})`,
+              }}>
+                <svg width="90" height="90" viewBox="0 0 90 90"
+                  style={{ transform:"rotate(-90deg)" }}>
+                  <circle cx="45" cy="45" r="38" fill="none"
+                    stroke="rgba(255,255,255,0.08)" strokeWidth="5"/>
+                  <circle cx="45" cy="45" r="38" fill="none"
+                    stroke={TV.blueBright} strokeWidth="5" strokeLinecap="round"
+                    strokeDasharray={`${dashLen} ${CIRC - dashLen}`}
+                    style={{ filter: `drop-shadow(0 0 6px ${TV.blueBright}55)` }}/>
+                </svg>
+                <div style={{
+                  position:"absolute", inset: 0,
+                  display:"flex", flexDirection:"column",
+                  alignItems:"center", justifyContent:"center", gap: 1,
+                }}>
+                  <span style={{
+                    fontSize: 22, fontWeight: 850, color: TV.text,
+                    letterSpacing: "-0.03em", lineHeight: 1, fontFamily: DISP,
+                  }}>{score}%</span>
+                </div>
+              </div>
+              <div style={{
+                display:"flex", alignItems:"center", gap: 6,
+                fontSize: 10.5, fontWeight: 700, color: TV.textDim,
+                letterSpacing: "0.02em", fontFamily: DISP,
+              }}>
+                <span style={{
+                  width: 6, height: 6, borderRadius: "50%",
+                  background: stateColor,
+                  boxShadow: `0 0 6px ${stateColor}88`,
+                }}/>
+                {stateLabel}
+              </div>
+            </div>
           </div>
         );
       })()}
+
+      {/* ── (État de forme désormais fusionné dans le header sous forme de cercle premium) ── */}
 
       {/* ── Bloc principal : séance (V5) OU composer (V4) ────── */}
       {todaySeance ? (() => {
@@ -546,7 +556,164 @@ export default function TodayView(props) {
           </>
         );
       })() : (
-        /* COMPOSER V4 — pas de séance ni programme actif */
+        /* COMPOSER V6 — carousel horizontal premium avec grandes cartes 228×266 */
+        <div style={{
+          marginBottom: 22,
+          animation:"tdFadeUp .6s cubic-bezier(.22,1,.36,1) both",
+          animationDelay:".16s",
+        }}>
+          {/* En-tête : label + titre à gauche, bouton "Planifier" à droite */}
+          <div style={{
+            display:"flex", alignItems:"flex-end", justifyContent:"space-between",
+            gap: 12, marginBottom: 16,
+          }}>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{
+                fontSize: 11, fontWeight: 800, letterSpacing:"0.14em",
+                color: TV.blueBright, fontFamily: DISP, marginBottom: 6,
+              }}>ENVIE DE BOUGER ?</div>
+              <div style={{
+                fontSize: 26, fontWeight: 800, letterSpacing:"-0.03em",
+                color: TV.text, lineHeight: 1.05, fontFamily: DISP,
+              }}>
+                Compose ta <span style={{ fontStyle:"italic", color: TV.blueBright }}>séance</span>
+              </div>
+            </div>
+            <button
+              onClick={() => setProgView && setProgView("analyse")}
+              className="tap"
+              style={{
+                flexShrink: 0,
+                display:"inline-flex", alignItems:"center", gap: 7,
+                background: "transparent",
+                border: `1px solid ${TV.borderHi}`,
+                borderRadius: 12,
+                padding: "9px 12px",
+                color: TV.text, fontFamily: DISP,
+                fontSize: 11.5, fontWeight: 700,
+                cursor: "pointer",
+              }}
+            >
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="4" width="18" height="17" rx="3"/><path d="M8 2v4M16 2v4M3 10h18"/>
+              </svg>
+              Planifier
+            </button>
+          </div>
+
+          {/* Carousel horizontal — snap, cartes 228×266, gap 12, débord latéral */}
+          <div style={{
+            display: "flex", gap: 12,
+            overflowX: "auto", overflowY: "hidden",
+            scrollSnapType: "x mandatory",
+            WebkitOverflowScrolling: "touch",
+            paddingBottom: 4,
+            marginInline: -20, paddingInline: 20,
+            scrollbarWidth: "none",
+          }}>
+            <style>{`.tv-cs::-webkit-scrollbar{display:none}`}</style>
+            {[
+              { key:"muscu",   label:"Musculation", sub:"À composer", img: CAROUSEL_IMG.muscu,   icon:"gym",      onClick: () => setShowCreateSeance(true) },
+              { key:"cardio",  label:"Cardio",      sub:"20 min",     img: CAROUSEL_IMG.cardio,  icon:"cardio",   onClick: () => setShowCreateSeance(true) },
+              { key:"stretch", label:"Étirement",   sub: todayMobilite ? "Fait ✓" : "10 min", img: CAROUSEL_IMG.stretch, icon:"recovery", onClick: toggleMobilite, flash: mobiliteFlash },
+            ].map((card, i) => (
+              <div key={card.key} onClick={card.onClick}
+                className="tap"
+                style={{
+                  flex: "0 0 228px",
+                  height: 266,
+                  borderRadius: 22,
+                  overflow: "hidden",
+                  position: "relative",
+                  scrollSnapAlign: "start",
+                  cursor: "pointer",
+                  border: `1px solid ${card.flash ? "rgba(18,183,106,0.5)" : TV.border}`,
+                  background: TV.surface,
+                  boxShadow: card.flash
+                    ? "0 0 24px rgba(18,183,106,0.35)"
+                    : "0 12px 30px rgba(0,0,0,0.35)",
+                  animation:"tdFadeUp .55s cubic-bezier(.22,1,.36,1) both",
+                  animationDelay:`${(0.22 + i * 0.06).toFixed(2)}s`,
+                }}>
+                {/* Image de fond */}
+                <img src={card.img} alt={card.label}
+                  style={{
+                    position:"absolute", inset: 0,
+                    width:"100%", height:"100%",
+                    objectFit:"cover", objectPosition:"center 30%",
+                    display:"block",
+                  }}/>
+                {/* Overlay dégradé bas */}
+                <div style={{
+                  position:"absolute", inset: 0,
+                  background:"linear-gradient(180deg, rgba(5,6,9,0.10) 0%, rgba(5,6,9,0.20) 40%, rgba(5,6,9,0.88) 100%)",
+                  pointerEvents:"none",
+                }}/>
+                {/* Icône bleue en haut-gauche */}
+                <div style={{
+                  position:"absolute", top: 14, left: 14,
+                  width: 42, height: 42, borderRadius: 12,
+                  background: TV.blue,
+                  display:"grid", placeItems:"center",
+                  boxShadow: `0 6px 16px ${TV.blueSoft}`,
+                }}>
+                  <ID name={card.icon} size={22} dark tint="#fff"/>
+                </div>
+                {/* Titre + sous-titre + bouton flèche en bas */}
+                <div style={{
+                  position:"absolute", left: 16, right: 16, bottom: 16,
+                  display:"flex", alignItems:"flex-end", justifyContent:"space-between",
+                  gap: 8,
+                }}>
+                  <div style={{ minWidth: 0 }}>
+                    <div style={{
+                      fontSize: 18, fontWeight: 800, color: "#fff",
+                      lineHeight: 1.15, letterSpacing:"-0.02em", fontFamily: DISP,
+                    }}>{card.label}</div>
+                    <div style={{
+                      fontSize: 12, fontWeight: 500,
+                      color: "rgba(255,255,255,0.72)",
+                      marginTop: 2, fontFamily: DISP,
+                    }}>{card.sub}</div>
+                  </div>
+                  <div style={{
+                    width: 36, height: 36, borderRadius: "50%",
+                    background: "rgba(5,6,9,0.55)",
+                    border: `1px solid ${TV.blueLine}`,
+                    backdropFilter: "blur(10px)",
+                    WebkitBackdropFilter: "blur(10px)",
+                    display:"grid", placeItems:"center", flexShrink: 0,
+                  }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                      stroke={TV.blueBright} strokeWidth="2.4"
+                      strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M5 12h13M13 6l6 6-6 6"/>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Indicateur dots — visuel */}
+          <div style={{
+            display:"flex", justifyContent:"center", gap: 6,
+            marginTop: 14,
+          }}>
+            {[0,1,2,3].map(i => (
+              <div key={i} style={{
+                width: i === 0 ? 18 : 6, height: 6, borderRadius: 999,
+                background: i === 0 ? TV.blueBright : "rgba(255,255,255,0.12)",
+                transition: "width .3s ease",
+              }}/>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ── Composer V4 legacy (désactivé — remplacé par carousel V6) ── */}
+      {false && (
         <div style={{
           position:"relative", borderRadius: 24, overflow:"hidden",
           background:"#0E1220",
@@ -680,14 +847,17 @@ export default function TodayView(props) {
         return (
         <div style={{ marginBottom: 20 }}>
           <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:12 }}>
-            <div style={{ fontFamily:DISP, fontSize:17, fontWeight:800, color:C.text, letterSpacing:-0.3 }}>
+            <div style={{
+              fontFamily:DISP, fontSize:12, fontWeight:800,
+              color:TV.textDim, letterSpacing:"0.14em", textTransform:"uppercase",
+            }}>
               Records & Objectifs
             </div>
             <button onClick={() => setShowProgression(true)}
-              style={{ fontSize:11, fontWeight:600, color:C.mid,
-                background:C.s2, border:"none", borderRadius:12,
-                padding:"4px 12px", cursor:"pointer", fontFamily:DISP,
-                display:"flex", alignItems:"center", gap:4 }}>
+              style={{ fontSize:11.5, fontWeight:700, color:TV.text,
+                background:"transparent", border:`1px solid ${TV.borderHi}`, borderRadius:12,
+                padding:"7px 12px", cursor:"pointer", fontFamily:DISP,
+                display:"flex", alignItems:"center", gap:6 }}>
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                 <path d="M3 17 9 11 13 15 21 7"/><path d="M14 7h7v7"/>
@@ -697,17 +867,48 @@ export default function TodayView(props) {
           </div>
 
           {rmData.length === 0 ? (
-            <div style={{ background:C.s1, border:`1px solid ${C.bd}`, borderRadius:20, padding:"24px 20px 20px", textAlign:"center" }}>
-              <div style={{ fontFamily:DISP, fontSize:14, fontWeight:700, color:C.text, marginBottom:8 }}>Pas encore de données</div>
-              <div style={{ fontSize:11, color:C.mid, lineHeight:1.6, marginBottom:16, fontFamily:DISP }}>
-                Enregistre tes charges pendant les séances pour voir tes records et tes 1RM estimés.
+            <div style={{
+              background: TV.surface,
+              border: `1px solid ${TV.border}`,
+              borderRadius: 20,
+              padding: "18px 18px",
+              display: "flex", alignItems: "center", gap: 14,
+            }}>
+              {/* Icône cible à gauche */}
+              <div style={{
+                width: 48, height: 48, borderRadius: 14,
+                background: TV.surfaceHi,
+                border: `1px solid ${TV.border}`,
+                display: "grid", placeItems: "center", flexShrink: 0,
+              }}>
+                <ID name="goal" size={24} dark tint={TV.blueBright}/>
               </div>
+              {/* Texte au centre */}
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{
+                  fontFamily: DISP, fontSize: 14, fontWeight: 800,
+                  color: TV.text, marginBottom: 4,
+                }}>Pas encore de données</div>
+                <div style={{
+                  fontSize: 11.5, color: TV.muted,
+                  lineHeight: 1.5, fontFamily: DISP,
+                }}>
+                  Enregistre tes charges pendant les séances pour voir tes progrès et tes records.
+                </div>
+              </div>
+              {/* Bouton + circulaire à droite */}
               <button onClick={() => setShowProgression(true)} style={{
-                width:"100%", padding:"16px", borderRadius:16,
-                background:"#3B5BFB", border:"none",
-                color:"#FFF", fontFamily:DISP, fontSize:14, fontWeight:700,
-                cursor:"pointer", boxShadow:"0 8px 24px rgba(60,91,255,0.35)",
-              }}>Saisir un record</button>
+                width: 44, height: 44, borderRadius: "50%",
+                background: TV.blue, border: "none",
+                color: "#fff", cursor: "pointer",
+                display: "grid", placeItems: "center", flexShrink: 0,
+                boxShadow: `0 8px 20px ${TV.blueSoft}`,
+              }} aria-label="Saisir un record">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                  stroke="#fff" strokeWidth="2.4" strokeLinecap="round">
+                  <path d="M12 5v14M5 12h14"/>
+                </svg>
+              </button>
             </div>
           ) : (
             <div>
