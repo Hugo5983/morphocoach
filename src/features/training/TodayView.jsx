@@ -834,23 +834,25 @@ export default function TodayView(props) {
           return d > 0 ? d : null;
         };
         return (
-        <div style={{ marginBottom: 0 }}>
+        <div style={{ marginBottom: 0, marginInline: 14 }}>
+          {/* Titre sur 2 lignes — « Objectifs » en italique bleu dessous */}
           <div style={{ display:"flex", alignItems:"flex-end", justifyContent:"space-between", marginBottom:16, gap:12 }}>
             <div style={{
               flex: 1, minWidth: 0,
-              fontSize: 26, fontWeight: 800, letterSpacing:"-0.03em",
-              color: TV.text, lineHeight: 1.05, fontFamily: DISP,
+              fontSize: 29, fontWeight: 800, letterSpacing:"-0.035em",
+              color: TV.text, lineHeight: 1.04, fontFamily: DISP,
             }}>
-              Records & <span style={{ fontStyle:"italic", color: TV.blueBright }}>Objectifs</span>
+              Records &<br />
+              <span style={{ fontStyle:"italic", color: TV.blueBright }}>Objectifs</span>
             </div>
             <button onClick={() => setShowProgression(true)}
-              style={{ flexShrink:0, fontSize:11.5, fontWeight:700, color:TV.text,
-                background:"transparent", border:`1px solid ${TV.borderHi}`, borderRadius:12,
-                padding:"7px 12px", cursor:"pointer", fontFamily:DISP,
-                display:"flex", alignItems:"center", gap:6 }}>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+              style={{ flexShrink:0, fontSize:12.5, fontWeight:700, color:TV.text,
+                background:"transparent", border:`1px solid ${TV.borderHi}`, borderRadius:14,
+                padding:"10px 15px", cursor:"pointer", fontFamily:DISP,
+                display:"flex", alignItems:"center", gap:7 }}>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                <path d="M3 17 9 11 13 15 21 7"/><path d="M14 7h7v7"/>
+                <path d="M3 17 9 11l4 4 8-8"/><path d="M14 7h7v7"/>
               </svg>
               Historique
             </button>
@@ -859,7 +861,7 @@ export default function TodayView(props) {
           {(() => {
             // ── Valeurs dérivées des données existantes (0 si rien) ──────
             // Aucune donnée inventée : tout vient de rmData / getRM().
-            const totalRecords   = rmData.length;
+            const totalRecords    = rmData.length;
             const objectifsActifs = rmData.filter(ex => ex.rm1 < ex.cible).length;
 
             // Progression moyenne en % sur les exercices ayant ≥2 entrées
@@ -874,181 +876,218 @@ export default function TodayView(props) {
             const progPct = gainsPct.length
               ? Math.round(gainsPct.reduce((a, b) => a + b, 0) / gainsPct.length)
               : 0;
+            const hasProg = progPct > 0;
 
-            // Courbe : historique 1RM du record le plus lourd
+            // Exercice mis en avant : le record le plus lourd
             const topEx = rmData.length
-              ? rmData.reduce((a, b) => (a.rm1 >= b.rm1 ? a : b))
-              : null;
+                ? rmData.reduce((a, b) => (a.rm1 >= b.rm1 ? a : b))
+                : null;
             const sparkValues = topEx?.historique?.length
               ? topEx.historique.map(h => calc1RM(parseFloat(h.poids), parseInt(h.reps)))
               : [];
+            const gainKg  = topEx ? trendOf(topEx.historique) : null;
+            const resteKg = topEx ? Math.max(0, Math.round(topEx.cible - topEx.rm1)) : 0;
 
-            // Construction du tracé lissé (ligne + aire)
-            const W = 170, H = 82;
-            const buildSpark = (values) => {
-              if (!values || values.length < 2) {
-                const y = H * 0.78; // ligne plate basse quand il n'y a rien
-                return {
-                  line: `M0,${y} L${W},${y}`,
-                  area: `M0,${y} L${W},${y} L${W},${H} L0,${H} Z`,
-                  lx: W, ly: y, flat: true,
-                };
-              }
+            // ── Courbe traversante ───────────────────────────────────────
+            const W = 390, H = 96;
+            // Tracé d'amorce quand il n'y a rien : presque plat, remonte à droite.
+            const EMPTY_LINE = "M0,84 C60,84 90,82 140,81 C200,80 235,77 280,73 C320,69 350,62 390,54";
+            const buildLine = (values) => {
+              if (!values || values.length < 2) return { d: EMPTY_LINE, lx: W, ly: 54, empty: true };
               const min = Math.min(...values), max = Math.max(...values);
               const span = (max - min) || 1;
               const pts = values.map((v, i) => ({
                 x: (i / (values.length - 1)) * W,
-                y: H - ((v - min) / span) * (H * 0.80) - H * 0.10,
+                y: H - ((v - min) / span) * (H * 0.72) - H * 0.14,
               }));
-              let line = `M${pts[0].x.toFixed(1)},${pts[0].y.toFixed(1)}`;
+              let d = `M${pts[0].x.toFixed(1)},${pts[0].y.toFixed(1)}`;
               for (let i = 1; i < pts.length; i++) {
                 const p0 = pts[i - 1], p1 = pts[i];
                 const dx = (p1.x - p0.x) / 2.6;
-                line += ` C${(p0.x + dx).toFixed(1)},${p0.y.toFixed(1)} ${(p1.x - dx).toFixed(1)},${p1.y.toFixed(1)} ${p1.x.toFixed(1)},${p1.y.toFixed(1)}`;
+                d += ` C${(p0.x + dx).toFixed(1)},${p0.y.toFixed(1)} ${(p1.x - dx).toFixed(1)},${p1.y.toFixed(1)} ${p1.x.toFixed(1)},${p1.y.toFixed(1)}`;
               }
-              return {
-                line,
-                area: `${line} L${W},${H} L0,${H} Z`,
-                lx: pts[pts.length - 1].x,
-                ly: pts[pts.length - 1].y,
-                flat: false,
-              };
+              const last = pts[pts.length - 1];
+              return { d, lx: last.x, ly: last.y, empty: false };
             };
-            const spark = buildSpark(sparkValues);
-            const hasProg = progPct > 0;
+            const curve = buildLine(sparkValues);
 
             return (
               <div style={{
-                position: "relative", overflow: "hidden",
-                borderRadius: 22,
-                border: `1px solid ${TV.border}`,
+                position:"relative", overflow:"hidden",
+                borderRadius: 30,
+                border:"1px solid rgba(80,105,190,0.22)",
+                minHeight: 470,
+                display:"flex", flexDirection:"column",
+                boxShadow:"0 20px 50px rgba(0,0,0,0.45)",
               }}>
-                {/* Photo en fond, grand-angle */}
+                {/* Photo de fond */}
                 <img src="https://images.pexels.com/photos/15373907/pexels-photo-15373907.jpeg"
                   alt=""
                   style={{
                     position:"absolute", inset: 0,
                     width:"100%", height:"100%",
-                    objectFit:"cover", objectPosition:"center 35%",
+                    objectFit:"cover", objectPosition:"center 42%",
                     display:"block",
                   }}/>
-                {/* Voile sombre — lisibilité des chiffres par-dessus la photo */}
+                {/* Voile progressif : sombre derrière les textes, ouvert au milieu */}
                 <div style={{
-                  position:"absolute", inset: 0,
-                  background: "linear-gradient(180deg, rgba(11,14,18,0.78) 0%, rgba(11,14,18,0.88) 45%, rgba(11,14,18,0.96) 100%)",
-                  pointerEvents:"none",
+                  position:"absolute", inset: 0, pointerEvents:"none",
+                  background:"linear-gradient(180deg, rgba(9,11,16,0.94) 0%, rgba(9,11,16,0.80) 22%, rgba(9,11,16,0.42) 42%, rgba(9,11,16,0.78) 66%, rgba(9,11,16,0.96) 100%)",
+                }}/>
+                {/* Teinte bleue haut-gauche */}
+                <div style={{
+                  position:"absolute", inset: 0, pointerEvents:"none",
+                  background:"radial-gradient(120% 70% at 15% 8%, rgba(49,88,255,0.16), transparent 60%)",
                 }}/>
 
-                <div style={{ position:"relative", zIndex: 1 }}>
-                  {/* En-tête : titre + badge progression */}
-                  <div style={{
-                    display:"flex", alignItems:"center", justifyContent:"space-between",
-                    padding:"18px 18px 0", gap: 10,
-                  }}>
-                    <span style={{
-                      fontSize: 15, fontWeight: 800, color:"#fff",
-                      letterSpacing:"-0.01em", fontFamily: DISP,
-                      textShadow:"0 2px 10px rgba(0,0,0,0.45)",
-                    }}>Tes performances</span>
-                    <span style={{
+                <div style={{
+                  position:"relative", zIndex: 2, flex: 1,
+                  display:"flex", flexDirection:"column", padding: 22,
+                }}>
+                  {/* Haut : titre + badge */}
+                  <div style={{ display:"flex", alignItems:"flex-start", justifyContent:"space-between", gap: 12 }}>
+                    <div>
+                      <div style={{
+                        fontSize: 19, fontWeight: 800, letterSpacing:"-0.02em",
+                        color:"#fff", fontFamily: DISP,
+                      }}>Tes performances</div>
+                      <div style={{
+                        fontSize: 12.5, color: TV.muted, lineHeight: 1.5,
+                        marginTop: 7, maxWidth: 190, fontFamily: DISP,
+                      }}>
+                        {topEx
+                          ? `${topEx.nom} · ${topEx.rm1} kg au 1RM`
+                          : "Commence à construire ton historique."}
+                      </div>
+                    </div>
+                    <div style={{
                       flexShrink: 0,
-                      display:"inline-flex", alignItems:"center", gap: 5,
-                      background: hasProg ? "rgba(18,183,106,0.14)" : "rgba(255,255,255,0.06)",
-                      border: `1px solid ${hasProg ? "rgba(18,183,106,0.30)" : TV.border}`,
-                      borderRadius: 99, padding:"4px 9px",
+                      display:"inline-flex", alignItems:"baseline", gap: 6,
+                      background:"rgba(9,11,16,0.62)",
+                      border:`1px solid ${TV.borderHi}`,
+                      borderRadius: 99, padding:"7px 13px",
+                      backdropFilter:"blur(10px)", WebkitBackdropFilter:"blur(10px)",
                     }}>
                       <span style={{
-                        color: hasProg ? "#12B76A" : TV.muted,
-                        fontSize: 11, fontWeight: 800, fontFamily: DISP, ...NUM,
+                        color: hasProg ? "#12B76A" : TV.blueBright,
+                        fontSize: 13, fontWeight: 800, fontFamily: DISP, ...NUM,
                       }}>{hasProg ? `+${progPct}%` : "0%"}</span>
-                      <span style={{ fontSize: 9.5, color: TV.muted, fontFamily: DISP }}>
+                      <span style={{ fontSize: 11, color: TV.muted, fontWeight: 500, fontFamily: DISP }}>
                         progression
                       </span>
-                    </span>
+                    </div>
                   </div>
 
-                  {/* Corps : chiffres à gauche, courbe à droite */}
-                  <div style={{
-                    display:"flex", gap: 16, alignItems:"flex-end",
-                    padding:"16px 18px 16px",
-                  }}>
-                    <div style={{ flexShrink: 0, display:"flex", gap: 18 }}>
+                  {/* Respiration — la photo est visible ici */}
+                  <div style={{ flex: 1, minHeight: 78 }}/>
+
+                  {/* Courbe traversante, de bord à bord */}
+                  <div style={{ margin:"0 -22px 2px" }}>
+                    <svg viewBox={`0 0 ${W} ${H}`} width="100%" height={H}
+                      preserveAspectRatio="none" style={{ display:"block" }}>
+                      <defs>
+                        <linearGradient id="tdHzFill" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%"   stopColor={TV.blueBright} stopOpacity={curve.empty ? "0.16" : "0.34"}/>
+                          <stop offset="100%" stopColor={TV.blueBright} stopOpacity="0"/>
+                        </linearGradient>
+                        <linearGradient id="tdHzLine" x1="0" y1="0" x2="1" y2="0">
+                          <stop offset="0%"   stopColor={TV.blueBright} stopOpacity={curve.empty ? "0.16" : "0.72"}/>
+                          <stop offset="62%"  stopColor={TV.blueBright} stopOpacity={curve.empty ? "0.42" : "0.90"}/>
+                          <stop offset="100%" stopColor={TV.blueBright} stopOpacity="1"/>
+                        </linearGradient>
+                      </defs>
+                      {/* Grille très discrète */}
+                      <line x1="0" y1="46" x2={W} y2="46" stroke="rgba(255,255,255,0.045)" strokeWidth="1"/>
+                      <line x1="0" y1="70" x2={W} y2="70" stroke="rgba(255,255,255,0.045)" strokeWidth="1"/>
+                      <path d={`${curve.d} L${W},${H} L0,${H} Z`} fill="url(#tdHzFill)"/>
+                      <path d={curve.d} fill="none" stroke="url(#tdHzLine)"
+                        strokeWidth={curve.empty ? "2.4" : "2.6"}
+                        strokeLinecap="round" strokeLinejoin="round"
+                        vectorEffect="non-scaling-stroke"/>
+                      <circle cx={curve.lx} cy={curve.ly} r="9" fill={TV.blueBright} opacity="0.18"/>
+                      <circle cx={curve.lx} cy={curve.ly} r="4" fill={TV.blueBright}/>
+                    </svg>
+                  </div>
+
+                  {/* Bas : chiffres + amorce */}
+                  <div style={{ display:"flex", alignItems:"center", gap: 16, marginTop: 2 }}>
+                    <div style={{ flexShrink: 0, display:"flex", gap: 16 }}>
                       <div>
                         <div style={{
-                          fontSize: 34, fontWeight: 800, lineHeight: 1,
-                          letterSpacing:"-0.045em", color: TV.blueBright,
-                          fontFamily: DISP, ...NUM,
+                          fontSize: 38, fontWeight: 800, color: TV.blueBright,
+                          letterSpacing:"-0.05em", lineHeight: 1, fontFamily: DISP, ...NUM,
                         }}>{totalRecords}</div>
                         <div style={{
-                          fontSize: 11, color: TV.muted, lineHeight: 1.35,
-                          marginTop: 6, fontFamily: DISP,
+                          fontSize: 12, color: TV.muted, lineHeight: 1.35,
+                          marginTop: 8, fontFamily: DISP,
                         }}>Records<br />personnels</div>
                       </div>
                       <div style={{ width: 1, background: TV.border, alignSelf:"stretch" }}/>
                       <div>
                         <div style={{
-                          fontSize: 34, fontWeight: 800, lineHeight: 1,
-                          letterSpacing:"-0.045em", color: TV.blueBright,
-                          fontFamily: DISP, ...NUM,
+                          fontSize: 38, fontWeight: 800, color: TV.blueBright,
+                          letterSpacing:"-0.05em", lineHeight: 1, fontFamily: DISP, ...NUM,
                         }}>{objectifsActifs}</div>
                         <div style={{
-                          fontSize: 11, color: TV.muted, lineHeight: 1.35,
-                          marginTop: 6, fontFamily: DISP,
+                          fontSize: 12, color: TV.muted, lineHeight: 1.35,
+                          marginTop: 8, fontFamily: DISP,
                         }}>Objectifs<br />actifs</div>
                       </div>
                     </div>
-
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <svg viewBox={`0 0 ${W} ${H}`} width="100%" height={H}
-                        preserveAspectRatio="none" style={{ display:"block" }}>
-                        <defs>
-                          <linearGradient id="tdSparkFill" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="0%"   stopColor={TV.blueBright} stopOpacity={spark.flat ? "0.10" : "0.32"}/>
-                            <stop offset="100%" stopColor={TV.blueBright} stopOpacity="0"/>
-                          </linearGradient>
-                        </defs>
-                        <path d={spark.area} fill="url(#tdSparkFill)"/>
-                        <path d={spark.line} fill="none"
-                          stroke={spark.flat ? "rgba(255,255,255,0.16)" : TV.blueBright}
-                          strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"
-                          vectorEffect="non-scaling-stroke"/>
-                        {!spark.flat && (
-                          <circle cx={spark.lx} cy={spark.ly} r="3.4"
-                            fill={TV.blueBright} stroke={TV.bg} strokeWidth="2"
-                            vectorEffect="non-scaling-stroke"/>
-                        )}
-                      </svg>
+                    <div style={{ width: 1, background: TV.border, alignSelf:"stretch" }}/>
+                    <div style={{ flex: 1, minWidth: 0, display:"flex", gap: 11, alignItems:"flex-start" }}>
                       <div style={{
-                        fontSize: 9.5, color: TV.muted, marginTop: 7,
-                        fontFamily: DISP, textAlign:"right",
-                        overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap",
+                        flexShrink: 0, width: 36, height: 36, borderRadius: 11,
+                        background: topEx ? "rgba(18,183,106,0.13)" : "rgba(49,88,255,0.13)",
+                        border: `1px solid ${topEx ? "rgba(18,183,106,0.30)" : "rgba(49,88,255,0.30)"}`,
+                        display:"grid", placeItems:"center",
                       }}>
-                        {topEx ? topEx.nom : "En attente de ta première charge"}
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none"
+                          stroke={topEx ? "#12B76A" : TV.blueBright} strokeWidth="2.2" strokeLinecap="round">
+                          <path d="M3 17 9 11l4 4 8-8"/><path d="M14 7h7v7"/>
+                        </svg>
+                      </div>
+                      <div style={{ minWidth: 0 }}>
+                        <div style={{
+                          fontSize: 12.5, fontWeight: 800, letterSpacing:"-0.01em",
+                          color:"#fff", fontFamily: DISP,
+                        }}>
+                          {topEx
+                            ? (gainKg ? `+${gainKg} kg de progression` : `${topEx.rm1} kg au 1RM`)
+                            : "Commence ta progression"}
+                        </div>
+                        <div style={{
+                          fontSize: 11, color: TV.muted, lineHeight: 1.45,
+                          marginTop: 4, fontFamily: DISP,
+                        }}>
+                          {topEx
+                            ? (resteKg > 0
+                                ? `Plus que ${resteKg} kg avant ton objectif de ${Math.round(topEx.cible)} kg.`
+                                : `Objectif de ${Math.round(topEx.cible)} kg atteint.`)
+                            : "Enregistre ta première charge pour voir tes performances ici."}
+                        </div>
                       </div>
                     </div>
                   </div>
 
                   {/* CTA */}
-                  <div style={{ padding:"0 18px 18px" }}>
-                    <button onClick={() => setShowProgression(true)}
-                      className="tap"
-                      style={{
-                        width:"100%",
-                        display:"inline-flex", alignItems:"center", justifyContent:"center", gap: 8,
-                        padding:"13px 20px", borderRadius: 14,
-                        background: TV.blue, border:"none",
-                        color:"#fff", fontFamily: DISP,
-                        fontSize: 13.5, fontWeight: 750,
-                        letterSpacing:"-0.005em", cursor:"pointer",
-                        boxShadow:"0 10px 26px rgba(49,88,255,0.42)",
-                      }}>
-                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
-                        stroke="#fff" strokeWidth="2.4" strokeLinecap="round">
-                        <path d="M12 5v14M5 12h14"/>
-                      </svg>
-                      Ajouter un objectif
-                    </button>
-                  </div>
+                  <button onClick={() => setShowProgression(true)}
+                    className="tap"
+                    style={{
+                      marginTop: 18, width:"100%", height: 54,
+                      border:"none", borderRadius: 17,
+                      background: TV.blue, color:"#fff", fontFamily: DISP,
+                      fontSize: 14.5, fontWeight: 750, letterSpacing:"-0.005em",
+                      cursor:"pointer",
+                      display:"inline-flex", alignItems:"center", justifyContent:"center", gap: 9,
+                      boxShadow:"0 12px 30px rgba(49,88,255,0.42)",
+                    }}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                      stroke="#fff" strokeWidth="2.4" strokeLinecap="round">
+                      <path d="M12 5v14M5 12h14"/>
+                    </svg>
+                    Ajouter un objectif
+                  </button>
                 </div>
               </div>
             );
