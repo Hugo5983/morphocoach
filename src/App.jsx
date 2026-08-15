@@ -381,7 +381,7 @@ export default function App() {
 
   return (
     <AppContext.Provider value={contextValue}>
-      <Screen style={(tab === "coach" || tab === "home") ? { background:DARK.bgDeep, color:DARK.text } : undefined}>
+      <Screen style={(tab === "coach" || tab === "home" || (tab === "program" && subViewTraining === "today")) ? { background:DARK.bgDeep, color:DARK.text } : undefined}>
         <div onTouchStart={gTS} onTouchMove={gTM} onTouchEnd={gTE}
           style={{ ...globalSwipe, minHeight:"100vh" }}>
         <style>{CSS}</style>
@@ -399,7 +399,8 @@ export default function App() {
           const isPremiumOfferView = tab === "home" && subViewHome === "pro";
           const isCoachView = tab === "coach";
           const isHomeView = tab === "home";
-          const layoutTheme = (isPremiumOfferView || isCoachView || isHomeView) ? "dark" : "light";
+          const isTrainingTodayView = tab === "program" && subViewTraining === "today";
+          const layoutTheme = (isPremiumOfferView || isCoachView || isHomeView || isTrainingTodayView) ? "dark" : "light";
           return (
             <Header
               premium={premium} cycleStart={cycleStart} jR={jR}
@@ -417,7 +418,7 @@ export default function App() {
           </Suspense>
 )}
 
-        <PageContainer style={(tab === "coach" || tab === "home") ? { background:DARK.bgDeep, color:DARK.text } : undefined}>
+        <PageContainer style={(tab === "coach" || tab === "home" || (tab === "program" && subViewTraining === "today")) ? { background:DARK.bgDeep, color:DARK.text } : undefined}>
           <div className="page-enter">
             {tab ==="home" && <Home {...homeProps} />}
             {tab !=="home" && (
@@ -452,7 +453,7 @@ export default function App() {
         </div>
         {/* ── Fin zone swipable ── */}
 
-        <BottomNav tab={tab} setTab={setTab} theme={(tab === "coach" || tab === "home") ? "dark" : "light"} />
+        <BottomNav tab={tab} setTab={setTab} theme={(tab === "coach" || tab === "home" || (tab === "program" && subViewTraining === "today")) ? "dark" : "light"} />
 
         {/* ── Modal Level-Up Momentum XP ── */}
         <LevelUpModal
