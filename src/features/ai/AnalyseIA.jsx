@@ -224,7 +224,7 @@ export default function AnalyseIA(props) {
               filter:'blur(18px)', animation:'ob-breathe 3s ease-in-out infinite' }}/>
             <svg width="140" height="140" viewBox="0 0 140 140"
               style={{ position:'relative', transform:'rotate(-90deg)' }}>
-              <circle cx="70" cy="70" r={RING_R} stroke="rgba(0,0,0,0.05)" strokeWidth="2" fill="none"/>
+              <circle cx="70" cy="70" r={RING_R} stroke="rgba(255,255,255,0.10)" strokeWidth="2" fill="none"/>
               <circle cx="70" cy="70" r={RING_R} stroke={T.ac} strokeWidth="2.5" fill="none"
                 strokeLinecap="round" strokeDasharray={CIRC} strokeDashoffset={CIRC*0.35}
                 style={{ animation:'ob-spin 2s linear infinite', transformOrigin:'center' }}/>
@@ -360,7 +360,7 @@ export default function AnalyseIA(props) {
             <div style={{ display:'flex', gap:4 }}>
               {[photos.face,photos.dos,photos.profil].map((f,i) => (
                 <span key={i} style={{ width:18, height:4, borderRadius:2,
-                  background:f?T.ac:'rgba(0,0,0,0.12)' }}/>
+                  background:f?T.ac:'rgba(255,255,255,0.14)' }}/>
 ))}
             </div>
             <span style={{ fontFamily:MON, fontSize:10, fontWeight:500, color:T.t4,
@@ -642,7 +642,7 @@ export default function AnalyseIA(props) {
                       </div>
                       <div style={{ fontSize:11.5, color:T.t3, marginTop:2 }}>{mvt}</div>
                       {lue.drapeaux.length > 0 && (
-                        <div style={{ fontSize:11.5, fontWeight:600, color:'#B37400',
+                        <div style={{ fontSize:11.5, fontWeight:600, color:'#F59E0B',
                           lineHeight:1.45, marginTop:5 }}>{lue.drapeaux[0]}</div>
                       )}
                     </div>
