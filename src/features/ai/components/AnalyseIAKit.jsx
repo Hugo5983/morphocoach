@@ -1,5 +1,5 @@
 import { C, DARK, FONT } from"../../../data/constants.js";
-import { Ico as UIco } from"../../../components/ui/Icon.jsx";
+import { Ico as UIco, I } from"../../../components/ui/Icon.jsx";
 /**
  * AnalyseIAKit.jsx — Tokens & composants UI du wizard AnalyseIA.
  * Extrait de AnalyseIA.jsx sans aucune modification de code.
@@ -167,7 +167,7 @@ function Stepper({ step, eyebrow, title, subtitle }) {
   ];
   const total = steps.length;
   return (
-    <div style={{ padding:'20px 20px 0' }}>
+    <div style={{ padding:'28px 20px 0' }}>
       {/* Cercles + ligne */}
       <div style={{ position:'relative', display:'flex',
         alignItems:'flex-start', justifyContent:'space-between' }}>
@@ -185,15 +185,18 @@ function Stepper({ step, eyebrow, title, subtitle }) {
               alignItems:'center', gap:4, position:'relative', zIndex:1 }}>
               <div style={{
                 width:36, height:36, borderRadius:'50%',
-                background: cur ? T.ac : done ? T.acDk : T.surf,
+                background: cur ? T.ac : done ? T.surfHi : T.surf,
                 display:'grid', placeItems:'center',
                 boxShadow: cur
                   ?`0 4px 12px ${T.acGlow}, 0 0 0 4px rgba(60,91,255,0.12)`
-                  : done ?'none'
-                  :'0 2px 8px rgba(0,0,0,0.45)',
-                border: cur||done ?'none' :`1.5px solid rgba(255,255,255,0.12)`,
+                  :'none',
+                border: cur ?'none' :`1.5px solid rgba(255,255,255,0.12)`,
               }}>
-                <OI n={s.icon} sz={16} s={1.8} c={cur||done?'#FFF':T.t4}/>
+                {/* <I> (monochrome) et non <OI> : Ico bascule sur la version
+                    duotone pour ces noms et ignore alors la couleur demandée,
+                    d'où le bleu résiduel dans les icônes inactives. */}
+                <I name={s.icon} size={16} stroke={1.8}
+                   color={cur ?'#FFF' : done ? T.t2 : T.t4}/>
               </div>
               <span style={{ fontFamily:MON, fontSize:7.5,
                 fontWeight:cur?600:400, letterSpacing:"0.1em",
@@ -311,12 +314,14 @@ const GOAL_ICONS = {
 };
 // Chaque objectif a sa couleur sémantique — comme les intensités du programme
 const GOAL_COLORS = {
-  hypertrophie:'#3C5BFF',  // orange doux = modéré planning
-  force:'#E5484D',  // rouge doux  = lourd planning
-  poids:'#3C5BFF',  // bleu        = accent app
-  prep_physique:'#F59E0B',  // jaune doux  — énergie, vitesse
-  reathletisation:'#9DB0FF',  // violet doux — récup, soin
-  sante:'#12B76A',  // vert        = léger planning
+  // Charte MorphoCoach : bleu en accent principal, dégradés bleutés pour
+  // différencier — plus de rouge / jaune / vert sur ces cartes.
+  hypertrophie:'#3C5BFF',
+  force:'#3C5BFF',
+  poids:'#3C5BFF',
+  prep_physique:'#6E86FF',
+  reathletisation:'#9DB0FF',
+  sante:'#6E86FF',
 };
 function GoalCrd({ id, label, selected, onClick }) {
   const ic  = GOAL_ICONS[id]  ||'zap';
