@@ -25,7 +25,6 @@ import {
 } from"./components/AnalyseIAKit.jsx";
 
 export default function AnalyseIA(props) {
-  useScrollTop();
   const [elapsed, setElapsed] = useState(0);
   const [dlrZone, setDlrZone] = useState(null);   // zone en cours de description
   const [dlrLoc,  setDlrLoc]  = useState(null);
@@ -35,6 +34,12 @@ export default function AnalyseIA(props) {
 
   // ── État du formulaire (inchangé) ────────────────────────────────────────
   const [aStep, setAStep] = useState(0);
+
+  // Remet la vue en haut à CHAQUE changement d'étape (pas seulement au montage).
+  // Sans ça, le passage d'une étape à l'autre conserve la position de scroll et
+  // le stepper se retrouve partiellement masqué derrière le header sticky.
+  useScrollTop(aStep);
+
   const [form, setForm]   = useState({
     prenom: profil?.prenom ||"", age: profil?.age ||"",
     poids:  profil?.poids  ||"", taille: profil?.taille ||"",
