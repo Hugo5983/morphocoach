@@ -5,14 +5,16 @@ import { Ico as UIco } from"../../../components/ui/Icon.jsx";
  * Extrait de AnalyseIA.jsx sans aucune modification de code.
  */
 
-// ── Tokens (thème clair — aligné sur l'app) ──────────────────────────────────
+// ── Tokens (thème DARK — aligné sur les autres pages dark de l'app) ──────────
+// Fond et surfaces reprennent les tokens DARK.* partagés (page Accueil,
+// Entraînement/Aujourd'hui) → même teinte partout, aucune valeur inventée.
 const T = {
-  bg:C.bg, surf:'#FFFFFF', surfHi:'#FFFFFF', surfFlat:C.s2,
-  bd:'rgba(0,0,0,0.05)', bdHi:'rgba(0,0,0,0.12)', bdAc:'rgba(60,91,255,0.35)',
-  t1:C.text, t2:C.mid, t3:C.dim,
-  t4:'rgba(107,114,128,0.65)', t5:'rgba(107,114,128,0.35)',
+  bg:DARK.bgDeep, surf:DARK.surface, surfHi:DARK.surfaceHi, surfFlat:'#141922',
+  bd:'rgba(255,255,255,0.08)', bdHi:'rgba(255,255,255,0.14)', bdAc:'rgba(60,91,255,0.45)',
+  t1:DARK.text, t2:'rgba(246,247,249,0.75)', t3:'rgba(246,247,249,0.55)',
+  t4:'rgba(246,247,249,0.38)', t5:'rgba(246,247,249,0.20)',
   ac:C.accent, acLt:DARK.accent, acDk:C.accentDk,
-  acSoft:'rgba(60,91,255,0.12)', acGlow:'rgba(60,91,255,0.18)',
+  acSoft:'rgba(60,91,255,0.16)', acGlow:'rgba(60,91,255,0.28)',
   green:'#12B76A', red:'#E5484D',
 };
 const F   = FONT;
@@ -23,7 +25,7 @@ const CARD = {
   background:   T.surf,
   border:`1px solid ${T.bd}`,
   borderRadius: 20,
-  boxShadow: C.shadow,
+  boxShadow:'0 8px 24px rgba(0,0,0,0.35)',
   padding:'20px 16px',
 };
 
@@ -96,7 +98,7 @@ function PoseCard({ view, hint, filled, photo, onTap, index }) {
           {/* Mannequin — gauche */}
           <div style={{ width:"42%", overflow:"hidden", position:"relative",
             flexShrink:0,
-            borderRight:`1px solid rgba(0,0,0,0.05)` }}>
+            borderRight:`1px solid rgba(255,255,255,0.08)` }}>
             <img src={POSE_IMGS[view]} alt={view}
               style={{ position:"absolute", inset:0,
                 width:"100%", height:"100%",
@@ -171,7 +173,7 @@ function Stepper({ step, eyebrow, title, subtitle }) {
         alignItems:'flex-start', justifyContent:'space-between' }}>
         {/* Ligne fond */}
         <div style={{ position:'absolute', top:18, left:'9%', right:'9%',
-          height:2, background:'rgba(0,0,0,0.05)', zIndex:0 }}/>
+          height:2, background:'rgba(255,255,255,0.08)', zIndex:0 }}/>
         {/* Ligne active */}
         <div style={{ position:'absolute', top:18, left:'9%',
           width: step===0?'0%':`${Math.min((step/(total-1))*82,82)}%`,
@@ -188,8 +190,8 @@ function Stepper({ step, eyebrow, title, subtitle }) {
                 boxShadow: cur
                   ?`0 4px 12px ${T.acGlow}, 0 0 0 4px rgba(60,91,255,0.12)`
                   : done ?'none'
-                  :'0 1px 4px rgba(0,0,0,0.08)',
-                border: cur||done ?'none' :`1.5px solid rgba(0,0,0,0.08)`,
+                  :'0 2px 8px rgba(0,0,0,0.45)',
+                border: cur||done ?'none' :`1.5px solid rgba(255,255,255,0.12)`,
               }}>
                 <OI n={s.icon} sz={16} s={1.8} c={cur||done?'#FFF':T.t4}/>
               </div>
@@ -331,9 +333,9 @@ function GoalCrd({ id, label, selected, onClick }) {
       boxShadow: selected ?`0 16px 32px ${col}35` :'none',
     }}>
       {selected && <div style={{ position:'absolute', top:0, left:0, right:0, height:1,
-        background:'linear-gradient(90deg,transparent,rgba(0,0,0,0.18),transparent)' }}/>}
+        background:'linear-gradient(90deg,transparent,rgba(255,255,255,0.10),transparent)' }}/>}
       {selected && <div style={{ position:'absolute', inset:0, pointerEvents:'none',
-        background:'radial-gradient(160% 60% at 20% 10%, rgba(0,0,0,0.12), transparent 55%)' }}/>}
+        background:'radial-gradient(160% 60% at 20% 10%, rgba(255,255,255,0.07), transparent 55%)' }}/>}
       {selected && (
         <div style={{ position:'absolute', top:8, right:8, width:20, height:20,
           borderRadius:'50%', background:'rgba(255,255,255,0.95)',
@@ -422,7 +424,7 @@ function ZoneGrp({ zone, items, selected, onToggle }) {
     <div style={{ marginBottom:20 }}>
       <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:12 }}>
         <div style={{ width:24, height:24, borderRadius:8,
-          background:'rgba(0,0,0,0.05)', border:`1px solid ${T.bd}`,
+          background:'rgba(255,255,255,0.05)', border:`1px solid ${T.bd}`,
           display:'grid', placeItems:'center', color:T.t3 }}>
           <OI n={ZONE_ICONS[zone]||'more'} sz={13} s={1.6}/>
         </div>
