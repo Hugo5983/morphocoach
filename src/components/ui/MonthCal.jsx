@@ -9,6 +9,21 @@ const DISPLAY ="'Archivo',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',
 const NUM     = { fontVariantNumeric:'tabular-nums', fontFeatureSettings:'"tnum"' };
 const ey      = { fontSize:10, fontWeight:700, letterSpacing:"0.1em", textTransform:'uppercase', color:C.accent, fontFamily:DISPLAY };
 
+// ─── Palette d'intensité LOCALE au planning ──────────────────────────────────
+// INT (constants.js) donne le même #3C5BFF aux 5 intensités : la légende était
+// donc illisible. On ne touche pas à INT — il est partagé par 14 fichiers — et
+// on déclinę ici un dégradé de bleus MorphoCoach, du clair (Léger) au profond
+// (Intense), Mobilité en gris neutre. Les jours du calendrier ET la légende
+// lisent cette même source, donc ils restent toujours cohérents.
+const INT_CAL = {
+  leger:    '#8FA5FF',
+  modere:   '#6E86FF',
+  lourd:    '#3C5BFF',
+  intense:  '#2438B8',
+  mobilite: 'rgba(255,255,255,0.34)',
+};
+const intColor = (k) => INT_CAL[k] || INT_CAL.modere;
+
 function I({name,size=18,color="currentColor",stroke=1.7,...r}){
   return <UIco name={name} size={size} color={color} stroke={stroke} {...r}/>;
 }
@@ -298,14 +313,14 @@ function BilanMois({ sessions, year, month, currentWeek }) {
     <div style={{marginTop:24}}>
       {/* ── Séparateur ── */}
       <div style={{display:'flex',alignItems:'center',gap:12,marginBottom:20}}>
-        <div style={{flex:1,height:1,background:'rgba(0,0,0,0.05)'}}/>
+        <div style={{flex:1,height:1,background:'rgba(255,255,255,0.08)'}}/>
         <div style={{...ey,letterSpacing:"0.1em",flexShrink:0}}>Bilan du mois</div>
-        <div style={{flex:1,height:1,background:'rgba(0,0,0,0.05)'}}/>
+        <div style={{flex:1,height:1,background:'rgba(255,255,255,0.08)'}}/>
       </div>
 
       {/* Mois + mésocycle */}
       <div style={{display:'flex',alignItems:'flex-end',justifyContent:'space-between',marginBottom:16}}>
-        <div style={{fontFamily:SERIF,fontSize:34,fontWeight:400,color:C.text,letterSpacing:-0.5,lineHeight:1}}>
+        <div style={{fontFamily:SERIF,fontSize:34,fontWeight:800,color:DARK.text,letterSpacing:-1,lineHeight:1}}>
           {['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'][month]}
         </div>
         {currentWeek !== undefined && (
@@ -378,7 +393,7 @@ export const MonthCal = memo(function MonthCal({ sessions, onUpdate, semC, curre
   const getDayColor = (key) => {
     const s = getSess(key);
     if (!s.length) return null;
-    return INT[s[0].intensite||'modere']?.c || s[0].color || C.accent;
+    return intColor(s[0].intensite||'modere') || s[0].color || C.accent;
   };
 
   return (
@@ -418,7 +433,7 @@ export const MonthCal = memo(function MonthCal({ sessions, onUpdate, semC, curre
             const color   = getDayColor(key);
             const hasSess = daySess.length>0;
             const isDone  = daySess.some(s=>s.done);          // au moins une séance validée
-            const dotColors = daySess.filter(s=>!s.done).map(s=>INT[s.intensite||'modere']?.c||s.color||'#3C5BFF').slice(0,3);
+            const dotColors = daySess.filter(s=>!s.done).map(s=>intColor(s.intensite||'modere')||s.color||'#3C5BFF').slice(0,3);
 
             // ── Styles selon l'état : validée = plein, planifiée = teintée ──
             let bg, bd, numColor;
@@ -457,7 +472,7 @@ export const MonthCal = memo(function MonthCal({ sessions, onUpdate, semC, curre
           <div style={{...ey,color:DARK.accent,marginRight:4}}>Intensité</div>
           {Object.entries(INT).map(([k,v])=>(
             <div key={k} style={{display:'flex',alignItems:'center',gap:4}}>
-              <div style={{width:6,height:6,borderRadius:2,background:v.c,flexShrink:0}}/>
+              <div style={{width:7,height:7,borderRadius:'50%',background:intColor(k),flexShrink:0}}/>
               <span style={{fontSize:10,color:DARK.dim,fontFamily:DISPLAY}}>{v.l}</span>
             </div>
 ))}
