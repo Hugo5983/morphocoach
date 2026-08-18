@@ -133,7 +133,7 @@ export default function Calendar(props) {
         }).toUpperCase().replace(".", "");
         const DISP = "'Archivo',system-ui,-apple-system,sans-serif";
         return (
-          <div style={{ marginBottom:20, paddingTop:10 }}>
+          <div style={{ marginBottom:18, paddingTop:0, marginTop:-4 }}>
             <div style={{
               fontSize:11, fontWeight:800, letterSpacing:"0.14em",
               color:C.accent, fontFamily:DISP, marginBottom:8,
@@ -159,6 +159,54 @@ export default function Calendar(props) {
         else setCalSess(s => { const ns={...s}; delete ns[date]; return ns; });
       }}/>
 
+      {/* ── CTA planning → onglet Programme ── */}
+      <div
+        onClick={() => setProgView && setProgView("creer")}
+        className="tap"
+        style={{
+          position:"relative", overflow:"hidden",
+          marginTop:12, cursor:"pointer",
+          background: DARK.surface,
+          border:`1px solid rgba(255,255,255,0.08)`,
+          borderRadius:20,
+          padding:"16px 16px",
+          display:"flex", alignItems:"center", gap:14,
+        }}>
+        {/* halo bleu discret */}
+        <div style={{
+          position:"absolute", top:-50, right:-40,
+          width:170, height:170, borderRadius:"50%",
+          background:"radial-gradient(closest-side, rgba(60,91,255,0.22), transparent 70%)",
+          filter:"blur(10px)", pointerEvents:"none",
+        }}/>
+        <div style={{
+          position:"relative", zIndex:1, flexShrink:0,
+          width:46, height:46, borderRadius:14,
+          background:"rgba(60,91,255,0.13)",
+          border:"1px solid rgba(60,91,255,0.30)",
+          display:"grid", placeItems:"center",
+        }}>
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none"
+            stroke={C.accent} strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="3" y="4" width="18" height="17" rx="3"/><path d="M8 2v4M16 2v4M3 10h18"/>
+          </svg>
+        </div>
+        <div style={{ position:"relative", zIndex:1, flex:1, minWidth:0 }}>
+          <div style={{
+            fontSize:14.5, fontWeight:800, letterSpacing:"-0.015em",
+            color:DARK.text, fontFamily:FONT,
+          }}>Planning actif</div>
+          <div style={{
+            fontSize:12, color:"#9AA3B5", marginTop:3, fontFamily:FONT,
+          }}>Ton programme du mois en un coup d'œil</div>
+        </div>
+        <div style={{ position:"relative", zIndex:1, flexShrink:0, color:"#9AA3B5" }}>
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+            <path d="M9 6l6 6-6 6"/>
+          </svg>
+        </div>
+      </div>
 
     </div>
 );
