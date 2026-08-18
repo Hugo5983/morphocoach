@@ -16,11 +16,11 @@ const ey      = { fontSize:10, fontWeight:700, letterSpacing:"0.1em", textTransf
 // (Intense), Mobilité en gris neutre. Les jours du calendrier ET la légende
 // lisent cette même source, donc ils restent toujours cohérents.
 const INT_CAL = {
-  leger:    '#8FA5FF',
-  modere:   '#6E86FF',
-  lourd:    '#3C5BFF',
-  intense:  '#2438B8',
-  mobilite: 'rgba(255,255,255,0.34)',
+  leger:    '#A9BAFF',   // bleu pâle
+  modere:   '#7E96FF',
+  lourd:    '#3C5BFF',   // bleu MorphoCoach
+  intense:  '#6E4AFF',   // violet bleuté — rappelle le glow de la carte
+  mobilite: '#7C879B',   // gris froid : récup, pas d'effort
 };
 const intColor = (k) => INT_CAL[k] || INT_CAL.modere;
 
@@ -472,7 +472,7 @@ export const MonthCal = memo(function MonthCal({ sessions, onUpdate, semC, curre
           <div style={{...ey,color:DARK.accent,marginRight:4}}>Intensité</div>
           {Object.entries(INT).map(([k,v])=>(
             <div key={k} style={{display:'flex',alignItems:'center',gap:4}}>
-              <div style={{width:7,height:7,borderRadius:'50%',background:intColor(k),flexShrink:0}}/>
+              <div style={{width:8,height:8,borderRadius:'50%',background:intColor(k),flexShrink:0,boxShadow:`0 0 6px ${intColor(k)}55`}}/>
               <span style={{fontSize:10,color:DARK.dim,fontFamily:DISPLAY}}>{v.l}</span>
             </div>
 ))}
