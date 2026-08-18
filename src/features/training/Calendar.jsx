@@ -1,6 +1,6 @@
 import { useState } from"react";
 import { I } from"../../components/ui/Icon.jsx";
-import { C, INT, FONT } from"../../data/constants.js";
+import { C, DARK, INT, FONT } from"../../data/constants.js";
 import { EX } from"../../data/exercises.js";
 import { Card, Eyebrow, Lbl, Btn, Row } from"../../components/ui/index.jsx";
 import { Tabs } from"../../components/ui/Tabs.jsx";
@@ -88,7 +88,14 @@ export default function Calendar(props) {
     const weekInt = INT[WEEK_INTENSITY[currentWeek]];
     const int = INT[jour.intensite ||"modere"];
     return (
-      <div style={{padding:"0 20px"}}>
+      <div style={{
+        background: DARK.bgDeep,
+        color: DARK.text,
+        fontFamily: FONT,
+        minHeight: "100dvh",
+        padding: "0 20px 32px",
+        boxSizing: "border-box",
+      }}>
         <button onClick={() => setViewJour(null)} style={{background:"transparent",border:"none",color:"#3C5BFF",cursor:"pointer",fontSize:13,fontWeight:600,padding:"16px 0 12px",display:"flex",alignItems:"center",gap:4}}><I name="chevronLeft" size={14}/> Retour aux séances</button>
         <div style={{padding:"12px 16px",background:`${int.c}14`,border:`0.5px solid ${int.c}40`,borderRadius:12,marginBottom:4}}>
           <div style={{fontSize:10,color:int.c,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",marginBottom:4}}>{int.l}</div>
@@ -109,9 +116,16 @@ export default function Calendar(props) {
   }
 
   return (
-    <div style={{padding:"0 20px"}}>
+    <div style={{
+      background: DARK.bgDeep,
+      color: DARK.text,
+      fontFamily: FONT,
+      minHeight: "100dvh",
+      padding: "0 20px 32px",
+      boxSizing: "border-box",
+    }}>
 
-      {/* ── Header planning (même style TodayView) ── */}
+      {/* ── Header planning (titre conservé, adapté au dark) ── */}
       {(() => {
         const now = new Date();
         const dateLabel = now.toLocaleDateString("fr-FR", {
@@ -119,20 +133,20 @@ export default function Calendar(props) {
         }).toUpperCase().replace(".", "");
         const DISP = "'Archivo',system-ui,-apple-system,sans-serif";
         return (
-          <div style={{ marginBottom:20, paddingTop:4 }}>
+          <div style={{ marginBottom:20, paddingTop:10 }}>
             <div style={{
-              fontSize:11, fontWeight:700, letterSpacing:"0.12em",
-              color:C.accent, fontFamily:DISP, marginBottom:6,
+              fontSize:11, fontWeight:800, letterSpacing:"0.14em",
+              color:C.accent, fontFamily:DISP, marginBottom:8,
             }}>{dateLabel}</div>
             <div style={{
               fontFamily:DISP, fontSize:31, fontWeight:800,
-              letterSpacing:"-0.03em", color:C.text, lineHeight:1,
+              letterSpacing:"-0.03em", color:DARK.text, lineHeight:1,
             }}>
               Ton <span style={{ fontStyle:"italic", color:C.accent }}>planning</span>
             </div>
             <div style={{
-              fontSize:13.5, fontWeight:500, color:"#6B7486",
-              fontFamily:DISP, marginTop:6,
+              fontSize:13.5, fontWeight:500, color:"#9AA3B5",
+              fontFamily:DISP, marginTop:8, lineHeight:1.5,
             }}>
               Densité d'effort, séances planifiées, jours de récupération
             </div>
