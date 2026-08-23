@@ -202,7 +202,7 @@ export default function AuthPage() {
         <section
           style={{
             position: "absolute",
-            top: "28.5%",
+            top: "33%",
             left: 0,
             right: 0,
             textAlign: "center",
@@ -214,7 +214,7 @@ export default function AuthPage() {
           <div style={{
             marginTop: 12,
             fontFamily: '"Arial Narrow", "Roboto Condensed", "Helvetica Neue", Arial, sans-serif',
-            fontSize: "clamp(30px, 5.8vw, 54px)",
+            fontSize: "clamp(26px, 5vw, 40px)",
             lineHeight: .95,
             fontWeight: 900,
             fontStyle: "italic",
@@ -465,22 +465,36 @@ function Message({ tone, children }) {
 }
 
 function BrandMark() {
+  // Logo MorphoCoach officiel — tracé vectoriel unique (deux chevrons
+  // entrecroisés + languette signature en haut à droite).
+  // Le viewBox est resserré sur la forme : elle remplit la boîte sans marge morte.
   return (
     <div style={{
-      width: "clamp(72px, 15vw, 108px)",
-      height: "clamp(72px, 15vw, 108px)",
+      width: "clamp(58px, 11.5vw, 78px)",
+      height: "clamp(58px, 11.5vw, 78px)",
       margin: "0 auto",
       filter: "drop-shadow(0 10px 28px rgba(60,91,255,.40))",
     }}>
-      <svg viewBox="0 0 108 108" width="100%" height="100%" fill="none" aria-hidden="true">
+      <svg
+        viewBox="461 90.2 112.5 147.9"
+        width="100%"
+        height="100%"
+        fill="none"
+        preserveAspectRatio="xMidYMid meet"
+        aria-hidden="true"
+      >
+        <defs>
+          <linearGradient id="morphoMark" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stopColor="#4D6BFF" />
+            <stop offset=".52" stopColor={BLUE} />
+            <stop offset="1" stopColor="#1F35C4" />
+          </linearGradient>
+        </defs>
         <path
-          d="M28 82V25l26 24 26-24v57"
-          stroke={BLUE}
-          strokeWidth="7"
-          strokeLinecap="round"
-          strokeLinejoin="round"
+          fillRule="evenodd"
+          fill="url(#morphoMark)"
+          d="m552.35 93.34c1.89 0.31 5.57 1.74 8.18 3.18 2.61 1.44 5.92 3.86 9.97 8.14v57.66c0 49.8-0.2 57.9-1.47 59.45-0.81 0.99-5.45 4.39-10.3 7.55-6.55 4.27-9.72 5.75-12.26 5.74-2.14-0.01-5.11-1.12-7.85-2.92-2.43-1.59-6.29-4.47-12.75-9.89l0.03-63.27-14.35-17.66c-7.89-9.71-16.61-19.98-19.39-22.82-2.77-2.84-5.7-5.14-6.51-5.12-0.81 0.02-2.91 1.13-7.85 4.89l-0.02 95.64 4.18 2.69c3.66 2.36 4.42 2.53 6.14 1.38 1.08-0.73 2.96-1.94 6.38-4.07v-33.11c0-18.21 0.22-33.1 0.49-33.1 0.27 0 3.37 2.53 13.29 11.28l-0.05 62.29-6.13 5.42c-3.37 2.99-7.57 6.08-9.32 6.87-1.76 0.79-5.62 1.44-8.59 1.44-5.12 0-5.76-0.3-20.1-11.77v-112.81l4.65-3.77c2.57-2.08 6.65-5.18 9.08-6.9 3.58-2.53 5.34-3.11 9.32-3.07 4.77 0.05 5.09 0.24 11.81 7.14 3.8 3.9 9.54 10.09 18.6 20.43l8.51-10.6c4.68-5.82 9.97-11.97 11.77-13.67 1.79-1.69 5.03-4.01 7.18-5.14 2.79-1.46 4.93-1.9 7.36-1.5zm-22.86 41.27c0 0 6.95 11.26 7.9 11.5 1.59 0.4 1.23 3.04 1.23 34.45v33.84c6.99 4.95 8.97 5.7 10.3 5.28 1.08-0.35 3.17-1.46 4.66-2.46l2.7-1.84v-101.04c-4.95-3.03-7.1-3.92-7.98-3.92-0.89 0-4.01 2.76-6.94 6.13-2.93 3.37-9.62 15.23-11.87 18.06z"
         />
-        <path d="M41 82V38M67 82V38" stroke={BLUE_DARK} strokeWidth="5.5" strokeLinecap="round"/>
       </svg>
     </div>
   );
