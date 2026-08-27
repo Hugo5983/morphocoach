@@ -32,13 +32,23 @@ export function Header({ premium, cycleStart, jR, tab, setTab, subNav, subView, 
       }}>
         <div style={{ display:"flex", alignItems:"center", gap: 8, flexShrink: 0 }}>
           <div style={{
-            width: 32, height: 32, borderRadius: 11, background: C.accent,
+            width: 32, height: 32, borderRadius: 11,
+            background: dark ? T.surface : C.accentLt,
             display:"grid", placeItems:"center", flexShrink: 0,
           }}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFF" strokeWidth="2.2" strokeLinecap="round">
-              <rect x="3" y="3" width="5" height="18" rx="1.2"/>
-              <rect x="10" y="6" width="5" height="15" rx="1.2"/>
-              <rect x="17" y="1" width="5" height="20" rx="1.2"/>
+            {/* Symbole MorphoCoach officiel. Le tracé est bleu : la tuile
+                passe donc sur une surface neutre pour garder le contraste.
+                Taille, rayon et position de la tuile : inchangés. */}
+            <svg width="18" height="18" viewBox="461 90.2 112.5 147.9" fill="none"
+                 preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+              <defs>
+                <linearGradient id="mcHeaderMark" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stopColor="#5A78FF"/>
+                  <stop offset=".52" stopColor={C.accent}/>
+                  <stop offset="1" stopColor="#2438B8"/>
+                </linearGradient>
+              </defs>
+              <path fillRule="evenodd" fill="url(#mcHeaderMark)" d="m552.35 93.34c1.89 0.31 5.57 1.74 8.18 3.18 2.61 1.44 5.92 3.86 9.97 8.14v57.66c0 49.8-0.2 57.9-1.47 59.45-0.81 0.99-5.45 4.39-10.3 7.55-6.55 4.27-9.72 5.75-12.26 5.74-2.14-0.01-5.11-1.12-7.85-2.92-2.43-1.59-6.29-4.47-12.75-9.89l0.03-63.27-14.35-17.66c-7.89-9.71-16.61-19.98-19.39-22.82-2.77-2.84-5.7-5.14-6.51-5.12-0.81 0.02-2.91 1.13-7.85 4.89l-0.02 95.64 4.18 2.69c3.66 2.36 4.42 2.53 6.14 1.38 1.08-0.73 2.96-1.94 6.38-4.07v-33.11c0-18.21 0.22-33.1 0.49-33.1 0.27 0 3.37 2.53 13.29 11.28l-0.05 62.29-6.13 5.42c-3.37 2.99-7.57 6.08-9.32 6.87-1.76 0.79-5.62 1.44-8.59 1.44-5.12 0-5.76-0.3-20.1-11.77v-112.81l4.65-3.77c2.57-2.08 6.65-5.18 9.08-6.9 3.58-2.53 5.34-3.11 9.32-3.07 4.77 0.05 5.09 0.24 11.81 7.14 3.8 3.9 9.54 10.09 18.6 20.43l8.51-10.6c4.68-5.82 9.97-11.97 11.77-13.67 1.79-1.69 5.03-4.01 7.18-5.14 2.79-1.46 4.93-1.9 7.36-1.5zm-22.86 41.27c0 0 6.95 11.26 7.9 11.5 1.59 0.4 1.23 3.04 1.23 34.45v33.84c6.99 4.95 8.97 5.7 10.3 5.28 1.08-0.35 3.17-1.46 4.66-2.46l2.7-1.84v-101.04c-4.95-3.03-7.1-3.92-7.98-3.92-0.89 0-4.01 2.76-6.94 6.13-2.93 3.37-9.62 15.23-11.87 18.06z"/>
             </svg>
           </div>
           <span style={{ fontSize:16, fontWeight:700, letterSpacing:"-.02em",
