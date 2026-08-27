@@ -115,6 +115,7 @@ export default function AuthPage() {
           src={AUTH_BACKGROUND}
           alt=""
           aria-hidden="true"
+          className="mc-photo"
           style={{
             // Cadrage calé sur la maquette : le sujet est agrandi et remonté
             // pour que la tête arrive en haut de l'écran. Valeurs en % de la
@@ -175,6 +176,7 @@ export default function AuthPage() {
           Résultat : la composition est rigoureusement identique d'un
           téléphone à l'autre, seule la taille globale change. */}
       <main
+        className="mc-scene"
         style={{
           position: "relative",
           zIndex: 2,
@@ -182,11 +184,11 @@ export default function AuthPage() {
           aspectRatio: "393 / 852",
           maxHeight: "calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom))",
           margin: "0 auto",
-          containerType: "size",
+          containerType: "inline-size",
           display: "flex",
           flexDirection: "column",
           boxSizing: "border-box",
-          padding: "5.089cqw 5.089cqw 6.107cqw",
+          padding: "4.571cqw 0 5.485cqw",
         }}
       >
         {/* Répartition 4:1 — reproduit la composition de la maquette sur
@@ -199,13 +201,15 @@ export default function AuthPage() {
           style={{
             width: "100%",
             margin: "0 auto",
+            padding: "0 4.571cqw",
+            boxSizing: "border-box",
             display: "flex",
             flexDirection: "column",
             flexShrink: 0,
           }}
         >
         {/* Petit retour uniquement pour inscription / récupération. */}
-        <div style={{ minHeight: "11.705cqw", display: "flex", alignItems: "center" }}>
+        <div style={{ minHeight: "10.514cqw", display: "flex", alignItems: "center" }}>
           {(isSignup || isForgot) && (
             <button
               type="button"
@@ -213,9 +217,9 @@ export default function AuthPage() {
               aria-label="Retour"
               className="tap"
               style={{
-                width: "10.687cqw",
-                height: "10.687cqw",
-                borderRadius: "3.562cqw",
+                width: "9.599cqw",
+                height: "9.599cqw",
+                borderRadius: "3.199cqw",
                 border: `1px solid ${BORDER}`,
                 background: "rgba(7,11,19,.52)",
                 color: TEXT,
@@ -234,15 +238,15 @@ export default function AuthPage() {
         <section
           style={{
             textAlign: "center",
-            marginBottom: "11.196cqw",
+            marginBottom: "10.056cqw",
             pointerEvents: "none",
           }}
         >
           <BrandMark />
           <div style={{
-            marginTop: "3.053cqw",
+            marginTop: "2.742cqw",
             fontFamily: '"Arial Narrow", "Roboto Condensed", "Helvetica Neue", Arial, sans-serif',
-            fontSize: "10.178cqw",
+            fontSize: "9.142cqw",
             lineHeight: .95,
             fontWeight: 900,
             fontStyle: "italic",
@@ -283,7 +287,7 @@ export default function AuthPage() {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "3.053cqw" }}>
+          <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "2.742cqw" }}>
             {isSignup && (
               <Field label="Prénom" value={fullName} onChange={setFullName} type="text" placeholder="Ton prénom" autoComplete="name" icon={<UserIcon />} />
             )}
@@ -308,14 +312,14 @@ export default function AuthPage() {
               disabled={busy}
               className="tap"
               style={{
-                height: "15.267cqw",
+                height: "13.713cqw",
                 border: 0,
-                borderRadius: "4.326cqw",
-                marginTop: "1.018cqw",
+                borderRadius: "3.886cqw",
+                marginTop: "0.914cqw",
                 background: busy ? "#26304E" : `linear-gradient(135deg, ${BLUE}, ${BLUE_DARK})`,
                 color: "#FFF",
                 fontFamily: FONT,
-                fontSize: "3.817cqw",
+                fontSize: "3.429cqw",
                 fontWeight: 750,
                 letterSpacing: ".015em",
                 cursor: busy ? "default" : "pointer",
@@ -323,7 +327,7 @@ export default function AuthPage() {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                gap: "3.053cqw",
+                gap: "2.742cqw",
               }}
             >
               {busy ? "..." : isForgot ? "Envoyer le lien" : isSignup ? "Créer mon compte" : "Se connecter"}
@@ -333,20 +337,20 @@ export default function AuthPage() {
 
           {!isForgot && (
             <>
-              <div style={{ display: "flex", alignItems: "center", gap: "3.053cqw", margin: "5.089cqw 0 3.562cqw" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "2.742cqw", margin: "4.571cqw 0 3.199cqw" }}>
                 <div style={{ flex: 1, height: 1, background: BORDER }} />
-                <span style={{ fontSize: "2.672cqw", letterSpacing: ".12em", color: FAINT, fontWeight: 700 }}>OU</span>
+                <span style={{ fontSize: "2.400cqw", letterSpacing: ".12em", color: FAINT, fontWeight: 700 }}>OU</span>
                 <div style={{ flex: 1, height: 1, background: BORDER }} />
               </div>
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "2.545cqw" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "2.286cqw" }}>
                 <SocialButton provider="apple" label="Apple" busy={oauthBusy === "apple"} disabled={!!oauthBusy} onClick={() => handleOAuth("apple")} icon={<AppleMark />} />
                 <SocialButton provider="google" label="Google" busy={oauthBusy === "google"} disabled={!!oauthBusy} onClick={() => handleOAuth("google")} icon={<GoogleMark />} />
               </div>
             </>
           )}
 
-          <div style={{ textAlign: "center", marginTop: "5.089cqw", fontSize: "3.308cqw", color: MUTED }}>
+          <div style={{ textAlign: "center", marginTop: "4.571cqw", fontSize: "2.971cqw", color: MUTED }}>
             {isSignup ? (
               <>
                 Déjà un compte ?{" "}
@@ -371,6 +375,41 @@ export default function AuthPage() {
         .tap { -webkit-tap-highlight-color: transparent; transition: transform .16s ease, opacity .16s ease, filter .16s ease; }
         .tap:active { transform: scale(.985); }
         input::placeholder { color: rgba(247,248,252,.34); }
+
+        /* ORDINATEUR / grande tablette.
+           Sur téléphone la scène est verrouillée au format iPhone 15 pour
+           que le rendu soit identique partout. Sur un grand écran ce
+           verrou n'a plus lieu d'être : il rendrait la carte étroite et
+           minuscule. On l'élargit donc et on libère la hauteur, le
+           contenu se centrant verticalement. Les dimensions internes
+           étant en cqw, tout grandit d'un bloc avec la largeur. */
+        @media (min-width: 768px) {
+          .mc-scene {
+            /* Plafonnée à 460px, mais réduite si la fenêtre est peu haute :
+               le contenu occupe environ 1,55 fois la largeur, donc on borne
+               par la hauteur disponible pour éviter tout scroll. */
+            width: min(460px, calc((100dvh - 48px) / 1.55)) !important;
+            aspect-ratio: auto !important;
+            max-height: none !important;
+            min-height: 100dvh;
+            justify-content: center;
+            padding-top: 24px !important;
+            padding-bottom: 24px !important;
+          }
+
+          /* Le cadrage à 120 % de large est calibré pour un écran de
+             téléphone (portrait). Sur un écran d'ordinateur (paysage) il
+             zoome beaucoup trop : on revient à un remplissage classique. */
+          .mc-photo {
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            transform: none !important;
+            object-fit: cover;
+            object-position: center 28%;
+          }
+        }
       `}</style>
     </div>
   );
@@ -382,10 +421,10 @@ function Field({ label, value, onChange, type, placeholder, autoComplete, requir
   const inputType = isPassword && showPassword ? "text" : type;
 
   return (
-    <label style={{ display: "flex", flexDirection: "column", gap: "1.781cqw" }}>
-      <span style={{ fontSize: "2.926cqw", fontWeight: 650, color: MUTED, paddingLeft: "0.509cqw" }}>{label}</span>
+    <label style={{ display: "flex", flexDirection: "column", gap: "1.600cqw" }}>
+      <span style={{ fontSize: "2.628cqw", fontWeight: 650, color: MUTED, paddingLeft: "0.457cqw" }}>{label}</span>
       <div style={{ position: "relative" }}>
-        <span style={{ position: "absolute", left: "4.326cqw", top: "50%", transform: "translateY(-50%)", color: "rgba(255,255,255,.62)", display: "grid", placeItems: "center", pointerEvents: "none", zIndex: 2 }}>
+        <span style={{ position: "absolute", left: "3.886cqw", top: "50%", transform: "translateY(-50%)", color: "rgba(255,255,255,.62)", display: "grid", placeItems: "center", pointerEvents: "none", zIndex: 2 }}>
           {icon}
         </span>
         <input
@@ -397,14 +436,14 @@ function Field({ label, value, onChange, type, placeholder, autoComplete, requir
           required={required}
           style={{
             width: "100%",
-            height: "14.249cqw",
-            borderRadius: "4.071cqw",
+            height: "12.799cqw",
+            borderRadius: "3.657cqw",
             border: `1px solid rgba(255,255,255,.15)`,
             background: "rgba(7,11,20,.42)",
             backdropFilter: "blur(18px)",
             WebkitBackdropFilter: "blur(18px)",
-            padding: isPassword ? "0 12.723cqw 0 13.232cqw" : "0 4.071cqw 0 13.232cqw",
-            fontSize: "max(16px, 3.944cqw)",
+            padding: isPassword ? "0 11.428cqw 0 11.885cqw" : "0 3.657cqw 0 11.885cqw",
+            fontSize: "max(16px, 3.543cqw)",
             fontFamily: FONT,
             color: TEXT,
             outline: "none",
@@ -419,13 +458,13 @@ function Field({ label, value, onChange, type, placeholder, autoComplete, requir
             aria-label={showPassword ? "Masquer le mot de passe" : "Afficher le mot de passe"}
             style={{
               position: "absolute",
-              right: "3.817cqw",
+              right: "3.429cqw",
               top: "50%",
               transform: "translateY(-50%)",
               border: 0,
               background: "transparent",
               color: "rgba(255,255,255,.68)",
-              padding: "1.527cqw",
+              padding: "1.372cqw",
               cursor: "pointer",
               display: "grid",
               placeItems: "center",
@@ -442,8 +481,8 @@ function Field({ label, value, onChange, type, placeholder, autoComplete, requir
 function SocialButton({ label, icon, busy, disabled, onClick }) {
   return (
     <button type="button" onClick={onClick} disabled={disabled} className="tap" style={{
-      height: "14.758cqw",
-      borderRadius: "3.817cqw",
+      height: "13.256cqw",
+      borderRadius: "3.429cqw",
       border: `1px solid ${BORDER}`,
       background: "rgba(7,11,19,.56)",
       backdropFilter: "blur(16px)",
@@ -451,10 +490,10 @@ function SocialButton({ label, icon, busy, disabled, onClick }) {
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
-      gap: "2.290cqw",
+      gap: "2.057cqw",
       cursor: disabled ? "default" : "pointer",
       opacity: disabled && !busy ? .45 : 1,
-      fontSize: "3.435cqw",
+      fontSize: "3.085cqw",
       fontWeight: 650,
       fontFamily: FONT,
     }}>
@@ -485,8 +524,8 @@ function BrandMark() {
   // Le viewBox est resserré sur la forme : elle remplit la boîte sans marge morte.
   return (
     <div style={{
-      width: "16.794cqw",
-      height: "16.794cqw",
+      width: "15.085cqw",
+      height: "15.085cqw",
       margin: "0 auto",
       filter: "drop-shadow(0 10px 28px rgba(60,91,255,.40))",
     }}>
@@ -516,29 +555,29 @@ function BrandMark() {
 }
 
 function ArrowRight() {
-  return <svg width="19" height="19" style={{ width: "4.835cqw", height: "4.835cqw" }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h13"/><path d="m13 6 6 6-6 6"/></svg>;
+  return <svg width="19" height="19" style={{ width: "4.343cqw", height: "4.343cqw" }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h13"/><path d="m13 6 6 6-6 6"/></svg>;
 }
 function ArrowLeft() {
-  return <svg width="18" height="18" style={{ width: "4.580cqw", height: "4.580cqw" }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5"/><path d="m11 18-6-6 6-6"/></svg>;
+  return <svg width="18" height="18" style={{ width: "4.114cqw", height: "4.114cqw" }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5"/><path d="m11 18-6-6 6-6"/></svg>;
 }
 function MailIcon() {
-  return <svg width="19" height="19" style={{ width: "4.835cqw", height: "4.835cqw" }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>;
+  return <svg width="19" height="19" style={{ width: "4.343cqw", height: "4.343cqw" }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>;
 }
 function LockIcon() {
-  return <svg width="19" height="19" style={{ width: "4.835cqw", height: "4.835cqw" }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>;
+  return <svg width="19" height="19" style={{ width: "4.343cqw", height: "4.343cqw" }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>;
 }
 function UserIcon() {
-  return <svg width="19" height="19" style={{ width: "4.835cqw", height: "4.835cqw" }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c.8-3.5 3.3-5.3 7-5.3s6.2 1.8 7 5.3"/></svg>;
+  return <svg width="19" height="19" style={{ width: "4.343cqw", height: "4.343cqw" }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c.8-3.5 3.3-5.3 7-5.3s6.2 1.8 7 5.3"/></svg>;
 }
 function Spinner() {
   return <div style={{ width: 16, height: 16, borderRadius: "50%", border: "2px solid rgba(255,255,255,.25)", borderTopColor: "#fff", animation: "spin .7s linear infinite" }} />;
 }
 function GoogleMark() {
-  return <svg width="18" height="18" style={{ width: "4.580cqw", height: "4.580cqw" }} viewBox="0 0 48 48"><path fill="#4285F4" d="M45.1 24.5c0-1.6-.14-3.13-.4-4.6H24v9.02h11.85c-.51 2.75-2.06 5.08-4.4 6.64v5.52h7.11c4.16-3.83 6.54-9.47 6.54-16.58Z"/><path fill="#34A853" d="M24 46c5.94 0 10.92-1.97 14.56-5.32l-7.11-5.52c-1.97 1.32-4.5 2.1-7.45 2.1-5.73 0-10.58-3.87-12.31-9.07H4.34v5.7C7.96 41.07 15.4 46 24 46Z"/><path fill="#FBBC05" d="M11.69 28.19A13.87 13.87 0 0 1 10.95 24c0-1.46.25-2.87.74-4.19v-5.7H4.34A21.93 21.93 0 0 0 2 24c0 3.55.85 6.9 2.34 9.89l7.35-5.7Z"/><path fill="#EA4335" d="M24 10.75c3.23 0 6.13 1.11 8.41 3.29l6.31-6.31C34.9 4.18 29.93 2 24 2 15.4 2 7.96 6.93 4.34 14.11l7.35 5.7c1.73-5.2 6.58-9.06 12.31-9.06Z"/></svg>;
+  return <svg width="18" height="18" style={{ width: "4.114cqw", height: "4.114cqw" }} viewBox="0 0 48 48"><path fill="#4285F4" d="M45.1 24.5c0-1.6-.14-3.13-.4-4.6H24v9.02h11.85c-.51 2.75-2.06 5.08-4.4 6.64v5.52h7.11c4.16-3.83 6.54-9.47 6.54-16.58Z"/><path fill="#34A853" d="M24 46c5.94 0 10.92-1.97 14.56-5.32l-7.11-5.52c-1.97 1.32-4.5 2.1-7.45 2.1-5.73 0-10.58-3.87-12.31-9.07H4.34v5.7C7.96 41.07 15.4 46 24 46Z"/><path fill="#FBBC05" d="M11.69 28.19A13.87 13.87 0 0 1 10.95 24c0-1.46.25-2.87.74-4.19v-5.7H4.34A21.93 21.93 0 0 0 2 24c0 3.55.85 6.9 2.34 9.89l7.35-5.7Z"/><path fill="#EA4335" d="M24 10.75c3.23 0 6.13 1.11 8.41 3.29l6.31-6.31C34.9 4.18 29.93 2 24 2 15.4 2 7.96 6.93 4.34 14.11l7.35 5.7c1.73-5.2 6.58-9.06 12.31-9.06Z"/></svg>;
 }
 function EyeIcon({ open }) {
   return (
-    <svg width="21" height="21" style={{ width: "5.344cqw", height: "5.344cqw" }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="21" height="21" style={{ width: "4.800cqw", height: "4.800cqw" }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       {open ? (
         <>
           <path d="M2.2 12s3.4-6 9.8-6 9.8 6 9.8 6-3.4 6-9.8 6-9.8-6-9.8-6Z"/>
@@ -554,7 +593,7 @@ function EyeIcon({ open }) {
   );
 }
 function AppleMark() {
-  return <svg width="17" height="20" style={{ width: "4.326cqw", height: "5.089cqw" }} viewBox="0 0 17 20" fill="#FFF"><path d="M14.03 10.62c-.02-2.15 1.76-3.18 1.84-3.23-1-1.47-2.57-1.67-3.13-1.69-1.33-.14-2.6.78-3.28.78-.68 0-1.72-.76-2.82-.74-1.45.02-2.79.85-3.54 2.15-1.51 2.62-.39 6.5 1.09 8.63.72 1.04 1.58 2.2 2.71 2.16 1.09-.04 1.5-.7 2.82-.7 1.31 0 1.69.7 2.84.68 1.18-.02 1.92-1.06 2.63-2.11.83-1.21 1.17-2.38 1.19-2.44-.03-.01-2.28-.88-2.35-3.49ZM11.87 4.14c.59-.72.99-1.71.88-2.7-.85.03-1.88.57-2.49 1.28-.55.63-1.03 1.65-.9 2.62.94.07 1.91-.48 2.51-1.2Z"/></svg>;
+  return <svg width="17" height="20" style={{ width: "3.886cqw", height: "4.571cqw" }} viewBox="0 0 17 20" fill="#FFF"><path d="M14.03 10.62c-.02-2.15 1.76-3.18 1.84-3.23-1-1.47-2.57-1.67-3.13-1.69-1.33-.14-2.6.78-3.28.78-.68 0-1.72-.76-2.82-.74-1.45.02-2.79.85-3.54 2.15-1.51 2.62-.39 6.5 1.09 8.63.72 1.04 1.58 2.2 2.71 2.16 1.09-.04 1.5-.7 2.82-.7 1.31 0 1.69.7 2.84.68 1.18-.02 1.92-1.06 2.63-2.11.83-1.21 1.17-2.38 1.19-2.44-.03-.01-2.28-.88-2.35-3.49ZM11.87 4.14c.59-.72.99-1.71.88-2.7-.85.03-1.88.57-2.49 1.28-.55.63-1.03 1.65-.9 2.62.94.07 1.91-.48 2.51-1.2Z"/></svg>;
 }
 
 const linkButtonStyle = {
@@ -563,7 +602,7 @@ const linkButtonStyle = {
   padding: 0,
   color: "#4D6BFF",
   fontFamily: FONT,
-  fontSize: "3.308cqw",
+  fontSize: "2.971cqw",
   fontWeight: 650,
   cursor: "pointer",
 };
