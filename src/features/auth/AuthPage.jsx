@@ -186,7 +186,7 @@ export default function AuthPage() {
           display: "flex",
           flexDirection: "column",
           boxSizing: "border-box",
-          padding: `${R(20)} ${R(20)} ${R(24)}`,
+          padding: "5.089cqw 5.089cqw 6.107cqw",
         }}
       >
         {/* Répartition 4:1 — reproduit la composition de la maquette sur
@@ -522,10 +522,10 @@ function ArrowLeft() {
   return <svg width="18" height="18" style={{ width: "4.580cqw", height: "4.580cqw" }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5"/><path d="m11 18-6-6 6-6"/></svg>;
 }
 function MailIcon() {
-  return <svg width="19" height="19" style={{ width: "4.835cqw", height: "4.835cqw" }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="5" width="18" height="14" style={{ width: "4.580cqw", height: "3.562cqw" }} rx="2"/><path d="m3 7 9 6 9-6"/></svg>;
+  return <svg width="19" height="19" style={{ width: "4.835cqw", height: "4.835cqw" }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>;
 }
 function LockIcon() {
-  return <svg width="19" height="19" style={{ width: "4.835cqw", height: "4.835cqw" }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="10" width="14" height="10" style={{ width: "3.562cqw", height: "2.545cqw" }} rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>;
+  return <svg width="19" height="19" style={{ width: "4.835cqw", height: "4.835cqw" }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>;
 }
 function UserIcon() {
   return <svg width="19" height="19" style={{ width: "4.835cqw", height: "4.835cqw" }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c.8-3.5 3.3-5.3 7-5.3s6.2 1.8 7 5.3"/></svg>;
@@ -566,7 +566,7 @@ const linkButtonStyle = {
   fontSize: "3.308cqw",
   fontWeight: 650,
   cursor: "pointer",
-}
+};
 
 function traduireErreur(msg) {
   if (msg.includes("Invalid login credentials")) return "Email ou mot de passe incorrect.";
