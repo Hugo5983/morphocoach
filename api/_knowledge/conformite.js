@@ -21,6 +21,8 @@
 
 import { getPrescription, calibrerSeance, reserveEchauffementMin } from "./prescription.js";
 import { findInCatalogue } from "./exercices_catalogue.js";
+import { collectDiagnostics, detectMethodesExo, METHODES, METHODES_INTERDITES_DEBUTANT, METHODES_DOUCES_DEBUTANT } from "./methodes.js";
+import { pathologiesActives } from "./pathologies-cadre.js";
 
 const norm = (s) => String(s || "").toLowerCase().normalize("NFD")
   .replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9 ]/g, " ").replace(/\s+/g, " ").trim();
@@ -388,12 +390,193 @@ export function validateTempsSeance(parsed, objectif, dureeSeance) {
   return problems;
 }
 
-/** Lance les quatre contrôles d'un coup. */
-export function validateConformite(parsed, { objectif, dossier, fiche, dureeSeance }) {
+// ─── VALIDATEUR MÉTHODES (V5) ───────────────────────────────────────────────
+// Pour chaque diagnostic présent sur ce profil (extrait via collectDiagnostics
+// de methodes.js), on vérifie qu'au moins UNE des méthodes attendues apparaît
+// dans le programme, sur les exercices ciblant le muscle concerné.
+//
+// PRINCIPE : ce validateur est CAUSAL, jamais quantitatif. Il ne compte pas
+// "combien de méthodes au total". Il vérifie qu'à chaque diagnostic présent
+// correspond au moins une réponse méthodologique dans le programme.
+
+/**
+ * Retourne le groupe musculaire d'un exercice via findInCatalogue.
+ * Renvoie null si le catalogue ne le connaît pas (le validateur d'exercices
+ * s'en occupe déjà, on ne double pas l'alerte ici).
+ */
+function groupeDeExo(nom) {
+  const entry = findInCatalogue(nom);
+  return entry?.groupe || null;
+}
+
+/** Un groupe musculaire matche-t-il un groupe cible du diagnostic ? */
+function matchGroupe(groupeExo, groupeCible) {
+  if (!groupeCible) return true;                 // diagnostic sans groupe spécifique
+  if (!groupeExo) return false;
+  const g = String(groupeExo).toLowerCase();
+  const c = String(groupeCible).toLowerCase();
+  if (g === c) return true;
+  // Alias raisonnables
+  if (c === "dos" && (g === "dos_largeur" || g === "dos_epaisseur")) return true;
+  if (c === "jambes" && ["quadriceps", "ischios", "mollets", "fessiers"].includes(g)) return true;
+  if (c === "abdos" && (g === "abdos" || g === "abdominaux")) return true;
+  return false;
+}
+
+export function validateMethodes(parsed, { fiche, form }) {
+  if (!parsed?.programme?.seances) return [];
+  const diags = collectDiagnostics(fiche, form);
+  if (diags.length === 0) return [];
+
+  const niveau = form?.niveau || "intermediaire";
+  const isDebutant = niveau === "debutant"
+    || fiche?.observations?.physique?.densite_musculaire === "debutant";
+
+  // Toutes les méthodes détectées dans le programme, agrégées par groupe.
+  // { groupe: Set<methode_key>, ... } + un Set global "sans groupe".
+  const methodesParGroupe = new Map();
+  const methodesGlobal = new Set();
+  const allExos = tousExercices(parsed);
+
+  for (const { ex } of allExos) {
+    const g = groupeDeExo(ex.nom);
+    const found = detectMethodesExo(ex);
+    for (const m of found) {
+      methodesGlobal.add(m);
+      if (g) {
+        if (!methodesParGroupe.has(g)) methodesParGroupe.set(g, new Set());
+        methodesParGroupe.get(g).add(m);
+      }
+    }
+  }
+
+  const problems = [];
+
+  for (const d of diags) {
+    // Appliquer les garde-fous : retirer les méthodes interdites au débutant
+    // (sauf si elles font partie des méthodes douces autorisées sur point faible).
+    let attendues = d.methodes_attendues || [];
+    if (isDebutant) {
+      attendues = attendues.filter(m => METHODES_DOUCES_DEBUTANT.has(m) && !METHODES_INTERDITES_DEBUTANT.has(m));
+      // Si le diagnostic se retrouve sans aucune méthode autorisée pour
+      // débutant, on ne bloque pas — le garde-fou G3 a absorbé la règle.
+      if (attendues.length === 0) continue;
+    }
+
+    // Cherche si au moins une méthode attendue apparaît sur un exercice du
+    // muscle cible (ou globalement si groupe_cible est null).
+    let trouve = false;
+    if (d.groupe_cible) {
+      // Regarder tous les groupes qui matchent (aliases inclus)
+      for (const [g, set] of methodesParGroupe.entries()) {
+        if (!matchGroupe(g, d.groupe_cible)) continue;
+        if (attendues.some(m => set.has(m))) { trouve = true; break; }
+      }
+    } else {
+      // Diagnostic sans groupe : on regarde globalement
+      trouve = attendues.some(m => methodesGlobal.has(m));
+    }
+
+    if (!trouve) {
+      const noms = attendues.map(m => METHODES[m]?.nom || m).join(" OU ");
+      const cible = d.groupe_cible ? ` sur ${d.groupe_cible}` : "";
+      problems.push(
+        `Diagnostic actif "${d.diagnostic}" (${d.source_matrice}) sans réponse méthodologique${cible} : ` +
+        `attendu au moins une méthode parmi { ${noms} } — aucune détectée dans le programme.`
+      );
+    }
+  }
+
+  return problems;
+}
+
+// ─── VALIDATEUR PATHOLOGIES (V5) ────────────────────────────────────────────
+// Cadre grand public 4 étapes (exclusion / substitution / progression /
+// avis_medical). Ce validateur vérifie surtout :
+//   - présence du champ "avis_medical" dans le JSON quand une pathologie
+//     est déclarée
+//   - respect du RPE plafond sur la zone concernée pendant la phase de
+//     prudence (approximation : le champ RPE des exos concernés ne
+//     dépasse pas rpe_max)
+//   - absence de langage médical prohibé dans les tips_coach
+
+const LANGAGE_MEDICAL_INTERDIT = /\b(traiter|traite|traité|soigner|soigne|soigné|guérir|guéri|guérit)\b/i;
+
+/** Extrait un RPE numérique haut d'une chaîne "6-7", "7", "RPE 8". Renvoie null si non parsable. */
+function rpeHaut(v) {
+  const t = String(v || "").toLowerCase().trim();
+  if (!t) return null;
+  const m = t.match(/(\d{1,2})\s*(?:[-–à]\s*(\d{1,2}))?/);
+  if (!m) return null;
+  const b = m[2] ? parseInt(m[2], 10) : parseInt(m[1], 10);
+  return Number.isFinite(b) && b >= 1 && b <= 10 ? b : null;
+}
+
+/** Muscle concerné par la pathologie (approximation grossière pour scan RPE) */
+const ZONE_PATHO_TO_GROUPES = {
+  hernie_discale:  ["dos", "dos_largeur", "dos_epaisseur", "jambes", "quadriceps", "ischios", "fessiers"],
+  epaule:          ["epaules", "pectoraux", "dos_largeur"],
+  coude:           ["biceps", "triceps"],
+  genou:           ["quadriceps", "ischios", "fessiers", "jambes"],
+  laxite_hormonale: null,   // s'applique à TOUT le corps
+  reprise_age_sedentaire: null,
+};
+
+export function validatePathologies(parsed, { form }) {
+  const patos = pathologiesActives(form?.pathologies || []);
+  if (patos.length === 0) return [];
+
+  const problems = [];
+
+  // 1. Présence du champ avis_medical
+  const avis = String(parsed?.avis_medical || parsed?.correction?.avis_medical || "").trim();
+  if (avis.length < 30) {
+    problems.push(
+      `Champ "avis_medical" manquant ou trop court : pathologie(s) déclarée(s) (${patos.map(p => p.libelle).join(", ")}), ` +
+      `ajouter dans le JSON de sortie : "avis_medical": "En cas de douleur qui persiste, s'aggrave ou irradie, arrête et consulte ton médecin ou kinésithérapeute. Ce programme est un cadre d'entraînement, pas un traitement."`
+    );
+  }
+
+  // 2. RPE plafond sur la zone concernée
+  const allExos = tousExercices(parsed);
+  for (const p of patos) {
+    const rpeMax = p.progression?.rpe_max;
+    if (!rpeMax) continue;
+    const zones = ZONE_PATHO_TO_GROUPES[p.id];
+    const exosZone = zones
+      ? allExos.filter(({ ex }) => zones.includes(groupeDeExo(ex.nom)))
+      : allExos;
+    for (const { ex, jour } of exosZone) {
+      const rh = rpeHaut(ex.rpe);
+      if (rh && rh > rpeMax) {
+        problems.push(
+          `RPE trop haut pour "${p.libelle}" : ${ex.nom} (${jour}) prescrit à RPE ${ex.rpe}, plafond ${rpeMax} pendant la phase de prudence.`
+        );
+      }
+    }
+  }
+
+  // 3. Langage médical interdit dans les tips_coach
+  for (const { ex, jour } of allExos) {
+    if (LANGAGE_MEDICAL_INTERDIT.test(ex.tips_coach || "")) {
+      problems.push(
+        `Langage médical prohibé dans "${ex.nom}" (${jour}) : "${ex.tips_coach}". ` +
+        `Reformuler avec "adapter", "protéger", "renforcer avec précaution" — jamais "traiter", "soigner", "guérir".`
+      );
+    }
+  }
+
+  return problems;
+}
+
+/** Lance TOUS les contrôles (dont les 2 nouveaux V5). */
+export function validateConformite(parsed, { objectif, dossier, fiche, dureeSeance, form }) {
   return [
     ...validatePrescription(parsed, objectif),
     ...validateCharges(parsed, dossier),
     ...validatePointsFaibles(parsed, fiche),
     ...validateTempsSeance(parsed, objectif, dureeSeance),
+    ...(form ? validateMethodes(parsed, { fiche, form }) : []),
+    ...(form ? validatePathologies(parsed, { form }) : []),
   ];
 }

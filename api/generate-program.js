@@ -39,6 +39,8 @@ import { validateConformite } from "./_knowledge/conformite.js";
 import { buildEvolutionBlock } from "./_knowledge/evolution.js";
 import { buildCardioBlock } from "./_knowledge/cardio.js";
 import { buildFrequenceBlock } from "./_knowledge/frequence.js";
+import { buildMethodesBlock } from "./_knowledge/methodes.js";
+import { buildPathologiesCadreBlock } from "./_knowledge/pathologies-cadre.js";
 
 export const config = { api: { bodyParser: { sizeLimit: "4mb" } } };
 
@@ -437,6 +439,14 @@ ${correctifsCibles.map(e => `- ${e.n} [${e.groupe} · ${e.mat}]`).join("\n")}
 Ces exercices sont du RENFORCEMENT, jamais un traitement : ne formule aucun
 diagnostic, et rappelle dans "tips_coach" d'arrêter en cas de douleur vive.` : "";
 
+  // ─── V5 : matrice diagnostic → méthodes + cadre pathologies ─────────────
+  // Ces deux blocs remplacent la consigne verbale "utilise au moins une
+  // méthode d'intensification". Ils exposent à Sonnet, extrait de la
+  // matrice V5, la liste PRÉCISE des méthodes attendues pour CE profil,
+  // ainsi que le cadre 4-étapes pour chaque pathologie déclarée.
+  const methodesBlock = buildMethodesBlock({ fiche, form });
+  const pathologiesCadreBlock = buildPathologiesCadreBlock(form.pathologies || []);
+
   // ─── OBJECTIF PRÉCIS — traitement explicite ────────────────────────────
   // Historiquement, form.objectifPrecis était concaténé au champ objectif
   // dans une simple ligne texte ("Objectif: hypertrophie (précis: prendre
@@ -531,6 +541,8 @@ ${form.sport ? `Sport pratiqué: ${form.sport} — intégrer des exercices de tr
 Pathologies déclarées: ${(form.pathologies || []).filter(p => p !== "Aucune").join(", ") || "aucune"}
 Numéro de cycle: ${cycleNum}
 ${objectifPrecisBlock}
+${methodesBlock}
+${pathologiesCadreBlock}
 
 ${prescriptionBlock}
 
@@ -670,7 +682,8 @@ Le champ "progression_semaine" explique comment progresser la SEMAINE SUIVANTE s
 "exercices_correctifs": ["exercice spécifique"]
   },
 "nutrition": {"cal": 2500, "p": 150, "g": 300, "l": 80, "conseil": "conseil nutrition lié à l'objectif" },
-"morpho": {"resume": "synthèse morphologique complète pour l'utilisateur" }
+"morpho": {"resume": "synthèse morphologique complète pour l'utilisateur" },
+"avis_medical": "OBLIGATOIRE si pathologie déclarée — sinon chaîne vide. Formulation type : 'En cas de douleur qui persiste, s'aggrave ou irradie, arrête et consulte ton médecin ou kinésithérapeute. Ce programme est un cadre d'entraînement, pas un traitement.' Jamais de langage médical (traiter, soigner, guérir) — toujours adapter, protéger, renforcer avec précaution."
 }`;
 }
 
@@ -681,7 +694,7 @@ function listExercices(parsed) {
   return out;
 }
 
-export function validateProgramme(parsed, { dossier, fiche, materiel, joursDemandes = [], douleurs = [], objectif = "", dureeSeance = 0 }) {
+export function validateProgramme(parsed, { dossier, fiche, materiel, joursDemandes = [], douleurs = [], objectif = "", dureeSeance = 0, form = null }) {
   const problems = [];
   const noms = listExercices(parsed);
   const exos = noms.map(normalizeExo);
@@ -740,9 +753,11 @@ export function validateProgramme(parsed, { dossier, fiche, materiel, joursDeman
     }
   }
   // 4. CONFORMITÉ — la connaissance est-elle APPLIQUÉE, pas seulement reçue ?
-  //    Prescription (reps/repos/tempo), charges réelles en kilos, et volume
-  //    réellement alloué aux points faibles diagnostiqués sur photo.
-  problems.push(...validateConformite(parsed, { objectif, dossier, fiche, dureeSeance }));
+  //    Prescription (reps/repos/tempo), charges réelles en kilos, volume
+  //    réellement alloué aux points faibles diagnostiqués sur photo, +
+  //    V5 : matrice diagnostic → méthodes attendues et cadre pathologies
+  //    (4 étapes : exclusion / substitution / progression / avis_medical).
+  problems.push(...validateConformite(parsed, { objectif, dossier, fiche, dureeSeance, form }));
 
   // La liste des inconnus voyage avec les problèmes : elle alimente la file de
   // revue sans jamais faire échouer la génération.
@@ -904,7 +919,7 @@ Un programme complet et sobre vaut infiniment mieux qu'aucun programme.`;
   try {
     let raw = await appelPrincipal();
     let parsed = parseJSON(raw);
-    let problems = validateProgramme(parsed, { dossier, fiche, materiel: form.materiel, joursDemandes: normalizeJours(form.jours), douleurs: form.douleurs || [], objectif: form.objectif, dureeSeance: form.dureeSeance });
+    let problems = validateProgramme(parsed, { dossier, fiche, materiel: form.materiel, joursDemandes: normalizeJours(form.jours), douleurs: form.douleurs || [], objectif: form.objectif, dureeSeance: form.dureeSeance, form });
 
     // Une seule tentative corrective, et seulement si le temps restant le
     // permet. FILET DE SÉCURITÉ : si la correction expire ou échoue, on
@@ -923,7 +938,7 @@ Un programme complet et sobre vaut infiniment mieux qu'aucun programme.`;
         });
         const parsed2 = parseJSON(raw2);
         parsed = parsed2;
-        problems = validateProgramme(parsed2, { dossier, fiche, materiel: form.materiel, joursDemandes: normalizeJours(form.jours), douleurs: form.douleurs || [], objectif: form.objectif, dureeSeance: form.dureeSeance });
+        problems = validateProgramme(parsed2, { dossier, fiche, materiel: form.materiel, joursDemandes: normalizeJours(form.jours), douleurs: form.douleurs || [], objectif: form.objectif, dureeSeance: form.dureeSeance, form });
       } catch (e2) {
         console.warn("[generate-program] Correction avortée, programme initial conservé:", e2.message);
       }
