@@ -1,4 +1,11 @@
 // ─── API LIB : APPEL ANTHROPIC + PARSE ──────────────────────────────────────
+// V4 : support du prompt caching (cache_control ephemeral, TTL 5 min ou 1 h).
+//   - Un bloc marqué cache_control est stocké côté Anthropic pendant sa TTL.
+//   - Les appels suivants qui envoient EXACTEMENT le même préfixe paient
+//     10 % du tarif input sur la partie cachée (économie 90 %).
+//   - Le cache est partagé au niveau de la clé API : si l'utilisateur B
+//     génère 30 s après l'utilisateur A, il bénéficie du cache écrit par A.
+//   - TTL 1 h nécessite le header beta "extended-cache-ttl-2025-04-11".
 
 // Timeout par appel. Doit TOUJOURS rester sous le maxDuration déclaré pour la
 // fonction dans vercel.json, sinon la plateforme coupe avant l'abort et renvoie
@@ -7,7 +14,13 @@ const API_TIMEOUT_MS = Number(process.env.ANTHROPIC_TIMEOUT_MS) || 50_000;
 
 /**
  * Appelle l'API Anthropic depuis le serveur (la clé ne quitte jamais Vercel).
- * Accepte soit`content` (message user unique), soit`messages` (historique complet).
+ * Accepte soit `content` (message user unique), soit `messages` (historique complet).
+ *
+ * Support du cache : si un bloc du content contient `cache_control`, on active
+ * automatiquement le header beta pour le TTL 1 h. Le cache est totalement
+ * transparent côté appelant — Anthropic renvoie usage.cache_read_input_tokens
+ * et usage.cache_creation_input_tokens dans data pour instrumentation future.
+ *
  * @param {{timeoutMs?: number}} opts timeoutMs surcharge le défaut pour cet appel
  * @returns {Promise<string>} texte brut concaténé de la réponse
  */
@@ -18,28 +31,36 @@ export async function callAnthropic({ model, maxTokens, system, content, message
   const budget = Math.max(5_000, timeoutMs || API_TIMEOUT_MS);
   const controller = new AbortController();
   const t = setTimeout(() => controller.abort(), budget);
+
+  // Détection du cache 1 h : on active le header beta uniquement si nécessaire,
+  // pour ne pas polluer les appels qui n'en ont pas besoin.
+  const usesLongCache = hasLongCache(content) || hasLongCache(messages);
+
+  const headers = {
+    "Content-Type": "application/json",
+    "x-api-key": apiKey,
+    "anthropic-version": "2023-06-01",
+  };
+  if (usesLongCache) headers["anthropic-beta"] = "extended-cache-ttl-2025-04-11";
+
   try {
     const res = await fetch("https://api.anthropic.com/v1/messages", {
-      method:"POST",
-      headers: {
-"Content-Type":"application/json",
-"x-api-key": apiKey,
-"anthropic-version":"2023-06-01",
-      },
+      method: "POST",
+      headers,
       body: JSON.stringify({
         model,
         max_tokens: maxTokens,
         system,
-        messages: messages || [{ role:"user", content }],
+        messages: messages || [{ role: "user", content }],
       }),
       signal: controller.signal,
     });
     const data = await res.json();
     if (!res.ok) {
       throw Object.assign(
-        new Error(data.error?.message ||"Erreur API Anthropic"),
+        new Error(data.error?.message || "Erreur API Anthropic"),
         { status: res.status }
-);
+      );
     }
     // Réponse coupée par le plafond de tokens : le texte serait un JSON
     // tronqué en plein milieu — irréparable. Mieux vaut une erreur nette
@@ -50,13 +71,33 @@ export async function callAnthropic({ model, maxTokens, system, content, message
         { status: 502, truncated: true }
       );
     }
-    return (data.content || []).map((i) => i.text ||"").join("").trim();
+    // Instrumentation cache — utile pour vérifier en production que le cache
+    // fonctionne réellement (cache_read_input_tokens > 0 = économie active).
+    if (data.usage) {
+      const cw = data.usage.cache_creation_input_tokens || 0;
+      const cr = data.usage.cache_read_input_tokens || 0;
+      if (cw || cr) {
+        console.log(`[anthropic] cache: write=${cw} tok, read=${cr} tok`);
+      }
+    }
+    return (data.content || []).map((i) => i.text || "").join("").trim();
   } catch (e) {
-    if (e.name ==="AbortError") throw Object.assign(new Error("Délai dépassé"), { status: 504 });
+    if (e.name === "AbortError") throw Object.assign(new Error("Délai dépassé"), { status: 504 });
     throw e;
   } finally {
     clearTimeout(t);
   }
+}
+
+// Détecte un bloc cache_control avec TTL 1 h dans le content ou messages.
+// La fonction est tolérante : accepte content=undefined, messages=undefined,
+// bloc sans cache_control, cache_control sans ttl, etc.
+function hasLongCache(payload) {
+  if (!payload) return false;
+  const blocks = Array.isArray(payload)
+    ? payload.flatMap(m => Array.isArray(m?.content) ? m.content : (m?.type ? [m] : []))
+    : [];
+  return blocks.some(b => b?.cache_control?.ttl === "1h");
 }
 
 /** Parse tolérant d'une réponse censée être du JSON pur (répare les fences/troncatures). */
@@ -192,10 +233,10 @@ function reparer(s) {
 
 /** Normalise un nom d'exercice pour comparaison (accents, casse, pluriels simples). */
 export function normalizeExo(nom) {
-  return String(nom ||"")
+  return String(nom || "")
     .toLowerCase()
-    .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
-    .replace(/[^a-z0-9 ]/g," ")
-    .replace(/\s+/g," ")
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9 ]/g, " ")
+    .replace(/\s+/g, " ")
     .trim();
 }

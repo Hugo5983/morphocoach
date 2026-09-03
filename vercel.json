@@ -3,10 +3,10 @@
   "outputDirectory": "dist",
   "framework": "vite",
   "functions": {
-    "api/generate-program-start.js":  { "maxDuration": 300 },
+    "api/generate-program-start.js":  { "maxDuration": 300, "includeFiles": "api/_knowledge/**" },
     "api/generate-program-status.js": { "maxDuration": 15 },
-    "api/generate-program.js": { "maxDuration": 120 },
-    "api/analyze-morpho.js":   { "maxDuration": 60 },
+    "api/generate-program.js": { "maxDuration": 120, "includeFiles": "api/_knowledge/**" },
+    "api/analyze-morpho.js":   { "maxDuration": 60,  "includeFiles": "api/_knowledge/**" },
     "api/coach-chat.js":       { "maxDuration": 60 },
     "api/analyze-meal.js":     { "maxDuration": 60 }
   },

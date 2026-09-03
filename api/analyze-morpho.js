@@ -6,6 +6,7 @@
 import { guard, checkAccess } from "./_lib/security.js";
 import { callAnthropic, parseJSON } from "./_lib/anthropic.js";
 import { logMorphoEvent } from "./_lib/telemetry.js";
+import { buildBaseBlock } from "./_lib/knowledge-base.js";
 import { SCHEMA_OBSERVATIONS, REPERES_VISUELS, validerObservations, deriverConsequences }
   from "./_knowledge/morphologie.js";
 
@@ -62,14 +63,30 @@ export default async function handler(req, res) {
     if (p.length > 3_000_000) return res.status(400).json({ error: "Photo trop lourde (compresser côté client)" });
   }
 
-  const content = imgs.map(p => ({
-    type: "image",
-    source: { type: "base64", media_type: "image/jpeg", data: p.replace(/^data:image\/\w+;base64,/, "") },
-  }));
+  // ─── Injection base MorphoCoach en TÊTE du content ────────────────────
+  // Sonnet lit les leviers, insertions et postures AVEC toute la connaissance
+  // MorphoCoach en tête (moteur d'orchestration étape 1, C2 sécurité morpho,
+  // C6 leviers fins, C10 rattrapage). Le premier bloc porte cache_control :
+  // il est stocké 1 h côté Anthropic, et surtout il est IDENTIQUE au premier
+  // bloc envoyé par generate-program → si l'utilisateur enchaîne analyse
+  // morpho puis génération, la génération bénéficie du cache écrit ici.
+  const baseBlock = buildBaseBlock("1h");
+  const content = [
+    ...baseBlock,
+    ...imgs.map(p => ({
+      type: "image",
+      source: { type: "base64", media_type: "image/jpeg", data: p.replace(/^data:image\/\w+;base64,/, "") },
+    })),
+  ];
 
   content.push({
     type: "text",
     text: `Tu es l'œil d'un coach sportif expert en morpho-anatomie. Analyse ces photos de posture (face/dos/profil, dans le désordre) d'une personne (${profil?.sexe || "?"}, ${profil?.age || "?"} ans).
+
+Tu as reçu EN AMONT ta base de connaissance MorphoCoach complète. La section
+1 du moteur d'orchestration ("Lecture morphologique des photos") et le
+chapitre C2 (couche sécurité & personnalisation morpho) DÉCRIVENT
+exactement ce que tu dois lire et comment. Applique-les à la lettre.
 
 ÉTAPE 1 — QUALITÉ PHOTO
 Évalue d'abord la qualité globale des photos :

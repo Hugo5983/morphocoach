@@ -19,6 +19,7 @@ import { callAnthropic, parseJSON, normalizeExo } from "./_lib/anthropic.js";
 import { checkAndCountUsage } from "./_lib/usage.js";
 import { logGenerationEvent } from "./_lib/telemetry.js";
 import { logExercicesProposes } from "./_lib/proposals.js";
+import { buildBaseBlock, hasBaseMorphoCoach } from "./_lib/knowledge-base.js";
 import { buildPathoRules, buildGardeFous, canonPathologies } from "./_knowledge/securite.js";
 import { getVolumeParams, getMesocycleLogic, REGLES_NIVEAU } from "./_knowledge/noyau.js";
 import { QUESTIONS_COACH, REGLE_PONDERATION, getVariationDirectives, SCHEMA_REFLEXION }
@@ -436,7 +437,58 @@ ${correctifsCibles.map(e => `- ${e.n} [${e.groupe} · ${e.mat}]`).join("\n")}
 Ces exercices sont du RENFORCEMENT, jamais un traitement : ne formule aucun
 diagnostic, et rappelle dans "tips_coach" d'arrêter en cas de douleur vive.` : "";
 
+  // ─── OBJECTIF PRÉCIS — traitement explicite ────────────────────────────
+  // Historiquement, form.objectifPrecis était concaténé au champ objectif
+  // dans une simple ligne texte ("Objectif: hypertrophie (précis: prendre
+  // du fessier)") — SANS aucun effet sur le catalogue, la prescription
+  // ou les validateurs. Sonnet devinait avec sa culture générale.
+  //
+  // Ici on lui dit EXPLICITEMENT quoi faire : traiter cette intention
+  // exactement comme un point faible visuel diagnostiqué sur photo, en
+  // s'appuyant sur les chapitres pertinents de la base (C7, C9, C10, C6
+  // et le référentiel détaillé du muscle cible). Sonnet a la base complète
+  // en amont du prompt — il DOIT y puiser sa réponse.
+  const objPrecis = String(form.objectifPrecis || "").trim();
+  const objectifPrecisBlock = objPrecis ? `
+═══ OBJECTIF PRÉCIS DÉCLARÉ PAR L'ATHLÈTE — TRAITEMENT PRIORITAIRE ═══
+L'athlète a écrit textuellement : « ${objPrecis} »
+
+Cette intention doit être traitée avec le MÊME poids qu'un point faible
+diagnostiqué visuellement sur photo. Applique la logique du chapitre C10
+(rattrapage par muscle) de la base et croise-la avec :
+  - le référentiel détaillé du muscle cible (DOS / PECTORAUX / JAMBES /
+    BRAS), si l'intention nomme un muscle qui y figure ;
+  - les données EMG du chapitre C9 pour la sélection d'exercices ;
+  - les techniques avancées du C6 quand le niveau de l'athlète le permet ;
+  - la lecture morpho pour ADAPTER (pas contourner) l'objectif à ses
+    leviers, insertions et pathologies éventuelles.
+
+Attendus concrets dans le programme :
+  1. Le(s) muscle(s) cible(s) reçoit(vent) un VOLUME hebdo dans la partie
+     haute de la fourchette (MAV → MRV), fréquence ≥ 2 stimulations/semaine.
+  2. Le premier exercice de la séance qui cible ce muscle est un mouvement
+     lourd principal (compound ou signature du muscle selon référentiel),
+     traité frais, jamais en fin de séance.
+  3. Au moins UNE méthode d'intensification adaptée au muscle cible et au
+     niveau de l'athlète apparaît dans le cycle (rest-pause, drop-set,
+     stretch-mediated, cluster, pré-fatigue…) — choisie selon la logique
+     de la base, jamais au hasard.
+  4. Le bloc "reflexion" du JSON explicite dans son champ "priorites" :
+     « objectif précis : ${objPrecis} → rattrapage [muscle] via [méthode] »,
+     et dans "diagnostic" pourquoi tu as choisi CES exercices signature.
+  5. Les exercices signature du muscle cible sont sélectionnés en priorité
+     dans la liste de candidats fournie plus bas.
+
+Cette intention textuelle PRIME sur l'objectif générique quand il y a
+arbitrage de volume — sans jamais violer les garde-fous morpho ou les
+adaptations pathologies (qui restent au sommet de la hiérarchie).` : "";
+
   return `Tu es un Master Coach Sportif et Préparateur Physique expert en biomécanique, hypertrophie et périodisation. Tu conçois de véritables planifications individualisées, cliniques et orientées progression réelle.
+
+Tu as reçu EN AMONT ta base de connaissance MorphoCoach complète (181 pages :
+moteur d'orchestration, 11 couches C1-C11, 4 référentiels détaillés DOS/PEC/
+JAMBES/BRAS). Le prompt qui suit est le CAS PARTICULIER de cet athlète :
+tu dois le résoudre en t'appuyant explicitement sur la base, jamais à côté.
 
 ═══ COUCHE 0 — DOSSIER ATHLÈTE (données RÉELLES du compte, jamais fictives) ═══
 ${dossierTexte}
@@ -478,6 +530,7 @@ Matériel disponible: ${(form.materiel || []).join(", ") || "salle complète"}
 ${form.sport ? `Sport pratiqué: ${form.sport} — intégrer des exercices de transfert spécifiques` : ""}
 Pathologies déclarées: ${(form.pathologies || []).filter(p => p !== "Aucune").join(", ") || "aucune"}
 Numéro de cycle: ${cycleNum}
+${objectifPrecisBlock}
 
 ${prescriptionBlock}
 
@@ -815,11 +868,24 @@ Un programme complet et sobre vaut infiniment mieux qu'aucun programme.`;
    * Appel principal avec reprise. Une expiration ne doit pas se solder par
    * l'absence totale de programme quand il reste du temps au budget.
    */
+  // ─── Injection base de connaissance MorphoCoach + prompt caching ──────
+  // La base (181 pages, ~55 000 tokens) est envoyée en TÊTE du content avec
+  // cache_control ttl=1h. Anthropic stocke la version compilée pendant 1 h ;
+  // tous les appels suivants dans la fenêtre paient 10 % du tarif input sur
+  // la base (0,30 $/M au lieu de 3 $/M). Le cache est partagé au niveau de
+  // la clé API : deux utilisateurs simultanés bénéficient du même cache.
+  //
+  // Le préfixe DOIT être strictement identique d'un appel à l'autre pour que
+  // le cache hit — c'est pourquoi buildBaseBlock est déterministe (pas de
+  // date, pas de random). Le prompt dynamique (dossier, morpho, catalogue…)
+  // vient APRÈS le marqueur cache_control : il n'est jamais caché.
+  const baseBlock = buildBaseBlock("1h");   // [] si base indisponible
+
   async function appelPrincipal() {
     try {
       return await callAnthropic({
         model: MODEL, maxTokens: concisDemblee ? 12000 : 16000, system,
-        content: [{ type: "text", text: prompt + (concisDemblee ? CONCISION : "") }],
+        content: [...baseBlock, { type: "text", text: prompt + (concisDemblee ? CONCISION : "") }],
         timeoutMs: Math.min(CAP1, remaining()),
       });
     } catch (e) {
@@ -829,7 +895,7 @@ Un programme complet et sobre vaut infiniment mieux qu'aucun programme.`;
       console.warn(`[generate-program] 1er appel expiré, reprise compacte (${Math.round(reste / 1000)}s restantes)`);
       return await callAnthropic({
         model: MODEL, maxTokens: 6000, system,
-        content: [{ type: "text", text: prompt + MINIMAL }],
+        content: [...baseBlock, { type: "text", text: prompt + MINIMAL }],
         timeoutMs: reste,
       });
     }
@@ -850,7 +916,7 @@ Un programme complet et sobre vaut infiniment mieux qu'aucun programme.`;
         const raw2 = await callAnthropic({
           model: MODEL, maxTokens: 16000, system,
           timeoutMs: Math.min(CAP2, remaining() - MARGE),
-          content: [{
+          content: [...baseBlock, {
             type: "text",
             text: prompt + `\n\n═══ CORRECTION OBLIGATOIRE ═══\nTa précédente proposition violait ces règles:\n- ${problems.join("\n- ")}\nRégénère le JSON COMPLET en corrigeant ces violations (remplace les exercices fautifs par des alternatives autorisées du même pattern moteur, prises dans la liste fournie, renouvelle les exercices en trop).`,
           }],
