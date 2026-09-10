@@ -9,33 +9,30 @@ import { ManualRMModal, CreateSeanceModal, EditRecordModal, RMCard, OBJ_TARGET, 
 import RecordDetailPage from"./components/RecordDetailPage.jsx";
 import ProgressionPage from"./ProgressionPage.jsx";
 import FocusMode from"./FocusMode.jsx";
+import ExercisePhoto from"../../components/ui/ExercisePhoto.jsx";
 
 const DISP = FONT;
 const SERIF_F = SERIF;
 
 // ─── Palette dark premium (locale à TodayView) ─────────────────────────────
-// Fond & surfaces alignés sur les tokens DARK.* partagés avec la page Accueil
-// et les autres surfaces dark de l'app → cohérence visuelle stricte, même
-// teinte partout. Le bleu MorphoCoach et le muted restent locaux (accents
-// spécifiques à cette page).
 const TV = {
-  bg:         DARK.bgDeep,             // "#0B0E12" — même fond que Accueil
-  surface:    DARK.surface,            // "#1A1F27" — cartes qui ressortent
-  surfaceHi:  DARK.surfaceHi,          // "#141922" — surfaces surélevées
-  surfaceMid: "#0E1220",               // conservé pour cas spécifiques (legacy composer)
-  border:     DARK.border,             // "rgba(255,255,255,0.08)"
-  borderHi:   DARK.borderHi,           // "rgba(255,255,255,0.12)"
-  text:       DARK.text,               // "#F6F7F9"
-  textDim:    DARK.dimStrong,          // "rgba(246,247,249,0.75)"
-  muted:      "#9AA3B5",               // gris froid (accent local)
+  bg:         DARK.bgDeep,
+  surface:    DARK.surface,
+  surfaceHi:  DARK.surfaceHi,
+  surfaceMid: "#0E1220",
+  border:     DARK.border,
+  borderHi:   DARK.borderHi,
+  text:       DARK.text,
+  textDim:    DARK.dimStrong,
+  muted:      "#9AA3B5",
   faint:      "#5A6072",
-  blue:       "#3158FF",               // bleu MorphoCoach (accent, conservé)
+  blue:       "#3158FF",
   blueBright: "#3158FF",
   blueSoft:   "rgba(49,88,255,0.14)",
   blueLine:   "rgba(49,88,255,0.32)",
 };
 
-// Images du carousel « Compose ta séance » — Pexels (IDs choisis par Hugo)
+// Images du carousel « Compose ta séance » — Pexels
 const CAROUSEL_IMG = {
   muscu:   "https://images.pexels.com/photos/16996376/pexels-photo-16996376.jpeg",
   cardio:  "https://images.pexels.com/photos/6389882/pexels-photo-6389882.jpeg",
@@ -65,10 +62,10 @@ export default function TodayView(props) {
     catch { return {}; }
   });
   const [showSleepModal, setShowSleepModal] = useState(false);
-  const [sleepInput, setSleepInput]   = useState(null); // valeur en cours d'édition dans la modal
+  const [sleepInput, setSleepInput]   = useState(null);
 
   const saveSleepTarget = (v) => {
-    const val = Math.round(v * 2) / 2; // arrondi 0.5
+    const val = Math.round(v * 2) / 2;
     setSleepTarget(val);
     localStorage.setItem('morpho_sleep_target', String(val));
   };
@@ -208,7 +205,7 @@ export default function TodayView(props) {
 
   const todaySeance = getTodaySeance();
 
-  // ── Focus Mode (overlay inline, remplace viewSeance) ──────────────────────
+  // ── Focus Mode ────────────────────────────────────────────────────────────
   if (focusActive && todaySeance) {
     return (
       <FocusMode
@@ -229,7 +226,7 @@ export default function TodayView(props) {
 );
   }
 
-  // ── Records & Objectifs (page pleine, remplace le contenu, garde header) ──
+  // ── Records & Objectifs (page pleine) ────────────────────────────────────
   if (showProgression) {
     return (
       <ProgressionPage EX={EX} prog={prog} setProg={setProg} push={push}
@@ -257,13 +254,12 @@ export default function TodayView(props) {
         @keyframes tdFloaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
       `}</style>
 
-      {/* ── Header daté (V4/V5) ─────────────────────────────────── */}
+      {/* ── Header daté ─────────────────────────────────────────── */}
       {(() => {
         const dateLabel = today.toLocaleDateString("fr-FR", {
           weekday:"long", day:"numeric", month:"short",
         }).toUpperCase().replace(".", "");
 
-        // Score État de forme — même calcul qu'avant, hissé ici pour le cercle
         let score = 70;
         if (todaySleepLogged !== null) {
           if (todaySleepLogged >= sleepTarget) score += 15;
@@ -275,7 +271,7 @@ export default function TodayView(props) {
         score = Math.max(30, Math.min(100, score));
         const stateLabel = score >= 80 ? "Prêt" : score >= 60 ? "Bon" : "Repos";
         const stateColor = score >= 80 ? "#12B981" : score >= 60 ? "#12B981" : "#F59E0B";
-        const CIRC = 2 * Math.PI * 38; // r=38
+        const CIRC = 2 * Math.PI * 38;
         const dashLen = CIRC * (score / 100);
 
         return (
@@ -311,7 +307,7 @@ export default function TodayView(props) {
               </div>
             </div>
 
-            {/* État de forme — cercle premium 90×90 à droite */}
+            {/* État de forme — cercle 90×90 */}
             <div
               onClick={() => { setSleepInput(todaySleepLogged ?? sleepTarget); setShowSleepModal(true); }}
               style={{
@@ -362,9 +358,7 @@ export default function TodayView(props) {
         );
       })()}
 
-      {/* ── (État de forme désormais fusionné dans le header sous forme de cercle premium) ── */}
-
-      {/* ── Bloc principal : séance (V5) OU composer (V4) ────── */}
+      {/* ── Bloc principal : séance OU composer ────── */}
       {todaySeance ? (() => {
         const intData = INT[todaySeance.intensite || "modere"] || INT.modere;
         const total   = todaySeance.exercices?.length || 0;
@@ -373,7 +367,7 @@ export default function TodayView(props) {
 
         return (
           <>
-            {/* HERO séance V5 */}
+            {/* HERO séance */}
             <div style={{
               borderRadius: 24, overflow:"hidden", background:"#0E1220",
               marginBottom: 18,
@@ -381,19 +375,16 @@ export default function TodayView(props) {
               animationDelay:".16s",
             }}>
               <div style={{ position:"relative", height: 160 }}>
-                {/* Dégradé bas */}
                 <div style={{
                   position:"absolute", inset: 0,
                   background:"linear-gradient(to top,rgba(8,9,18,0.95) 0%,rgba(8,9,18,0.5) 46%,rgba(8,9,18,0.08) 80%)",
                   pointerEvents:"none",
                 }}/>
-                {/* Label haut */}
                 <span style={{
                   position:"absolute", top: 16, left: 16,
                   fontSize: 11, fontWeight: 800, letterSpacing:"0.12em",
                   color:"#C4B5FF", fontFamily: DISP,
                 }}>SÉANCE PROGRAMMÉE</span>
-                {/* Badge haut-droit */}
                 <span style={{
                   position:"absolute", top: 14, right: 14,
                   display:"inline-flex", alignItems:"center", gap: 5,
@@ -411,7 +402,6 @@ export default function TodayView(props) {
                   }}/>
                   {done}/{total} fait{total > 1 ? "s" : ""}
                 </span>
-                {/* Bas */}
                 <div style={{
                   position:"absolute", left: 16, right: 16, bottom: 16,
                   display:"flex", flexDirection:"column", gap: 11,
@@ -483,17 +473,17 @@ export default function TodayView(props) {
               </div>
             </div>
 
-            {/* EXERCICES échelonnés */}
+            {/* ── EXERCICES — cartes dark + vignette du mouvement ── */}
             {!todaySeance.complete && (
-              <div style={{ display:"flex", flexDirection:"column", gap: 11, marginBottom: 18 }}>
+              <div style={{ display:"flex", flexDirection:"column", gap: 10, marginBottom: 18 }}>
                 <div style={{
                   display:"flex", alignItems:"center", justifyContent:"space-between",
                   padding:"0 2px",
                   animation:"tdFadeUp .5s cubic-bezier(.22,1,.36,1) both",
                   animationDelay:".22s",
                 }}>
-                  <span style={{ fontSize: 17, fontWeight: 800, color: C.text, fontFamily: DISP }}>Exercices</span>
-                  <span style={{ fontSize: 12, fontWeight: 700, color:"#9AA3B2", fontFamily: DISP }}>
+                  <span style={{ fontSize: 17, fontWeight: 800, color: TV.text, fontFamily: DISP }}>Exercices</span>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: TV.muted, fontFamily: DISP }}>
                     {total} au total
                   </span>
                 </div>
@@ -505,24 +495,27 @@ export default function TodayView(props) {
                   const lastEntry = ex.historique?.[ex.historique.length - 1];
                   return (
                     <div key={idx} style={{
-                      background:"#fff", border:"1px solid rgba(15,25,35,0.06)",
-                      borderRadius: 16, padding:"13px 14px",
-                      display:"flex", alignItems:"center", gap: 13,
-                      boxShadow:"0 1px 3px rgba(15,25,35,0.04)",
+                      background: isFirstOpen ? TV.surfaceHi : TV.surface,
+                      border:`1px solid ${isFirstOpen ? TV.blueLine : TV.border}`,
+                      borderRadius: 16, padding: 10,
+                      display:"flex", alignItems:"center", gap: 11,
+                      opacity: isChecked ? 0.5 : 1,
+                      transition:"opacity .2s",
                       animation:"tdFadeUp .5s cubic-bezier(.22,1,.36,1) both",
                       animationDelay:`${(0.26 + idx * 0.05).toFixed(2)}s`,
                     }}>
+                      {/* Coche / numéro */}
                       <div onClick={() => toggleCheck(todaySeance.id, idx, ex.repos, todaySeance._calKey)}
                         style={{
-                          width: 38, height: 38, borderRadius: 11, flexShrink: 0,
+                          width: 34, height: 34, borderRadius: 10, flexShrink: 0,
                           display:"grid", placeItems:"center", cursor:"pointer",
-                          fontSize: 15, fontWeight: 800, fontFamily: DISP,
-                          background: isChecked
-                            ? "#12B76A"
-                            : isFirstOpen ? "#EEF1FF" : "#F1F3F8",
-                          color: isChecked
-                            ? "#fff"
-                            : isFirstOpen ? "#3B5BFB" : "#6B7486",
+                          fontSize: 14, fontWeight: 800, fontFamily: DISP,
+                          background: isChecked ? "#12B76A"
+                            : isFirstOpen ? TV.blueSoft : "rgba(255,255,255,0.05)",
+                          border: isChecked ? "none"
+                            : `1px solid ${isFirstOpen ? TV.blueLine : TV.border}`,
+                          color: isChecked ? "#fff"
+                            : isFirstOpen ? TV.blueBright : TV.muted,
                           transition:"all .15s",
                         }}>
                         {isChecked ? (
@@ -532,22 +525,33 @@ export default function TodayView(props) {
                           </svg>
                         ) : idx + 1}
                       </div>
-                      <div style={{ flex: 1, minWidth: 0, display:"flex", flexDirection:"column", gap: 2 }}>
+
+                      {/* Vignette du mouvement */}
+                      <div style={{ width: 54, flexShrink: 0 }}>
+                        <ExercisePhoto nom={ex.nom} variant="thumb" radius={11}/>
+                      </div>
+
+                      {/* Nom + détails */}
+                      <div style={{ flex: 1, minWidth: 0, display:"flex", flexDirection:"column", gap: 3 }}>
                         <span style={{
-                          fontSize: 14.5, fontWeight: 800, fontFamily: DISP,
-                          color: isChecked ? "#98A2B3" : "#0F1923",
+                          fontSize: 14, fontWeight: 800, fontFamily: DISP,
+                          color: isChecked ? TV.muted : TV.text,
                           textDecoration: isChecked ? "line-through" : "none",
                           overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap",
+                          letterSpacing:"-0.01em",
                         }}>{ex.nom}</span>
                         <span style={{
-                          fontSize: 12, fontWeight: 600, color:"#9AA3B2", fontFamily: DISP,
+                          fontSize: 11.5, fontWeight: 600, color: TV.muted, fontFamily: DISP,
                           ...NUM,
                         }}>
                           {ex.series}×{ex.reps} · {ex.repos}s{ex.methode && ex.methode !== "Classique" ? ` · ${ex.methode}` : " · Standard"}
                           {lastEntry ? ` · ${lastEntry.poids}kg` : ""}
                         </span>
                       </div>
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C3C9D4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+                        stroke={TV.faint} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                        style={{ flexShrink: 0 }}>
                         <path d="M9 5l7 7-7 7"/>
                       </svg>
                     </div>
@@ -558,13 +562,12 @@ export default function TodayView(props) {
           </>
         );
       })() : (
-        /* COMPOSER V6 — carousel horizontal premium avec grandes cartes 228×266 */
+        /* COMPOSER — carousel horizontal */
         <div style={{
           marginBottom: 22,
           animation:"tdFadeUp .6s cubic-bezier(.22,1,.36,1) both",
           animationDelay:".16s",
         }}>
-          {/* En-tête : label + titre à gauche, bouton "Planifier" à droite */}
           <div style={{
             display:"flex", alignItems:"flex-end", justifyContent:"space-between",
             gap: 12, marginBottom: 16,
@@ -600,7 +603,6 @@ export default function TodayView(props) {
             </button>
           </div>
 
-          {/* Carousel horizontal — snap, cartes 228×266, gap 12, débord latéral */}
           <div style={{
             display: "flex", gap: 12,
             overflowX: "auto", overflowY: "hidden",
@@ -634,7 +636,6 @@ export default function TodayView(props) {
                   animation:"tdFadeUp .55s cubic-bezier(.22,1,.36,1) both",
                   animationDelay:`${(0.22 + i * 0.06).toFixed(2)}s`,
                 }}>
-                {/* Image de fond */}
                 <img src={card.img} alt={card.label}
                   style={{
                     position:"absolute", inset: 0,
@@ -642,14 +643,11 @@ export default function TodayView(props) {
                     objectFit:"cover", objectPosition:"center 30%",
                     display:"block",
                   }}/>
-                {/* Overlay dégradé bas */}
                 <div style={{
                   position:"absolute", inset: 0,
                   background:"linear-gradient(180deg, rgba(5,6,9,0.10) 0%, rgba(5,6,9,0.20) 40%, rgba(5,6,9,0.88) 100%)",
                   pointerEvents:"none",
                 }}/>
-                {/* (Petit badge d'icône bleu supprimé — la photo devient l'élément visuel principal) */}
-                {/* Titre + sous-titre + bouton flèche en bas */}
                 <div style={{
                   position:"absolute", left: 16, right: 16, bottom: 16,
                   display:"flex", alignItems:"flex-end", justifyContent:"space-between",
@@ -685,7 +683,6 @@ export default function TodayView(props) {
             ))}
           </div>
 
-          {/* Indicateur dots — visuel */}
           <div style={{
             display:"flex", justifyContent:"center", gap: 6,
             marginTop: 14,
@@ -697,127 +694,6 @@ export default function TodayView(props) {
                 transition: "width .3s ease",
               }}/>
             ))}
-          </div>
-        </div>
-      )}
-
-      {/* ── Composer V4 legacy (désactivé — remplacé par carousel V6) ── */}
-      {false && (
-        <div style={{
-          position:"relative", borderRadius: 24, overflow:"hidden",
-          background:"#0E1220",
-          boxShadow:"0 20px 50px rgba(14,18,32,0.42)",
-          marginBottom: 18,
-          animation:"tdFadeUp .6s cubic-bezier(.22,1,.36,1) both",
-          animationDelay:".16s",
-        }}>
-          {/* Aurora 1 */}
-          <div style={{
-            position:"absolute", top:-46, left:-34, width: 190, height: 190,
-            borderRadius:"50%",
-            background:"radial-gradient(circle,#3B5BFB,transparent 68%)",
-            filter:"blur(14px)", opacity: 0.55,
-            animation:"tdAurora 9s ease-in-out infinite",
-            pointerEvents:"none",
-          }}/>
-          {/* Aurora 2 */}
-          <div style={{
-            position:"absolute", bottom:-58, right:-36, width: 210, height: 210,
-            borderRadius:"50%",
-            background:"radial-gradient(circle,#7C5CFF,transparent 68%)",
-            filter:"blur(18px)", opacity: 0.42,
-            animation:"tdAurora 12s ease-in-out infinite reverse",
-            pointerEvents:"none",
-          }}/>
-          <div style={{
-            position:"relative", padding:"22px 18px 18px",
-            display:"flex", flexDirection:"column", gap: 16,
-          }}>
-            <div style={{ display:"flex", flexDirection:"column", gap: 5 }}>
-              <span style={{
-                fontSize: 11, fontWeight: 800, letterSpacing:"0.14em",
-                color:"#9FB0FF", fontFamily: DISP,
-              }}>ENVIE DE BOUGER ?</span>
-              <span style={{
-                fontSize: 26, fontWeight: 800, letterSpacing:"-0.03em",
-                color:"#fff", lineHeight: 1.05, fontFamily: DISP,
-              }}>
-                Compose ta <span style={{ fontStyle:"italic", color:"#A9B8FF" }}>séance</span>
-              </span>
-              <span style={{
-                fontSize: 13, fontWeight: 500, color:"rgba(255,255,255,0.6)",
-                lineHeight: 1.5, fontFamily: DISP,
-              }}>Choisis un format et lance-toi — sans pression, à ton rythme.</span>
-            </div>
-
-            <div style={{ display:"flex", gap: 10 }}>
-              {[
-                {
-                  label: "Muscu", sub: "à composer",
-                  iconBg: "rgba(255,255,255,0.12)",
-                  icon: <ID name="gym" size={24} dark/>,
-                  onClick: () => setShowCreateSeance(true),
-                },
-                {
-                  label: "Cardio", sub: "20 min",
-                  iconBg: "rgba(255,255,255,0.12)",
-                  icon: <ID name="cardio" size={24} dark/>,
-                  onClick: () => setShowCreateSeance(true),
-                },
-                {
-                  label: "Étirement",
-                  sub: todayMobilite ? "Fait ✓" : "10 min",
-                  iconBg: "rgba(255,255,255,0.12)",
-                  icon: <ID name="recovery" size={24} dark/>,
-                  onClick: toggleMobilite,
-                  flash: mobiliteFlash,
-                },
-              ].map((t, i) => (
-                <div key={i} onClick={t.onClick} style={{
-                  flex: 1,
-                  display:"flex", flexDirection:"column", alignItems:"center", gap: 9,
-                  background: t.flash ? "rgba(18,183,106,0.22)" : "rgba(255,255,255,0.06)",
-                  border: `1px solid ${t.flash ? "rgba(18,183,106,0.5)" : "rgba(255,255,255,0.1)"}`,
-                  borderRadius: 18, padding:"16px 6px 13px",
-                  cursor:"pointer",
-                  transition:"transform .16s cubic-bezier(.22,1,.36,1), background .3s, border .3s",
-                  boxShadow: t.flash ? "0 0 18px rgba(18,183,106,0.4)" : "none",
-                  animation:"tdFadeUp .5s cubic-bezier(.22,1,.36,1) both",
-                  animationDelay:`${(0.22 + i * 0.05).toFixed(2)}s`,
-                }}>
-                  <div style={{
-                    width: 46, height: 46, borderRadius: 14,
-                    background: t.iconBg,
-                    display:"grid", placeItems:"center",
-                  }}>{t.icon}</div>
-                  <div style={{
-                    display:"flex", flexDirection:"column", alignItems:"center", gap: 1,
-                  }}>
-                    <span style={{ fontSize: 13, fontWeight: 800, color:"#fff", fontFamily: DISP }}>{t.label}</span>
-                    <span style={{ fontSize: 10.5, fontWeight: 600, color:"rgba(255,255,255,0.45)", fontFamily: DISP }}>{t.sub}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div onClick={() => setProgView && setProgView("analyse")} style={{
-              display:"flex", alignItems:"center", justifyContent:"center", gap: 7,
-              background:"rgba(255,255,255,0.05)",
-              border:"1px solid rgba(255,255,255,0.12)",
-              borderRadius: 14, padding: 12,
-              fontSize: 13, fontWeight: 700, color:"rgba(255,255,255,0.82)",
-              fontFamily: DISP, cursor:"pointer",
-              animation:"tdFadeUp .5s cubic-bezier(.22,1,.36,1) both",
-              animationDelay:".38s",
-            }}>
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="3" y="4" width="18" height="17" rx="3"/><path d="M8 2v4M16 2v4M3 10h18"/>
-              </svg>
-              Planifier un programme complet
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.55)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M9 5l7 7-7 7"/>
-              </svg>
-            </div>
           </div>
         </div>
       )}
@@ -835,7 +711,6 @@ export default function TodayView(props) {
         };
         return (
         <div style={{ marginBottom: 0, marginInline: 6 }}>
-          {/* Titre sur 2 lignes — « Objectifs » en italique bleu dessous */}
           <div style={{ display:"flex", alignItems:"flex-end", justifyContent:"space-between", marginBottom:16, gap:12 }}>
             <div style={{
               flex: 1, minWidth: 0,
@@ -859,12 +734,9 @@ export default function TodayView(props) {
           </div>
 
           {(() => {
-            // ── Valeurs dérivées des données existantes (0 si rien) ──────
-            // Aucune donnée inventée : tout vient de rmData / getRM().
             const totalRecords    = rmData.length;
             const objectifsActifs = rmData.filter(ex => ex.rm1 < ex.cible).length;
 
-            // Progression moyenne en % sur les exercices ayant ≥2 entrées
             const gainsPct = rmData.map(ex => {
               const h = ex.historique;
               if (!h || h.length < 2) return null;
@@ -878,7 +750,6 @@ export default function TodayView(props) {
               : 0;
             const hasProg = progPct > 0;
 
-            // Exercice mis en avant : le record le plus lourd
             const topEx = rmData.length
                 ? rmData.reduce((a, b) => (a.rm1 >= b.rm1 ? a : b))
                 : null;
@@ -888,9 +759,7 @@ export default function TodayView(props) {
             const gainKg  = topEx ? trendOf(topEx.historique) : null;
             const resteKg = topEx ? Math.max(0, Math.round(topEx.cible - topEx.rm1)) : 0;
 
-            // ── Courbe traversante ───────────────────────────────────────
             const W = 390, H = 58;
-            // Tracé d'amorce quand il n'y a rien : presque plat, remonte à droite.
             const EMPTY_LINE = "M0,51 C60,51 90,49.5 140,49 C200,48 235,46.5 280,44 C320,42 350,37 390,33";
             const buildLine = (values) => {
               if (!values || values.length < 2) return { d: EMPTY_LINE, lx: W, ly: 33, empty: true };
@@ -920,7 +789,6 @@ export default function TodayView(props) {
                 display:"flex", flexDirection:"column",
                 boxShadow:"0 20px 50px rgba(0,0,0,0.45)",
               }}>
-                {/* Photo de fond — cadrée sur le disque, au centre-droit */}
                 <img src="https://images.pexels.com/photos/15373907/pexels-photo-15373907.jpeg"
                   alt=""
                   style={{
@@ -929,13 +797,10 @@ export default function TodayView(props) {
                     objectFit:"cover", objectPosition:"58% 45%",
                     display:"block",
                   }}/>
-                {/* Voile progressif allégé : sombre derrière les textes,
-                    largement ouvert au centre pour révéler le disque */}
                 <div style={{
                   position:"absolute", inset: 0, pointerEvents:"none",
                   background:"linear-gradient(180deg, rgba(9,11,16,0.88) 0%, rgba(9,11,16,0.60) 22%, rgba(9,11,16,0.26) 42%, rgba(9,11,16,0.62) 66%, rgba(9,11,16,0.90) 100%)",
                 }}/>
-                {/* Teinte bleue haut-gauche, adoucie pour ne pas laver le métal */}
                 <div style={{
                   position:"absolute", inset: 0, pointerEvents:"none",
                   background:"radial-gradient(120% 70% at 15% 8%, rgba(49,88,255,0.10), transparent 60%)",
@@ -945,7 +810,6 @@ export default function TodayView(props) {
                   position:"relative", zIndex: 2, flex: 1,
                   display:"flex", flexDirection:"column", padding: 18,
                 }}>
-                  {/* Haut : titre + badge */}
                   <div style={{ display:"flex", alignItems:"flex-start", justifyContent:"space-between", gap: 12 }}>
                     <div>
                       <div style={{
@@ -979,10 +843,8 @@ export default function TodayView(props) {
                     </div>
                   </div>
 
-                  {/* Respiration — la photo est visible ici */}
                   <div style={{ flex: 1, minHeight: 12 }}/>
 
-                  {/* Courbe traversante, de bord à bord */}
                   <div style={{ margin:"0 -18px 2px" }}>
                     <svg viewBox={`0 0 ${W} ${H}`} width="100%" height={H}
                       preserveAspectRatio="none" style={{ display:"block" }}>
@@ -997,7 +859,6 @@ export default function TodayView(props) {
                           <stop offset="100%" stopColor={TV.blueBright} stopOpacity="1"/>
                         </linearGradient>
                       </defs>
-                      {/* Grille très discrète */}
                       <line x1="0" y1="28" x2={W} y2="28" stroke="rgba(255,255,255,0.045)" strokeWidth="1"/>
                       <line x1="0" y1="42" x2={W} y2="42" stroke="rgba(255,255,255,0.045)" strokeWidth="1"/>
                       <path d={`${curve.d} L${W},${H} L0,${H} Z`} fill="url(#tdHzFill)"/>
@@ -1010,7 +871,6 @@ export default function TodayView(props) {
                     </svg>
                   </div>
 
-                  {/* Bas : chiffres sur une ligne, amorce en dessous pleine largeur */}
                   <div style={{ marginTop: 10 }}>
                     <div style={{ display:"flex", gap: 18, alignItems:"flex-start" }}>
                       <div>
@@ -1074,7 +934,6 @@ export default function TodayView(props) {
                     </div>
                   </div>
 
-                  {/* CTA */}
                   <button onClick={() => setShowProgression(true)}
                     className="tap"
                     style={{
@@ -1097,7 +956,7 @@ export default function TodayView(props) {
             );
           })()}
 
-          {/* Grille des records — inchangée dans sa logique, adaptée au dark */}
+          {/* Grille des records */}
           {rmData.length > 0 && (
             <div style={{ marginTop: 12 }}>
               <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:12 }}>
@@ -1145,8 +1004,6 @@ export default function TodayView(props) {
         );
       })()}
 
-      {/* Aucun programme actif — supprimé, géré par Composer V4 */}
-
       {/* Modals */}
       {showManualRM && (
         <ManualRMModal
@@ -1154,7 +1011,6 @@ export default function TodayView(props) {
           prog={prog} setProg={setProg} push={push} C={C} EX={EX}
           onSelectExercise={(ex) => {
             setShowManualRM(false);
-            // Construire exData pour RecordDetailPage
             const nom = ex.nom;
             let historique = [];
             (prog?.jours || []).forEach(j =>
@@ -1192,112 +1048,103 @@ export default function TodayView(props) {
           }}>
             <div onClick={e=>e.stopPropagation()} style={{
               width:"100%",maxWidth:480,
-              background:"#FFFFFF",border:"1px solid rgba(0,0,0,0.05)",
+              background: TV.surface, border:`1px solid ${TV.border}`,
               borderRadius:"20px 20px 0 0",padding:"0 0 32px",
-              boxShadow: C.shadow,
+              boxShadow:"0 -20px 50px rgba(0,0,0,0.5)",
             }}>
-              {/* Handle */}
-              <div style={{ width:36,height:4,borderRadius:2,background:"rgba(0,0,0,0.08)",margin:"14px auto 0" }}/>
+              <div style={{ width:36,height:4,borderRadius:2,background:"rgba(255,255,255,0.14)",margin:"14px auto 0" }}/>
 
-              {/* Header */}
               <div style={{ padding:"20px 24px 0",display:"flex",alignItems:"center",justifyContent:"space-between" }}>
                 <div>
-                  <div style={{ fontFamily:F,fontSize:20,fontWeight:700,color:"${C.text}",letterSpacing:-0.3 }}> Sommeil</div>
-                  <div style={{ fontSize:11,color:"${C.dim}",marginTop:4,fontFamily:F }}>Cible & log quotidien</div>
+                  <div style={{ fontFamily:F,fontSize:20,fontWeight:800,color:TV.text,letterSpacing:-0.3 }}>Sommeil</div>
+                  <div style={{ fontSize:11,color:TV.muted,marginTop:4,fontFamily:F }}>Cible &amp; log quotidien</div>
                 </div>
                 <button onClick={()=>setShowSleepModal(false)} style={{
-                  width:36,height:36,borderRadius:12,background:"rgba(0,0,0,0.05)",
-                  border:"1px solid rgba(0,0,0,0.05)",color:C.mid,
+                  width:36,height:36,borderRadius:12,background:"rgba(255,255,255,0.06)",
+                  border:`1px solid ${TV.border}`,color:TV.muted,
                   fontSize:16,cursor:"pointer",display:"grid",placeItems:"center",
                 }}>×</button>
               </div>
 
-              {/* Séparateur */}
-              <div style={{ height:1,background:"rgba(0,0,0,0.05)",margin:"16px 0" }}/>
+              <div style={{ height:1,background:TV.border,margin:"16px 0" }}/>
 
               <div style={{ padding:"0 24px" }}>
 
-                {/* ── Section 1 : Cible ─────────────────────────── */}
-                <div style={{ fontSize:10,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",
-                              color:"${C.dim}",marginBottom:16,fontFamily:F }}>
+                <div style={{ fontSize:10,fontWeight:800,letterSpacing:"0.1em",textTransform:"uppercase",
+                              color:TV.muted,marginBottom:16,fontFamily:F }}>
                   OBJECTIF NUIT
                 </div>
                 <div style={{ display:"flex",alignItems:"center",justifyContent:"space-between",
-                              background:"rgba(0,0,0,0.05)",border:"1px solid rgba(0,0,0,0.05)",
+                              background:"rgba(255,255,255,0.04)",border:`1px solid ${TV.border}`,
                               borderRadius:16,padding:"16px 16px",marginBottom:20 }}>
                   <button onClick={()=>saveSleepTarget(stepD(sleepTarget))} style={{
-                    width:44,height:44,borderRadius:12,background:"rgba(0,0,0,0.05)",
-                    border:"none",color:C.mid,fontSize:20,cursor:"pointer",
+                    width:44,height:44,borderRadius:12,background:"rgba(255,255,255,0.06)",
+                    border:"none",color:TV.text,fontSize:20,cursor:"pointer",
                     display:"grid",placeItems:"center",
                   }}>−</button>
                   <div style={{ textAlign:"center" }}>
-                    <div style={{ fontSize:34,fontWeight:700,color:"${C.text}",letterSpacing:-1,fontFamily:F }}>
-                      {sleepTarget}<span style={{ fontSize:16,color:C.mid,marginLeft:4 }}>h</span>
+                    <div style={{ fontSize:34,fontWeight:800,color:TV.text,letterSpacing:-1,fontFamily:F }}>
+                      {sleepTarget}<span style={{ fontSize:16,color:TV.muted,marginLeft:4 }}>h</span>
                     </div>
-                    <div style={{ fontSize:10,color:"${C.dim}",fontFamily:F,marginTop:2 }}>cible par nuit</div>
+                    <div style={{ fontSize:10,color:TV.muted,fontFamily:F,marginTop:2 }}>cible par nuit</div>
                   </div>
                   <button onClick={()=>saveSleepTarget(step(sleepTarget))} style={{
                     width:44,height:44,borderRadius:12,
-                    background:"rgba(91,141,239,0.12)",border:"1px solid rgba(91,141,239,0.35)",
-                    color:"#9DB0FF",fontSize:20,cursor:"pointer",display:"grid",placeItems:"center",
+                    background:TV.blueSoft,border:`1px solid ${TV.blueLine}`,
+                    color:TV.blueBright,fontSize:20,cursor:"pointer",display:"grid",placeItems:"center",
                   }}>+</button>
                 </div>
 
-                {/* ── Section 2 : Log aujourd'hui ───────────────── */}
-                <div style={{ fontSize:10,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",
-                              color:"${C.dim}",marginBottom:16,fontFamily:F }}>
+                <div style={{ fontSize:10,fontWeight:800,letterSpacing:"0.1em",textTransform:"uppercase",
+                              color:TV.muted,marginBottom:16,fontFamily:F }}>
                   CETTE NUIT
                 </div>
                 <div style={{ display:"flex",alignItems:"center",justifyContent:"space-between",
-                              background:"rgba(0,0,0,0.05)",border:"1px solid rgba(0,0,0,0.05)",
+                              background:"rgba(255,255,255,0.04)",border:`1px solid ${TV.border}`,
                               borderRadius:16,padding:"16px 16px",marginBottom:16 }}>
                   <button onClick={()=>setSleepInput(stepD(inputVal))} style={{
-                    width:44,height:44,borderRadius:12,background:"rgba(0,0,0,0.05)",
-                    border:"none",color:C.mid,fontSize:20,cursor:"pointer",
+                    width:44,height:44,borderRadius:12,background:"rgba(255,255,255,0.06)",
+                    border:"none",color:TV.text,fontSize:20,cursor:"pointer",
                     display:"grid",placeItems:"center",
                   }}>−</button>
                   <div style={{ textAlign:"center" }}>
-                    <div style={{ fontSize:34,fontWeight:700,color:"${C.text}",letterSpacing:-1,fontFamily:F }}>
-                      {inputVal}<span style={{ fontSize:16,color:C.mid,marginLeft:4 }}>h</span>
+                    <div style={{ fontSize:34,fontWeight:800,color:TV.text,letterSpacing:-1,fontFamily:F }}>
+                      {inputVal}<span style={{ fontSize:16,color:TV.muted,marginLeft:4 }}>h</span>
                     </div>
-                    <div style={{ fontSize:11,fontWeight:600,color:qualColor(inputVal),fontFamily:F,marginTop:2 }}>
+                    <div style={{ fontSize:11,fontWeight:700,color:qualColor(inputVal),fontFamily:F,marginTop:2 }}>
                       {qualLabel(inputVal)}
                     </div>
                   </div>
                   <button onClick={()=>setSleepInput(step(inputVal))} style={{
                     width:44,height:44,borderRadius:12,
-                    background:"rgba(91,141,239,0.12)",border:"1px solid rgba(91,141,239,0.35)",
-                    color:"#9DB0FF",fontSize:20,cursor:"pointer",display:"grid",placeItems:"center",
+                    background:TV.blueSoft,border:`1px solid ${TV.blueLine}`,
+                    color:TV.blueBright,fontSize:20,cursor:"pointer",display:"grid",placeItems:"center",
                   }}>+</button>
                 </div>
 
-                {/* Barre de comparaison */}
                 <div style={{ marginBottom:24 }}>
                   <div style={{ display:"flex",justifyContent:"space-between",marginBottom:8 }}>
-                    <span style={{ fontSize:11,color:"${C.dim}",fontFamily:F }}>0h</span>
-                    <span style={{ fontSize:11,color:"rgba(91,141,239,0.65)",fontFamily:F }}>cible {sleepTarget}h</span>
-                    <span style={{ fontSize:11,color:"${C.dim}",fontFamily:F }}>12h</span>
+                    <span style={{ fontSize:11,color:TV.muted,fontFamily:F }}>0h</span>
+                    <span style={{ fontSize:11,color:TV.blueBright,fontFamily:F }}>cible {sleepTarget}h</span>
+                    <span style={{ fontSize:11,color:TV.muted,fontFamily:F }}>12h</span>
                   </div>
-                  <div style={{ height:6,borderRadius:3,background:"rgba(0,0,0,0.05)",position:"relative" }}>
-                    {/* Cible */}
+                  <div style={{ height:6,borderRadius:3,background:"rgba(255,255,255,0.07)",position:"relative" }}>
                     <div style={{ position:"absolute",top:-2,bottom:-2,width:2,borderRadius:1,
-                      background:"rgba(91,141,239,0.5)",left:`${(sleepTarget/12)*100}%` }}/>
-                    {/* Valeur saisie */}
+                      background:TV.blueLine,left:`${(sleepTarget/12)*100}%` }}/>
                     <div style={{ height:"100%",borderRadius:3,
                       background:`linear-gradient(90deg,${qualColor(inputVal)}99,${qualColor(inputVal)})`,
                       width:`${Math.min(100,(inputVal/12)*100)}%`,transition:"width .2s" }}/>
                   </div>
                 </div>
 
-                {/* Bouton valider */}
                 <button onClick={()=>{ logSleepToday(inputVal); setShowSleepModal(false); }} style={{
                   width:"100%",padding:"16px",borderRadius:16,
-                  background:"linear-gradient(180deg,#9DB0FF 0%,#3C5BFF 50%,#2E48D9 100%)",
-                  color:"#FFF",border:"1px solid rgba(156,185,245,0.35)",
-                  fontFamily:F,fontSize:14,fontWeight:700,cursor:"pointer",
-                  boxShadow:"inset 0 1px 0 rgba(0,0,0,0.12), 0 8px 22px rgba(45,93,201,0.35)",
+                  background:TV.blue,
+                  color:"#FFF",border:"none",
+                  fontFamily:F,fontSize:14,fontWeight:800,cursor:"pointer",
+                  boxShadow:"0 8px 22px rgba(49,88,255,0.35)",
                 }}>
-                   Enregistrer {inputVal}h de sommeil
+                  Enregistrer {inputVal}h de sommeil
                 </button>
               </div>
             </div>
