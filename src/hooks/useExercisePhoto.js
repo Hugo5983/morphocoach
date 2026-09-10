@@ -1,105 +1,79 @@
-import { useState, useEffect } from "react";
-import { useExercisePhoto } from "../../hooks/useExercisePhoto.js";
-import { DARK } from "../../data/constants.js";
+import { useMemo } from "react";
+import MANIFEST from "../data/exerciseImageManifest.json";
+
+// ─── Base Supabase Storage ───────────────────────────────────────────────────
+// Remplace <TON-PROJET> par l'identifiant de ton projet Supabase.
+// Tu le trouves dans Supabase → Settings → API → Project URL.
+const BASE =
+  "https://<TON-PROJET>.supabase.co/storage/v1/object/public/exercices";
+
+// ─── Normalisation ───────────────────────────────────────────────────────────
+// Les noms d'exercices arrivent parfois avec une casse ou des accents
+// différents selon la source (base EX, programme généré, saisie manuelle).
+// On compare sur une forme neutralisée pour éviter les ratés.
+const norm = (s = "") =>
+  s
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+
+// Index construit une seule fois au chargement du module
+const INDEX = (() => {
+  const idx = {};
+  for (const [nom, data] of Object.entries(MANIFEST)) {
+    // "Squat barre (2)" -> on indexe aussi sur "Squat barre"
+    const sansSuffixe = nom.replace(/\s*\(\d+\)$/, "");
+    const k1 = norm(nom);
+    const k2 = norm(sansSuffixe);
+    if (!idx[k1]) idx[k1] = data;
+    if (!idx[k2]) idx[k2] = data;
+  }
+  return idx;
+})();
 
 /**
- * Photo d'exercice.
+ * Retourne les photos d'un exercice.
  *
- * Deux usages :
- *   <ExercisePhoto nom="Développé couché barre" />                → fiche, 4:5, alternance auto
- *   <ExercisePhoto nom="Développé couché barre" variant="thumb"/> → vignette carrée figée
- *
- * Quand l'exercice a une position de départ ET une position d'arrivée,
- * la fiche alterne entre les deux toutes les 1,5 s : l'utilisateur voit
- * le mouvement au lieu d'une posture figée.
+ * @param {string} nom  Nom de l'exercice (ex: "Développé couché barre")
+ * @returns {{
+ *   depart: string|null,   // URL de la position de départ
+ *   fin:    string|null,   // URL de la position d'arrivée
+ *   unique: string|null,   // URL si l'exercice n'a qu'une seule image
+ *   toutes: string[],      // toutes les URLs disponibles, dans l'ordre
+ *   existe: boolean        // false si aucune image pour cet exercice
+ * }}
  */
-export default function ExercisePhoto({
-  nom,
-  variant = "full",      // "full" | "thumb"
-  radius,
-  style,
-}) {
-  const photo = useExercisePhoto(nom);
-  const [i, setI] = useState(0);
-  const anime = variant === "full" && photo.toutes.length > 1;
+export function useExercisePhoto(nom) {
+  return useMemo(() => {
+    const vide = { depart: null, fin: null, unique: null, toutes: [], existe: false };
+    if (!nom) return vide;
 
-  useEffect(() => {
-    if (!anime) return;
-    const t = setInterval(() => setI((v) => (v + 1) % photo.toutes.length), 1500);
-    return () => clearInterval(t);
-  }, [anime, photo.toutes.length]);
+    const d = INDEX[norm(nom)];
+    if (!d) return vide;
 
-  const thumb = variant === "thumb";
-  const r = radius ?? (thumb ? 12 : 20);
+    const url = (f) => `${BASE}/${f}`;
 
-  // ── Pas d'image pour cet exercice : placeholder discret ──
-  if (!photo.existe) {
-    return (
-      <div style={{
-        aspectRatio: thumb ? "1 / 1" : "4 / 5",
-        width: "100%", borderRadius: r,
-        background: DARK.surface,
-        border: `1px solid ${DARK.border}`,
-        display: "grid", placeItems: "center",
-        ...style,
-      }}>
-        <svg width={thumb ? 20 : 30} height={thumb ? 20 : 30} viewBox="0 0 24 24"
-          fill="none" stroke={DARK.dim} strokeWidth="1.6" strokeLinecap="round">
-          <path d="M4 9v6M7 7v10M17 7v10M20 9v6M7 12h10" />
-        </svg>
-      </div>
-    );
-  }
+    if (d.type === "solo") {
+      const u = url(d.img);
+      return { depart: u, fin: null, unique: u, toutes: [u], existe: true };
+    }
 
-  const src = anime ? photo.toutes[i] : photo.toutes[0];
-
-  return (
-    <div style={{
-      position: "relative", overflow: "hidden",
-      width: "100%", aspectRatio: thumb ? "1 / 1" : "4 / 5",
-      borderRadius: r, background: DARK.surface,
-      border: `1px solid ${DARK.border}`,
-      ...style,
-    }}>
-      {/* Les deux images sont montées en permanence et on joue sur l'opacité :
-          ça évite le clignotement d'un rechargement à chaque bascule. */}
-      {photo.toutes.map((u, k) => (
-        <img
-          key={u}
-          src={u}
-          alt={nom}
-          loading="lazy"
-          style={{
-            position: "absolute", inset: 0,
-            width: "100%", height: "100%",
-            objectFit: "cover",
-            objectPosition: "center 40%",
-            opacity: anime ? (k === i ? 1 : 0) : (k === 0 ? 1 : 0),
-            transition: "opacity .45s ease",
-          }}
-        />
-      ))}
-
-      {/* Repère départ / fin, uniquement sur la fiche */}
-      {anime && (
-        <div style={{
-          position: "absolute", bottom: 10, left: 10,
-          display: "flex", alignItems: "center", gap: 6,
-          background: "rgba(9,11,16,0.72)",
-          border: `1px solid ${DARK.borderHi}`,
-          borderRadius: 99, padding: "5px 10px",
-          backdropFilter: "blur(8px)",
-          fontSize: 10.5, fontWeight: 700, letterSpacing: "0.06em",
-          color: DARK.text, textTransform: "uppercase",
-        }}>
-          <span style={{
-            width: 5, height: 5, borderRadius: "50%",
-            background: "#3C5BFF",
-            boxShadow: "0 0 6px rgba(60,91,255,0.8)",
-          }} />
-          {i === 0 ? "Départ" : "Fin"}
-        </div>
-      )}
-    </div>
-  );
+    const dep = url(d.depart);
+    const fin = url(d.fin);
+    return { depart: dep, fin, unique: null, toutes: [dep, fin], existe: true };
+  }, [nom]);
 }
+
+/** Variante non-hook, utilisable hors composant React. */
+export function getExercisePhoto(nom) {
+  const d = INDEX[norm(nom)];
+  if (!d) return null;
+  const url = (f) => `${BASE}/${f}`;
+  return d.type === "solo"
+    ? { unique: url(d.img), depart: url(d.img), fin: null }
+    : { unique: null, depart: url(d.depart), fin: url(d.fin) };
+}
+
+export default useExercisePhoto;
