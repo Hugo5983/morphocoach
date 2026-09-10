@@ -5,7 +5,7 @@ import MANIFEST from "../data/exerciseImageManifest.json";
 // Remplace <TON-PROJET> par l'identifiant de ton projet Supabase.
 // Tu le trouves dans Supabase → Settings → API → Project URL.
 const BASE =
-  "https://<TON-PROJET>.supabase.co/storage/v1/object/public/exercices";
+  "https://mcwvfniomgxtmwalcptb.supabase.co/storage/v1/object/public/exercices";
 
 // ─── Normalisation ───────────────────────────────────────────────────────────
 // Les noms d'exercices arrivent parfois avec une casse ou des accents
