@@ -1,0 +1,2436 @@
+{
+ "Écarté poulie mi-hauteur": {
+  "groupe": "PECTORAUX",
+  "type": "duo",
+  "depart": "ecarte-poulie-mi-hauteur-depart.webp",
+  "fin": "ecarte-poulie-mi-hauteur-fin.webp"
+ },
+ "Développé couché barre": {
+  "groupe": "PECTORAUX",
+  "type": "duo",
+  "depart": "developpe-couche-barre-depart.webp",
+  "fin": "developpe-couche-barre-fin.webp"
+ },
+ "Pompes standards": {
+  "groupe": "PECTORAUX",
+  "type": "duo",
+  "depart": "pompes-standards-depart.webp",
+  "fin": "pompes-standards-fin.webp"
+ },
+ "Machine convergente pectoraux": {
+  "groupe": "PECTORAUX",
+  "type": "duo",
+  "depart": "machine-convergente-pectoraux-depart.webp",
+  "fin": "machine-convergente-pectoraux-fin.webp"
+ },
+ "Développé élastique unilatéral": {
+  "groupe": "ÉPAULES",
+  "type": "duo",
+  "depart": "developpe-elastique-unilateral-depart.webp",
+  "fin": "developpe-elastique-unilateral-fin.webp"
+ },
+ "Rowing T-bar": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "rowing-t-bar-depart.webp",
+  "fin": "rowing-t-bar-fin.webp"
+ },
+ "Tirage unilatéral poulie haute": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "tirage-unilateral-poulie-haute-depart.webp",
+  "fin": "tirage-unilateral-poulie-haute-fin.webp"
+ },
+ "Face pull unilatéral": {
+  "groupe": "TRAPÈZES",
+  "type": "duo",
+  "depart": "face-pull-unilateral-depart.webp",
+  "fin": "face-pull-unilateral-fin.webp"
+ },
+ "Tirage horizontal câble assis": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "tirage-horizontal-cable-assis-depart.webp",
+  "fin": "tirage-horizontal-cable-assis-fin.webp"
+ },
+ "Traction lestée pronation": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "traction-lestee-pronation-depart.webp",
+  "fin": "traction-lestee-pronation-fin.webp"
+ },
+ "Rowing inversé (body row)": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "rowing-inverse-body-row-depart.webp",
+  "fin": "rowing-inverse-body-row-fin.webp"
+ },
+ "Élévations latérales poulie basse": {
+  "groupe": "ÉPAULES",
+  "type": "duo",
+  "depart": "elevations-laterales-poulie-basse-depart.webp",
+  "fin": "elevations-laterales-poulie-basse-fin.webp"
+ },
+ "Oiseau haltères penché": {
+  "groupe": "ÉPAULES",
+  "type": "duo",
+  "depart": "oiseau-halteres-penche-depart.webp",
+  "fin": "oiseau-halteres-penche-fin.webp"
+ },
+ "Élévation frontale disque": {
+  "groupe": "ÉPAULES",
+  "type": "duo",
+  "depart": "elevation-frontale-disque-depart.webp",
+  "fin": "elevation-frontale-disque-fin.webp"
+ },
+ "Élévations frontales haltères": {
+  "groupe": "ÉPAULES",
+  "type": "duo",
+  "depart": "elevations-frontales-halteres-depart.webp",
+  "fin": "elevations-frontales-halteres-fin.webp"
+ },
+ "Développé élastique en fente": {
+  "groupe": "ÉPAULES",
+  "type": "duo",
+  "depart": "developpe-elastique-en-fente-depart.webp",
+  "fin": "developpe-elastique-en-fente-fin.webp"
+ },
+ "Développé militaire élastique": {
+  "groupe": "ÉPAULES",
+  "type": "duo",
+  "depart": "developpe-militaire-elastique-depart.webp",
+  "fin": "developpe-militaire-elastique-fin.webp"
+ },
+ "Pull-apart supination": {
+  "groupe": "ÉPAULES",
+  "type": "duo",
+  "depart": "pull-apart-supination-depart.webp",
+  "fin": "pull-apart-supination-fin.webp"
+ },
+ "Élévation latérale élastique unilatérale": {
+  "groupe": "ÉPAULES",
+  "type": "duo",
+  "depart": "elevation-laterale-elastique-unilaterale-depart.webp",
+  "fin": "elevation-laterale-elastique-unilaterale-fin.webp"
+ },
+ "Y-T-W au sol": {
+  "groupe": "ÉPAULES",
+  "type": "duo",
+  "depart": "y-t-w-au-sol-depart.webp",
+  "fin": "y-t-w-au-sol-fin.webp"
+ },
+ "Curl câble unilatéral": {
+  "groupe": "BICEPS",
+  "type": "duo",
+  "depart": "curl-cable-unilateral-depart.webp",
+  "fin": "curl-cable-unilateral-fin.webp"
+ },
+ "Curl pupitre haltère unilatéral": {
+  "groupe": "BICEPS",
+  "type": "duo",
+  "depart": "curl-pupitre-haltere-unilateral-depart.webp",
+  "fin": "curl-pupitre-haltere-unilateral-fin.webp"
+ },
+ "Curl barre EZ debout": {
+  "groupe": "BICEPS",
+  "type": "duo",
+  "depart": "curl-barre-ez-debout-depart.webp",
+  "fin": "curl-barre-ez-debout-fin.webp"
+ },
+ "Kickback appui banc": {
+  "groupe": "TRICEPS",
+  "type": "duo",
+  "depart": "kickback-appui-banc-depart.webp",
+  "fin": "kickback-appui-banc-fin.webp"
+ },
+ "French press barre EZ couché": {
+  "groupe": "TRICEPS",
+  "type": "duo",
+  "depart": "french-press-barre-ez-couche-depart.webp",
+  "fin": "french-press-barre-ez-couche-fin.webp"
+ },
+ "Dips buste vertical prise serrée": {
+  "groupe": "PECTORAUX",
+  "type": "duo",
+  "depart": "dips-buste-vertical-prise-serree-depart.webp",
+  "fin": "dips-buste-vertical-prise-serree-fin.webp"
+ },
+ "Pompes bulgares (pieds surélevés)": {
+  "groupe": "PECTORAUX",
+  "type": "duo",
+  "depart": "pompes-bulgares-pieds-sureleves-depart.webp",
+  "fin": "pompes-bulgares-pieds-sureleves-fin.webp"
+ },
+ "Rowing TRX": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "rowing-trx-depart.webp",
+  "fin": "rowing-trx-fin.webp"
+ },
+ "Squat goblet haltère": {
+  "groupe": "QUADRICEPS",
+  "type": "duo",
+  "depart": "squat-goblet-haltere-depart.webp",
+  "fin": "squat-goblet-haltere-fin.webp"
+ },
+ "Fentes arrière": {
+  "groupe": "FESSIERS",
+  "type": "duo",
+  "depart": "fentes-arriere-depart.webp",
+  "fin": "fentes-arriere-fin.webp"
+ },
+ "Squat sur bosu": {
+  "groupe": "QUADRICEPS",
+  "type": "duo",
+  "depart": "squat-sur-bosu-depart.webp",
+  "fin": "squat-sur-bosu-fin.webp"
+ },
+ "Nordic curl": {
+  "groupe": "ISCHIO-JAMBIERS",
+  "type": "duo",
+  "depart": "nordic-curl-depart.webp",
+  "fin": "nordic-curl-fin.webp"
+ },
+ "Leg curl glissé (sliders)": {
+  "groupe": "ISCHIO-JAMBIERS",
+  "type": "duo",
+  "depart": "leg-curl-glisse-sliders-depart.webp",
+  "fin": "leg-curl-glisse-sliders-fin.webp"
+ },
+ "Soulevé de terre unilatéral kettlebell": {
+  "groupe": "ISCHIO-JAMBIERS",
+  "type": "duo",
+  "depart": "souleve-de-terre-unilateral-kettlebell-depart.webp",
+  "fin": "souleve-de-terre-unilateral-kettlebell-fin.webp"
+ },
+ "Leg extension machine": {
+  "groupe": "QUADRICEPS",
+  "type": "duo",
+  "depart": "leg-extension-machine-depart.webp",
+  "fin": "leg-extension-machine-fin.webp"
+ },
+ "Bulgarian split squat barre": {
+  "groupe": "QUADRICEPS",
+  "type": "duo",
+  "depart": "bulgarian-split-squat-barre-depart.webp",
+  "fin": "bulgarian-split-squat-barre-fin.webp"
+ },
+ "Gainage latéral": {
+  "groupe": "ABDOMINAUX",
+  "type": "duo",
+  "depart": "gainage-lateral-depart.webp",
+  "fin": "gainage-lateral-fin.webp"
+ },
+ "Dead bug": {
+  "groupe": "LOMBAIRES",
+  "type": "duo",
+  "depart": "dead-bug-depart.webp",
+  "fin": "dead-bug-fin.webp"
+ },
+ "V-ups": {
+  "groupe": "ABDOMINAUX",
+  "type": "duo",
+  "depart": "v-ups-depart.webp",
+  "fin": "v-ups-fin.webp"
+ },
+ "Tuck-up": {
+  "groupe": "ABDOMINAUX",
+  "type": "duo",
+  "depart": "tuck-up-depart.webp",
+  "fin": "tuck-up-fin.webp"
+ },
+ "Pike TRX": {
+  "groupe": "ABDOMINAUX",
+  "type": "duo",
+  "depart": "pike-trx-depart.webp",
+  "fin": "pike-trx-fin.webp"
+ },
+ "Russian twist kettlebell": {
+  "groupe": "ABDOMINAUX",
+  "type": "duo",
+  "depart": "russian-twist-kettlebell-depart.webp",
+  "fin": "russian-twist-kettlebell-fin.webp"
+ },
+ "Soulevé de terre kettlebell": {
+  "groupe": "LOMBAIRES",
+  "type": "duo",
+  "depart": "souleve-de-terre-kettlebell-depart.webp",
+  "fin": "souleve-de-terre-kettlebell-fin.webp"
+ },
+ "Bird dog": {
+  "groupe": "LOMBAIRES",
+  "type": "duo",
+  "depart": "bird-dog-depart.webp",
+  "fin": "bird-dog-fin.webp"
+ },
+ "Kettlebell swing": {
+  "groupe": "ISCHIO-JAMBIERS",
+  "type": "duo",
+  "depart": "kettlebell-swing-depart.webp",
+  "fin": "kettlebell-swing-fin.webp"
+ },
+ "Chaise au mur (wall sit)": {
+  "groupe": "QUADRICEPS",
+  "type": "duo",
+  "depart": "chaise-au-mur-wall-sit-depart.webp",
+  "fin": "chaise-au-mur-wall-sit-fin.webp"
+ },
+ "Extension mollets assis": {
+  "groupe": "MOLLETS",
+  "type": "duo",
+  "depart": "extension-mollets-assis-depart.webp",
+  "fin": "extension-mollets-assis-fin.webp"
+ },
+ "Extension mollets élastique assis": {
+  "groupe": "MOLLETS",
+  "type": "duo",
+  "depart": "extension-mollets-elastique-assis-depart.webp",
+  "fin": "extension-mollets-elastique-assis-fin.webp"
+ },
+ "Farmer walk": {
+  "groupe": "AVANT-BRAS",
+  "type": "duo",
+  "depart": "farmer-walk-depart.webp",
+  "fin": "farmer-walk-fin.webp"
+ },
+ "Rowing barre debout (upright row)": {
+  "groupe": "TRAPÈZES",
+  "type": "duo",
+  "depart": "rowing-barre-debout-upright-row-depart.webp",
+  "fin": "rowing-barre-debout-upright-row-fin.webp"
+ },
+ "Soulevé de terre roumain": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "souleve-de-terre-roumain-depart.webp",
+  "fin": "souleve-de-terre-roumain-fin.webp"
+ },
+ "Pull-over en travers du banc": {
+  "groupe": "PECTORAUX",
+  "type": "solo",
+  "img": "pull-over-en-travers-du-banc.webp"
+ },
+ "Rowing inversé (body row) (2)": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "rowing-inverse-body-row-2-depart.webp",
+  "fin": "rowing-inverse-body-row-2-fin.webp"
+ },
+ "Haussements épaules haltères": {
+  "groupe": "TRAPÈZES",
+  "type": "duo",
+  "depart": "haussements-epaules-halteres-depart.webp",
+  "fin": "haussements-epaules-halteres-fin.webp"
+ },
+ "Tirage vertical élastique": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "tirage-vertical-elastique-depart.webp",
+  "fin": "tirage-vertical-elastique-fin.webp"
+ },
+ "Écarté TRX (chest fly)": {
+  "groupe": "PECTORAUX",
+  "type": "duo",
+  "depart": "ecarte-trx-chest-fly-depart.webp",
+  "fin": "ecarte-trx-chest-fly-fin.webp"
+ },
+ "Rowing 2 kettlebells penché": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "rowing-2-kettlebells-penche-depart.webp",
+  "fin": "rowing-2-kettlebells-penche-fin.webp"
+ },
+ "Élévation latérale unilatérale câble": {
+  "groupe": "ÉPAULES",
+  "type": "duo",
+  "depart": "elevation-laterale-unilaterale-cable-depart.webp",
+  "fin": "elevation-laterale-unilaterale-cable-fin.webp"
+ },
+ "Élévations latérales poulie basse (2)": {
+  "groupe": "ÉPAULES",
+  "type": "duo",
+  "depart": "elevations-laterales-poulie-basse-2-depart.webp",
+  "fin": "elevations-laterales-poulie-basse-2-fin.webp"
+ },
+ "Élévation frontale câble": {
+  "groupe": "ÉPAULES",
+  "type": "duo",
+  "depart": "elevation-frontale-cable-depart.webp",
+  "fin": "elevation-frontale-cable-fin.webp"
+ },
+ "Y-T-W au sol (2)": {
+  "groupe": "ÉPAULES",
+  "type": "solo",
+  "img": "y-t-w-au-sol-2.webp"
+ },
+ "Écarté TRX (chest fly) (2)": {
+  "groupe": "PECTORAUX",
+  "type": "solo",
+  "img": "ecarte-trx-chest-fly-2.webp"
+ },
+ "Pull-apart élastique": {
+  "groupe": "TRAPÈZES",
+  "type": "duo",
+  "depart": "pull-apart-elastique-depart.webp",
+  "fin": "pull-apart-elastique-fin.webp"
+ },
+ "Rowing élastique assis": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "rowing-elastique-assis-depart.webp",
+  "fin": "rowing-elastique-assis-fin.webp"
+ },
+ "Écarté TRX unilatéral": {
+  "groupe": "PECTORAUX",
+  "type": "solo",
+  "img": "ecarte-trx-unilateral.webp"
+ },
+ "Curl câble bilatéral debout": {
+  "groupe": "BICEPS",
+  "type": "duo",
+  "depart": "curl-cable-bilateral-debout-depart.webp",
+  "fin": "curl-cable-bilateral-debout-fin.webp"
+ },
+ "Curl kettlebell": {
+  "groupe": "BICEPS",
+  "type": "duo",
+  "depart": "curl-kettlebell-depart.webp",
+  "fin": "curl-kettlebell-fin.webp"
+ },
+ "Goblet curl (par les cornes)": {
+  "groupe": "BICEPS",
+  "type": "duo",
+  "depart": "goblet-curl-par-les-cornes-depart.webp",
+  "fin": "goblet-curl-par-les-cornes-fin.webp"
+ },
+ "Extension haltère nuque assis": {
+  "groupe": "TRICEPS",
+  "type": "duo",
+  "depart": "extension-haltere-nuque-assis-depart.webp",
+  "fin": "extension-haltere-nuque-assis-fin.webp"
+ },
+ "Extension poulie haute corde": {
+  "groupe": "TRICEPS",
+  "type": "solo",
+  "img": "extension-poulie-haute-corde.webp"
+ },
+ "French press barre EZ couché (2)": {
+  "groupe": "TRICEPS",
+  "type": "duo",
+  "depart": "french-press-barre-ez-couche-2-depart.webp",
+  "fin": "french-press-barre-ez-couche-2-fin.webp"
+ },
+ "French press au sol": {
+  "groupe": "TRICEPS",
+  "type": "duo",
+  "depart": "french-press-au-sol-depart.webp",
+  "fin": "french-press-au-sol-fin.webp"
+ },
+ "Extension nuque unilatérale": {
+  "groupe": "TRICEPS",
+  "type": "duo",
+  "depart": "extension-nuque-unilaterale-depart.webp",
+  "fin": "extension-nuque-unilaterale-fin.webp"
+ },
+ "Pompes diamant": {
+  "groupe": "TRICEPS",
+  "type": "duo",
+  "depart": "pompes-diamant-depart.webp",
+  "fin": "pompes-diamant-fin.webp"
+ },
+ "Dips entre bancs": {
+  "groupe": "TRICEPS",
+  "type": "duo",
+  "depart": "dips-entre-bancs-depart.webp",
+  "fin": "dips-entre-bancs-fin.webp"
+ },
+ "Presse à jambes 45° pieds hauts": {
+  "groupe": "QUADRICEPS",
+  "type": "duo",
+  "depart": "presse-a-jambes-45-pieds-hauts-depart.webp",
+  "fin": "presse-a-jambes-45-pieds-hauts-fin.webp"
+ },
+ "Écarté haltères incliné": {
+  "groupe": "PECTORAUX",
+  "type": "duo",
+  "depart": "ecarte-halteres-incline-depart.webp",
+  "fin": "ecarte-halteres-incline-fin.webp"
+ },
+ "Hack squat machine": {
+  "groupe": "QUADRICEPS",
+  "type": "duo",
+  "depart": "hack-squat-machine-depart.webp",
+  "fin": "hack-squat-machine-fin.webp"
+ },
+ "Hack squat machine (2)": {
+  "groupe": "QUADRICEPS",
+  "type": "duo",
+  "depart": "hack-squat-machine-2-depart.webp",
+  "fin": "hack-squat-machine-2-fin.webp"
+ },
+ "Squat sauté": {
+  "groupe": "QUADRICEPS",
+  "type": "duo",
+  "depart": "squat-saute-depart.webp",
+  "fin": "squat-saute-fin.webp"
+ },
+ "Soulevé de terre roumain (2)": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "souleve-de-terre-roumain-2-depart.webp",
+  "fin": "souleve-de-terre-roumain-2-fin.webp"
+ },
+ "Développé couché barre (2)": {
+  "groupe": "PECTORAUX",
+  "type": "duo",
+  "depart": "developpe-couche-barre-2-depart.webp",
+  "fin": "developpe-couche-barre-2-fin.webp"
+ },
+ "Hip thrust classique": {
+  "groupe": "ISCHIO-JAMBIERS",
+  "type": "duo",
+  "depart": "hip-thrust-classique-depart.webp",
+  "fin": "hip-thrust-classique-fin.webp"
+ },
+ "Squat élastique": {
+  "groupe": "QUADRICEPS",
+  "type": "duo",
+  "depart": "squat-elastique-depart.webp",
+  "fin": "squat-elastique-fin.webp"
+ },
+ "Good morning barre légère": {
+  "groupe": "LOMBAIRES",
+  "type": "duo",
+  "depart": "good-morning-barre-legere-depart.webp",
+  "fin": "good-morning-barre-legere-fin.webp"
+ },
+ "Kettlebell swing (2)": {
+  "groupe": "ISCHIO-JAMBIERS",
+  "type": "duo",
+  "depart": "kettlebell-swing-2-depart.webp",
+  "fin": "kettlebell-swing-2-fin.webp"
+ },
+ "Fentes avant barre": {
+  "groupe": "QUADRICEPS",
+  "type": "duo",
+  "depart": "fentes-avant-barre-depart.webp",
+  "fin": "fentes-avant-barre-fin.webp"
+ },
+ "Bulgarian split squat barre (2)": {
+  "groupe": "QUADRICEPS",
+  "type": "duo",
+  "depart": "bulgarian-split-squat-barre-2-depart.webp",
+  "fin": "bulgarian-split-squat-barre-2-fin.webp"
+ },
+ "Dips entre bancs (2)": {
+  "groupe": "TRICEPS",
+  "type": "duo",
+  "depart": "dips-entre-bancs-2-depart.webp",
+  "fin": "dips-entre-bancs-2-fin.webp"
+ },
+ "Relevé de jambes suspendu": {
+  "groupe": "ABDOMINAUX",
+  "type": "duo",
+  "depart": "releve-de-jambes-suspendu-depart.webp",
+  "fin": "releve-de-jambes-suspendu-fin.webp"
+ },
+ "Gainage latéral (2)": {
+  "groupe": "ABDOMINAUX",
+  "type": "duo",
+  "depart": "gainage-lateral-2-depart.webp",
+  "fin": "gainage-lateral-2-fin.webp"
+ },
+ "Bicycle crunch": {
+  "groupe": "ABDOMINAUX",
+  "type": "duo",
+  "depart": "bicycle-crunch-depart.webp",
+  "fin": "bicycle-crunch-fin.webp"
+ },
+ "Mountain climbers croisés": {
+  "groupe": "ABDOMINAUX",
+  "type": "duo",
+  "depart": "mountain-climbers-croises-depart.webp",
+  "fin": "mountain-climbers-croises-fin.webp"
+ },
+ "Russian twist kettlebell (2)": {
+  "groupe": "ABDOMINAUX",
+  "type": "duo",
+  "depart": "russian-twist-kettlebell-2-depart.webp",
+  "fin": "russian-twist-kettlebell-2-fin.webp"
+ },
+ "Hyperextension 45°": {
+  "groupe": "LOMBAIRES",
+  "type": "duo",
+  "depart": "hyperextension-45-depart.webp",
+  "fin": "hyperextension-45-fin.webp"
+ },
+ "Good morning assis": {
+  "groupe": "LOMBAIRES",
+  "type": "duo",
+  "depart": "good-morning-assis-depart.webp",
+  "fin": "good-morning-assis-fin.webp"
+ },
+ "Rowing haltère unilatéral": {
+  "groupe": "DOS",
+  "type": "solo",
+  "img": "rowing-haltere-unilateral.webp"
+ },
+ "Superman": {
+  "groupe": "LOMBAIRES",
+  "type": "duo",
+  "depart": "superman-depart.webp",
+  "fin": "superman-fin.webp"
+ },
+ "Extension lombaire sur ballon": {
+  "groupe": "LOMBAIRES",
+  "type": "duo",
+  "depart": "extension-lombaire-sur-ballon-depart.webp",
+  "fin": "extension-lombaire-sur-ballon-fin.webp"
+ },
+ "Extension mollets debout machine": {
+  "groupe": "MOLLETS",
+  "type": "duo",
+  "depart": "extension-mollets-debout-machine-depart.webp",
+  "fin": "extension-mollets-debout-machine-fin.webp"
+ },
+ "Rowing barre debout (upright row) (2)": {
+  "groupe": "TRAPÈZES",
+  "type": "duo",
+  "depart": "rowing-barre-debout-upright-row-2-depart.webp",
+  "fin": "rowing-barre-debout-upright-row-2-fin.webp"
+ },
+ "Shrug barre devant": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "shrug-barre-devant-depart.webp",
+  "fin": "shrug-barre-devant-fin.webp"
+ },
+ "Pull-over poulie basse debout": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "pull-over-poulie-basse-debout-depart.webp",
+  "fin": "pull-over-poulie-basse-debout-fin.webp"
+ },
+ "Tirage horizontal câble assis (2)": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "tirage-horizontal-cable-assis-2-depart.webp",
+  "fin": "tirage-horizontal-cable-assis-2-fin.webp"
+ },
+ "Curl barre EZ debout (2)": {
+  "groupe": "BICEPS",
+  "type": "duo",
+  "depart": "curl-barre-ez-debout-2-depart.webp",
+  "fin": "curl-barre-ez-debout-2-fin.webp"
+ },
+ "Rowing élastique unilatéral": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "rowing-elastique-unilateral-depart.webp",
+  "fin": "rowing-elastique-unilateral-fin.webp"
+ },
+ "Oiseau au câble croisé": {
+  "groupe": "ÉPAULES",
+  "type": "duo",
+  "depart": "oiseau-au-cable-croise-depart.webp",
+  "fin": "oiseau-au-cable-croise-fin.webp"
+ },
+ "Pompes piquées (pike push-up)": {
+  "groupe": "ÉPAULES",
+  "type": "duo",
+  "depart": "pompes-piquees-pike-push-up-depart.webp",
+  "fin": "pompes-piquees-pike-push-up-fin.webp"
+ },
+ "Pike push-up pieds surélevés": {
+  "groupe": "ÉPAULES",
+  "type": "duo",
+  "depart": "pike-push-up-pieds-sureleves-depart.webp",
+  "fin": "pike-push-up-pieds-sureleves-fin.webp"
+ },
+ "Haussements épaules haltères (2)": {
+  "groupe": "TRAPÈZES",
+  "type": "duo",
+  "depart": "haussements-epaules-halteres-2-depart.webp",
+  "fin": "haussements-epaules-halteres-2-fin.webp"
+ },
+ "Développé haltères incliné 30°": {
+  "groupe": "PECTORAUX",
+  "type": "solo",
+  "img": "developpe-halteres-incline-30.webp"
+ },
+ "Body saw TRX": {
+  "groupe": "ABDOMINAUX",
+  "type": "duo",
+  "depart": "body-saw-trx-depart.webp",
+  "fin": "body-saw-trx-fin.webp"
+ },
+ "Curl barre EZ debout (3)": {
+  "groupe": "BICEPS",
+  "type": "duo",
+  "depart": "curl-barre-ez-debout-3-depart.webp",
+  "fin": "curl-barre-ez-debout-3-fin.webp"
+ },
+ "French press au sol (2)": {
+  "groupe": "TRICEPS",
+  "type": "duo",
+  "depart": "french-press-au-sol-2-depart.webp",
+  "fin": "french-press-au-sol-2-fin.webp"
+ },
+ "French press barre EZ couché (3)": {
+  "groupe": "TRICEPS",
+  "type": "duo",
+  "depart": "french-press-barre-ez-couche-3-depart.webp",
+  "fin": "french-press-barre-ez-couche-3-fin.webp"
+ },
+ "French press décliné": {
+  "groupe": "TRICEPS",
+  "type": "duo",
+  "depart": "french-press-decline-depart.webp",
+  "fin": "french-press-decline-fin.webp"
+ },
+ "Extension nuque câble haut": {
+  "groupe": "TRICEPS",
+  "type": "duo",
+  "depart": "extension-nuque-cable-haut-depart.webp",
+  "fin": "extension-nuque-cable-haut-fin.webp"
+ },
+ "Écarté haltères incliné (2)": {
+  "groupe": "PECTORAUX",
+  "type": "duo",
+  "depart": "ecarte-halteres-incline-2-depart.webp",
+  "fin": "ecarte-halteres-incline-2-fin.webp"
+ },
+ "Goblet squat kettlebell": {
+  "groupe": "QUADRICEPS",
+  "type": "duo",
+  "depart": "goblet-squat-kettlebell-depart.webp",
+  "fin": "goblet-squat-kettlebell-fin.webp"
+ },
+ "Leg extension machine (2)": {
+  "groupe": "QUADRICEPS",
+  "type": "duo",
+  "depart": "leg-extension-machine-2-depart.webp",
+  "fin": "leg-extension-machine-2-fin.webp"
+ },
+ "Dips buste incliné": {
+  "groupe": "PECTORAUX",
+  "type": "duo",
+  "depart": "dips-buste-incline-depart.webp",
+  "fin": "dips-buste-incline-fin.webp"
+ },
+ "Bulgares haltères": {
+  "groupe": "QUADRICEPS",
+  "type": "duo",
+  "depart": "bulgares-halteres-depart.webp",
+  "fin": "bulgares-halteres-fin.webp"
+ },
+ "Squat sumo poids de corps": {
+  "groupe": "QUADRICEPS",
+  "type": "duo",
+  "depart": "squat-sumo-poids-de-corps-depart.webp",
+  "fin": "squat-sumo-poids-de-corps-fin.webp"
+ },
+ "Chaise au mur (wall sit) (2)": {
+  "groupe": "QUADRICEPS",
+  "type": "duo",
+  "depart": "chaise-au-mur-wall-sit-2-depart.webp",
+  "fin": "chaise-au-mur-wall-sit-2-fin.webp"
+ },
+ "Leg curl allongé excentrique": {
+  "groupe": "ISCHIO-JAMBIERS",
+  "type": "duo",
+  "depart": "leg-curl-allonge-excentrique-depart.webp",
+  "fin": "leg-curl-allonge-excentrique-fin.webp"
+ },
+ "Hip thrust classique (2)": {
+  "groupe": "ISCHIO-JAMBIERS",
+  "type": "duo",
+  "depart": "hip-thrust-classique-2-depart.webp",
+  "fin": "hip-thrust-classique-2-fin.webp"
+ },
+ "Soulevé de terre déficit": {
+  "groupe": "LOMBAIRES",
+  "type": "duo",
+  "depart": "souleve-de-terre-deficit-depart.webp",
+  "fin": "souleve-de-terre-deficit-fin.webp"
+ },
+ "Swing unilatéral": {
+  "groupe": "ISCHIO-JAMBIERS",
+  "type": "duo",
+  "depart": "swing-unilateral-depart.webp",
+  "fin": "swing-unilateral-fin.webp"
+ },
+ "Marche latérale élastique": {
+  "groupe": "FESSIERS",
+  "type": "duo",
+  "depart": "marche-laterale-elastique-depart.webp",
+  "fin": "marche-laterale-elastique-fin.webp"
+ },
+ "Step-up haltères": {
+  "groupe": "FESSIERS",
+  "type": "duo",
+  "depart": "step-up-halteres-depart.webp",
+  "fin": "step-up-halteres-fin.webp"
+ },
+ "Développé couché barre (3)": {
+  "groupe": "PECTORAUX",
+  "type": "duo",
+  "depart": "developpe-couche-barre-3-depart.webp",
+  "fin": "developpe-couche-barre-3-fin.webp"
+ },
+ "V-ups (2)": {
+  "groupe": "ABDOMINAUX",
+  "type": "duo",
+  "depart": "v-ups-2-depart.webp",
+  "fin": "v-ups-2-fin.webp"
+ },
+ "Développé haltères incliné 30° (2)": {
+  "groupe": "PECTORAUX",
+  "type": "duo",
+  "depart": "developpe-halteres-incline-30-2-depart.webp",
+  "fin": "developpe-halteres-incline-30-2-fin.webp"
+ },
+ "Relevé de jambes suspendu (2)": {
+  "groupe": "ABDOMINAUX",
+  "type": "duo",
+  "depart": "releve-de-jambes-suspendu-2-depart.webp",
+  "fin": "releve-de-jambes-suspendu-2-fin.webp"
+ },
+ "V-ups (3)": {
+  "groupe": "ABDOMINAUX",
+  "type": "duo",
+  "depart": "v-ups-3-depart.webp",
+  "fin": "v-ups-3-fin.webp"
+ },
+ "Crunch câble agenouillé": {
+  "groupe": "ABDOMINAUX",
+  "type": "duo",
+  "depart": "crunch-cable-agenouille-depart.webp",
+  "fin": "crunch-cable-agenouille-fin.webp"
+ },
+ "Développé décliné barre": {
+  "groupe": "PECTORAUX",
+  "type": "duo",
+  "depart": "developpe-decline-barre-depart.webp",
+  "fin": "developpe-decline-barre-fin.webp"
+ },
+ "Body saw TRX (2)": {
+  "groupe": "ABDOMINAUX",
+  "type": "duo",
+  "depart": "body-saw-trx-2-depart.webp",
+  "fin": "body-saw-trx-2-fin.webp"
+ },
+ "Développé incliné barre": {
+  "groupe": "PECTORAUX",
+  "type": "duo",
+  "depart": "developpe-incline-barre-depart.webp",
+  "fin": "developpe-incline-barre-fin.webp"
+ },
+ "Développé couché haltères": {
+  "groupe": "PECTORAUX",
+  "type": "duo",
+  "depart": "developpe-couche-halteres-depart.webp",
+  "fin": "developpe-couche-halteres-fin.webp"
+ },
+ "Superman (2)": {
+  "groupe": "LOMBAIRES",
+  "type": "duo",
+  "depart": "superman-2-depart.webp",
+  "fin": "superman-2-fin.webp"
+ },
+ "Extension mollets élastique assis (2)": {
+  "groupe": "MOLLETS",
+  "type": "duo",
+  "depart": "extension-mollets-elastique-assis-2-depart.webp",
+  "fin": "extension-mollets-elastique-assis-2-fin.webp"
+ },
+ "Curl concentration haltère": {
+  "groupe": "BICEPS",
+  "type": "duo",
+  "depart": "curl-concentration-haltere-depart.webp",
+  "fin": "curl-concentration-haltere-fin.webp"
+ },
+ "Haussements épaules haltères (3)": {
+  "groupe": "TRAPÈZES",
+  "type": "duo",
+  "depart": "haussements-epaules-halteres-3-depart.webp",
+  "fin": "haussements-epaules-halteres-3-fin.webp"
+ },
+ "Upright row haltères": {
+  "groupe": "TRAPÈZES",
+  "type": "duo",
+  "depart": "upright-row-halteres-depart.webp",
+  "fin": "upright-row-halteres-fin.webp"
+ },
+ "Wall slide": {
+  "groupe": "TRAPÈZES",
+  "type": "duo",
+  "depart": "wall-slide-depart.webp",
+  "fin": "wall-slide-fin.webp"
+ },
+ "Pompes standards (2)": {
+  "groupe": "PECTORAUX",
+  "type": "duo",
+  "depart": "pompes-standards-2-depart.webp",
+  "fin": "pompes-standards-2-fin.webp"
+ },
+ "Machine convergente pectoraux (2)": {
+  "groupe": "PECTORAUX",
+  "type": "duo",
+  "depart": "machine-convergente-pectoraux-2-depart.webp",
+  "fin": "machine-convergente-pectoraux-2-fin.webp"
+ },
+ "Tirage horizontal câble assis (3)": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "tirage-horizontal-cable-assis-3-depart.webp",
+  "fin": "tirage-horizontal-cable-assis-3-fin.webp"
+ },
+ "Pompes sur bosu": {
+  "groupe": "PECTORAUX",
+  "type": "duo",
+  "depart": "pompes-sur-bosu-depart.webp",
+  "fin": "pompes-sur-bosu-fin.webp"
+ },
+ "Tirage poulie haute prise large": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "tirage-poulie-haute-prise-large-depart.webp",
+  "fin": "tirage-poulie-haute-prise-large-fin.webp"
+ },
+ "Rowing barre 45°": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "rowing-barre-45-depart.webp",
+  "fin": "rowing-barre-45-fin.webp"
+ },
+ "Rowing élastique debout ancrage bas": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "rowing-elastique-debout-ancrage-bas-depart.webp",
+  "fin": "rowing-elastique-debout-ancrage-bas-fin.webp"
+ },
+ "Pull-apart élastique (2)": {
+  "groupe": "TRAPÈZES",
+  "type": "duo",
+  "depart": "pull-apart-elastique-2-depart.webp",
+  "fin": "pull-apart-elastique-2-fin.webp"
+ },
+ "Tirage coude au corps poulie basse": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "tirage-coude-au-corps-poulie-basse-depart.webp",
+  "fin": "tirage-coude-au-corps-poulie-basse-fin.webp"
+ },
+ "Traction lestée pronation (2)": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "traction-lestee-pronation-2-depart.webp",
+  "fin": "traction-lestee-pronation-2-fin.webp"
+ },
+ "Tractions pronation prise large": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "tractions-pronation-prise-large-depart.webp",
+  "fin": "tractions-pronation-prise-large-fin.webp"
+ },
+ "Haussements épaules haltères (4)": {
+  "groupe": "TRAPÈZES",
+  "type": "duo",
+  "depart": "haussements-epaules-halteres-4-depart.webp",
+  "fin": "haussements-epaules-halteres-4-fin.webp"
+ },
+ "Rowing élastique debout ancrage bas (2)": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "rowing-elastique-debout-ancrage-bas-2-depart.webp",
+  "fin": "rowing-elastique-debout-ancrage-bas-2-fin.webp"
+ },
+ "Développé haltères debout": {
+  "groupe": "ÉPAULES",
+  "type": "duo",
+  "depart": "developpe-halteres-debout-depart.webp",
+  "fin": "developpe-halteres-debout-fin.webp"
+ },
+ "Développé militaire barre debout": {
+  "groupe": "ÉPAULES",
+  "type": "duo",
+  "depart": "developpe-militaire-barre-debout-depart.webp",
+  "fin": "developpe-militaire-barre-debout-fin.webp"
+ },
+ "Rotation externe haltère allongé sur le côté": {
+  "groupe": "ÉPAULES",
+  "type": "duo",
+  "depart": "rotation-externe-haltere-allonge-sur-le-cote-depart.webp",
+  "fin": "rotation-externe-haltere-allonge-sur-le-cote-fin.webp"
+ },
+ "Élévations frontales barre droite": {
+  "groupe": "TRAPÈZES",
+  "type": "duo",
+  "depart": "elevations-frontales-barre-droite-depart.webp",
+  "fin": "elevations-frontales-barre-droite-fin.webp"
+ },
+ "Y-T-W au sol (3)": {
+  "groupe": "ÉPAULES",
+  "type": "duo",
+  "depart": "y-t-w-au-sol-3-depart.webp",
+  "fin": "y-t-w-au-sol-3-fin.webp"
+ },
+ "Élévation frontale câble (2)": {
+  "groupe": "ÉPAULES",
+  "type": "duo",
+  "depart": "elevation-frontale-cable-2-depart.webp",
+  "fin": "elevation-frontale-cable-2-fin.webp"
+ },
+ "Y-T-W TRX": {
+  "groupe": "ÉPAULES",
+  "type": "duo",
+  "depart": "y-t-w-trx-depart.webp",
+  "fin": "y-t-w-trx-fin.webp"
+ },
+ "Y-T-W au sol (4)": {
+  "groupe": "ÉPAULES",
+  "type": "solo",
+  "img": "y-t-w-au-sol-4.webp"
+ },
+ "Halo à genoux": {
+  "groupe": "ÉPAULES",
+  "type": "duo",
+  "depart": "halo-a-genoux-depart.webp",
+  "fin": "halo-a-genoux-fin.webp"
+ },
+ "Curl incliné haltères 45°": {
+  "groupe": "BICEPS",
+  "type": "duo",
+  "depart": "curl-incline-halteres-45-depart.webp",
+  "fin": "curl-incline-halteres-45-fin.webp"
+ },
+ "Curl câble unilatéral (2)": {
+  "groupe": "BICEPS",
+  "type": "duo",
+  "depart": "curl-cable-unilateral-2-depart.webp",
+  "fin": "curl-cable-unilateral-2-fin.webp"
+ },
+ "Spider curl banc incliné inversé": {
+  "groupe": "BICEPS",
+  "type": "duo",
+  "depart": "spider-curl-banc-incline-inverse-depart.webp",
+  "fin": "spider-curl-banc-incline-inverse-fin.webp"
+ },
+ "French press au sol (3)": {
+  "groupe": "TRICEPS",
+  "type": "duo",
+  "depart": "french-press-au-sol-3-depart.webp",
+  "fin": "french-press-au-sol-3-fin.webp"
+ },
+ "Dips entre bancs (3)": {
+  "groupe": "TRICEPS",
+  "type": "duo",
+  "depart": "dips-entre-bancs-3-depart.webp",
+  "fin": "dips-entre-bancs-3-fin.webp"
+ },
+ "Leg extension machine (3)": {
+  "groupe": "QUADRICEPS",
+  "type": "duo",
+  "depart": "leg-extension-machine-3-depart.webp",
+  "fin": "leg-extension-machine-3-fin.webp"
+ },
+ "Front squat barre": {
+  "groupe": "QUADRICEPS",
+  "type": "duo",
+  "depart": "front-squat-barre-depart.webp",
+  "fin": "front-squat-barre-fin.webp"
+ },
+ "Hip thrust unilatéral au sol": {
+  "groupe": "FESSIERS",
+  "type": "duo",
+  "depart": "hip-thrust-unilateral-au-sol-depart.webp",
+  "fin": "hip-thrust-unilateral-au-sol-fin.webp"
+ },
+ "Leg curl TRX": {
+  "groupe": "ISCHIO-JAMBIERS",
+  "type": "duo",
+  "depart": "leg-curl-trx-depart.webp",
+  "fin": "leg-curl-trx-fin.webp"
+ },
+ "Fentes avant haltères": {
+  "groupe": "QUADRICEPS",
+  "type": "duo",
+  "depart": "fentes-avant-halteres-depart.webp",
+  "fin": "fentes-avant-halteres-fin.webp"
+ },
+ "Step-up barre": {
+  "groupe": "FESSIERS",
+  "type": "duo",
+  "depart": "step-up-barre-depart.webp",
+  "fin": "step-up-barre-fin.webp"
+ },
+ "Crunch contrôlé": {
+  "groupe": "ABDOMINAUX",
+  "type": "duo",
+  "depart": "crunch-controle-depart.webp",
+  "fin": "crunch-controle-fin.webp"
+ },
+ "Gainage latéral (3)": {
+  "groupe": "ABDOMINAUX",
+  "type": "duo",
+  "depart": "gainage-lateral-3-depart.webp",
+  "fin": "gainage-lateral-3-fin.webp"
+ },
+ "Mountain climbers": {
+  "groupe": "ABDOMINAUX",
+  "type": "duo",
+  "depart": "mountain-climbers-depart.webp",
+  "fin": "mountain-climbers-fin.webp"
+ },
+ "Tuck-up (2)": {
+  "groupe": "ABDOMINAUX",
+  "type": "duo",
+  "depart": "tuck-up-2-depart.webp",
+  "fin": "tuck-up-2-fin.webp"
+ },
+ "Body saw TRX (3)": {
+  "groupe": "ABDOMINAUX",
+  "type": "duo",
+  "depart": "body-saw-trx-3-depart.webp",
+  "fin": "body-saw-trx-3-fin.webp"
+ },
+ "Hyperextension 45° (2)": {
+  "groupe": "LOMBAIRES",
+  "type": "duo",
+  "depart": "hyperextension-45-2-depart.webp",
+  "fin": "hyperextension-45-2-fin.webp"
+ },
+ "Superman (3)": {
+  "groupe": "LOMBAIRES",
+  "type": "duo",
+  "depart": "superman-3-depart.webp",
+  "fin": "superman-3-fin.webp"
+ },
+ "Extension mollets debout machine (2)": {
+  "groupe": "MOLLETS",
+  "type": "duo",
+  "depart": "extension-mollets-debout-machine-2-depart.webp",
+  "fin": "extension-mollets-debout-machine-2-fin.webp"
+ },
+ "Corde à sauter": {
+  "groupe": "MOLLETS",
+  "type": "duo",
+  "depart": "corde-a-sauter-depart.webp",
+  "fin": "corde-a-sauter-fin.webp"
+ },
+ "Curl poignet barre": {
+  "groupe": "AVANT-BRAS",
+  "type": "duo",
+  "depart": "curl-poignet-barre-depart.webp",
+  "fin": "curl-poignet-barre-fin.webp"
+ },
+ "Dead hang barre fixe": {
+  "groupe": "AVANT-BRAS",
+  "type": "duo",
+  "depart": "dead-hang-barre-fixe-depart.webp",
+  "fin": "dead-hang-barre-fixe-fin.webp"
+ },
+ "Dead bug (2)": {
+  "groupe": "LOMBAIRES",
+  "type": "duo",
+  "depart": "dead-bug-2-depart.webp",
+  "fin": "dead-bug-2-fin.webp"
+ },
+ "Machine convergente pectoraux (3)": {
+  "groupe": "PECTORAUX",
+  "type": "duo",
+  "depart": "machine-convergente-pectoraux-3-depart.webp",
+  "fin": "machine-convergente-pectoraux-3-fin.webp"
+ },
+ "Close grip à la Smith machine": {
+  "groupe": "TRICEPS",
+  "type": "duo",
+  "depart": "close-grip-a-la-smith-machine-depart.webp",
+  "fin": "close-grip-a-la-smith-machine-fin.webp"
+ },
+ "Pompes standards (3)": {
+  "groupe": "PECTORAUX",
+  "type": "duo",
+  "depart": "pompes-standards-3-depart.webp",
+  "fin": "pompes-standards-3-fin.webp"
+ },
+ "Pompes archer": {
+  "groupe": "PECTORAUX",
+  "type": "duo",
+  "depart": "pompes-archer-depart.webp",
+  "fin": "pompes-archer-fin.webp"
+ },
+ "Développé haltères incliné 30° (3)": {
+  "groupe": "PECTORAUX",
+  "type": "solo",
+  "img": "developpe-halteres-incline-30-3.webp"
+ },
+ "Écarté élastique debout": {
+  "groupe": "PECTORAUX",
+  "type": "duo",
+  "depart": "ecarte-elastique-debout-depart.webp",
+  "fin": "ecarte-elastique-debout-fin.webp"
+ },
+ "Développé incliné unilatéral": {
+  "groupe": "PECTORAUX",
+  "type": "solo",
+  "img": "developpe-incline-unilateral.webp"
+ },
+ "Rowing haltère unilatéral (2)": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "rowing-haltere-unilateral-2-depart.webp",
+  "fin": "rowing-haltere-unilateral-2-fin.webp"
+ },
+ "Tirage nuque": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "tirage-nuque-depart.webp",
+  "fin": "tirage-nuque-fin.webp"
+ },
+ "Tirage horizontal câble assis (4)": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "tirage-horizontal-cable-assis-4-depart.webp",
+  "fin": "tirage-horizontal-cable-assis-4-fin.webp"
+ },
+ "Développé incliné barre (2)": {
+  "groupe": "PECTORAUX",
+  "type": "solo",
+  "img": "developpe-incline-barre-2.webp"
+ },
+ "Tractions pronation prise large (2)": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "tractions-pronation-prise-large-2-depart.webp",
+  "fin": "tractions-pronation-prise-large-2-fin.webp"
+ },
+ "Tractions pronation": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "tractions-pronation-depart.webp",
+  "fin": "tractions-pronation-fin.webp"
+ },
+ "Tirage coude au corps poulie basse (2)": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "tirage-coude-au-corps-poulie-basse-2-depart.webp",
+  "fin": "tirage-coude-au-corps-poulie-basse-2-fin.webp"
+ },
+ "Rowing inversé (body row) (3)": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "rowing-inverse-body-row-3-depart.webp",
+  "fin": "rowing-inverse-body-row-3-fin.webp"
+ },
+ "Rowing inversé prise large": {
+  "groupe": "DOS",
+  "type": "solo",
+  "img": "rowing-inverse-prise-large.webp"
+ },
+ "Rowing inversé prise large (2)": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "rowing-inverse-prise-large-2-depart.webp",
+  "fin": "rowing-inverse-prise-large-2-fin.webp"
+ },
+ "Écarté TRX (chest fly) (3)": {
+  "groupe": "PECTORAUX",
+  "type": "duo",
+  "depart": "ecarte-trx-chest-fly-3-depart.webp",
+  "fin": "ecarte-trx-chest-fly-3-fin.webp"
+ },
+ "Tirage poulie haute prise large (2)": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "tirage-poulie-haute-prise-large-2-depart.webp",
+  "fin": "tirage-poulie-haute-prise-large-2-fin.webp"
+ },
+ "Tractions pronation (2)": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "tractions-pronation-2-depart.webp",
+  "fin": "tractions-pronation-2-fin.webp"
+ },
+ "Développé haltères assis": {
+  "groupe": "ÉPAULES",
+  "type": "duo",
+  "depart": "developpe-halteres-assis-depart.webp",
+  "fin": "developpe-halteres-assis-fin.webp"
+ },
+ "Écarté haltères plat": {
+  "groupe": "PECTORAUX",
+  "type": "solo",
+  "img": "ecarte-halteres-plat.webp"
+ },
+ "Élévations frontales haltères (2)": {
+  "groupe": "ÉPAULES",
+  "type": "duo",
+  "depart": "elevations-frontales-halteres-2-depart.webp",
+  "fin": "elevations-frontales-halteres-2-fin.webp"
+ },
+ "Pike push-up pieds surélevés (2)": {
+  "groupe": "ÉPAULES",
+  "type": "duo",
+  "depart": "pike-push-up-pieds-sureleves-2-depart.webp",
+  "fin": "pike-push-up-pieds-sureleves-2-fin.webp"
+ },
+ "Y-T-W TRX (2)": {
+  "groupe": "ÉPAULES",
+  "type": "solo",
+  "img": "y-t-w-trx-2.webp"
+ },
+ "Élévations frontales haltères (3)": {
+  "groupe": "ÉPAULES",
+  "type": "duo",
+  "depart": "elevations-frontales-halteres-3-depart.webp",
+  "fin": "elevations-frontales-halteres-3-fin.webp"
+ },
+ "Curl haltères assis dossier vertical": {
+  "groupe": "BICEPS",
+  "type": "duo",
+  "depart": "curl-halteres-assis-dossier-vertical-depart.webp",
+  "fin": "curl-halteres-assis-dossier-vertical-fin.webp"
+ },
+ "Curl haltères supination alternés": {
+  "groupe": "BICEPS",
+  "type": "duo",
+  "depart": "curl-halteres-supination-alternes-depart.webp",
+  "fin": "curl-halteres-supination-alternes-fin.webp"
+ },
+ "Curl barre EZ debout (4)": {
+  "groupe": "BICEPS",
+  "type": "duo",
+  "depart": "curl-barre-ez-debout-4-depart.webp",
+  "fin": "curl-barre-ez-debout-4-fin.webp"
+ },
+ "Curl câble bilatéral debout (2)": {
+  "groupe": "BICEPS",
+  "type": "duo",
+  "depart": "curl-cable-bilateral-debout-2-depart.webp",
+  "fin": "curl-cable-bilateral-debout-2-fin.webp"
+ },
+ "Extension nuque câble haut (2)": {
+  "groupe": "TRICEPS",
+  "type": "duo",
+  "depart": "extension-nuque-cable-haut-2-depart.webp",
+  "fin": "extension-nuque-cable-haut-2-fin.webp"
+ },
+ "Dips buste incliné (2)": {
+  "groupe": "PECTORAUX",
+  "type": "duo",
+  "depart": "dips-buste-incline-2-depart.webp",
+  "fin": "dips-buste-incline-2-fin.webp"
+ },
+ "Développé couché barre (4)": {
+  "groupe": "PECTORAUX",
+  "type": "duo",
+  "depart": "developpe-couche-barre-4-depart.webp",
+  "fin": "developpe-couche-barre-4-fin.webp"
+ },
+ "Développé incliné barre (3)": {
+  "groupe": "PECTORAUX",
+  "type": "duo",
+  "depart": "developpe-incline-barre-3-depart.webp",
+  "fin": "developpe-incline-barre-3-fin.webp"
+ },
+ "Overhead triceps extension câble": {
+  "groupe": "TRICEPS",
+  "type": "duo",
+  "depart": "overhead-triceps-extension-cable-depart.webp",
+  "fin": "overhead-triceps-extension-cable-fin.webp"
+ },
+ "Fentes avant barre (2)": {
+  "groupe": "QUADRICEPS",
+  "type": "duo",
+  "depart": "fentes-avant-barre-2-depart.webp",
+  "fin": "fentes-avant-barre-2-fin.webp"
+ },
+ "Pistol squat assisté TRX": {
+  "groupe": "QUADRICEPS",
+  "type": "duo",
+  "depart": "pistol-squat-assiste-trx-depart.webp",
+  "fin": "pistol-squat-assiste-trx-fin.webp"
+ },
+ "Fentes marchées haltères": {
+  "groupe": "FESSIERS",
+  "type": "solo",
+  "img": "fentes-marchees-halteres.webp"
+ },
+ "Squat élastique (2)": {
+  "groupe": "QUADRICEPS",
+  "type": "duo",
+  "depart": "squat-elastique-2-depart.webp",
+  "fin": "squat-elastique-2-fin.webp"
+ },
+ "Fente arrière sur bosu": {
+  "groupe": "QUADRICEPS",
+  "type": "duo",
+  "depart": "fente-arriere-sur-bosu-depart.webp",
+  "fin": "fente-arriere-sur-bosu-fin.webp"
+ },
+ "Leg curl allongé excentrique (2)": {
+  "groupe": "ISCHIO-JAMBIERS",
+  "type": "duo",
+  "depart": "leg-curl-allonge-excentrique-2-depart.webp",
+  "fin": "leg-curl-allonge-excentrique-2-fin.webp"
+ },
+ "Bird dog (2)": {
+  "groupe": "LOMBAIRES",
+  "type": "duo",
+  "depart": "bird-dog-2-depart.webp",
+  "fin": "bird-dog-2-fin.webp"
+ },
+ "Planche avant isométrique": {
+  "groupe": "ABDOMINAUX",
+  "type": "duo",
+  "depart": "planche-avant-isometrique-depart.webp",
+  "fin": "planche-avant-isometrique-fin.webp"
+ },
+ "Crunch câble agenouillé (2)": {
+  "groupe": "ABDOMINAUX",
+  "type": "duo",
+  "depart": "crunch-cable-agenouille-2-depart.webp",
+  "fin": "crunch-cable-agenouille-2-fin.webp"
+ },
+ "Planche haute bras tendus": {
+  "groupe": "ABDOMINAUX",
+  "type": "duo",
+  "depart": "planche-haute-bras-tendus-depart.webp",
+  "fin": "planche-haute-bras-tendus-fin.webp"
+ },
+ "Gainage latéral (4)": {
+  "groupe": "ABDOMINAUX",
+  "type": "duo",
+  "depart": "gainage-lateral-4-depart.webp",
+  "fin": "gainage-lateral-4-fin.webp"
+ },
+ "Hollow body hold": {
+  "groupe": "ABDOMINAUX",
+  "type": "duo",
+  "depart": "hollow-body-hold-depart.webp",
+  "fin": "hollow-body-hold-fin.webp"
+ },
+ "Pallof press câble": {
+  "groupe": "ABDOMINAUX",
+  "type": "duo",
+  "depart": "pallof-press-cable-depart.webp",
+  "fin": "pallof-press-cable-fin.webp"
+ },
+ "Mountain climbers (2)": {
+  "groupe": "ABDOMINAUX",
+  "type": "duo",
+  "depart": "mountain-climbers-2-depart.webp",
+  "fin": "mountain-climbers-2-fin.webp"
+ },
+ "Dead bug (3)": {
+  "groupe": "LOMBAIRES",
+  "type": "duo",
+  "depart": "dead-bug-3-depart.webp",
+  "fin": "dead-bug-3-fin.webp"
+ },
+ "Russian twist sans charge": {
+  "groupe": "ABDOMINAUX",
+  "type": "duo",
+  "depart": "russian-twist-sans-charge-depart.webp",
+  "fin": "russian-twist-sans-charge-fin.webp"
+ },
+ "Hyperextension 45° (3)": {
+  "groupe": "LOMBAIRES",
+  "type": "duo",
+  "depart": "hyperextension-45-3-depart.webp",
+  "fin": "hyperextension-45-3-fin.webp"
+ },
+ "Extension horizontale sur GHD": {
+  "groupe": "LOMBAIRES",
+  "type": "duo",
+  "depart": "extension-horizontale-sur-ghd-depart.webp",
+  "fin": "extension-horizontale-sur-ghd-fin.webp"
+ },
+ "Extension mollets assis machine": {
+  "groupe": "MOLLETS",
+  "type": "duo",
+  "depart": "extension-mollets-assis-machine-depart.webp",
+  "fin": "extension-mollets-assis-machine-fin.webp"
+ },
+ "Extension mollets unilatérale sur marche": {
+  "groupe": "MOLLETS",
+  "type": "duo",
+  "depart": "extension-mollets-unilaterale-sur-marche-depart.webp",
+  "fin": "extension-mollets-unilaterale-sur-marche-fin.webp"
+ },
+ "Haussements épaules haltères (5)": {
+  "groupe": "TRAPÈZES",
+  "type": "duo",
+  "depart": "haussements-epaules-halteres-5-depart.webp",
+  "fin": "haussements-epaules-halteres-5-fin.webp"
+ },
+ "Shrug haltères": {
+  "groupe": "TRAPÈZES",
+  "type": "duo",
+  "depart": "shrug-halteres-depart.webp",
+  "fin": "shrug-halteres-fin.webp"
+ },
+ "Pompes déficit sur poignées": {
+  "groupe": "PECTORAUX",
+  "type": "duo",
+  "depart": "pompes-deficit-sur-poignees-depart.webp",
+  "fin": "pompes-deficit-sur-poignees-fin.webp"
+ },
+ "Développé haltères décliné": {
+  "groupe": "PECTORAUX",
+  "type": "duo",
+  "depart": "developpe-halteres-decline-depart.webp",
+  "fin": "developpe-halteres-decline-fin.webp"
+ },
+ "Pompes standards (4)": {
+  "groupe": "PECTORAUX",
+  "type": "duo",
+  "depart": "pompes-standards-4-depart.webp",
+  "fin": "pompes-standards-4-fin.webp"
+ },
+ "Tractions supination": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "tractions-supination-depart.webp",
+  "fin": "tractions-supination-fin.webp"
+ },
+ "Rowing haltère unilatéral (3)": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "rowing-haltere-unilateral-3-depart.webp",
+  "fin": "rowing-haltere-unilateral-3-fin.webp"
+ },
+ "Good morning barre légère (2)": {
+  "groupe": "LOMBAIRES",
+  "type": "duo",
+  "depart": "good-morning-barre-legere-2-depart.webp",
+  "fin": "good-morning-barre-legere-2-fin.webp"
+ },
+ "Tirage horizontal câble assis (5)": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "tirage-horizontal-cable-assis-5-depart.webp",
+  "fin": "tirage-horizontal-cable-assis-5-fin.webp"
+ },
+ "Soulevé de terre roumain (3)": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "souleve-de-terre-roumain-3-depart.webp",
+  "fin": "souleve-de-terre-roumain-3-fin.webp"
+ },
+ "Rowing élastique debout ancrage bas (3)": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "rowing-elastique-debout-ancrage-bas-3-depart.webp",
+  "fin": "rowing-elastique-debout-ancrage-bas-3-fin.webp"
+ },
+ "Pull-over haltère couché": {
+  "groupe": "DOS",
+  "type": "solo",
+  "img": "pull-over-haltere-couche.webp"
+ },
+ "Tirage vertical élastique (2)": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "tirage-vertical-elastique-2-depart.webp",
+  "fin": "tirage-vertical-elastique-2-fin.webp"
+ },
+ "Développé militaire barre debout (2)": {
+  "groupe": "ÉPAULES",
+  "type": "duo",
+  "depart": "developpe-militaire-barre-debout-2-depart.webp",
+  "fin": "developpe-militaire-barre-debout-2-fin.webp"
+ },
+ "Rowing TRX pronation": {
+  "groupe": "DOS",
+  "type": "solo",
+  "img": "rowing-trx-pronation.webp"
+ },
+ "Machine convergente pectoraux (4)": {
+  "groupe": "PECTORAUX",
+  "type": "duo",
+  "depart": "machine-convergente-pectoraux-4-depart.webp",
+  "fin": "machine-convergente-pectoraux-4-fin.webp"
+ },
+ "Shrug haltères (2)": {
+  "groupe": "TRAPÈZES",
+  "type": "duo",
+  "depart": "shrug-halteres-2-depart.webp",
+  "fin": "shrug-halteres-2-fin.webp"
+ },
+ "Développé haltères classique": {
+  "groupe": "ÉPAULES",
+  "type": "duo",
+  "depart": "developpe-halteres-classique-depart.webp",
+  "fin": "developpe-halteres-classique-fin.webp"
+ },
+ "Élévation latérale unilatérale câble (2)": {
+  "groupe": "ÉPAULES",
+  "type": "duo",
+  "depart": "elevation-laterale-unilaterale-cable-2-depart.webp",
+  "fin": "elevation-laterale-unilaterale-cable-2-fin.webp"
+ },
+ "Élévations latérales poulie basse (3)": {
+  "groupe": "ÉPAULES",
+  "type": "duo",
+  "depart": "elevations-laterales-poulie-basse-3-depart.webp",
+  "fin": "elevations-laterales-poulie-basse-3-fin.webp"
+ },
+ "Y-T-W au sol (5)": {
+  "groupe": "ÉPAULES",
+  "type": "solo",
+  "img": "y-t-w-au-sol-5.webp"
+ },
+ "Élévations latérales élastique": {
+  "groupe": "ÉPAULES",
+  "type": "duo",
+  "depart": "elevations-laterales-elastique-depart.webp",
+  "fin": "elevations-laterales-elastique-fin.webp"
+ },
+ "Superman (4)": {
+  "groupe": "LOMBAIRES",
+  "type": "duo",
+  "depart": "superman-4-depart.webp",
+  "fin": "superman-4-fin.webp"
+ },
+ "Superman alterné": {
+  "groupe": "LOMBAIRES",
+  "type": "solo",
+  "img": "superman-alterne.webp"
+ },
+ "Y-T-W TRX (3)": {
+  "groupe": "ÉPAULES",
+  "type": "solo",
+  "img": "y-t-w-trx-3.webp"
+ },
+ "Curl marteau": {
+  "groupe": "BICEPS",
+  "type": "duo",
+  "depart": "curl-marteau-depart.webp",
+  "fin": "curl-marteau-fin.webp"
+ },
+ "Curl incliné haltères 45° (2)": {
+  "groupe": "BICEPS",
+  "type": "duo",
+  "depart": "curl-incline-halteres-45-2-depart.webp",
+  "fin": "curl-incline-halteres-45-2-fin.webp"
+ },
+ "Curl incliné haltères": {
+  "groupe": "BICEPS",
+  "type": "duo",
+  "depart": "curl-incline-halteres-depart.webp",
+  "fin": "curl-incline-halteres-fin.webp"
+ },
+ "Spider curl banc incliné inversé (2)": {
+  "groupe": "BICEPS",
+  "type": "duo",
+  "depart": "spider-curl-banc-incline-inverse-2-depart.webp",
+  "fin": "spider-curl-banc-incline-inverse-2-fin.webp"
+ },
+ "Curl câble unilatéral (3)": {
+  "groupe": "BICEPS",
+  "type": "duo",
+  "depart": "curl-cable-unilateral-3-depart.webp",
+  "fin": "curl-cable-unilateral-3-fin.webp"
+ },
+ "Extension poulie haute corde (2)": {
+  "groupe": "TRICEPS",
+  "type": "duo",
+  "depart": "extension-poulie-haute-corde-2-depart.webp",
+  "fin": "extension-poulie-haute-corde-2-fin.webp"
+ },
+ "Extension triceps TRX": {
+  "groupe": "TRICEPS",
+  "type": "duo",
+  "depart": "extension-triceps-trx-depart.webp",
+  "fin": "extension-triceps-trx-fin.webp"
+ },
+ "Extension nuque kettlebell": {
+  "groupe": "TRICEPS",
+  "type": "duo",
+  "depart": "extension-nuque-kettlebell-depart.webp",
+  "fin": "extension-nuque-kettlebell-fin.webp"
+ },
+ "Body saw TRX (4)": {
+  "groupe": "ABDOMINAUX",
+  "type": "duo",
+  "depart": "body-saw-trx-4-depart.webp",
+  "fin": "body-saw-trx-4-fin.webp"
+ },
+ "Développé kettlebell unilatéral": {
+  "groupe": "ÉPAULES",
+  "type": "duo",
+  "depart": "developpe-kettlebell-unilateral-depart.webp",
+  "fin": "developpe-kettlebell-unilateral-fin.webp"
+ },
+ "Dips buste vertical prise serrée (2)": {
+  "groupe": "PECTORAUX",
+  "type": "duo",
+  "depart": "dips-buste-vertical-prise-serree-2-depart.webp",
+  "fin": "dips-buste-vertical-prise-serree-2-fin.webp"
+ },
+ "Hack squat machine (3)": {
+  "groupe": "QUADRICEPS",
+  "type": "duo",
+  "depart": "hack-squat-machine-3-depart.webp",
+  "fin": "hack-squat-machine-3-fin.webp"
+ },
+ "Curl poignet barre (2)": {
+  "groupe": "AVANT-BRAS",
+  "type": "duo",
+  "depart": "curl-poignet-barre-2-depart.webp",
+  "fin": "curl-poignet-barre-2-fin.webp"
+ },
+ "Goblet squat kettlebell (2)": {
+  "groupe": "QUADRICEPS",
+  "type": "duo",
+  "depart": "goblet-squat-kettlebell-2-depart.webp",
+  "fin": "goblet-squat-kettlebell-2-fin.webp"
+ },
+ "Développé haltères incliné 30° (4)": {
+  "groupe": "PECTORAUX",
+  "type": "solo",
+  "img": "developpe-halteres-incline-30-4.webp"
+ },
+ "Fentes arrière (2)": {
+  "groupe": "FESSIERS",
+  "type": "duo",
+  "depart": "fentes-arriere-2-depart.webp",
+  "fin": "fentes-arriere-2-fin.webp"
+ },
+ "Hip thrust classique (3)": {
+  "groupe": "ISCHIO-JAMBIERS",
+  "type": "duo",
+  "depart": "hip-thrust-classique-3-depart.webp",
+  "fin": "hip-thrust-classique-3-fin.webp"
+ },
+ "Leg curl TRX (2)": {
+  "groupe": "ISCHIO-JAMBIERS",
+  "type": "duo",
+  "depart": "leg-curl-trx-2-depart.webp",
+  "fin": "leg-curl-trx-2-fin.webp"
+ },
+ "Fentes avant barre (3)": {
+  "groupe": "QUADRICEPS",
+  "type": "duo",
+  "depart": "fentes-avant-barre-3-depart.webp",
+  "fin": "fentes-avant-barre-3-fin.webp"
+ },
+ "Step-up barre (2)": {
+  "groupe": "FESSIERS",
+  "type": "duo",
+  "depart": "step-up-barre-2-depart.webp",
+  "fin": "step-up-barre-2-fin.webp"
+ },
+ "Relevé de jambes suspendu (3)": {
+  "groupe": "ABDOMINAUX",
+  "type": "duo",
+  "depart": "releve-de-jambes-suspendu-3-depart.webp",
+  "fin": "releve-de-jambes-suspendu-3-fin.webp"
+ },
+ "Crunch contrôlé (2)": {
+  "groupe": "ABDOMINAUX",
+  "type": "duo",
+  "depart": "crunch-controle-2-depart.webp",
+  "fin": "crunch-controle-2-fin.webp"
+ },
+ "Good morning assis (2)": {
+  "groupe": "LOMBAIRES",
+  "type": "duo",
+  "depart": "good-morning-assis-2-depart.webp",
+  "fin": "good-morning-assis-2-fin.webp"
+ },
+ "Extension lombaire sur ballon (2)": {
+  "groupe": "LOMBAIRES",
+  "type": "duo",
+  "depart": "extension-lombaire-sur-ballon-2-depart.webp",
+  "fin": "extension-lombaire-sur-ballon-2-fin.webp"
+ },
+ "Extension mollets assis (2)": {
+  "groupe": "MOLLETS",
+  "type": "duo",
+  "depart": "extension-mollets-assis-2-depart.webp",
+  "fin": "extension-mollets-assis-2-fin.webp"
+ },
+ "Équilibre unipodal sur bosu": {
+  "groupe": "MOLLETS",
+  "type": "duo",
+  "depart": "equilibre-unipodal-sur-bosu-depart.webp",
+  "fin": "equilibre-unipodal-sur-bosu-fin.webp"
+ },
+ "Curl poignet haltère unilatéral": {
+  "groupe": "AVANT-BRAS",
+  "type": "duo",
+  "depart": "curl-poignet-haltere-unilateral-depart.webp",
+  "fin": "curl-poignet-haltere-unilateral-fin.webp"
+ },
+ "Shrug barre devant (2)": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "shrug-barre-devant-2-depart.webp",
+  "fin": "shrug-barre-devant-2-fin.webp"
+ },
+ "Upright row corde poulie basse": {
+  "groupe": "TRAPÈZES",
+  "type": "duo",
+  "depart": "upright-row-corde-poulie-basse-depart.webp",
+  "fin": "upright-row-corde-poulie-basse-fin.webp"
+ },
+ "Pompes mains surélevées": {
+  "groupe": "PECTORAUX",
+  "type": "duo",
+  "depart": "pompes-mains-surelevees-depart.webp",
+  "fin": "pompes-mains-surelevees-fin.webp"
+ },
+ "Face pull élastique": {
+  "groupe": "TRAPÈZES",
+  "type": "duo",
+  "depart": "face-pull-elastique-depart.webp",
+  "fin": "face-pull-elastique-fin.webp"
+ },
+ "Tirage poulie haute prise large (3)": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "tirage-poulie-haute-prise-large-3-depart.webp",
+  "fin": "tirage-poulie-haute-prise-large-3-fin.webp"
+ },
+ "French press barre EZ couché (4)": {
+  "groupe": "TRICEPS",
+  "type": "solo",
+  "img": "french-press-barre-ez-couche-4.webp"
+ },
+ "Rowing barre 45° (2)": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "rowing-barre-45-2-depart.webp",
+  "fin": "rowing-barre-45-2-fin.webp"
+ },
+ "Soulevé de terre roumain (4)": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "souleve-de-terre-roumain-4-depart.webp",
+  "fin": "souleve-de-terre-roumain-4-fin.webp"
+ },
+ "Développé haltères incliné 30° (5)": {
+  "groupe": "PECTORAUX",
+  "type": "solo",
+  "img": "developpe-halteres-incline-30-5.webp"
+ },
+ "Soulevé de terre déficit (2)": {
+  "groupe": "LOMBAIRES",
+  "type": "duo",
+  "depart": "souleve-de-terre-deficit-2-depart.webp",
+  "fin": "souleve-de-terre-deficit-2-fin.webp"
+ },
+ "Soulevé de terre sumo": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "souleve-de-terre-sumo-depart.webp",
+  "fin": "souleve-de-terre-sumo-fin.webp"
+ },
+ "Shrug barre": {
+  "groupe": "TRAPÈZES",
+  "type": "duo",
+  "depart": "shrug-barre-depart.webp",
+  "fin": "shrug-barre-fin.webp"
+ },
+ "Rowing inversé supination": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "rowing-inverse-supination-depart.webp",
+  "fin": "rowing-inverse-supination-fin.webp"
+ },
+ "Rowing kettlebell unilatéral": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "rowing-kettlebell-unilateral-depart.webp",
+  "fin": "rowing-kettlebell-unilateral-fin.webp"
+ },
+ "Rowing kettlebell appui banc": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "rowing-kettlebell-appui-banc-depart.webp",
+  "fin": "rowing-kettlebell-appui-banc-fin.webp"
+ },
+ "Tractions pronation (3)": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "tractions-pronation-3-depart.webp",
+  "fin": "tractions-pronation-3-fin.webp"
+ },
+ "Développé haltères assis (2)": {
+  "groupe": "ÉPAULES",
+  "type": "duo",
+  "depart": "developpe-halteres-assis-2-depart.webp",
+  "fin": "developpe-halteres-assis-2-fin.webp"
+ },
+ "Écarté haltères plat (2)": {
+  "groupe": "PECTORAUX",
+  "type": "duo",
+  "depart": "ecarte-halteres-plat-2-depart.webp",
+  "fin": "ecarte-halteres-plat-2-fin.webp"
+ },
+ "Élévations frontales haltères (4)": {
+  "groupe": "ÉPAULES",
+  "type": "duo",
+  "depart": "elevations-frontales-halteres-4-depart.webp",
+  "fin": "elevations-frontales-halteres-4-fin.webp"
+ },
+ "Élévation frontale disque (2)": {
+  "groupe": "ÉPAULES",
+  "type": "duo",
+  "depart": "elevation-frontale-disque-2-depart.webp",
+  "fin": "elevation-frontale-disque-2-fin.webp"
+ },
+ "Développé haltères classique (2)": {
+  "groupe": "ÉPAULES",
+  "type": "duo",
+  "depart": "developpe-halteres-classique-2-depart.webp",
+  "fin": "developpe-halteres-classique-2-fin.webp"
+ },
+ "Élévations latérales élastique (2)": {
+  "groupe": "ÉPAULES",
+  "type": "duo",
+  "depart": "elevations-laterales-elastique-2-depart.webp",
+  "fin": "elevations-laterales-elastique-2-fin.webp"
+ },
+ "Oiseau au câble croisé (2)": {
+  "groupe": "ÉPAULES",
+  "type": "duo",
+  "depart": "oiseau-au-cable-croise-2-depart.webp",
+  "fin": "oiseau-au-cable-croise-2-fin.webp"
+ },
+ "Curl incliné haltères 45° (3)": {
+  "groupe": "BICEPS",
+  "type": "duo",
+  "depart": "curl-incline-halteres-45-3-depart.webp",
+  "fin": "curl-incline-halteres-45-3-fin.webp"
+ },
+ "Curl pupitre barre EZ": {
+  "groupe": "BICEPS",
+  "type": "duo",
+  "depart": "curl-pupitre-barre-ez-depart.webp",
+  "fin": "curl-pupitre-barre-ez-fin.webp"
+ },
+ "Curl barre EZ debout (5)": {
+  "groupe": "BICEPS",
+  "type": "duo",
+  "depart": "curl-barre-ez-debout-5-depart.webp",
+  "fin": "curl-barre-ez-debout-5-fin.webp"
+ },
+ "Extension triceps TRX (2)": {
+  "groupe": "TRICEPS",
+  "type": "duo",
+  "depart": "extension-triceps-trx-2-depart.webp",
+  "fin": "extension-triceps-trx-2-fin.webp"
+ },
+ "Extension poulie haute corde (3)": {
+  "groupe": "TRICEPS",
+  "type": "solo",
+  "img": "extension-poulie-haute-corde-3.webp"
+ },
+ "Extension haltère nuque assis (2)": {
+  "groupe": "TRICEPS",
+  "type": "duo",
+  "depart": "extension-haltere-nuque-assis-2-depart.webp",
+  "fin": "extension-haltere-nuque-assis-2-fin.webp"
+ },
+ "Extension haltère nuque assis (3)": {
+  "groupe": "TRICEPS",
+  "type": "duo",
+  "depart": "extension-haltere-nuque-assis-3-depart.webp",
+  "fin": "extension-haltere-nuque-assis-3-fin.webp"
+ },
+ "Dips entre bancs (4)": {
+  "groupe": "TRICEPS",
+  "type": "duo",
+  "depart": "dips-entre-bancs-4-depart.webp",
+  "fin": "dips-entre-bancs-4-fin.webp"
+ },
+ "Good morning barre légère (3)": {
+  "groupe": "LOMBAIRES",
+  "type": "duo",
+  "depart": "good-morning-barre-legere-3-depart.webp",
+  "fin": "good-morning-barre-legere-3-fin.webp"
+ },
+ "Extension triceps élastique": {
+  "groupe": "TRICEPS",
+  "type": "duo",
+  "depart": "extension-triceps-elastique-depart.webp",
+  "fin": "extension-triceps-elastique-fin.webp"
+ },
+ "Extension nuque élastique": {
+  "groupe": "TRICEPS",
+  "type": "duo",
+  "depart": "extension-nuque-elastique-depart.webp",
+  "fin": "extension-nuque-elastique-fin.webp"
+ },
+ "Presse à jambes 45° pieds hauts (2)": {
+  "groupe": "QUADRICEPS",
+  "type": "duo",
+  "depart": "presse-a-jambes-45-pieds-hauts-2-depart.webp",
+  "fin": "presse-a-jambes-45-pieds-hauts-2-fin.webp"
+ },
+ "Squat sumo élastique": {
+  "groupe": "QUADRICEPS",
+  "type": "duo",
+  "depart": "squat-sumo-elastique-depart.webp",
+  "fin": "squat-sumo-elastique-fin.webp"
+ },
+ "Soulevé de terre roumain unilatéral": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "souleve-de-terre-roumain-unilateral-depart.webp",
+  "fin": "souleve-de-terre-roumain-unilateral-fin.webp"
+ },
+ "Leg extension machine (4)": {
+  "groupe": "QUADRICEPS",
+  "type": "duo",
+  "depart": "leg-extension-machine-4-depart.webp",
+  "fin": "leg-extension-machine-4-fin.webp"
+ },
+ "Hip thrust barre": {
+  "groupe": "FESSIERS",
+  "type": "duo",
+  "depart": "hip-thrust-barre-depart.webp",
+  "fin": "hip-thrust-barre-fin.webp"
+ },
+ "Hyperextension 45° (4)": {
+  "groupe": "LOMBAIRES",
+  "type": "duo",
+  "depart": "hyperextension-45-4-depart.webp",
+  "fin": "hyperextension-45-4-fin.webp"
+ },
+ "Hyperextension accent fessiers": {
+  "groupe": "LOMBAIRES",
+  "type": "duo",
+  "depart": "hyperextension-accent-fessiers-depart.webp",
+  "fin": "hyperextension-accent-fessiers-fin.webp"
+ },
+ "Hip thrust unilatéral": {
+  "groupe": "ISCHIO-JAMBIERS",
+  "type": "duo",
+  "depart": "hip-thrust-unilateral-depart.webp",
+  "fin": "hip-thrust-unilateral-fin.webp"
+ },
+ "Fentes arrière (3)": {
+  "groupe": "FESSIERS",
+  "type": "duo",
+  "depart": "fentes-arriere-3-depart.webp",
+  "fin": "fentes-arriere-3-fin.webp"
+ },
+ "Hip thrust barre (2)": {
+  "groupe": "FESSIERS",
+  "type": "duo",
+  "depart": "hip-thrust-barre-2-depart.webp",
+  "fin": "hip-thrust-barre-2-fin.webp"
+ },
+ "Planche avant isométrique (2)": {
+  "groupe": "ABDOMINAUX",
+  "type": "duo",
+  "depart": "planche-avant-isometrique-2-depart.webp",
+  "fin": "planche-avant-isometrique-2-fin.webp"
+ },
+ "Crunch sur ballon": {
+  "groupe": "ABDOMINAUX",
+  "type": "duo",
+  "depart": "crunch-sur-ballon-depart.webp",
+  "fin": "crunch-sur-ballon-fin.webp"
+ },
+ "Pallof press câble (2)": {
+  "groupe": "ABDOMINAUX",
+  "type": "duo",
+  "depart": "pallof-press-cable-2-depart.webp",
+  "fin": "pallof-press-cable-2-fin.webp"
+ },
+ "Développé couché haltères (2)": {
+  "groupe": "PECTORAUX",
+  "type": "duo",
+  "depart": "developpe-couche-halteres-2-depart.webp",
+  "fin": "developpe-couche-halteres-2-fin.webp"
+ },
+ "Pallof press élastique": {
+  "groupe": "ABDOMINAUX",
+  "type": "duo",
+  "depart": "pallof-press-elastique-depart.webp",
+  "fin": "pallof-press-elastique-fin.webp"
+ },
+ "Pallof press à genoux": {
+  "groupe": "ABDOMINAUX",
+  "type": "duo",
+  "depart": "pallof-press-a-genoux-depart.webp",
+  "fin": "pallof-press-a-genoux-fin.webp"
+ },
+ "Bird dog (3)": {
+  "groupe": "LOMBAIRES",
+  "type": "duo",
+  "depart": "bird-dog-3-depart.webp",
+  "fin": "bird-dog-3-fin.webp"
+ },
+ "Extension mollets assis machine (2)": {
+  "groupe": "MOLLETS",
+  "type": "duo",
+  "depart": "extension-mollets-assis-machine-2-depart.webp",
+  "fin": "extension-mollets-assis-machine-2-fin.webp"
+ },
+ "Extension mollets debout machine (3)": {
+  "groupe": "MOLLETS",
+  "type": "duo",
+  "depart": "extension-mollets-debout-machine-3-depart.webp",
+  "fin": "extension-mollets-debout-machine-3-fin.webp"
+ },
+ "Sauts de mollets explosifs": {
+  "groupe": "MOLLETS",
+  "type": "duo",
+  "depart": "sauts-de-mollets-explosifs-depart.webp",
+  "fin": "sauts-de-mollets-explosifs-fin.webp"
+ },
+ "Développé couché barre (5)": {
+  "groupe": "PECTORAUX",
+  "type": "duo",
+  "depart": "developpe-couche-barre-5-depart.webp",
+  "fin": "developpe-couche-barre-5-fin.webp"
+ },
+ "Shrug barre (2)": {
+  "groupe": "TRAPÈZES",
+  "type": "duo",
+  "depart": "shrug-barre-2-depart.webp",
+  "fin": "shrug-barre-2-fin.webp"
+ },
+ "Shrug barre devant (3)": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "shrug-barre-devant-3-depart.webp",
+  "fin": "shrug-barre-devant-3-fin.webp"
+ },
+ "Écarté élastique ancrage haut": {
+  "groupe": "PECTORAUX",
+  "type": "duo",
+  "depart": "ecarte-elastique-ancrage-haut-depart.webp",
+  "fin": "ecarte-elastique-ancrage-haut-fin.webp"
+ },
+ "Élévations latérales élastique (3)": {
+  "groupe": "ÉPAULES",
+  "type": "duo",
+  "depart": "elevations-laterales-elastique-3-depart.webp",
+  "fin": "elevations-laterales-elastique-3-fin.webp"
+ },
+ "Tirage poulie haute prise large (4)": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "tirage-poulie-haute-prise-large-4-depart.webp",
+  "fin": "tirage-poulie-haute-prise-large-4-fin.webp"
+ },
+ "French press barre EZ couché (5)": {
+  "groupe": "TRICEPS",
+  "type": "solo",
+  "img": "french-press-barre-ez-couche-5.webp"
+ },
+ "Tractions aux anneaux": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "tractions-aux-anneaux-depart.webp",
+  "fin": "tractions-aux-anneaux-fin.webp"
+ },
+ "Rowing barre debout (upright row) (3)": {
+  "groupe": "TRAPÈZES",
+  "type": "duo",
+  "depart": "rowing-barre-debout-upright-row-3-depart.webp",
+  "fin": "rowing-barre-debout-upright-row-3-fin.webp"
+ },
+ "Rowing TRX (2)": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "rowing-trx-2-depart.webp",
+  "fin": "rowing-trx-2-fin.webp"
+ },
+ "Développé haltères assis (3)": {
+  "groupe": "ÉPAULES",
+  "type": "duo",
+  "depart": "developpe-halteres-assis-3-depart.webp",
+  "fin": "developpe-halteres-assis-3-fin.webp"
+ },
+ "Oiseau haltères penché (2)": {
+  "groupe": "ÉPAULES",
+  "type": "duo",
+  "depart": "oiseau-halteres-penche-2-depart.webp",
+  "fin": "oiseau-halteres-penche-2-fin.webp"
+ },
+ "Oiseau assis penché": {
+  "groupe": "ÉPAULES",
+  "type": "duo",
+  "depart": "oiseau-assis-penche-depart.webp",
+  "fin": "oiseau-assis-penche-fin.webp"
+ },
+ "Haussements épaules haltères (6)": {
+  "groupe": "TRAPÈZES",
+  "type": "duo",
+  "depart": "haussements-epaules-halteres-6-depart.webp",
+  "fin": "haussements-epaules-halteres-6-fin.webp"
+ },
+ "Rowing haltère coude ouvert": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "rowing-haltere-coude-ouvert-depart.webp",
+  "fin": "rowing-haltere-coude-ouvert-fin.webp"
+ },
+ "Élévations latérales élastique (4)": {
+  "groupe": "ÉPAULES",
+  "type": "duo",
+  "depart": "elevations-laterales-elastique-4-depart.webp",
+  "fin": "elevations-laterales-elastique-4-fin.webp"
+ },
+ "Développé kettlebell unilatéral (2)": {
+  "groupe": "ÉPAULES",
+  "type": "duo",
+  "depart": "developpe-kettlebell-unilateral-2-depart.webp",
+  "fin": "developpe-kettlebell-unilateral-2-fin.webp"
+ },
+ "Curl haltères supination alternés (2)": {
+  "groupe": "BICEPS",
+  "type": "duo",
+  "depart": "curl-halteres-supination-alternes-2-depart.webp",
+  "fin": "curl-halteres-supination-alternes-2-fin.webp"
+ },
+ "Curl marteau (2)": {
+  "groupe": "BICEPS",
+  "type": "duo",
+  "depart": "curl-marteau-2-depart.webp",
+  "fin": "curl-marteau-2-fin.webp"
+ },
+ "Curl marteau incliné": {
+  "groupe": "BICEPS",
+  "type": "duo",
+  "depart": "curl-marteau-incline-depart.webp",
+  "fin": "curl-marteau-incline-fin.webp"
+ },
+ "Câble croisé debout": {
+  "groupe": "PECTORAUX",
+  "type": "duo",
+  "depart": "cable-croise-debout-depart.webp",
+  "fin": "cable-croise-debout-fin.webp"
+ },
+ "Curl élastique debout": {
+  "groupe": "BICEPS",
+  "type": "duo",
+  "depart": "curl-elastique-debout-depart.webp",
+  "fin": "curl-elastique-debout-fin.webp"
+ },
+ "Curl haltères assis dossier vertical (2)": {
+  "groupe": "BICEPS",
+  "type": "duo",
+  "depart": "curl-halteres-assis-dossier-vertical-2-depart.webp",
+  "fin": "curl-halteres-assis-dossier-vertical-2-fin.webp"
+ },
+ "Curl élastique debout (2)": {
+  "groupe": "BICEPS",
+  "type": "duo",
+  "depart": "curl-elastique-debout-2-depart.webp",
+  "fin": "curl-elastique-debout-2-fin.webp"
+ },
+ "Extension poulie barre droite": {
+  "groupe": "TRICEPS",
+  "type": "duo",
+  "depart": "extension-poulie-barre-droite-depart.webp",
+  "fin": "extension-poulie-barre-droite-fin.webp"
+ },
+ "Extension poulie unilatérale": {
+  "groupe": "TRICEPS",
+  "type": "duo",
+  "depart": "extension-poulie-unilaterale-depart.webp",
+  "fin": "extension-poulie-unilaterale-fin.webp"
+ },
+ "French press au sol (4)": {
+  "groupe": "TRICEPS",
+  "type": "duo",
+  "depart": "french-press-au-sol-4-depart.webp",
+  "fin": "french-press-au-sol-4-fin.webp"
+ },
+ "Dips entre bancs (5)": {
+  "groupe": "TRICEPS",
+  "type": "duo",
+  "depart": "dips-entre-bancs-5-depart.webp",
+  "fin": "dips-entre-bancs-5-fin.webp"
+ },
+ "Kickback élastique": {
+  "groupe": "FESSIERS",
+  "type": "duo",
+  "depart": "kickback-elastique-depart.webp",
+  "fin": "kickback-elastique-fin.webp"
+ },
+ "Presse à jambes 45°": {
+  "groupe": "QUADRICEPS",
+  "type": "duo",
+  "depart": "presse-a-jambes-45-depart.webp",
+  "fin": "presse-a-jambes-45-fin.webp"
+ },
+ "Presse unilatérale": {
+  "groupe": "QUADRICEPS",
+  "type": "duo",
+  "depart": "presse-unilaterale-depart.webp",
+  "fin": "presse-unilaterale-fin.webp"
+ },
+ "Fentes avant haltères (2)": {
+  "groupe": "QUADRICEPS",
+  "type": "duo",
+  "depart": "fentes-avant-halteres-2-depart.webp",
+  "fin": "fentes-avant-halteres-2-fin.webp"
+ },
+ "Fentes marchées": {
+  "groupe": "QUADRICEPS",
+  "type": "duo",
+  "depart": "fentes-marchees-depart.webp",
+  "fin": "fentes-marchees-fin.webp"
+ },
+ "Bulgarian split squat barre (3)": {
+  "groupe": "QUADRICEPS",
+  "type": "duo",
+  "depart": "bulgarian-split-squat-barre-3-depart.webp",
+  "fin": "bulgarian-split-squat-barre-3-fin.webp"
+ },
+ "Squat au poids de corps": {
+  "groupe": "QUADRICEPS",
+  "type": "duo",
+  "depart": "squat-au-poids-de-corps-depart.webp",
+  "fin": "squat-au-poids-de-corps-fin.webp"
+ },
+ "Dips machine assis": {
+  "groupe": "TRICEPS",
+  "type": "solo",
+  "img": "dips-machine-assis.webp"
+ },
+ "Front squat barre (2)": {
+  "groupe": "QUADRICEPS",
+  "type": "duo",
+  "depart": "front-squat-barre-2-depart.webp",
+  "fin": "front-squat-barre-2-fin.webp"
+ },
+ "Goblet squat": {
+  "groupe": "FESSIERS",
+  "type": "duo",
+  "depart": "goblet-squat-depart.webp",
+  "fin": "goblet-squat-fin.webp"
+ },
+ "Nordic curl (2)": {
+  "groupe": "ISCHIO-JAMBIERS",
+  "type": "duo",
+  "depart": "nordic-curl-2-depart.webp",
+  "fin": "nordic-curl-2-fin.webp"
+ },
+ "Nordic curl au sol": {
+  "groupe": "ISCHIO-JAMBIERS",
+  "type": "duo",
+  "depart": "nordic-curl-au-sol-depart.webp",
+  "fin": "nordic-curl-au-sol-fin.webp"
+ },
+ "Hip thrust classique (4)": {
+  "groupe": "ISCHIO-JAMBIERS",
+  "type": "duo",
+  "depart": "hip-thrust-classique-4-depart.webp",
+  "fin": "hip-thrust-classique-4-fin.webp"
+ },
+ "Hip thrust unilatéral au sol (2)": {
+  "groupe": "FESSIERS",
+  "type": "duo",
+  "depart": "hip-thrust-unilateral-au-sol-2-depart.webp",
+  "fin": "hip-thrust-unilateral-au-sol-2-fin.webp"
+ },
+ "Dips buste incliné (3)": {
+  "groupe": "PECTORAUX",
+  "type": "duo",
+  "depart": "dips-buste-incline-3-depart.webp",
+  "fin": "dips-buste-incline-3-fin.webp"
+ },
+ "Step-up haltères (2)": {
+  "groupe": "FESSIERS",
+  "type": "duo",
+  "depart": "step-up-halteres-2-depart.webp",
+  "fin": "step-up-halteres-2-fin.webp"
+ },
+ "Pont fessier sur bosu": {
+  "groupe": "FESSIERS",
+  "type": "duo",
+  "depart": "pont-fessier-sur-bosu-depart.webp",
+  "fin": "pont-fessier-sur-bosu-fin.webp"
+ },
+ "Relevé de jambes chaise romaine": {
+  "groupe": "ABDOMINAUX",
+  "type": "duo",
+  "depart": "releve-de-jambes-chaise-romaine-depart.webp",
+  "fin": "releve-de-jambes-chaise-romaine-fin.webp"
+ },
+ "Mountain climbers croisés (2)": {
+  "groupe": "ABDOMINAUX",
+  "type": "duo",
+  "depart": "mountain-climbers-croises-2-depart.webp",
+  "fin": "mountain-climbers-croises-2-fin.webp"
+ },
+ "Planche sur bosu": {
+  "groupe": "ABDOMINAUX",
+  "type": "duo",
+  "depart": "planche-sur-bosu-depart.webp",
+  "fin": "planche-sur-bosu-fin.webp"
+ },
+ "Planche haute bras tendus (2)": {
+  "groupe": "ABDOMINAUX",
+  "type": "duo",
+  "depart": "planche-haute-bras-tendus-2-depart.webp",
+  "fin": "planche-haute-bras-tendus-2-fin.webp"
+ },
+ "Rowing élastique unilatéral (2)": {
+  "groupe": "DOS",
+  "type": "duo",
+  "depart": "rowing-elastique-unilateral-2-depart.webp",
+  "fin": "rowing-elastique-unilateral-2-fin.webp"
+ },
+ "Écarté haltères plat (3)": {
+  "groupe": "PECTORAUX",
+  "type": "duo",
+  "depart": "ecarte-halteres-plat-3-depart.webp",
+  "fin": "ecarte-halteres-plat-3-fin.webp"
+ },
+ "Extension mollets debout": {
+  "groupe": "MOLLETS",
+  "type": "duo",
+  "depart": "extension-mollets-debout-depart.webp",
+  "fin": "extension-mollets-debout-fin.webp"
+ },
+ "Farmer walk (2)": {
+  "groupe": "AVANT-BRAS",
+  "type": "duo",
+  "depart": "farmer-walk-2-depart.webp",
+  "fin": "farmer-walk-2-fin.webp"
+ },
+ "Pompes standards (5)": {
+  "groupe": "PECTORAUX",
+  "type": "duo",
+  "depart": "pompes-standards-5-depart.webp",
+  "fin": "pompes-standards-5-fin.webp"
+ },
+ "Pompes pieds surélevés": {
+  "groupe": "PECTORAUX",
+  "type": "duo",
+  "depart": "pompes-pieds-sureleves-depart.webp",
+  "fin": "pompes-pieds-sureleves-fin.webp"
+ },
+ "Pompes sur bosu (2)": {
+  "groupe": "PECTORAUX",
+  "type": "duo",
+  "depart": "pompes-sur-bosu-2-depart.webp",
+  "fin": "pompes-sur-bosu-2-fin.webp"
+ },
+ "Haussements épaules haltères (7)": {
+  "groupe": "TRAPÈZES",
+  "type": "duo",
+  "depart": "haussements-epaules-halteres-7-depart.webp",
+  "fin": "haussements-epaules-halteres-7-fin.webp"
+ },
+ "Leg extension machine (5)": {
+  "groupe": "QUADRICEPS",
+  "type": "duo",
+  "depart": "leg-extension-machine-5-depart.webp",
+  "fin": "leg-extension-machine-5-fin.webp"
+ }
+}
